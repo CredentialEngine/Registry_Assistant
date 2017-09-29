@@ -32,6 +32,10 @@ namespace RA.Models.Input
 	{
 		public LearningOpportunity()
 		{
+
+			//OwnedBy = new List<string>();
+			OwnedBy = new OrganizationReference();
+
 			Subject = new List<string>();
 			Keyword = new List<string>();
             DeliveryType = new List<string>();
@@ -45,8 +49,6 @@ namespace RA.Models.Input
             AvailableOnlineAt = new List<string>();
 			CodedNotation = new List<string>();
 
-			//OwnedBy = new List<string>();
-			OwnedBy = new OrganizationReference();
 			
             AccreditedBy = new List<Input.OrganizationReference>();
             ApprovedBy = new List<Input.OrganizationReference>();
@@ -77,26 +79,47 @@ namespace RA.Models.Input
             FinancialAssistance = new List<Input.FinancialAlignmentObject>();
         }
 
+
+
+		#region *** Required Properties ***
 		public string Name { get; set; }
 		public string Description { get; set; }
-		public List<string> InLanguage { get; set; }
-		public List<string> Keyword { get; set; }
-        public List<string> Subject { get; set; }
-        public string SubjectWebpage { get; set; } //URL
-      
-		public List<string> CodedNotation { get; set; }
-		public string DateEffective { get; set; }
-        //public string Type { get; set; }
-        public string Ctid { get; set; }
-		
+
+		public string SubjectWebpage { get; set; } //URL
+		public string Ctid { get; set; }
+
 		/// <summary>
-		/// Organization that owns this credential
+		/// Organization that owns this resource
 		/// </summary>
 		public OrganizationReference OwnedBy { get; set; }
 
-		public string VerificationMethodDescription { get; set; }
-        public List<string> AvailableOnlineAt { get; set; } //URL
+		#endregion
+
+
+
+		#region *** Required if available Properties ***
+		public List<string> AvailableOnlineAt { get; set; } //URL
 		public List<string> AvailabilityListing { get; set; } //URL
+		public List<PostalAddress> AvailableAt { get; set; }
+		#endregion
+
+		#region *** Recommended Properties ***
+
+		#endregion
+
+
+		public List<string> InLanguage { get; set; }
+		public List<string> Keyword { get; set; }
+        public List<string> Subject { get; set; }
+       
+      
+		public List<string> CodedNotation { get; set; }
+		public string DateEffective { get; set; }
+       
+
+		public string VerificationMethodDescription { get; set; }
+      
+
 		public List<string> LearningMethodType { get; set; }
 		public List<string> DeliveryType { get; set; }
         public string DeliveryTypeDescription { get; set; }
@@ -140,7 +163,7 @@ namespace RA.Models.Input
 		public List<Connections> IsRecommendedFor { get; set; }
 		public List<Connections> IsRequiredFor { get; set; }
 
-		public List<PostalAddress> AvailableAt { get; set; }
+
         public List<EntityReference> CommonCosts { get; set; }
         public List<EntityReference> CommonConditions { get; set; }
         public List<FinancialAlignmentObject> FinancialAssistance { get; set; }

@@ -36,29 +36,6 @@ namespace RA.Models.Input
 
 	}
 
-	//public class CredentialRequestHelper
-	//{
-	//	public CredentialRequestHelper( CredentialRequest request)
-	//	{
-	//		Request = request;
-	//		RequestStatus = new RequestStatus();
-	//	}
-	//	//public CredentialRequestHelper()
-	//	//{
-	//	//	Request = new CredentialRequest();
-	//	//	RequestStatus = new RequestStatus();
-	//	//}
-	//	/// <summary>
-	//	/// Credential Input Class
-	//	/// </summary>
-	//	public CredentialRequest Request { get; set; }
-
-
-	//	public string Payload { get; set; }
-
-	//	public RequestStatus RequestStatus { get; set; }
-	//}
-
 	public class Credential
 	{
 		public Credential()
@@ -77,7 +54,7 @@ namespace RA.Models.Input
 
 			Jurisdiction = new List<Jurisdiction>();
 			// Region = new List<GeoCoordinates>();
-			OwnedBy = new OrganizationReference();
+			OwnedBy = new List<OrganizationReference>();
 			CopyrightHolder = new OrganizationReference();
 
 			HasPart = new List<EntityReference>();
@@ -121,16 +98,35 @@ namespace RA.Models.Input
 			RevocationProcess = new List<ProcessProfile>();
 		}
 
+
+		#region *** Required Properties ***
+
+		#endregion
+
 		/// <summary>
 		/// Name of this credential
 		/// </summary>
 		public string Name { get; set; }
 		public string Description { get; set; }
+
+
+		/// <summary>
+		/// The credential type as defined in CTDL
+		/// </summary>
+		public string CredentialType { get; set; }
+
+
+
+		#region *** Required if available Properties ***
+
+		#endregion
+
+
 		public string DateEffective { get; set; }
 		/// <summary>
 		/// Organization that owns this credential
 		/// </summary>
-		public OrganizationReference OwnedBy { get; set; }
+		public List<OrganizationReference> OwnedBy { get; set; }
 
 		/// <summary>
 		/// CTID - unique identifier
@@ -141,20 +137,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Ctid { get; set; }
 
-		public string AlternateName { get; set; }
-		/// <summary>
-		/// Image URL
-		/// </summary>
-		public string Image { get; set; }
 		/// <summary>
 		/// SubjectWebpage URL
 		/// </summary>
 		public string SubjectWebpage { get; set; } //URL
 
+
+
+		public string AlternateName { get; set; }
 		/// <summary>
-		/// The credential type as defined in CTDL
+		/// Image URL
 		/// </summary>
-		public string CredentialType { get; set; }
+		public string Image { get; set; }
+
 
 		/// <summary>
 		/// AvailableOnlineAt URL

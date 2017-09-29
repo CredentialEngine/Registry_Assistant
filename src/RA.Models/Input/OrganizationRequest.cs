@@ -83,13 +83,18 @@ namespace RA.Models.Input
             JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
         }
 
-        /// <summary>
-        /// The type of organization is one of :
-        /// - CredentialOrganization
-        /// - QACredentialOrganization
-        /// Required
-        /// </summary>
-        public string Type { get; set; }
+
+
+		#region *** Required if available Properties ***
+
+		#endregion
+		/// <summary>
+		/// The type of organization is one of :
+		/// - CredentialOrganization
+		/// - QACredentialOrganization
+		/// Required
+		/// </summary>
+		public string Type { get; set; }
 
         /// <summary>
         /// Name 
@@ -123,10 +128,23 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> AgentType { get; set; }
 
-        /// <summary>
-        /// Url for Organization image
-        /// </summary>
-        public string Image { get; set; }
+
+
+
+		#region *** Required if available Properties ***
+
+		#endregion
+		public List<OrganizationReference> ParentOrganization { get; set; }
+
+
+
+		#region *** Required if available Properties ***
+
+		#endregion
+		/// <summary>
+		/// Url for Organization image
+		/// </summary>
+		public string Image { get; set; }
 
         public string FoundingDate { get; set; }
 

@@ -87,7 +87,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CTID { get; set; }
 
-		//if there is no available Id/CTID, enter the following, where Name, and subjectwebpage would be required
+		//if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would be required
 
 		/// <summary>
 		/// the type of the entity must be provided if the Id was not provided. examples

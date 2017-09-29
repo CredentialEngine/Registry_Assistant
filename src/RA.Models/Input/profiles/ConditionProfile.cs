@@ -7,47 +7,6 @@ using System.Threading.Tasks;
 namespace RA.Models.Input
 {
 	/// <summary>
-	/// Common input class for all condition profiles
-	/// </summary>
-	//public class ConditionProfiles
-	//{
-	//	public ConditionProfiles()
-	//	{
-	//		Requires = new List<ConditionProfile>();
-	//		Recommends = new List<ConditionProfile>();
-	//		EntryConditions = new List<ConditionProfile>();
-	//		Corequisite = new List<ConditionProfile>();
-	//		Renewal = new List<ConditionProfile>();
-	//		AdvancedStandingFor = new List<ConditionProfile>();
-	//		AdvancedStandingFrom = new List<ConditionProfile>();
-	//		IsPreparationFor = new List<ConditionProfile>();
-	//		PreparationFrom = new List<ConditionProfile>();
-
-	//		IsRequiredFor = new List<ConditionProfile>();
-	//		IsRecommendedFor = new List<ConditionProfile>();
- 
-	//	}
-	//	public List<ConditionProfile> Requires { get; set; }
-	//	public List<ConditionProfile> Recommends { get; set; }
-	//	public List<ConditionProfile> EntryConditions { get; set; }
-
-	//	public List<ConditionProfile> Corequisite { get; set; }
-
-	//	public List<ConditionProfile> Renewal { get; set; }
-
-	//	public List<ConditionProfile> AdvancedStandingFor { get; set; }
-	//	public List<ConditionProfile> AdvancedStandingFrom { get; set; }
-
-	//	public List<ConditionProfile> IsPreparationFor { get; set; }
-	//	public List<ConditionProfile> PreparationFrom { get; set; }
-
-	//	public List<ConditionProfile> IsRequiredFor { get; set; }
-	//	public List<ConditionProfile> IsRecommendedFor { get; set; }
-      
- //   }
-
-
-	/// <summary>
 	/// Input class for a condition profile
 	/// </summary>
 	public class ConditionProfile

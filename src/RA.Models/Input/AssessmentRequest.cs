@@ -84,16 +84,38 @@ namespace RA.Models.Input
             FinancialAssistance = new List<Input.FinancialAlignmentObject>();
         }
 
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public List<string> Keyword { get; set; }
+
+
+		#region *** Required Properties ***
+		public string Name { get; set; }
+		public string Description { get; set; }
+		public string Ctid { get; set; }
+		public string SubjectWebpage { get; set; } //URL
+
+		/// <summary>
+		/// Organization that owns this resource
+		/// </summary>
+		public OrganizationReference OwnedBy { get; set; }
+		#endregion
+
+
+
+		#region *** Required if available Properties ***
+
+		#endregion
+
+		#region *** Recommended Properties ***
+
+		#endregion
+
+
+		public List<string> Keyword { get; set; }
         public List<string> Subject { get; set; }
-        public string SubjectWebpage { get; set; } //URL
+        
         public List<string> AssessmentMethodType { get; set; }
         public List<string> CodedNotation { get; set; }
         public string DateEffective { get; set; }
-       // public string Type { get; set; }
-        public string Ctid { get; set; }
+      
         public string AssessmentExample { get; set; }
         public string AssessmentExampleDescription { get; set; }
         public string AssessmentOutput { get; set; }
@@ -104,10 +126,7 @@ namespace RA.Models.Input
 		public List<string> InLanguage { get; set; }
 		public List<Jurisdiction> Jurisdiction { get; set; }
 
-		/// <summary>
-		/// Organization that owns this resource
-		/// </summary>
-		public OrganizationReference OwnedBy { get; set; }
+	
 
         public string ProcessStandards { get; set; }
 
