@@ -9,8 +9,8 @@ namespace RA.Models.Input
     /// <summary>
     /// Class used with an Organization format or publish request
     /// </summary>
-    public class OrganizationRequest
-    {
+    public class OrganizationRequest : BaseRequest
+	{
         public OrganizationRequest()
         {
             Organization = new Organization();
@@ -21,18 +21,6 @@ namespace RA.Models.Input
         /// </summary>
         public Organization Organization { get; set; }
 
-        /// <summary>
-        /// API key for the requesting partner - required for publishing
-        /// May ultimately be passed in the header
-        /// </summary>
-        public string APIKey { get; set; }
-
-        /// <summary>
-        /// Envelope Identifier
-        /// Previously required to update an existing document
-        /// </summary>
-        public string RegistryEnvelopeId { get; set; }
-
     }
 
     public class Organization
@@ -42,16 +30,17 @@ namespace RA.Models.Input
 
             AgentType = new List<string>();
 
-            AgentSectorType = new List<string>();
-            Industries = new List<FrameworkItem>();
-            Keyword = new List<string>();
+			//AgentSectorType = new List<string>();
+			IndustryType = new List<FrameworkItem>();
+			Naics = new List<string>();
+			Keyword = new List<string>();
             Email = new List<string>();
             SocialMedia = new List<string>();
             SameAs = new List<string>();
             AvailabilityListing = new List<string>();
             ServiceType = new List<string>();
             Jurisdiction = new List<Input.Jurisdiction>();
-            Address = new List<PostalAddress>();
+            Address = new List<Place>();
             ContactPoint = new List<ContactPoint>();
             //
             AccreditedBy = new List<Input.OrganizationReference>();
@@ -66,8 +55,12 @@ namespace RA.Models.Input
             Revokes = new List<EntityReference>();
             Recognizes = new List<EntityReference>();
 			//
-            HasConditionManifests = new List<Input.EntityReference>();
-            HasCostManifests = new List<EntityReference>();
+			OwnsCredentials = new List<EntityReference>();
+			OwnsAssessments = new List<EntityReference>();
+			OwnsLearningOpportunities = new List<EntityReference>();
+			//
+			HasConditionManifest = new List<string>();
+            HasCostManifest = new List<string>();
             VerificationServiceProfiles = new List<Input.VerificationServiceProfile>();
 			//
             AdministrationProcess = new List<ProcessProfile>();
@@ -85,9 +78,7 @@ namespace RA.Models.Input
 
 
 
-		#region *** Required if available Properties ***
-
-		#endregion
+		#region *** Required Properties ***
 		/// <summary>
 		/// The type of organization is one of :
 		/// - CredentialOrganization
@@ -96,55 +87,71 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Type { get; set; }
 
-        /// <summary>
-        /// Name 
-        /// Required
-        /// </summary>
-        public string Name { get; set; }
+		/// <summary>
+		/// Name 
+		/// Required
+		/// </summary>
+		public string Name { get; set; }
 
-        /// <summary>
-        /// Organization description 
-        /// Required
-        /// </summary>
-        public string Description { get; set; }
+		/// <summary>
+		/// Organization description 
+		/// Required
+		/// </summary>
+		public string Description { get; set; }
 
-        /// <summary>
-        /// Credential Identifier
-        /// format: 
-        /// ce-UUID (guid)
-        /// Required
-        /// </summary>
-        public string Ctid { get; set; }
+		/// <summary>
+		/// Credential Identifier
+		/// format: 
+		/// ce-UUID (guid)
+		/// Required
+		/// </summary>
+		public string Ctid { get; set; }
 
-        /// <summary>
-        /// Organization subject web page
-        /// Required
-        /// </summary>
-        public string SubjectWebpage { get; set; }
+		/// <summary>
+		/// Organization subject web page
+		/// Required
+		/// </summary>
+		public string SubjectWebpage { get; set; }
 
-        /// <summary>
-        /// The type of the described agent.
-        /// Must provide valid organization types
-        /// </summary>
-        public List<string> AgentType { get; set; }
+		/// <summary>
+		/// The type of the described agent.
+		/// Must provide valid organization types
+		/// </summary>
+		public List<string> AgentType { get; set; }
 
-
-
-
-		#region *** Required if available Properties ***
+		/// <summary>
+		/// The types of sociological, economic, or political subdivision of society served by an agent. Enter one of:
+		/// <value>
+		/// agentSector:PrivateForProfit agentSector:PrivateNonProfit agentSector:Public
+		/// </value>
+		/// </summary>
+		public string AgentSectorType { get; set; }
 
 		#endregion
+
+		#region *** Required if available Properties ***
+		public string AgentPurpose { get; set; }
+		public string AgentPurposeDescription { get; set; }
+
+		//External Quality Assurance
+		public List<OrganizationReference> AccreditedBy { get; set; }
+		public List<OrganizationReference> ApprovedBy { get; set; }
+		public List<OrganizationReference> RecognizedBy { get; set; }
+		public List<OrganizationReference> RegulatedBy { get; set; }
+
 		public List<OrganizationReference> ParentOrganization { get; set; }
 
-
-
-		#region *** Required if available Properties ***
-
 		#endregion
+		#region *** Recommended Properties ***
+
+		public List<string> SocialMedia { get; set; }
+		public List<string> Keyword { get; set; }
 		/// <summary>
 		/// Url for Organization image
 		/// </summary>
 		public string Image { get; set; }
+		public List<string> ServiceType { get; set; }
+		#endregion
 
         public string FoundingDate { get; set; }
 
@@ -155,20 +162,11 @@ namespace RA.Models.Input
         public string AlternativeIdentifier { get; set; }
         public string MissionAndGoalsStatement { get; set; }
         public string MissionAndGoalsStatementDescription { get; set; }
-        public string AgentPurpose { get; set; }
-        public string AgentPurposeDescription { get; set; }
 
-
-        /// <summary>
-        /// Need process to provide valid types (agentSectorType)
-        /// </summary>
-        public List<string> AgentSectorType { get; set; }
-        public List<FrameworkItem> Industries { get; set; }
-        public List<string> Keyword { get; set; }
+        public List<FrameworkItem> IndustryType { get; set; }
+		public List<string> Naics { get; set; }
 
         public List<string> Email { get; set; }
-
-        public List<string> SocialMedia { get; set; }
 
         //all phone numbers are entered in contact points
 
@@ -179,15 +177,10 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> SameAs { get; set; }
         public List<string> AvailabilityListing { get; set; }
-        public List<string> ServiceType { get; set; }
+        
         public List<Jurisdiction> Jurisdiction { get; set; }
-        public List<PostalAddress> Address { get; set; }
+        public List<Place> Address { get; set; }
 
-
-        public List<OrganizationReference> AccreditedBy { get; set; }
-        public List<OrganizationReference> ApprovedBy { get; set; }
-        public List<OrganizationReference> RecognizedBy { get; set; }
-        public List<OrganizationReference> RegulatedBy { get; set; }
         public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
 
 		/// <summary>
@@ -196,21 +189,35 @@ namespace RA.Models.Input
 		/// </summary>
         public List<EntityReference> Approves { get; set; }
         public List<EntityReference> Offers { get; set; }
-        public List<EntityReference> Owns { get; set; }
 
         public List<EntityReference> Renews { get; set; }
         public List<EntityReference> Revokes { get; set; }
         public List<EntityReference> Recognizes { get; set; }
 
-        /// <summary>
-        /// Reference to condition manifests
-        /// A condition manifest must have already been published, in which case the URL is entered for the EntityReference.Id, or if the condition manifest exist at a url, provide:
-        /// <list type="steps"><item>Name</item><item>Description</item><item>Subject webpage</item></list>
-        /// </summary>
-        public List<EntityReference> HasConditionManifests { get; set; }
-        public List<EntityReference> HasCostManifests { get; set; }
+		public List<EntityReference> Owns { get; set; }
+		// *** OR ***
 
-        public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; }
+		/// <summary>
+		/// Prototype separate properties
+		/// </summary>
+		public List<EntityReference> OwnsCredentials { get; set; }
+		public List<EntityReference> OwnsAssessments { get; set; }
+
+		public List<EntityReference> OwnsLearningOpportunities { get; set; }
+
+
+		/// <summary>
+		/// Reference to condition manifests
+		/// A condition manifest can never be a third party reference, so a url is expected
+		/// </summary>
+		public List<string> HasConditionManifest { get; set; }
+		/// <summary>
+		/// Reference to cost manifests
+		/// A cost manifest can never be a third party reference, so a url is expected
+		/// </summary>
+		public List<string> HasCostManifest { get; set; }
+
+		public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; }
         public List<ProcessProfile> AdministrationProcess { get; set; }
         public List<ProcessProfile> DevelopmentProcess { get; set; }
         public List<ProcessProfile> MaintenanceProcess { get; set; }

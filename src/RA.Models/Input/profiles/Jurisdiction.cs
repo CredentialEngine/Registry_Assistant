@@ -4,14 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using RAPlace = RA.Models.Input.Place;
+//using RAPlace = RA.Models.Input.GeoCoordinates;
 namespace RA.Models.Input
 {
 	public class Jurisdiction
 	{
         public Jurisdiction()
         {
-			MainJurisdiction = new Input.GeoCoordinates();
-			JurisdictionException = new List<GeoCoordinates>();
+			MainJurisdiction = new RAPlace();
+			JurisdictionException = new List<RAPlace>();
         }
 		public bool? GlobalJurisdiction { get; set; }
 		public string Description { get; set; }
@@ -20,10 +22,10 @@ namespace RA.Models.Input
 		/// TBD - does it make sense to offer providing the full GeoCoordinates.
 		/// Will be useful where the request can be populated programatically.
 		/// </summary>
-		public GeoCoordinates MainJurisdiction { get; set; }
+		public RAPlace MainJurisdiction { get; set; }
 
 		//public List<string> JurisdictionException { get; set; }
-		public List<GeoCoordinates> JurisdictionException { get; set; }
+		public List<RAPlace> JurisdictionException { get; set; }
 	}
 
 	public class JurisdictionAssertedInProfile 
@@ -61,11 +63,11 @@ namespace RA.Models.Input
 		public GeoCoordinates()
 		{
 			Name = "";
-			ToponymName = "";
+			//ToponymName = "";
 			Region = "";
 			Country = "";
-			Address = new PostalAddress();
-			Bounds = new BoundingBox();
+		//	Address = null;
+		//	Bounds = null;
 
 		}
 
@@ -73,20 +75,21 @@ namespace RA.Models.Input
 		public string Name { get; set; }
 		public bool IsException { get; set; }
 
-		public string ToponymName { get; set; }
+		//public string ToponymName { get; set; }
 		public string Region { get; set; }
 		public string Country { get; set; }
 		public double Latitude { get; set; }
 		public double Longitude { get; set; }
 
-		public PostalAddress Address { get; set; }
+		//public PostalAddress Address { get; set; }
 
 		/// <summary>
-		/// URL, typically of a geonames place
+		/// ceterms:geoURI
+		/// Entity that describes the longitude, latitude and other location details of a place.
 		/// </summary>
-		public string Url { get; set; } 
+		public string GeoUri { get; set; } 
 
-		public BoundingBox Bounds { get; set; }
+		//public BoundingBox Bounds { get; set; }
 	}
 
 	public class BoundingBox

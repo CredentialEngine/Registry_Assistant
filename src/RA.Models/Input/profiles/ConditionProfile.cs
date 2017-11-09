@@ -16,14 +16,13 @@ namespace RA.Models.Input
             AssertedBy = new OrganizationReference();
             EstimatedCosts = new List<CostProfile>();
 
-            SubjectWebpage = new List<string>();
+            //SubjectWebpage = new List<string>();
             AudienceLevelType = new List<string>();
             AudienceType = new List<string>();
             Condition = new List<string>();
 			SubmissionOf = new List<string>();
 
 			AlternativeCondition = new List<ConditionProfile>();
-			SubjectWebpage = new List<string>();
 
 			//ApplicableAudienceType = new List<string>();
 			TargetAssessment = new List<EntityReference>();
@@ -38,7 +37,7 @@ namespace RA.Models.Input
 
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<string> SubjectWebpage { get; set; } //URL
+        public string SubjectWebpage { get; set; } //URL
 
         //TODO - alter from enumeration
         public List<string> AudienceLevelType { get; set; }

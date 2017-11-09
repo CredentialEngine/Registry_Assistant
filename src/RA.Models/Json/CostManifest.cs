@@ -13,7 +13,6 @@ namespace RA.Models.Json
 		public static string classType = "ceterms:CostManifest";
 		public CostManifest()
 		{
-			CostDetails = new IdProperty();
 			Type = "ceterms:CostManifest";
 		}
 
@@ -39,7 +38,7 @@ namespace RA.Models.Json
 		public List<OrganizationBase> CostManifestOf { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:costDetails" )]
-		public IdProperty CostDetails { get; set; } //URL
+		public string CostDetails { get; set; } //URL
 
 		[JsonProperty( PropertyName = "ceterms:startDate" )]
 		public string StartDate { get; set; }

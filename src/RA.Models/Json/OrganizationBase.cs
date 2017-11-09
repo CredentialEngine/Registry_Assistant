@@ -14,8 +14,8 @@ namespace RA.Models.Json
 	{
 		public OrganizationBase()
 		{
-			SubjectWebpage = new List<IdProperty>();
-			SocialMedia = new List<IdProperty>();
+			//SubjectWebpage = new List<string>();
+			SocialMedia = new List<string>();
 		}
 		
 		/// <summary>
@@ -28,7 +28,7 @@ namespace RA.Models.Json
 		public new string Type { get; set; }
 		
 		[JsonProperty( PropertyName = "ceterms:socialMedia" )]
-		public List<IdProperty> SocialMedia { get; set; }
+		public List<string> SocialMedia { get; set; }
 
 		public override void NegateNonIdProperties()
 		{
@@ -48,7 +48,8 @@ namespace RA.Models.Json
 	{
 		public EntityBase()
 		{
-			SubjectWebpage = new List<IdProperty>();
+			//SubjectWebpage = new List<string>();
+			SubjectWebpage = null;
 		}
 
 		[JsonProperty( "@id" )]
@@ -71,8 +72,7 @@ namespace RA.Models.Json
 		public string Ctid { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-		public List<IdProperty> SubjectWebpage { get; set; } //URL
-
+		public string SubjectWebpage { get; set; }
 
 		public virtual void NegateNonIdProperties()
 		{

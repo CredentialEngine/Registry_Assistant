@@ -7,13 +7,23 @@ using Newtonsoft.Json;
 
 namespace RA.Models.Json
 {
-    public class CredentialAlignmentObject
+	/// <summary>
+	/// Credential Alignment Object
+	/// Modifications
+	/// 2017-10-17 TargetNodeName is now required!
+	/// </summary>
+	public class CredentialAlignmentObject
     {
         public CredentialAlignmentObject()
         {
             Type = "ceterms:CredentialAlignmentObject";
-			CodedNotation = new List<string>();
+			//CodedNotation = new List<string>();
+			CodedNotation = null;
+			AlignmentDate = null;
+			//Weight = null;
+			AlignmentType = null;
 
+			
 		}
         /// <summary>
         /// Need a custom mapping to @type based on input value
@@ -41,14 +51,14 @@ namespace RA.Models.Json
         /// A short set of alpha-numeric symbols that uniquely identifies a resource and supports its discovery.
         /// </summary>
         [JsonProperty( PropertyName = "ceterms:codedNotation" )]
-        public List<string> CodedNotation { get; set; }
-
+        public string CodedNotation { get; set; }
+		//public List<string> CodedNotation { get; set; }
 		/// <summary>
 		/// Framework URL
 		/// The framework to which the resource being described is aligned.Must be a valid URL.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:framework" )]
-        public IdProperty Framework { get; set; }
+        public string Framework { get; set; }
 
 		/// <summary>
 		/// Framework Name
@@ -62,7 +72,7 @@ namespace RA.Models.Json
         /// The node of a framework targeted by the alignment. Must be a valid URL.
         /// </summary>
         [JsonProperty( PropertyName = "ceterms:targetNode" )]
-        public IdProperty TargetNode { get; set; }
+        public string TargetNode { get; set; }
 
         /// <summary>
         /// Target Description
@@ -83,7 +93,7 @@ namespace RA.Models.Json
         /// An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
         /// </summary>
         [JsonProperty( PropertyName = "ceterms:weight" )]
-        public string Weight { get; set; }
+        public decimal Weight { get; set; }
 
         //have to handle weight and alignmentdate 
     }

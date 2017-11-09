@@ -6,27 +6,18 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
-	public class CostManifestRequest
+	public class CostManifestRequest : BaseRequest
 	{
 		public CostManifestRequest()
 		{
 			//CostManifests = new List<CostManifest>();
+			CostManifest = new CostManifest();
 		}
 		//TODO - only allow single or multiple???
 		public CostManifest CostManifest { get; set; }
 		//public List<CostManifest> CostManifests { get; set; }
 
-		/// <summary>
-		/// API key for the requesting partner - required for publishing
-		/// May ultimately be passed in the header
-		/// </summary>
-		public string APIKey { get; set; }
 
-		/// <summary>
-		/// Envelope Identifier
-		/// Currently required to update an existing document
-		/// </summary>
-		public string RegistryEnvelopeId { get; set; }
 	}
 
 	public class CostManifest

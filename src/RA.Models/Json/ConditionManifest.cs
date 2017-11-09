@@ -14,10 +14,10 @@ namespace RA.Models.Json
 
 		public ConditionManifest()
 		{
-			SubjectWebpage = new List<IdProperty>();
 			Type = "ceterms:ConditionManifest";
             EntryConditions = new List<ConditionProfile>();
             Requires = new List<ConditionProfile>();
+            Renewal = new List<ConditionProfile>();
 			Recommends = new List<ConditionProfile>();
 			Corequisite = new List<ConditionProfile>();
 			//ConditionManifestOf = new List<OrganizationBase>();
@@ -42,7 +42,7 @@ namespace RA.Models.Json
 		public string Description { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-		public List<IdProperty> SubjectWebpage { get; set; } //URL
+		public string SubjectWebpage { get; set; } //URL
 
 
 		[JsonProperty( PropertyName = "ceterms:conditionManifestOf" )]
@@ -51,7 +51,10 @@ namespace RA.Models.Json
 		[JsonProperty( PropertyName = "ceterms:requires" )]
         public List<ConditionProfile> Requires { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:recommends" )]
+        [JsonProperty( PropertyName = "ceterms:renewal" )]
+        public List<ConditionProfile> Renewal { get; set; }
+
+        [JsonProperty( PropertyName = "ceterms:recommends" )]
 		public List<ConditionProfile> Recommends { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:entryCondition" )]

@@ -13,20 +13,20 @@ namespace RA.Models.Json
 		public static string classType = "ceterms:LearningOpportunityProfile";
 		public LearningOpportunityProfile()
         {
-            InLanguage = new List<string>();
+			Type = "ceterms:LearningOpportunityProfile";
+			InLanguage = new List<string>();
             Keyword = new List<string>();
-            SubjectWebpage = new List<IdProperty>();
-            AvailabilityListing = new List<IdProperty>();
+        
+            AvailabilityListing = new List<string>();
             Subject = new List<CredentialAlignmentObject>();
-            AvailableOnlineAt = new List<IdProperty>();
+            AvailableOnlineAt = new List<string>();
 			LearningMethodType = new List<CredentialAlignmentObject>();
 			DeliveryType = new List<CredentialAlignmentObject>();
             InstructionalProgramType = new List<CredentialAlignmentObject>();
             EstimatedDuration = new List<DurationProfile>();
             EstimatedCost = new List<CostProfile>();
-            CreditUnitType = new List<CredentialAlignmentObject>();
-            Type = "ceterms:LearningOpportunityProfile";
-			CodedNotation = new List<string>();
+            CreditUnitType = new CredentialAlignmentObject();
+            
             Requires = new List<ConditionProfile>();
             Corequisite = new List<ConditionProfile>();
             Recommends = new List<ConditionProfile>();
@@ -48,7 +48,7 @@ namespace RA.Models.Json
 			RevokedIn = null;
 
 			Jurisdiction = new List<JurisdictionProfile>();
-			AvailableAt = new List<Json.AvailableAt>();
+			AvailableAt = new List<Json.Place>();
 
 			AdvancedStandingFrom = new List<ConditionProfile>();
 			IsAdvancedStandingFor = new List<ConditionProfile>();
@@ -56,10 +56,15 @@ namespace RA.Models.Json
 			IsRecommendedFor = new List<ConditionProfile>();
 			IsRequiredFor = new List<ConditionProfile>();
 			PreparationFrom = new List<ConditionProfile>();
-            CommonConditions = new List<EntityBase>();
-            CommonCosts = new List<EntityBase>();
+
+            CommonConditions = new List<string>();
+            CommonCosts = new List<string>();
             FinancialAssistance = new List<Json.FinancialAlignmentObject>();
-        }
+
+			HasPart = new List<EntityBase>();
+			IsPartOf = new List<EntityBase>();
+			VersionIdentifier = new List<IdentifierValue>();
+		}
 
         [JsonProperty( PropertyName = "ceterms:name" )]
         public string Name { get; set; }
@@ -68,22 +73,24 @@ namespace RA.Models.Json
         public string Description { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:inLanguage" )]
-        public List<string> InLanguage { get; set; }
+		//public string InLanguage { get; set; }
+		public List<string> InLanguage { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:keyword" )]
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
         public List<string> Keyword { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:subject" )]
         public List<CredentialAlignmentObject> Subject { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-        public List<IdProperty> SubjectWebpage { get; set; } //URL
-
+        public string SubjectWebpage { get; set; } //URL
+		//public string SubjectWebpage { get; set; } //URL
 
 		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
-        public List<string> CodedNotation { get; set; }
+        public string CodedNotation { get; set; }
+		//public string CodedNotation { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:dateEffective" )]
+		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
         public string DateEffective { get; set; }
 
         /// <summary>
@@ -104,10 +111,10 @@ namespace RA.Models.Json
         public string VerificationMethodDescription { get; set; }
         
         [JsonProperty( PropertyName = "ceterms:availabilityListing" )]
-        public List<IdProperty> AvailabilityListing { get; set; } //URL
+        public List<string> AvailabilityListing { get; set; } //URL
 
         [JsonProperty( PropertyName = "ceterms:availableOnlineAt" )] //URL
-        public List<IdProperty> AvailableOnlineAt { get; set; }
+        public List<string> AvailableOnlineAt { get; set; }
 
 
 		[JsonProperty( PropertyName = "ceterms:learningMethodType" )]
@@ -130,7 +137,7 @@ namespace RA.Models.Json
         public string CreditHourType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:creditUnitType" )]
-        public List<CredentialAlignmentObject> CreditUnitType { get; set; }
+        public CredentialAlignmentObject CreditUnitType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:creditHourValue" )]
         public decimal CreditHourValue { get; set; }
@@ -147,6 +154,12 @@ namespace RA.Models.Json
 
 		[JsonProperty( PropertyName = "ceterms:teaches" )]
 		public List<CredentialAlignmentObject> Teaches { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:hasPart" )]
+		public List<EntityBase> HasPart { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:isPartOf" )]
+		public List<EntityBase> IsPartOf { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
 		public List<OrganizationBase> OwnedBy { get; set; }
@@ -202,10 +215,10 @@ namespace RA.Models.Json
         public List<ConditionProfile> EntryCondition { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:commonConditions" )]
-		public List<EntityBase> CommonConditions { get; set; }
+		public List<string> CommonConditions { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:commonCosts" )]
-		public List<EntityBase> CommonCosts { get; set; }
+		public List<string> CommonCosts { get; set; }
 
 
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
@@ -231,9 +244,13 @@ namespace RA.Models.Json
 		public List<ConditionProfile> IsRequiredFor { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:availableAt" )]
-		public List<AvailableAt> AvailableAt { get; set; }
+		public List<Place> AvailableAt { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:financialAssistance" )]
         public List<FinancialAlignmentObject> FinancialAssistance { get; set; }
-    }
+
+		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
+		public List<IdentifierValue> VersionIdentifier { get; set; }
+
+	}
 }

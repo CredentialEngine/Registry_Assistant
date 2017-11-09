@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 
 namespace RA.Models.Input
 {
-	public class AssessmentRequest
+	public class AssessmentRequest : BaseRequest
 	{
 		public AssessmentRequest()
 		{
@@ -18,13 +11,7 @@ namespace RA.Models.Input
 
 		public Assessment Assessment { get; set; }
 
-		public string APIKey { get; set; }
 
-		/// <summary>
-		/// Envelope Identifier
-		/// Currently required to update an existing document
-		/// </summary>
-		public string RegistryEnvelopeId { get; set; }
 	}
 	public class Assessment
     {
@@ -32,7 +19,7 @@ namespace RA.Models.Input
         {
             Subject = new List<string>();
             Keyword = new List<string>();
-			//SubjectWebpage = new List<string>();
+			
 			AssessmentMethodType = new List<string>();
 			CodedNotation = new List<string>();
 			AssessmentUseType = new List<string>();
@@ -68,7 +55,7 @@ namespace RA.Models.Input
 			AssessesCompetency = new List<CredentialAlignmentObject>();
 			//RequiresCompetency = new List<CredentialAlignmentObject>();
 
-			AvailableAt = new List<PostalAddress>();
+			AvailableAt = new List<Place>();
 			
 			AdvancedStandingFrom = new List<Connections>();
 			IsAdvancedStandingFor = new List<Connections>();
@@ -79,10 +66,12 @@ namespace RA.Models.Input
 
 			ExternalResearch = new List<string>();
 			InLanguage = new List<string>();
-            CommonConditions = new List<EntityReference>();
-            CommonCosts = new List<EntityReference>();
+            CommonConditions = new List<string>();
+            CommonCosts = new List<string>();
             FinancialAssistance = new List<Input.FinancialAlignmentObject>();
-        }
+			VersionIdentifier = new List<IdentifierValue>();
+
+		}
 
 
 
@@ -181,9 +170,10 @@ namespace RA.Models.Input
 		//required competencies are handled with condition profiles
 		//public List<CredentialAlignmentObject> RequiresCompetency { get; set; }
 
-		public List<PostalAddress> AvailableAt { get; set; }
-        public List<EntityReference> CommonCosts { get; set; }
-        public List<EntityReference> CommonConditions { get; set; }
+		public List<Place> AvailableAt { get; set; }
+        public List<string> CommonCosts { get; set; }
+        public List<string> CommonConditions { get; set; }
         public List<FinancialAlignmentObject> FinancialAssistance { get; set; }
-    }
+		public List<IdentifierValue> VersionIdentifier { get; set; }
+	}
 }

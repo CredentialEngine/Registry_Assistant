@@ -26,8 +26,9 @@ namespace RA.Models.Input
         public string Description { get; set; }
 		public string SubjectWebpage { get; set; }
 		public string DateEffective { get; set; }
-        public List<string> ExternalInputType { get; set; }
-        public string ProcessFrequency { get; set; }
+		//public List<CredentialAlignmentObject> ExternalInputType { get; set; }
+		public List<string> ExternalInputType { get; set; }
+		public string ProcessFrequency { get; set; }
         public OrganizationReference ProcessingAgent { get; set; }
         public string ProcessMethod { get; set; }
         public string ProcessMethodDescription { get; set; }

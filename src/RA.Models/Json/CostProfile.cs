@@ -28,7 +28,7 @@ namespace RA.Models.Json
         public string Type { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:costDetails" )]
-		public IdProperty CostDetails { get; set; }
+		public string CostDetails { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:currency" )]
 		public string Currency { get; set; }

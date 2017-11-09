@@ -13,21 +13,25 @@ namespace RA.Models.Json
 		public static string classType = "ceterms:AssessmentProfile";
 		public AssessmentProfile()
         {
-            Keyword = new List<string>();
-            SubjectWebpage = new List<IdProperty>();
-            AvailabilityListing = new List<IdProperty>();
-            AvailableOnlineAt = new List<IdProperty>();
-            DeliveryType = new List<CredentialAlignmentObject>();
+			Type = "ceterms:AssessmentProfile";
+
+			Keyword = new List<string>();
+
+            AvailabilityListing = new List<string>();
+            AvailableOnlineAt = new List<string>();
+			AvailableAt = new List<Json.Place>();
+			DeliveryType = new List<CredentialAlignmentObject>();
             AssessmentMethodType = new List<CredentialAlignmentObject>();
             EstimatedCost = new List<CostProfile>();
             EstimatedDuration = new List<DurationProfile>();
             ScoringMethodType = new List<CredentialAlignmentObject>();
-            Type = "ceterms:AssessmentProfile";
-            Requires = new List<ConditionProfile>();
+			InstructionalProgramType = new List<CredentialAlignmentObject>();
+
+			 Requires = new List<ConditionProfile>();
             Corequisite = new List<ConditionProfile>();
             Recommends = new List<ConditionProfile>();
             EntryCondition = new List<ConditionProfile>();
-			CreditUnitType = new List<CredentialAlignmentObject>();
+			CreditUnitType = new CredentialAlignmentObject();
 			Assesses = new List<CredentialAlignmentObject>();
 			OwnedBy = null;
 			AccreditedBy = null;
@@ -54,57 +58,62 @@ namespace RA.Models.Json
 			IsRequiredFor = new List<ConditionProfile>();
 			PreparationFrom = new List<ConditionProfile>();
 			Jurisdiction = new List<JurisdictionProfile>();
-            ExternalResearch = new List<IdProperty>();
-			AvailableAt = new List<Json.AvailableAt>();
-            CommonConditions = new List<EntityBase>();
-            CommonCosts = new List<EntityBase>();
+            ExternalResearch = new List<string>();
+			
+            CommonConditions = new List<string>();
+            CommonCosts = new List<string>();
             FinancialAssistance = new List<FinancialAlignmentObject>();
-        }
+			InstructionalProgramType = new List<CredentialAlignmentObject>();
+			VersionIdentifier = new List<IdentifierValue>();
+		}
 
-        [JsonProperty( PropertyName = "ceterms:name" )]
+		/// <summary>
+		/// object type
+		/// </summary>
+		[JsonProperty( "@type" )]
+		public string Type { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:name" )]
         public string Name { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:description" )]
         public string Description { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:inLanguage" )]
-        public List<string> InLanguage { get; set; }
+		//public string InLanguage { get; set; }
+		public List<string> InLanguage { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:keyword" )]
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
         public List<string> Keyword { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:subject" )]
         public List<CredentialAlignmentObject> Subject { get; set; } 
 
-        [JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-        public List<IdProperty> SubjectWebpage { get; set; } //URL
+		//*** pending schema changes
 
-        [JsonProperty( PropertyName = "ceterms:assessmentMethodType" )]
+        [JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
+        public string SubjectWebpage { get; set; } //URL
+
+		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
+		public string CodedNotation { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:assessmentMethodType" )]
         public List<CredentialAlignmentObject> AssessmentMethodType { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:assesses" )]
 		public List<CredentialAlignmentObject> Assesses { get; set; }
 
 
-		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
-        public List<string> CodedNotation { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:dateEffective" )]
+		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
         public string DateEffective { get; set; }
 
-        /// <summary>
-        /// Need a custom mapping to @type based on input value
-        /// ceterms:CredentialOrganization, oR
-        /// ceterms:QACredentialOrganization
-        /// </summary>
-        [JsonProperty( "@type" )]
-        public string Type { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:ctid" )]
         public string Ctid { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:assessmentExample" )] //URL
-        public IdProperty AssessmentExample { get; set; }
+        public string AssessmentExample { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:assessmentExampleDescription" )]
         public string AssessmentExampleDescription { get; set; }
@@ -116,17 +125,17 @@ namespace RA.Models.Json
         public List<CredentialAlignmentObject> AssessmentUseType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:availabilityListing" )]
-        public List<IdProperty> AvailabilityListing { get; set; } //URL
+        public List<string> AvailabilityListing { get; set; } //URL
 
         [JsonProperty( PropertyName = "ceterms:processStandards" )]
-        public IdProperty ProcessStandards { get; set; }
+        public string ProcessStandards { get; set; }
 
         [JsonProperty( "@id" )]
         public string CtdlId { get; set; }
 
 
         [JsonProperty( PropertyName = "ceterms:availableOnlineAt" )] //URL
-        public List<IdProperty> AvailableOnlineAt { get; set; }
+        public List<string> AvailableOnlineAt { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:deliveryType" )]
         public List<CredentialAlignmentObject> DeliveryType { get; set; }
@@ -134,12 +143,16 @@ namespace RA.Models.Json
 
         [JsonProperty( PropertyName = "ceterms:isProctored", DefaultValueHandling = DefaultValueHandling.Include )]
         public bool? IsProctored { get; set; }
+
         [JsonProperty( PropertyName = "ceterms:hasGroupEvaluation", DefaultValueHandling = DefaultValueHandling.Include )]
         public bool? HasGroupEvaluation { get; set; }
+
         [JsonProperty( PropertyName = "ceterms:hasGroupParticipation", DefaultValueHandling = DefaultValueHandling.Include )]
         public bool? HasGroupParticipation { get; set; }
+
         [JsonProperty( PropertyName = "ceterms:deliveryTypeDescription" )]
         public string DeliveryTypeDescription { get; set; }
+
         [JsonProperty( PropertyName = "ceterms:processStandardsDescription" )]
         public string ProcessStandardsDescription { get; set; }
 
@@ -152,7 +165,7 @@ namespace RA.Models.Json
         [JsonProperty( PropertyName = "ceterms:scoringMethodDescription" )]
         public string ScoringMethodDescription { get; set; }
         [JsonProperty( PropertyName = "ceterms:scoringMethodExample" )]
-        public IdProperty ScoringMethodExample { get; set; }
+        public string ScoringMethodExample { get; set; }
         [JsonProperty( PropertyName = "ceterms:scoringMethodExampleDescription" )]
         public string ScoringMethodExampleDescription { get; set; }
         [JsonProperty( PropertyName = "ceterms:scoringMethodType" )]
@@ -166,7 +179,7 @@ namespace RA.Models.Json
         public string CreditHourType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:creditUnitType" )]
-        public List<CredentialAlignmentObject> CreditUnitType { get; set; }
+        public CredentialAlignmentObject CreditUnitType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:creditHourValue" )]
         public decimal CreditHourValue { get; set; }
@@ -227,10 +240,10 @@ namespace RA.Models.Json
         public List<ConditionProfile> EntryCondition { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:commonConditions" )]
-		public List<EntityBase> CommonConditions { get; set; }
+		public List<string> CommonConditions { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:commonCosts" )]
-		public List<EntityBase> CommonCosts { get; set; }
+		public List<string> CommonCosts { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:administrationProcess" )]
         public List<ProcessProfile> AdministrationProcess { get; set; }
@@ -245,7 +258,7 @@ namespace RA.Models.Json
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:externalResearch" )]
-        public List<IdProperty> ExternalResearch { get; set; }
+        public List<string> ExternalResearch { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:advancedStandingFrom" )]
 		public List<ConditionProfile> AdvancedStandingFrom { get; set; }
@@ -266,10 +279,14 @@ namespace RA.Models.Json
 		public List<ConditionProfile> IsRequiredFor { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:availableAt" )]
-		public List<AvailableAt> AvailableAt { get; set; }
+		public List<Place> AvailableAt { get; set; }
         
         [JsonProperty( PropertyName = "ceterms:financialAssistance" )]
         public List<FinancialAlignmentObject> FinancialAssistance { get; set; }
-    }
+
+
+		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
+		public List<IdentifierValue> VersionIdentifier { get; set; }
+	}
 }
 

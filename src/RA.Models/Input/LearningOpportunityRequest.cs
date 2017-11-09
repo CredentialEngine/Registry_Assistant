@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
-	public class LearningOpportunityRequest
+	public class LearningOpportunityRequest : BaseRequest
 	{
 		public LearningOpportunityRequest()
 		{
@@ -15,17 +15,6 @@ namespace RA.Models.Input
 
 		public LearningOpportunity LearningOpportunity { get; set; }
 
-		/// <summary>
-		/// API key for the requesting partner - required for publishing
-		/// May ultimately be passed in the header
-		/// </summary>
-		public string APIKey { get; set; }
-
-		/// <summary>
-		/// Envelope Identifier
-		/// Currently required to update an existing document
-		/// </summary>
-		public string RegistryEnvelopeId { get; set; }
 	}
 
 	public class LearningOpportunity
@@ -39,12 +28,12 @@ namespace RA.Models.Input
 			Subject = new List<string>();
 			Keyword = new List<string>();
             DeliveryType = new List<string>();
-            InstructionalProgramType = new List<string>();
+            InstructionalProgramType = new List<FrameworkItem>();
 			LearningMethodType = new List<string>();
 			EstimatedCosts = new List<CostProfile>();
 			Jurisdiction = new List<Jurisdiction>();
 			//Region = new List<GeoCoordinates>();
-            //SubjectWebpage = new List<string>();
+  
             AvailabilityListing = new List<string>();
             AvailableOnlineAt = new List<string>();
 			CodedNotation = new List<string>();
@@ -73,11 +62,15 @@ namespace RA.Models.Input
 			IsRecommendedFor = new List<Connections>();
 			IsRequiredFor = new List<Connections>();
 			InLanguage = new List<string>();
-			AvailableAt = new List<PostalAddress>();
-            CommonConditions = new List<EntityReference>();
-            CommonCosts = new List<EntityReference>();
+			AvailableAt = new List<Place>();
+            CommonConditions = new List<string>();
+            CommonCosts = new List<string>();
             FinancialAssistance = new List<Input.FinancialAlignmentObject>();
-        }
+
+			HasPart = new List<EntityReference>();
+			IsPartOfLearningOpportunity = new List<EntityReference>();
+			VersionIdentifier = new List<IdentifierValue>();
+		}
 
 
 
@@ -100,7 +93,7 @@ namespace RA.Models.Input
 		#region *** Required if available Properties ***
 		public List<string> AvailableOnlineAt { get; set; } //URL
 		public List<string> AvailabilityListing { get; set; } //URL
-		public List<PostalAddress> AvailableAt { get; set; }
+		public List<Place> AvailableAt { get; set; }
 		#endregion
 
 		#region *** Recommended Properties ***
@@ -123,8 +116,8 @@ namespace RA.Models.Input
 		public List<string> LearningMethodType { get; set; }
 		public List<string> DeliveryType { get; set; }
         public string DeliveryTypeDescription { get; set; }
-        public List<string> InstructionalProgramType { get; set; }
-        public List<DurationProfile> EstimatedDuration { get; set; }
+		public List<FrameworkItem> InstructionalProgramType { get; set; }
+		public List<DurationProfile> EstimatedDuration { get; set; }
 
         public string CreditHourType { get; set; }
         public string CreditUnitType { get; set; }
@@ -163,9 +156,20 @@ namespace RA.Models.Input
 		public List<Connections> IsRecommendedFor { get; set; }
 		public List<Connections> IsRequiredFor { get; set; }
 
+		/// <summary>
+		/// List of 'child' learning opps
+		/// </summary>
+		public List<EntityReference> HasPart { get; set; }
 
-        public List<EntityReference> CommonCosts { get; set; }
-        public List<EntityReference> CommonConditions { get; set; }
+		/// <summary>
+		/// Not sure of best use. Should be initially limited to lopps?
+		/// </summary>
+		public List<EntityReference> IsPartOfLearningOpportunity { get; set; }
+
+		public List<string> CommonCosts { get; set; }
+        public List<string> CommonConditions { get; set; }
         public List<FinancialAlignmentObject> FinancialAssistance { get; set; }
-    }
+
+		public List<IdentifierValue> VersionIdentifier { get; set; }
+	}
 }

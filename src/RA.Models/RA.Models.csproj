@@ -35,10 +35,22 @@
     <DocumentationFile>App_Data/XmlDocument.xml</DocumentationFile>
     <NoWarn>CS0168;CS0219</NoWarn>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Azure|AnyCPU'">
+    <OutputPath>bin\Azure\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>App_Data/XmlDocument.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <WarningLevel>3</WarningLevel>
+    <NoWarn>CS0168;CS0219</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -55,21 +67,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="input\AssessmentRequest.cs" />
-    <Compile Include="input\ConditionManifestRequest.cs" />
-    <Compile Include="input\CtdlAttributes.cs" />
-    <Compile Include="input\profiles\Address.cs" />
-    <Compile Include="input\profiles\ConditionProfile.cs" />
-    <Compile Include="input\profiles\CostProfile.cs" />
-    <Compile Include="input\profiles\CredentialAlignmentObject.cs" />
-    <Compile Include="input\profiles\DurationProfile.cs" />
-    <Compile Include="input\profiles\FinancialAlignmentObject.cs" />
-    <Compile Include="input\profiles\FrameworkItem.cs" />
-    <Compile Include="input\profiles\Jurisdiction.cs" />
-    <Compile Include="input\profiles\OrganizationReference.cs" />
-    <Compile Include="input\profiles\ProcessProfile.cs" />
-    <Compile Include="input\profiles\VerificationServiceProfile.cs" />
-    <Compile Include="input\CostManifestRequest.cs" />
+    <Compile Include="Input\AssessmentRequest.cs" />
+    <Compile Include="Input\BaseRequest.cs" />
+    <Compile Include="Input\ConditionManifestRequest.cs" />
+    <Compile Include="Input\CostManifestRequest.cs" />
+    <Compile Include="Input\CredentialRequest.cs" />
+    <Compile Include="Input\CtdlAttributes.cs" />
+    <Compile Include="Input\LearningOpportunityRequest.cs" />
+    <Compile Include="Input\OrganizationRequest.cs" />
+    <Compile Include="Input\profiles\Address.cs" />
+    <Compile Include="Input\profiles\ConditionProfile.cs" />
+    <Compile Include="Input\profiles\CostProfile.cs" />
+    <Compile Include="Input\profiles\CredentialAlignmentObject.cs" />
+    <Compile Include="Input\profiles\DurationProfile.cs" />
+    <Compile Include="Input\profiles\FinancialAlignmentObject.cs" />
+    <Compile Include="Input\profiles\FrameworkItem.cs" />
+    <Compile Include="Input\profiles\HelperClasses.cs" />
+    <Compile Include="Input\profiles\Jurisdiction.cs" />
+    <Compile Include="Input\profiles\OrganizationReference.cs" />
+    <Compile Include="Input\profiles\Place.cs" />
+    <Compile Include="Input\profiles\ProcessProfile.cs" />
+    <Compile Include="Input\profiles\VerificationServiceProfile.cs" />
     <Compile Include="Json\Address.cs" />
     <Compile Include="Json\AvailableAt.cs" />
     <Compile Include="Json\ConditionManifest.cs" />
@@ -78,13 +96,9 @@
     <Compile Include="Json\CostManifest.cs" />
     <Compile Include="Json\CostProfile.cs" />
     <Compile Include="Json\Credential.cs" />
-    <Compile Include="Input\OrganizationRequest.cs" />
-    <Compile Include="Input\CredentialRequest.cs" />
-    <Compile Include="Input\LearningOpportunityRequest.cs" />
     <Compile Include="Json\Agent.cs" />
     <Compile Include="Json\AssessmentProfile.cs" />
     <Compile Include="Json\CredentialAlignmentObject.cs" />
-    <Compile Include="Json\DirectCostType.cs" />
     <Compile Include="Json\DurationProfile.cs" />
     <Compile Include="Json\FinancialAlignmentObject.cs" />
     <Compile Include="Json\HelpersClass.cs" />
@@ -92,6 +106,7 @@
     <Compile Include="Json\JurisdictionProfile.cs" />
     <Compile Include="Json\LearningOpportunityProfile.cs" />
     <Compile Include="Json\OrganizationBase.cs" />
+    <Compile Include="Json\Place.cs" />
     <Compile Include="Json\ProcessProfile.cs" />
     <Compile Include="Json\VerificationServiceProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,7 +115,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\XmlDocument.xml">

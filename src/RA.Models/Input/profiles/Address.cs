@@ -24,34 +24,6 @@ namespace RA.Models.Input
 		public List<ContactPoint> ContactPoint { get; set; }
 	}
 
-	public class ContactPoint
-	{
-		public ContactPoint()
-		{
-			PhoneNumbers = new List<string>();
-			Emails = new List<string>();
-			SocialMediaPages = new List<string>();
-            ContactOption = new List<string>();
-		}
 
-		public string Name { get; set; }
-
-		/// <summary>
-		/// Specification of the type of contact
-		/// </summary>
-		public string ContactType { get; set; }
-
-		/// <summary>
-		/// An option available on this contact point.
-		/// For example, a toll-free number or support for hearing-impaired callers.
-		/// </summary>
-		public List<string> ContactOption { get; set; }
-
-		public List<string> PhoneNumbers { get; set; }
-		public List<string> Emails { get; set; }
-		public List<string> SocialMediaPages { get; set; }
-
-	
-	}
 
 }

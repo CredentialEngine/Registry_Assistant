@@ -32,6 +32,18 @@ namespace RA.Models.Json
 
 	}
 
+	public class LanguageString
+	{
+		[JsonProperty( "en" )]
+		public string Value { get; set; }
+
+		[JsonProperty( "es" )]
+		public string esValue { get; set; }
+
+		[JsonProperty( "de" )]
+		public string deValue { get; set; }
+	}
+
 	public class IdentifierValue
 	{
 		public IdentifierValue()
@@ -40,7 +52,7 @@ namespace RA.Models.Json
 		}
 
 		[JsonProperty( "@type" )]
-		public new string Type { get; set; }
+		public string Type { get; set; }
 
 		[JsonProperty( "ceterms:name" )]
 		public string Name { get; set; }
@@ -54,5 +66,5 @@ namespace RA.Models.Json
 		[JsonProperty( "ceterms:identifierValueCode" )]
 		public string IdentifierValueCode { get; set; }
 	}
-	
+
 }

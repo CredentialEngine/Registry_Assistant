@@ -7,7 +7,7 @@ using static System.Net.WebRequestMethods;
 
 namespace RA.Models.Input
 {
-	public class ConditionManifestRequest
+	public class ConditionManifestRequest : BaseRequest
 	{
 		public ConditionManifestRequest()
 		{
@@ -23,17 +23,7 @@ namespace RA.Models.Input
 
 		public ConditionManifest ConditionManifest { get; set; }
 
-		/// <summary>
-		/// API key for the requesting partner - required for publishing
-		/// May ultimately be passed in the header
-		/// </summary>
-		public string APIKey { get; set; }
 
-		/// <summary>
-		/// Envelope Identifier
-		/// Currently required to update an existing document
-		/// </summary>
-		public string RegistryEnvelopeId { get; set; }
 	}
 
 	public class ConditionManifest
@@ -42,7 +32,8 @@ namespace RA.Models.Input
 		{
             EntryConditions = new List<ConditionProfile>();
 			RequiredConditions = new List<ConditionProfile>();
-			RecommendedConditions = new List<ConditionProfile>();
+            RenewedConditions = new List<ConditionProfile>();
+            RecommendedConditions = new List<ConditionProfile>();
 			CorequisiteConditions = new List<ConditionProfile>();
 			OwningOrganization = new OrganizationReference();
 		}
@@ -61,10 +52,16 @@ namespace RA.Models.Input
 		/// Required condition profiles
 		/// </summary>
 		public List<ConditionProfile> RequiredConditions { get; set; }
-		/// <summary>
-		/// Recommended condition profiles
-		/// </summary>
-		public List<ConditionProfile> RecommendedConditions { get; set; }
+        
+        /// <summary>
+        /// Renewed condition profiles
+        /// </summary>
+        public List<ConditionProfile> RenewedConditions { get; set; }
+
+        /// <summary>
+        /// Recommended condition profiles
+        /// </summary>
+        public List<ConditionProfile> RecommendedConditions { get; set; }
 
 		/// <summary>
 		/// Entry Conditions condition profiles

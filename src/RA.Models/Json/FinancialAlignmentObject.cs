@@ -14,7 +14,7 @@ namespace RA.Models.Json
     {
         public FinancialAlignmentObject()
         {
-            CodedNotation = new List<string>();
+            CodedNotation = null;
             Type = "ceterms:FinancialAlignmentObject";
         }
         [JsonProperty( "@type" )]
@@ -24,10 +24,11 @@ namespace RA.Models.Json
         public string AlignmentType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:codedNotation" )]
-        public List<string> CodedNotation { get; set; }
+        public string CodedNotation { get; set; }
+		//public List<string> CodedNotation { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:targetNode" )]
-        public IdProperty TargetNode { get; set; }
+		[JsonProperty( PropertyName = "ceterms:targetNode" )]
+        public string TargetNode { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:targetNodeDescription" )]
         public string TargetNodeDescription { get; set; }
@@ -36,7 +37,7 @@ namespace RA.Models.Json
         public string TargetNodeName { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:framework" )]
-        public IdProperty Framework { get; set; }
+        public string Framework { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:frameworkName" )]
         public string FrameworkName { get; set; }

@@ -17,26 +17,27 @@ namespace RA.Models.Json
 
 		public Agent()
         {
-            Industries = new List<CredentialAlignmentObject>();
-            Keyword = new List<string>();
-            SubjectWebpage = new List<IdProperty>();
-           // MissionAndGoalsStatement = new List<IdProperty>();
-            Image = new List<IdProperty>();
+			IndustryType = new List<CredentialAlignmentObject>();
+			Naics = new List<string>();
+			Keyword = new List<string>();
+			SubjectWebpage = null;//new List<string>();
+           // MissionAndGoalsStatement = new List<string>();
+            //Image = new List<string>();
             AgentType = new List<CredentialAlignmentObject>();
             AgentSectorType = new List<CredentialAlignmentObject>();
-            //AgentPurpose = new List<IdProperty>();
+            //AgentPurpose = new List<string>();
             ServiceType = new List<CredentialAlignmentObject>();
-            AvailabilityListing = new List<IdProperty>();
+            AvailabilityListing = new List<string>();
 			AlternativeIdentifier = new List<IdentifierValue>();
 			Type = "ceterms:CredentialOrganization";
 
-			SameAs = new List<IdProperty>();
-			SocialMedia = new List<IdProperty>();
-            Address = new List<Address>();
-            ContactPoint = new List<Json.ContactPoint>();
+			SameAs = new List<string>();
+			SocialMedia = new List<string>();
+            Address = new List<Place>();
+            //ContactPoint = new List<Json.ContactPoint>();
 
-			HasConditionManifest = new List<EntityBase>();
-			HasCostManifest = new List<EntityBase>();
+			HasConditionManifest = new List<string>();
+			HasCostManifest = new List<string>();
 
 			AccreditedBy = null;
             ApprovedBy = null;
@@ -55,7 +56,9 @@ namespace RA.Models.Json
             RecognizedIn = null;
             RegulatedIn = null;
             VerificationServiceProfiles = new List<VerificationServiceProfile>();
-            Department = new List<OrganizationBase>();
+
+			ParentOrganization = null;
+			Department = new List<OrganizationBase>();
             SubOrganization = new List<OrganizationBase>();
 			Jurisdiction = new List<JurisdictionProfile>();
         }
@@ -83,9 +86,9 @@ namespace RA.Models.Json
 		public string Ctid { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-		public List<IdProperty> SubjectWebpage { get; set; } //URL
+		public string SubjectWebpage { get; set; } //URL
 
-        [JsonProperty( PropertyName = "ceterms:accreditedIn" )]
+		[JsonProperty( PropertyName = "ceterms:accreditedIn" )]
         public List<JurisdictionProfile> AccreditedIn { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:approvedIn" )]
@@ -98,14 +101,14 @@ namespace RA.Models.Json
         public List<JurisdictionProfile> RegulatedIn { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:sameAs" )]
-		public List<IdProperty> SameAs { get; set; }
+		public List<string> SameAs { get; set; }
 
 
 		[JsonProperty( PropertyName = "ceterms:socialMedia" )]
-		public List<IdProperty> SocialMedia { get; set; }
+		public List<string> SocialMedia { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:image" )]
-		public List<IdProperty> Image { get; set; } //Image URL
+		public string Image { get; set; } //Image URL
 
 		[JsonProperty( PropertyName = "ceterms:foundingDate" )]
 		public string FoundingDate { get; set; }
@@ -119,23 +122,25 @@ namespace RA.Models.Json
 
 
 		[JsonProperty( PropertyName = "ceterms:industryType" )]
-        public List<CredentialAlignmentObject> Industries { get; set; }
+        public List<CredentialAlignmentObject> IndustryType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:keyword" )]
+		[JsonProperty( PropertyName = "ceterms:naics" )]
+		public List<string> Naics { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
         public List<string> Keyword { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternativeIdentifier" )]
 		public List<IdentifierValue> AlternativeIdentifier { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:missionAndGoalsStatement" )]
-		public IdProperty MissionAndGoalsStatement { get; set; }
-		//public List<IdProperty> MissionAndGoalsStatement { get; set; }
+		public string MissionAndGoalsStatement { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:missionAndGoalsStatementDescription" )]
 		public string MissionAndGoalsStatementDescription { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:agentPurpose" )]
-		public IdProperty AgentPurpose { get; set; }
+		public string AgentPurpose { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:agentPurposeDescription" )]
 		public string AgentPurposeDescription { get; set; }
@@ -159,17 +164,17 @@ namespace RA.Models.Json
 
 
         [JsonProperty( PropertyName = "ceterms:availabilityListing" )]
-        public List<IdProperty> AvailabilityListing { get; set; }
+        public List<string> AvailabilityListing { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:serviceType" )]
         public List<CredentialAlignmentObject> ServiceType { get; set; }
 
         //public Jurisdiction Jurisdiction { get; set; }
         [JsonProperty( PropertyName = "ceterms:address" )]
-        public  List<Address> Address { get; set; }
+        public  List<Place> Address { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:targetContactPoint" )]
-        public List<ContactPoint> ContactPoint { get; set; }
+        //[JsonProperty( PropertyName = "ceterms:targetContactPoint" )]
+        //public List<ContactPoint> ContactPoint { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
@@ -206,10 +211,10 @@ namespace RA.Models.Json
 		public List<EntityBase> Recognizes { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:hasConditionManifest" )]
-		public List<EntityBase> HasConditionManifest { get; set; }
+		public List<string> HasConditionManifest { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:hasCostManifest" )]
-		public List<EntityBase> HasCostManifest { get; set; }
+		public List<string> HasCostManifest { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:hasVerificationService" )]
         public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; }
@@ -235,7 +240,10 @@ namespace RA.Models.Json
         [JsonProperty( PropertyName = "ceterms:revocationProcess" )]
         public List<ProcessProfile> RevocationProcess { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:department" )]
+		[JsonProperty( PropertyName = "ceterms:parentOrganization" )]
+		public List<OrganizationBase> ParentOrganization { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:department" )]
         public List<OrganizationBase> Department { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:subOrganization" )]

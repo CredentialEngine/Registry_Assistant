@@ -19,7 +19,7 @@ namespace RA.Models.Json
 			ProcessMethod = null;
 			ProcessStandards = null;
 			ScoringMethodExample = null;
-			SubjectWebpage = new List<IdProperty>();
+			SubjectWebpage = null;
 
 			TargetAssessment = new List<EntityBase>();
 			TargetCredential = new List<EntityBase>();
@@ -53,13 +53,13 @@ namespace RA.Models.Json
         public List<OrganizationBase> ProcessingAgent { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:processMethod" )]
-        public IdProperty ProcessMethod { get; set; }
+        public string ProcessMethod { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:processMethodDescription" )]
         public string ProcessMethodDescription { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:processStandards", NullValueHandling = NullValueHandling.Ignore )]
-        public IdProperty ProcessStandards { get; set; }
+        public string ProcessStandards { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:processStandardsDescription" )]
         public string ProcessStandardsDescription { get; set; }
@@ -68,16 +68,16 @@ namespace RA.Models.Json
         public string ScoringMethodDescription { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:scoringMethodExample" )]
-        public IdProperty ScoringMethodExample { get; set; }
+        public string ScoringMethodExample { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:scoringMethodExampleDescription" )]
         public string ScoringMethodExampleDescription { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-        public List<IdProperty> SubjectWebpage { get; set; }
+		public string SubjectWebpage { get; set; } //URL
 
 
-        [JsonProperty( PropertyName = "ceterms:verificationMethodDescription" )]
+		[JsonProperty( PropertyName = "ceterms:verificationMethodDescription" )]
         public string VerificationMethodDescription { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:jurisdiction" )]

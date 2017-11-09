@@ -13,7 +13,7 @@ namespace RA.Models.Json
         {
             PhoneNumbers = new List<string>();
             Emails = new List<string>();
-            SocialMediaPages = new List<IdProperty>();
+            SocialMediaPages = new List<string>();
             Type = "ceterms:ContactPoint";
             ContactOption = new List<string>();
         }
@@ -44,6 +44,6 @@ namespace RA.Models.Json
         public List<string> Emails { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:socialMedia" )]
-        public List<IdProperty> SocialMediaPages { get; set; }
+        public List<string> SocialMediaPages { get; set; }
     }
 }

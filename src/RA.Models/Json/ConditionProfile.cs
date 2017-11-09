@@ -12,16 +12,17 @@ namespace RA.Models.Json
         public ConditionProfile()
         {
 			AssertedBy = null;
+			//AssertedByList = new List<OrganizationBase>();
 			// AssertedBy = new List<OrganizationBase>();
 			EstimatedCosts = new List<CostProfile>();
             ResidentOf = new List<JurisdictionProfile>();
-            SubjectWebpage = new List<IdProperty>();
+			SubjectWebpage = null; 
             AudienceLevelType = new List<CredentialAlignmentObject>();
             AudienceType = new List<CredentialAlignmentObject>();
             //AudienceLevel = new List<string>();
             Condition = new List<string>();
 			SubmissionOf = new List<string>();
-			CreditUnitType = new List<CredentialAlignmentObject>();
+			CreditUnitType = new CredentialAlignmentObject();
             //ApplicableAudienceType = new List<string>();
             AlternativeCondition = new List<ConditionProfile>();
             TargetAssessment = new List<EntityBase>();
@@ -45,7 +46,7 @@ namespace RA.Models.Json
         public string Description { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-		public List<IdProperty> SubjectWebpage { get; set; }
+		public string SubjectWebpage { get; set; }
 
 		//TODO - alter from enumeration
 		[JsonProperty( PropertyName = "ceterms:audienceLevelType" )]
@@ -74,6 +75,15 @@ namespace RA.Models.Json
 		//public OrganizationBase AssertedBy { get; set; }
 		//public List<OrganizationBase> AssertedBy { get; set; }
 
+		//[JsonIgnore]
+		//public List<OrganizationBase> AssertedByList {
+		//	get;
+		//	set
+		//	{
+		//		AssertedBy = value;
+		//	}
+		//}
+
 		[JsonProperty( PropertyName = "ceterms:experience" )]
         public string Experience { get; set; }
 
@@ -93,7 +103,7 @@ namespace RA.Models.Json
         public decimal CreditHourValue { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:creditUnitType" )]
-        public List<CredentialAlignmentObject> CreditUnitType { get; set; } //Used for publishing
+        public CredentialAlignmentObject CreditUnitType { get; set; } //Used for publishing
 
         [JsonProperty( PropertyName = "ceterms:creditUnitTypeDescription" )]
         public string CreditUnitTypeDescription { get; set; }

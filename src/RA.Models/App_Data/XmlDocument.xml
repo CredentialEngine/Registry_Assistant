@@ -4,33 +4,32 @@
         <name>RA.Models</name>
     </assembly>
     <members>
-        <member name="P:RA.Models.Input.AssessmentRequest.RegistryEnvelopeId">
-            <summary>
-            Envelope Identifier
-            Currently required to update an existing document
-            </summary>
-        </member>
         <member name="P:RA.Models.Input.Assessment.OwnedBy">
             <summary>
             Organization that owns this resource
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.BaseRequest.APIKey">
+            <summary>
+            quite likely will be passed in the header????
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.BaseRequest.RegistryEnvelopeId">
+            <summary>
+            Envelope Identifier
+            Optional property, used where the publishing entity wishes to store the identifier.
+            Contains registry envelope identifier for a document in the registy. It should be empty for a new document. 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.BaseRequest.Submitter">
+            <summary>
+            Person/Organization making the request
             </summary>
         </member>
         <member name="P:RA.Models.Input.ConditionManifestRequest.ConditionManifest">
             <summary>
             consider allowing multiple?
             Probably too many complications
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.ConditionManifestRequest.APIKey">
-            <summary>
-            API key for the requesting partner - required for publishing
-            May ultimately be passed in the header
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.ConditionManifestRequest.RegistryEnvelopeId">
-            <summary>
-            Envelope Identifier
-            Currently required to update an existing document
             </summary>
         </member>
         <member name="P:RA.Models.Input.ConditionManifest.OwningOrganization">
@@ -61,6 +60,195 @@
             </summary>
             <see cref="!:http://purl.org/ctdl/terms/corequisite"/>
             <remarks>Includes dual (double) degrees that cannot be earned independently of each other.</remarks>
+        </member>
+        <member name="P:RA.Models.Input.CostManifest.CostDetails">
+            <summary>
+            URL for cost details
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CostManifest.OwningOrganization">
+            <summary>
+            Organization that owns this credential
+            </summary>
+        </member>
+        <member name="T:RA.Models.Input.CredentialRequest">
+            <summary>
+            Class used with a CredentiAL format or publish request
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CredentialRequest.Credential">
+            <summary>
+            Credential Input Class
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.Name">
+            <summary>
+            Name of this credential
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.CredentialType">
+            <summary>
+            The credential type as defined in CTDL
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.OwnedBy">
+            <summary>
+            Organization that owns this credential
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.Ctid">
+            <summary>
+            CTID - unique identifier
+            If not provided, will be set to ce-UUID
+            ex: ce-F22CA1DC-2D2E-49C0-9E72-0457AD348873
+            It will be the primary key for retrieving this entity from the registry. 
+            Also it must be provided 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.SubjectWebpage">
+            <summary>
+            SubjectWebpage URL
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.Image">
+            <summary>
+            Image URL
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.AvailableOnlineAt">
+            <summary>
+            AvailableOnlineAt URL
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.AccreditedBy">
+            <summary>
+            could use general input or specific
+            general has more opportunity for errors
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.JurisdictionAssertions">
+            <summary>
+            Handling assertions in jurisdictions
+            The current approach is to use a one record per asserting organization. The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.AvailabilityListing">
+            <summary>
+            AvailabilityListing URL
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.Requires">
+            <summary>
+            Container for all condition profiles for entity
+            </summary>        
+        </member>
+        <member name="T:RA.Models.Input.RevocationProfile">
+            <summary>
+            Revocation Profile
+            The conditions and methods by which a credential can be removed from a holder.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.LearningOpportunity.OwnedBy">
+            <summary>
+            Organization that owns this resource
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.LearningOpportunity.HasPart">
+            <summary>
+            List of 'child' learning opps
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.LearningOpportunity.IsPartOfLearningOpportunity">
+            <summary>
+            Not sure of best use. Should be initially limited to lopps?
+            </summary>
+        </member>
+        <member name="T:RA.Models.Input.OrganizationRequest">
+            <summary>
+            Class used with an Organization format or publish request
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.OrganizationRequest.Organization">
+            <summary>
+            Organization Input Class
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.Type">
+            <summary>
+            The type of organization is one of :
+            - CredentialOrganization
+            - QACredentialOrganization
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.Name">
+            <summary>
+            Name 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.Description">
+            <summary>
+            Organization description 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.Ctid">
+            <summary>
+            Credential Identifier
+            format: 
+            ce-UUID (guid)
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.SubjectWebpage">
+            <summary>
+            Organization subject web page
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.AgentType">
+            <summary>
+            The type of the described agent.
+            Must provide valid organization types
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.AgentSectorType">
+            <summary>
+            The types of sociological, economic, or political subdivision of society served by an agent. Enter one of:
+            <value>
+            agentSector:PrivateForProfit agentSector:PrivateNonProfit agentSector:Public
+            </value>
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.Image">
+            <summary>
+            Url for Organization image
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.SameAs">
+            <summary>
+            A resource that unambiguously indicates the identity of the resource being described.
+            Resources that may indicate identity include, but are not limited to, descriptions of entities in open databases such as DBpedia and Wikidata or social media accounts such as FaceBook and LinkedIn.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.Approves">
+            <summary>
+            Organization Approves these entities
+            The entities could be any of credential, assessment, or learning opportunity
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.HasConditionManifest">
+            <summary>
+            Reference to condition manifests
+            A condition manifest can never be a third party reference, so a url is expected
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.HasCostManifest">
+            <summary>
+            Reference to cost manifests
+            A cost manifest can never be a third party reference, so a url is expected
+            </summary>
         </member>
         <member name="P:RA.Models.Input.ContactPoint.ContactType">
             <summary>
@@ -150,28 +338,15 @@
             A single condition or aspect of experience that refines the conditions under which the resource being described is applicable.
             </summary>
         </member>
-        <member name="P:RA.Models.Input.CostProfile.CostItems">
-            <summary>
-            List of cost items
-            This seems to be the logical approach at this time
-            </summary>
-        </member>
         <member name="P:RA.Models.Input.CostProfile.Jurisdiction">
             <summary>
             List of jurisdictions
             </summary>
         </member>
-        <member name="M:RA.Models.Input.CostProfile.Clone">
+        <member name="P:RA.Models.Input.CostProfile.CostItems">
             <summary>
-            List of regions (jurisdictions)
-            </summary>
-        </member>
-        <member name="T:RA.Models.Input.CostProfileFlattened">
-            <summary>
-            Version of Cost Profile where all cost items are flattened into a single record.
-            That is:
-            - if there is a single cost profile with three costs
-            - Output will be three cost profiles with the cost profile specific properties repeated for each cost profile item
+            List of cost items
+            This seems to be the logical approach at this time
             </summary>
         </member>
         <member name="T:RA.Models.Input.CostProfileItem">
@@ -191,17 +366,17 @@
         </member>
         <member name="P:RA.Models.Input.CostProfileItem.ResidencyType">
             <summary>
-            
+            List of Residency items
             </summary>
         </member>
         <member name="P:RA.Models.Input.CostProfileItem.AudienceType">
             <summary>
-            
+            List of Audience Types
             </summary>
         </member>
         <member name="P:RA.Models.Input.CostProfileItem.PaymentPattern">
             <summary>
-            literal
+            Payment Pattern
             </summary>
         </member>
         <member name="P:RA.Models.Input.CostProfileItem.Price">
@@ -365,225 +540,6 @@
             Common input class for all verification profiles
             </summary>
         </member>
-        <member name="P:RA.Models.Input.CostManifestRequest.APIKey">
-            <summary>
-            API key for the requesting partner - required for publishing
-            May ultimately be passed in the header
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.CostManifestRequest.RegistryEnvelopeId">
-            <summary>
-            Envelope Identifier
-            Currently required to update an existing document
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.CostManifest.CostDetails">
-            <summary>
-            URL for cost details
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.CostManifest.OwningOrganization">
-            <summary>
-            Organization that owns this credential
-            </summary>
-        </member>
-        <member name="T:RA.Models.Input.OrganizationRequest">
-            <summary>
-            Class used with an Organization format or publish request
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.OrganizationRequest.Organization">
-            <summary>
-            Organization Input Class
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.OrganizationRequest.APIKey">
-            <summary>
-            API key for the requesting partner - required for publishing
-            May ultimately be passed in the header
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.OrganizationRequest.RegistryEnvelopeId">
-            <summary>
-            Envelope Identifier
-            Previously required to update an existing document
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Organization.Type">
-            <summary>
-            The type of organization is one of :
-            - CredentialOrganization
-            - QACredentialOrganization
-            Required
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Organization.Name">
-            <summary>
-            Name 
-            Required
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Organization.Description">
-            <summary>
-            Organization description 
-            Required
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Organization.Ctid">
-            <summary>
-            Credential Identifier
-            format: 
-            ce-UUID (guid)
-            Required
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Organization.SubjectWebpage">
-            <summary>
-            Organization subject web page
-            Required
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Organization.AgentType">
-            <summary>
-            The type of the described agent.
-            Must provide valid organization types
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Organization.Image">
-            <summary>
-            Url for Organization image
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Organization.AgentSectorType">
-            <summary>
-            Need process to provide valid types (agentSectorType)
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Organization.SameAs">
-            <summary>
-            A resource that unambiguously indicates the identity of the resource being described.
-            Resources that may indicate identity include, but are not limited to, descriptions of entities in open databases such as DBpedia and Wikidata or social media accounts such as FaceBook and LinkedIn.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Organization.Approves">
-            <summary>
-            Organization Approves these entities
-            The entities could be any of credential, assessment, or learning opportunity
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Organization.HasConditionManifests">
-            <summary>
-            Reference to condition manifests
-            A condition manifest must have already been published, in which case the URL is entered for the EntityReference.Id, or if the condition manifest exist at a url, provide:
-            <list type="steps"><item>Name</item><item>Description</item><item>Subject webpage</item></list>
-            </summary>
-        </member>
-        <member name="T:RA.Models.Input.CredentialRequest">
-            <summary>
-            Class used with a CredentiAL format or publish request
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.CredentialRequest.Credential">
-            <summary>
-            Credential Input Class
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.CredentialRequest.APIKey">
-            <summary>
-            API key for the requesting partner - required for publishing
-            May ultimately be passed in the header
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.CredentialRequest.RegistryEnvelopeId">
-            <summary>
-            Envelope Identifier
-            Previously required to update an existing document
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Credential.Name">
-            <summary>
-            Name of this credential
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Credential.OwnedBy">
-            <summary>
-            Organization that owns this credential
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Credential.Ctid">
-            <summary>
-            CTID - unique identifier
-            If not provided, will be set to ce-UUID
-            ex: ce-F22CA1DC-2D2E-49C0-9E72-0457AD348873
-            It will be the primary key for retrieving this entity from the registry. 
-            Also it must be provided 
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Credential.Image">
-            <summary>
-            Image URL
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Credential.SubjectWebpage">
-            <summary>
-            SubjectWebpage URL
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Credential.CredentialType">
-            <summary>
-            The credential type as defined in CTDL
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Credential.AvailableOnlineAt">
-            <summary>
-            AvailableOnlineAt URL
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Credential.AccreditedBy">
-            <summary>
-            could use general input or specific
-            general has more opportunity for errors
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Credential.JurisdictionAssertions">
-            <summary>
-            Handling assertions in jurisdictions
-            The current approach is to use a one record per asserting organization. The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Credential.AvailabilityListing">
-            <summary>
-            AvailabilityListing URL
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Credential.Requires">
-            <summary>
-            Container for all condition profiles for entity
-            </summary>        
-        </member>
-        <member name="T:RA.Models.Input.RevocationProfile">
-            <summary>
-            Revocation Profile
-            The conditions and methods by which a credential can be removed from a holder.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.LearningOpportunityRequest.APIKey">
-            <summary>
-            API key for the requesting partner - required for publishing
-            May ultimately be passed in the header
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.LearningOpportunityRequest.RegistryEnvelopeId">
-            <summary>
-            Envelope Identifier
-            Currently required to update an existing document
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.LearningOpportunity.OwnedBy">
-            <summary>
-            Organization that owns this credential
-            </summary>
-        </member>
         <member name="P:RA.Models.Json.ConditionManifest.Type">
             <summary>
             entity type
@@ -630,9 +586,14 @@
         </member>
         <member name="P:RA.Models.Json.AssessmentProfile.Type">
             <summary>
-            Need a custom mapping to @type based on input value
-            ceterms:CredentialOrganization, oR
-            ceterms:QACredentialOrganization
+            object type
+            </summary>
+        </member>
+        <member name="T:RA.Models.Json.CredentialAlignmentObject">
+            <summary>
+            Credential Alignment Object
+            Modifications
+            2017-10-17 TargetNodeName is now required!
             </summary>
         </member>
         <member name="P:RA.Models.Json.CredentialAlignmentObject.Type">
@@ -781,6 +742,11 @@
             rigid-concepts must match ctdl 
             warn - allow exceptions, return a warning message
             skip - no validation of concept scheme concepts
+            </summary>
+        </member>
+        <member name="P:RA.Models.RequestStatus.RegistryEnvelopeId">
+            <summary>
+            return the registr envelope id
             </summary>
         </member>
     </members>

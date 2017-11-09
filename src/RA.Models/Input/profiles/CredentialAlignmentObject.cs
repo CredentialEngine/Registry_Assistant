@@ -22,6 +22,6 @@ namespace RA.Models.Input
 		public string TargetNodeDescription { get; set; }
 		public string TargetNodeName { get; set; }
 
-
+		public decimal Weight { get; set; }
 	}
 }

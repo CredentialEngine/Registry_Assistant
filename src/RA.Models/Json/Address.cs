@@ -22,17 +22,6 @@ namespace RA.Models.Json
 
         [JsonProperty( "ceterms:streetAddress" )]
 		public string StreetAddress { get; set; }
-		//public string StreetAddress
-  //      {
-  //          get
-  //          {
-  //              return string.Format( "{0} {1}", Address1, Address2 );
-  //          }
-  //      }
-  //      [JsonIgnore]
-  //      public string Address1 { get; set; }
-  //      [JsonIgnore]
-  //      public string Address2 { get; set; }
 
 		[ JsonProperty( "ceterms:postOfficeBoxNumber" ) ]
 		public string PostOfficeBoxNumber { get; set; }

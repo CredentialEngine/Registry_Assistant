@@ -11,10 +11,13 @@ namespace RA.Models.Json
 	{
 		public DurationProfile()
 		{
-			MinimumDuration = new DurationItem();
-			MaximumDuration = new DurationItem();
-			ExactDuration = new DurationItem();
-            Type = "ceterms:DurationProfile";
+			MinimumDuration = null;
+			MaximumDuration = null;
+			ExactDuration = null;
+			//MinimumDuration = new DurationItem();
+			//MaximumDuration = new DurationItem();
+			//ExactDuration = new DurationItem();
+			Type = "ceterms:DurationProfile";
 		}
 
         [JsonProperty( "@type" )]
@@ -23,48 +26,51 @@ namespace RA.Models.Json
         [JsonProperty( PropertyName = "ceterms:description" )]
         public string Description { get; set; }
 
-        [JsonIgnore]        
-        public DurationItem MinimumDuration { get; set; }
+        //[JsonIgnore]        
+        //public DurationItem MinimumDuration { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:minimumDuration" )]
-        public string Minimum { get { return AsSchemaDuration( MinimumDuration ); } }
+		public string MinimumDuration { get; set; }
+		// public string Minimum { get { return AsSchemaDuration( MinimumDuration ); } }
 
-        [JsonIgnore]
-        public DurationItem MaximumDuration { get; set; }
+		//[JsonIgnore]
+		//public DurationItem MaximumDuration { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:maximumDuration" )]
-        public string Maximum { get { return AsSchemaDuration( MaximumDuration ); } }
+		[JsonProperty( PropertyName = "ceterms:maximumDuration" )]
+		public string MaximumDuration { get; set; }
+		// public string Maximum { get { return AsSchemaDuration( MaximumDuration ); } }
 
-        [JsonIgnore]        
-        public DurationItem ExactDuration { get; set; }
+		//[JsonIgnore]        
+		//public DurationItem ExactDuration { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:exactDuration" )]
-        public string Exact { get { return AsSchemaDuration( ExactDuration ); } }
+		[JsonProperty( PropertyName = "ceterms:exactDuration" )]
+		public string ExactDuration { get; set; }
+		//public string Exact { get { return AsSchemaDuration( ExactDuration ); } }
 
-        [JsonIgnore]
-        public bool IsRange
-		{
-			get
-			{
-				return this.MinimumDuration != null && this.MaximumDuration != null && ( this.MinimumDuration.HasValue && this.MaximumDuration.HasValue );
-			}
-		}
+		//[JsonIgnore]
+  //      public bool IsRange
+		//{
+		//	get
+		//	{
+		//		return this.MinimumDuration != null && this.MaximumDuration != null && ( this.MinimumDuration.HasValue && this.MaximumDuration.HasValue );
+		//	}
+		//}
 
-        public static string AsSchemaDuration( DurationItem entity )
-        {
-            string duration = "";
+        //public static string AsSchemaDuration( DurationItem entity )
+        //{
+        //    string duration = "";
 
-            if ( entity.Years > 0 ) duration += entity.Years.ToString() + "Y";
-            if ( entity.Months > 0 ) duration += entity.Months.ToString() + "M";
-            if ( entity.Weeks > 0 ) duration += entity.Weeks.ToString() + "W";
-            if ( entity.Days > 0 ) duration += entity.Days.ToString() + "D";
-            if ( entity.Hours > 0 || entity.Minutes > 0 ) duration += "T";
-            if ( entity.Hours > 0 ) duration += entity.Hours.ToString() + "H";
-            if ( entity.Minutes > 0 ) duration += entity.Minutes.ToString() + "M";
+        //    if ( entity.Years > 0 ) duration += entity.Years.ToString() + "Y";
+        //    if ( entity.Months > 0 ) duration += entity.Months.ToString() + "M";
+        //    if ( entity.Weeks > 0 ) duration += entity.Weeks.ToString() + "W";
+        //    if ( entity.Days > 0 ) duration += entity.Days.ToString() + "D";
+        //    if ( entity.Hours > 0 || entity.Minutes > 0 ) duration += "T";
+        //    if ( entity.Hours > 0 ) duration += entity.Hours.ToString() + "H";
+        //    if ( entity.Minutes > 0 ) duration += entity.Minutes.ToString() + "M";
 
-            if ( !string.IsNullOrEmpty( duration ) ) duration = "P" + duration;
-            return duration;
-        }
+        //    if ( !string.IsNullOrEmpty( duration ) ) duration = "P" + duration;
+        //    return duration;
+        //}
     }
 
 	public class DurationItem

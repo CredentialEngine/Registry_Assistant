@@ -11,7 +11,7 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Class used with a CredentiAL format or publish request
 	/// </summary>
-	public class CredentialRequest
+	public class CredentialRequest : BaseRequest
 	{
 		public CredentialRequest()
 		{
@@ -22,17 +22,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public Credential Credential { get; set; }
 
-		/// <summary>
-		/// API key for the requesting partner - required for publishing
-		/// May ultimately be passed in the header
-		/// </summary>
-		public string APIKey { get; set; }
-
-		/// <summary>
-		/// Envelope Identifier
-		/// Previously required to update an existing document
-		/// </summary>
-		public string RegistryEnvelopeId { get; set; }
 
 	}
 
@@ -44,6 +33,7 @@ namespace RA.Models.Input
 			Subject = new List<string>();
 			OccupationType = new List<FrameworkItem>();
 			IndustryType = new List<FrameworkItem>();
+			Naics = new List<string>();
 			Keyword = new List<string>();
 			DegreeConcentration = new List<string>();
 			DegreeMajor = new List<string>();
@@ -51,13 +41,12 @@ namespace RA.Models.Input
 
 			EstimatedCost = new List<CostProfile>();
 			EstimatedDuration = new List<DurationProfile>();
-
+			RenewalFrequency = new DurationItem();
+			
 			Jurisdiction = new List<Jurisdiction>();
 			// Region = new List<GeoCoordinates>();
 			OwnedBy = new List<OrganizationReference>();
 			CopyrightHolder = new OrganizationReference();
-
-			HasPart = new List<EntityReference>();
 
 			AccreditedBy = new List<Input.OrganizationReference>();
 			ApprovedBy = new List<Input.OrganizationReference>();
@@ -73,9 +62,11 @@ namespace RA.Models.Input
 			Requires = new List<ConditionProfile>();
 
 			//ProcessProfile = new List<Input.ProcessProfile>();
-			CommonConditions = new List<EntityReference>();
-			CommonCosts = new List<EntityReference>();
+			CommonConditions = new List<string>();
+			CommonCosts = new List<string>();
+
 			HasPart = new List<EntityReference>();
+			IsPartOf = new List<EntityReference>();
 
 			FinancialAssistance = new List<Input.FinancialAlignmentObject>();
 			AdvancedStandingFrom = new List<Connections>();
@@ -85,7 +76,7 @@ namespace RA.Models.Input
 			IsRecommendedFor = new List<Connections>();
 			IsRequiredFor = new List<Connections>();
 			InLanguage = new List<string>();
-			AvailableAt = new List<PostalAddress>();
+			AvailableAt = new List<Place>();
 			CodedNotation = new List<string>();
 			Renewal = new List<ConditionProfile>();
 			Revocation = new List<RevocationProfile>();
@@ -157,8 +148,9 @@ namespace RA.Models.Input
 		public string AvailableOnlineAt { get; set; }
 
 		public List<EntityReference> HasPart { get; set; }
+		public List<EntityReference> IsPartOf { get; set; }
 
-		public List<PostalAddress> AvailableAt { get; set; }
+		public List<Place> AvailableAt { get; set; }
 
 		public OrganizationReference CopyrightHolder { get; set; }
 		/// <summary>
@@ -202,7 +194,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public string AvailabilityListing { get; set; }
 		public string CredentialId { get; set; }
-		public string VersionIdentifier { get; set; }
+		//public string VersionIdentifier { get; set; }
+		public List<IdentifierValue> VersionIdentifier { get; set; }
 		public List<string> CodedNotation { get; set; }
 		public List<string> InLanguage { get; set; }
 		public string ProcessStandards { get; set; }
@@ -214,6 +207,7 @@ namespace RA.Models.Input
 		public List<string> AudienceLevelType { get; set; }
 		public List<FrameworkItem> OccupationType { get; set; }
 		public List<FrameworkItem> IndustryType { get; set; }
+		public List<string> Naics { get; set; }
 		public List<string> Keyword { get; set; }
 
 		public List<string> DegreeConcentration { get; set; }
@@ -223,7 +217,8 @@ namespace RA.Models.Input
 		public List<CostProfile> EstimatedCost { get; set; }
 
 		public List<DurationProfile> EstimatedDuration { get; set; }
-
+		public DurationItem RenewalFrequency { get; set; }
+		
 		public List<Jurisdiction> Jurisdiction { get; set; }
 		// public List<GeoCoordinates> Region { get; set; }
 
@@ -237,8 +232,8 @@ namespace RA.Models.Input
 		public List<ConditionProfile> Corequisite { get; set; }
 		public List<ConditionProfile> Renewal { get; set; }
 
-		public List<EntityReference> CommonCosts { get; set; }
-		public List<EntityReference> CommonConditions { get; set; }
+		public List<string> CommonCosts { get; set; }
+		public List<string> CommonConditions { get; set; }
 
 		public List<Connections> AdvancedStandingFrom { get; set; }
 		public List<Connections> IsAdvancedStandingFor { get; set; }
@@ -270,13 +265,13 @@ namespace RA.Models.Input
 		public RevocationProfile()
 		{
 			Jurisdiction = new List<Input.Jurisdiction>();
-			RevocationCriteria = new List<string>();
+			//RevocationCriteria = new List<string>();
 		}
 		public string Description { get; set; }
 		//public List<string> CredentialProfiled { get; set; }
 		public string DateEffective { get; set; }
 		public List<Jurisdiction> Jurisdiction { get; set; }
-		public List<string> RevocationCriteria { get; set; }
+		public string RevocationCriteria { get; set; }
 		public string RevocationCriteriaDescription { get; set; }
 
 	}

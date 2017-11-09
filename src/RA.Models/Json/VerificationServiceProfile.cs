@@ -19,8 +19,8 @@ namespace RA.Models.Json
             //Region = new List<GeoCoordinates>();
             OfferedBy = new List<OrganizationBase>();
             VerifiedClaimType = new List<CredentialAlignmentObject>();
-            VerificationDirectory = new List<Json.IdProperty>();
-            VerificationService = new List<IdProperty>();
+            VerificationDirectory = new List<string>();
+            VerificationService = new List<string>();
             TargetCredential = new List<EntityBase>();
             Type = "ceterms:VerificationServiceProfile";
         }
@@ -35,7 +35,7 @@ namespace RA.Models.Json
         public string DateEffective { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-		public List<IdProperty> SubjectWebpage { get; set; }
+		public string SubjectWebpage { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:estimatedCost" )]
         public List<CostProfile> EstimatedCost { get; set; }
@@ -47,13 +47,13 @@ namespace RA.Models.Json
         public List<EntityBase> TargetCredential { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:verificationDirectory" )]
-        public List<IdProperty> VerificationDirectory { get; set; }
+        public List<string> VerificationDirectory { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:verificationMethodDescription" )]
         public string VerificationMethodDescription { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:verificationService" )]
-        public List<IdProperty> VerificationService { get; set; }
+        public List<string> VerificationService { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:verifiedClaimType" )]
         public List<CredentialAlignmentObject> VerifiedClaimType { get; set; }

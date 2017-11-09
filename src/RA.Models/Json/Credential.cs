@@ -15,21 +15,20 @@ namespace RA.Models.Json
 		public Credential()
         {
 			Subject = new List<CredentialAlignmentObject>();
-            Occupations = new List<CredentialAlignmentObject>();
-            Industries = new List<CredentialAlignmentObject>();
-            Keyword = new List<string>();
-            SubjectWebpage = new List<IdProperty>();
+			OccupationType = new List<CredentialAlignmentObject>();
+            IndustryType = new List<CredentialAlignmentObject>();
+			Naics = new List<string>();
+			Keyword = new List<string>();
+            SubjectWebpage = null;
 			HasPart = null;
+			IsPartOf = null;
 			AudienceLevel = new List<CredentialAlignmentObject>();
-            AvailableOnlineAt = new List<IdProperty>();
-            AvailabilityListing = new List<IdProperty>();
+            AvailableOnlineAt = new List<string>();
+            AvailabilityListing = new List<string>();
 			CopyrightHolder = new List<OrganizationBase>();
 			AlternateName = new List<string>();
-			Image = new List<IdProperty>();
+			//Image = new List<string>();
 			InLanguage = new List<string>();
-			PreviousVersion = new List<IdProperty>();
-            LatestVersion = new List<IdProperty>();
-			CodedNotation = new List<string>();
 			
 			VersionIdentifier = new List<IdentifierValue>();
 			DegreeConcentration = new List<CredentialAlignmentObject>();
@@ -66,7 +65,7 @@ namespace RA.Models.Json
 			RevocationProcess = new List<ProcessProfile>();
 			
 			FinancialAssistance = new List<FinancialAlignmentObject>();
-            CredentialStatusType = new List<CredentialAlignmentObject>();
+            CredentialStatusType = new CredentialAlignmentObject();
             AdvancedStandingFrom = new List<ConditionProfile>();
             IsAdvancedStandingFor = new List<ConditionProfile>();
             IsPreparationFor = new List<ConditionProfile>();
@@ -74,10 +73,10 @@ namespace RA.Models.Json
             IsRequiredFor = new List<ConditionProfile>();
             PreparationFrom = new List<ConditionProfile>();
 			Jurisdiction = new List<JurisdictionProfile>();
-			AvailableAt = new List<Json.AvailableAt>();
+			AvailableAt = new List<Json.Place>();
 
-            CommonConditions = new List<EntityBase>();
-            CommonCosts = new List<EntityBase>();
+            CommonConditions = new List<string>();
+            CommonCosts = new List<string>();
             Revocation = new List<RevocationProfile>();
             Renewal = new List<ConditionProfile>();
         }
@@ -109,20 +108,27 @@ namespace RA.Models.Json
         public List<string> AlternateName { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:image" )]
-        public List<IdProperty> Image { get; set; } //Image URL
+        public string Image { get; set; } //Image URL
 
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-        public List<IdProperty> SubjectWebpage { get; set; }
+        public string SubjectWebpage { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
+		public string CodedNotation { get; set; }
+		//public string CodedNotation { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:hasPart" )]
 		public List<EntityBase> HasPart { get; set; }
 
+
+		[JsonProperty( PropertyName = "ceterms:isPartOf" )]
+		public List<EntityBase> IsPartOf { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:availabilityListing" )]
-        public List<IdProperty> AvailabilityListing { get; set; } //URL
+        public List<string> AvailabilityListing { get; set; } //URL
 
         [JsonProperty( PropertyName = "ceterms:availableOnlineAt" )]
-        public List<IdProperty> AvailableOnlineAt { get; set; }
+        public List<string> AvailableOnlineAt { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:credentialId" )]
         public string CredentialId { get; set; }
@@ -130,34 +136,36 @@ namespace RA.Models.Json
         [JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
         public List<IdentifierValue> VersionIdentifier { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:codedNotation" )]
-        public List<string> CodedNotation { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:inLanguage" )]
-        public List<string> InLanguage { get; set; }
+		//public string InLanguage { get; set; }
+		public List<string> InLanguage { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:processStandards" )]
-        public IdProperty ProcessStandards { get; set; } //URL
+		[JsonProperty( PropertyName = "ceterms:processStandards" )]
+        public string ProcessStandards { get; set; } //URL
 
         [JsonProperty( PropertyName = "ceterms:processStandardsDescription" )]
         public string ProcessStandardsDescription { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:latestVersion" )]
-        public List<IdProperty> LatestVersion { get; set; } //URL
+        public string LatestVersion { get; set; } //URL
 
         [JsonProperty( PropertyName = "ceterms:previousVersion" )]
-        public List<IdProperty> PreviousVersion { get; set; } //URL
+        public string PreviousVersion { get; set; } //URL
 
         [JsonProperty( PropertyName = "ceterms:subject" )]
         public List<CredentialAlignmentObject> Subject { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:occupationType" )]
-        public List<CredentialAlignmentObject> Occupations { get; set; }
+        public List<CredentialAlignmentObject> OccupationType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:industryType" )]
-        public List<CredentialAlignmentObject> Industries { get; set; }
+        public List<CredentialAlignmentObject> IndustryType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:keyword" )]
+		[JsonProperty( PropertyName = "ceterms:naics" )]
+		public List<string> Naics { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
         public List<string> Keyword { get; set; }
 
 
@@ -184,11 +192,15 @@ namespace RA.Models.Json
 
 
 		[JsonProperty( PropertyName = "ceterms:commonCosts" )]
-		public List<EntityBase> CommonCosts { get; set; }
+		public List<string> CommonCosts { get; set; }
 
 		#endregion
 		[JsonProperty( PropertyName = "ceterms:estimatedDuration" )]
         public List<DurationProfile> EstimatedDuration { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:renewalFrequency" )]
+		public string RenewalFrequency { get; set; }
+
 
 		#region Condition Profiles
 		[JsonProperty( PropertyName = "ceterms:requires" )]
@@ -205,7 +217,7 @@ namespace RA.Models.Json
 		public List<ConditionProfile> Renewal { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:commonConditions" )]
-		public List<EntityBase> CommonConditions { get; set; }
+		public List<string> CommonConditions { get; set; }
 
 		#endregion
 
@@ -236,7 +248,7 @@ namespace RA.Models.Json
         public List<FinancialAlignmentObject> FinancialAssistance { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:credentialStatusType" )]
-        public List<CredentialAlignmentObject> CredentialStatusType { get; set; }
+        public CredentialAlignmentObject CredentialStatusType { get; set; }
 
 		#region Connections
 		[JsonProperty( PropertyName = "ceterms:advancedStandingFrom" )]
@@ -259,7 +271,7 @@ namespace RA.Models.Json
 		#endregion
 
 		[JsonProperty( PropertyName = "ceterms:availableAt" )]
-		public List<AvailableAt> AvailableAt { get; set; }
+		public List<Place> AvailableAt { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:revocation" )]
         public List<RevocationProfile> Revocation { get; set; }
@@ -326,19 +338,17 @@ namespace RA.Models.Json
     {
         public RevocationProfile()
         {
-            Jurisdiction = new List<JurisdictionProfile>();
-            RevocationCriteria = new List<IdProperty>();
-            //CredentialProfiled = new List<IdProperty>();
+			Type = "ceterms:RevocationProfile";
+			Jurisdiction = new List<JurisdictionProfile>();
+           // RevocationCriteria = new List<string>();
+            //CredentialProfiled = new List<string>();
         }
 
         [JsonProperty( "@type" )]
-        public string CredentialType { get; set; }
+        public string Type { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:description" )]
         public string Description { get; set; }
-
-        //[JsonProperty( PropertyName = "ceterms:credentialProfiled" )]
-        // public List<IdProperty> CredentialProfiled { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:dateEffective" )]
         public string DateEffective { get; set; }
@@ -347,7 +357,7 @@ namespace RA.Models.Json
         public List<JurisdictionProfile> Jurisdiction { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:revocationCriteria" )]
-        public List<IdProperty> RevocationCriteria { get; set; }
+        public string RevocationCriteria { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:revocationCriteriaDescription" )]
         public string RevocationCriteriaDescription { get; set; }
