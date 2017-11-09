@@ -1,0 +1,412 @@
+{
+  "Organization": {
+    "Address": [
+      {
+        "Address1": "311 Park Place Blvd",
+        "Address2": "Suite 400",
+        "AddressRegion": "Florida",
+        "City": "Clearwater",
+        "ContactPoint": [
+          {
+            "ContactType": "Registrar",
+            "Name": "Grants"
+          }
+        ],
+        "Country": "United States",
+        "Latitude": 27.9624843,
+        "Longitude": -82.723858499999992,
+        "Name": "(ISC)²",
+        "PostalCode": " 33759"
+      },
+      {
+        "Address1": "123 Main",
+        "AddressRegion": "GM",
+        "City": "victoryville",
+        "Country": "Guam",
+        "Name": "Main address",
+        "PostalCode": "23009"
+      }
+    ],
+    "AdministrationProcess": [
+      {
+        "Description": "Admin",
+        "ExternalInputType": [
+          "InternationalBodies",
+          "Practitioners",
+          "Associations"
+        ],
+        "ProcessingAgent": {
+          "Id": "http://lr-staging.learningtapestry.com/resources/ce-66B26730-C43F-4FF7-A055-5A6919568750"
+        }
+      }
+    ],
+    "AgentPurpose": "http://credentialfinder.org",
+    "AgentPurposeDescription": "Support and provide members and constituents with credentials, resources, and leadership to address cyber, information, software and infrastructure security to deliver value to society.",
+    "AgentSectorType": "PrivateNonProfit",
+    "AgentType": [
+      "BusinessAssociation",
+      "CertificationBody",
+      "TrainingProvider"
+    ],
+    "AlternativeIdentifier": "org alternative identifier",
+    "Approves": [
+      {
+        "Description": "Assessments vary per course.",
+        "Name": "TESTING_Advanced Manufacturing Technician Associate in Applied Science Degree",
+        "SubjectWebpage": "http://example.com?t=testAssessment",
+        "Type": "ceterms:AssessmentProfile"
+      },
+      {
+        "Description": "more later - 0504a\nJP exceptions not saving\nupdate",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-3D57BA3B-9B84-4A14-9F64-13D83960F9CC",
+        "Name": "TESTING_my first assessment - updated 170316a",
+        "SubjectWebpage": "http://example.com?t=testAssessment",
+        "Type": "ceterms:AssessmentProfile"
+      },
+      {
+        "Description": "This is a sample certificate",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-BE484CE9-6BFC-42DC-B91F-B0B386EEB8F9",
+        "Name": "TESTING_A Simple Cerificate Credential",
+        "SubjectWebpage": "http://example.com?t=testCredential",
+        "Type": "ceterms:Certificate"
+      },
+      {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-1785aa77-e844-4f25-9dd2-5f801c9e475e",
+        "Name": "TESTING_new credential from a learning opp",
+        "SubjectWebpage": "http://example.com?t=testCredential",
+        "Type": "ceterms:Certificate"
+      },
+      {
+        "Description": "This work/study program gives you the opportunity to learn in the environment in which you will work as well as the ability to apply almost immediately what you learned in class on the manufacturing floor. It is not your typical college class. You attend class full time two days a week and work at your sponsoring manufacturer three days. You will also learn “lean” manufacturing principles and develop productive work behaviors that provide excellent self-development skills that are very attractive to employers. The course work implements the multidisciplinary, multiskilled model with courses in electricity, fluid power, mechanics, fabrication, troubleshooting, problem solving, etc.",
+        "Name": "TESTING_TESTING_Advanced Manufacturing Technician Associate in Applied Science Degree Program",
+        "SubjectWebpage": "http://example.com?t=testLearningOpportunity",
+        "Type": "ceterms:LearningOpportunityProfile"
+      },
+      {
+        "Description": "The PA educational program is modeled on the medical school curriculum with a combination of classroom and clinical instruction. The PA course of study is graduate level, full-time, rigorous and intense. \nThe program requires 27 consecutive months of full time academic and clinical coursework that will confer a Master’s degree.",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-7CD825C4-3493-4337-A845-61B1598DA214",
+        "Name": "TESTING_TESTING_Masters of Science - Physician Assistant Program",
+        "SubjectWebpage": "http://example.com?t=testLearningOpportunity",
+        "Type": "ceterms:LearningOpportunityProfile"
+      }
+    ],
+    "AvailabilityListing": [
+      null
+    ],
+    "ContactPoint": [
+      {
+        "ContactOption": [
+          "Information"
+        ],
+        "Emails": [
+          "membersupport@isc2.org"
+        ]
+      },
+      {
+        "ContactOption": [
+          "Toll Free"
+        ],
+        "PhoneNumbers": [
+          "1-866-462-4777"
+        ]
+      },
+      {
+        "ContactOption": [
+          "Main Phone Number"
+        ],
+        "PhoneNumbers": [
+          "703-891-6781"
+        ]
+      },
+      {
+        "ContactOption": [
+          "Fax"
+        ],
+        "PhoneNumbers": [
+          "703-356-7977"
+        ]
+      },
+      {
+        "ContactOption": [
+          "Australia"
+        ],
+        "PhoneNumbers": [
+          "+61 2 4728 4600"
+        ]
+      },
+      {
+        "ContactOption": [
+          "Custom Phone Type"
+        ],
+        "PhoneNumbers": [
+          "123-456-7890"
+        ]
+      },
+      {
+        "ContactOption": [
+          "Toll-Free"
+        ],
+        "ContactType": "Illinois",
+        "Name": "Technical Support",
+        "PhoneNumbers": [
+          "810-Get-Help (Toll Free)"
+        ]
+      }
+    ],
+    "Ctid": "ce-66B26730-C43F-4FF7-A055-5A6919568750",
+    "Department": [
+      {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-2D409AAE-91B6-4A49-A767-D0C4BF8F462A"
+      },
+      {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-0A448F2E-B76B-497B-92CF-51504C7A5000"
+      },
+      {
+        "Description": "AdvancED is the largest community of education professionals in the world. We are a non-profit, non-partisan organization that conducts rigorous, on-site external reviews of PreK-12 schools and school systems to ensure that all learners realize their full potential. While our expertise is grounded in more than a hundred years of work in school accreditation, AdvancED is far from a typical accrediting agency. Our goal isn’t to certify that schools are good enough. Rather, our commitment is to help schools improve.",
+        "Name": "AdvancED",
+        "SubjectWebpage": "http://www.advanc-ed.org/",
+        "Type": "CredentialOrganization"
+      },
+      {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-52AC3310-0BF2-4F00-9F10-DFFC00FE1D3F"
+      }
+    ],
+    "Description": "Headquartered in the United States and with offices in London, Hong Kong, Tokyo, Mumbai, and an authorized China agency in Beijing, the International Information System Security Certification Consortium, Inc., (ISC)²®, is the global, not-for-profit leader in educating and certifying cyber, information, software and infrastructure security professionals throughout their careers. We are recognized for Gold Standard certifications and world class education programs.",
+    "Duns": "789797920",
+    "Fein": "04-3064434",
+    "FoundingDate": "1988-1",
+    "HasConditionManifest": [
+      "http://lr-staging.learningtapestry.com/resources/ce-0214d23e-372f-410e-aad4-c02d5c9872bb"
+    ],
+    "Image": "http://insights.dice.com/wp-content/uploads/2014/07/isc2_logo.jpg",
+    "IndustryType": [
+      {
+        "CodedNotation": "11",
+        "Description": "Agriculture, Forestry, Fishing and Hunting",
+        "Framework": "https://www.census.gov/eos/www/naics/",
+        "FrameworkName": "NAICS",
+        "Name": "Agriculture, Forestry, Fishing and Hunting",
+        "URL": "https://www.census.gov/cgi-bin/sssd/naics/naicsrch?code=11&search=2012"
+      },
+      {
+        "CodedNotation": "111",
+        "Description": "Crop Production",
+        "Framework": "https://www.census.gov/eos/www/naics/",
+        "FrameworkName": "NAICS",
+        "Name": "Crop Production",
+        "URL": "https://www.census.gov/cgi-bin/sssd/naics/naicsrch?code=111&search=2012"
+      }
+    ],
+    "Jurisdiction": [
+      {
+        "Description": "Available world wide - check update",
+        "GlobalJurisdiction": false,
+        "MainJurisdiction": {
+          "GeoURI": "http://geonames.org/6295630/",
+          "Name": "Earth"
+        }
+      },
+      {
+        "GlobalJurisdiction": false,
+        "MainJurisdiction": {
+          "Country": "United States",
+          "GeoURI": "http://geonames.org/6252001/",
+          "Latitude": 39.76,
+          "Longitude": -98.5,
+          "Name": "United States"
+        }
+      }
+    ],
+    "Keyword": [
+      "Organization 1080"
+    ],
+    "Naics": [
+      "11",
+      "111"
+    ],
+    "Name": "TESTING_(ISC)²",
+    "Offers": [
+      {
+        "Description": "The 21st Century Skills for Workplace Success industry-based credential is included in NOCTI’s Job Ready assessment battery.  Job Ready assessments measure \ntechnical skills at the occupational level and include items which gauge factual and theoretical knowledge.  Job Ready assessments typically over both a written and performance component and can be used at the secondary and post-secondary levels.  Job Ready assessments can be delivered in an online or paper/pencil format.",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-86BE9B32-0556-4429-A058-E6DE44BD8FD3",
+        "Name": "TESTING_21st Century Skills for Workplace Success",
+        "SubjectWebpage": "http://example.com?t=testCredential",
+        "Type": "ceterms:Certificate"
+      },
+      {
+        "Description": "The ISO 22301 Auditor certifications are credentials for professionals needing to audit a Business Continuity Management System (BCMS) and, in case of the “ISO 22301 Lead Auditor\" Certification, able to manage a team of auditors.",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-41DB3899-8826-41F6-DCBA-B79A63184EBD",
+        "Name": "TESTING_Certified ISO 22301 Lead Auditor",
+        "SubjectWebpage": "http://example.com?t=testCredential",
+        "Type": "ceterms:Certificate"
+      },
+      {
+        "Description": "This credential is intended to test the extent of the system's data display.\n\nThis should be a multi\nline\ndescription",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-70A27CE2-2F7E-4F79-AEFA-B27F37C2A41A",
+        "Name": "TESTING_zzz Full Test Credential",
+        "SubjectWebpage": "http://example.com?t=testCredential",
+        "Type": "ceterms:MasterDegree"
+      },
+      {
+        "Description": "This work/study program gives you the opportunity to learn in the environment in which you will work as well as the ability to apply almost immediately what you learned in class on the manufacturing floor. It is not your typical college class. You attend class full time two days a week and work at your sponsoring manufacturer three days. You will also learn “lean” manufacturing principles and develop productive work behaviors that provide excellent self-development skills that are very attractive to employers. The course work implements the multidisciplinary, multiskilled model with courses in electricity, fluid power, mechanics, fabrication, troubleshooting, problem solving, etc.",
+        "Name": "TESTING_TESTING_Advanced Manufacturing Technician Associate in Applied Science Degree Program",
+        "SubjectWebpage": "http://example.com?t=testLearningOpportunity",
+        "Type": "ceterms:LearningOpportunityProfile"
+      },
+      {
+        "Description": "Blended learning badge.",
+        "Name": "TESTING_TESTING_Applied Problem Solving and Decision Making Badge",
+        "SubjectWebpage": "http://example.com?t=testLearningOpportunity",
+        "Type": "ceterms:LearningOpportunityProfile"
+      },
+      {
+        "Description": "The PA educational program is modeled on the medical school curriculum with a combination of classroom and clinical instruction. The PA course of study is graduate level, full-time, rigorous and intense. \nThe program requires 27 consecutive months of full time academic and clinical coursework that will confer a Master’s degree.",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-7CD825C4-3493-4337-A845-61B1598DA214",
+        "Name": "TESTING_TESTING_Masters of Science - Physician Assistant Program",
+        "SubjectWebpage": "http://example.com?t=testLearningOpportunity",
+        "Type": "ceterms:LearningOpportunityProfile"
+      }
+    ],
+    "OpeId": "1080-OPEID",
+    "Owns": [
+      {
+        "Description": "The vendor-neutral CISSP certification is the ideal credential for those with proven deep technical and managerial competence, skills, experience, and credibility to design, engineer, implement, and manage their overall information security program to protect organizations from growing sophisticated attacks. ",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-B2492F20-02F6-4C7A-DCBA-362C889D91B3",
+        "Name": "TESTING_Certified Information Systems Security Professional (CISSP)",
+        "SubjectWebpage": "http://example.com?t=testCredential",
+        "Type": "ceterms:Certification"
+      },
+      {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-1785aa77-e844-4f25-9dd2-5f801c9e475e",
+        "Name": "TESTING_new credential from a learning opp",
+        "SubjectWebpage": "http://example.com?t=testCredential",
+        "Type": "ceterms:Certificate"
+      },
+      {
+        "Description": "testing",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-0ddd924e-b202-46b9-8522-92b1bb7f7a5e",
+        "Name": "TESTING_new min credential",
+        "SubjectWebpage": "http://example.com?t=testCredential",
+        "Type": "ceterms:Certificate"
+      },
+      {
+        "Description": "This credential is intended to test the extent of the system's data display.\n\nThis should be a multi\nline\ndescription",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-70A27CE2-2F7E-4F79-AEFA-B27F37C2A41A",
+        "Name": "TESTING_zzz Full Test Credential",
+        "SubjectWebpage": "http://example.com?t=testCredential",
+        "Type": "ceterms:MasterDegree"
+      },
+      {
+        "Description": "The PA educational program is modeled on the medical school curriculum with a combination of classroom and clinical instruction. The PA course of study is graduate level, full-time, rigorous and intense. \nThe program requires 27 consecutive months of full time academic and clinical coursework that will confer a Master’s degree.",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-7CD825C4-3493-4337-A845-61B1598DA214",
+        "Name": "TESTING_TESTING_Masters of Science - Physician Assistant Program",
+        "SubjectWebpage": "http://example.com?t=testLearningOpportunity",
+        "Type": "ceterms:LearningOpportunityProfile"
+      }
+    ],
+    "ParentOrganization": [
+      {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-66B26730-C43F-4FF7-A055-5A6919568750"
+      },
+      {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-66B26730-C43F-4FF7-A055-5A6919568750"
+      },
+      {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-66B26730-C43F-4FF7-A055-5A6919568750"
+      }
+    ],
+    "Recognizes": [
+      {
+        "Description": "The 21st Century Skills for Workplace Success industry-based credential is included in NOCTI’s Job Ready assessment battery. Job Ready assessments measure\ntechnical skills at the occupational level and include items which gauge factual and theoretical knowledge. Job Ready assessments typically over both a written and performance component and can be used at the secondary and post-secondary levels. Job Ready assessments can be delivered in an online or paper/pencil format. This assessment may be administered in one, two, or three sessions.",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-A81E3B16-1111-40DA-A186-C568559AD7E5",
+        "Name": "TESTING_21st Century Skills for Workplace Success - 170215a",
+        "SubjectWebpage": "http://example.com?t=testAssessment",
+        "Type": "ceterms:AssessmentProfile"
+      }
+    ],
+    "Renews": [
+      {
+        "Description": "This credential is intended to test the extent of the system's data display.\n\nThis should be a multi\nline\ndescription",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-70A27CE2-2F7E-4F79-AEFA-B27F37C2A41A",
+        "Name": "TESTING_zzz Full Test Credential",
+        "SubjectWebpage": "http://example.com?t=testCredential",
+        "Type": "ceterms:MasterDegree"
+      }
+    ],
+    "Revokes": [
+      {
+        "Description": "This credential is intended to test the extent of the system's data display.\n\nThis should be a multi\nline\ndescription",
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-70A27CE2-2F7E-4F79-AEFA-B27F37C2A41A",
+        "Name": "TESTING_zzz Full Test Credential",
+        "SubjectWebpage": "http://example.com?t=testCredential",
+        "Type": "ceterms:MasterDegree"
+      }
+    ],
+    "ServiceType": [
+      "OfferService",
+      "RecognizeService"
+    ],
+    "SocialMedia": [
+      "https://www.facebook.com/isc2fb",
+      "https://www.youtube.com/user/ISC2TV",
+      "https://www.linkedin.com/company/isc2"
+    ],
+    "SubjectWebpage": "http://example.com?t=testOrganization",
+    "Type": "CredentialOrganization",
+    "VerificationServiceProfiles": [
+      {
+        "DateEffective": "12/2/2017",
+        "Description": "this is service data",
+        "EstimatedCost": [
+          {
+            "CostDetails": "http://example.com",
+            "CostItems": [
+              {
+                "Price": 234.00
+              }
+            ],
+            "Currency": "US Dollar",
+            "Description": "cost description",
+            "Name": "Costs for this verification profile"
+          }
+        ],
+        "HolderMustAuthorize": true,
+        "Jurisdiction": [
+          {
+            "Description": "check it out",
+            "GlobalJurisdiction": false,
+            "MainJurisdiction": {}
+          }
+        ],
+        "OfferedBy": [
+          {
+            "Id": "http://lr-staging.learningtapestry.com/resources/ce-66B26730-C43F-4FF7-A055-5A6919568750"
+          }
+        ],
+        "SubjectWebpage": "http://example.com?t=verificationSWP",
+        "TargetCredential": [
+          {
+            "Id": "http://lr-staging.learningtapestry.com/resources/ce-86BE9B32-0556-4429-A058-E6DE44BD8FD3",
+            "Type": "ceterms:Certificate"
+          },
+          {
+            "Id": "http://lr-staging.learningtapestry.com/resources/ce-e6b2018e-217f-4ec0-8c19-8916b4ce86f5",
+            "Type": "ceterms:Badge"
+          },
+          {
+            "Id": "http://lr-staging.learningtapestry.com/resources/ce-BE484CE9-6BFC-42DC-B91F-B0B386EEB8F9",
+            "Type": "ceterms:Certificate"
+          }
+        ],
+        "VerificationDirectory": "http://directory.com",
+        "VerificationMethodDescription": "the methods are pretty standard",
+        "VerificationService": "http://example.com",
+        "VerifiedClaimType": [
+          "BadgeClaim",
+          "TranscriptClaim",
+          "Verifiedclaim"
+        ]
+      }
+    ]
+  }
+}
