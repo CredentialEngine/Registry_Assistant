@@ -41,6 +41,7 @@ namespace RA.Models.Input
             ServiceType = new List<string>();
             Jurisdiction = new List<Input.Jurisdiction>();
             Address = new List<Place>();
+			AlternateName = new List<string>();
             ContactPoint = new List<ContactPoint>();
             //
             AccreditedBy = new List<Input.OrganizationReference>();
@@ -74,7 +75,9 @@ namespace RA.Models.Input
             Department = new List<OrganizationReference>();
             SubOrganization = new List<OrganizationReference>();
             JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
-        }
+			AlternativeIdentifier = new List<IdentifierValue>();
+
+		}
 
 
 
@@ -153,14 +156,16 @@ namespace RA.Models.Input
 		public List<string> ServiceType { get; set; }
 		#endregion
 
-        public string FoundingDate { get; set; }
+		public List<string> AlternateName { get; set; }
+		public string FoundingDate { get; set; }
 
         public string Duns { get; set; }
         public string Fein { get; set; }
         public string IpedsId { get; set; }
         public string OpeId { get; set; }
-        public string AlternativeIdentifier { get; set; }
-        public string MissionAndGoalsStatement { get; set; }
+        //public string AlternativeIdentifier { get; set; }
+		public List<IdentifierValue> AlternativeIdentifier { get; set; }
+		public string MissionAndGoalsStatement { get; set; }
         public string MissionAndGoalsStatementDescription { get; set; }
 
         public List<FrameworkItem> IndustryType { get; set; }

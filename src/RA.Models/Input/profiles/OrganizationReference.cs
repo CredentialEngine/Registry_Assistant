@@ -37,10 +37,9 @@ namespace RA.Models.Input
 		{
 			//skip social media for now
 			//	|| ( SocialMedia == null || SocialMedia.Count == 0 )
-
+			//				|| string.IsNullOrWhiteSpace( Description )
 			if ( string.IsNullOrWhiteSpace( Type )
 				|| string.IsNullOrWhiteSpace( Name )
-				|| string.IsNullOrWhiteSpace( Description )
 				|| string.IsNullOrWhiteSpace( SubjectWebpage )
 				)
 				return false;
@@ -72,7 +71,7 @@ namespace RA.Models.Input
 	/// </summary>
 	public class EntityReference
 	{
-		/// <summary>
+/// <summary>
 		/// Id is a resovable URI
 		/// If the entity exists in the registry, provide the URI. 
 		/// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
@@ -81,15 +80,14 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Id { get; set; }
 
-		/// <summary>
+/// <summary>
 		/// Optionally, a CTID can be entered instead of an Id. 
 		/// Only enter Id or CTID, but not both
 		/// </summary>
 		public string CTID { get; set; }
 
 		//if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would be required
-
-		/// <summary>
+/// <summary>
 		/// the type of the entity must be provided if the Id was not provided. examples
 		/// ceterms:AssessmentProfile
 		/// ceterms:LearningOpportunityProfile
@@ -121,10 +119,9 @@ namespace RA.Models.Input
 		/// <returns></returns>
 		public bool HasNecessaryProperties()
 		{
-			//
+			//	|| string.IsNullOrWhiteSpace( Description )
 			if ( string.IsNullOrWhiteSpace( Name )
 				|| string.IsNullOrWhiteSpace( Type ) 
-				|| string.IsNullOrWhiteSpace( Description )
 				|| string.IsNullOrWhiteSpace( SubjectWebpage )
 				)
 				return false;

@@ -87,6 +87,8 @@ namespace RA.Models.Input
 			ComplaintProcess = new List<ProcessProfile>();
 			ReviewProcess = new List<ProcessProfile>();
 			RevocationProcess = new List<ProcessProfile>();
+
+			VersionIdentifier = new List<IdentifierValue>();
 		}
 
 
