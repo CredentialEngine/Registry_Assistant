@@ -1,0 +1,220 @@
+{
+  "LearningOpportunity": {
+    "AvailabilityListing": [
+      "http://www.google.com/?availabilityListing"
+    ],
+    "AvailableAt": [
+      {
+        "Address1": " 525-535 West Jefferson Street",
+        "Address2": "Address line 2",
+        "AddressRegion": "IL  ",
+        "City": "Springfield",
+        "Country": "United States",
+        "Name": "Springfield",
+        "PostalCode": "62761"
+      }
+    ],
+    "AvailableOnlineAt": [
+      "http://www.google.com/?availableOnlineAt"
+    ],
+    "CodedNotation": [
+      "123abc"
+    ],
+    "CreditHourType": "credit hour type value",
+    "CreditHourValue": 20.00,
+    "Ctid": "ce-3c6dccc7-9fc2-4c8b-9d22-b23595568c98",
+    "DateEffective": "2001-01-01",
+    "DeliveryType": [
+      "BlendedDelivery",
+      "InPerson",
+      "OnlineOnly"
+    ],
+    "DeliveryTypeDescription": "Delivery Type Description value",
+    "Description": "This will help test the publishing mechanism.",
+    "EstimatedCosts": [
+      {
+        "CostDetails": "http://www.google.com/?costdetailsurl",
+        "CostItems": [
+          {
+            "AudienceType": [
+              "CurrentStudent",
+              "FormerMilitary"
+            ],
+            "DirectCostType": "EnrollmentFee",
+            "PaymentPattern": "payment pattern description",
+            "Price": 1234567.00,
+            "ResidencyType": [
+              "InState",
+              "Local"
+            ]
+          }
+        ],
+        "Currency": "US Dollar",
+        "Description": "Cost profile description",
+        "EndDate": "2002-02-02",
+        "Jurisdiction": [
+          {
+            "Description": "jurisdiction description",
+            "GlobalJurisdiction": true,
+            "MainJurisdiction": {}
+          }
+        ],
+        "Name": "Cost profile name",
+        "StartDate": "2001-01-01"
+      }
+    ],
+    "EstimatedDuration": [
+      {
+        "ExactDuration": {
+          "Days": 4,
+          "HasValue": true,
+          "Hours": 5,
+          "Minutes": 6,
+          "Months": 2,
+          "Weeks": 3,
+          "Years": 1
+        },
+        "MaximumDuration": {},
+        "MinimumDuration": {}
+      }
+    ],
+    "HasPart": [
+      {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-73D4131B-FEF0-478F-9870-E21CE67C22F3",
+        "Type": "ceterms:LearningOpportunityProfile"
+      },
+      {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-96fd5a7f-4365-4874-919a-20a34230ac80",
+        "Type": "ceterms:LearningOpportunityProfile"
+      }
+    ],
+    "InstructionalProgramType": [
+      {
+        "CodedNotation": "11",
+        "Description": "Instructional programs that focus on the computer and information sciences and prepare individuals for various occupations in information technology and computer operations fields.",
+        "FrameworkName": "Classification of Instructional Programs",
+        "Name": "COMPUTER AND INFORMATION SCIENCES AND SUPPORT SERVICES",
+        "URL": "https://nces.ed.gov/ipeds/cipcode/cipdetail.aspx?y=55&cip=11"
+      },
+      {
+        "CodedNotation": "11.01",
+        "Description": "Instructional content for this group of programs is defined in codes 11.0101 - 11.0199.",
+        "FrameworkName": "Classification of Instructional Programs",
+        "Name": "Computer and Information Sciences, General",
+        "URL": "https://nces.ed.gov/ipeds/cipcode/cipdetail.aspx?y=55&cip=11.01"
+      },
+      {
+        "CodedNotation": "11.0101",
+        "Description": "A general program that focuses on computing, computer science, and information science and systems. Such programs are undifferentiated as to title and content and are not to be confused with specific programs in computer science, information science, or related support services.",
+        "FrameworkName": "Classification of Instructional Programs",
+        "Name": "Computer and Information Sciences, General",
+        "URL": "https://nces.ed.gov/ipeds/cipcode/cipdetail.aspx?y=55&cip=11.0101"
+      },
+      {
+        "Name": "other program category"
+      }
+    ],
+    "Jurisdiction": [
+      {
+        "Description": "jurisdiction description",
+        "GlobalJurisdiction": false,
+        "MainJurisdiction": {
+          "AddressRegion": "Saint Peter",
+          "Country": "Barbados",
+          "GeoURI": "http://geonames.org/3373554/",
+          "Latitude": 13.26096,
+          "Longitude": -59.61585,
+          "Name": "Saint Peter"
+        }
+      }
+    ],
+    "JurisdictionAssertions": [
+      {
+        "AssertedBy": {
+          "Id": "http://lr-staging.learningtapestry.com/resources/ce-2D409AAE-91B6-4A49-A767-D0C4BF8F462A"
+        },
+        "AssertsAccreditedIn": true,
+        "AssertsApprovedIn": true,
+        "Jurisdiction": {
+          "Description": "this is a jurisdiction assertion",
+          "GlobalJurisdiction": false,
+          "JurisdictionException": [
+            {
+              "AddressRegion": "Drenthe",
+              "Country": "Netherlands",
+              "GeoURI": "http://geonames.org/2756631/",
+              "Latitude": 52.83333,
+              "Longitude": 6.58333,
+              "Name": "Provincie Drenthe"
+            }
+          ],
+          "MainJurisdiction": {
+            "AddressRegion": "Provence-Alpes-Côte d'Azur",
+            "Country": "France",
+            "GeoURI": "http://geonames.org/3012937/",
+            "Latitude": 43.11954,
+            "Longitude": 6.13897,
+            "Name": "Hyères"
+          }
+        }
+      }
+    ],
+    "Keyword": [
+      "Keyword 1",
+      "Keyword 2",
+      "RegistryAssistant testing editor RecordId: 2163"
+    ],
+    "LearningMethodType": [
+      "Applied",
+      "ElectronicMediaBased",
+      "Laboratory"
+    ],
+    "Name": "TESTING_TESTING_Full Test Learning Opportunity -RegistryAssistant from Lopp: ",
+    "OwnedBy": {
+      "Id": "http://lr-staging.learningtapestry.com/resources/ce-8c5e42ea-724a-40e2-b082-efdc2299205e"
+    },
+    "Recommends": [
+      {
+        "AssertedBy": {
+          "Id": "http://lr-staging.learningtapestry.com/resources/ce-8c5e42ea-724a-40e2-b082-efdc2299205e"
+        },
+        "Description": "These are the recommendations.",
+        "Name": "recommendations"
+      }
+    ],
+    "Requires": [
+      {
+        "AssertedBy": {
+          "Id": "http://lr-staging.learningtapestry.com/resources/ce-8c5e42ea-724a-40e2-b082-efdc2299205e"
+        },
+        "Description": "These are the eligibility requirements.",
+        "Experience": "23 things",
+        "Name": "requirements",
+        "YearsOfExperience": 5.00
+      }
+    ],
+    "Subject": [
+      "Subject 1",
+      "Subject 2"
+    ],
+    "SubjectWebpage": "http://example.com?t=testLearningOpportunity",
+    "TeachesCompetency": [
+      {
+        "CodedNotation": "abcabc123",
+        "Framework": "http://www.google.com/?frameworkURL",
+        "FrameworkName": "Teaches competency framework",
+        "TargetNodeDescription": "teaches competency description",
+        "TargetNodeName": "teaches competency name"
+      },
+      {
+        "CodedNotation": "123abc",
+        "Framework": "http://www.google.com/?educationalframeworkurl",
+        "FrameworkName": "Competency framework name - Requires ",
+        "TargetNode": "http://www.google.com/?competencyURL",
+        "TargetNodeDescription": "Competency Description value",
+        "TargetNodeName": "Competency Name value - Requires "
+      }
+    ],
+    "VerificationMethodDescription": "Verification Method Description value"
+  }
+}

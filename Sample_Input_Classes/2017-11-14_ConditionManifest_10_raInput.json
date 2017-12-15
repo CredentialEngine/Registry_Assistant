@@ -1,0 +1,40 @@
+{
+  "CorequisiteConditions": [],
+  "Ctid": "ce-c9a375ea-7250-44e8-a906-05a094cd31f9",
+  "Description": "what happened here?",
+  "EntryConditions": [],
+  "Name": "NOCTI condition manifest",
+  "OwningOrganization": {
+    "Id": "https://sandbox.credentialengineregistry.org/resources/ce-6a62b250-a1a2-4d31-a702-cdc2437efd31"
+  },
+  "RecommendedConditions": [],
+  "RenewedConditions": [],
+  "RequiredConditions": [
+    {
+      "AlternativeCondition": [],
+      "AssertedBy": {
+        "Id": "https://sandbox.credentialengineregistry.org/resources/ce-6a62b250-a1a2-4d31-a702-cdc2437efd31"
+      },
+      "AudienceLevelType": [],
+      "AudienceType": [],
+      "Condition": [],
+      "CreditHourType": "",
+      "CreditUnitType": "",
+      "CreditUnitTypeDescription": "",
+      "DateEffective": "",
+      "Description": "This describes requirements inside a condition manifest",
+      "EstimatedCosts": [],
+      "Experience": "Experience text",
+      "Jurisdiction": [],
+      "Name": "requirements description",
+      "RequiresCompetency": [],
+      "ResidentOf": [],
+      "SubmissionOf": [],
+      "TargetAssessment": [],
+      "TargetCredential": [],
+      "TargetLearningOpportunity": [],
+      "YearsOfExperience": 4.00
+    }
+  ],
+  "SubjectWebpage": "http://www.example.com/?SubjectWebpage"
+}

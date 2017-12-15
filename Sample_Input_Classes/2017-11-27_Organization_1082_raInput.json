@@ -1,0 +1,214 @@
+{
+  "Organization": {
+    "Address": [
+      {
+        "Address1": "500 N Bronson Ave",
+        "AddressRegion": "MI",
+        "City": "Big Rapids",
+        "Country": "United States",
+        "Latitude": 43.705193,
+        "Longitude": -85.463534,
+        "Name": "NOCTI",
+        "PostalCode": "49307-9036"
+      }
+    ],
+    "AgentPurposeDescription": "To provide occupational competency testing materials and services to various state and teacher institutions (colleges and universities) engaged in preparing occupationally competent persons for teaching, supervisory, administrative or other leadership positions in vocational education.",
+    "AgentSectorType": "PrivateNonProfit",
+    "AgentType": [
+      "BusinessAssociation",
+      "CertificationBody"
+    ],
+    "AlternativeIdentifier": "NOCTI_alternative",
+    "AvailabilityListing": [
+      null
+    ],
+    "ComplaintProcess": [
+      {
+        "DateEffective": "11/12/2013",
+        "Description": "a review process",
+        "ExternalInputType": [
+          "Business",
+          "BusinessAssociation",
+          "Consumers"
+        ],
+        "ProcessFrequency": "Daily",
+        "ProcessingAgent": {
+          "Id": "https://sandbox.credentialengineregistry.org/resources/ce-6a62b250-a1a2-4d31-a702-cdc2437efd31"
+        },
+        "ProcessMethod": "http://example.com?t=processMethod",
+        "ProcessMethodDescription": "Process Method Description",
+        "ProcessStandards": "http://example.com?t=processStandards",
+        "ProcessStandardsDescription": "Process Standards Description",
+        "ScoringMethodDescription": "Scoring Method Description",
+        "SubjectWebpage": "http://example.com?t=processSubject"
+      }
+    ],
+    "ContactPoint": [
+      {
+        "ContactOption": [
+          "Information"
+        ],
+        "Emails": [
+          "nocti@nocti.org"
+        ]
+      },
+      {
+        "ContactOption": [
+          "Main Phone Number"
+        ],
+        "PhoneNumbers": [
+          "231-796-4890"
+        ]
+      }
+    ],
+    "Ctid": "ce-6a62b250-a1a2-4d31-a702-cdc2437efd31",
+    "Department": [
+      {
+        "Description": "testing",
+        "Name": "TESTING_a new popup dept",
+        "SubjectWebpage": "http://example.com?t=testOrganization1159",
+        "Type": "CredentialOrganization"
+      }
+    ],
+    "Description": "NOCTI is the largest provider of industry-based credentials and partner industry certifications for career and technical education (CTE) programs across the nation. Whether using assessments to meet Perkins accountability requirements, to guide data-driven instructional improvement, or to assist with teacher evaluation systems, NOCTI provides a credible solution through its validated and reliable technical skill assessment.",
+    "Duns": "054666222",
+    "Fein": "23-7455576",
+    "FoundingDate": "1999",
+    "HasConditionManifest": [
+      "https://sandbox.credentialengineregistry.org/resources/ce-c9a375ea-7250-44e8-a906-05a094cd31f9"
+    ],
+    "HasCostManifest": [
+      "https://sandbox.credentialengineregistry.org/resources/ce-bf427786-e7e3-44b8-92b0-6603b3b0b8e3"
+    ],
+    "Image": "http://www.lcsedu.net/sites/default/files/images/news/2012/nocti-logo-300x200.jpg",
+    "JurisdictionAssertions": [
+      {
+        "AssertedBy": {
+          "Id": "https://sandbox.credentialengineregistry.org/resources/ce-fc87a4f8-fb47-449c-8310-e5f10755fae4"
+        },
+        "AssertsAccreditedIn": true,
+        "AssertsApprovedIn": true,
+        "AssertsRecognizedIn": true,
+        "Jurisdiction": {
+          "Description": "org JA - specific INs",
+          "GlobalJurisdiction": false,
+          "MainJurisdiction": {
+            "Country": "United States",
+            "GeoURI": "http://geonames.org/6252001/",
+            "Latitude": 39.76,
+            "Longitude": -98.5,
+            "Name": "United States"
+          }
+        }
+      }
+    ],
+    "Keyword": [
+      "RegistryAssistant testing"
+    ],
+    "Name": "TESTING_NOCTI -RegistryAssistant from Org: ",
+    "Owns": [
+      {
+        "Description": "NOCTI Job Ready Assessment NOCTI written assessments consist of questions to measure an individual’s factual theoretical knowledge. 124 questions. This assessment may be administered in one, two, or three sessions.",
+        "Name": "TESTING_21st Century Skills for Workplace Success",
+        "SubjectWebpage": "http://example.com?t=testAssessment",
+        "Type": "ceterms:AssessmentProfile"
+      },
+      {
+        "Description": "The Board  of  Certified  Safety Professionals (BCSP) partners  with Pearson VUE to deliver  its  computer-based certification examinations  at testing  centers  available   throughout  the world.",
+        "Id": "https://sandbox.credentialengineregistry.org/resources/ce-2A2806BF-5FB8-4241-AEFA-6EA9EF2108EF",
+        "Name": "TESTING_ASP Exam",
+        "SubjectWebpage": "http://example.com?t=testAssessment",
+        "Type": "ceterms:AssessmentProfile"
+      },
+      {
+        "Description": "The 21st Century Skills for Workplace Success industry-based credential is included in NOCTI’s Job Ready assessment battery.  Job Ready assessments measure \ntechnical skills at the occupational level and include items which gauge factual and theoretical knowledge.  Job Ready assessments typically over both a written and performance component and can be used at the secondary and post-secondary levels.  Job Ready assessments can be delivered in an online or paper/pencil format.",
+        "Id": "https://sandbox.credentialengineregistry.org/resources/ce-86BE9B32-0556-4429-A058-E6DE44BD8FD3",
+        "Name": "TESTING_21st Century Skills for Workplace Success",
+        "SubjectWebpage": "http://example.com?t=testCredential",
+        "Type": "ceterms:Certificate"
+      },
+      {
+        "Description": "It's not an online program, it's a live broadcast/video",
+        "Id": "https://sandbox.credentialengineregistry.org/resources/ce-73D4131B-FEF0-478F-9870-E21CE67C22F3",
+        "Name": "TESTING_TESTING_Active Standard ASTM E2659",
+        "SubjectWebpage": "http://example.com?t=testLearningOpportunity",
+        "Type": "ceterms:LearningOpportunityProfile"
+      }
+    ],
+    "ServiceType": [
+      "OfferService"
+    ],
+    "SocialMedia": [
+      "https://twitter.com/NOCTI1",
+      "https://www.linkedin.com/company/nocti",
+      "https://www.facebook.com/NOCTI.org"
+    ],
+    "SubjectWebpage": "http://example.com?t=testOrganization",
+    "SubOrganization": [
+      {
+        "Description": "NOCTI Department of training",
+        "Name": "TESTING_NOCTI Department of training",
+        "SubjectWebpage": "http://example.com?t=testOrganization1157",
+        "Type": "CredentialOrganization"
+      }
+    ],
+    "Type": "CredentialOrganization",
+    "VerificationServiceProfiles": [
+      {
+        "DateEffective": "12/12/2015",
+        "Description": "verification profile description",
+        "EstimatedCost": [
+          {
+            "CostDetails": "http://example.com?t=verification&u=cost",
+            "CostItems": [
+              {
+                "PaymentPattern": "One time",
+                "Price": 130.45
+              }
+            ],
+            "Currency": "Azerbaijanian Manat",
+            "Description": "Verification Cost desc",
+            "EndDate": "2020-12-31",
+            "Name": "Verification Cost profile",
+            "StartDate": "2010-12-12"
+          }
+        ],
+        "HolderMustAuthorize": true,
+        "Jurisdiction": [
+          {
+            "Description": "a jurisdiction jurisdiction - type#1",
+            "GlobalJurisdiction": false,
+            "MainJurisdiction": {
+              "Country": "France",
+              "GeoURI": "http://geonames.org/3017382/",
+              "Latitude": 46.0,
+              "Longitude": 2.0,
+              "Name": "France"
+            }
+          }
+        ],
+        "OfferedBy": [
+          {
+            "Id": "https://sandbox.credentialengineregistry.org/resources/ce-141693CA-90E1-4749-820E-94F6C9A0A6DD"
+          }
+        ],
+        "TargetCredential": [
+          {
+            "Id": "https://sandbox.credentialengineregistry.org/resources/ce-86BE9B32-5555-4429-A058-E6DE44BD8FD3",
+            "Type": "ceterms:Certificate"
+          }
+        ],
+        "VerificationDirectory": "http://example.com?t=verificationDIRECTORY",
+        "VerificationMethodDescription": "Verification Method Description",
+        "VerificationService": "http://example.com?t=verificationservice",
+        "VerifiedClaimType": [
+          "BadgeClaim",
+          "TranscriptClaim",
+          "Verifiedclaim"
+        ]
+      }
+    ]
+  },
+  "OwningOrganizationIdentifier": "b0ae322e-71d5-4a17-951a-0d1e2ba72cd4",
+  "PublishByOrganizationIdentifier": "a1f0af86f561aa053704074c0438aab7"
+}

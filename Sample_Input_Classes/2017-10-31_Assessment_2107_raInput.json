@@ -1,0 +1,405 @@
+{
+  "AccreditedBy": [
+    {
+      "Id": "http://lr-staging.learningtapestry.com/resources/ce-66B26730-C43F-4FF7-A055-5A6919568750"
+    },
+    {
+      "Id": "http://lr-staging.learningtapestry.com/resources/ce-B3C9C71C-CCC8-491E-9AC6-A8E7A97AF62A"
+    }
+  ],
+  "AdministrationProcess": [],
+  "AdvancedStandingFrom": [
+    {
+      "AssertedBy": {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-6cd909c1-cfe3-42eb-9ba7-6ba36469f285"
+      },
+      "CreditHourType": "",
+      "CreditUnitType": "",
+      "CreditUnitTypeDescription": "",
+      "Description": "PLEASE PROVIDE A VALID DESCRIPTION",
+      "Name": "",
+      "TargetAssessment": [],
+      "TargetCredential": [],
+      "TargetLearningOpportunity": []
+    }
+  ],
+  "ApprovedBy": [
+    {
+      "Id": "http://lr-staging.learningtapestry.com/resources/ce-B3C9C71C-CCC8-491E-9AC6-A8E7A97AF62A"
+    }
+  ],
+  "AssessesCompetency": [
+    {
+      "CodedNotation": "",
+      "Framework": "",
+      "FrameworkName": "A test assesses framework - soon to be obsolete",
+      "TargetNode": "",
+      "TargetNodeDescription": "",
+      "TargetNodeName": "asmt2107 competency one"
+    },
+    {
+      "CodedNotation": "",
+      "Framework": "",
+      "FrameworkName": "A test assesses framework - soon to be obsolete",
+      "TargetNode": "",
+      "TargetNodeDescription": "",
+      "TargetNodeName": "asmt2107 competency 2"
+    },
+    {
+      "CodedNotation": "",
+      "Framework": "",
+      "FrameworkName": "A test assesses framework - soon to be obsolete",
+      "TargetNode": "",
+      "TargetNodeDescription": "",
+      "TargetNodeName": "asmt2107 competency 3"
+    }
+  ],
+  "AssessmentExample": "http://example.com?t=170215a.com",
+  "AssessmentExampleDescription": "170215a",
+  "AssessmentMethodType": [
+    "Artifact",
+    "Exam",
+    "Performance"
+  ],
+  "AssessmentOutput": "170215a",
+  "AssessmentUseType": [
+    "Formative"
+  ],
+  "AvailabilityListing": [
+    "http://example.com?t=AvailabilityListing.com"
+  ],
+  "AvailableAt": [
+    {
+      "Address1": "2450 Foundation Drive",
+      "Address2": "",
+      "AddressRegion": "IL",
+      "City": "Springfield",
+      "ContactPoint": [],
+      "Country": "United States",
+      "Name": "Springfield",
+      "PostalCode": "62704"
+    }
+  ],
+  "AvailableOnlineAt": [
+    "http://example.com?t=AvailableOnlineAt.com"
+  ],
+  "CodedNotation": [
+    "asmt 2107"
+  ],
+  "CommonConditions": [],
+  "CommonCosts": [],
+  "Corequisite": [
+    {
+      "AlternativeCondition": [],
+      "AssertedBy": {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-6cd909c1-cfe3-42eb-9ba7-6ba36469f285"
+      },
+      "AudienceLevelType": [],
+      "AudienceType": [],
+      "Condition": [],
+      "CreditHourType": "",
+      "CreditUnitType": "",
+      "CreditUnitTypeDescription": "",
+      "DateEffective": "",
+      "Description": "an asmt corq",
+      "EstimatedCosts": [],
+      "Experience": "",
+      "Jurisdiction": [],
+      "Name": "Associate Safety Professional (ASP)",
+      "RequiresCompetency": [],
+      "ResidentOf": [],
+      "SubmissionOf": [],
+      "TargetAssessment": [],
+      "TargetCredential": [
+        {
+          "Id": "http://lr-staging.learningtapestry.com/resources/ce-C1835D19-12FB-4052-DCBA-FC568BB34B54",
+          "Type": "ceterms:Certification"
+        }
+      ],
+      "TargetLearningOpportunity": []
+    }
+  ],
+  "CreditHourType": "",
+  "CreditUnitType": "ContinuingEducationUnit",
+  "CreditUnitTypeDescription": "added semester hours, value of 12, un of degree; value of 5",
+  "CreditUnitValue": 5.00,
+  "Ctid": "ce-A81E3B16-1111-40DA-A186-C568559AD7E5",
+  "DateEffective": "2010-12-12",
+  "DeliveryType": [
+    "BlendedDelivery",
+    "InPerson",
+    "OnlineOnly"
+  ],
+  "DeliveryTypeDescription": "170215a",
+  "Description": "The 21st Century Skills for Workplace Success industry-based credential is included in NOCTI’s Job Ready assessment battery. Job Ready assessments measure\ntechnical skills at the occupational level and include items which gauge factual and theoretical knowledge. Job Ready assessments typically over both a written and performance component and can be used at the secondary and post-secondary levels. Job Ready assessments can be delivered in an online or paper/pencil format. This assessment may be administered in one, two, or three sessions.",
+  "DevelopmentProcess": [],
+  "EntryCondition": [
+    {
+      "AlternativeCondition": [],
+      "AssertedBy": {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-6cd909c1-cfe3-42eb-9ba7-6ba36469f285"
+      },
+      "AudienceLevelType": [
+        "BeginnerLevel",
+        "IntermediateLevel"
+      ],
+      "AudienceType": [],
+      "Condition": [
+        "Be alert"
+      ],
+      "CreditHourType": "",
+      "CreditUnitType": "",
+      "CreditUnitTypeDescription": "",
+      "DateEffective": "",
+      "Description": "PLEASE PROVIDE A VALID DESCRIPTION",
+      "EstimatedCosts": [],
+      "Experience": "",
+      "Jurisdiction": [],
+      "Name": "an assessment entry condition",
+      "RequiresCompetency": [],
+      "ResidentOf": [],
+      "SubmissionOf": [],
+      "TargetAssessment": [],
+      "TargetCredential": [],
+      "TargetLearningOpportunity": []
+    }
+  ],
+  "EstimatedCosts": [
+    {
+      "Condition": [],
+      "CostDetails": "http://www.nocti.org/Pricing.cfm?ptab=JobReadyAssessments",
+      "CostItems": [
+        {
+          "AudienceType": [
+            "Citizen"
+          ],
+          "DirectCostType": "costType:StandaloneAssessment",
+          "Price": 29.50,
+          "ResidencyType": [
+            "InState",
+            "Local",
+            "OutOfState",
+            "Regional"
+          ]
+        },
+        {
+          "AudienceType": [
+            "Citizen"
+          ],
+          "DirectCostType": "costType:Application",
+          "Price": 55.00,
+          "ResidencyType": [
+            "InState",
+            "Local",
+            "OutOfState",
+            "Regional"
+          ]
+        }
+      ],
+      "Currency": "US Dollar",
+      "Description": "*** COST PROFILE DESCRIPTION MISSING ***",
+      "Name": "21st Century Skills for Workplace Success ASSESSMENT -updated from credential"
+    },
+    {
+      "Condition": [],
+      "CostDetails": "http://example.com",
+      "CostItems": [
+        {
+          "AudienceType": [],
+          "DirectCostType": "costType:AggregateCost",
+          "Price": 999.33,
+          "ResidencyType": [
+            "International"
+          ]
+        }
+      ],
+      "Currency": "Pound Sterling",
+      "Description": "*** COST PROFILE DESCRIPTION MISSING ***",
+      "Name": "Cost for the British"
+    }
+  ],
+  "ExternalResearch": [
+    "http://example.com?t=170215a.com"
+  ],
+  "FinancialAssistance": [],
+  "HasGroupEvaluation": false,
+  "HasGroupParticipation": false,
+  "InLanguage": [
+    "Spanish; Castilian"
+  ],
+  "InstructionalProgramType": [],
+  "IsProctored": false,
+  "Jurisdiction": [
+    {
+      "GlobalJurisdiction": false,
+      "JurisdictionException": [],
+      "MainJurisdiction": {
+        "Country": "United States",
+        "GeoNamesId": 6252001,
+        "Latitude": 39.76,
+        "Longitude": -98.5,
+        "Name": "United States",
+        "ToponymName": "",
+        "Url": "http://geonames.org/6252001/"
+      }
+    }
+  ],
+  "JurisdictionAssertions": [
+    {
+      "AssertedBy": {
+        "Description": "Boston University Metropolitan College",
+        "Name": "Boston University Metropolitan College",
+        "SubjectWebpage": "http://msmonline.bu.edu/about-us-pop-up",
+        "Type": "CredentialOrganization"
+      },
+      "AssertsAccreditedIn": true,
+      "AssertsApprovedIn": true,
+      "Jurisdiction": {
+        "Description": "testing asserted in ",
+        "GlobalJurisdiction": false,
+        "JurisdictionException": [
+          {
+            "Country": "United States",
+            "GeoNamesId": 5185099,
+            "Latitude": 40.25175,
+            "Longitude": -77.70027,
+            "Name": "Concord",
+            "Region": "Pennsylvania",
+            "ToponymName": "",
+            "Url": "http://geonames.org/5185099/"
+          }
+        ],
+        "MainJurisdiction": {
+          "Country": "United States",
+          "GeoNamesId": 4930907,
+          "Latitude": 42.43343,
+          "Longitude": -71.60784,
+          "Name": "Bolton",
+          "Region": "Massachusetts",
+          "ToponymName": "",
+          "Url": "http://geonames.org/4930907/"
+        }
+      }
+    }
+  ],
+  "Keyword": [
+    "2107 asmt  keyword"
+  ],
+  "MaintenanceProcess": [],
+  "Name": "TESTING_21st Century Skills for Workplace Success - 170215a",
+  "OfferedBy": [],
+  "OwnedBy": {
+    "Id": "http://lr-staging.learningtapestry.com/resources/ce-6cd909c1-cfe3-42eb-9ba7-6ba36469f285"
+  },
+  "ProcessStandards": "http://example.com?t=170215a.com",
+  "ProcessStandardsDescription": "http://170215a.com",
+  "RecognizedBy": [
+    {
+      "Id": "http://lr-staging.learningtapestry.com/resources/ce-66B26730-C43F-4FF7-A055-5A6919568750"
+    }
+  ],
+  "Recommends": [
+    {
+      "AlternativeCondition": [],
+      "AssertedBy": {
+        "Id": "http://lr-staging.learningtapestry.com/resources/ce-6cd909c1-cfe3-42eb-9ba7-6ba36469f285"
+      },
+      "AudienceLevelType": [],
+      "AudienceType": [],
+      "Condition": [],
+      "CreditHourType": "",
+      "CreditUnitType": "",
+      "CreditUnitTypeDescription": "",
+      "DateEffective": "",
+      "Description": "PLEASE PROVIDE A VALID DESCRIPTION",
+      "EstimatedCosts": [],
+      "Experience": "",
+      "Jurisdiction": [],
+      "Name": "Later",
+      "RequiresCompetency": [],
+      "ResidentOf": [],
+      "SubmissionOf": [],
+      "TargetAssessment": [],
+      "TargetCredential": [],
+      "TargetLearningOpportunity": []
+    }
+  ],
+  "RegulatedBy": [],
+  "Requires": [
+    {
+      "AlternativeCondition": [],
+      "AssertedBy": {},
+      "AudienceLevelType": [],
+      "AudienceType": [],
+      "Condition": [],
+      "CreditHourType": "",
+      "CreditUnitType": "",
+      "CreditUnitTypeDescription": "",
+      "DateEffective": "",
+      "Description": "PLEASE PROVIDE A VALID DESCRIPTION",
+      "EstimatedCosts": [],
+      "Experience": "",
+      "Jurisdiction": [],
+      "Name": "required competencies",
+      "RequiresCompetency": [
+        {
+          "CodedNotation": "",
+          "Framework": "",
+          "FrameworkName": "req cond prof - competency framework 1",
+          "TargetNode": "",
+          "TargetNodeDescription": "",
+          "TargetNodeName": "req cond prof - competency framework 1  - comp one"
+        },
+        {
+          "CodedNotation": "",
+          "Framework": "",
+          "FrameworkName": "req cond prof - competency framework 1",
+          "TargetNode": "",
+          "TargetNodeDescription": "",
+          "TargetNodeName": "competency framework 1  - comp 2"
+        },
+        {
+          "CodedNotation": "",
+          "Framework": "",
+          "FrameworkName": "req cond prof - competency framework 1",
+          "TargetNode": "",
+          "TargetNodeDescription": "",
+          "TargetNodeName": "competency framework 1  - comp 3"
+        },
+        {
+          "CodedNotation": "",
+          "Framework": "",
+          "FrameworkName": "req cond prof - competency framework 1",
+          "TargetNode": "",
+          "TargetNodeDescription": "ASMT COMPETENCY NOT SAVING",
+          "TargetNodeName": "competency framework 1  - comp 4"
+        },
+        {
+          "CodedNotation": "",
+          "Framework": "",
+          "FrameworkName": "req cond prof - competency framework 1",
+          "TargetNode": "",
+          "TargetNodeDescription": "ASMT COMPETENCY NOT SAVING",
+          "TargetNodeName": "competency framework 1  - comp 5"
+        }
+      ],
+      "ResidentOf": [],
+      "SubmissionOf": [],
+      "TargetAssessment": [],
+      "TargetCredential": [],
+      "TargetLearningOpportunity": []
+    }
+  ],
+  "ScoringMethodDescription": "170215a",
+  "ScoringMethodExample": "http://example.com?t=170215a.com",
+  "ScoringMethodExampleDescription": "170215a",
+  "ScoringMethodType": [
+    "NormReferenced"
+  ],
+  "Subject": [
+    "2107 asmt subject",
+    "my other subject",
+    "my subject"
+  ],
+  "SubjectWebpage": "http://example.com?t=testAssessment"
+}

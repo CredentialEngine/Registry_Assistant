@@ -1,0 +1,59 @@
+{
+  "CostDetails": "http://example.com",
+  "Ctid": "ce-bf427786-e7e3-44b8-92b0-6603b3b0b8e3",
+  "Description": "testing - has one cost profile with three costs items",
+  "EndDate": "12/12/2050",
+  "EstimatedCosts": [
+    {
+      "Condition": [],
+      "CostDetails": "http://example.com",
+      "CostItems": [
+        {
+          "AudienceType": [],
+          "DirectCostType": "costType:Application",
+          "PaymentPattern": "One-time",
+          "Price": 99.99,
+          "ResidencyType": []
+        },
+        {
+          "AudienceType": [],
+          "DirectCostType": "costType:BackgroundCheck",
+          "Price": 49.99,
+          "ResidencyType": []
+        },
+        {
+          "AudienceType": [],
+          "DirectCostType": "costType:GraduationFee",
+          "Price": 111.00,
+          "ResidencyType": []
+        }
+      ],
+      "Currency": "Afghani",
+      "Description": "*** COST PROFILE DESCRIPTION MISSING ***",
+      "EndDate": "1999-12-31",
+      "Jurisdiction": [
+        {
+          "Description": "We should consider auto creating default jurisdictions for the US.",
+          "GlobalJurisdiction": false,
+          "JurisdictionException": [],
+          "MainJurisdiction": {
+            "AddressRegion": "",
+            "ContactPoint": [],
+            "Country": "United States",
+            "GeoURI": "http://geonames.org/6252001/",
+            "Latitude": 39.76,
+            "Longitude": -98.5,
+            "Name": "United States"
+          }
+        }
+      ],
+      "Name": " cost profile one for cost manifest",
+      "StartDate": "2010-01-01"
+    }
+  ],
+  "Name": "First cost manifest for org 1082",
+  "OwningOrganization": {
+    "Id": "https://sandbox.credentialengineregistry.org/resources/ce-6a62b250-a1a2-4d31-a702-cdc2437efd31"
+  },
+  "StartDate": "11/13/2013"
+}
