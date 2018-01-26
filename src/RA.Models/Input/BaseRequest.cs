@@ -8,18 +8,6 @@ namespace RA.Models.Input
 {
 	public class BaseRequest
 	{
-		/// <summary>
-		/// API Key
-		/// Used to verify publishing org has rights to publish data for the 
-		/// </summary>
-		public string APIKey { get; set; }
-
-
-		/// <summary>
-		/// Publisher/Organization making the request
-		/// This is the API Key for the publishing organization
-		/// </summary>
-		public string PublishByOrganizationIdentifier { get; set; }
 
 		/// <summary>
 		/// Identifier for Organization which Owns the data being published
