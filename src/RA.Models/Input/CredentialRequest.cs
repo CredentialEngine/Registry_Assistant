@@ -9,7 +9,7 @@ using RA.Models;
 namespace RA.Models.Input
 {
 	/// <summary>
-	/// Class used with a CredentiAL format or publish request
+	/// Class used with a Credential format or publish request
 	/// </summary>
 	public class CredentialRequest : BaseRequest
 	{
@@ -21,7 +21,6 @@ namespace RA.Models.Input
 		/// Credential Input Class
 		/// </summary>
 		public Credential Credential { get; set; }
-
 
 	}
 
@@ -135,8 +134,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public string SubjectWebpage { get; set; } //URL
 
-
-
 		public string AlternateName { get; set; }
 		/// <summary>
 		/// Image URL
@@ -159,20 +156,7 @@ namespace RA.Models.Input
 		/// could use general input or specific
 		/// general has more opportunity for errors
 		/// </summary>
-		//public List<OrgRole> AgentRoles { get; set; }
-		/*
-		 * ceterms:accreditedBy
-			ceterms:approvedBy
-			ceterms:offeredBy
-			ceterms:recognizedBy
-			ceterms:regulatedBy
-			ceterms:renewedBy
-			ceterms:revokedBy
 		 * 
-		 * 
-		 * 
-		 * 
-		 */
 		public List<OrganizationReference> AccreditedBy { get; set; }
 		public List<OrganizationReference> ApprovedBy { get; set; }
 		public List<OrganizationReference> OfferedBy { get; set; }
