@@ -15,8 +15,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public string PublishForOrganizationIdentifier { get; set; }
 
-		//public string ApiPublisher { get; set; }
-
 		/// <summary>
 		/// Envelope Identifier
 		/// Optional property, used where the publishing entity wishes to store the identifier.

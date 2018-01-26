@@ -156,7 +156,6 @@ namespace RA.Models.Input
 		/// could use general input or specific
 		/// general has more opportunity for errors
 		/// </summary>
-		 * 
 		public List<OrganizationReference> AccreditedBy { get; set; }
 		public List<OrganizationReference> ApprovedBy { get; set; }
 		public List<OrganizationReference> OfferedBy { get; set; }
