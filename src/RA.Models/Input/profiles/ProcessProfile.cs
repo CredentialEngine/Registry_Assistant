@@ -14,7 +14,6 @@ namespace RA.Models.Input
         public ProcessProfile()
         {
             ExternalInputType = new List<string>();
-			ScoringMethodType = new List<string>();
 			Jurisdiction = new List<Jurisdiction>();
 			ProcessingAgent = new OrganizationReference();
 			TargetCredential = new List<EntityReference>();
@@ -37,7 +36,7 @@ namespace RA.Models.Input
         public string ScoringMethodDescription { get; set; }
         public string ScoringMethodExample { get; set; }
         public string ScoringMethodExampleDescription { get; set; }
-        public List<string> ScoringMethodType { get; set; }
+        //public List<string> ScoringMethodType { get; set; }
         public List<EntityReference> TargetCredential { get; set; }
         public List<EntityReference> TargetAssessment { get; set; }
         public List<EntityReference> TargetLearningOpportunity { get; set; }

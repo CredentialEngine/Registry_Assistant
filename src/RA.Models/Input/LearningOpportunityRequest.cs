@@ -86,36 +86,39 @@ namespace RA.Models.Input
 		/// </summary>
 		public OrganizationReference OwnedBy { get; set; }
 
-		#endregion
+        //at least one of:
+        public List<string> AvailableOnlineAt { get; set; } //URL
+        public List<string> AvailabilityListing { get; set; } //URL
+        public List<Place> AvailableAt { get; set; }
+        #endregion
+
+        #region *** Required if available Properties ***
+
+
+        public List<string> LearningMethodType { get; set; }
+        public List<string> DeliveryType { get; set; }
+        public string DeliveryTypeDescription { get; set; }
+        #endregion
+
+        #region *** Recommended Properties ***
+        public string DateEffective { get; set; }
+        public List<string> InLanguage { get; set; }
+        #endregion
 
 
 
-		#region *** Required if available Properties ***
-		public List<string> AvailableOnlineAt { get; set; } //URL
-		public List<string> AvailabilityListing { get; set; } //URL
-		public List<Place> AvailableAt { get; set; }
-		#endregion
-
-		#region *** Recommended Properties ***
-
-		#endregion
-
-
-		public List<string> InLanguage { get; set; }
-		public List<string> Keyword { get; set; }
+        public List<string> Keyword { get; set; }
         public List<string> Subject { get; set; }
        
       
 		public List<string> CodedNotation { get; set; }
-		public string DateEffective { get; set; }
+
        
 
 		public string VerificationMethodDescription { get; set; }
       
 
-		public List<string> LearningMethodType { get; set; }
-		public List<string> DeliveryType { get; set; }
-        public string DeliveryTypeDescription { get; set; }
+
 		public List<FrameworkItem> InstructionalProgramType { get; set; }
 		public List<DurationProfile> EstimatedDuration { get; set; }
 

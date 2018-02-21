@@ -93,21 +93,37 @@ namespace RA.Models.Input
 
 		#region *** Required Properties ***
 
-		#endregion
 
 		/// <summary>
 		/// Name of this credential
 		/// </summary>
 		public string Name { get; set; }
 		public string Description { get; set; }
-
+		/// <summary>
+		/// Organization that owns this credential
+		/// </summary>
+		public List<OrganizationReference> OwnedBy { get; set; }
 
 		/// <summary>
 		/// The credential type as defined in CTDL
 		/// </summary>
 		public string CredentialType { get; set; }
 
+        public string CredentialStatusType { get; set; }
+        /// <summary>
+        /// CTID - unique identifier
+        /// If not provided, will be set to ce-UUID
+        /// ex: ce-F22CA1DC-2D2E-49C0-9E72-0457AD348873
+        /// It will be the primary key for retrieving this entity from the registry. 
+        /// Also it must be provided 
+        /// </summary>
+        public string Ctid { get; set; }
 
+		/// <summary>
+		/// SubjectWebpage URL
+		/// </summary>
+		public string SubjectWebpage { get; set; } //URL
+		#endregion
 
 		#region *** Required if available Properties ***
 
@@ -115,41 +131,24 @@ namespace RA.Models.Input
 
 
 		public string DateEffective { get; set; }
-		/// <summary>
-		/// Organization that owns this credential
-		/// </summary>
-		public List<OrganizationReference> OwnedBy { get; set; }
 
-		/// <summary>
-		/// CTID - unique identifier
-		/// If not provided, will be set to ce-UUID
-		/// ex: ce-F22CA1DC-2D2E-49C0-9E72-0457AD348873
-		/// It will be the primary key for retrieving this entity from the registry. 
-		/// Also it must be provided 
-		/// </summary>
-		public string Ctid { get; set; }
-
-		/// <summary>
-		/// SubjectWebpage URL
-		/// </summary>
-		public string SubjectWebpage { get; set; } //URL
-
-		public string AlternateName { get; set; }
-		/// <summary>
-		/// Image URL
-		/// </summary>
-		public string Image { get; set; }
+		//public string AlternateName { get; set; }
+        public List<string> AlternateName { get; set; } = new List<string>();
+        /// <summary>
+        /// Image URL
+        /// </summary>
+        public string Image { get; set; }
 
 
 		/// <summary>
 		/// AvailableOnlineAt URL
 		/// </summary>
 		public string AvailableOnlineAt { get; set; }
-
-		public List<EntityReference> HasPart { get; set; }
-		public List<EntityReference> IsPartOf { get; set; }
-
-		public List<Place> AvailableAt { get; set; }
+        /// <summary>
+        /// AvailabilityListing URL
+        /// </summary>
+        public string AvailabilityListing { get; set; }
+        public List<Place> AvailableAt { get; set; }
 
 		public OrganizationReference CopyrightHolder { get; set; }
 		/// <summary>
@@ -164,20 +163,22 @@ namespace RA.Models.Input
 		public List<OrganizationReference> RenewedBy { get; set; }
 		public List<OrganizationReference> RevokedBy { get; set; }
 
-		#region INs
-		/// <summary>
-		/// Handling assertions in jurisdictions
-		/// The current approach is to use a one record per asserting organization. The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected
-		/// </summary>
-		public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
+
+        public List<EntityReference> HasPart { get; set; }
+        public List<EntityReference> IsPartOf { get; set; }
+
+
+        #region INs
+        /// <summary>
+        /// Handling assertions in jurisdictions
+        /// The current approach is to use a one record per asserting organization. The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected
+        /// </summary>
+        public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
 
 	
 		#endregion
 
-		/// <summary>
-		/// AvailabilityListing URL
-		/// </summary>
-		public string AvailabilityListing { get; set; }
+
 		public string CredentialId { get; set; }
 		//public string VersionIdentifier { get; set; }
 		public List<IdentifierValue> VersionIdentifier { get; set; }
@@ -207,11 +208,6 @@ namespace RA.Models.Input
 		public List<Jurisdiction> Jurisdiction { get; set; }
 		// public List<GeoCoordinates> Region { get; set; }
 
-		/// <summary>
-		/// Container for all condition profiles for entity
-		/// </summary>        
-		//public ConditionProfiles ConditionProfiles { get; set; }
-
 		public List<ConditionProfile> Requires { get; set; }
 		public List<ConditionProfile> Recommends { get; set; }
 		public List<ConditionProfile> Corequisite { get; set; }
@@ -236,7 +232,7 @@ namespace RA.Models.Input
 		public List<ProcessProfile> RevocationProcess { get; set; }
 		public List<FinancialAlignmentObject> FinancialAssistance { get; set; }
 
-		public string CredentialStatusType { get; set; }
+		
 		public List<RevocationProfile> Revocation { get; set; }
 		
 	}
