@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
 using System.Web;
 using Newtonsoft.Json;
-using Utilities;
 
 //may want an alternative to this
 //using CtdlHelper = Factories;
@@ -16,7 +12,7 @@ using Utilities;
 
 namespace RA.Services
 {
-	public class ValidationServices
+    public class ValidationServices
 	{
 		#region codes
 
@@ -152,9 +148,6 @@ namespace RA.Services
 		public static bool IsTermValid( string ctdlProperty, string term, ref CodeItem code )
 		{
 			bool isValid = true;
-
-			//			if ( CtdlHelper.CodesManager.IsPropertySchemaValid( categoryCode, property, ref code ) == false )
-			//	return false;
 
 			code = GetVocabularyTermJson( ctdlProperty, term, ref isValid );
 

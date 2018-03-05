@@ -14,7 +14,7 @@ namespace RA.Models.Json
 			AssertedBy = null;
 			//AssertedByList = new List<OrganizationBase>();
 			// AssertedBy = new List<OrganizationBase>();
-			EstimatedCosts = new List<CostProfile>();
+			EstimatedCost = new List<CostProfile>();
             ResidentOf = new List<JurisdictionProfile>();
 			SubjectWebpage = null; 
             AudienceLevelType = new List<CredentialAlignmentObject>();
@@ -67,10 +67,11 @@ namespace RA.Models.Json
         [JsonProperty( PropertyName = "ceterms:submissionOf" )]
         public List<string> SubmissionOf { get; set; }
 
-        /// <summary>
-        /// Organization that owns this credential
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:assertedBy" )]
+		/// <summary>
+		/// Organization that asserts this condition
+		/// NOTE: It must be serialized to a List
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:assertedBy" )]
 		public object AssertedBy { get; set; }
 		//public OrganizationBase AssertedBy { get; set; }
 		//public List<OrganizationBase> AssertedBy { get; set; }
@@ -117,7 +118,7 @@ namespace RA.Models.Json
 
 		//external classes =====================================
 		[JsonProperty( PropertyName = "ceterms:estimatedCost" )]
-        public List<CostProfile> EstimatedCosts { get; set; }
+        public List<CostProfile> EstimatedCost { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:jurisdiction" )]
         public List<JurisdictionProfile> Jurisdiction { get; set; }

@@ -18,7 +18,7 @@ using Newtonsoft.Json.Serialization;
 using System.Runtime.Serialization;
 using Utilities;
 
-//using Models;
+using RA.Models;
 using MI = RA.Models.Input;
 using MJ = RA.Models.Json;
 using MIPlace = RA.Models.Input.Place;
@@ -39,9 +39,13 @@ namespace RA.Services
 
 		static string DEFAULT_GUID = "00000000-0000-0000-0000-000000000000";
 		public static string idUrl = ServiceHelper.GetAppKeyValue( "credRegistryResourceUrl" );
+
 		public string codeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
 		public static bool includingMinDataWithReferenceId = UtilityManager.GetAppKeyValue( "includeMinDataWithReferenceId", false );
-
+		public static string CurrentEntityType = "";
+		public static string CurrentEntityName = "";
+		public static string CurrentCtid = "";
+		public static string LastProfileType = "";
 		//
 		/// <summary>
 		/// Session variable for message to display in the system console
@@ -105,21 +109,66 @@ namespace RA.Services
 		}
 
 
-		#region Organization
-		/// <summary>
-		/// Format list of organization references to a target list 
-		/// </summary>
-		/// <param name="input"></param>
-		/// <param name="propertyName"></param>
-		/// <param name="dataIsRequired"></param>
-		/// <param name="messages"></param>
-		/// <returns></returns>
-		public static List<OrganizationBase> FormatOrganizationReferences( List<OrganizationReference> input,
+        #region Organization
+        public static List<OrganizationBase> FormatOrganizationReferences( object orgReference,
+                    string propertyName,
+                    bool dataIsRequired,
+                    ref List<string> messages,
+                    bool isQAOrg = false )
+        {
+
+            OrganizationReference input = new OrganizationReference();
+            List<OrganizationReference> list = new List<OrganizationReference>();
+            if ( orgReference.GetType() == typeof( List<OrganizationReference> ) )
+            {
+                list = orgReference as List<OrganizationReference>;
+                return FormatOrganizationReferences( list, propertyName, dataIsRequired, ref messages, isQAOrg );
+            }
+            else if ( orgReference.GetType() == typeof( OrganizationReference ) )
+            {
+                input = orgReference as OrganizationReference;
+                return FormatOrganizationReferenceToList( input, propertyName, dataIsRequired, ref messages, isQAOrg );
+            }
+            else if ( orgReference.GetType() == typeof( Newtonsoft.Json.Linq.JArray ) )
+            {
+                Newtonsoft.Json.Linq.JArray ar = new Newtonsoft.Json.Linq.JArray();
+                ar = orgReference as Newtonsoft.Json.Linq.JArray;
+                //list = ar.ToObject<List<string>>();
+                List<OrganizationReference> items = ( ( Newtonsoft.Json.Linq.JArray ) ar ).Select( x => new OrganizationReference
+                {
+                    Id = ( string ) x[ "id" ]
+                } ).ToList();
+                //foreach (var item in ar)
+                //{
+                //    input = new OrganizationReference() { Id = item.First.ToString() };
+                //}
+                return FormatOrganizationReferences( items, propertyName, dataIsRequired, ref messages, isQAOrg );
+            }
+            else
+            {
+                //unexpected
+                messages.Add( "Error unexpected type for Organization Reference for " + propertyName + " with a tyoe of " + orgReference.GetType().ToString() );
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Format list of organization references to a target list 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="propertyName"></param>
+        /// <param name="dataIsRequired"></param>
+        /// <param name="messages"></param>
+        /// <returns></returns>
+        public static List<OrganizationBase> FormatOrganizationReferences( List<OrganizationReference> input,
 			   string propertyName,
 			   bool dataIsRequired,
 			   ref List<string> messages,
 				bool isQAOrg = false )
 		{
+			if ( input == null || input.Count == 0 )
+				return null;
+
 			List<OrganizationBase> output = new List<OrganizationBase>();
 			EntityReferenceHelper helper = new EntityReferenceHelper();
 			foreach ( var target in input )
@@ -167,16 +216,16 @@ namespace RA.Services
 				return output;
 		}
 
-		/// <summary>
-		/// Handle a reference to an entity such as an organizaion. 
-		/// The input should either have an @id value, or all of:
-		/// - name
-		/// - subject webpage
-		/// - description
-		/// </summary>
-		/// <param name="entity"></param>
-		/// <returns></returns>
-		public static bool FormatOrganizationReference( OrganizationReference entity,
+        /// <summary>
+        /// Handle a reference to an entity such as an organizaion. 
+        /// The input should either have an @id value, or all of:
+        /// - name
+        /// - subject webpage
+        /// - description
+        /// </summary>
+        /// <param name="entity">OrganizationReference</param>
+        /// <returns></returns>
+        public static bool FormatOrganizationReference( OrganizationReference entity,
 				string propertyName,
 				ref EntityReferenceHelper helper,
 				bool dataIsRequired,
@@ -191,6 +240,8 @@ namespace RA.Services
 			//org.Context = null;
 			//just in case
 			helper.OrgBaseList = new List<OrganizationBase>();
+			//default
+			helper.ReturnedDataType = 1;
 
 			if ( entity == null || entity.IsEmpty() )
 			{
@@ -216,15 +267,6 @@ namespace RA.Services
 					org.CtdlId = entity.Id;
 					//17-09-?? per Stuart don't include a type with an @id
 					org.Type = null;
-					//if ( isQAOrg )
-					//	org.Type = AgentServices.QACredentialOrganization;
-					//else
-					//	org.Type = AgentServices.CredentialOrganization;
-					////or just agent
-					//org.Type = MJ.Agent.classType;
-
-					helper.ReturnedDataType = 1;
-
 					helper.OrgBaseList.Add( org );
 
 					//consider whether a warning should be returned if additional data was included - that is, it will be ignored.
@@ -241,8 +283,8 @@ namespace RA.Services
 				if ( !IsCtidValid( entity.CTID, ref messages ) )
 					return false;
 				org.NegateNonIdProperties();
-				string url = string.Format( UtilityManager.GetAppKeyValue( "credRegistryResourceIdTemplate" ), entity.CTID );
-				org.CtdlId = url;
+				org.CtdlId = idUrl + entity.CTID;
+				helper.OrgBaseList.Add( org );
 				return true;
 			}
 
@@ -251,7 +293,7 @@ namespace RA.Services
 			helper.ReturnedDataType = 2;
 			if ( dataIsRequired && entity.HasNecessaryProperties() == false )
 			{
-				messages.Add( string.Format( "Invalid Organization reference for {0}. Either a resolvable URL must be provided in the Id property, or all of the following properties are expected: Type, Name, Description, Subject Webpage, and Social Media.", propertyName ) );
+				messages.Add( string.Format( "Invalid Organization reference for {0}. Either a resolvable URL must be provided in the Id property, or all of the following properties are expected: Type: {0}, Name: {1}, and Subject Webpage {2}, and optionally Social Media.", propertyName, entity.Name, entity.SubjectWebpage ) );
 				return false;
 			}
 
@@ -273,12 +315,19 @@ namespace RA.Services
 			{
 				if ( orgReferencesRequireOrgType )
 					isValid = false;
+				else
+					org.Type = MJ.Agent.classType;
 			}
 
 			//at this point, all data should be present
 			//there is no reason to provide an org ref id not
+			int msgcount = messages.Count();
 
-			if ( !string.IsNullOrWhiteSpace( entity.Name ) )
+			if ( string.IsNullOrWhiteSpace( entity.Name ) )
+			{
+				messages.Add( string.Format( "A Name must be entered with a reference for {0}.", org.Type ) );
+			}
+			else
 			{
 				org.Name = entity.Name;
 				hasData = true;
@@ -286,7 +335,7 @@ namespace RA.Services
 			if ( !string.IsNullOrWhiteSpace( entity.Description ) )
 			{
 				org.Description = entity.Description;
-				hasData = true;
+				//hasData = true;
 			}
 
 			if ( string.IsNullOrWhiteSpace( entity.SubjectWebpage ) )
@@ -335,10 +384,14 @@ namespace RA.Services
 				helper.OrgBaseList.Add( org );
 			}
 
+			if ( messages.Count > msgcount )
+				isValid = false;
+
 			return isValid;
-		}
+        }
 
-
+               
+        
 		public static bool ValidateOrgType( string inputType,
 				ref string outputType,
 				ref List<string> messages )
@@ -374,6 +427,9 @@ namespace RA.Services
 			   bool dataIsRequired, //may not be necessary
 			   ref List<string> messages )
 		{
+			if ( input == null || input.Count == 0 )
+				return null;
+
 			List<EntityBase> output = new List<EntityBase>();
 			EntityReferenceHelper helper = new EntityReferenceHelper();
 			foreach ( var target in input )
@@ -397,13 +453,13 @@ namespace RA.Services
 		/// If classSchema is present, it will be assumed to be valid. Otherwise entity.Type will be validated
 		/// </summary>
 		/// <param name="entity"></param>
-		/// <param name="classSchema"></param>
+		/// <param name="classSchema">can be blank, where used with generic props like offers, approves</param>
 		/// <param name="helper"></param>
 		/// <param name="dataIsRequired">True if the property is required</param>
 		/// <param name="messages"></param>
 		/// <returns></returns>
 		public static bool FormatEntityReference( EntityReference entity,
-				string classSchema,
+				string classSchema, 
 				ref EntityReferenceHelper helper,
 				bool dataIsRequired,
 				ref List<string> messages )
@@ -415,6 +471,8 @@ namespace RA.Services
 			EntityBase entityBase = new EntityBase();
 			//just in case
 			helper.EntityBaseList = new List<EntityBase>();
+			//default
+			helper.ReturnedDataType = 1;
 
 			if ( entity == null || entity.IsEmpty() )
 			{
@@ -433,10 +491,8 @@ namespace RA.Services
 					entityBase.NegateNonIdProperties();
 					entityBase.CtdlId = entity.Id;
 					//the type is not to be included with @id
-					entityBase.Type = null; // classSchema;
 
 					helper.ReturnedDataType = 1;
-
 					helper.EntityBaseList.Add( entityBase );
 
 					//consider whether a warning should be returned if additional data was included - that is, it will be ignored.
@@ -444,7 +500,7 @@ namespace RA.Services
 				}
 				else
 				{
-					messages.Add( string.Format( "Invalid Id property for {0}. When the Id property is provided for an entity, it must be a valid resolvable URL", classSchema ) );
+					messages.Add( string.Format( "Invalid Id property for {0} ({1}). When the Id property is provided for an entity, it must have valid format for a URL", entity.Id, classSchema ) );
 					return false;
 				}
 			}
@@ -453,8 +509,10 @@ namespace RA.Services
 				if ( !IsCtidValid( entity.CTID, ref messages ) )
 					return false;
 				entityBase.NegateNonIdProperties();
-				string url = string.Format( UtilityManager.GetAppKeyValue( "credRegistryResourceIdTemplate" ), entity.CTID );
-				entityBase.CtdlId = url;
+				
+				entityBase.CtdlId = idUrl + entity.CTID;
+				
+				helper.EntityBaseList.Add( entityBase );
 				return true;
 			}
 
@@ -462,31 +520,36 @@ namespace RA.Services
 			helper.ReturnedDataType = 2;
 			if ( dataIsRequired && entity.HasNecessaryProperties() == false )
 			{
-				messages.Add( string.Format( "Invalid Entity reference for {0}. Either a resolvable URL must be provided in the Id property, or all of the following properties are expected: Type, Name, Description, and Subject Webpage.", string.IsNullOrWhiteSpace( classSchema ) ? entity.Type : classSchema ) );
+				messages.Add( string.Format( "Invalid Entity reference for {0}. Either a resolvable URL must be provided in the Id property, or all of the following properties are expected: Type: {0}, Name: {1}, and Subject Webpage {2}.", !string.IsNullOrWhiteSpace( entity.Type ) ? entity.Type : classSchema, entity.Name, entity.SubjectWebpage ) );
 				return false;
 			}
 
 			//if classSchema empty, the entity.Type must be a valid type
 			string validSchema = "";
-			if ( string.IsNullOrWhiteSpace( classSchema ) )
+			//start by validating entity type
+			if ( ValidationServices.IsSchemaNameValid( entity.Type, ref validSchema ) )
+				entityBase.Type = validSchema;
+			else if ( ValidationServices.IsSchemaNameValid( classSchema, ref validSchema ) )
 			{
-				//entity.Type
-				if ( ValidationServices.IsSchemaNameValid( entity.Type, ref validSchema ) )
-					entityBase.Type = validSchema;
-				else
-				{
-					messages.Add( string.Format( "Invalid Entity Type of {0} for SubjectWebpage: {1}. ", entity.Type, entity.SubjectWebpage ) );
-					return false;
-				}
-			} else
-				entityBase.Type = classSchema;
+				entityBase.Type = validSchema;
+			} else 
+			{
+				messages.Add( string.Format( "Invalid Entity Type of {0} for Name: {1}, SubjectWebpage: {2}. ", entity.Type, entity.Name, entity.SubjectWebpage ) );
+				return false;
+			}
+
+		
 			//set id to null
 			entityBase.CtdlId = null;
 			int msgcount = messages.Count();
 			//at this point, all data should be present
 			//there is no reason to provide an entityBase ref id not
 
-			if ( !string.IsNullOrWhiteSpace( entity.Name ) )
+			if ( string.IsNullOrWhiteSpace( entity.Name ) )
+			{
+				messages.Add( string.Format( "A Name must be entered with a reference for {0}.", entityBase.Type ) );
+			}
+			else
 			{
 				entityBase.Name = entity.Name;
 				hasData = true;
@@ -494,19 +557,16 @@ namespace RA.Services
 			if ( !string.IsNullOrWhiteSpace( entity.Description ) )
 			{
 				entityBase.Description = entity.Description;
-				hasData = true;
 			}
 
 			if ( string.IsNullOrWhiteSpace( entity.SubjectWebpage ) )
 			{
-				messages.Add( string.Format( "A Subject Webpage must be entered with organization reference for {0}.", classSchema ) );
-				return false;
+				messages.Add( string.Format( "A Subject Webpage must be entered with entity reference for {0}.", entityBase.Type ) );
 			}
 			else
-		   if ( !IsUrlValid( entity.SubjectWebpage, ref statusMessage, ref isUrlPresent ) )
+			if ( !IsUrlValid( entity.SubjectWebpage, ref statusMessage, ref isUrlPresent ) )
 			{
-				messages.Add( string.Format( "The Subject Webpage for {0} is invalid: {1}", classSchema, statusMessage ) );
-				return false;
+				messages.Add( string.Format( "The Subject Webpage for {0} is invalid: {1}", entityBase.Type, statusMessage ) );
 			}
 			else
 			{
@@ -521,13 +581,16 @@ namespace RA.Services
 				if ( dataIsRequired )
 				{
 					isValid = false;
-					messages.Add( "Invalid Entity reference. Either a resolvable URL must provided in the Id property, or the following properties are expected: Name, Description, and Subject Webpage." );
+					messages.Add( "Invalid Entity reference. Either a resolvable URL must provided in the Id property, or the following properties are expected: Name, and Subject Webpage." );
 				}
 			}
 			else
 			{
 				helper.EntityBaseList.Add( entityBase );
 			}
+
+			if ( messages.Count > msgcount )
+				isValid = false;
 
 			return isValid;
 		}
@@ -643,6 +706,8 @@ namespace RA.Services
 		#region ConditionManifest
 		public static List<MJ.ConditionManifest> FormatConditionManifest( List<MI.ConditionManifest> list, ref List<string> messages )
 		{
+			if ( list == null || list.Count == 0 )
+				return null;
 			var result = new List<MJ.ConditionManifest>();
 			foreach ( var input in list )
 			{
@@ -703,20 +768,20 @@ namespace RA.Services
 				cp.Condition = input.Condition;
 				cp.SubmissionOf = input.SubmissionOf;
 
-				//cp.AssertedBy = FormatOrganizationReference( input.AssertedBy, "Asserted By", true, ref messages );
-				if ( FormatOrganizationReference( input.AssertedBy, "Asserted By", ref helper, true, ref messages ) )
-				{
-					if ( helper.ReturnedDataType == 1 || helper.ReturnedDataType == 2 )
-					{
-						//currently defined as object. Ultimately will be a list, but should be single
-						List<OrganizationBase> bys = new List<OrganizationBase>();
-						bys.Add( helper.OrgBaseList[ 0 ] );
-						cp.AssertedBy = bys;
-						//OR
-						//cp.AssertedByList.Add( helper.OrgBaseList[ 0 ] );
-						//cp.AssertedBy = helper.OrgBaseList[ 0 ] ;
-					}
-				}
+				cp.AssertedBy = FormatOrganizationReferences( input.AssertedBy, "Asserted By", false, ref messages );
+				//if ( FormatOrganizationReference( input.AssertedBy, "Asserted By", ref helper, false, ref messages ) )
+				//{
+				//	if ( helper.ReturnedDataType == 1 || helper.ReturnedDataType == 2 )
+				//	{
+				//		//currently defined as object. Ultimately will be a list, but should be single
+				//		List<OrganizationBase> bys = new List<OrganizationBase>();
+				//		bys.Add( helper.OrgBaseList[ 0 ] );
+				//		cp.AssertedBy = bys;
+				//		//OR
+				//		//cp.AssertedByList.Add( helper.OrgBaseList[ 0 ] );
+				//		//cp.AssertedBy = helper.OrgBaseList[ 0 ] ;
+				//	}
+				//}
 
 				cp.Experience = input.Experience;
 				cp.MinimumAge = input.MinimumAge;
@@ -743,7 +808,7 @@ namespace RA.Services
 				}
 
 				cp.AlternativeCondition = FormatConditionProfile( input.AlternativeCondition, ref messages );
-				cp.EstimatedCosts = FormatCosts( input.EstimatedCosts, ref messages );
+				cp.EstimatedCost = FormatCosts( input.EstimatedCost, ref messages );
 
 				//jurisdictions
 				JurisdictionProfile newJp = new JurisdictionProfile();
@@ -778,7 +843,8 @@ namespace RA.Services
 		#region Connections
 		public static List<MJ.ConditionProfile> FormatConnections( List<MI.Connections> requires, ref List<string> messages )
 		{
-			if ( requires == null || requires.Count == 0 ) return null;
+			if ( requires == null || requires.Count == 0 )
+				return null;
 
 			var list = new List<MJ.ConditionProfile>();
 			EntityReferenceHelper helper = new EntityReferenceHelper();
@@ -787,7 +853,7 @@ namespace RA.Services
 				var cp = new Models.Json.ConditionProfile();
 
 				//cp.AssertedBy = FormatOrganizationReferenceToList( item.AssertedBy, "Asserted By", true, ref messages );
-				if ( FormatOrganizationReference( item.AssertedBy, "Asserted By", ref helper, true, ref messages ) )
+				if ( FormatOrganizationReference( item.AssertedBy, "Asserted By", ref helper, false, ref messages ) )
 				{
 					if ( helper.ReturnedDataType == 1 || helper.ReturnedDataType == 2 )
 					{
@@ -796,6 +862,7 @@ namespace RA.Services
 						bys.Add( helper.OrgBaseList[ 0 ] );
 						cp.AssertedBy = bys;
 						//cp.AssertedBy = helper.OrgBaseList[ 0 ] ;
+                        
 					}
 				}
 
@@ -870,14 +937,17 @@ namespace RA.Services
 
 				cp.Jurisdiction = MapJurisdictions( input.Jurisdiction, ref messages );
 				//cp.Region = MapRegions( input.Region, ref messages );
-				cp.ProcessingAgent = FormatOrganizationReferenceToList( input.ProcessingAgent, "Processing Agent", false, ref messages );
+				cp.ProcessingAgent = FormatOrganizationReferences( input.ProcessingAgent, "Processing Agent", false, ref messages );
 
 				//targets
 				cp.TargetCredential = FormatEntityReferences( input.TargetCredential, MJ.Credential.classType, false, ref messages );
 				cp.TargetAssessment = FormatEntityReferences( input.TargetAssessment, MJ.AssessmentProfile.classType, false, ref messages );
 				cp.TargetLearningOpportunity = FormatEntityReferences( input.TargetLearningOpportunity, MJ.LearningOpportunityProfile.classType, false, ref messages );
 
-				output.Add( cp );
+                cp.TargetCompetencyFramework = FormatEntityReferences( input.TargetCompetencyFramework, "ceterms:targetCompetencyFramework", false, ref messages ); ;
+
+
+                output.Add( cp );
 			}
 
 			return output;
@@ -962,9 +1032,12 @@ namespace RA.Services
 			//first check if a valid ISO8601 value has been provided.
 			if ( !string.IsNullOrWhiteSpace( entity.Duration_ISO8601 ) )
 			{
-				//find a regex validator
+                //find a regex validator
 
-			}
+                //if valid,return string
+                return entity.Duration_ISO8601;
+
+            }
 
 			if ( entity.Years > 0 )
 				duration += entity.Years.ToString() + "Y";
@@ -1079,7 +1152,7 @@ namespace RA.Services
 			//additional check for asserted by org, and list of assertion types
 			//jp.AssertedBy = FormatOrganizationReferenceToList( profile.AssertedBy, "Asserted By", true, ref messages );
 
-			if ( FormatOrganizationReference( profile.AssertedBy, "Asserted By", ref helper, true, ref messages ) )
+			if ( FormatOrganizationReference( profile.AssertedBy, "Asserted By", ref helper, false, ref messages ) )
 			{
 				if ( helper.ReturnedDataType == 1 || helper.ReturnedDataType == 2 )
 				{
@@ -1105,7 +1178,7 @@ namespace RA.Services
 			jpOut.Description = jp.Description;
 			//NEED to handle at least the main jurisdiction
 			if ( jp.MainJurisdiction != null &&
-				!string.IsNullOrEmpty( jp.MainJurisdiction.Name ) )
+				(!string.IsNullOrEmpty( jp.MainJurisdiction.Name) || !string.IsNullOrEmpty( jp.MainJurisdiction.GeoURI ) ))
 			{
 				jpOut.GlobalJurisdiction = null;
 				var gc = new MOPlace();
@@ -1612,11 +1685,6 @@ namespace RA.Services
 		{
 			MJ.CredentialAlignmentObject ca = new MJ.CredentialAlignmentObject();
 			CodeItem code = new CodeItem();
-			//if ( ctdlProperty.IndexOf( ":" ) == -1 )
-			//ctdlProperty += ":";
-			//do code look up
-			//        if ( term.ToLower().IndexOf( ctdlProperty.ToLower() ) == -1 && term.IndexOf(":") == -1 )
-			//term = ctdlProperty + ":" + term.Trim();
 
 			//TODO add framework
 			/*
@@ -1631,8 +1699,6 @@ namespace RA.Services
 				ceterms:frameworkName: "Organization Type",
 				ceterms:targetNodeName: "Certification Body"
 			},			 
-			 
-
 			 * 
 			 */
 			if ( ValidationServices.IsTermValid( ctdlProperty, term, ref code ) )
@@ -1642,11 +1708,11 @@ namespace RA.Services
 				ca.TargetNodeName = code.Name;
 				ca.TargetNodeDescription = code.Description;
 				if ( !string.IsNullOrWhiteSpace( code.ParentSchemaName ) )
-					ca.Framework = code.ParentSchemaName;
+					ca.FrameworkName = code.ParentSchemaName.Replace("ceterms:","");
 			}
 			else
 			{
-				messages.Add( string.Format( "Warning - The {0} type of {1} is invalid.", ctdlProperty, term ) );
+				messages.Add( string.Format( "The {0} type of {1} is invalid.", ctdlProperty, term ) );
 				ca = null;
 			}
 
@@ -1678,7 +1744,7 @@ namespace RA.Services
 		//    return ca;
 		//}
 
-		public static List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromList( List<FrameworkItem> list, bool includingCodedNotation, string frameworkName = "", string framework = "" )
+		public static List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromList( List<FrameworkItem> list, bool includingCodedNotation, ref List<string> messages, string frameworkName = "", string framework = "" )
 		{
 			if ( list == null || list.Count == 0 )
 				return null;
@@ -1690,7 +1756,7 @@ namespace RA.Services
 			foreach ( FrameworkItem item in list )
 			{
 				entity = new Models.Json.CredentialAlignmentObject();
-				entity = FormatCredentialAlignment( item, true, frameworkName, framework );
+				entity = FormatCredentialAlignment( item, true, ref messages, frameworkName, framework );
 				if ( entity != null )
 					output.Add( entity );
 			}
@@ -1698,21 +1764,15 @@ namespace RA.Services
 			return output;
 		}   //
 
-		public static MJ.CredentialAlignmentObject FormatCredentialAlignment( FrameworkItem entity, bool includingCodedNotation, string frameworkName = "", string framework = "" )
+		public static MJ.CredentialAlignmentObject FormatCredentialAlignment( FrameworkItem entity, bool includingCodedNotation, ref List<string> messages, string frameworkName = "", string framework = "" )
 		{
 			bool hasData = false;
-			MJ.CredentialAlignmentObject ca = new MJ.CredentialAlignmentObject();
+            bool isUrlPresent = true;
+            string statusMessage = "";
 
-			if ( !string.IsNullOrWhiteSpace( entity.Framework ) )
-			{
-				ca.Framework = entity.Framework;
-				//hasData = true;
-			}
-			else if ( !string.IsNullOrWhiteSpace( framework ) )
-			{
-				ca.Framework = framework;
-				//hasData = true;
-			}
+            MJ.CredentialAlignmentObject ca = new MJ.CredentialAlignmentObject();
+
+            
 
 			if ( !string.IsNullOrWhiteSpace( entity.FrameworkName ) )
 			{
@@ -1750,9 +1810,29 @@ namespace RA.Services
 					ca.CodedNotation = entity.CodedNotation;
 					//hasData = true;
 				}
-
 			}
-			if ( !hasData )
+
+            //Framework must be a valid Url
+            if ( !string.IsNullOrWhiteSpace( entity.Framework ) )
+            {
+                if ( IsUrlValid( entity.Framework, ref statusMessage, ref isUrlPresent ) )
+                    ca.Framework = entity.Framework;
+                else
+                {
+                    messages.Add( string.Format( "The Framework in a Credential Alignment Object must be a valid URI. Framework: {0}, targetNodeName: {1}, Message: {2}.", entity.Framework, ca.TargetNodeName, statusMessage ) );
+                }
+            }
+            else if ( !string.IsNullOrWhiteSpace( framework ) )
+            {
+                if ( IsUrlValid( entity.Framework, ref statusMessage, ref isUrlPresent ) )
+                    ca.Framework = framework;
+                else
+                {
+                    messages.Add( string.Format( "The Framework in a Credential Alignment Object must be a valid URI. Framework: {0}, targetNodeName: {1}, Message: {2}.", framework, ca.TargetNodeName, statusMessage ) );
+                }
+            }
+
+            if ( !hasData )
 				ca = null;
 			return ca;
 		}
@@ -2080,7 +2160,7 @@ namespace RA.Services
 		}
 		public static List<MJ.IdentifierValue> AssignIdentifierListToList( List<MI.IdentifierValue> input )
 		{
-			if ( input == null || input.Count > 0 )
+			if ( input == null || input.Count == 0 )
 				return null;
 
 			List<MJ.IdentifierValue> list = new List<MJ.IdentifierValue>();
@@ -2115,7 +2195,18 @@ namespace RA.Services
 			return value;
 		}
 		#region JSON helpers
-		public static JsonSerializerSettings GetJsonSettings()
+        public static void LogInputFile( CredentialRequest request, string endpoint, int appLevel = 6 )
+        {
+            string jsoninput = JsonConvert.SerializeObject( request, ServiceHelper.GetJsonSettings() );
+            LoggingHelper.WriteLogFile( appLevel, string.Format("Credential_{0}_{1}_raInput.json", endpoint, request.Credential.Ctid), jsoninput, "", false );
+        }
+        public static void LogInputFile( object request, string ctid, string entityType, string endpoint, int appLevel = 6 )
+        {
+            string jsoninput = JsonConvert.SerializeObject( request, ServiceHelper.GetJsonSettings() );
+            LoggingHelper.WriteLogFile( appLevel, string.Format( "{0}_{1}_{2}_raInput.json", entityType, endpoint, ctid ), jsoninput, "", false );
+        }
+
+        public static JsonSerializerSettings GetJsonSettings()
         {
             var settings = new JsonSerializerSettings()
             {
@@ -2171,40 +2262,80 @@ namespace RA.Services
         #endregion
 
         #region === Security related Methods ===
-        public static bool ValidateApiKey( string apiKey, ref string statusMessage )
-        {
-            if ( UtilityManager.GetAppKeyValue( "requiringApiKey", true ) == false )
+
+        /// <summary>
+        /// The actual validation will be via a call to the accounts api
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="statusMessage"></param>
+        /// <returns></returns>
+        public static bool ValidateRequest(RequestHelper helper, ref string statusMessage, bool isDeleteRequest = false)
+		{
+			bool isValid = true;
+            bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
+            if ( isDeleteRequest )
+                isTokenRequired = true;
+
+            //api key will be passed in the header
+            string apiToken = "";
+            if (IsAuthTokenValid( isTokenRequired, ref apiToken, ref statusMessage) == false)
             {
-                return true;
+                return false;
             }
-            else
+            helper.ApiKey = apiToken;
+
+            if ( isTokenRequired &&
+                (string.IsNullOrWhiteSpace(helper.OwnerCtid) || 
+                 !helper.OwnerCtid.ToLower().StartsWith("ce-")  ||
+                 helper.OwnerCtid.Length != 39) 
+                )
             {
-                //validate APIkey
-                if ( string.IsNullOrWhiteSpace( apiKey ) )
+                statusMessage = "Error - a valid CTID for the related organization must be provided.";
+            }
+            return isValid;
+		}
+
+		public static bool IsAuthTokenValid( bool isTokenRequired, ref string token, ref string message )
+		{
+			bool isValid = true;
+            //need to handle both ways. So if a token, and ctid are provided, then use them!
+            //bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
+
+            try
+            {
+                HttpContext httpContext = HttpContext.Current;
+
+                string authHeader = httpContext.Request.Headers[ "Authorization" ];
+                //registry API uses Token rather than Basic
+                if ( authHeader != null && authHeader.StartsWith( "ApiToken" ) )
                 {
-                    statusMessage = "An API Key must be provided.";
+                    //Extract credentials
+                    token = authHeader.Substring( "ApiToken ".Length ).Trim();
+
                 }
-                else
+            } catch (Exception ex)
+            {
+                if ( isTokenRequired )
                 {
-                    string encrypted = UtilityManager.Encrypt( apiKey );
-                    if ( encrypted == UtilityManager.GetAppKeyValue( "siteApiKey" ) )
-                        return true;
-                    else
-                    {
-                        statusMessage = "The Api Key is not a known key.";
-                    }
+                    LoggingHelper.LogError( ex, "Exception encountered attempting to get API key from request header. " );
                 }
             }
 
-            return false;
-        }
-        /// <summary>
-        /// Encrypt the text using MD5 crypto service
-        /// This is used for one way encryption of a user password - it can't be decrypted
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static string Encrypt( string data )
+            if ( isTokenRequired && string.IsNullOrWhiteSpace(token ) )
+            {
+                message = "Error a valid API key must be provided in the header";
+                isValid = false;
+            }
+
+            return isValid;
+		}
+		/// <summary>
+		/// Encrypt the text using MD5 crypto service
+		/// This is used for one way encryption of a user password - it can't be decrypted
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns></returns>
+		public static string Encrypt( string data )
         {
             byte[] byDataToHash = ( new UnicodeEncoding() ).GetBytes( data );
             byte[] bytHashValue = new MD5CryptoServiceProvider().ComputeHash( byDataToHash );
@@ -2885,7 +3016,7 @@ namespace RA.Services
 
 		public static void NotifyOnPublish( string type, string message )
 		{
-			string subject = string.Format("RA - successfully published a {0}", type);
+			string subject = string.Format("Registry Assistant - successfully published a {0}", type);
 			//string message = "";
 			//
 			if (UtilityManager.GetAppKeyValue( "notifyOnPublish", false ) )
@@ -3028,7 +3159,7 @@ namespace RA.Services
 
             return strValue;
         }
-        public static String CleanText( String text )
+        public static String CleanText( string text )
         {
             if ( String.IsNullOrEmpty( text.Trim() ) )
                 return String.Empty;
@@ -3053,7 +3184,33 @@ namespace RA.Services
             return output;
         }
 
-        #endregion
-    }
+		public static String FormatMessage( string message, string parm1 )
+		{
+			string msg = CurrentEntityType; //+ " " + 
+			if ( !string.IsNullOrWhiteSpace( CurrentEntityName ) )
+				msg += " - " + CurrentEntityName;
+
+			if ( message.IndexOf( "{0}" ) > -1 )
+				return string.Format( message, parm1 );
+			else
+				return message;
+		}
+		public static string FormatMessage( string message, string parm1, string parm2 )
+		{
+			return string.Format( message, parm1, parm2 );
+		}
+		public static string GetCurrentIP()
+		{
+			string remoteIP = "";
+			try
+			{
+				remoteIP = HttpContext.Current.Request.ServerVariables[ "REMOTE_HOST" ];
+			}
+			catch { }
+			return remoteIP;
+		}
+		
+		#endregion
+	}
 
 }

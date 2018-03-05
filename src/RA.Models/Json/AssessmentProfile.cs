@@ -68,7 +68,7 @@ namespace RA.Models.Json
 		}
 
 		/// <summary>
-		/// object type
+		///  type
 		/// </summary>
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }

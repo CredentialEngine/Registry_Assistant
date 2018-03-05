@@ -27,15 +27,6 @@ namespace RA.Models.Input
 		public DurationItem MaximumDuration { get; set; }
 		public DurationItem ExactDuration { get; set; }
 
-		public bool IsRange
-		{
-			get
-			{
-				return this.MinimumDuration != null
-			  && this.MaximumDuration != null
-			  && ( this.MinimumDuration.HasValue || this.MaximumDuration.HasValue );
-			}
-		}
 	}
 	//
 
@@ -51,6 +42,6 @@ namespace RA.Models.Input
 		public int Days { get; set; }
 		public int Hours { get; set; }
 		public int Minutes { get; set; }
-		public bool HasValue { get { return Years + Months + Weeks + Days + Hours + Minutes > 0; } }
+
 	}
 }

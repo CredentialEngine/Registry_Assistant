@@ -9,9 +9,10 @@
             Organization that owns this resource
             </summary>
         </member>
-        <member name="P:RA.Models.Input.BaseRequest.APIKey">
+        <member name="P:RA.Models.Input.BaseRequest.PublishForOrganizationIdentifier">
             <summary>
-            quite likely will be passed in the header????
+            Identifier for Organization which Owns the data being published
+            2017-12-13 - this will be the CTID for the owning org.
             </summary>
         </member>
         <member name="P:RA.Models.Input.BaseRequest.RegistryEnvelopeId">
@@ -19,11 +20,6 @@
             Envelope Identifier
             Optional property, used where the publishing entity wishes to store the identifier.
             Contains registry envelope identifier for a document in the registy. It should be empty for a new document. 
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.BaseRequest.Submitter">
-            <summary>
-            Person/Organization making the request
             </summary>
         </member>
         <member name="P:RA.Models.Input.ConditionManifestRequest.ConditionManifest">
@@ -40,6 +36,11 @@
         <member name="P:RA.Models.Input.ConditionManifest.RequiredConditions">
             <summary>
             Required condition profiles
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConditionManifest.RenewedConditions">
+            <summary>
+            Renewed condition profiles
             </summary>
         </member>
         <member name="P:RA.Models.Input.ConditionManifest.RecommendedConditions">
@@ -73,7 +74,7 @@
         </member>
         <member name="T:RA.Models.Input.CredentialRequest">
             <summary>
-            Class used with a CredentiAL format or publish request
+            Class used with a Credential format or publish request
             </summary>
         </member>
         <member name="P:RA.Models.Input.CredentialRequest.Credential">
@@ -86,14 +87,14 @@
             Name of this credential
             </summary>
         </member>
-        <member name="P:RA.Models.Input.Credential.CredentialType">
-            <summary>
-            The credential type as defined in CTDL
-            </summary>
-        </member>
         <member name="P:RA.Models.Input.Credential.OwnedBy">
             <summary>
             Organization that owns this credential
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.CredentialType">
+            <summary>
+            The credential type as defined in CTDL
             </summary>
         </member>
         <member name="P:RA.Models.Input.Credential.Ctid">
@@ -110,6 +111,7 @@
             SubjectWebpage URL
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "P:RA.Models.Input.Credential.AlternateName" -->
         <member name="P:RA.Models.Input.Credential.Image">
             <summary>
             Image URL
@@ -118,6 +120,11 @@
         <member name="P:RA.Models.Input.Credential.AvailableOnlineAt">
             <summary>
             AvailableOnlineAt URL
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.AvailabilityListing">
+            <summary>
+            AvailabilityListing URL
             </summary>
         </member>
         <member name="P:RA.Models.Input.Credential.AccreditedBy">
@@ -132,20 +139,39 @@
             The current approach is to use a one record per asserting organization. The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected
             </summary>
         </member>
-        <member name="P:RA.Models.Input.Credential.AvailabilityListing">
-            <summary>
-            AvailabilityListing URL
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Credential.Requires">
-            <summary>
-            Container for all condition profiles for entity
-            </summary>        
-        </member>
         <member name="T:RA.Models.Input.RevocationProfile">
             <summary>
             Revocation Profile
             The conditions and methods by which a credential can be removed from a holder.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.DeleteRequest.CTID">
+            <summary>
+            CTID of document to be deleted
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.DeleteRequest.PublishForOrganizationIdentifier">
+            <summary>
+            Identifier for Organization which Owns the data being published
+            2017-12-13 - this will be the CTID for the owning org.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.EnvelopeDelete.RegistryEnvelopeId">
+            <summary>
+            Envelope Identifier
+            Optional property, used where the publishing entity wishes to store the identifier.
+            Contains registry envelope identifier for a document in the registy. It should be empty for a new document. 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.EnvelopeDelete.CTID">
+            <summary>
+            CTID of document to be deleted
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.EnvelopeDelete.PublishForOrganizationIdentifier">
+            <summary>
+            Identifier for Organization which Owns the data being published
+            2017-12-13 - this will be the CTID for the owning org.
             </summary>
         </member>
         <member name="P:RA.Models.Input.LearningOpportunity.OwnedBy">
@@ -238,6 +264,11 @@
             The entities could be any of credential, assessment, or learning opportunity
             </summary>
         </member>
+        <member name="P:RA.Models.Input.Organization.OwnsCredentials">
+            <summary>
+            Prototype separate properties
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Organization.HasConditionManifest">
             <summary>
             Reference to condition manifests
@@ -248,17 +279,6 @@
             <summary>
             Reference to cost manifests
             A cost manifest can never be a third party reference, so a url is expected
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.ContactPoint.ContactType">
-            <summary>
-            Specification of the type of contact
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.ContactPoint.ContactOption">
-            <summary>
-            An option available on this contact point.
-            For example, a toll-free number or support for hearing-impaired callers.
             </summary>
         </member>
         <member name="T:RA.Models.Input.ConditionProfile">
@@ -275,6 +295,7 @@
         <member name="P:RA.Models.Input.ConditionProfile.AssertedBy">
             <summary>
             Organization that asserts this condition
+            This should be single, but as CTDL defines as multi-value, need to handle a List
             </summary>
         </member>
         <member name="P:RA.Models.Input.ConditionProfile.CreditUnitType">
@@ -384,6 +405,39 @@
             Price for this cost - optional
             </summary>
         </member>
+        <member name="T:RA.Models.Input.CostProfileFlattened">
+            <summary>
+            Version of Cost Profile where all cost items are flattened into a single record.
+            That is:
+            - if there is a single cost profile with three costs
+            - Output will be three cost profiles with the cost profile specific properties repeated for each cost profile item
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CostProfileFlattened.DirectCostType">
+            <summary>
+            Must be a valid CTDL cost type
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CostProfileFlattened.ResidencyType">
+            <summary>
+            List of Residency items
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CostProfileFlattened.AudienceType">
+            <summary>
+            List of Audience Types
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CostProfileFlattened.Price">
+            <summary>
+            Price for this cost - optional
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CostProfileFlattened.PaymentPattern">
+            <summary>
+            Payment Pattern
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.CredentialAlignmentObject.Framework">
             <summary>
             URL
@@ -441,9 +495,10 @@
             Organization asserts the related resource is accredited in the referenced jurisdiction
             </summary>
         </member>
-        <member name="P:RA.Models.Input.GeoCoordinates.Url">
+        <member name="P:RA.Models.Input.GeoCoordinates.GeoUri">
             <summary>
-            URL, typically of a geonames place
+            ceterms:geoURI
+            Entity that describes the longitude, latitude and other location details of a place.
             </summary>
         </member>
         <member name="T:RA.Models.Input.OrganizationReference">
@@ -510,17 +565,17 @@
         </member>
         <member name="P:RA.Models.Input.EntityReference.Name">
             <summary>
-            Name of the entity
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.EntityReference.Description">
-            <summary>
-            Description of the entity
+            Name of the entity (required)
             </summary>
         </member>
         <member name="P:RA.Models.Input.EntityReference.SubjectWebpage">
             <summary>
             Subject webpage of the entity
+            </summary> (required)
+        </member>
+        <member name="P:RA.Models.Input.EntityReference.Description">
+            <summary>
+            Description of the entity (optional)
             </summary>
         </member>
         <member name="M:RA.Models.Input.EntityReference.HasNecessaryProperties">
@@ -529,6 +584,17 @@
             17-08-27 We do need a type if only providing reference data
             </summary>
             <returns></returns>
+        </member>
+        <member name="P:RA.Models.Input.ContactPoint.ContactType">
+            <summary>
+            Specification of the type of contact
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ContactPoint.ContactOption">
+            <summary>
+            An option available on this contact point.
+            For example, a toll-free number or support for hearing-impaired callers.
+            </summary>
         </member>
         <member name="T:RA.Models.Input.ProcessProfile">
             <summary>
@@ -547,7 +613,8 @@
         </member>
         <member name="P:RA.Models.Json.ConditionProfile.AssertedBy">
             <summary>
-            Organization that owns this credential
+            Organization that asserts this condition
+            NOTE: It must be serialized to a List
             </summary>
         </member>
         <member name="P:RA.Models.Json.ContactPoint.ContactType">
@@ -586,7 +653,7 @@
         </member>
         <member name="P:RA.Models.Json.AssessmentProfile.Type">
             <summary>
-            object type
+             type
             </summary>
         </member>
         <member name="T:RA.Models.Json.CredentialAlignmentObject">
@@ -675,11 +742,7 @@
         <member name="P:RA.Models.Json.JurisdictionProfile.AssertedBy">
             <summary>
             Asserted by is typically only explicitly entered for jurisdiction assertions the INs
-            </summary>
-        </member>
-        <member name="T:RA.Models.Json.GeoCoordinates">
-            <summary>
-            If a url exists, then only output name plus the @id, otherwise, use the other properties 
+            NOTE: It must be serialized to a List
             </summary>
         </member>
         <member name="P:RA.Models.Json.LearningOpportunityProfile.Type">
@@ -736,7 +799,7 @@
             Payload of request to registry, containing properties formatted as CTDL - JSON-LD
             </summary>
         </member>
-        <member name="P:RA.Models.RequestStatus.CodeValidationType">
+        <member name="P:RA.Models.RequestHelper.CodeValidationType">
             <summary>
             CodeValidationType - actions for code validation
             rigid-concepts must match ctdl 
@@ -744,7 +807,7 @@
             skip - no validation of concept scheme concepts
             </summary>
         </member>
-        <member name="P:RA.Models.RequestStatus.RegistryEnvelopeId">
+        <member name="P:RA.Models.RequestHelper.RegistryEnvelopeId">
             <summary>
             return the registr envelope id
             </summary>

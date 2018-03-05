@@ -27,12 +27,11 @@ namespace RA.Models.Input
             AvailabilityListing = new List<string>();
             AvailableOnlineAt = new List<string>();
 			Jurisdiction = new List<Input.Jurisdiction>();
-			OwnedBy = new OrganizationReference();
 			JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
 			DeliveryType = new List<string>();
 
             InstructionalProgramType = new List<FrameworkItem>();
-            EstimatedCosts = new List<CostProfile>();
+            EstimatedCost = new List<CostProfile>();
             EstimatedDuration = new List<DurationProfile>();
 			//
             ScoringMethodType = new List<string>();
@@ -84,21 +83,21 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Organization that owns this resource
 		/// </summary>
-		public OrganizationReference OwnedBy { get; set; }
-		#endregion
+        public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
+        #endregion
 
 
 
-		#region *** Required if available Properties ***
+        #region *** Required if available Properties ***
 
-		#endregion
+        #endregion
 
-		#region *** Recommended Properties ***
+        #region *** Recommended Properties ***
 
-		#endregion
+        #endregion
 
 
-		public List<string> Keyword { get; set; }
+        public List<string> Keyword { get; set; }
         public List<string> Subject { get; set; }
         
         public List<string> AssessmentMethodType { get; set; }
@@ -130,7 +129,7 @@ namespace RA.Models.Input
 
         public List<DurationProfile> EstimatedDuration { get; set; }        
         //external classes
-        public List<CostProfile> EstimatedCosts { get; set; }
+        public List<CostProfile> EstimatedCost { get; set; }
 
         public string ScoringMethodDescription { get; set; }
         public string ScoringMethodExample { get; set; }

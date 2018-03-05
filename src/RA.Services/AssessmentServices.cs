@@ -24,7 +24,7 @@ namespace RA.Services
 		/// <param name="request"></param>
 		/// <param name="isValid"></param>
 		/// <param name="messages"></param>
-		public static void Publish( EntityRequest request, ref bool isValid, ref List<string> messages, ref string payload, ref string crEnvelopeId )
+		public static void Publish( EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId )
 		{
 			isValid = true;
 			//string crEnvelopeId = "";
@@ -36,16 +36,21 @@ namespace RA.Services
 			{
 				payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 
-				CER cer = new CER();
-				//crEnvelopeId = request.RegistryEnvelopeId;
+                CER cer = new CER( "Assessment", output.Type, output.Ctid );
+                cer.PublisherAuthorizationToken = apiKey;
+				cer.PublishingForOrgCtid = request.PublishForOrganizationIdentifier;
+
+				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+					cer.IsManagedRequest = true;
+
 				string identifier = "Assessment_" + request.Assessment.Ctid;
 
-				if ( cer.Publish( payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+				if ( cer.Publish( payload, submitter, identifier, ref status, ref registryEnvelopeId ) )
 				{
 					//for now need to ensure envelopid is returned
 					//request.RegistryEnvelopeId = crEnvelopeId;
 
-					string msg = string.Format( "<p>Published Assessment: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
+					string msg = string.Format( "<p>Published Assessment: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, registryEnvelopeId );
 					NotifyOnPublish( "Assessment", msg );
 				}
 				else
@@ -62,16 +67,16 @@ namespace RA.Services
 		}
 		//
 		//Used for demo page - NA 6/5/2017
-		public static string DemoPublish( OutputEntity ctdlFormattedAssessment, ref bool isValid, ref List<string> messages, ref string rawResponse, bool forceSkipValidation = false )
-		{
-			isValid = true;
-			var crEnvelopeId = "";
-			var payload = JsonConvert.SerializeObject( ctdlFormattedAssessment, ServiceHelper.GetJsonSettings() );
-			var identifier = "assessment_" + ctdlFormattedAssessment.Ctid;
-			rawResponse = new CER().Publish( payload, "", identifier, ref isValid, ref status, ref crEnvelopeId, forceSkipValidation );
+		//public static string DemoPublish( OutputEntity ctdlFormattedAssessment, ref bool isValid, ref List<string> messages, ref string rawResponse, bool forceSkipValidation = false )
+		//{
+		//	isValid = true;
+		//	var crEnvelopeId = "";
+		//	var payload = JsonConvert.SerializeObject( ctdlFormattedAssessment, ServiceHelper.GetJsonSettings() );
+		//	var identifier = "assessment_" + ctdlFormattedAssessment.Ctid;
+		//	rawResponse = new CER().Publish( payload, "", identifier, ref isValid, ref status, ref crEnvelopeId, forceSkipValidation );
 
-			return crEnvelopeId;
-		}
+		//	return crEnvelopeId;
+		//}
 		//
 
 		public static string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
@@ -112,7 +117,8 @@ namespace RA.Services
         /// <returns></returns>        
         public static bool ToMap( InputEntity input, OutputEntity output, ref List<string> messages )
         {
-            bool isValid = true;
+			CurrentEntityType = "Assessment";
+			bool isValid = true;
             RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
 
 			try
@@ -136,7 +142,7 @@ namespace RA.Services
 
 				HandleCredentialAlignmentFields( input, output, ref messages );
 
-				output.EstimatedCost = FormatCosts( input.EstimatedCosts, ref messages );
+				output.EstimatedCost = FormatCosts( input.EstimatedCost, ref messages );
 
 				output.EstimatedDuration = FormatDuration( input.EstimatedDuration, ref messages );
 
@@ -172,7 +178,9 @@ namespace RA.Services
 				output.FinancialAssistance = MapFinancialAssitance( input.FinancialAssistance, ref messages );
 
 				output.VersionIdentifier = AssignIdentifierListToList( input.VersionIdentifier );
-			}
+                HandleOrgProperties( input, output, ref messages );
+
+            }
 			catch ( Exception ex )
 			{
 				LogError( ex, "AssessmentServices.ToMap" );
@@ -186,15 +194,14 @@ namespace RA.Services
         }
         public static void HandleOrgProperties( InputEntity input, OutputEntity output, ref List<string> messages )
         {
-			
-			output.OwnedBy = FormatOrganizationReferenceToList( input.OwnedBy, "Owning Organization", true, ref messages );
-
-			RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
+			//see HandleRequiredFields
+			//output.OwnedBy = FormatOrganizationReferenceToList( input.OwnedBy, "Owning Organization", true, ref messages );
+			//output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages );
 
 			//other roles
 			output.AccreditedBy = FormatOrganizationReferences( input.AccreditedBy, "Accredited By", false, ref messages );
 			output.ApprovedBy = FormatOrganizationReferences( input.ApprovedBy, "Approved By", false, ref messages );
-			output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages );
+			
 			output.RecognizedBy = FormatOrganizationReferences( input.RecognizedBy, "Recognized By", false, ref messages );
             output.RegulatedBy = FormatOrganizationReferences( input.RegulatedBy, "Regulated By", false, ref messages );
 
@@ -212,24 +219,41 @@ namespace RA.Services
             {
                 output.Ctid = input.Ctid;
                 output.CtdlId = idUrl + output.Ctid;
-            }
+				CurrentCtid = input.Ctid;
+			}
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )
             {
                 messages.Add( "Error - An Assessment name must be entered." );
             }
-            else
-                output.Name = input.Name;
-            if ( string.IsNullOrWhiteSpace( input.Description ) )
+			else
+			{
+				output.Name = input.Name;
+				CurrentEntityName = input.Name;
+			}
+			if ( string.IsNullOrWhiteSpace( input.Description ) )
             {
-                messages.Add( "Error - An Assessment description must be entered." );
-            }
+                messages.Add( string.Format( "Error - An Assessment description must be provided for Assessment: '{0}'", input.Name ) );
+			}
             else
                 output.Description = input.Description;
 
 			//now literal
 			output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
 
+            output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "Owning Organization", false, ref messages );
+            //output.OwnedBy = FormatOrganizationReferenceToList( input.OwnedBy, "Owning Organization", false, ref messages );
+			output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages );
+
+			if (output.OwnedBy == null && output.OfferedBy == null )
+			{
+				messages.Add( string.Format("Error - At least one of an 'Offered By' organization, or an 'Owned By' organization must be provided for Assessment: '{0}'", input.Name ));
+			}
+
+			if ( (input.AvailableOnlineAt == null		|| input.AvailableOnlineAt.Count ==0 ) &&
+				 ( input.AvailabilityListing == null	|| input.AvailabilityListing.Count == 0 ) &&
+				 ( input.AvailableAt == null			|| input.AvailableAt.Count == 0 )	 )
+				messages.Add( string.Format( "Error - At least one of: 'Available Online At', 'Availability Listing', or 'Available At' (address) must be provided for Assessment: '{0}'", input.Name ) );
 
 			return isValid;
 		}
@@ -292,16 +316,10 @@ namespace RA.Services
 
         public static void HandleUrlFields( InputEntity input, OutputEntity output, ref List<string> messages )
         {
-
+			//17-11-27 Added a requirement check for these in the required section
 			output.AvailableOnlineAt = AssignValidUrlListAsStringList( input.AvailableOnlineAt, "Available Online At", ref messages );
 			output.AvailabilityListing = AssignValidUrlListAsStringList( input.AvailabilityListing, "Availability Listing", ref messages );
 
-			//foreach ( var field in input.AvailableOnlineAt )
-			//             output.AvailableOnlineAt = HandleSingleUrlField( field, "AvailableOnlineAt", ref messages );
-
-
-			//foreach ( var field in input.AvailabilityListing )
-			//             output.AvailabilityListing = HandleSingleUrlField( field, "AvailabilityListing", ref messages );
 
 			output.ExternalResearch = AssignValidUrlListAsStringList( input.ExternalResearch, "External Research", ref messages );
 			//foreach ( var field in input.ExternalResearch )
@@ -380,7 +398,7 @@ namespace RA.Services
    //         else
    //             to.ScoringMethodType = null;
 
-			to.InstructionalProgramType = FormatCredentialAlignmentListFromList( from.InstructionalProgramType, true, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
+			to.InstructionalProgramType = FormatCredentialAlignmentListFromList( from.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
 			//if ( from.InstructionalProgramType != null && from.InstructionalProgramType.Count > 0 )
 			//{
 			//	foreach ( FrameworkItem item in from.InstructionalProgramType )

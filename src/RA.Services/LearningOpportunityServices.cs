@@ -26,24 +26,25 @@ namespace RA.Services
 		/// <param name="request"></param>
 		/// <param name="isValid"></param>
 		/// <param name="messages"></param>
-		public static void Publish( EntityRequest request, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId )
+		public static void Publish( EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId )
         {
             isValid = true;
-			registryEnvelopeId = "";
 			string submitter = "";
 			var output = new OutputEntity();
             if ( ToMap( request.LearningOpportunity, output, ref messages ) )
             {
                 payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 
-                CER cer = new CER();
-				//crEnvelopeId = request.RegistryEnvelopeId;
+                CER cer = new CER( "LearningOpportunity", output.Type, output.Ctid );
+                cer.PublisherAuthorizationToken = apiKey;
+				cer.PublishingForOrgCtid = request.PublishForOrganizationIdentifier;
 
-				string identifier = "learningOpportunity_" + request.LearningOpportunity.Ctid;
+				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+					cer.IsManagedRequest = true;
+
+				string identifier = "LearningOpportunity_" + request.LearningOpportunity.Ctid;
 				if ( cer.Publish( payload, submitter, identifier, ref status, ref registryEnvelopeId ) )
 				{
-					//for now need to ensure envelopid is returned
-					//request.RegistryEnvelopeId = registryEnvelopeId;
 
 					string msg = string.Format( "<p>Published LearningOpportunity: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, registryEnvelopeId );
 					NotifyOnPublish( "LearningOpportunity", msg );
@@ -62,16 +63,16 @@ namespace RA.Services
         }
 
 		//Used for demo page - NA 6/5/2017
-		public static string DemoPublish( Models.Json.LearningOpportunityProfile ctdlFormattedLearningOpportunity, ref bool isValid, ref List<string> messages, ref string rawResponse, bool forceSkipValidation = false )
-		{
-			isValid = true;
-			var crEnvelopeId = "";
-			var payload = JsonConvert.SerializeObject( ctdlFormattedLearningOpportunity, ServiceHelper.GetJsonSettings() );
-			var identifier = "learningopportunity_" + ctdlFormattedLearningOpportunity.Ctid;
-			rawResponse = new CER().Publish( payload, "", identifier, ref isValid, ref status, ref crEnvelopeId, forceSkipValidation );
+		//public static string DemoPublish( Models.Json.LearningOpportunityProfile ctdlFormattedLearningOpportunity, ref bool isValid, ref List<string> messages, ref string rawResponse, bool forceSkipValidation = false )
+		//{
+		//	isValid = true;
+		//	var crEnvelopeId = "";
+		//	var payload = JsonConvert.SerializeObject( ctdlFormattedLearningOpportunity, ServiceHelper.GetJsonSettings() );
+		//	var identifier = "learningopportunity_" + ctdlFormattedLearningOpportunity.Ctid;
+		//	rawResponse = new CER().Publish( payload, "", identifier, ref isValid, ref status, ref crEnvelopeId, forceSkipValidation );
 
-			return crEnvelopeId;
-		}
+		//	return crEnvelopeId;
+		//}
 		//
 
 		public static string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
@@ -107,7 +108,8 @@ namespace RA.Services
         /// <returns></returns>        
         public static bool ToMap( InputEntity input, OutputEntity output, ref List<string> messages )
         {
-            bool isValid = true;
+			CurrentEntityType = "LearningOpportunity";
+			bool isValid = true;
            
             EntityReferenceHelper helper = new EntityReferenceHelper();
 			try
@@ -131,7 +133,7 @@ namespace RA.Services
 
 				HandleCredentialAlignmentFields( input, output, ref messages );
 
-				output.EstimatedCost = FormatCosts( input.EstimatedCosts, ref messages );
+				output.EstimatedCost = FormatCosts( input.EstimatedCost, ref messages );
 				output.EstimatedDuration = FormatDuration( input.EstimatedDuration, ref messages );
 
 				output.Recommends = FormatConditionProfile( input.Recommends, ref messages );
@@ -181,13 +183,13 @@ namespace RA.Services
 
         public static void HandleOrgProperties( InputEntity input, OutputEntity output, ref List<string> messages )
         {
-			output.OwnedBy = FormatOrganizationReferenceToList( input.OwnedBy, "Owning Organization", true, ref messages );
-
-			EntityReferenceHelper helper = new EntityReferenceHelper();
+			//see HandleRequiredFields
+			//output.OwnedBy = FormatOrganizationReferenceToList( input.OwnedBy, "Owning Organization", true, ref messages );
+			//output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages );
 
 			output.AccreditedBy = FormatOrganizationReferences( input.AccreditedBy, "Accredited By", false, ref messages );
 			output.ApprovedBy = FormatOrganizationReferences( input.ApprovedBy, "Approved By", false, ref messages );
-			output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages );
+			
 			output.RecognizedBy = FormatOrganizationReferences( input.RecognizedBy, "Recognized By", false, ref messages );
             output.RegulatedBy = FormatOrganizationReferences( input.RegulatedBy, "Regulated By", false, ref messages );
 
@@ -208,15 +210,19 @@ namespace RA.Services
             {
                 output.Ctid = input.Ctid;
                 output.CtdlId = idUrl + output.Ctid;
-            }
+				CurrentCtid = input.Ctid;
+			}
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )
             {
-                messages.Add( "Error - A Learning Opportunity name must be entered." );
-            }
-            else
-                output.Name = input.Name;
-            if ( string.IsNullOrWhiteSpace( input.Description ) )
+				messages.Add( FormatMessage( "Error - A name must be entered for Learning Opportunity with CTID: '{0}'.", input.Ctid ) );
+			}
+			else
+			{
+				output.Name = input.Name;
+				CurrentEntityName = input.Name;
+			}
+			if ( string.IsNullOrWhiteSpace( input.Description ) )
             {
                 messages.Add( "Error - A Learning Opportunity description must be entered." );
             }
@@ -226,6 +232,20 @@ namespace RA.Services
 			//now literal
 			output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
 
+
+            output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "Owning Organization", false, ref messages );
+            output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages );
+
+			if ( output.OwnedBy == null && output.OfferedBy == null )
+			{
+				messages.Add( "Error - At least one of an 'Offered By' organization, or an 'Owned By' organization must be provided for a Learning Opportunity" );
+			}
+
+
+			if ( ( input.AvailableOnlineAt == null || input.AvailableOnlineAt.Count == 0 ) &&
+				 ( input.AvailabilityListing == null || input.AvailabilityListing.Count == 0 ) &&
+				 ( input.AvailableAt == null || input.AvailableAt.Count == 0 ) )
+				messages.Add( string.Format( "Error - At least one of: 'Available Online At', 'Availability Listing', or 'Available At' (address) must be provided for Assessment: '{0}'", input.Name ) );
 
 			return isValid;
         }
@@ -264,6 +284,7 @@ namespace RA.Services
 
         public static void HandleUrlFields( InputEntity from, OutputEntity to, ref List<string> messages )
         {
+			//17-11-27 Added a requirement check for these in the required section
 			to.AvailableOnlineAt = AssignValidUrlListAsStringList( from.AvailableOnlineAt, "Available Online At", ref messages );
 			to.AvailabilityListing = AssignValidUrlListAsStringList( from.AvailabilityListing, "Availability Listing", ref messages );
 
@@ -328,7 +349,7 @@ namespace RA.Services
                     output.DeliveryType.Add( FormatCredentialAlignment( "deliveryType", item, ref messages ) );
             else output.DeliveryType = null;
 
-			output.InstructionalProgramType = FormatCredentialAlignmentListFromList( input.InstructionalProgramType, true, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
+			output.InstructionalProgramType = FormatCredentialAlignmentListFromList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
 			//if ( input.InstructionalProgramType != null && input.InstructionalProgramType.Count > 0 )
 			//{
 			//	foreach ( FrameworkItem item in input.InstructionalProgramType )

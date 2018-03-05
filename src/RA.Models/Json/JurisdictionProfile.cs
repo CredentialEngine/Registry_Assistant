@@ -43,10 +43,10 @@ namespace RA.Models.Json
 
 		/// <summary>
 		/// Asserted by is typically only explicitly entered for jurisdiction assertions the INs
+		/// NOTE: It must be serialized to a List
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:assertedBy" )]
 		public object AssertedBy { get; set; }
-		//public OrganizationBase AssertedBy { get; set; }
 		//public List<OrganizationBase> AssertedBy { get; set; }
 	}
 	

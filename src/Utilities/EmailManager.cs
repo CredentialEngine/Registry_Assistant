@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -41,11 +42,11 @@ namespace Utilities
 		/// <param name="subject">Email subject</param>
 		/// <param name="message">Message Text</param>
 		/// <returns></returns>
-		public static bool SendSiteEmail( string subject, string message )
+		public static bool SendSiteEmail( string subject, string message, string CC = "" )
 		{
 			string toEmail = UtilityManager.GetAppKeyValue( "contactUsMailTo", "cwd.mparsons@ad.siu.edu" );
 			string fromEmail = UtilityManager.GetAppKeyValue( "contactUsMailFrom", "mparsons@siuccwd.com" );
-			return SendEmail( toEmail, fromEmail, subject, message, "", "" );
+			return SendEmail( toEmail, fromEmail, subject, message, CC);
 
 		} //
 
@@ -85,7 +86,7 @@ namespace Utilities
 		/// <param name="CC"></param>
 		/// <param name="BCC"></param>
 		/// <returns></returns>
-		public static bool SendEmail( string toEmail, string fromEmail, string subject, string message, string CC, string BCC )
+		public static bool SendEmail( string toEmail, string fromEmail, string subject, string message, string CC = "", string BCC = "" )
 		{
 			char[] delim = new char[ 1 ];
 			delim[ 0 ] = ',';
@@ -96,7 +97,8 @@ namespace Utilities
 				BCC = systemAdminEmail;
 			else
 				BCC += ", " + systemAdminEmail;
-
+			if (string.IsNullOrWhiteSpace(toEmail))
+				toEmail = UtilityManager.GetAppKeyValue( "contactUsMailTo", "cwd.mparsons@ad.siu.edu" );
 			try
 			{
 				MailAddress maFrom;
@@ -227,13 +229,15 @@ namespace Utilities
 		{
 			string emailService = UtilityManager.GetAppKeyValue( "emailService", "smtp" );
 
-			if ( emailService == "serviceApi" )
+			if ( emailService == "mailgun" )
+				SendEmailViaMailgun( emailMsg );
+			else if ( emailService == "serviceApi" )
 				SendEmailViaApi( emailMsg );
 			else if ( emailService == "smtp" )
 			{
 				SmtpClient smtp = new SmtpClient( UtilityManager.GetAppKeyValue( "SmtpHost" ) );
 				smtp.UseDefaultCredentials = false;
-				smtp.Credentials = new NetworkCredential( "mparsons", "Mctd19971" );
+				smtp.Credentials = new NetworkCredential( "mparsons", "WhoKnows" );
 
 				smtp.Send( emailMsg );
 				//SmtpMail.Send(email);
@@ -251,7 +255,60 @@ namespace Utilities
 			
 		}
 
-		private static void SendEmailViaApi( MailMessage emailMsg )
+        private static void SendEmailViaMailgun( MailMessage emailMsg )
+        {
+            bool valid = true;
+            string status = "";
+            var sendingDomain = System.Configuration.ConfigurationManager.AppSettings[ "MailgunSendingDomainName" ];
+            var apiKey = System.Configuration.ConfigurationManager.AppSettings[ "MailgunSecretAPIKey" ];
+            if ( string.IsNullOrWhiteSpace( sendingDomain ) )
+            {
+                //no service api
+                LoggingHelper.DoTrace( 2, "***** EmailManager.SendEmailViaMailgun - no email service has been configured" );
+                return;
+            }
+            var apiKeyEncoded = Convert.ToBase64String( UTF8Encoding.UTF8.GetBytes( "api" + ":" + apiKey ) );
+            var url = "https://api.mailgun.net/v3/" + sendingDomain + "/messages";
+            //
+            var email = new MailgunEmail()
+            {
+                BodyHtml = emailMsg.Body,
+                From = emailMsg.From.Address,
+                BCC = emailMsg.Bcc.ToString(),
+                Subject = emailMsg.Subject
+            };
+            email.To.Add( emailMsg.To.ToString() );
+            email.CC.Add( emailMsg.CC.ToString() );
+            var parameters = email.GetContent();
+
+            using ( var client = new HttpClient() )
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue( "Basic", apiKeyEncoded );
+                var result = client.PostAsync( url, parameters ).Result;
+                valid = result.IsSuccessStatusCode;
+                status = valid ? result.Content.ReadAsStringAsync().Result : result.ReasonPhrase;
+            }
+            if (!valid)
+            {
+                LoggingHelper.DoTrace( 2, "***** EmailManager.SendEmailViaMailgun - error on send: " + status );
+            }
+        }
+        /// <summary>
+        /// Options for sending domain
+        /// "Credential Engine Accounts", "donotreply"
+        /// "Admin Notifications", "adminnotifications"
+        /// </summary>
+        /// <param name="emailName"></param>
+        /// <param name="emailPrefix"></param>
+        /// <returns></returns>
+        public static string GetSendingDomain( string emailName, string emailPrefix )
+        {
+            string env = UtilityManager.GetAppKeyValue( "envType" );
+            if ( env != "prod" )
+                emailName = env + " - " + emailName;
+            return emailName + " <" + emailPrefix + "@" + UtilityManager.GetAppKeyValue( "MailgunSendingDomainName" ) + ">";
+        }
+        private static void SendEmailViaApi( MailMessage emailMsg )
 		{
 			string emailServiceUri = UtilityManager.GetAppKeyValue( "SendEmailService" );
 			if ( string.IsNullOrWhiteSpace( emailServiceUri ) )
@@ -260,17 +317,6 @@ namespace Utilities
 				LoggingHelper.DoTrace( 2, "***** EmailManager.SendEmail - no email service has been configured" );
 				return;
 			}
-			//else if ( emailServiceUri.ToLower().Equals( "sendgrid" ) )
-			//{
-			//	EmailViaSendGrid( emailMsg );
-			//	return;
-			//} 
-			//else if ( emailServiceUri.ToLower().Equals( "smtp" ) )
-			//{
-			//	EmailViaSmtp( emailMsg );
-			//	return;
-			//}
-
 
 			var email = new Email()
 			{
@@ -356,6 +402,9 @@ namespace Utilities
 		///		- then any characters
 		///		- then two underscore characters
 		///		- followed with the valid domain name
+		///	NOTE 17-12-19
+		///	By accident it appears that using pipes can result in aliases. I used
+		///	mparsons|mp19a|@siuccwd.com, and got email at siuccwd.com?
 		/// </summary>
 		/// <param name="address">Email address</param>
 		/// <returns>translated email address as needed</returns>
@@ -370,15 +419,36 @@ namespace Utilities
 				newAddr = address.Substring( 0, atPos + 1 ) + address.Substring( wnPos + 1 );
 			} else
 			{
-				//check for others with format:
-				//	someName@_ ??? __realDomain.com
-				atPos = address.IndexOf( "@_" );
-				if ( atPos > 1 )
+				int p1 = address.IndexOf( "||" );
+				if ( p1 > 0 )
 				{
-					wnPos = address.IndexOf( "__", atPos );
-					if ( wnPos > atPos )
+					//check for second pipe or @
+					int p2 = address.IndexOf( "|", p1 + 2 );
+					if ( p2 > p1 )
 					{
-						newAddr = address.Substring( 0, atPos + 1 ) + address.Substring( wnPos + 2 );
+						newAddr = address.Substring( 0, p1 ) + address.Substring( p2 + 1 );
+					}
+					else if ( p2 == -1 )
+					{
+						p2 = address.IndexOf( "@", p1 + 2 );
+						if ( p2 > p1 )
+						{
+							newAddr = address.Substring( 0, p1 ) + address.Substring( p2 );
+						}
+					}
+				}
+				else
+				{
+					//check for others with format:
+					//	someName@_ ??? __realDomain.com
+					atPos = address.IndexOf( "@_" );
+					if ( atPos > 1 )
+					{
+						wnPos = address.IndexOf( "__", atPos );
+						if ( wnPos > atPos )
+						{
+							newAddr = address.Substring( 0, atPos + 1 ) + address.Substring( wnPos + 2 );
+						}
 					}
 				}
 			}
@@ -566,15 +636,22 @@ namespace Utilities
 					msg += "\nMessage: " + email.Body.ToString();
 					msg += "\n=============================================================== ";
 
-					string datePrefix = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
-					string logFile = UtilityManager.GetAppKeyValue( "path.email.log", "C:\\VOS_LOGS.txt" );
-					string outputFile = logFile.Replace( "[date]", datePrefix );
+                    string datePrefix1 = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
+                    string datePrefix = System.DateTime.Today.ToString( "yyyy-dd" );
+                    string logFile = UtilityManager.GetAppKeyValue( "path.email.log", "" );
+                    if ( !string.IsNullOrWhiteSpace( logFile ) )
+                    {
+                        string outputFile = logFile.Replace( "[date]", datePrefix );
+                        if ( File.Exists( outputFile ) )
+                        {
+                            if ( File.GetLastWriteTime( outputFile ).Month != DateTime.Now.Month )
+                                File.Delete( outputFile );
+                        }
+                        StreamWriter file = File.AppendText( outputFile );
 
-					StreamWriter file = File.AppendText( outputFile );
-
-					file.WriteLine( msg );
-					file.Close();
-
+                        file.WriteLine( msg );
+                        file.Close();
+                    }
 				}
 			} catch
       {
@@ -595,13 +672,16 @@ namespace Utilities
         {
 
             string body = HttpContext.Current.Cache[emailName] as string;
-
-            if (string.IsNullOrEmpty(body))
-            {
+            if (string.IsNullOrEmpty(body) || UtilityManager.GetAppKeyValue( "allowingCachingEmailTemplates",true) == false)
+			{
                 string file = System.Web.HttpContext.Current.Server.MapPath(string.Format("~/App_Data/email/{0}.txt",emailName));
                 body = File.ReadAllText(file);
-
-                HttpContext.Current.Cache[emailName] = body;
+				//remove comments at bottom
+				if ( body.IndexOf( "<div style=\"display:none;\">" ) > 0 )
+				{
+					body = body.Substring( 0, body.IndexOf( "<div style=\"display:none;\">" ) );
+				}
+				HttpContext.Current.Cache[emailName] = body;
             }
 
             return body;
@@ -617,5 +697,53 @@ namespace Utilities
 			public string Subject { get; set; }
 			public bool IsHtml { get; set; }
 		}
-  }
+
+        public class MailgunEmail
+        {
+            public MailgunEmail()
+            {
+                To = new List<string>();
+                CC = new List<string>();
+                BCC = "";
+            }
+
+            public string From { get; set; }
+            public List<string> To { get; set; }
+            public List<string> CC { get; set; }
+            public string BCC { get; set; }
+            public string Subject { get; set; }
+            public string BodyHtml { get; set; }
+            public string BodyText { get; set; }
+
+            public FormUrlEncodedContent GetContent()
+            {
+                var data = new List<KeyValuePair<string, string>>();
+                Add( data, "from", From );
+                Add( data, "subject", Subject );
+                Add( data, "html", BodyHtml );
+                Add( data, "text", BodyText );
+                foreach ( var item in To )
+                {
+                    Add( data, "to", HandleProxyEmails( item ) );
+                }
+                foreach ( var item in CC )
+                {
+                    Add( data, "cc", HandleProxyEmails( item ) );
+                }
+                if ( !string.IsNullOrWhiteSpace( BCC ) )
+                {
+                    Add( data, "bcc", BCC );
+                }
+                return new FormUrlEncodedContent( data );
+            }
+
+            private void Add( List<KeyValuePair<string, string>> data, string key, string value )
+            {
+                if ( !string.IsNullOrWhiteSpace( value ) )
+                {
+                    data.Add( new KeyValuePair<string, string>( key, value ) );
+                }
+            }
+        }
+    }
 }

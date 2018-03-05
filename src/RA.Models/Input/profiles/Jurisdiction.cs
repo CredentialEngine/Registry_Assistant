@@ -12,7 +12,6 @@ namespace RA.Models.Input
 	{
         public Jurisdiction()
         {
-			MainJurisdiction = new RAPlace();
 			JurisdictionException = new List<RAPlace>();
         }
 		public bool? GlobalJurisdiction { get; set; }
@@ -22,10 +21,11 @@ namespace RA.Models.Input
 		/// TBD - does it make sense to offer providing the full GeoCoordinates.
 		/// Will be useful where the request can be populated programatically.
 		/// </summary>
-		public RAPlace MainJurisdiction { get; set; }
+		public RAPlace MainJurisdiction { get; set; } = new RAPlace();
+        //public List<RAPlace> MainJurisdictions { get; set; } = new List<RAPlace>();
 
-		//public List<string> JurisdictionException { get; set; }
-		public List<RAPlace> JurisdictionException { get; set; }
+
+        public List<RAPlace> JurisdictionException { get; set; }
 	}
 
 	public class JurisdictionAssertedInProfile 

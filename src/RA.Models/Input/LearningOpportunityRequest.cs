@@ -22,15 +22,12 @@ namespace RA.Models.Input
 		public LearningOpportunity()
 		{
 
-			//OwnedBy = new List<string>();
-			OwnedBy = new OrganizationReference();
-
 			Subject = new List<string>();
 			Keyword = new List<string>();
             DeliveryType = new List<string>();
             InstructionalProgramType = new List<FrameworkItem>();
 			LearningMethodType = new List<string>();
-			EstimatedCosts = new List<CostProfile>();
+			EstimatedCost = new List<CostProfile>();
 			Jurisdiction = new List<Jurisdiction>();
 			//Region = new List<GeoCoordinates>();
   
@@ -81,10 +78,10 @@ namespace RA.Models.Input
 		public string SubjectWebpage { get; set; } //URL
 		public string Ctid { get; set; }
 
-		/// <summary>
-		/// Organization that owns this resource
-		/// </summary>
-		public OrganizationReference OwnedBy { get; set; }
+        /// <summary>
+        /// Organization that owns this resource
+        /// </summary>
+        public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
 
         //at least one of:
         public List<string> AvailableOnlineAt { get; set; } //URL
@@ -129,7 +126,7 @@ namespace RA.Models.Input
         public decimal CreditUnitValue { get; set; }
         public string CreditUnitTypeDescription { get; set; }
         //external classes
-        public List<CostProfile> EstimatedCosts { get; set; }
+        public List<CostProfile> EstimatedCost { get; set; }
 
 		public List<Jurisdiction> Jurisdiction { get; set; }
 		//public List<GeoCoordinates> Region { get; set; }

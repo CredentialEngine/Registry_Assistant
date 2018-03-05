@@ -13,8 +13,7 @@ namespace RA.Models.Input
     {
         public ConditionProfile()
         {
-            AssertedBy = new OrganizationReference();
-            EstimatedCosts = new List<CostProfile>();
+            EstimatedCost = new List<CostProfile>();
 
             //SubjectWebpage = new List<string>();
             AudienceLevelType = new List<string>();
@@ -30,7 +29,7 @@ namespace RA.Models.Input
 			TargetLearningOpportunity = new List<EntityReference>();
 			RequiresCompetency = new List<CredentialAlignmentObject>();
 
-			AlternativeCondition = new List<ConditionProfile>();
+
 			Jurisdiction = new List<Input.Jurisdiction>();
 			ResidentOf = new List<Input.Jurisdiction>();
 		}
@@ -39,7 +38,6 @@ namespace RA.Models.Input
         public string Description { get; set; }
         public string SubjectWebpage { get; set; } //URL
 
-        //TODO - alter from enumeration
         public List<string> AudienceLevelType { get; set; }
         public List<string> AudienceType { get; set; }
         public string DateEffective { get; set; }
@@ -50,10 +48,13 @@ namespace RA.Models.Input
 		public List<string> Condition { get; set; }
 
         public List<string> SubmissionOf { get; set; }
+
         /// <summary>
         /// Organization that asserts this condition
+        /// This should be single, but as CTDL defines as multi-value, need to handle a List
         /// </summary>
-        public OrganizationReference AssertedBy { get; set; }
+        public object AssertedBy { get; set; } = new object();
+        //public List<OrganizationReference> AssertedBys { get; set; } = new List<OrganizationReference>();
 
         public string Experience { get; set; }
         public int MinimumAge { get; set; }
@@ -72,7 +73,7 @@ namespace RA.Models.Input
         public decimal CreditUnitValue { get; set; }
 
         //external classes =====================================
-        public List<CostProfile> EstimatedCosts { get; set; }
+        public List<CostProfile> EstimatedCost { get; set; }
         public List<Jurisdiction> Jurisdiction { get; set; }
         public List<Jurisdiction> ResidentOf { get; set; }
 

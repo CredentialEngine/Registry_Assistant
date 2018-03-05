@@ -14,19 +14,35 @@ using Utilities;
 //using JWT;
 //using J2 = Utilities.JsonWebToken2;
 using Newtonsoft.Json;
-using MetadataRegistry;
+using CredentialRegistry;
 
 namespace RA.Services
 {
 	public class RegistryServices
 	{
+		public RegistryServices( string entityType, string ctdlType, string ctid)
+		{
+            PublishingEntityType = entityType;
+            CtdlType = ctdlType;
+            EntityCtid = ctid;
+        }
 
+		/// <summary>
+		/// AKA API Key
+		/// </summary>
+		public string PublisherAuthorizationToken { get; set; }
+		public string PublishingForOrgCtid { get; set; }
+        public string PublishingEntityType { get; set; }
+        public string CtdlType { get; set; }
+        public string EntityCtid { get; set; }
+        public bool IsManagedRequest { get; set; }
+		public bool IsManagedRequestOld { get; set; }
 		#region Publishing
 
 		/// <summary>
 		/// Publish a document to the Credential Registry
 		/// </summary>
-		/// <param name="payload"></param>
+		/// <param name="payload">Serialized version of request object</param>
 		/// <param name="submitter"></param>
 		/// <param name="statusMessage"></param>
 		/// <param name="crEnvelopeId"></param>
@@ -35,16 +51,39 @@ namespace RA.Services
 									string submitter,
 									string identifier,
 									ref string statusMessage,
-									ref string crEnvelopeId )
+									ref string crEnvelopeId)
 		{
 			var successful = true;
-			var result = Publish( payload, submitter, identifier, ref successful, ref statusMessage, ref crEnvelopeId );
+			if ( IsManagedRequest )
+				ManagedPublishThroughAcccounts( payload,
+					this.PublisherAuthorizationToken,
+					this.PublishingForOrgCtid,
+					submitter, identifier, ref successful, ref statusMessage, ref crEnvelopeId );
+
+			//else if ( IsManagedRequestOld )
+			//	ManagedPublish( payload,
+			//		this.PublisherAuthorizationToken,
+			//		this.PublishingForOrgCtid,
+			//		submitter, identifier, ref successful, ref statusMessage, ref crEnvelopeId );
+			else
+				SelfPublish( payload, submitter, identifier, ref successful, ref statusMessage, ref crEnvelopeId );
+			
+				
 			return successful;
-		}
+		} //
 
-
-		//Used for demo page, and possibly other cases where the raw response is desired
-		public string Publish( string payload,
+		/// <summary>
+		/// Publish using
+		/// </summary>
+		/// <param name="payload"></param>
+		/// <param name="submitter"></param>
+		/// <param name="identifier"></param>
+		/// <param name="valid"></param>
+		/// <param name="status"></param>
+		/// <param name="crEnvelopeId"></param>
+		/// <param name="forceSkipValidation"></param>
+		/// <returns></returns>
+		public string SelfPublish( string payload,
 				string submitter,
 				string identifier,
 				ref bool valid,
@@ -56,7 +95,9 @@ namespace RA.Services
 			var publicKeyPath = "";
 			var privateKeyPath = "";
 			var postBody = "";
-
+			List<string> messages = new List<string>();
+			LoggingHelper.DoTrace( 6, string.Format( "RegistryServices.SelfPublish. crEnvelopeId: {0}", crEnvelopeId ));
+			LoggingHelper.DoTrace( 7, "              - payload: \r\n" + payload );
 			try
 			{
 				//TODO - add handling where keys are stored in the registry
@@ -65,14 +106,15 @@ namespace RA.Services
 					valid = false;
 					//no, the proper error is returned from GetKeys
 					//status = "Error getting CER Keys";
-					return status;
+					messages.Add( status );
+					return "";
 				}
 
 				//todo - need to add signer and other to the content
 				//note for new, DO NOT INCLUDE an EnvelopeIdentifier property 
 				//		-this is necessary due to a bug, and hopefully can change back to a single call
 
-				LoggingHelper.DoTrace( 5, "RegistryServices.Publish - payload: \r\n" + payload );
+				
 
 				if ( string.IsNullOrWhiteSpace( crEnvelopeId ) )
 				{
@@ -83,7 +125,7 @@ namespace RA.Services
 
 					postBody = JsonConvert.SerializeObject( envelope );
 
-					LoggingHelper.DoTrace( 7, "RegistryServices.Publish - ADD envelope: \r\n" + postBody );
+					LoggingHelper.DoTrace( 7, "RegistryServices.SelfPublish - ADD envelope: \r\n" + postBody );
 				}
 				else
 				{
@@ -94,7 +136,8 @@ namespace RA.Services
 					envelope.EnvelopeIdentifier = crEnvelopeId;
 					postBody = JsonConvert.SerializeObject( envelope );
 
-					LoggingHelper.DoTrace( 7, "RegistryServices.Publish - update envelope: \r\n" + postBody );
+					LoggingHelper.DoTrace( 5, string.Format( "RegistryServices.SelfPublish - updating existing envelopeId: {0}. update envelope: \r\n", crEnvelopeId )  );
+					LoggingHelper.DoTrace( 7, "RegistryServices.SelfPublish - update envelope: \r\n" + postBody );
 				}
 
 				//Do publish
@@ -113,20 +156,21 @@ namespace RA.Services
 						serviceUri += "&skip_validation=true";
 					}
 				}
-
+				string contents = "";
 				try
 				{
 					using ( var client = new HttpClient() )
 					{
 						client.DefaultRequestHeaders.
 							Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+					
 
 						var task = client.PostAsync( serviceUri,
 							new StringContent( postBody, Encoding.UTF8, "application/json" ) );
 						task.Wait();
 						var response = task.Result;
 						//should get envelope_id from contents?
-						var contents = task.Result.Content.ReadAsStringAsync().Result;
+						contents = task.Result.Content.ReadAsStringAsync().Result;
 
 						if ( response.IsSuccessStatusCode == false )
 						{
@@ -143,20 +187,21 @@ namespace RA.Services
 								false, "CredentialRegistry publish failed for " + identifier );
 
 							status = string.Join( ",", contentsJson.Errors.ToArray() );
-
+							messages.AddRange( contentsJson.Errors );
 							LoggingHelper.WriteLogFile( 5, identifier + "_payload_failed.json", payload, "", false );
-							//LoggingHelper.WriteLogFile( 7, identifier + "_envelope_failed", postBody, "", false );
+							LoggingHelper.WriteLogFile( 7, identifier + "_envelope_failed", postBody, "", false );
 							//statusMessage =contents.err contentsJson.Errors.ToString();
 						}
 						else
 						{
 							valid = true;
+							LoggingHelper.DoTrace( 7, "contents after successful publish.\r\n" + contents );
 							UpdateEnvelope ue = JsonConvert.DeserializeObject<UpdateEnvelope>( contents );
 							crEnvelopeId = ue.EnvelopeIdentifier;
+                            LoggingHelper.DoTrace( 5, "EnvelopeId - " + crEnvelopeId );
+                            //LoggingHelper.DoTrace( 7, "response: " + JsonConvert.SerializeObject( contents ) );
 
-							//LoggingHelper.DoTrace( 7, "response: " + JsonConvert.SerializeObject( contents ) );
-
-							LoggingHelper.WriteLogFile( 6, identifier + "_payload_Successful.json", payload, "", false );
+                            LoggingHelper.WriteLogFile( 6, identifier + "_payload_Successful.json", payload, "", false );
 							//LoggingHelper.WriteLogFile( 7, identifier + "_envelope_Successful", postBody, "", false );
 						}
 
@@ -165,10 +210,12 @@ namespace RA.Services
 				}
 				catch ( Exception ex )
 				{
-					LoggingHelper.LogError( ex, "RegistryServices.Publish - POST" );
+					
+					LoggingHelper.LogError( ex, "RegistryServices.SelfPublish - POST" );
 					valid = false;
 					status = "Failed on Registry Publish: " + LoggingHelper.FormatExceptions( ex );
-					return status;
+					messages.Add( status );
+					return "";
 				}
 				//Set return values
 				//no cr id returned?
@@ -176,19 +223,286 @@ namespace RA.Services
 			}
 			catch ( Exception ex )
 			{
-				LoggingHelper.LogError( ex, "RegistryServices.Publish" );
+
+				LoggingHelper.LogError( ex, "RegistryServices.SelfPublish" );
 
 				valid = false;
 				crEnvelopeId = "";
-				status = "Failed during Registry preperations: " + LoggingHelper.FormatExceptions( ex );
-				return status;
+				status = "Failed during Registry preparations: " + LoggingHelper.FormatExceptions( ex );
+				messages.Add( status );
+				return "";
 			}
 		}
 		//
 
+		public string ManagedPublishThroughAcccounts( string payload,
+				string apiKey,
+				string dataOwnerCTID,
+				string submitter,
+				string identifier,
+				ref bool valid,
+				ref string status,
+				ref string crEnvelopeId)
+		{
+			valid = true;
+			List<string> messages = new List<string>();
+			AccountPublishRequest apr = new AccountPublishRequest();
+			apr.payloadJSON = payload;
+			apr.apiKey = apiKey;
+			apr.dataOwnerCTID = dataOwnerCTID;
+            apr.publishMethodURI = "publishMethod:RegistryAssistant";
+            apr.publishingEntityType = PublishingEntityType;
+            apr.ctdlType = CtdlType;
+            apr.entityCtid = EntityCtid;
 
-		//
-		private static string GetRequestContext()
+            LoggingHelper.DoTrace( 6, "RegistryServices.ManagedPublishThroughAcccounts - payload: \r\n" + payload );
+			//already serialized!
+			string postBody = JsonConvert.SerializeObject( apr );
+			
+
+			//get accounts url
+			string serviceUri = UtilityManager.GetAppKeyValue( "accountsPublishApi" );
+
+			string contents = "";
+
+			try
+			{
+				using ( var client = new HttpClient() )
+				{
+					client.DefaultRequestHeaders.
+						Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+					//client.DefaultRequestHeaders.Add( "Authorization", "ApiToken " + apiKey );
+
+					var task = client.PostAsync( serviceUri,
+						new StringContent( postBody, Encoding.UTF8, "application/json" ) );
+					task.Wait();
+					var response = task.Result;
+					//should get envelope_id from contents?
+					//the accounts endpoint will return the registry response verbatim 
+					contents = task.Result.Content.ReadAsStringAsync().Result;
+
+					if ( response.IsSuccessStatusCode == false )
+					{
+                        //note the accounts publish will always return successful otherwise any error messages get lost
+                        if ( contents.ToLower().IndexOf( "accountresponse" ) > 0  )
+                        {
+                            AccountPublishResponse acctResponse = JsonConvert.DeserializeObject<AccountPublishResponse>( contents );
+                            if ( acctResponse.Messages != null && acctResponse.Messages.Count > 0 )
+                            {
+                                status = string.Join( ",", acctResponse.Messages.ToArray() );
+                                messages.AddRange( acctResponse.Messages );
+                            }
+                        }
+                        else if ( contents.ToLower().IndexOf( "error" ) > 0 && contents.ToLower().IndexOf( "{" ) > -1 )
+                        {
+                            //handle double [[
+                            contents = contents.Replace( "[[", "[" ).Replace( "]]", "]" );
+                            RegistryResponseContent contentsJson = JsonConvert.DeserializeObject<RegistryResponseContent>( contents );
+                            if ( contentsJson.Errors != null && contentsJson.Errors.Count > 0 )
+                            {
+                                status = string.Join( ",", contentsJson.Errors.ToArray() );
+                                messages.AddRange( contentsJson.Errors );
+                            }
+                        }
+                        else
+                        {
+                            status = contents;
+                            messages.Add( status );
+                        }
+						//
+						valid = false;
+						string queryString = GetRequestContext();
+						//now null:
+						//+ "\n\rERRORS:\n\r " + string.Join( ",", contentsJson.Errors.ToArray() )
+						LoggingHelper.LogError( identifier + " RegistryServices.Publish Failed:"
+							+ "\n\rURL:\n\r " + queryString
+							+ "\n\rRESPONSE:\n\r " + JsonConvert.SerializeObject( response )
+							+ "\n\rCONTENTS:\n\r " + JsonConvert.SerializeObject( contents ),
+							false, "CredentialRegistry publish failed for " + identifier );
+						//if ( contentsJson.Errors != null && contentsJson.Errors.Count > 0 )
+						//{
+						//	status = string.Join( ",", contentsJson.Errors.ToArray() );
+						//	messages.AddRange( contentsJson.Errors );
+						//}
+						//else
+						//{
+						//	status = contents;
+						//	messages.Add( status );
+						//}
+
+						LoggingHelper.WriteLogFile( 5, identifier + "_payload_failed.json", payload, "", false );
+					}
+					else
+					{
+                        //accounts publisher can return errors like: {"data":null,"valid":false,"status":"Error: Owning organization not found.","extra":null}
+                        if ( contents.ToLower().IndexOf( "{\"data\":" ) == 0 && contents.ToLower().IndexOf( "error:" ) > -1 )
+                        {
+                            valid = false;
+                            status = UtilityManager.ExtractNameValue( contents, "Error", ":", "\"" );
+                            messages.Add( status );
+
+                        }
+                        else if ( contents.ToLower().IndexOf( "error" ) > 0 && contents.ToLower().IndexOf( "{" ) > -1 )
+                        {
+                            valid = false;
+                            contents = contents.Replace( "[[", "[" ).Replace( "]]", "]" );
+                            RegistryResponseContent contentsJson = JsonConvert.DeserializeObject<RegistryResponseContent>( contents );
+                            if ( contentsJson.Errors != null && contentsJson.Errors.Count > 0 )
+                            {
+                                status = string.Join( ",", contentsJson.Errors.ToArray() );
+                                //remove extraneous message of:@type : did not match one of the following values
+                                if (status.IndexOf( ", \"@type : did not match one of the following values" ) > 50 )
+                                {
+                                    status = status.Substring( 0, status.IndexOf( ", \"@type : did not match one of the following values" ) ) + "]";
+                                }
+                                messages.AddRange( contentsJson.Errors );
+                            }
+                            else
+                            {
+                                status = UtilityManager.ExtractNameValue( contents, "Error", ":", "\"" );
+                                messages.Add( status );
+                            }
+
+                        }
+                        else
+                        {
+							valid = true;//maybe
+							LoggingHelper.DoTrace( 7, "contents after successful managed publish.\r\n" + contents );
+							UpdateEnvelope ue = JsonConvert.DeserializeObject<UpdateEnvelope>( contents );
+							crEnvelopeId = ue.EnvelopeIdentifier;
+                            LoggingHelper.DoTrace( 5, "EnvelopeId - " + crEnvelopeId );
+                            LoggingHelper.WriteLogFile( 6, identifier + "_payload_Successful.json", payload, "", false );
+							//LoggingHelper.WriteLogFile( 7, identifier + "_envelope_Successful", postBody, "", false );
+						}
+
+					}
+
+					return contents;
+				}
+			}
+			catch ( Exception ex )
+			{
+                
+				LoggingHelper.LogError( ex, "RegistryServices.ManagedPublishThroughAcccounts. contents: " + contents );
+				valid = false;
+				status = "Failed on Registry Publish: " + LoggingHelper.FormatExceptions( ex );
+				messages.Add( status );
+				return status;
+			}
+
+		}
+        //
+        /// <summary>
+        /// Publish where registry will manage the keys
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <param name="submitter"></param>
+        /// <param name="identifier"></param>
+        /// <param name="valid"></param>
+        /// <param name="status"></param>
+        /// <param name="crEnvelopeId">Will this is stil be applicable</param>
+        /// <param name="forceSkipValidation"></param>
+        /// <returns></returns>
+        public string ManagedPublish(string payload,
+                string authorizationToken,
+                string publishingOrgUid,
+                string submitter,
+                string identifier,
+                ref bool valid,
+                ref string status,
+                ref string crEnvelopeId,
+                bool forceSkipValidation = false)
+        {
+            valid = true;
+            var postBody = "";
+            List<string> messages = new List<string>();
+
+
+
+            //todo - need to add signer and other to the content
+            //note for new, DO NOT INCLUDE an EnvelopeIdentifier property 
+            //		-this is necessary due to a bug, and hopefully can change back to a single call
+
+            LoggingHelper.DoTrace(6, "RegistryServices.ManagedPublish(OLD) - payload: \r\n" + payload);
+            //already serialized!
+            //postBody = JsonConvert.SerializeObject( payload );
+            postBody = payload;
+
+
+            //Do publish
+            string serviceUri = string.Format(UtilityManager.GetAppKeyValue("managedRegistryUrl"), publishingOrgUid);
+
+            string contents = "";
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.
+                        Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Add("Authorization", "ApiToken " + authorizationToken);
+
+                    var task = client.PostAsync(serviceUri,
+                        new StringContent(postBody, Encoding.UTF8, "application/json"));
+                    task.Wait();
+                    var response = task.Result;
+                    //should get envelope_id from contents?
+                    contents = task.Result.Content.ReadAsStringAsync().Result;
+
+                    if (response.IsSuccessStatusCode == false)
+                    {
+                        RegistryResponseContent contentsJson = JsonConvert.DeserializeObject<RegistryResponseContent>(contents);
+                        //
+                        valid = false;
+                        string queryString = GetRequestContext();
+                        //now null:
+                        //+ "\n\rERRORS:\n\r " + string.Join( ",", contentsJson.Errors.ToArray() )
+                        LoggingHelper.LogError(identifier + " RegistryServices.Publish Failed:"
+                            + "\n\rURL:\n\r " + queryString
+                            + "\n\rRESPONSE:\n\r " + JsonConvert.SerializeObject(response)
+                            + "\n\rCONTENTS:\n\r " + JsonConvert.SerializeObject(contents),
+                            false, "CredentialRegistry publish failed for " + identifier);
+                        if (contentsJson.Errors != null && contentsJson.Errors.Count > 0)
+                        {
+                            status = string.Join(",", contentsJson.Errors.ToArray());
+                            messages.AddRange(contentsJson.Errors);
+                        }
+                        else
+                        {
+                            status = contents;
+                            messages.Add(status);
+                        }
+
+                        LoggingHelper.WriteLogFile(5, identifier + "_payload_failed.json", payload, "", false);
+                        //LoggingHelper.WriteLogFile( 7, identifier + "_envelope_failed", postBody, "", false );
+                        //statusMessage =contents.err contentsJson.Errors.ToString();
+                    }
+                    else
+                    {
+                        valid = true;
+                        LoggingHelper.DoTrace(6, "contents after successful managed publish.\r\n" + contents);
+                        UpdateEnvelope ue = JsonConvert.DeserializeObject<UpdateEnvelope>(contents);
+                        crEnvelopeId = ue.EnvelopeIdentifier;
+
+                        LoggingHelper.WriteLogFile(6, identifier + "_payload_Successful.json", payload, "", false);
+                        //LoggingHelper.WriteLogFile( 7, identifier + "_envelope_Successful", postBody, "", false );
+                    }
+
+                    return contents;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                LoggingHelper.LogError(ex, "RegistryServices.Publish - POST");
+                valid = false;
+                status = "Failed on Registry Publish: " + LoggingHelper.FormatExceptions(ex);
+                messages.Add(status);
+                return status;
+            }
+
+        }
+        private static string GetRequestContext()
 		{
 			string queryString = "batch";
 			try
@@ -197,53 +511,111 @@ namespace RA.Services
 			}
 			catch ( Exception exc )
 			{
-				return queryString;
+				return "";
 			}
 			return queryString;
 		}
-		private static bool PostRequest( string postBody, string serviceUri, ref string response )
-		{
-			try
-			{
-				using ( var client = new HttpClient() )
-				{
-					client.DefaultRequestHeaders.
-						Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+
+        #endregion
+
+        #region Deletes
+        public bool ManagedDelete( string dataOwnerCTID, string ctid, string apiKey, ref string statusMessage )
+        {
+            bool valid = true;
+            AccountPublishRequest apr = new AccountPublishRequest();
+            apr.apiKey = apiKey;
+            apr.dataOwnerCTID = dataOwnerCTID;
+            apr.publishMethodURI = "publishMethod:RegistryAssistant";
+            apr.publishingEntityType = PublishingEntityType;
+            apr.entityCtid = ctid;
+            string postBody = JsonConvert.SerializeObject( apr );
+            string serviceUri = UtilityManager.GetAppKeyValue( "accountsDeleteApi" );
+
+            string contents = "";
+            try
+            {
+                using ( var client = new HttpClient() )
+                {
+                    client.DefaultRequestHeaders.
+                        Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+                    //account site will do actual delete, so not sure if this should be a delete request
+                    HttpRequestMessage request = new HttpRequestMessage
+                    {
+                        Content = new StringContent( postBody, Encoding.UTF8, "application/json" ),
+                        Method = HttpMethod.Delete,
+                        RequestUri = new Uri( serviceUri )
+                    };
+                    var task = client.SendAsync( request );
+                    task.Wait();
+                    var response = task.Result;
+                    contents = task.Result.Content.ReadAsStringAsync().Result;
+
+                    //will always return successful from accounts
+                    if ( response.IsSuccessStatusCode == false )
+                    {
+                        //logging???
+                        //response = contents.Result;
+                        LoggingHelper.LogError( "RegistryServices.DeleteRequest Failed\n\r" + response + "\n\rError: " + JsonConvert.SerializeObject( contents ) );
+
+                        RegistryResponseContent contentsJson = JsonConvert.DeserializeObject<RegistryResponseContent>( contents );
+                        statusMessage = string.Join( ",", contentsJson.Errors.ToArray() );
+                        return false;
+                    }
+                    else
+                    {
+                        if ( contents.ToLower().IndexOf( "{\"data\":" ) == 0 && contents.ToLower().IndexOf( "error:" ) > -1 )
+                        {
+                            valid = false;
+                            statusMessage = UtilityManager.ExtractNameValue( contents, "Error", ":", "\"" );
+                            return false;
+                        }
+                        else if ( contents.ToLower().IndexOf( "error" ) > 0 && contents.ToLower().IndexOf( "{" ) > -1 )
+                        {
+                            valid = false;
+                            contents = contents.Replace( "[[", "[" ).Replace( "]]", "]" );
+                            RegistryResponseContent contentsJson = JsonConvert.DeserializeObject<RegistryResponseContent>( contents );
+                            if ( contentsJson.Errors != null && contentsJson.Errors.Count > 0 )
+                            {
+                                statusMessage = string.Join( ",", contentsJson.Errors.ToArray() );
+                                //remove extraneous message of:@type : did not match one of the following values
+                                if ( statusMessage.IndexOf( ", \"@type : did not match one of the following values" ) > 50 )
+                                {
+                                    statusMessage = statusMessage.Substring( 0, statusMessage.IndexOf( ", \"@type : did not match one of the following values" ) ) + "]";
+                                }
+
+                            }
+                            else
+                            {
+                                statusMessage = UtilityManager.ExtractNameValue( contents, "Error", ":", "\"" );
+
+                            }
+                            return false;
+                        }
+                        else
+                        {
+                            //not sure what will be returned upon successful delete - apparantly nothing
+                            statusMessage = contents;
+                            LoggingHelper.DoTrace( 6, string.Format( "Delete Successful. Type: {0}, CTID: {1}, OwnerCtid: {2}, contents: {3}", PublishingEntityType, EntityCtid, dataOwnerCTID, contents ) );
+
+                        }
+
+                    }
+
+                    return valid;
+                }
+            }
+            catch ( Exception exc )
+            {
+                LoggingHelper.LogError( exc, "RegistryServices.ManagedDelete" );
+                statusMessage = exc.Message;
+                return false;
+
+            }
+
+        }
 
 
-					var task = client.PostAsync( serviceUri,
-						new StringContent( postBody, Encoding.UTF8, "application/json" ) );
-					task.Wait();
-					var result = task.Result;
-					response = JsonConvert.SerializeObject( result );
-					var contents = task.Result.Content.ReadAsStringAsync();
-
-					if ( result.IsSuccessStatusCode == false )
-					{
-						//logging???
-
-						LoggingHelper.LogError( "RegistryServices.PostRequest Failed\n\r" + response + "\n\r" + contents );
-					}
-					else
-					{
-						//no doc id?
-						LoggingHelper.DoTrace( 6, "result: " + response );
-					}
-					return result.IsSuccessStatusCode;
-				}
-			}
-			catch ( Exception exc )
-			{
-				LoggingHelper.LogError( exc, "RegistryServices.PostRequest" );
-				return false;
-
-			}
-
-		}
-		#endregion
-
-		#region Deletes
-		public bool CredentialRegistry_Delete( string crEnvelopeId, string ctid, string requestedBy, ref string statusMessage )
+        public static bool CredentialRegistry_SelfManagedKeysDelete( string crEnvelopeId, string ctid, string requestedBy, ref string statusMessage )
 		{
 			string publicKeyPath = "";
 			string privateKeyPath = "";
@@ -285,14 +657,6 @@ namespace RA.Services
 						RequestUri = new Uri( serviceUri )
 					};
 					var task = client.SendAsync( request );
-
-
-					//client.DefaultRequestHeaders.
-					//	Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
-
-
-					//var task = client.PutAsync( serviceUri,
-					//	new StringContent( postBody, Encoding.UTF8, "application/json" ) );
 					task.Wait();
 					var result = task.Result;
 					response = JsonConvert.SerializeObject( result );
@@ -309,6 +673,8 @@ namespace RA.Services
 					}
 					else
 					{
+						RegistryResponseContent contentsJson = JsonConvert.DeserializeObject<RegistryResponseContent>( contents.Result );
+						response = string.Join( ",", contentsJson.Errors.ToArray() );
 						LoggingHelper.DoTrace( 6, "result: " + response );
 					}
 
@@ -350,6 +716,8 @@ namespace RA.Services
 			//if it works, then adjust the value stored in appkeys
 			//doens't work = mike.parsons\appData\roaming
 			//var fileName = Path.Combine( Environment.GetFolderPath( 	Environment.SpecialFolder.ApplicationData ), publicKeyLocation );
+			//NOTE: cannot use HostingEnvironment.MapPath here
+			//var fullPath = System.Web.Hosting.HostingEnvironment.MapPath( publicKeyLocation );
 
 			if ( publicKeyLocation.ToLower().StartsWith( "c:\\" ) )
 				publicKeyPath = publicKeyLocation;
@@ -365,7 +733,7 @@ namespace RA.Services
 			LoggingHelper.DoTrace( 4, string.Format( "files: private: {0}, \r\npublic: {1}", privateKeyPath, publicKeyPath ) );
 			if ( !System.IO.File.Exists( privateKeyPath ) )
 			{
-				statusMessage = "Error - the encoding key was not found";
+				statusMessage = "Error - the privateKeyPath (encoding key) was not found";
 				isValid = false;
 			}
 			if ( !System.IO.File.Exists( publicKeyPath ) )
@@ -378,4 +746,52 @@ namespace RA.Services
 
 		#endregion
 	}
+	public class PublishRequest
+	{
+		public PublishRequest()
+		{
+			Messages = new List<string>();
+		}
+		//input
+		public string RequestType { get; set; }
+		public string AuthorizationToken { get; set; }
+		public string PublishingOrgUid { get; set; }
+		public string Submitter { get; set; }
+		public string InputPayload { get; set; }
+		
+		public string Identifier { get; set; }
+		public string EnvelopeIdentifier { get; set; }
+
+		public string FormattedPayload { get; set; }
+
+		public List<string> Messages { get; set; }
+	}
+
+	public class AccountPublishRequest
+	{
+		public AccountPublishRequest()
+		{
+		}
+		public string dataOwnerCTID { get; set; }
+		public string apiKey { get; set; }
+		public string payloadJSON { get; set; }
+        public string publishIdentifier { get; set; }
+        public string publishMethodURI { get; set; } = "publishMethod:RegistryAssistant";
+        public string publishingEntityType { get; set; }
+        public string ctdlType { get; set; }
+        public string entityCtid { get; set; }
+    }
+
+    public class AccountPublishResponse
+    {
+        public AccountPublishResponse()
+        {
+            Messages = new List<string>();
+        }
+        public string ResponseType { get; set; } = "accountResponse";
+        public bool Successful { get; set; } = true;
+
+        public List<string> Messages { get; set; }
+
+    }
 }

@@ -30,25 +30,29 @@ namespace RA.Services
 		/// <param name="request"></param>
 		/// <param name="isValid"></param>
 		/// <param name="messages"></param>
-		public static void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestStatus reqStatus )
+		public static void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
 		{
 			isValid = true;
-			string crEnvelopeId = "";
+			string crEnvelopeId = request.RegistryEnvelopeId;
 			string submitter = "";
 
 			var output = new OutputEntity();
-			if ( ToMap( request.ConditionManifest, output, ref reqStatus ) )
+			if ( ToMap( request.ConditionManifest, output, ref helper ) )
 			{
-				reqStatus.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 
-				CER cer = new CER();
-				//crEnvelopeId = reqStatus.RegistryEnvelopeId;
+                CER cer = new CER( "ConditionManifest", output.Type, output.Ctid );
+                cer.PublisherAuthorizationToken = helper.ApiKey;
+				cer.PublishingForOrgCtid = helper.OwnerCtid;
 
-				string identifier = "conditionManifest_" + request.ConditionManifest.Ctid;
-				if ( cer.Publish( reqStatus.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+					cer.IsManagedRequest = true;
+
+				string identifier = "ConditionManifest_" + request.ConditionManifest.Ctid;
+				if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
 				{
 					//for now need to ensure envelopid is returned
-					reqStatus.RegistryEnvelopeId = crEnvelopeId;
+					helper.RegistryEnvelopeId = crEnvelopeId;
 
 
 					string msg = string.Format( "<p>Published ConditionManifest: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
@@ -56,47 +60,48 @@ namespace RA.Services
 				}
 				else
 				{
-					reqStatus.AddError( status );
+					helper.AddError( status );
 					isValid = false;
 				}
 			}
 			else
 			{
-				reqStatus.HasErrors = true;
+				helper.HasErrors = true;
 				isValid = false;
-				reqStatus.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 			}
 		}
 
-		public static string FormatAsJson( EntityRequest request, ref bool isValid, RA.Models.RequestStatus reqStatus )
+		public static string FormatAsJson( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
 		{
-			return FormatAsJson( request.ConditionManifest, ref isValid, reqStatus );
+			return FormatAsJson( request.ConditionManifest, ref isValid, helper );
 		}
 
-		public static string FormatAsJson( InputEntity input, ref bool isValid, RA.Models.RequestStatus reqStatus )
+		public static string FormatAsJson( InputEntity input, ref bool isValid, RA.Models.RequestHelper helper )
 		{
 			var output = new OutputEntity();
-			reqStatus.Payload = "";
+			helper.Payload = "";
 			isValid = true;
-			//RA.Models.RequestStatus reqStatus = new Models.RequestStatus();
+			//RA.Models.RequestStatus helper = new Models.RequestStatus();
 //do this in controller
-			reqStatus.CodeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
+			helper.CodeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
 			
 
-			if ( ToMap( input, output, ref reqStatus ) )
-				reqStatus.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+			if ( ToMap( input, output, ref helper ) )
+				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 			else
 			{
 				isValid = false;
 				//do payload anyway
-				reqStatus.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 			}
 
-			return reqStatus.Payload;
+			return helper.Payload;
 		}
 
-		public static bool ToMap( InputEntity input, OutputEntity output, ref RA.Models.RequestStatus reqStatus )
+		public static bool ToMap( InputEntity input, OutputEntity output, ref RA.Models.RequestHelper helper )
 		{
+			CurrentEntityType = "ConditionManifest";
 			bool isValid = true;
 			List<string> messages = new List<string>();
 			//too late to fully implement the possibility of returning just warnings
@@ -119,7 +124,8 @@ namespace RA.Services
 					( output.Corequisite == null || output.Corequisite.Count == 0 )
 					)
 				{
-					messages.Add( "Error - An Condition Manifest must have at least one conditon profile." );
+					//not approved
+					//messages.Add( "Error - An Condition Manifest must have at least one conditon profile." );
 				}
 			}
 			catch ( Exception ex )
@@ -131,7 +137,7 @@ namespace RA.Services
 			if ( messages.Count > 0 )
 			{
 				isValid = false;
-				reqStatus.SetMessages( messages );
+				helper.SetMessages( messages );
 			}
 			return isValid;
 		}
@@ -149,6 +155,7 @@ namespace RA.Services
 			{
 				output.Ctid = input.Ctid;
 				output.CtdlId = idUrl + output.Ctid;
+				CurrentCtid = input.Ctid;
 			}
 			//required
 			if ( string.IsNullOrWhiteSpace( input.Name ) )
@@ -156,7 +163,10 @@ namespace RA.Services
 				messages.Add( "Error - An Condition Manifest name must be entered." );
 			}
 			else
+			{
 				output.Name = input.Name;
+				CurrentEntityName = input.Name;
+			}
 			if ( string.IsNullOrWhiteSpace( input.Description ) )
 			{
 				messages.Add( "Error - An Condition Manifest description must be entered." );

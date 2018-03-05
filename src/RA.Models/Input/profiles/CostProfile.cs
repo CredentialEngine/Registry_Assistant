@@ -73,30 +73,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<CostProfileItem> CostItems { get; set; }
 
-        //OR 
-
-		//public string DirectCostType { get; set; }
-		//public List<string> ResidencyType { get; set; }
-  //      public List<string> AudienceType { get; set; }
-  //      public decimal Price { get; set; }
-
-  //      public string PaymentPattern { get; set; }
-
-
-
-        //public object Clone()
-        //{
-        //    var cp = new CostProfile();
-        //    cp.CostDetails = CostDetails;
-        //    cp.Currency = Currency;
-        //    cp.Description = Description;
-        //    cp.Name = Name;
-        //    cp.EndDate = EndDate;
-        //    cp.StartDate = StartDate;
-        //    cp.Jurisdiction = Jurisdiction;
-        //   // cp.Region = Region;
-        //    return cp;
-        //}
     }
 
 	/// <summary>

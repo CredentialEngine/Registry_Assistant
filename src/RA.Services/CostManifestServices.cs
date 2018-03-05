@@ -24,10 +24,10 @@ namespace RA.Services
         /// <param name="request"></param>
         /// <param name="isValid"></param>
         /// <param name="messages"></param>
-        public static void Publish( EntityRequest request, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId )
+        public static void Publish( EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId )
         {
             isValid = true;
-			registryEnvelopeId = "";
+
 			string submitter = "";
 
             var output = new OutputEntity();
@@ -35,8 +35,15 @@ namespace RA.Services
             {
                 payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 
-                CER cer = new CER();
-                string identifier = "CostManifest_" + request.CostManifest.Ctid;
+                CER cer = new CER( "CostManifest", output.Type, output.Ctid );
+
+                cer.PublisherAuthorizationToken = apiKey;
+				cer.PublishingForOrgCtid = request.PublishForOrganizationIdentifier;
+
+				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+					cer.IsManagedRequest = true;
+
+				string identifier = "CostManifest_" + request.CostManifest.Ctid;
 
                 if ( cer.Publish( payload, submitter, identifier, ref status, ref registryEnvelopeId ) )
                 {
@@ -56,16 +63,16 @@ namespace RA.Services
         }
         //
         //Used for demo page - NA 6/5/2017
-        public static string DemoPublish( OutputEntity ctdlFormattedEntity, ref bool isValid, ref List<string> messages, ref string rawResponse, bool forceSkipValidation = false )
-        {
-            isValid = true;
-            var crEnvelopeId = "";
-            var payload = JsonConvert.SerializeObject( ctdlFormattedEntity, ServiceHelper.GetJsonSettings() );
-            var identifier = "CostManifest_" + ctdlFormattedEntity.Ctid;
-            rawResponse = new CER().Publish( payload, "", identifier, ref isValid, ref status, ref crEnvelopeId, forceSkipValidation );
+        //public static string DemoPublish( OutputEntity ctdlFormattedEntity, ref bool isValid, ref List<string> messages, ref string rawResponse, bool forceSkipValidation = false )
+        //{
+        //    isValid = true;
+        //    var crEnvelopeId = "";
+        //    var payload = JsonConvert.SerializeObject( ctdlFormattedEntity, ServiceHelper.GetJsonSettings() );
+        //    var identifier = "CostManifest_" + ctdlFormattedEntity.Ctid;
+        //    rawResponse = new CER().Publish( payload, "", identifier, ref isValid, ref status, ref crEnvelopeId, forceSkipValidation );
 
-            return crEnvelopeId;
-        }
+        //    return crEnvelopeId;
+        //}
         //
 
         public static string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
@@ -79,7 +86,7 @@ namespace RA.Services
             string payload = "";
             isValid = true;
 
-            RA.Models.RequestStatus reqStatus = new Models.RequestStatus();
+            RA.Models.RequestHelper reqStatus = new Models.RequestHelper();
             reqStatus.CodeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
 
             if ( ToMap( input, output, ref messages ) )
@@ -109,7 +116,8 @@ namespace RA.Services
         /// <returns></returns>        
         public static bool ToMap( InputEntity input, OutputEntity output, ref List<string> messages )
         {
-            bool isValid = true;
+			CurrentEntityType = "CostManifest";
+			bool isValid = true;
 			try
 			{
 				HandleRequiredFields( input, output, ref messages );
@@ -117,13 +125,13 @@ namespace RA.Services
 				HandleLiteralFields( input, output, ref messages );
 
 				//TBD - are estimated costs required?
-				if ( input.EstimatedCosts == null || input.EstimatedCosts.Count == 0 )
+				if ( input.EstimatedCost == null || input.EstimatedCost.Count == 0 )
 				{
-					messages.Add( "Error - An Cost Manifest must have at least one cost profile." );
+					//messages.Add( "Error - An Cost Manifest must have at least one cost profile." );
 				}
 				else
 				{
-					output.EstimatedCost = FormatCosts( input.EstimatedCosts, ref messages );
+					output.EstimatedCost = FormatCosts( input.EstimatedCost, ref messages );
 				}
 			}
 			catch ( Exception ex )
@@ -150,16 +158,20 @@ namespace RA.Services
             {
                 output.Ctid = input.Ctid;
                 output.CtdlId = idUrl + output.Ctid;
-            }
+				CurrentCtid = input.Ctid;
+			}
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )
             {
                 messages.Add( "Error - An Cost Manifest name must be entered." );
             }
-            else
-                output.Name = input.Name;
+			else
+			{
+				output.Name = input.Name;
+				CurrentEntityName = input.Name;
+			}
 
-            if ( string.IsNullOrWhiteSpace( input.Description ) )
+			if ( string.IsNullOrWhiteSpace( input.Description ) )
                 messages.Add( "Error - An Cost Manifest description must be entered." );
             else
                 output.Description = input.Description;

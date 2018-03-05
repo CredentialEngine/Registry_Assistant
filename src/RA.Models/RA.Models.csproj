@@ -73,6 +73,7 @@
     <Compile Include="Input\CostManifestRequest.cs" />
     <Compile Include="Input\CredentialRequest.cs" />
     <Compile Include="Input\CtdlAttributes.cs" />
+    <Compile Include="Input\DeleteRequest.cs" />
     <Compile Include="Input\LearningOpportunityRequest.cs" />
     <Compile Include="Input\OrganizationRequest.cs" />
     <Compile Include="Input\profiles\Address.cs" />
@@ -111,7 +112,7 @@
     <Compile Include="Json\VerificationServiceProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryAssistantResponse.cs" />
-    <Compile Include="RequestStatus.cs" />
+    <Compile Include="RequestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

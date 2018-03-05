@@ -131,7 +131,10 @@ namespace RA.Models.Input
 
 
 		public string DateEffective { get; set; }
-
+        /// <summary>
+        /// AlternateName - replaced by the List<string> AlternateNames 
+        /// </summary>
+  //      [Obsolete]
 		//public string AlternateName { get; set; }
         public List<string> AlternateName { get; set; } = new List<string>();
         /// <summary>

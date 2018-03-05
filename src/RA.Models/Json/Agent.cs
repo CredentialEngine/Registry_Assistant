@@ -13,7 +13,7 @@ namespace RA.Models.Json
     public class Agent : JsonLDDocument
 	{
 		[JsonIgnore]
-		public static string classType = "ceterms:Agent";
+		public static string classType = "ceterms:CredentialOrganization";
 
 		public Agent()
         {
@@ -29,6 +29,7 @@ namespace RA.Models.Json
             ServiceType = new List<CredentialAlignmentObject>();
             AvailabilityListing = new List<string>();
 			AlternativeIdentifier = new List<IdentifierValue>();
+			AlternateName = new List<string>();
 			Type = "ceterms:CredentialOrganization";
 
 			SameAs = new List<string>();
@@ -103,6 +104,8 @@ namespace RA.Models.Json
         [JsonProperty( PropertyName = "ceterms:sameAs" )]
 		public List<string> SameAs { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public List<string> AlternateName { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:socialMedia" )]
 		public List<string> SocialMedia { get; set; }

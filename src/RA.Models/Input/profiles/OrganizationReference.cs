@@ -71,53 +71,54 @@ namespace RA.Models.Input
 	/// </summary>
 	public class EntityReference
 	{
-/// <summary>
-		/// Id is a resovable URI
-		/// If the entity exists in the registry, provide the URI. 
-		/// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
-		/// Alterate URIs are under consideration. For example
-		/// http://dbpedia.com/Stanford_University
-		/// </summary>
-		public string Id { get; set; }
+        /// <summary>
+        /// Id is a resovable URI
+        /// If the entity exists in the registry, provide the URI. 
+        /// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
+        /// Alterate URIs are under consideration. For example
+        /// http://dbpedia.com/Stanford_University
+        /// </summary>
+        public string Id { get; set; }
 
-/// <summary>
-		/// Optionally, a CTID can be entered instead of an Id. 
-		/// Only enter Id or CTID, but not both
-		/// </summary>
-		public string CTID { get; set; }
+        /// <summary>
+        /// Optionally, a CTID can be entered instead of an Id. 
+        /// Only enter Id or CTID, but not both
+        /// </summary>
+        public string CTID { get; set; }
 
-		//if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would be required
-/// <summary>
-		/// the type of the entity must be provided if the Id was not provided. examples
-		/// ceterms:AssessmentProfile
-		/// ceterms:LearningOpportunityProfile
-		/// ceterms:ConditionManifest
-		/// ceterms:CostManifest
-		/// or the many credential subclasses!!
-		/// </summary>
-		public virtual string Type { get; set; }
+        //if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would be required
+
+        /// <summary>
+        /// the type of the entity must be provided if the Id was not provided. examples
+        /// ceterms:AssessmentProfile
+        /// ceterms:LearningOpportunityProfile
+        /// ceterms:ConditionManifest
+        /// ceterms:CostManifest
+        /// or the many credential subclasses!!
+        /// </summary>
+        public virtual string Type { get; set; }
 
 		/// <summary>
-		/// Name of the entity
+		/// Name of the entity (required)
 		/// </summary>
 		public string Name { get; set; }
 
-		/// <summary>
-		/// Description of the entity
-		/// </summary>
-		public string Description { get; set; }
+        /// <summary>
+        /// Subject webpage of the entity
+        /// </summary> (required)
+        public string SubjectWebpage { get; set; }
 
-		/// <summary>
-		/// Subject webpage of the entity
-		/// </summary>
-		public string SubjectWebpage { get; set; }
+        /// <summary>
+        /// Description of the entity (optional)
+        /// </summary>
+        public string Description { get; set; }
 
-		/// <summary>
-		/// Check if all properties for a reference request are present
-		/// 17-08-27 We do need a type if only providing reference data
-		/// </summary>
-		/// <returns></returns>
-		public bool HasNecessaryProperties()
+        /// <summary>
+        /// Check if all properties for a reference request are present
+        /// 17-08-27 We do need a type if only providing reference data
+        /// </summary>
+        /// <returns></returns>
+        public bool HasNecessaryProperties()
 		{
 			//	|| string.IsNullOrWhiteSpace( Description )
 			if ( string.IsNullOrWhiteSpace( Name )

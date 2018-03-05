@@ -14,69 +14,94 @@ using Utilities;
 
 namespace RA.Services
 {
-	public class AgentServices : ServiceHelper
+	public class OrganizationServices : ServiceHelper
 	{
 		static string status = "";
 		static bool isUrlPresent = true;
 
 		public static string CredentialOrganization = "ceterms:CredentialOrganization";
 		public static string QACredentialOrganization = "ceterms:QACredentialOrganization";
-		/// <summary>
-		/// Publish a Learning Opportunity to the Credential Registry
-		/// </summary>
-		/// <param name="request"></param>
-		/// <param name="isValid"></param>
-		/// <param name="messages"></param>
-		public static void Publish( EntityRequest request, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId )
-		{
-			isValid = true;
-			registryEnvelopeId = "";
-			//submitter is not a person for this api, rather the organization
-			//may want to do a lookup via the api key?
-			string submitter = "";
+        /// <summary>
+        /// Publish a Learning Opportunity to the Credential Registry
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="isValid"></param>
+        /// <param name="messages"></param>
+        public static void Publish(EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId)
+        {
+            RA.Models.RequestHelper helper = new Models.RequestHelper();
+            helper.RegistryEnvelopeId = registryEnvelopeId;
+            helper.ApiKey = apiKey;
+            helper.OwnerCtid = request.PublishForOrganizationIdentifier;
 
-			var output = new Agent();
-			if ( ToMap( request.Organization, output, ref messages ) )
-			{
-				payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+            Publish(request, ref isValid, helper);
 
-				CER cer = new CER();
-				//crEnvelopeId = registryEnvelopeId;
+            payload = helper.Payload;
+            messages = helper.GetAllMessages();
+            registryEnvelopeId = helper.RegistryEnvelopeId;
+        }
+        /// <summary>
+        ///Publish an organization to the Credential Registry
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="isValid"></param>
+        /// <param name="helper"></param>
+        public static void Publish(EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper)
+        {
+            isValid = true;
+            string crEnvelopeId = request.RegistryEnvelopeId;
+            //submitter is not a person for this api, rather the organization
+            //may want to do a lookup via the api key?
+            string submitter = "";
 
-				string identifier = "agent_" + request.Organization.Ctid;
-				if ( cer.Publish( payload, submitter, identifier, ref status, ref registryEnvelopeId ) )
-				{
-					string msg = string.Format( "<p>Published organization: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage.ToString(), output.Ctid, registryEnvelopeId );
-					NotifyOnPublish( "Organization", msg );
-				}
-				else
-				{
-					messages.Add( status );
-					isValid = false;
-				}
-			}
-			else
-			{
-				isValid = false;
-				payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
-			}
+            var output = new Agent();
+            List<string> messages = new List<string>();
+            if (ToMap(request.Organization, output, ref messages))
+            {
+                helper.Payload = JsonConvert.SerializeObject(output, ServiceHelper.GetJsonSettings());
 
-		}
-		//
+                CER cer = new CER( "Organization", output.Type, output.Ctid );
+                cer.PublisherAuthorizationToken = helper.ApiKey;
+                cer.PublishingForOrgCtid = helper.OwnerCtid;
+                if (cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32)
+                    cer.IsManagedRequest = true;
 
-		//Used for demo page - NA 6/5/2017
-		public static string DemoPublish( OutputEntity ctdlFormattedAgent, ref bool isValid, ref List<string> messages, ref string rawResponse, bool forceSkipValidation = false )
-		{
-			isValid = true;
-			var crEnvelopeId = "";
-			var payload = JsonConvert.SerializeObject( ctdlFormattedAgent, ServiceHelper.GetJsonSettings() );
-			var identifier = "agent_" + ctdlFormattedAgent.Ctid;
-			rawResponse = new CER().Publish( payload, "", identifier, ref isValid, ref status, ref crEnvelopeId, forceSkipValidation );
+                string identifier = "Organization_" + request.Organization.Ctid;
 
-			return crEnvelopeId;
-		}
+                if (cer.Publish(helper.Payload, submitter, identifier, ref status, ref crEnvelopeId))
+                {
+                    helper.RegistryEnvelopeId = crEnvelopeId;
+                    string msg = string.Format("<p>Published organization: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage.ToString(), output.Ctid, crEnvelopeId);
+                    NotifyOnPublish("Organization", msg);
+                }
+                else
+                {
+                    messages.Add(status);
+                    isValid = false;
+                }
+            }
+            else
+            {
+                isValid = false;
+                helper.Payload = JsonConvert.SerializeObject(output, ServiceHelper.GetJsonSettings());
+            }
+            helper.SetMessages(messages);
+        }
+        //
 
-		public static string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
+        //Used for demo page - NA 6/5/2017
+        //public static string DemoPublish( OutputEntity ctdlFormattedAgent, ref bool isValid, ref List<string> messages, ref string rawResponse, bool forceSkipValidation = false )
+        //{
+        //	isValid = true;
+        //	var crEnvelopeId = "";
+        //	var payload = JsonConvert.SerializeObject( ctdlFormattedAgent, ServiceHelper.GetJsonSettings() );
+        //	var identifier = "agent_" + ctdlFormattedAgent.Ctid;
+        //	rawResponse = new CER().Publish( payload, "", identifier, ref isValid, ref status, ref crEnvelopeId, forceSkipValidation );
+
+        //	return crEnvelopeId;
+        //}
+
+        public static string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
 		{
 			return FormatAsJson( request.Organization, ref isValid, ref messages );
 		}
@@ -112,6 +137,7 @@ namespace RA.Services
 		/// <returns></returns>
 		public static bool ToMap( InputEntity input, OutputEntity output, ref List<string> messages )
 		{
+			CurrentEntityType = "Organization";
 			bool isValid = true;
 			try
 			{
@@ -127,6 +153,11 @@ namespace RA.Services
 				else
 					output.Keyword = null;
 
+				if ( input.AlternateName != null && input.AlternateName.Count > 0 )
+					output.AlternateName = input.AlternateName;
+				else
+					output.AlternateName = null;
+
 				HandleCredentialAlignmentFields( input, output, ref messages );
 
 				output.Jurisdiction = MapJurisdictions( input.Jurisdiction, ref messages );
@@ -140,13 +171,13 @@ namespace RA.Services
 				output.RevocationProcess = FormatProcessProfile( input.RevocationProcess, ref messages );
 
 				//Following can be a variety of entities, so valid type must be provided
-				output.Approves = FormatEntityReferences( input.Approves, "", false, ref messages );
-				output.Owns = FormatEntityReferences( input.Owns, "", false, ref messages ); //Owns Credentials
-				output.Offers = FormatEntityReferences( input.Offers, "", false, ref messages );//Offers Credentials
+				output.Approves = FormatEntityReferences( input.Approves, "AgentApproves", false, ref messages );
+				output.Owns = FormatEntityReferences( input.Owns, "AgentOwns", false, ref messages ); //Owns Credentials
+				output.Offers = FormatEntityReferences( input.Offers, "AgentOffers", false, ref messages );//Offers Credentials
 
-				output.Renews = FormatEntityReferences( input.Renews, "", false, ref messages );//Renews Credentials
-				output.Revokes = FormatEntityReferences( input.Revokes, "", false, ref messages ); //Revokes Credentials
-				output.Recognizes = FormatEntityReferences( input.Recognizes, "", false, ref messages ); //Recognizes Credentials
+				output.Renews = FormatEntityReferences( input.Renews, "AgentRenews", false, ref messages );//Renews Credentials
+				output.Revokes = FormatEntityReferences( input.Revokes, "AgentRevokes", false, ref messages ); //Revokes Credentials
+				output.Recognizes = FormatEntityReferences( input.Recognizes, "AgentRecognizes", false, ref messages ); //Recognizes Credentials
 
 				output.HasConditionManifest = AssignRegistryURIsListAsStringList( input.HasConditionManifest, "HasConditionManifest", ref messages );
 				output.HasCostManifest = AssignRegistryURIsListAsStringList( input.HasCostManifest, "HasCostManifest", ref messages );
@@ -196,6 +227,7 @@ namespace RA.Services
 			{
 				output.Ctid = input.Ctid;
 				output.CtdlId = idUrl + output.Ctid;
+				CurrentCtid = input.Ctid;
 			}
 			if ( string.IsNullOrWhiteSpace( output.CtdlId ) )
 			{
@@ -207,7 +239,10 @@ namespace RA.Services
 				messages.Add( "Error - An organization name must be entered." );
 			}
 			else
+			{
 				output.Name = input.Name;
+				CurrentEntityName = input.Name;
+			}
 			if ( string.IsNullOrWhiteSpace( input.Description ) )
 			{
 				messages.Add( "Error - An organization description must be entered." );
@@ -273,13 +308,12 @@ namespace RA.Services
 				output.AgentSectorType = null;
 			}
 
-			if ( input.Address == null && input.Address.Count == 0 &&
-				( input.Email == null || input.Email.Count == 0 ) &&
-				( input.Address == null || input.Address.Count == 0 ) &&
+			if ( (input.Address == null || input.Address.Count == 0) &&
+				( input.Email == null   || input.Email.Count == 0 ) &&
 				( input.ContactPoint == null || input.ContactPoint.Count == 0 )
 				)
 			{
-				messages.Add( "Error: At least one type of contact property, like  physical address, contact point, email address, or phone number. is required." );
+				messages.Add( "Error: At least one type of contact property, like  physical address, contact point, or email address is required." );
 			}
 			return isValid;
 
@@ -287,7 +321,8 @@ namespace RA.Services
 
 		public static void HandleLiteralFields( InputEntity input, OutputEntity output, ref List<string> messages )
 		{
-			output.AlternativeIdentifier = AssignIdentifierValueToList( input.AlternativeIdentifier );
+			//output.AlternativeIdentifier = AssignIdentifierValueToList( input.AlternativeIdentifier );
+			output.AlternativeIdentifier = AssignIdentifierListToList( input.AlternativeIdentifier );
 			output.MissionAndGoalsStatementDescription = input.MissionAndGoalsStatementDescription;
 			output.AgentPurposeDescription = input.AgentPurposeDescription;
 			output.DUNS = input.Duns;
@@ -433,7 +468,7 @@ namespace RA.Services
 		public static void HandleCredentialAlignmentFields( InputEntity from, OutputEntity to, ref List<string> messages )
 		{
 			//can't depend on the codes being NAICS
-			to.IndustryType = FormatCredentialAlignmentListFromList( from.IndustryType, true, "" );
+			to.IndustryType = FormatCredentialAlignmentListFromList( from.IndustryType, true, ref messages);
 			if ( from.Naics != null && from.Naics.Count > 0 )
 				to.Naics = from.Naics;
 			else

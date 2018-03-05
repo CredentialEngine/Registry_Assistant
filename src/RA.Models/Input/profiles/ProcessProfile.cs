@@ -15,7 +15,7 @@ namespace RA.Models.Input
         {
             ExternalInputType = new List<string>();
 			Jurisdiction = new List<Jurisdiction>();
-			ProcessingAgent = new OrganizationReference();
+			
 			TargetCredential = new List<EntityReference>();
 			TargetAssessment = new List<EntityReference>();
 			TargetLearningOpportunity = new List<EntityReference>();
@@ -28,7 +28,7 @@ namespace RA.Models.Input
 		//public List<CredentialAlignmentObject> ExternalInputType { get; set; }
 		public List<string> ExternalInputType { get; set; }
 		public string ProcessFrequency { get; set; }
-        public OrganizationReference ProcessingAgent { get; set; }
+        public List<OrganizationReference> ProcessingAgent { get; set; } = new List<OrganizationReference>();
         public string ProcessMethod { get; set; }
         public string ProcessMethodDescription { get; set; }
         public string ProcessStandards { get; set; }

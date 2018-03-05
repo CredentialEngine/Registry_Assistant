@@ -25,7 +25,7 @@ namespace RA.Models.Input
 		public CostManifest()
 		{
 			OwningOrganization = new OrganizationReference();
-			EstimatedCosts = new List<CostProfile>();
+			EstimatedCost = new List<CostProfile>();
 		}
 
 		public string Name { get; set; }
@@ -45,6 +45,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public OrganizationReference OwningOrganization { get; set; }
 
-		public List<CostProfile> EstimatedCosts { get; set; }
+		public List<CostProfile> EstimatedCost { get; set; }
 	}
 }
