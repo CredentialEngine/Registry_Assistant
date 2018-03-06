@@ -61,7 +61,7 @@ namespace RA.Services
                     messages.AddRange( warnings );
 
                 helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
-                CER cer = new CER("Credential", output.CredentialType, output.Ctid); 
+                CER cer = new CER("Credential", output.CredentialType, output.Ctid, helper.SerializedInput); 
                 cer.PublisherAuthorizationToken = helper.ApiKey;
                 cer.PublishingForOrgCtid = helper.OwnerCtid;
                 if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32)
@@ -85,6 +85,7 @@ namespace RA.Services
             else
             {
                 isValid = false;
+                messages.Add( status );
                 helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
             }
 

@@ -19,15 +19,15 @@ namespace Samples
             var organizationIdentifierFromAccountsSite = "ce-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 
             //Assign a CTID for the entity being published and keep track of it
-            var myAsmtCTID = "ce-" + Guid.NewGuid().ToString();
-            //DataService.SaveAssessmentCTID( myAsmtCTID );
+            var myCTID = "ce-" + Guid.NewGuid().ToString();
+            //DataService.SaveAssessmentCTID( myCTID );
 
             //A simple assessment object - see below for sample class definition
             var myAsmt = new SampleAssessment()
             {
                 Name = "My Assessment Name",
                 Description = "This is some text that describes my assessment.",
-                CTID = myAsmtCTID,
+                CTID = myCTID,
                 SubjectWebpage = "http://www.credreg.net/assessment/1234",
                 Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
                 AssessmentMethodType = new List<string>() { "assessMethod:Exam", "assessMethod:Performance" },

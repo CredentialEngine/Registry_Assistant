@@ -36,7 +36,14 @@ namespace RegistryAPI.Controllers
 
 			try
 			{
-				response.Payload = LearningOpportunityServices.FormatAsJson( request, ref isValid, ref messages );
+                if ( request == null || request.LearningOpportunity == null )
+                {
+                    response.Messages.Add( "Error - please provide a valid LearningOpportunity request." );
+                    return response;
+                }
+                ServiceHelper.LogInputFile( request, request.LearningOpportunity.Ctid, "LearningOpportunity", "Format" );
+
+                response.Payload = LearningOpportunityServices.FormatAsJson( request, ref isValid, ref messages );
 				response.Successful = isValid;
 
 				if ( !isValid )
@@ -63,7 +70,7 @@ namespace RegistryAPI.Controllers
 			bool isValid = true;
 			List<string> messages = new List<string>();
 			var response = new RegistryAssistantResponse();
-			string payload = "";
+			
 			string registryEnvelopeId = "";
 			try
 			{
@@ -81,17 +88,25 @@ namespace RegistryAPI.Controllers
 				}
 				else
 				{
-					registryEnvelopeId = request.RegistryEnvelopeId;
+                    helper.SerializedInput = ServiceHelper.LogInputFile( request, request.LearningOpportunity.Ctid, "LearningOpportunity", "Publish", 5 );
+
+                    registryEnvelopeId = request.RegistryEnvelopeId;
 					string origCTID = request.LearningOpportunity.Ctid ?? "";
 
-					LearningOpportunityServices.Publish( request, helper.ApiKey, ref isValid, ref messages, ref payload, ref registryEnvelopeId );
-					response.Payload = payload;
-					response.Successful = isValid;
+					LearningOpportunityServices.Publish( request, ref isValid, helper );
 
-					if ( isValid )
+                    //CredentialServices.Publish( request, ref isValid, ref messages, ref payload, ref registryEnvelopeId );
+
+                    response.CTID = request.LearningOpportunity.Ctid;
+                    response.Payload = helper.Payload;
+                    response.Successful = isValid;
+
+                    if ( isValid )
 					{
-						response.RegistryEnvelopeIdentifier = registryEnvelopeId;
-						response.CTID = request.LearningOpportunity.Ctid;
+                        response.RegistryEnvelopeIdentifier = helper.RegistryEnvelopeId;
+                        if ( helper.Messages.Count > 0 )
+                            response.Messages = helper.GetAllMessages();
+                        response.CTID = request.LearningOpportunity.Ctid;
 						if ( response.CTID != origCTID )
 						{
 							response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this Learning Opportunity. If not provided, the future request will be treated as a new Learning Opportunity." );
@@ -99,8 +114,8 @@ namespace RegistryAPI.Controllers
 					}
 					else
 					{
-						response.Messages = messages;
-					}
+                        response.Messages = helper.GetAllMessages();
+                    }
 				}
 			}
 			catch ( Exception ex )

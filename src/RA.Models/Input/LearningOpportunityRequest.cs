@@ -49,8 +49,7 @@ namespace RA.Models.Input
             Requires = new List<ConditionProfile>();
             EntryCondition = new List<ConditionProfile>();
 
-			TeachesCompetency = new List<CredentialAlignmentObject>();
-			//RequiresCompetency = new List<CredentialAlignmentObject>();
+            Teaches = new List<CredentialAlignmentObject>();
 			
 			AdvancedStandingFrom = new List<Connections>();
 			IsAdvancedStandingFor = new List<Connections>();
@@ -145,11 +144,16 @@ namespace RA.Models.Input
         public List<ConditionProfile> Recommends { get; set; }
         public List<ConditionProfile> EntryCondition { get; set; }
 
-		public List<CredentialAlignmentObject> TeachesCompetency { get; set; }
-		//required competencies are input with condition profiles
-		//public List<CredentialAlignmentObject> RequiresCompetency { get; set; }
+		public List<CredentialAlignmentObject> Teaches{ get; set; }
+        public List<CredentialAlignmentObject> TeachesCompetency
+        {
+            get { return Teaches; }
+            set { Teaches = value; }
+        }
+        //required competencies are input with condition profiles
+        //public List<CredentialAlignmentObject> RequiresCompetency { get; set; }
 
-		public List<Connections> AdvancedStandingFrom { get; set; }
+        public List<Connections> AdvancedStandingFrom { get; set; }
 		public List<Connections> IsAdvancedStandingFor { get; set; }
 		public List<Connections> PreparationFrom { get; set; }
 		public List<Connections> IsPreparationFor { get; set; }

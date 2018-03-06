@@ -19,34 +19,57 @@ namespace RA.Services
 
         static string status = "";
 		static bool isUrlPresent = true;
+        /// <summary>
+        /// Publish a Credential to the Credential Registry
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="isValid"></param>
+        /// <param name="messages"></param>
+        /// <param name="payload"></param>
+        public static void Publish( EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId )
+        {
+            RA.Models.RequestHelper helper = new Models.RequestHelper();
+            helper.RegistryEnvelopeId = registryEnvelopeId;
+            helper.ApiKey = apiKey;
+            helper.OwnerCtid = request.PublishForOrganizationIdentifier;
 
-		/// <summary>
-		/// Publish a Learning Opportunity to the Credential Registry
-		/// </summary>
-		/// <param name="request"></param>
-		/// <param name="isValid"></param>
-		/// <param name="messages"></param>
-		public static void Publish( EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId )
+            Publish( request, ref isValid, helper );
+
+            payload = helper.Payload;
+            messages = helper.GetAllMessages();
+            registryEnvelopeId = helper.RegistryEnvelopeId;
+        }
+        /// <summary>
+        /// Publish a Learning Opportunity to the Credential Registry
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="isValid"></param>
+        /// <param name="messages"></param>
+        public static void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
         {
             isValid = true;
-			string submitter = "";
-			var output = new OutputEntity();
+            string crEnvelopeId = request.RegistryEnvelopeId;
+            string submitter = "";
+            List<string> messages = new List<string>();
+            var output = new OutputEntity();
             if ( ToMap( request.LearningOpportunity, output, ref messages ) )
             {
-                payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+                helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 
-                CER cer = new CER( "LearningOpportunity", output.Type, output.Ctid );
-                cer.PublisherAuthorizationToken = apiKey;
-				cer.PublishingForOrgCtid = request.PublishForOrganizationIdentifier;
+                CER cer = new CER( "LearningOpportunity", output.Type, output.Ctid, helper.SerializedInput);
+                cer.PublisherAuthorizationToken = helper.ApiKey;
+                cer.PublishingForOrgCtid = helper.OwnerCtid;
 
-				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+                if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
 					cer.IsManagedRequest = true;
 
 				string identifier = "LearningOpportunity_" + request.LearningOpportunity.Ctid;
-				if ( cer.Publish( payload, submitter, identifier, ref status, ref registryEnvelopeId ) )
+				if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
 				{
+                    //for now need to ensure envelopid is returned
+                    helper.RegistryEnvelopeId = crEnvelopeId;
 
-					string msg = string.Format( "<p>Published LearningOpportunity: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, registryEnvelopeId );
+                    string msg = string.Format( "<p>Published LearningOpportunity: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
 					NotifyOnPublish( "LearningOpportunity", msg );
 				}
 				else
@@ -58,7 +81,11 @@ namespace RA.Services
             else
             {
                 isValid = false;
+                messages.Add( status );
+                helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
             }
+
+            helper.SetMessages( messages );
 
         }
 

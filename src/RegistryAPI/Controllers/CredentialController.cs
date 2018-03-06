@@ -56,7 +56,7 @@ namespace RegistryAPI.Controllers
 				else
 				{
 					response.Messages = messages;
-				}
+                }
 			}
 			catch ( Exception ex )
 			{
@@ -78,7 +78,7 @@ namespace RegistryAPI.Controllers
 			List<string> messages = new List<string>();
 			var response = new RegistryAssistantResponse();
 			string statusMessage = "";
-			string registryEnvelopeId = "";
+
 			try
 			{
 				if ( request == null || request.Credential == null )
@@ -96,11 +96,7 @@ namespace RegistryAPI.Controllers
 				}
 				else
 				{
-                    string jsoninput = JsonConvert.SerializeObject( request, ServiceHelper.GetJsonSettings() );
-                    LoggingHelper.WriteLogFile( 2, "CredentialPublish_" + request.Credential.Ctid + "_raInput.json", jsoninput, "", false );
-                    ServiceHelper.LogInputFile( request, "Publish", 5 );
-                    registryEnvelopeId = request.RegistryEnvelopeId;
-
+                    helper.SerializedInput = ServiceHelper.LogInputFile( request, "Publish", 5 );
 					string origCTID = request.Credential.Ctid ?? "";
 
                     CredentialServices.Publish(request, ref isValid, helper);
@@ -113,12 +109,11 @@ namespace RegistryAPI.Controllers
 
 					if ( isValid )
 					{
-						response.Successful = true;
 						response.RegistryEnvelopeIdentifier = helper.RegistryEnvelopeId;
-						response.CTID = request.Credential.Ctid;
-                        if (helper.Messages.Count > 0)
+                        if ( helper.Messages.Count > 0 )
                             response.Messages = helper.GetAllMessages();
-
+                        response.CTID = request.Credential.Ctid;
+                        
                         if ( response.CTID != origCTID )
 						{
 							response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this credential. If not provided, the future request will be treated as a new credential." );
@@ -129,7 +124,6 @@ namespace RegistryAPI.Controllers
                         //if not valid, could return the payload as reference?
                         //response.Messages = messages;
                         response.Messages = helper.GetAllMessages();
-						response.Successful = false;
 					}
 				}
 			}

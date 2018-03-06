@@ -28,7 +28,6 @@ namespace RegistryAPI.Controllers
 		public RegistryAssistantResponse Format( ConditionManifestRequest request )
 		{
 			bool isValid = true;
-			List<string> messages = new List<string>();
 			var response = new RegistryAssistantResponse();
 
 			try
@@ -43,24 +42,27 @@ namespace RegistryAPI.Controllers
 				//foreach ( ConditionManifest item in request.ConditionManifests )
 				//{}
 				string origCTID = request.ConditionManifest.Ctid ?? "";
-				RequestHelper reqStatus = new RequestHelper();
-				reqStatus.CodeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
+				RequestHelper helper = new RequestHelper();
+				helper.CodeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
 				//do this in controller
 
-				response.Payload = ConditionManifestServices.FormatAsJson( request, ref isValid, reqStatus );
+				response.Payload = ConditionManifestServices.FormatAsJson( request, ref isValid, helper );
 				response.Successful = isValid;
 				if ( isValid )
 				{
-					//check for any (likely warnings) messages
-					if ( reqStatus.Messages.Count > 0)
-					{
-
-					}
-				}
+                    response.CTID = request.ConditionManifest.Ctid;
+                    //check for any (likely warnings) messages
+                    if ( helper.Messages.Count > 0 )
+                        response.Messages = helper.GetAllMessages();
+                    if ( response.CTID != origCTID )
+                    {
+                        response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this ConditionManifest. If not provided, the future request will be treated as a new ConditionManifest." );
+                    }
+                }
 				else
 				{
-					response.Messages = messages;
-				}
+                    response.Messages = helper.GetAllMessages();
+                }
 			}
 			catch ( Exception ex )
 			{
@@ -100,8 +102,8 @@ namespace RegistryAPI.Controllers
 				}
 				else
 				{
-					
-					string origCTID = request.ConditionManifest.Ctid ?? "";
+                    helper.SerializedInput = ServiceHelper.LogInputFile( request, request.ConditionManifest.Ctid, "ConditionManifest", "Publish", 5 );
+                    string origCTID = request.ConditionManifest.Ctid ?? "";
 					
 					ConditionManifestServices.Publish( request, ref isValid, helper);
 

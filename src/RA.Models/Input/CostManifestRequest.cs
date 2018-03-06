@@ -41,10 +41,14 @@ namespace RA.Models.Input
 		public string CostDetails { get; set; }
 
 		/// <summary>
-		/// Organization that owns this credential
+		/// Organization that owns this CostManifest
 		/// </summary>
-		public OrganizationReference OwningOrganization { get; set; }
-
-		public List<CostProfile> EstimatedCost { get; set; }
+		public OrganizationReference CostManifestOf { get; set; }
+        public OrganizationReference OwningOrganization
+        {
+            get { return CostManifestOf; }
+            set { CostManifestOf = value; }
+        }
+        public List<CostProfile> EstimatedCost { get; set; }
 	}
 }

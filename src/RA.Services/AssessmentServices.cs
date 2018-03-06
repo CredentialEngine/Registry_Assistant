@@ -16,41 +16,66 @@ namespace RA.Services
 	public class AssessmentServices : ServiceHelper
     {
         static string status = "";
-		static bool isUrlPresent = true;
+        static List<string> warnings = new List<string>();
+        static bool isUrlPresent = true;
+        /// <summary>
+        /// Publish an Assessment to the Credential Registry
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="isValid"></param>
+        /// <param name="messages"></param>
+        /// <param name="payload"></param>
+        public static void Publish( EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId )
+        {
+            RA.Models.RequestHelper helper = new Models.RequestHelper();
+            helper.RegistryEnvelopeId = registryEnvelopeId;
+            helper.ApiKey = apiKey;
+            helper.OwnerCtid = request.PublishForOrganizationIdentifier;
 
-		/// <summary>
-		/// Publish an Assessment to the Credential Registry
-		/// </summary>
-		/// <param name="request"></param>
-		/// <param name="isValid"></param>
-		/// <param name="messages"></param>
-		public static void Publish( EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId )
-		{
+            Publish( request, ref isValid, helper );
+
+            payload = helper.Payload;
+            messages = helper.GetAllMessages();
+            registryEnvelopeId = helper.RegistryEnvelopeId;
+        }
+        /// <summary>
+        /// Publish an Assessment to the Credential Registry
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="isValid"></param>
+        /// <param name="messages"></param>
+        public static void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
+        {
 			isValid = true;
-			//string crEnvelopeId = "";
-			//submitter is not a person for this api, rather the organization
-			//may want to do a lookup via the api key?
-			string submitter = "";
-			var output = new OutputEntity();
+            string crEnvelopeId = request.RegistryEnvelopeId;
+
+            //submitter is not a person for this api, rather the organization
+            //may want to do a lookup via the api key?
+            string submitter = "";
+            List<string> messages = new List<string>();
+            var output = new OutputEntity();
 			if ( ToMap( request.Assessment, output, ref messages ) )
 			{
-				payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+                if ( warnings.Count > 0 )
+                    messages.AddRange( warnings );
 
-                CER cer = new CER( "Assessment", output.Type, output.Ctid );
-                cer.PublisherAuthorizationToken = apiKey;
-				cer.PublishingForOrgCtid = request.PublishForOrganizationIdentifier;
+                helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 
-				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+                CER cer = new CER( "Assessment", output.Type, output.Ctid, helper.SerializedInput);
+                cer.PublisherAuthorizationToken = helper.ApiKey;
+                cer.PublishingForOrgCtid = helper.OwnerCtid;
+
+                if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
 					cer.IsManagedRequest = true;
 
 				string identifier = "Assessment_" + request.Assessment.Ctid;
 
-				if ( cer.Publish( payload, submitter, identifier, ref status, ref registryEnvelopeId ) )
+				if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
 				{
-					//for now need to ensure envelopid is returned
-					//request.RegistryEnvelopeId = crEnvelopeId;
+                    //for now need to ensure envelopid is returned
+                    helper.RegistryEnvelopeId = crEnvelopeId;
 
-					string msg = string.Format( "<p>Published Assessment: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, registryEnvelopeId );
+                    string msg = string.Format( "<p>Published Assessment: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
 					NotifyOnPublish( "Assessment", msg );
 				}
 				else
@@ -59,12 +84,15 @@ namespace RA.Services
 					isValid = false;
 				}
 			}
-			else
-			{
-				isValid = false;
-				payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
-			}
-		}
+            else
+            {
+                isValid = false;
+                messages.Add( status );
+                helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+            }
+
+            helper.SetMessages( messages );
+        }
 		//
 		//Used for demo page - NA 6/5/2017
 		//public static string DemoPublish( OutputEntity ctdlFormattedAssessment, ref bool isValid, ref List<string> messages, ref string rawResponse, bool forceSkipValidation = false )

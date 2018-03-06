@@ -24,8 +24,8 @@ namespace RA.Models
         /// skip - no validation of concept scheme concepts
         /// </summary>
         public string CodeValidationType { get; set; }
-
-		public string Payload { get; set; }
+        public string SerializedInput { get; set; }
+        public string Payload { get; set; }
 		/// <summary>
 		/// return the registr envelope id
 		/// </summary>

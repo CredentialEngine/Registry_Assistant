@@ -23,42 +23,47 @@ namespace RA.Services
         /// </summary>
         /// <param name="request"></param>
         /// <param name="isValid"></param>
-        /// <param name="messages"></param>
-        public static void Publish( EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId )
+        /// <param name="helper"></param>
+        public static void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
         {
             isValid = true;
-
-			string submitter = "";
+            string crEnvelopeId = request.RegistryEnvelopeId;
+            string submitter = "";
 
             var output = new OutputEntity();
-            if ( ToMap( request.CostManifest, output, ref messages ) )
+            if ( ToMap( request.CostManifest, output, ref helper ) )
             {
-                payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+                helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 
-                CER cer = new CER( "CostManifest", output.Type, output.Ctid );
+                CER cer = new CER( "CostManifest", output.Type, output.Ctid, helper.SerializedInput); 
 
-                cer.PublisherAuthorizationToken = apiKey;
-				cer.PublishingForOrgCtid = request.PublishForOrganizationIdentifier;
+                cer.PublisherAuthorizationToken = helper.ApiKey;
+                cer.PublishingForOrgCtid = helper.OwnerCtid;
 
-				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+                if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
 					cer.IsManagedRequest = true;
 
 				string identifier = "CostManifest_" + request.CostManifest.Ctid;
 
-                if ( cer.Publish( payload, submitter, identifier, ref status, ref registryEnvelopeId ) )
+                if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
                 {
-					string msg = string.Format( "<p>Published CostManifest: {0}</p><p>CostDetails  webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.CostDetails, output.Ctid, registryEnvelopeId );
+                    //for now need to ensure envelopid is returned
+                    helper.RegistryEnvelopeId = crEnvelopeId;
+
+                    string msg = string.Format( "<p>Published CostManifest: {0}</p><p>CostDetails  webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.CostDetails, output.Ctid, crEnvelopeId );
 					NotifyOnPublish( "CostManifest", msg );
 				}
                 else
                 {
-                    messages.Add( status );
+                    helper.AddError( status );
                     isValid = false;
                 }
             }
             else
             {
+                helper.HasErrors = true;
                 isValid = false;
+                helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
             }
         }
         //
@@ -75,12 +80,12 @@ namespace RA.Services
         //}
         //
 
-        public static string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
+        public static string FormatAsJson( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
         {
-            return FormatAsJson( request.CostManifest, ref isValid, ref messages );
+            return FormatAsJson( request.CostManifest, ref isValid, helper );
         }
         //
-        public static string FormatAsJson( InputEntity input, ref bool isValid, ref List<string> messages )
+        public static string FormatAsJson( InputEntity input, ref bool isValid, RA.Models.RequestHelper helper )
         {
             var output = new OutputEntity();
             string payload = "";
@@ -89,7 +94,7 @@ namespace RA.Services
             RA.Models.RequestHelper reqStatus = new Models.RequestHelper();
             reqStatus.CodeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
 
-            if ( ToMap( input, output, ref messages ) )
+            if ( ToMap( input, output, ref helper ) )
             {
                 payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
             }
@@ -114,11 +119,13 @@ namespace RA.Services
         /// <param name="output"></param>
         /// <param name="messages"></param>
         /// <returns></returns>        
-        public static bool ToMap( InputEntity input, OutputEntity output, ref List<string> messages )
+        public static bool ToMap( InputEntity input, OutputEntity output, ref RA.Models.RequestHelper helper )
         {
 			CurrentEntityType = "CostManifest";
 			bool isValid = true;
-			try
+            List<string> messages = new List<string>();
+
+            try
 			{
 				HandleRequiredFields( input, output, ref messages );
 
@@ -139,8 +146,11 @@ namespace RA.Services
 				LogError( ex, "CostManifestServices.ToMap" );
 				messages.Add( ex.Message );
 			}
-			if ( messages.Count > 0 )
+            if ( messages.Count > 0 )
+            {
                 isValid = false;
+                helper.SetMessages( messages );
+            }
 
             return isValid;
         }

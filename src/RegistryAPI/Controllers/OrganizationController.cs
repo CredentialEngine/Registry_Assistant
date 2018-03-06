@@ -42,7 +42,6 @@ namespace RegistryAPI.Controllers
 					return response;
 				}
                 ServiceHelper.LogInputFile( request, request.Organization.Ctid, "Organization", "Format" );
-                string origCTID = request.Organization.Ctid ?? "";
 
 				response.Payload = OrganizationServices.FormatAsJson( request, ref isValid, ref messages );
 				response.Successful = isValid;
@@ -72,8 +71,7 @@ namespace RegistryAPI.Controllers
 			bool isValid = true;
 			List<string> messages = new List<string>();
 			var response = new RegistryAssistantResponse();
-			string registryEnvelopeId = "";
-			string payload = "";
+
 			try
 			{
 				if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage ) )
@@ -97,9 +95,8 @@ namespace RegistryAPI.Controllers
 					}
 					else
 					{
-                        ServiceHelper.LogInputFile( request, request.Organization.Ctid, "Organization", "Publish", 5 );
+                        helper.SerializedInput = ServiceHelper.LogInputFile( request, request.Organization.Ctid, "Organization", "Publish", 5 );
 
-                        registryEnvelopeId = request.RegistryEnvelopeId;
 						string origCTID = request.Organization.Ctid ?? "";
 
                         OrganizationServices.Publish(request, ref isValid, helper);

@@ -31,11 +31,10 @@ namespace RA.Models.Input
 		public ConditionManifest()
 		{
             EntryConditions = new List<ConditionProfile>();
-			RequiredConditions = new List<ConditionProfile>();
+            Requires = new List<ConditionProfile>();
             RenewedConditions = new List<ConditionProfile>();
             RecommendedConditions = new List<ConditionProfile>();
 			CorequisiteConditions = new List<ConditionProfile>();
-			OwningOrganization = new OrganizationReference();
 		}
 
 		public string Name { get; set; }
@@ -43,23 +42,33 @@ namespace RA.Models.Input
 		public string SubjectWebpage { get; set; } //URL
 		public string Ctid { get; set; }
 
-		/// <summary>
-		/// Organization that owns this credential
-		/// </summary>
-		public OrganizationReference OwningOrganization { get; set; }
+        /// <summary>
+        /// Organization that owns this ConditionManifest
+        /// </summary>
+        public OrganizationReference ConditionManifestOf { get; set; } = new OrganizationReference();
+        //Alias
+        public OrganizationReference OwningOrganization
+        {
+            get { return ConditionManifestOf; }
+            set { ConditionManifestOf = value; }
+        }
 
-		/// <summary>
-		/// Required condition profiles
-		/// </summary>
-		public List<ConditionProfile> RequiredConditions { get; set; }
-        
+        /// <summary>
+        /// Required condition profiles
+        /// </summary>
+        public List<ConditionProfile> Requires { get; set; }
+        public List<ConditionProfile> RequiredConditions
+        {
+            get { return Requires; }
+            set { Requires = value; }
+        }
         /// <summary>
         /// Renewed condition profiles
         /// </summary>
         public List<ConditionProfile> RenewedConditions { get; set; }
 
         /// <summary>
-        /// Recommended condition profiles
+        /// Recommended condition profiles Recommends
         /// </summary>
         public List<ConditionProfile> RecommendedConditions { get; set; }
 

@@ -60,7 +60,7 @@ namespace RA.Services
             {
                 helper.Payload = JsonConvert.SerializeObject(output, ServiceHelper.GetJsonSettings());
 
-                CER cer = new CER( "Organization", output.Type, output.Ctid );
+                CER cer = new CER( "Organization", output.Type, output.Ctid, helper.SerializedInput); 
                 cer.PublisherAuthorizationToken = helper.ApiKey;
                 cer.PublishingForOrgCtid = helper.OwnerCtid;
                 if (cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32)

@@ -28,12 +28,12 @@
             Probably too many complications
             </summary>
         </member>
-        <member name="P:RA.Models.Input.ConditionManifest.OwningOrganization">
+        <member name="P:RA.Models.Input.ConditionManifest.ConditionManifestOf">
             <summary>
-            Organization that owns this credential
+            Organization that owns this ConditionManifest
             </summary>
         </member>
-        <member name="P:RA.Models.Input.ConditionManifest.RequiredConditions">
+        <member name="P:RA.Models.Input.ConditionManifest.Requires">
             <summary>
             Required condition profiles
             </summary>
@@ -45,7 +45,7 @@
         </member>
         <member name="P:RA.Models.Input.ConditionManifest.RecommendedConditions">
             <summary>
-            Recommended condition profiles
+            Recommended condition profiles Recommends
             </summary>
         </member>
         <member name="P:RA.Models.Input.ConditionManifest.EntryConditions">
@@ -67,9 +67,9 @@
             URL for cost details
             </summary>
         </member>
-        <member name="P:RA.Models.Input.CostManifest.OwningOrganization">
+        <member name="P:RA.Models.Input.CostManifest.CostManifestOf">
             <summary>
-            Organization that owns this credential
+            Organization that owns this CostManifest
             </summary>
         </member>
         <member name="T:RA.Models.Input.CredentialRequest">

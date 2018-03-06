@@ -24,13 +24,13 @@ namespace RA.Services
 		static string status = "";
 		static bool isUrlPresent = true;
 
-		/// <summary>
-		/// Publish a Condition Manifest to the Credential Registry
-		/// </summary>
-		/// <param name="request"></param>
-		/// <param name="isValid"></param>
-		/// <param name="messages"></param>
-		public static void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
+        /// <summary>
+        /// Publish a Condition Manifest to the Credential Registry
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="isValid"></param>
+        /// <param name="helper"></param>
+        public static void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
 		{
 			isValid = true;
 			string crEnvelopeId = request.RegistryEnvelopeId;
@@ -41,7 +41,7 @@ namespace RA.Services
 			{
 				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 
-                CER cer = new CER( "ConditionManifest", output.Type, output.Ctid );
+                CER cer = new CER( "ConditionManifest", output.Type, output.Ctid, helper.SerializedInput); 
                 cer.PublisherAuthorizationToken = helper.ApiKey;
 				cer.PublishingForOrgCtid = helper.OwnerCtid;
 
@@ -53,7 +53,6 @@ namespace RA.Services
 				{
 					//for now need to ensure envelopid is returned
 					helper.RegistryEnvelopeId = crEnvelopeId;
-
 
 					string msg = string.Format( "<p>Published ConditionManifest: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
 					NotifyOnPublish( "ConditionManifest", msg );
@@ -176,7 +175,7 @@ namespace RA.Services
 
 			output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
 
-			output.ConditionManifestOf = FormatOrganizationReferenceToList( input.OwningOrganization, "Owning Organization", true, ref messages );
+			output.ConditionManifestOf = FormatOrganizationReferenceToList( input.ConditionManifestOf, "Owning Organization", true, ref messages );
 
 			return isValid;
 		}

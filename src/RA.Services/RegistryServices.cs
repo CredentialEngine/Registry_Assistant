@@ -26,15 +26,22 @@ namespace RA.Services
             CtdlType = ctdlType;
             EntityCtid = ctid;
         }
-
-		/// <summary>
-		/// AKA API Key
-		/// </summary>
-		public string PublisherAuthorizationToken { get; set; }
+        public RegistryServices( string entityType, string ctdlType, string ctid, string serializedInput )
+        {
+            PublishingEntityType = entityType;
+            CtdlType = ctdlType;
+            EntityCtid = ctid;
+            SerializedInput = serializedInput;
+        }
+        /// <summary>
+        /// AKA API Key
+        /// </summary>
+        public string PublisherAuthorizationToken { get; set; }
 		public string PublishingForOrgCtid { get; set; }
         public string PublishingEntityType { get; set; }
         public string CtdlType { get; set; }
         public string EntityCtid { get; set; }
+        public string SerializedInput { get; set; } = "";
         public bool IsManagedRequest { get; set; }
 		public bool IsManagedRequestOld { get; set; }
 		#region Publishing
@@ -254,6 +261,7 @@ namespace RA.Services
             apr.publishingEntityType = PublishingEntityType;
             apr.ctdlType = CtdlType;
             apr.entityCtid = EntityCtid;
+            apr.serializedInput = SerializedInput;
 
             LoggingHelper.DoTrace( 6, "RegistryServices.ManagedPublishThroughAcccounts - payload: \r\n" + payload );
 			//already serialized!
@@ -780,6 +788,7 @@ namespace RA.Services
         public string publishingEntityType { get; set; }
         public string ctdlType { get; set; }
         public string entityCtid { get; set; }
+        public string serializedInput { get; set; }
     }
 
     public class AccountPublishResponse

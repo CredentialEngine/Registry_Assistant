@@ -129,6 +129,24 @@ namespace RA.Services
                 input = orgReference as OrganizationReference;
                 return FormatOrganizationReferenceToList( input, propertyName, dataIsRequired, ref messages, isQAOrg );
             }
+            else if ( orgReference.GetType() == typeof( Newtonsoft.Json.Linq.JObject ) )
+            {
+                Newtonsoft.Json.Linq.JObject o = ( Newtonsoft.Json.Linq.JObject ) orgReference;
+                foreach ( Newtonsoft.Json.Linq.JProperty property in o.Properties() )
+                {
+                    Console.WriteLine( property.Name + " - " + property.Value );
+                    if ( property.Name == "Id" ) {
+                        input.Id = property.Value.ToString();
+                        continue;
+                    }
+                    if ( property.Name == "CTID" ) input.CTID = property.Value.ToString();
+                    if ( property.Name == "Type" ) input.Type = property.Value.ToString();
+                    if ( property.Name == "Name" ) input.Name = property.Value.ToString();
+                    if ( property.Name == "SubjectWebpage" ) input.SubjectWebpage = property.Value.ToString();
+                }
+                
+                return FormatOrganizationReferenceToList( input, propertyName, dataIsRequired, ref messages, isQAOrg );
+            }
             else if ( orgReference.GetType() == typeof( Newtonsoft.Json.Linq.JArray ) )
             {
                 Newtonsoft.Json.Linq.JArray ar = new Newtonsoft.Json.Linq.JArray();
@@ -147,7 +165,7 @@ namespace RA.Services
             else
             {
                 //unexpected
-                messages.Add( "Error unexpected type for Organization Reference for " + propertyName + " with a tyoe of " + orgReference.GetType().ToString() );
+                messages.Add( "Error unexpected type for Organization Reference for " + propertyName + " with a type of " + orgReference.GetType().ToString() );
                 return null;
             }
         }
@@ -1247,7 +1265,7 @@ namespace RA.Services
 			entity = new MOPlace();
 			string statusMessage = "";
 
-			if ( string.IsNullOrWhiteSpace( input.Name ) )
+			if ( string.IsNullOrWhiteSpace( input.Name ) && string.IsNullOrWhiteSpace( input.GeoURI ) )
 			{
 				//although the name will usually equal the country or region
 				messages.Add( "Error - a name must be provided with a jurisidiction GeoCoordinate. The name is typically the country or region within a country, but could also be a continent." );
@@ -2195,15 +2213,17 @@ namespace RA.Services
 			return value;
 		}
 		#region JSON helpers
-        public static void LogInputFile( CredentialRequest request, string endpoint, int appLevel = 6 )
+        public static string LogInputFile( CredentialRequest request, string endpoint, int appLevel = 6 )
         {
             string jsoninput = JsonConvert.SerializeObject( request, ServiceHelper.GetJsonSettings() );
             LoggingHelper.WriteLogFile( appLevel, string.Format("Credential_{0}_{1}_raInput.json", endpoint, request.Credential.Ctid), jsoninput, "", false );
+            return jsoninput;
         }
-        public static void LogInputFile( object request, string ctid, string entityType, string endpoint, int appLevel = 6 )
+        public static string LogInputFile( object request, string ctid, string entityType, string endpoint, int appLevel = 6 )
         {
             string jsoninput = JsonConvert.SerializeObject( request, ServiceHelper.GetJsonSettings() );
             LoggingHelper.WriteLogFile( appLevel, string.Format( "{0}_{1}_{2}_raInput.json", entityType, endpoint, ctid ), jsoninput, "", false );
+            return jsoninput;
         }
 
         public static JsonSerializerSettings GetJsonSettings()

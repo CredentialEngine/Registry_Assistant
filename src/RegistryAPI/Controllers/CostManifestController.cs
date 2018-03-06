@@ -30,7 +30,6 @@ namespace RegistryAPI.Controllers
 		public RegistryAssistantResponse Format( CostManifestRequest request )
 		{
 			bool isValid = true;
-			List<string> messages = new List<string>();
 			var response = new RegistryAssistantResponse();
 
 			try
@@ -41,18 +40,33 @@ namespace RegistryAPI.Controllers
 					return response;
 				}
 
-				string origCTID = request.CostManifest.Ctid ?? "";
+                LoggingHelper.DoTrace( 2, string.Format( "RegistryAssistant.{0}.Trace request. ApiKey: {1}, IPaddress: {2}, requestBy: {3}, ctid: {4}", thisClassName, ServiceHelper.GetCurrentIP(), request.CostManifest.Ctid ) );
 
-				response.Payload = CostManifestServices.FormatAsJson( request, ref isValid, ref messages );
+                string origCTID = request.CostManifest.Ctid ?? "";
+                RequestHelper helper = new RequestHelper();
+                helper.CodeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
+
+                response.Payload = CostManifestServices.FormatAsJson( request, ref isValid, helper );
 				response.Successful = isValid;
 
-				if ( !isValid )
-				{
-					response.Messages = messages;
-				}
+                if ( isValid )
+                {
+                    response.CTID = request.CostManifest.Ctid;
+                    //check for any (likely warnings) messages
+                    if ( helper.Messages.Count > 0 )
+                        response.Messages = helper.GetAllMessages();
+                    if ( response.CTID != origCTID )
+                    {
+                        response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this CostManifest. If not provided, the future request will be treated as a new CostManifest." );
+                    }
+                }
+                else
+                {
+                    response.Messages = helper.GetAllMessages();
+                }
 
 
-			}
+            }
 			catch ( Exception ex )
 			{
 				response.Messages.Add( ex.Message );
@@ -73,8 +87,7 @@ namespace RegistryAPI.Controllers
 			List<string> messages = new List<string>();
 			var response = new RegistryAssistantResponse();
 			string statusMessage = "";
-			string payload = "";
-			string registryEnvelopeId = "";
+
 
 			try
 			{
@@ -92,28 +105,33 @@ namespace RegistryAPI.Controllers
 				}
 				else
 				{
-					registryEnvelopeId = request.RegistryEnvelopeId;
+                    helper.SerializedInput = ServiceHelper.LogInputFile( request, request.CostManifest.Ctid, "CostManifest", "Publish", 5 );
+
+                    //registryEnvelopeId = request.RegistryEnvelopeId;
 					string origCTID = request.CostManifest.Ctid ?? "";
 
-					CostManifestServices.Publish( request, helper.ApiKey, ref isValid, ref messages, ref payload, ref registryEnvelopeId );
+					CostManifestServices.Publish( request, ref isValid, helper );
 					response.CTID = request.CostManifest.Ctid;
-					response.Payload = payload;
-
-					response.Successful = isValid;
+                    response.Payload = helper.Payload;
+                    response.Successful = isValid;
 
 					if ( isValid )
 					{
-						response.RegistryEnvelopeIdentifier = registryEnvelopeId;
-						response.CTID = request.CostManifest.Ctid;
+                        response.RegistryEnvelopeIdentifier = helper.RegistryEnvelopeId;
+                        response.CTID = request.CostManifest.Ctid;
 						if ( response.CTID != origCTID )
 						{
 							response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this CostManifest. If not provided, the future request will be treated as a new CostManifest." );
 						}
-					}
+                        //would want to return any error messages
+                        if ( helper.Messages.Count > 0 )
+                            response.Messages = helper.GetAllMessages();
+                    }
 					else
 					{
-						response.Messages = messages;
-					}
+                        //response.Messages = messages;
+                        response.Messages = helper.GetAllMessages();
+                    }
 				}
 			}
 			catch ( Exception ex )

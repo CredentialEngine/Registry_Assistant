@@ -51,7 +51,7 @@ namespace RA.Models.Input
 			DevelopmentProcess = new List<ProcessProfile>();
 			MaintenanceProcess = new List<ProcessProfile>();
 
-			AssessesCompetency = new List<CredentialAlignmentObject>();
+            Assesses = new List<CredentialAlignmentObject>();
 			//RequiresCompetency = new List<CredentialAlignmentObject>();
 
 			AvailableAt = new List<Place>();
@@ -130,6 +130,10 @@ namespace RA.Models.Input
         public List<DurationProfile> EstimatedDuration { get; set; }        
         //external classes
         public List<CostProfile> EstimatedCost { get; set; }
+        public List<CostProfile> EstimatedCosts {
+            get { return EstimatedCost; }
+            set { EstimatedCost = value; }
+        } 
 
         public string ScoringMethodDescription { get; set; }
         public string ScoringMethodExample { get; set; }
@@ -165,11 +169,16 @@ namespace RA.Models.Input
         public List<ProcessProfile> MaintenanceProcess { get; set; }
         public List<string> ExternalResearch { get; set; }
 
-		public List<CredentialAlignmentObject> AssessesCompetency { get; set; }
-		//required competencies are handled with condition profiles
-		//public List<CredentialAlignmentObject> RequiresCompetency { get; set; }
+		public List<CredentialAlignmentObject> Assesses{ get; set; }
+        public List<CredentialAlignmentObject> AssessesCompetency
+        {
+            get { return Assesses; }
+            set { Assesses = value; }
+        }
+        //required competencies are handled with condition profiles
+        //public List<CredentialAlignmentObject> RequiresCompetency { get; set; }
 
-		public List<Place> AvailableAt { get; set; }
+        public List<Place> AvailableAt { get; set; }
         public List<string> CommonCosts { get; set; }
         public List<string> CommonConditions { get; set; }
         public List<FinancialAlignmentObject> FinancialAssistance { get; set; }

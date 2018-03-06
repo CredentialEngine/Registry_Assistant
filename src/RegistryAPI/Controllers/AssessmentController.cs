@@ -66,10 +66,9 @@ namespace RegistryAPI.Controllers
 		public RegistryAssistantResponse Publish( AssessmentRequest request )
 		{
 			bool isValid = true;
-			List<string> messages = new List<string>();
+			//List<string> messages = new List<string>();
 			var response = new RegistryAssistantResponse();
-			string payload = "";
-			string registryEnvelopeId = "";
+
 			try
 			{
 				if ( request == null || request.Assessment == null )
@@ -79,7 +78,7 @@ namespace RegistryAPI.Controllers
 				}
 
 				LoggingHelper.DoTrace( 2, string.Format( "RegistryAssistant.{0}.Publish request. IPaddress: {1}, ctid: {2}, envelopeId: {3}", thisClassName, ServiceHelper.GetCurrentIP(),  request.Assessment.Ctid, request.RegistryEnvelopeId ) );
-
+                helper = new RequestHelper();
                 helper.OwnerCtid = request.PublishForOrganizationIdentifier;
                 if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage ) )
 				{
@@ -87,18 +86,22 @@ namespace RegistryAPI.Controllers
 				}
 				else
 				{
-                    ServiceHelper.LogInputFile( request, request.Assessment.Ctid, "Assessment", "Publish", 5 );
-                    registryEnvelopeId = request.RegistryEnvelopeId;
+                    helper.SerializedInput = ServiceHelper.LogInputFile( request, request.Assessment.Ctid, "Assessment", "Publish", 5 );
 					string origCTID = request.Assessment.Ctid ?? "";
 
-					AssessmentServices.Publish( request, helper.ApiKey, ref isValid, ref messages, ref payload, ref registryEnvelopeId );
-					response.Payload = payload;
+					AssessmentServices.Publish( request, ref isValid, helper );
 
-					response.Successful = isValid;
-					if ( isValid )
+                    //CredentialServices.Publish( request, ref isValid, ref messages, ref payload, ref registryEnvelopeId );
+
+                    response.CTID = request.Assessment.Ctid;
+                    response.Payload = helper.Payload;
+                    response.Successful = isValid;
+                    if ( isValid )
 					{
-						response.RegistryEnvelopeIdentifier = registryEnvelopeId;
-						response.CTID = request.Assessment.Ctid;
+                        response.RegistryEnvelopeIdentifier = helper.RegistryEnvelopeId;
+                        if ( helper.Messages.Count > 0 )
+                            response.Messages = helper.GetAllMessages();
+                        response.CTID = request.Assessment.Ctid;
 						if ( response.CTID != origCTID )
 						{
 							response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this Assessment. If not provided, the future request will be treated as a new Assessment." );
@@ -107,8 +110,8 @@ namespace RegistryAPI.Controllers
 					}
 					else
 					{
-						response.Messages = messages;
-					}
+                        response.Messages = helper.GetAllMessages();
+                    }
 				}
 			}
 			catch ( Exception ex )
