@@ -77,13 +77,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<ConditionProfile> EntryConditions { get; set; }
 
-		/// <summary>
-		/// Corequisite Conditions
-		/// ceterms:corequisite
-		/// The resource being referenced must be pursued concurrently with the resource being described.
-		/// </summary>
-		/// <see cref="http://purl.org/ctdl/terms/corequisite"/>
-		/// <remarks>Includes dual (double) degrees that cannot be earned independently of each other.</remarks>
-		public List<ConditionProfile> CorequisiteConditions { get; set; }
+        /// <summary>
+        /// Corequisite Conditions
+        /// ceterms:corequisite
+        /// The resource being referenced must be pursued concurrently with the resource being described.
+        /// </summary>
+        /// See: <a href="http://purl.org/ctdl/terms/corequisite">corequisite</a>
+        /// <remarks>Includes dual (double) degrees that cannot be earned independently of each other.</remarks>
+        public List<ConditionProfile> CorequisiteConditions { get; set; }
 	}
 }

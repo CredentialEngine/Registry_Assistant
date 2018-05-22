@@ -80,54 +80,79 @@ namespace RA.Models.Input
 		public string Ctid { get; set; }
 		public string SubjectWebpage { get; set; } //URL
 
-		/// <summary>
-		/// Organization that owns this resource
-		/// </summary>
+        #region at least one of
+
+        /// <summary>
+        /// Organization that owns this resource
+        /// </summary>
         public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
+        //OR
+        /// <summary>
+        /// Organization(s) that offer this resource
+        /// </summary>
+        public List<OrganizationReference> OfferedBy { get; set; }
         #endregion
 
+        #region at least one of the following
+        public List<string> AvailableOnlineAt { get; set; } //URL
+        public List<string> AvailabilityListing { get; set; } //URL
+        public List<Place> AvailableAt { get; set; }
+        #endregion
 
+        #endregion
 
         #region *** Required if available Properties ***
+        public List<CredentialAlignmentObject> Assesses { get; set; }
 
+        public List<string> AssessmentMethodType { get; set; }
+        public List<string> DeliveryType { get; set; }
+        public string DeliveryTypeDescription { get; set; }
         #endregion
 
         #region *** Recommended Properties ***
+        public string DateEffective { get; set; }
 
-        #endregion
+        //List of language codes. ex: en, es
+        public List<string> InLanguage { get; set; }
 
+        public List<DurationProfile> EstimatedDuration { get; set; }
+        public List<ConditionProfile> Requires { get; set; }
+
+        //Credit Information
+        public string CreditHourType { get; set; }
+        public string CreditUnitType { get; set; }
+        public decimal CreditHourValue { get; set; }
+        public decimal CreditUnitValue { get; set; }
+        public string CreditUnitTypeDescription { get; set; }
 
         public List<string> Keyword { get; set; }
         public List<string> Subject { get; set; }
-        
-        public List<string> AssessmentMethodType { get; set; }
-        public List<string> CodedNotation { get; set; }
-        public string DateEffective { get; set; }
-      
+
         public string AssessmentExample { get; set; }
+        public List<string> AssessmentUseType { get; set; }
+        #endregion
+
+
+        public List<string> CodedNotation { get; set; }
+          
         public string AssessmentExampleDescription { get; set; }
         public string AssessmentOutput { get; set; }
-        public List<string> AssessmentUseType { get; set; }
-        public List<string> AvailabilityListing { get; set; }
-        public List<string> AvailableOnlineAt { get; set; }
-       
-		public List<string> InLanguage { get; set; }
+        
+        
 		public List<Jurisdiction> Jurisdiction { get; set; }
-
-	
+        public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
 
         public string ProcessStandards { get; set; }
 
         public string ProcessStandardsDescription { get; set; }
-        public List<string> DeliveryType { get; set; }
-        public string DeliveryTypeDescription { get; set; }
+        
 
 		public List<FrameworkItem> InstructionalProgramType { get; set; }
 		public bool? IsProctored { get; set; }
         public bool? HasGroupEvaluation { get; set; }
         public bool? HasGroupParticipation { get; set; }
 
-        public List<DurationProfile> EstimatedDuration { get; set; }        
+            
         //external classes
         public List<CostProfile> EstimatedCost { get; set; }
         public List<CostProfile> EstimatedCosts {
@@ -139,12 +164,8 @@ namespace RA.Models.Input
         public string ScoringMethodExample { get; set; }
         public string ScoringMethodExampleDescription { get; set; }
         public List<string> ScoringMethodType { get; set; }
-        public string CreditHourType { get; set; }
-        public string CreditUnitType { get; set; }
-        public decimal CreditHourValue { get; set; }
-        public decimal CreditUnitValue { get; set; }
-        public string CreditUnitTypeDescription { get; set; }
-
+        
+        //Connections
 		public List<Connections> AdvancedStandingFrom { get; set; }
 		public List<Connections> IsAdvancedStandingFor { get; set; }
 		public List<Connections> PreparationFrom { get; set; }
@@ -152,33 +173,31 @@ namespace RA.Models.Input
 		public List<Connections> IsRecommendedFor { get; set; }
 		public List<Connections> IsRequiredFor { get; set; }
 
+        //quality assurance
 		public List<OrganizationReference> AccreditedBy { get; set; }
         public List<OrganizationReference> ApprovedBy { get; set; }
-        public List<OrganizationReference> OfferedBy { get; set; }
+        
         public List<OrganizationReference> RecognizedBy { get; set; }
         public List<OrganizationReference> RegulatedBy { get; set; }
-        public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
 
-		public List<ConditionProfile> Requires { get; set; }
+        
+
+		//conditions
         public List<ConditionProfile> Corequisite { get; set; }
         public List<ConditionProfile> Recommends { get; set; }
         public List<ConditionProfile> EntryCondition { get; set; }
 
+        //Processes
         public List<ProcessProfile> AdministrationProcess { get; set; }
         public List<ProcessProfile> DevelopmentProcess { get; set; }
         public List<ProcessProfile> MaintenanceProcess { get; set; }
         public List<string> ExternalResearch { get; set; }
 
-		public List<CredentialAlignmentObject> Assesses{ get; set; }
-        public List<CredentialAlignmentObject> AssessesCompetency
-        {
-            get { return Assesses; }
-            set { Assesses = value; }
-        }
+		
         //required competencies are handled with condition profiles
         //public List<CredentialAlignmentObject> RequiresCompetency { get; set; }
 
-        public List<Place> AvailableAt { get; set; }
+        
         public List<string> CommonCosts { get; set; }
         public List<string> CommonConditions { get; set; }
         public List<FinancialAlignmentObject> FinancialAssistance { get; set; }

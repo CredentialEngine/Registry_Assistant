@@ -55,7 +55,8 @@ namespace RA.Models.Input
 		{
 			if ( string.IsNullOrWhiteSpace( Id )
 				&& string.IsNullOrWhiteSpace( Name )
-				&& string.IsNullOrWhiteSpace( Description )
+                && string.IsNullOrWhiteSpace( CTID )
+                && string.IsNullOrWhiteSpace( Description )
 				&& string.IsNullOrWhiteSpace( SubjectWebpage )
 				&& ( SocialMedia == null || SocialMedia.Count == 0 )
 				)
@@ -98,10 +99,17 @@ namespace RA.Models.Input
         /// </summary>
         public virtual string Type { get; set; }
 
+        /// <summary>
+        /// An identifier for use with blank nodes, to minimize duplicates
+        /// TBD - a better name!
+        /// </summary>
+        public string BNodeId { get; set; }
+
 		/// <summary>
 		/// Name of the entity (required)
 		/// </summary>
 		public string Name { get; set; }
+
 
         /// <summary>
         /// Subject webpage of the entity

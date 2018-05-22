@@ -77,19 +77,31 @@ namespace RA.Models.Input
 		public string SubjectWebpage { get; set; } //URL
 		public string Ctid { get; set; }
 
+
+        #region at least one of
+
         /// <summary>
         /// Organization that owns this resource
         /// </summary>
         public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
+        //OR
+        /// <summary>
+        /// Organization(s) that offer this resource
+        /// </summary>
+        public List<OrganizationReference> OfferedBy { get; set; }
+        #endregion
 
-        //at least one of:
+        #region at least one of the following
         public List<string> AvailableOnlineAt { get; set; } //URL
         public List<string> AvailabilityListing { get; set; } //URL
         public List<Place> AvailableAt { get; set; }
         #endregion
 
+        #endregion
+
         #region *** Required if available Properties ***
 
+        public List<CredentialAlignmentObject> Teaches { get; set; }
 
         public List<string> LearningMethodType { get; set; }
         public List<string> DeliveryType { get; set; }
@@ -98,14 +110,22 @@ namespace RA.Models.Input
 
         #region *** Recommended Properties ***
         public string DateEffective { get; set; }
+        //List of language codes. ex: en, es
         public List<string> InLanguage { get; set; }
-        #endregion
+        public List<DurationProfile> EstimatedDuration { get; set; }
+        public List<ConditionProfile> Requires { get; set; }
 
-
+        //Credit Information
+        public string CreditHourType { get; set; }
+        public string CreditUnitType { get; set; }
+        public decimal CreditHourValue { get; set; }
+        public decimal CreditUnitValue { get; set; }
+        public string CreditUnitTypeDescription { get; set; }
 
         public List<string> Keyword { get; set; }
         public List<string> Subject { get; set; }
-       
+        #endregion
+
       
 		public List<string> CodedNotation { get; set; }
 
@@ -116,40 +136,27 @@ namespace RA.Models.Input
 
 
 		public List<FrameworkItem> InstructionalProgramType { get; set; }
-		public List<DurationProfile> EstimatedDuration { get; set; }
 
-        public string CreditHourType { get; set; }
-        public string CreditUnitType { get; set; }
-
-        public decimal CreditHourValue { get; set; }
-        public decimal CreditUnitValue { get; set; }
-        public string CreditUnitTypeDescription { get; set; }
         //external classes
         public List<CostProfile> EstimatedCost { get; set; }
 
 		public List<Jurisdiction> Jurisdiction { get; set; }
-		//public List<GeoCoordinates> Region { get; set; }
-		
+        //public List<GeoCoordinates> Region { get; set; }
+        //quality assurance
         public List<OrganizationReference> AccreditedBy { get; set; }
         public List<OrganizationReference> ApprovedBy { get; set; }
-        public List<OrganizationReference> OfferedBy { get; set; }
         public List<OrganizationReference> RecognizedBy { get; set; }
 		public List<OrganizationReference> RegulatedBy { get; set; }
 
 
 		public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
-      
-		public List<ConditionProfile> Requires { get; set; }
+
+        //conditions
         public List<ConditionProfile> Corequisite { get; set; }
         public List<ConditionProfile> Recommends { get; set; }
         public List<ConditionProfile> EntryCondition { get; set; }
 
-		public List<CredentialAlignmentObject> Teaches{ get; set; }
-        public List<CredentialAlignmentObject> TeachesCompetency
-        {
-            get { return Teaches; }
-            set { Teaches = value; }
-        }
+
         //required competencies are input with condition profiles
         //public List<CredentialAlignmentObject> RequiresCompetency { get; set; }
 

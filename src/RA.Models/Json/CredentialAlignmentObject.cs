@@ -31,6 +31,12 @@ namespace RA.Models.Json
         [JsonProperty( "@type" )]
         public string Type { get; set; }
 
+        /// <summary>
+        /// Target Node
+        /// The node of a framework targeted by the alignment. Must be a valid URL.
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:targetNode" )]
+        public string TargetNode { get; set; }
 
         /// <summary>
         /// Alignment Date
@@ -67,12 +73,6 @@ namespace RA.Models.Json
 		[JsonProperty( PropertyName = "ceterms:frameworkName" )]
         public string FrameworkName { get; set; }
 
-        /// <summary>
-        /// Target Node
-        /// The node of a framework targeted by the alignment. Must be a valid URL.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:targetNode" )]
-        public string TargetNode { get; set; }
 
         /// <summary>
         /// Target Description

@@ -62,10 +62,7 @@ namespace RA.Models.Input
 		/// List of jurisdictions
 		/// </summary>
 		public List<Jurisdiction> Jurisdiction { get; set; }
-		/// <summary>
-		/// List of regions (jurisdictions)
-		/// </summary>
-		//  public List<GeoCoordinates> Region { get; set; }
+
 
 		/// <summary>
 		/// List of cost items
