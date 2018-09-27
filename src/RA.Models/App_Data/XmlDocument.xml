@@ -4,9 +4,35 @@
         <name>RA.Models</name>
     </assembly>
     <members>
+        <member name="P:RA.Models.Input.Assessment.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Assessment.Description">
+            <summary>
+            Assessment Description 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Assessment.Description_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Assessment.OwnedBy">
             <summary>
             Organization that owns this resource
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Assessment.OfferedBy">
+            <summary>
+            Organization(s) that offer this resource
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.BaseRequest.DefaultLanguage">
+            <summary>
+            DefaultLanguage is used with Language maps where there is more than one entry for InLanguage, and the user doesn't want to have the first language in the list be the language used with language maps. 
             </summary>
         </member>
         <member name="P:RA.Models.Input.BaseRequest.PublishForOrganizationIdentifier">
@@ -22,10 +48,29 @@
             Contains registry envelope identifier for a document in the registy. It should be empty for a new document. 
             </summary>
         </member>
+        <member name="P:RA.Models.Input.Competency.complexityLevel">
+            ProficiencyScale??
+        </member>
         <member name="P:RA.Models.Input.ConditionManifestRequest.ConditionManifest">
             <summary>
             consider allowing multiple?
             Probably too many complications
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConditionManifest.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConditionManifest.Description">
+            <summary>
+            Description 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConditionManifest.Description_Map">
+            <summary>
+            Alternately can provide a language map
             </summary>
         </member>
         <member name="P:RA.Models.Input.ConditionManifest.ConditionManifestOf">
@@ -59,8 +104,24 @@
             ceterms:corequisite
             The resource being referenced must be pursued concurrently with the resource being described.
             </summary>
-            <see cref="!:http://purl.org/ctdl/terms/corequisite"/>
+            See: <a href="http://purl.org/ctdl/terms/corequisite">corequisite</a>
             <remarks>Includes dual (double) degrees that cannot be earned independently of each other.</remarks>
+        </member>
+        <member name="P:RA.Models.Input.CostManifest.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CostManifest.Description">
+            <summary>
+            Description 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CostManifest.Description_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
         </member>
         <member name="P:RA.Models.Input.CostManifest.CostDetails">
             <summary>
@@ -85,6 +146,23 @@
         <member name="P:RA.Models.Input.Credential.Name">
             <summary>
             Name of this credential
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.Description">
+            <summary>
+            Credential description 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.Description_Map">
+            <summary>
+            Alternately can provide a language map
             </summary>
         </member>
         <member name="P:RA.Models.Input.Credential.OwnedBy">
@@ -111,7 +189,11 @@
             SubjectWebpage URL
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "P:RA.Models.Input.Credential.AlternateName" -->
+        <member name="P:RA.Models.Input.Credential.AlternateName">
+            <summary>
+            AlternateName
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Credential.Image">
             <summary>
             Image URL
@@ -174,9 +256,30 @@
             2017-12-13 - this will be the CTID for the owning org.
             </summary>
         </member>
+        <member name="P:RA.Models.Input.LearningOpportunity.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.LearningOpportunity.Description">
+            <summary>
+            Description 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.LearningOpportunity.Description_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.LearningOpportunity.OwnedBy">
             <summary>
             Organization that owns this resource
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.LearningOpportunity.OfferedBy">
+            <summary>
+            Organization(s) that offer this resource
             </summary>
         </member>
         <member name="P:RA.Models.Input.LearningOpportunity.HasPart">
@@ -213,10 +316,20 @@
             Required
             </summary>
         </member>
+        <member name="P:RA.Models.Input.Organization.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Organization.Description">
             <summary>
-            Organization description 
+            Description 
             Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.Description_Map">
+            <summary>
+            Alternately can provide a language map
             </summary>
         </member>
         <member name="P:RA.Models.Input.Organization.Ctid">
@@ -247,6 +360,11 @@
             </value>
             </summary>
         </member>
+        <member name="P:RA.Models.Input.Organization.AgentPurposeDescription_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Organization.Image">
             <summary>
             Url for Organization image
@@ -258,10 +376,10 @@
             Resources that may indicate identity include, but are not limited to, descriptions of entities in open databases such as DBpedia and Wikidata or social media accounts such as FaceBook and LinkedIn.
             </summary>
         </member>
-        <member name="P:RA.Models.Input.Organization.Approves">
+        <member name="P:RA.Models.Input.Organization.Accredits">
             <summary>
-            Organization Approves these entities
-            The entities could be any of credential, assessment, or learning opportunity
+            Organization performs QA on these entities
+            The entities could be any of organization, credential, assessment, or learning opportunity
             </summary>
         </member>
         <member name="P:RA.Models.Input.Organization.OwnsCredentials">
@@ -281,9 +399,37 @@
             A cost manifest can never be a third party reference, so a url is expected
             </summary>
         </member>
+        <member name="P:RA.Models.Input.CompetencyFrameworksGraph.Graph">
+            <summary>
+            Main graph object
+            </summary>
+        </member>
         <member name="T:RA.Models.Input.ConditionProfile">
             <summary>
             Input class for a condition profile
+            2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConditionProfile.Name">
+            <summary>
+            Name of this condition
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConditionProfile.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConditionProfile.Description">
+            <summary>
+            Condition description 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConditionProfile.Description_Map">
+            <summary>
+            Alternately can provide a language map
             </summary>
         </member>
         <member name="P:RA.Models.Input.ConditionProfile.Condition">
@@ -303,6 +449,28 @@
             Only one credit unit type is allowed for input
             </summary>
         </member>
+        <member name="P:RA.Models.Input.Connections.Name">
+            <summary>
+            Name of this condition
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Connections.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Connections.Description">
+            <summary>
+            Condition description 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Connections.Description_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Connections.AssertedBy">
             <summary>
             Organization that owns this credential
@@ -316,6 +484,7 @@
         <member name="T:RA.Models.Input.CostProfile">
             <summary>
             CostProfile class
+            2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
             </summary>
         </member>
         <member name="M:RA.Models.Input.CostProfile.#ctor">
@@ -333,14 +502,25 @@
             A currency code, for ex USD
             </summary>
         </member>
-        <member name="P:RA.Models.Input.CostProfile.Description">
-            <summary>
-            Description of the cost profile
-            </summary>
-        </member>
         <member name="P:RA.Models.Input.CostProfile.Name">
             <summary>
-            Name of the cost profile
+            Name of this cost profile
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CostProfile.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CostProfile.Description">
+            <summary>
+            Description of cost profile
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CostProfile.Description_Map">
+            <summary>
+            Alternately can provide a language map
             </summary>
         </member>
         <member name="P:RA.Models.Input.CostProfile.StartDate">
@@ -438,6 +618,11 @@
             Payment Pattern
             </summary>
         </member>
+        <member name="T:RA.Models.Input.CredentialAlignmentObject">
+            <summary>
+            2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.CredentialAlignmentObject.Framework">
             <summary>
             URL
@@ -466,7 +651,8 @@
         </member>
         <member name="T:RA.Models.Input.FinancialAlignmentObject">
             <summary>
-            Common input class for all verification profiles
+            Common input class for all Financial Alignment profiles
+            2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
             </summary>
         </member>
         <member name="T:RA.Models.Input.FrameworkItem">
@@ -547,6 +733,12 @@
             http://dbpedia.com/Stanford_University
             </summary>
         </member>
+        <member name="P:RA.Models.Input.EntityReference.BNodeId">
+            <summary>
+            An identifier for use with blank nodes, to minimize duplicates
+            TBD - a better name!
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.EntityReference.CTID">
             <summary>
             Optionally, a CTID can be entered instead of an Id. 
@@ -585,12 +777,18 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:RA.Models.Input.Place">
+            <summary>
+            Content for a Place or Address)
+            NOTE: Use either the string or LanguageMap equivalent property, but not both
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.ContactPoint.ContactType">
             <summary>
             Specification of the type of contact
             </summary>
         </member>
-        <member name="P:RA.Models.Input.ContactPoint.ContactOption">
+        <member name="P:RA.Models.Input.ContactPoint.PhoneNumbers">
             <summary>
             An option available on this contact point.
             For example, a toll-free number or support for hearing-impaired callers.
@@ -599,11 +797,454 @@
         <member name="T:RA.Models.Input.ProcessProfile">
             <summary>
             Common input class for all process profiles 
+            2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ProcessProfile.Description_Map">
+            <summary>
+            Alternately can provide a language map
             </summary>
         </member>
         <member name="T:RA.Models.Input.VerificationServiceProfile">
             <summary>
             Common input class for all verification profiles
+            2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Agent.Type">
+            <summary>
+            The type of organization is one of :
+            - CredentialOrganization
+            - QACredentialOrganization
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.AssessmentProfile.Type">
+            <summary>
+             type
+            </summary>
+        </member>
+        <member name="T:RA.Models.JsonV2.CompetencyInput">
+            <summary>
+            Variation of Competency that uses string instead of IdProperty
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.alignFrom">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.alignTo">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.crossSubjectReference">
+            <summary>
+            A relationship between this competency and a competency in a separate competency framework.
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.derivedFrom">
+            <summary>
+            The URI of a competency from which this competency has been derived.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.exactMatch">
+            <summary>
+            NOTE: temporary, will be changed to exactAlignment
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.isVersionOf">
+            <summary>
+            Competency uri
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.broadAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.exactAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.majorAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.minorAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.narrowAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.prerequisiteAlignment">
+            <summary>
+            This competency is a prerequisite to the referenced competency.
+            Uri to a competency
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.skillEmbodied">
+            <summary>
+            Cognitive, affective, and psychomotor skills directly or indirectly embodied in this competency.
+            URI
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyInput.weight">
+            <summary>
+            An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
+            Float
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.exactMatch">
+            <summary>
+            NOTE: temporary, will be changed to exactAlignment
+            </summary>
+        </member>
+        <member name="T:RA.Models.JsonV2.ProficiencyScale">
+            <summary>
+            The class of structured profiles describing discrete levels of expertise and performance mastery.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyFrameworksGraph.Graph">
+            <summary>
+            Main graph object
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyFrameworkInput.author">
+            <summary>
+            A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyFrameworkInput.conceptKeyword">
+            <summary>
+            A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CompetencyFrameworkInput.conceptTerm">
+            <summary>
+            A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.ConditionManifest.Type">
+            <summary>
+            entity type
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.ConditionProfile.AssertedBy">
+            <summary>
+            Organization that asserts this condition
+            NOTE: It must be serialized to a List
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.ContactPoint.ContactType">
+            <summary>
+            Specification of the type of contact
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.ContactPoint.PhoneNumbers">
+            <summary>
+            An option available on this contact point.
+            For example, a toll-free number or support for hearing-impaired callers.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CostManifest.Type">
+            <summary>
+            entity type
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Credential.CredentialType">
+            <summary>
+            Need a custom mapping to @type based on input value
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Credential.OwnedBy">
+            <summary>
+            OwnedBy
+            Will either by an Id array, or a thin organization array
+            </summary>
+        </member>
+        <member name="T:RA.Models.JsonV2.CredentialAlignmentObject">
+            <summary>
+            Credential Alignment Object
+            Modifications
+            2017-10-17 TargetNodeName is now required!
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CredentialAlignmentObject.Type">
+            <summary>
+            Need a custom mapping to @type based on input value
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CredentialAlignmentObject.TargetNode">
+            <summary>
+            Target Node
+            The node of a framework targeted by the alignment. Must be a valid URL.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CredentialAlignmentObject.AlignmentDate">
+            <summary>
+            Alignment Date
+            The date the alignment was made.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CredentialAlignmentObject.AlignmentType">
+            <summary>
+            Alignment Type
+            A category of alignment between the learning resource and the framework node.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CredentialAlignmentObject.CodedNotation">
+            <summary>
+            Coded Notation
+            A short set of alpha-numeric symbols that uniquely identifies a resource and supports its discovery.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CredentialAlignmentObject.Framework">
+            <summary>
+            Framework URL
+            The framework to which the resource being described is aligned.Must be a valid URL.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CredentialAlignmentObject.FrameworkName">
+            <summary>
+            Framework Name
+            The name of the framework to which the resource being described is aligned. 
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CredentialAlignmentObject.TargetNodeDescription">
+            <summary>
+            Target Description
+            The description of a node in an established educational framework.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CredentialAlignmentObject.TargetNodeName">
+            <summary>
+            Target Node Name
+            The name of a node in an established educational framework.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.CredentialAlignmentObject.Weight">
+            <summary>
+            Weight
+            An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
+            </summary>
+        </member>
+        <member name="T:RA.Models.JsonV2.FinancialAlignmentObject">
+            <summary>
+            Common input class for all verification profiles
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.GraphContainer.Graph">
+            <summary>
+            Main graph object
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.BlankNode.BNodeId">
+            <summary>
+            An identifier for use with blank nodes, to minimize duplicates
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.BlankNode.Type">
+            <summary>
+            the type of the entity must be provided. examples
+            ceterms:AssessmentProfile
+            ceterms:LearningOpportunityProfile
+            ceterms:ConditionManifest
+            ceterms:CostManifest
+            or the many credential subclasses!!
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.BlankNode.Name">
+            <summary>
+            Name of the entity (required)
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.BlankNode.Description">
+            <summary>
+            Description of the entity (optional)
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.BlankNode.SubjectWebpage">
+            <summary>
+            Subject webpage of the entity
+            </summary> (required)
+        </member>
+        <member name="P:RA.Models.JsonV2.EntityReferenceHelper.ReturnedDataType">
+            <summary>
+            indicate data returned
+            0 - none; 1 - Id list; 2 - org list
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.JurisdictionProfile.MainJurisdiction">
+            <summary>
+            The main jurisdiction, commonly a country name.
+            The schema is defined as an array. However, the RA, and editor only allow a single MainJurisdiction
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.JurisdictionProfile.AssertedBy">
+            <summary>
+            Asserted by is typically only explicitly entered for jurisdiction assertions the INs
+            NOTE: It must be serialized to a List
+            </summary>
+        </member>
+        <member name="T:RA.Models.JsonV2.LanguageMap">
+            <summary>
+            Class to represent a LanguageMap and related components
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.LearningOpportunityProfile.Type">
+            <summary>
+            Need a custom mapping to @type based on input value
+            ceterms:CredentialOrganization, oR
+            ceterms:QACredentialOrganization
+            </summary>
+        </member>
+        <member name="T:RA.Models.JsonV2.OrganizationBase">
+            <summary>
+            Base class to use for references to organizations that are not in the registry
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.OrganizationBase.Type">
+            <summary>
+            The type of organization is one of :
+            - CredentialOrganization
+            - QACredentialOrganization
+            </summary>
+        </member>
+        <member name="T:RA.Models.JsonV2.EntityBase">
+            <summary>
+            Base class to use for references to entities that are not in the registry
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.EntityBase.Type">
+            <summary>
+            The type of the referenced entity
+            </summary>
+        </member>
+        <member name="T:RA.Models.JsonV2.ProcessProfile">
+            <summary>
+            Common input class for all condition profiles
+            </summary>
+        </member>
+        <member name="T:RA.Models.JsonV2.VerificationServiceProfile">
+            <summary>
+            Common input class for all condition profiles
+            </summary>
+        </member>
+        <member name="T:RA.Models.Json.CompetencyInput">
+            <summary>
+            Variation of Competency that uses string instead of IdProperty
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.alignFrom">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.alignTo">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.crossSubjectReference">
+            <summary>
+            A relationship between this competency and a competency in a separate competency framework.
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.derivedFrom">
+            <summary>
+            The URI of a competency from which this competency has been derived.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.exactMatch">
+            <summary>
+            NOTE: temporary, will be changed to exactAlignment
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.isVersionOf">
+            <summary>
+            Competency uri
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.broadAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.exactAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.majorAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.minorAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.narrowAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.prerequisiteAlignment">
+            <summary>
+            This competency is a prerequisite to the referenced competency.
+            Uri to a competency
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.skillEmbodied">
+            <summary>
+            Cognitive, affective, and psychomotor skills directly or indirectly embodied in this competency.
+            URI
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.weight">
+            <summary>
+            An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
+            Float
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.Competency.exactMatch">
+            <summary>
+            NOTE: temporary, will be changed to exactAlignment
+            </summary>
+        </member>
+        <member name="T:RA.Models.Json.ProficiencyScale">
+            <summary>
+            The class of structured profiles describing discrete levels of expertise and performance mastery.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyFrameworksGraph.Graph">
+            <summary>
+            Main graph object
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyFrameworkInput.author">
+            <summary>
+            A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyFrameworkInput.conceptKeyword">
+            <summary>
+            A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyFrameworkInput.conceptTerm">
+            <summary>
+            A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
             </summary>
         </member>
         <member name="P:RA.Models.Json.ConditionManifest.Type">
@@ -622,7 +1263,7 @@
             Specification of the type of contact
             </summary>
         </member>
-        <member name="P:RA.Models.Json.ContactPoint.ContactOption">
+        <member name="P:RA.Models.Json.ContactPoint.PhoneNumbers">
             <summary>
             An option available on this contact point.
             For example, a toll-free number or support for hearing-impaired callers.
@@ -631,6 +1272,11 @@
         <member name="P:RA.Models.Json.CostManifest.Type">
             <summary>
             entity type
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CredentialGraph.Graph">
+            <summary>
+            Main graph object
             </summary>
         </member>
         <member name="P:RA.Models.Json.Credential.CredentialType">
@@ -668,6 +1314,12 @@
             Need a custom mapping to @type based on input value
             </summary>
         </member>
+        <member name="P:RA.Models.Json.CredentialAlignmentObject.TargetNode">
+            <summary>
+            Target Node
+            The node of a framework targeted by the alignment. Must be a valid URL.
+            </summary>
+        </member>
         <member name="P:RA.Models.Json.CredentialAlignmentObject.AlignmentDate">
             <summary>
             Alignment Date
@@ -696,12 +1348,6 @@
             <summary>
             Framework Name
             The name of the framework to which the resource being described is aligned. 
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CredentialAlignmentObject.TargetNode">
-            <summary>
-            Target Node
-            The node of a framework targeted by the alignment. Must be a valid URL.
             </summary>
         </member>
         <member name="P:RA.Models.Json.CredentialAlignmentObject.TargetNodeDescription">

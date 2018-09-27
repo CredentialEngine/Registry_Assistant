@@ -16,6 +16,7 @@ namespace RA.Models
 		}
         public string ApiKey { get; set; } = "";
         public string OwnerCtid { get; set; } = "";
+        public string ClientIdentifier { get; set; } = "";
 
         /// <summary>
         /// CodeValidationType - actions for code validation

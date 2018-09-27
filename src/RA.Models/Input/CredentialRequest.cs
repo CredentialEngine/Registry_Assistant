@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using RA.Models;
-
+using LM = RA.Models.JsonV2;
 namespace RA.Models.Input
 {
 	/// <summary>
@@ -29,7 +29,8 @@ namespace RA.Models.Input
 		public Credential()
 		{
 			AudienceLevelType = new List<string>();
-			Subject = new List<string>();
+            AudienceType = new List<string>();
+            Subject = new List<string>();
 			OccupationType = new List<FrameworkItem>();
 			IndustryType = new List<FrameworkItem>();
 			Naics = new List<string>();
@@ -76,7 +77,7 @@ namespace RA.Models.Input
 			IsRequiredFor = new List<Connections>();
 			InLanguage = new List<string>();
 			AvailableAt = new List<Place>();
-			CodedNotation = new List<string>();
+			//CodedNotation = new List<string>();
 			Renewal = new List<ConditionProfile>();
 			Revocation = new List<RevocationProfile>();
 			AdministrationProcess = new List<ProcessProfile>();
@@ -91,18 +92,32 @@ namespace RA.Models.Input
 		}
 
 
-		#region *** Required Properties ***
+        #region *** Required Properties ***
 
 
-		/// <summary>
-		/// Name of this credential
-		/// </summary>
-		public string Name { get; set; }
-		public string Description { get; set; }
-		/// <summary>
-		/// Organization that owns this credential
-		/// </summary>
-		public List<OrganizationReference> OwnedBy { get; set; }
+        /// <summary>
+        /// Name of this credential
+        /// Required
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Credential description 
+        /// Required
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Organization that owns this credential
+        /// </summary>
+        public List<OrganizationReference> OwnedBy { get; set; }
 
 		/// <summary>
 		/// The credential type as defined in CTDL
@@ -123,18 +138,22 @@ namespace RA.Models.Input
 		/// SubjectWebpage URL
 		/// </summary>
 		public string SubjectWebpage { get; set; } //URL
-		#endregion
 
-		#region *** Required if available Properties ***
+        public List<string> InLanguage { get; set; }
+        #endregion
 
-		#endregion
+        #region *** Required if available Properties ***
+
+        #endregion
 
 
-		public string DateEffective { get; set; }
+        public string DateEffective { get; set; }
         /// <summary>
         /// AlternateName
         /// </summary>
         public List<string> AlternateName { get; set; } = new List<string>();
+
+        public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
         /// <summary>
         /// Image URL
         /// </summary>
@@ -183,25 +202,32 @@ namespace RA.Models.Input
 		public string CredentialId { get; set; }
 		//public string VersionIdentifier { get; set; }
 		public List<IdentifierValue> VersionIdentifier { get; set; }
-		public List<string> CodedNotation { get; set; }
-		public List<string> InLanguage { get; set; }
+		public string CodedNotation { get; set; }
+
 		public string ProcessStandards { get; set; }
 		public string ProcessStandardsDescription { get; set; }
+        public LanguageMap ProcessStandardsDescription_Map { get; set; } = new LanguageMap();
 
-		public string LatestVersion { get; set; }
+        public string LatestVersion { get; set; }
 		public string PreviousVersion { get; set; }
 		public List<string> Subject { get; set; }
-		public List<string> AudienceLevelType { get; set; }
-		public List<FrameworkItem> OccupationType { get; set; }
+        public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
+        public List<string> AudienceLevelType { get; set; }
+        public List<string> AudienceType { get; set; }
+
+        public List<FrameworkItem> OccupationType { get; set; }
 		public List<FrameworkItem> IndustryType { get; set; }
 		public List<string> Naics { get; set; }
 		public List<string> Keyword { get; set; }
-
-		public List<string> DegreeConcentration { get; set; }
-		public List<string> DegreeMajor { get; set; }
-		public List<string> DegreeMinor { get; set; }
-		//external classes
-		public List<CostProfile> EstimatedCost { get; set; }
+        public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+        public List<string> DegreeConcentration { get; set; }
+        public LanguageMapList DegreeConcentration_Map { get; set; } = new LanguageMapList();
+        public List<string> DegreeMajor { get; set; }
+        public LanguageMapList DegreeMajor_Map { get; set; } = new LanguageMapList();
+        public List<string> DegreeMinor { get; set; }
+        public LanguageMapList DegreeMinor_Map { get; set; } = new LanguageMapList();
+        //external classes
+        public List<CostProfile> EstimatedCost { get; set; }
 
 		public List<DurationProfile> EstimatedDuration { get; set; }
 		public DurationItem RenewalFrequency { get; set; }
@@ -250,8 +276,9 @@ namespace RA.Models.Input
 			//RevocationCriteria = new List<string>();
 		}
 		public string Description { get; set; }
-		//public List<string> CredentialProfiled { get; set; }
-		public string DateEffective { get; set; }
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+        //public List<string> CredentialProfiled { get; set; }
+        public string DateEffective { get; set; }
 		public List<Jurisdiction> Jurisdiction { get; set; }
 		public string RevocationCriteria { get; set; }
 		public string RevocationCriteriaDescription { get; set; }

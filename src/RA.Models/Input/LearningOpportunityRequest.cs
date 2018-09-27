@@ -29,11 +29,12 @@ namespace RA.Models.Input
 			LearningMethodType = new List<string>();
 			EstimatedCost = new List<CostProfile>();
 			Jurisdiction = new List<Jurisdiction>();
-			//Region = new List<GeoCoordinates>();
-  
+            //Region = new List<GeoCoordinates>();
+
+            AudienceType = new List<string>();
             AvailabilityListing = new List<string>();
             AvailableOnlineAt = new List<string>();
-			CodedNotation = new List<string>();
+			//CodedNotation = new List<string>();
 
 			
             AccreditedBy = new List<Input.OrganizationReference>();
@@ -70,11 +71,23 @@ namespace RA.Models.Input
 
 
 
-		#region *** Required Properties ***
-		public string Name { get; set; }
-		public string Description { get; set; }
+        #region *** Required Properties ***
+        public string Name { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Description 
+        /// Required
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-		public string SubjectWebpage { get; set; } //URL
+        public string SubjectWebpage { get; set; } //URL
 		public string Ctid { get; set; }
 
 
@@ -106,6 +119,7 @@ namespace RA.Models.Input
         public List<string> LearningMethodType { get; set; }
         public List<string> DeliveryType { get; set; }
         public string DeliveryTypeDescription { get; set; }
+        public LanguageMap DeliveryTypeDescription_Map { get; set; } = new LanguageMap();
         #endregion
 
         #region *** Recommended Properties ***
@@ -117,25 +131,26 @@ namespace RA.Models.Input
 
         //Credit Information
         public string CreditHourType { get; set; }
+        public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
         public string CreditUnitType { get; set; }
         public decimal CreditHourValue { get; set; }
         public decimal CreditUnitValue { get; set; }
         public string CreditUnitTypeDescription { get; set; }
+        public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
 
         public List<string> Keyword { get; set; }
+        public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
         public List<string> Subject { get; set; }
+        public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
         #endregion
 
-      
-		public List<string> CodedNotation { get; set; }
-
-       
+        public List<string> AudienceType { get; set; }
+        public string CodedNotation { get; set; }
 
 		public string VerificationMethodDescription { get; set; }
-      
+        public LanguageMap VerificationMethodDescription_Map { get; set; } = new LanguageMap();
 
-
-		public List<FrameworkItem> InstructionalProgramType { get; set; }
+        public List<FrameworkItem> InstructionalProgramType { get; set; }
 
         //external classes
         public List<CostProfile> EstimatedCost { get; set; }

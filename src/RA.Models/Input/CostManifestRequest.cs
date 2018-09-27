@@ -28,10 +28,22 @@ namespace RA.Models.Input
 			EstimatedCost = new List<CostProfile>();
 		}
 
-		public string Name { get; set; }
-		public string Description { get; set; }
+        public string Name { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Description 
+        /// Required
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-		public string StartDate { get; set; }
+        public string StartDate { get; set; }
 		public string EndDate { get; set; }
 
 		public string Ctid { get; set; }

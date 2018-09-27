@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace RA.Models.Json
+namespace RA.Models.JsonV2
 {
     public class CompetencyFrameworksGraph
     {
@@ -19,18 +19,21 @@ namespace RA.Models.Json
         [JsonProperty( "@context" )]
         public string Context { get; set; }
 
-        [JsonProperty( "@id" )]
-        public string CtdlId { get; set; }
-
         /// <summary>
         /// Main graph object
         /// </summary>
         [ JsonProperty( "@graph" )]
-        //public List<object> Graph { get; set; } = new List<object>();
-        public object Graph { get; set;  }
+        public object Graph { get; set; }
+        //public object Graph { get; set;  }
+
+        [JsonIgnore]
+        [JsonProperty( "@id" )]
+        public string CtdlId { get; set; }
+
         [JsonIgnore]
         [JsonProperty( "@type" )]
         public string Type { get; set; }
+
         [JsonIgnore]
         [JsonProperty( "ceterms:ctid" )]
         public string CTID { get; set; }
@@ -94,7 +97,6 @@ namespace RA.Models.Json
         //single per https://github.com/CredentialEngine/CompetencyFrameworks/issues/66
         [JsonProperty( PropertyName = "ceasn:derivedFrom" )]
         public string derivedFrom { get; set; } 
-        //public IdProperty derivedFrom { get; set; } = new IdProperty();
 
         //???language map??
         [JsonProperty( PropertyName = "ceasn:description" )]
@@ -123,7 +125,7 @@ namespace RA.Models.Json
         public LanguageMap name { get; set; } = new LanguageMap();
 
         [ JsonProperty( PropertyName = "ceasn:publicationStatusType" )]
-        public List<string> publicationStatusType { get; set; } = new List<string>();
+        public string publicationStatusType { get; set; }// = new List<IdProperty>();
 
         [JsonProperty( PropertyName = "ceasn:publisher" )]
         public List<string> publisher { get; set; } = new List<string>();
@@ -214,7 +216,7 @@ namespace RA.Models.Json
         public string dateValidUntil { get; set; }
 
         [JsonProperty( PropertyName = "ceasn:derivedFrom" )]
-        public string derivedFrom { get; set; } 
+        public List<string> derivedFrom { get; set; } = new List<string>();
 
         //???language map??
         [JsonProperty( PropertyName = "ceasn:description" )]

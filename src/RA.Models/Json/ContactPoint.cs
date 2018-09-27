@@ -15,7 +15,7 @@ namespace RA.Models.Json
             Emails = new List<string>();
             SocialMediaPages = new List<string>();
             Type = "ceterms:ContactPoint";
-            ContactOption = new List<string>();
+            //ContactOption = new List<string>();
         }
 
         [JsonProperty( PropertyName = "@type" )]
@@ -34,8 +34,8 @@ namespace RA.Models.Json
         /// An option available on this contact point.
         /// For example, a toll-free number or support for hearing-impaired callers.
         /// </summary>
-        [JsonProperty( PropertyName = "ceterms:contactOption" )]
-        public List<string> ContactOption { get; set; }
+        //[JsonProperty( PropertyName = "ceterms:contactOption" )]
+        //public List<string> ContactOption { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:telephone" )]
 		public List<string> PhoneNumbers { get; set; }

@@ -23,7 +23,8 @@ namespace RA.Models.Input
 		/// Description of this duration profile - optional
 		/// </summary>
 		public string Description { get; set; }
-		public DurationItem MinimumDuration { get; set; }
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+        public DurationItem MinimumDuration { get; set; }
 		public DurationItem MaximumDuration { get; set; }
 		public DurationItem ExactDuration { get; set; }
 

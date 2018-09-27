@@ -16,7 +16,8 @@ namespace RA.Models.Json
 			Type = "ceterms:LearningOpportunityProfile";
 			InLanguage = new List<string>();
             Keyword = new List<string>();
-        
+
+            AudienceType = new List<CredentialAlignmentObject>();
             AvailabilityListing = new List<string>();
             Subject = new List<CredentialAlignmentObject>();
             AvailableOnlineAt = new List<string>();
@@ -116,8 +117,10 @@ namespace RA.Models.Json
         [JsonProperty( PropertyName = "ceterms:availableOnlineAt" )] //URL
         public List<string> AvailableOnlineAt { get; set; }
 
+        [JsonProperty(PropertyName = "ceterms:audienceType")]
+        public List<CredentialAlignmentObject> AudienceType { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:learningMethodType" )]
+        [JsonProperty( PropertyName = "ceterms:learningMethodType" )]
 		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
 
 

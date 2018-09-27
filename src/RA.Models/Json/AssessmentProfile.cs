@@ -17,6 +17,7 @@ namespace RA.Models.Json
 
 			Keyword = new List<string>();
 
+            AudienceType = new List<CredentialAlignmentObject>();
             AvailabilityListing = new List<string>();
             AvailableOnlineAt = new List<string>();
 			AvailableAt = new List<Json.Place>();
@@ -136,6 +137,9 @@ namespace RA.Models.Json
 
         [JsonProperty( PropertyName = "ceterms:availableOnlineAt" )] //URL
         public List<string> AvailableOnlineAt { get; set; }
+
+        [JsonProperty(PropertyName = "ceterms:audienceType")]
+        public List<CredentialAlignmentObject> AudienceType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:deliveryType" )]
         public List<CredentialAlignmentObject> DeliveryType { get; set; }

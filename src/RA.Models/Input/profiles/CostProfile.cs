@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
-	/// <summary>
-	/// CostProfile class
-	/// </summary>
-	//public class CostProfile : ICloneable
-	public class CostProfile 
+    /// <summary>
+    /// CostProfile class
+    /// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
+    /// </summary>
+    //public class CostProfile : ICloneable
+    public class CostProfile 
 	{
         /// <summary>
         /// Inialize lists
@@ -36,13 +37,23 @@ namespace RA.Models.Input
         /// </summary>
         public string Currency { get; set; }
         /// <summary>
-        /// Description of the cost profile
-        /// </summary>
-        public string Description { get; set; }
-        /// <summary>
-        /// Name of the cost profile
+        /// Name of this cost profile
         /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Description of cost profile
+        /// Required
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
         /// <summary>
         /// Start date or effective date of this cost profile
         /// </summary>
@@ -57,11 +68,12 @@ namespace RA.Models.Input
 		/// A single condition or aspect of experience that refines the conditions under which the resource being described is applicable.
 		/// </summary>
 		public List<string> Condition { get; set; }
+        public LanguageMapList Condition_Map { get; set; } = new LanguageMapList();
 
-		/// <summary>
-		/// List of jurisdictions
-		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; }
+        /// <summary>
+        /// List of jurisdictions
+        /// </summary>
+        public List<Jurisdiction> Jurisdiction { get; set; }
 
 
 		/// <summary>
@@ -104,10 +116,11 @@ namespace RA.Models.Input
 		/// Payment Pattern
 		/// </summary>
 		public string PaymentPattern { get; set; }
-		/// <summary>
-		/// Price for this cost - optional
-		/// </summary>
-		public decimal Price { get; set; }
+        public LanguageMap PaymentPattern_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Price for this cost - optional
+        /// </summary>
+        public decimal Price { get; set; }
 
 
 

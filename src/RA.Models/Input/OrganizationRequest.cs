@@ -42,13 +42,14 @@ namespace RA.Models.Input
             Jurisdiction = new List<Input.Jurisdiction>();
             Address = new List<Place>();
 			AlternateName = new List<string>();
-            ContactPoint = new List<ContactPoint>();
+            //ContactPoint = new List<ContactPoint>();
             //
             AccreditedBy = new List<Input.OrganizationReference>();
             ApprovedBy = new List<Input.OrganizationReference>();
             RecognizedBy = new List<Input.OrganizationReference>();
             RegulatedBy = new List<Input.OrganizationReference>();
-			//
+            //
+            Accredits = new List<EntityReference>();
             Approves = new List<EntityReference>();
             Offers = new List<EntityReference>();
             Owns = new List<EntityReference>();
@@ -90,25 +91,32 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Type { get; set; }
 
-		/// <summary>
-		/// Name 
-		/// Required
-		/// </summary>
-		public string Name { get; set; }
+        /// <summary>
+        /// Name 
+        /// Required
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Description 
+        /// Required
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// Organization description 
-		/// Required
-		/// </summary>
-		public string Description { get; set; }
-
-		/// <summary>
-		/// Credential Identifier
-		/// format: 
-		/// ce-UUID (guid)
-		/// Required
-		/// </summary>
-		public string Ctid { get; set; }
+        /// <summary>
+        /// Credential Identifier
+        /// format: 
+        /// ce-UUID (guid)
+        /// Required
+        /// </summary>
+        public string Ctid { get; set; }
 
 		/// <summary>
 		/// Organization subject web page
@@ -135,9 +143,13 @@ namespace RA.Models.Input
 		#region *** Required if available Properties ***
 		public string AgentPurpose { get; set; }
 		public string AgentPurposeDescription { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap AgentPurposeDescription_Map { get; set; } = new LanguageMap();
 
-		//External Quality Assurance
-		public List<OrganizationReference> AccreditedBy { get; set; }
+        //External Quality Assurance
+        public List<OrganizationReference> AccreditedBy { get; set; }
 		public List<OrganizationReference> ApprovedBy { get; set; }
 		public List<OrganizationReference> RecognizedBy { get; set; }
 		public List<OrganizationReference> RegulatedBy { get; set; }
@@ -149,22 +161,24 @@ namespace RA.Models.Input
 
 		public List<string> SocialMedia { get; set; }
 		public List<string> Keyword { get; set; }
-		/// <summary>
-		/// Url for Organization image
-		/// </summary>
-		public string Image { get; set; }
+        public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+        /// <summary>
+        /// Url for Organization image
+        /// </summary>
+        public string Image { get; set; }
 		public List<string> ServiceType { get; set; }
 		#endregion
 
 		public List<string> AlternateName { get; set; }
-		public string FoundingDate { get; set; }
+        public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+        public string FoundingDate { get; set; }
 
         public string Duns { get; set; }
         public string Fein { get; set; }
         public string IpedsId { get; set; }
         public string OpeId { get; set; }
-        //public string AlternativeIdentifier { get; set; }
-		public List<IdentifierValue> AlternativeIdentifier { get; set; }
+        public string LEICode { get; set; }
+        public List<IdentifierValue> AlternativeIdentifier { get; set; }
 		public string MissionAndGoalsStatement { get; set; }
         public string MissionAndGoalsStatementDescription { get; set; }
 
@@ -188,18 +202,20 @@ namespace RA.Models.Input
 
         public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
 
-		/// <summary>
-		/// Organization Approves these entities
-		/// The entities could be any of credential, assessment, or learning opportunity
-		/// </summary>
+        /// <summary>
+        /// Organization performs QA on these entities
+        /// The entities could be any of organization, credential, assessment, or learning opportunity
+        /// </summary>
+        public List<EntityReference> Accredits { get; set; }
         public List<EntityReference> Approves { get; set; }
         public List<EntityReference> Offers { get; set; }
 
         public List<EntityReference> Renews { get; set; }
         public List<EntityReference> Revokes { get; set; }
         public List<EntityReference> Recognizes { get; set; }
-
-		public List<EntityReference> Owns { get; set; }
+        public List<EntityReference> Regulates { get; set; } = new List<EntityReference>();
+        
+        public List<EntityReference> Owns { get; set; }
 		// *** OR ***
 
 		/// <summary>

@@ -13,11 +13,19 @@ namespace RA.Models.Input
             CompetencyFramework = new CompetencyFramework();
         }
         public string CTID { get; set; }
-        public CompetencyFramework CompetencyFramework { get; set; }
+        public CompetencyFramework CompetencyFramework { get; set; } = new CompetencyFramework();
 
-        //OR,will already be properly formatted, particularly if from CASS
 
-        public CompetencyFrameworksGraph CompetencyFrameworkGraph { get; set; }
+    }
+    public class CASSCompetencyFrameworkRequest : BaseRequest
+    {
+        public CASSCompetencyFrameworkRequest()
+        {
+            CompetencyFrameworkGraph = new CompetencyFrameworksGraph();
+        }
+        public string CTID { get; set; }
+
+        public CompetencyFrameworksGraph CompetencyFrameworkGraph { get; set; } 
 
     }
     public class CompetencyFramework 
@@ -29,7 +37,7 @@ namespace RA.Models.Input
         //won't be entered, only one type
         //public string Type { get; set; }
 
-        //required
+        //required??
         public string CtdlId { get; set; }
 
         //required
@@ -42,7 +50,7 @@ namespace RA.Models.Input
         public List<string> author { get; set; } = new List<string>();
 
 
-        public List<LanguageItem> conceptKeyword { get; set; } = new List<LanguageItem>();
+        public LanguageMapList conceptKeyword { get; set; } = new LanguageMapList();
 
         public List<string> conceptTerm { get; set; } = new List<string>();
 
@@ -57,10 +65,10 @@ namespace RA.Models.Input
 
         public string dateValidUntil { get; set; }
 
-        public List<string> derivedFrom { get; set; } = new List<string>();
+        public string derivedFrom { get; set; }
 
         //???language map??
-        public LanguageItem description { get; set; } = new LanguageItem();
+        public LanguageMap description { get; set; } = new LanguageMap();
 
         public List<string> educationLevelType { get; set; } = new List<string>();
 
@@ -72,15 +80,15 @@ namespace RA.Models.Input
 
         public string license { get; set; }
 
-        public List<LanguageItem> localSubject { get; set; } = new List<LanguageItem>();
+        public LanguageMapList localSubject { get; set; } = new LanguageMapList();
 
-        public LanguageItem name { get; set; } = new LanguageItem();
+        public LanguageMap name { get; set; } = new LanguageMap();
 
         public List<string> publicationStatusType { get; set; } = new List<string>();
 
         public List<string> publisher { get; set; } = new List<string>();
 
-        public List<LanguageItem> publisherName { get; set; } = new List<LanguageItem>();
+        public LanguageMapList publisherName { get; set; } = new LanguageMapList();
         //
 
         public string repositoryDate { get; set; }
@@ -92,7 +100,7 @@ namespace RA.Models.Input
         public List<string> source { get; set; } = new List<string>();
 
         //
-        public List<LanguageItem> tableOfContents { get; set; } = new List<LanguageItem>();
+        public LanguageMap tableOfContents { get; set; } = new LanguageMap();
 
         public List<Competency> Competencies { get; set; } = new List<Competency>();
     }
@@ -105,11 +113,13 @@ namespace RA.Models.Input
         {
         }
 
-        public string Type { get; set; }
+        //public string Type { get; set; }
 
-        public string CtdlId { get; set; }
+        //public string CtdlId { get; set; }
 
         public string Ctid { get; set; }
+
+        public LanguageMap competencyText { get; set; } = new LanguageMap();
 
         public List<string> alignFrom { get; set; } = new List<string>();
 
@@ -124,25 +134,19 @@ namespace RA.Models.Input
         public string codedNotation { get; set; }
 
 
-        public LanguageMap comment { get; set; }
+        public LanguageMap comment { get; set; } = new LanguageMap();
 
 
-        public List<LanguageMap> competencyCategory { get; set; }
-
-
-
-        public LanguageMap competencyText { get; set; }
+        public LanguageMapList competencyCategory { get; set; } = new LanguageMapList();
 
         ///ProficiencyScale??
         public List<string> complexityLevel { get; set; } = new List<string>();
 
         public List<string> comprisedOf { get; set; } = new List<string>();
 
-        public List<LanguageMap> conceptKeyword { get; set; }
+        public LanguageMapList conceptKeyword { get; set; } = new LanguageMapList();
 
         public List<string> conceptTerm { get; set; } = new List<string>();
-
-
 
         public List<string> creator { get; set; } = new List<string>();
 
@@ -150,7 +154,7 @@ namespace RA.Models.Input
 
         public string dateCreated { get; set; }
 
-        public List<string> derivedFrom { get; set; } = new List<string>();
+        public string derivedFrom { get; set; } 
 
         public List<string> educationLevelType { get; set; } = new List<string>();
 
@@ -171,7 +175,7 @@ namespace RA.Models.Input
 
         public string listID { get; set; }
 
-        public List<LanguageMap> localSubject { get; set; }
+        public LanguageMapList localSubject { get; set; } = new LanguageMapList();
 
         public List<string> majorAlignment { get; set; } = new List<string>();
 
@@ -187,25 +191,6 @@ namespace RA.Models.Input
         public string weight { get; set; }
 
     }
-    /// <summary>
-    /// Language Map is an object holds multiple 
-    /// </summary>
-    public class LanguageMap
-    {
-        public string English { get; set; }
-        public string English_US { get; set; }
 
-        public string English_GB { get; set; }
-
-        public string Spanish { get; set; }
-        public string Polish { get; set; }
-        public string German { get; set; }
-        public string Russian { get; set; }
-    }
-    public class LanguageItem
-    {
-        public string Language { get; set; }
-        public string Text { get; set; }
-    }
         
 }

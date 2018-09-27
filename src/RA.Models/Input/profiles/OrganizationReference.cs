@@ -80,6 +80,11 @@ namespace RA.Models.Input
         /// http://dbpedia.com/Stanford_University
         /// </summary>
         public string Id { get; set; }
+        /// <summary>
+        /// An identifier for use with blank nodes, to minimize duplicates
+        /// TBD - a better name!
+        /// </summary>
+        public string BNodeId { get; set; }
 
         /// <summary>
         /// Optionally, a CTID can be entered instead of an Id. 
@@ -99,11 +104,6 @@ namespace RA.Models.Input
         /// </summary>
         public virtual string Type { get; set; }
 
-        /// <summary>
-        /// An identifier for use with blank nodes, to minimize duplicates
-        /// TBD - a better name!
-        /// </summary>
-        public string BNodeId { get; set; }
 
 		/// <summary>
 		/// Name of the entity (required)

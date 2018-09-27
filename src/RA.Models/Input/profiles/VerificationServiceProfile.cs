@@ -8,6 +8,7 @@ namespace RA.Models.Input
 {
     /// <summary>
     /// Common input class for all verification profiles
+    /// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
     /// </summary>
     public class VerificationServiceProfile
     {
@@ -20,13 +21,15 @@ namespace RA.Models.Input
             TargetCredential = new List<EntityReference>();
         }        
         public string Description { get; set; }
-		public string SubjectWebpage { get; set; }
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+        public string SubjectWebpage { get; set; }
 		public string DateEffective { get; set; }
         public List<CostProfile> EstimatedCost { get; set; }
         public bool? HolderMustAuthorize { get; set; }
         public List<EntityReference> TargetCredential { get; set; }
         public string VerificationDirectory { get; set; }
         public string VerificationMethodDescription { get; set; }
+        public LanguageMap VerificationMethodDescription_Map { get; set; } = new LanguageMap();
         public string VerificationService { get; set; }
         public List<string> VerifiedClaimType { get; set; }
         public List<OrganizationReference> OfferedBy { get; set; }

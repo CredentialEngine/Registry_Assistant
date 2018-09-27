@@ -45,14 +45,16 @@ namespace RA.Models.Json
             RegulatedBy = null;
             RecognizedBy = null;
 
+            Accredits = null;
 			Approves = null;
 			Offers = null;
 			Owns = null;
 			Renews = null;
 			Revokes = null;
 			Recognizes = null;
+            Regulates = null;
 
-			AccreditedIn = null;
+            AccreditedIn = null;
             ApprovedIn = null;
             RecognizedIn = null;
             RegulatedIn = null;
@@ -162,7 +164,10 @@ namespace RA.Models.Json
 		[JsonProperty( PropertyName = "ceterms:opeID" )]
 		public string OPEID { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:email" )]
+        [JsonProperty( PropertyName = "ceterms:leiCode" )]
+        public string LEICode { get; set; }
+
+        [JsonProperty( PropertyName = "ceterms:email" )]
 		public List<string> Email { get; set; }
 
 
@@ -194,8 +199,10 @@ namespace RA.Models.Json
         [JsonProperty( PropertyName = "ceterms:regulatedBy" )]
         public List<OrganizationBase> RegulatedBy { get; set; }
 
+        [JsonProperty( PropertyName = "ceterms:accredits" )]
+        public List<EntityBase> Accredits { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:approves" )]
+        [JsonProperty( PropertyName = "ceterms:approves" )]
 		public List<EntityBase> Approves { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:offers" )]
@@ -212,8 +219,10 @@ namespace RA.Models.Json
 
 		[JsonProperty( PropertyName = "ceterms:recognizes" )]
 		public List<EntityBase> Recognizes { get; set; }
+        [JsonProperty( PropertyName = "ceterms:regulates" )]
+        public List<EntityBase> Regulates { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:hasConditionManifest" )]
+        [JsonProperty( PropertyName = "ceterms:hasConditionManifest" )]
 		public List<string> HasConditionManifest { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:hasCostManifest" )]

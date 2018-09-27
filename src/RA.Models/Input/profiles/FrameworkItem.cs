@@ -17,10 +17,13 @@ namespace RA.Models.Input
 	{
 		public string Framework { get; set; }
 		public string FrameworkName { get; set; }
+        public LanguageMap FrameworkName_Map { get; set; } = new LanguageMap();
 
-		public string CodedNotation { get; set; }
+        public string CodedNotation { get; set; }
 		public string Name { get; set; }
-		public string Description { get; set; }
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+        public string Description { get; set; }
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
 		
 
 		public string URL { get; set; }

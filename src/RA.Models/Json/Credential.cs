@@ -8,6 +8,35 @@ using RA.Models.Json;
 
 namespace RA.Models.Json
 {
+    public class CredentialGraph
+    {
+        [JsonIgnore]
+        public static string classType = "ceterms:Credential";
+        public CredentialGraph()
+        {
+            Type = classType;
+            Context = "http://credreg.net/ctdlasn/schema/context/json";
+        }
+        [JsonProperty("@context")]
+        public string Context { get; set; }
+
+
+        [JsonProperty("@id")]
+        public string CtdlId { get; set; }
+
+        /// <summary>
+        /// Main graph object
+        /// </summary>
+        [JsonProperty("@graph")]
+        public object Graph { get; set; }
+        
+        [JsonProperty("@type")]
+        public string Type { get; set; }
+
+        [JsonProperty("ceterms:ctid")]
+        public string CTID { get; set; }
+
+    }
     public class Credential : JsonLDDocument
     {
 		[JsonIgnore]
@@ -23,6 +52,7 @@ namespace RA.Models.Json
 			HasPart = null;
 			IsPartOf = null;
 			AudienceLevel = new List<CredentialAlignmentObject>();
+            AudienceType = new List<CredentialAlignmentObject>();
             AvailableOnlineAt = new List<string>();
             AvailabilityListing = new List<string>();
 			CopyrightHolder = new List<OrganizationBase>();
@@ -177,6 +207,9 @@ namespace RA.Models.Json
 		
 		[JsonProperty( PropertyName = "ceterms:audienceLevelType" )]
         public List<CredentialAlignmentObject> AudienceLevel { get; set; }
+
+        [JsonProperty( PropertyName = "ceterms:audienceType" )]
+        public List<CredentialAlignmentObject> AudienceType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:degreeConcentration" )]
         public List<CredentialAlignmentObject> DegreeConcentration { get; set; }

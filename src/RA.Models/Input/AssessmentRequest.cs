@@ -21,7 +21,8 @@ namespace RA.Models.Input
             Keyword = new List<string>();
 			
 			AssessmentMethodType = new List<string>();
-			CodedNotation = new List<string>();
+            AudienceType = new List<string>();
+            //CodedNotation = new List<string>();
 			AssessmentUseType = new List<string>();
 
             AvailabilityListing = new List<string>();
@@ -74,10 +75,23 @@ namespace RA.Models.Input
 
 
 
-		#region *** Required Properties ***
-		public string Name { get; set; }
-		public string Description { get; set; }
-		public string Ctid { get; set; }
+        #region *** Required Properties ***
+        public string Name { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Assessment Description 
+        /// Required
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+        public string Ctid { get; set; }
 		public string SubjectWebpage { get; set; } //URL
 
         #region at least one of
@@ -107,6 +121,7 @@ namespace RA.Models.Input
         public List<string> AssessmentMethodType { get; set; }
         public List<string> DeliveryType { get; set; }
         public string DeliveryTypeDescription { get; set; }
+        public LanguageMap DeliveryTypeDescription_Map { get; set; } = new LanguageMap();
         #endregion
 
         #region *** Recommended Properties ***
@@ -120,34 +135,39 @@ namespace RA.Models.Input
 
         //Credit Information
         public string CreditHourType { get; set; }
+        public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
         public string CreditUnitType { get; set; }
         public decimal CreditHourValue { get; set; }
         public decimal CreditUnitValue { get; set; }
         public string CreditUnitTypeDescription { get; set; }
+        public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
 
         public List<string> Keyword { get; set; }
+        public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
         public List<string> Subject { get; set; }
+        public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 
         public string AssessmentExample { get; set; }
         public List<string> AssessmentUseType { get; set; }
         #endregion
 
 
-        public List<string> CodedNotation { get; set; }
+        public string CodedNotation { get; set; }
           
         public string AssessmentExampleDescription { get; set; }
+        public LanguageMap AssessmentExampleDescription_Map { get; set; } = new LanguageMap();
         public string AssessmentOutput { get; set; }
-        
-        
-		public List<Jurisdiction> Jurisdiction { get; set; }
+        public LanguageMap AssessmentOutput_Map { get; set; } = new LanguageMap();
+
+        public List<Jurisdiction> Jurisdiction { get; set; }
         public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
 
         public string ProcessStandards { get; set; }
 
         public string ProcessStandardsDescription { get; set; }
-        
+        public LanguageMap ProcessStandardsDescription_Map { get; set; } = new LanguageMap();
 
-		public List<FrameworkItem> InstructionalProgramType { get; set; }
+        public List<FrameworkItem> InstructionalProgramType { get; set; }
 		public bool? IsProctored { get; set; }
         public bool? HasGroupEvaluation { get; set; }
         public bool? HasGroupParticipation { get; set; }
@@ -155,14 +175,13 @@ namespace RA.Models.Input
             
         //external classes
         public List<CostProfile> EstimatedCost { get; set; }
-        public List<CostProfile> EstimatedCosts {
-            get { return EstimatedCost; }
-            set { EstimatedCost = value; }
-        } 
 
+        public List<string> AudienceType { get; set; }
         public string ScoringMethodDescription { get; set; }
+        public LanguageMap ScoringMethodDescription_Map { get; set; } = new LanguageMap();
         public string ScoringMethodExample { get; set; }
         public string ScoringMethodExampleDescription { get; set; }
+        public LanguageMap ScoringMethodExampleDescription_Map { get; set; } = new LanguageMap();
         public List<string> ScoringMethodType { get; set; }
         
         //Connections

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
-	/// <summary>
-	/// Input class for a condition profile
-	/// </summary>
-	public class ConditionProfile
+    /// <summary>
+    /// Input class for a condition profile
+    /// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
+    /// </summary>
+    public class ConditionProfile
     {
         public ConditionProfile()
         {
@@ -34,8 +35,25 @@ namespace RA.Models.Input
 			ResidentOf = new List<Input.Jurisdiction>();
 		}
 
+        /// <summary>
+        /// Name of this condition
+        /// Required
+        /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Condition description 
+        /// Required
+        /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
         public string SubjectWebpage { get; set; } //URL
 
         public List<string> AudienceLevelType { get; set; }
@@ -46,8 +64,11 @@ namespace RA.Models.Input
 		/// A single condition or aspect of experience that refines the conditions under which the resource being described is applicable.
 		/// </summary>
 		public List<string> Condition { get; set; }
+        public LanguageMapList Condition_Map { get; set; } = new LanguageMapList();
+
 
         public List<string> SubmissionOf { get; set; }
+        public LanguageMapList SubmissionOf_Map { get; set; } = new LanguageMapList();
 
         /// <summary>
         /// Organization that asserts this condition
@@ -68,8 +89,10 @@ namespace RA.Models.Input
         /// <summary>
 		/// Only one credit unit type is allowed for input
 		/// </summary>
-        public string CreditUnitType { get; set; } 
+        public string CreditUnitType { get; set; }
+        public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
         public string CreditUnitTypeDescription { get; set; }
+        public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
         public decimal CreditUnitValue { get; set; }
 
         //external classes =====================================
@@ -97,8 +120,25 @@ namespace RA.Models.Input
 			TargetLearningOpportunity = new List<EntityReference>();
 		}
         public string Type { get; set; }
-        public string Description { get; set; }
+        /// <summary>
+        /// Name of this condition
+        /// Required
+        /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Condition description 
+        /// Required
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
         /// <summary>
         /// Organization that owns this credential
@@ -108,7 +148,8 @@ namespace RA.Models.Input
 		public decimal Weight { get; set; }
 
 		public string CreditHourType { get; set; }
-		public decimal CreditHourValue { get; set; }
+        public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
+        public decimal CreditHourValue { get; set; }
 	
 
 		/// <summary>
@@ -116,7 +157,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CreditUnitType { get; set; }
 		public string CreditUnitTypeDescription { get; set; }
-		public decimal CreditUnitValue { get; set; }
+        public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
+        public decimal CreditUnitValue { get; set; }
 
 		//external classes =====================================
 
