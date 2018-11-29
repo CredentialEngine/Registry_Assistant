@@ -90,6 +90,7 @@ namespace RA.Services
             var output = new OutputEntity();
             string payload = "";
             isValid = true;
+            IsAPublishRequest = false;
 
             RA.Models.RequestHelper reqStatus = new Models.RequestHelper();
             reqStatus.CodeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
@@ -159,17 +160,20 @@ namespace RA.Services
         {
             bool isValid = true;
             string statusMessage = "";
+            output.Ctid = FormatCtid(input.Ctid, ref messages);
+            output.CtdlId = idBaseUrl + output.Ctid;
 
             //todo determine if will generate where not found
-            if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )
-                input.Ctid = GenerateCtid();
+   //         if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )
+   //             input.Ctid = GenerateCtid();
 
-            if ( IsCtidValid( input.Ctid, ref messages ) )
-            {
-                output.Ctid = input.Ctid;
-                output.CtdlId = idUrl + output.Ctid;
-				CurrentCtid = input.Ctid;
-			}
+   //         if ( IsCtidValid( input.Ctid, ref messages ) )
+   //         {
+   //             //input.Ctid = input.Ctid.ToLower();
+   //             output.Ctid = input.Ctid;
+   //             output.CtdlId = idUrl + output.Ctid;
+			//	CurrentCtid = input.Ctid;
+			//}
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )
             {
@@ -184,7 +188,7 @@ namespace RA.Services
 			if ( string.IsNullOrWhiteSpace( input.Description ) )
                 messages.Add( "Error - An Cost Manifest description must be entered." );
             else
-                output.Description = input.Description;
+                output.Description = ConvertWordFluff( input.Description );
 
             if ( !IsUrlValid( input.CostDetails, ref statusMessage, ref isUrlPresent ) )
                 messages.Add( "The CostDetails is invalid" );

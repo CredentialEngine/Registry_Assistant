@@ -61,11 +61,11 @@ namespace RA.Services
 		public static bool IsCredentialTypeValid( string vocabulary, ref string property )
 		{
 
-			//if ( CtdlHelper.CodesManager.IsPropertySchemaValid( categoryCode, ref property ) == false )
-			//	return false;
+            //if ( CtdlHelper.CodesManager.IsPropertySchemaValid( categoryCode, ref property ) == false )
+            //    return false;
 
-			//CodeItem ci = GetVocabularyTermJson(vocabulary, property, ref isValid );
-			try
+            //CodeItem ci = GetVocabularyTermJson(vocabulary, property, ref isValid );
+            try
 			{
 				var targetVocab = vocabulary.Contains( ':' ) ? vocabulary.Split( ':' )[ 1 ] : vocabulary;
 				targetVocab = GetVocabularyConceptScheme( vocabulary );
@@ -91,20 +91,10 @@ namespace RA.Services
 				{
 					SchemaName = data.id,
 					Name = GetLabelWithoutLanguage(data),
-					//Name =  data.skos_prefLabel != null ? data.skos_prefLabel.ToString() : "",
-					//Description = ( data.skos_definition ?? "" ),
 					ParentSchemaName = parentSchema
-					//UsageNote = ( data.skos_scopeNote.FirstOrDefault() ?? "" ),
-					//Comment = string.IsNullOrWhiteSpace( data.dcterms_description ) ? "" : data.dcterms_description
+
 				};
-				//var result2 = new ToolTipData()
-				//{
-				//	Term = data.id,
-				//	Name = data.skos_prefLabel,
-				//	Definition = ( data.skos_definition ?? "" ),
-				//	UsageNote = ( data.skos_scopeNote.FirstOrDefault() ?? "" ),
-				//	Comment = string.IsNullOrWhiteSpace( data.dcterms_description ) ? "" : data.dcterms_description
-				//};
+	
 
 				return true;
 			}
@@ -202,16 +192,86 @@ namespace RA.Services
 			
 			return isValid;
 		}
-		#endregion
+        #endregion
 
-		#region  validation using webservice
-		/// <summary>
-		/// Get concept scheme for a cdtl property, and verify the passed term is a valid concept
-		/// </summary>
-		/// <param name="ctdlProperty"></param>
-		/// <param name="term"></param>
-		/// <returns></returns>
-		public static CodeItem GetVocabularyTermJson( string ctdlProperty, string term, ref bool isValid )
+        #region  validation using code tables - really
+        /// <summary>
+        /// Check if the provided property schema is valid
+        /// </summary>
+        /// <param name="category"></param>
+        /// <param name="schemaName"></param>
+        /// <returns></returns>
+        public static bool IsPropertySchemaValid( string categoryCode, ref string schemaName )
+        {
+            CodeItem item = GetPropertyBySchema( categoryCode, schemaName );
+
+            if ( item != null && item.Id > 0 )
+            {
+                //the lookup is case insensitive
+                //return the actual schema name value
+                schemaName = item.SchemaName;
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public static bool IsPropertySchemaValid( string categoryCode, string schemaName, ref CodeItem item )
+        {
+            item = GetPropertyBySchema( categoryCode, schemaName );
+
+            if ( item != null && item.Id > 0 )
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+        /// <summary>
+        /// Get a single property using the category code, and property schema name
+        /// </summary>
+        /// <param name="category"></param>
+        /// <param name="schemaName"></param>
+        /// <returns></returns>
+        public static CodeItem GetPropertyBySchema( string categoryCode, string schemaName )
+        {
+            CodeItem code = new CodeItem();
+
+            //using ( var context = new EM.CTIEntities() )
+            //{
+            //    //for the most part, the code schema name should be unique. We may want a extra check on the categoryCode?
+            //    //TODO - need to ensure the schemas are accurate - and not make sense to check here
+            //    Codes_PropertyCategory category = context.Codes_PropertyCategory
+            //                .FirstOrDefault( s => s.SchemaName.ToLower() == categoryCode.ToLower() && s.IsActive == true );
+
+            //    Data.Codes_PropertyValue item = context.Codes_PropertyValue
+            //        .FirstOrDefault( s => s.SchemaName == schemaName );
+            //    if ( item != null && item.Id > 0 )
+            //    {
+            //        //could have an additional check that the returned category is correct - no guarentees though
+            //        code = new CodeItem();
+            //        code.Id = ( int )item.Id;
+            //        code.CategoryId = item.CategoryId;
+            //        code.Title = item.Title;
+            //        code.Description = item.Description;
+            //        code.URL = item.SchemaUrl;
+            //        code.SchemaName = item.SchemaName;
+            //        code.ParentSchemaName = item.ParentSchemaName;
+            //        code.Totals = item.Totals ?? 0;
+            //    }
+            //}
+            return code;
+        }
+        #endregion
+
+        #region  validation using webservice
+        /// <summary>
+        /// Get concept scheme for a cdtl property, and verify the passed term is a valid concept
+        /// </summary>
+        /// <param name="ctdlProperty"></param>
+        /// <param name="term"></param>
+        /// <returns></returns>
+        public static CodeItem GetVocabularyTermJson( string ctdlProperty, string term, ref bool isValid )
 		{
 			isValid = true;
 			try
@@ -219,19 +279,20 @@ namespace RA.Services
 				//may want to be configurable to use pending
 				var ctdlUrl = Utilities.UtilityManager.GetAppKeyValue( "credRegVocabsApi", "http://credreg.net/ctdl/vocabs/");
 
-				var targetVocab = ctdlProperty.Contains( ':' ) ? ctdlProperty.Split( ':' )[ 1 ] : ctdlProperty;
-
-				targetVocab = GetVocabularyConceptScheme( ctdlProperty );
+				//var targetVocab = ctdlProperty.Contains( ':' ) ? ctdlProperty.Split( ':' )[ 1 ] : ctdlProperty;
+                //actually full conceptScheme (property was in cache returns without ceterms
+				var targetVocab = GetVocabularyConceptScheme( ctdlProperty );
 				if ( string.IsNullOrWhiteSpace( targetVocab ) )
 				{
 					//what to do ??
 					isValid = false;
 					return null;
 				}
-				string concept = targetVocab.Contains( ':' ) ? targetVocab.Split( ':' )[ 1 ] : targetVocab;
+                //plain conceptScheme
+				string conceptSchemePlain = targetVocab.Contains( ':' ) ? targetVocab.Split( ':' )[ 1 ] : targetVocab;
 
 				var targetTerm = term.Contains( ':' ) ? term.Split( ':' )[ 1 ] : term;
-				var rawJson = new HttpClient().GetAsync( ctdlUrl + concept + "/" + targetTerm + "/json" ).Result.Content.ReadAsStringAsync().Result;
+				var rawJson = new HttpClient().GetAsync( ctdlUrl + conceptSchemePlain + "/" + targetTerm + "/json" ).Result.Content.ReadAsStringAsync().Result;
 				//just getting minimum properties
 				var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiTermResult>( rawJson );
 				var data = deserialized.graph.First();
@@ -250,10 +311,11 @@ namespace RA.Services
 					Name = GetLabelWithoutLanguage( data ),
 					//Name = data.skos_prefLabel != null ? data.skos_prefLabel.ToString() : "",
 					//Description = ( data.skos_definition ?? "" ),
-					ParentSchemaName = targetVocab
-					//UsageNote = ( data.skos_scopeNote.FirstOrDefault() ?? "" ),
-					//Comment = string.IsNullOrWhiteSpace( data.dcterms_description ) ? "" : data.dcterms_description
-				};
+					ParentSchemaName = targetVocab,
+                    ConceptSchemaPlain = conceptSchemePlain
+                    //UsageNote = ( data.skos_scopeNote.FirstOrDefault() ?? "" ),
+                    //Comment = string.IsNullOrWhiteSpace( data.dcterms_description ) ? "" : data.dcterms_description
+                };
 			
 
 				return result;
@@ -453,8 +515,12 @@ namespace RA.Services
 		public string Description { get; set; }
 		public string SchemaName { get; set; }
 		public string ParentSchemaName { get; set; }
+        /// <summary>
+        /// will contain conceptScheme without prefix. ParentSchemaName may be the same, but this is ready for use as framework URI
+        /// </summary>
+        public string ConceptSchemaPlain { get; set; }
 
-	}
+    }
 
 
 }

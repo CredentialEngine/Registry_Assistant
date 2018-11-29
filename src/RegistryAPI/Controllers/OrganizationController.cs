@@ -16,47 +16,53 @@ namespace RegistryAPI.Controllers
 	/// <summary>
 	/// Registry Assistant for Organizations
 	/// </summary>
-	public class OrganizationController : ApiController
+	public class OrganizationController : BaseController
 	{
 		string thisClassName = "OrganizationController";
+		string controller = "organization";
 		string statusMessage = "";
         RA.Models.RequestHelper helper = new RequestHelper();
 
-        /// <summary>
-        /// Handle request to format an Organization document as CTDL Json-LD
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost, Route( "organization/format" )]
+		/// <summary>
+		/// Handle request to format an Organization document as CTDL Json-LD
+		/// OBSOLETE - redirects to FormatV2
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+		[HttpPost, Route( "organization/format" )]
+		[Obsolete]
 		public RegistryAssistantResponse Format( OrganizationRequest request)
 		{
-			bool isValid = true;
-			List<string> messages = new List<string>();
-			var response = new RegistryAssistantResponse();
-
-			try
-			{
-				if( request == null || request.Organization == null )
-				{
-					response.Messages.Add( "Error - please provide a valid Organization request." );
-					return response;
-				}
-                ServiceHelper.LogInputFile( request, request.Organization.Ctid, "Organization", "Format" );
-
-				response.Payload = OrganizationServices.FormatAsJson( request, ref isValid, ref messages );
-				response.Successful = isValid;
-
-				if ( !isValid )
-				{
-					response.Messages = messages;
-				}
-			}
-			catch ( Exception ex )
-			{
-				response.Messages.Add( ex.Message );
-				response.Successful = false;
-			}
+			var response = FormatV2( request );
+			response.Messages.Add( FormatObsoleteEndpoint( controller, "formatV2" ) );
 			return response;
+			//bool isValid = true;
+			//List<string> messages = new List<string>();
+			//var response = new RegistryAssistantResponse();
+
+			//try
+			//{
+			//	if( request == null || request.Organization == null )
+			//	{
+			//		response.Messages.Add( "Error - please provide a valid Organization request." );
+			//		return response;
+			//	}
+			//             ServiceHelper.LogInputFile( request, request.Organization.Ctid, "Organization", "Format" );
+
+			//	response.Payload = OrganizationServices.FormatAsJson( request, ref isValid, ref messages );
+			//	response.Successful = isValid;
+
+			//	if ( !isValid )
+			//	{
+			//		response.Messages = messages;
+			//	}
+			//}
+			//catch ( Exception ex )
+			//{
+			//	response.Messages.Add( ex.Message );
+			//	response.Successful = false;
+			//}
+			//return response;
 		} //
 
 
@@ -68,71 +74,173 @@ namespace RegistryAPI.Controllers
 		[HttpPost, Route( "organization/publish" )]
 		public RegistryAssistantResponse Publish( OrganizationRequest request )
 		{
-			bool isValid = true;
-			List<string> messages = new List<string>();
-			var response = new RegistryAssistantResponse();
-
-			try
-			{
-				if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage ) )
-				{
-					response.Messages.Add( statusMessage );
-				}
-				else
-				{
-					if ( request == null || request.Organization == null )
-					{
-						response.Messages.Add( "Error - please provide a valid Organization request." );
-						return response;
-					}
-					LoggingHelper.DoTrace( 2, string.Format( "RegistryAssistant.{0}.Publish request. IPaddress: {1}, ctid: {2}, envelopeId: {3}", thisClassName, ServiceHelper.GetCurrentIP(),  request.Organization.Ctid, request.RegistryEnvelopeId ) );
-
-                    helper.OwnerCtid = request.PublishForOrganizationIdentifier;
-                    if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage ) )
-					{
-						response.Messages.Add( statusMessage );
-
-					}
-					else
-					{
-                        helper.SerializedInput = ServiceHelper.LogInputFile( request, request.Organization.Ctid, "Organization", "Publish", 5 );
-
-						string origCTID = request.Organization.Ctid ?? "";
-
-                        OrganizationServices.Publish(request, ref isValid, helper);
-                        //OrganizationServices.Publish( request, ref isValid, ref messages, ref payload, ref registryEnvelopeId );
-                        response.CTID = request.Organization.Ctid;
-                        response.Payload = helper.Payload;
-                        response.Successful = isValid;
-
-                        if ( isValid )
-						{
-							response.RegistryEnvelopeIdentifier = helper.RegistryEnvelopeId;
-							response.CTID = request.Organization.Ctid;
-                            if (helper.Messages.Count > 0)
-                                response.Messages = helper.GetAllMessages();
-                            if ( response.CTID != origCTID )
-							{
-								response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this Organization. If not provided, the future request will be treated as a new Organization." );
-							}
-
-						}
-						else
-						{
-                            response.Messages = helper.GetAllMessages();
-                            response.Successful = false;
-                        }
-					}
-				}
-			}
-			catch ( Exception ex )
-			{
-				response.Messages.Add( ex.Message );
-				response.Successful = false;
-			}
+			var response = PublishV2( request );
+			response.Messages.Add( FormatObsoleteEndpoint( controller, "publishV2" ) );
 			return response;
-		} //
+			//bool isValid = true;
+			//List<string> messages = new List<string>();
+			//var response = new RegistryAssistantResponse();
 
+			//try
+			//{
+			//             if (request == null || request.Organization == null)
+			//             {
+			//                 response.Messages.Add( "Error - please provide a valid Organization request." );
+			//                 return response;
+			//             }
+
+
+			//	LoggingHelper.DoTrace( 2, string.Format( "RegistryAssistant.{0}.Publish request. IPaddress: {1}, ctid: {2}, envelopeId: {3}", thisClassName, ServiceHelper.GetCurrentIP(),  request.Organization.Ctid, request.RegistryEnvelopeId ) );
+
+			//             helper.OwnerCtid = request.PublishForOrganizationIdentifier;
+			//             if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage ) )
+			//	{
+			//		response.Messages.Add( statusMessage );
+			//	}
+			//	else
+			//	{
+			//                 helper.SerializedInput = ServiceHelper.LogInputFile( request, request.Organization.Ctid, "Organization", "Publish", 5 );
+
+			//		string origCTID = request.Organization.Ctid ?? "";
+
+			//                 OrganizationServices.Publish(request, ref isValid, helper);
+			//                 //OrganizationServices.Publish( request, ref isValid, ref messages, ref payload, ref registryEnvelopeId );
+			//                 response.CTID = request.Organization.Ctid;
+			//                 response.Payload = helper.Payload;
+			//                 response.Successful = isValid;
+
+			//                 if ( isValid )
+			//		{
+			//			response.RegistryEnvelopeIdentifier = helper.RegistryEnvelopeId;
+			//			response.CTID = request.Organization.Ctid;
+			//                     if (helper.Messages.Count > 0)
+			//                         response.Messages = helper.GetAllMessages();
+			//                     if ( response.CTID != origCTID )
+			//			{
+			//				response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this Organization. If not provided, the future request will be treated as a new Organization." );
+			//			}
+
+			//		}
+			//		else
+			//		{
+			//                     response.Messages = helper.GetAllMessages();
+			//                     response.Successful = false;
+			//                 }
+			//	}
+
+			//}
+			//catch ( Exception ex )
+			//{
+			//	response.Messages.Add( ex.Message );
+			//	response.Successful = false;
+			//}
+			//return response;
+		} //
+        /// <summary>
+        /// Handle request to format an Organization document as CTDL Json-LD
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost, Route( "organization/formatv2" )]
+        public RegistryAssistantResponse FormatV2( OrganizationRequest request )
+        {
+            bool isValid = true;
+            List<string> messages = new List<string>();
+            var response = new RegistryAssistantResponse();
+
+            try
+            {
+                if ( request == null || request.Organization == null )
+                {
+                    response.Messages.Add( "Error - please provide a valid Organization request." );
+                    return response;
+                }
+                ServiceHelper.LogInputFile( request, request.Organization.Ctid, "Organization", "Format" );
+
+                response.Payload = new OrganizationServicesV2().FormatAsJson( request, ref isValid, ref messages );
+                response.Successful = isValid;
+
+                if ( !isValid )
+                {
+                    response.Messages = messages;
+                }
+            }
+            catch ( Exception ex )
+            {
+                response.Messages.Add( ex.Message );
+                response.Successful = false;
+            }
+            return response;
+        } //
+
+
+        /// <summary>
+        /// Publish an Organization to the Credential Engine Registry
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost, Route( "organization/publishv2" )]
+        public RegistryAssistantResponse PublishV2( OrganizationRequest request )
+        {
+            bool isValid = true;
+            List<string> messages = new List<string>();
+            var response = new RegistryAssistantResponse();
+
+            try
+            {
+                if ( request == null || request.Organization == null )
+                {
+                    response.Messages.Add( "Error - please provide a valid Organization request." );
+                    return response;
+                }
+
+
+                LoggingHelper.DoTrace( 2, string.Format( "RegistryAssistant.{0}.Publish request. IPaddress: {1}, ctid: {2}, envelopeId: {3}", thisClassName, ServiceHelper.GetCurrentIP(), request.Organization.Ctid, request.RegistryEnvelopeId ) );
+
+                helper.OwnerCtid = request.PublishForOrganizationIdentifier;
+                if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage ) )
+                {
+                    response.Messages.Add( statusMessage );
+                }
+                else
+                {
+                    helper.SerializedInput = ServiceHelper.LogInputFile( request, request.Organization.Ctid, "Organization", "Publish", 5 );
+
+                    string origCTID = request.Organization.Ctid ?? "";
+
+                    new OrganizationServicesV2().Publish( request, ref isValid, helper );
+                    //OrganizationServices.Publish( request, ref isValid, ref messages, ref payload, ref registryEnvelopeId );
+                    response.CTID = request.Organization.Ctid;
+                    response.Payload = helper.Payload;
+                    response.Successful = isValid;
+
+                    if ( isValid )
+                    {
+                        response.RegistryEnvelopeIdentifier = helper.RegistryEnvelopeId;
+                        response.CTID = request.Organization.Ctid;
+                        if ( helper.Messages.Count > 0 )
+                            response.Messages = helper.GetAllMessages();
+                        if ( response.CTID != origCTID )
+                        {
+                            response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this Organization. If not provided, the future request will be treated as a new Organization." );
+                        }
+
+                    }
+                    else
+                    {
+                        response.Messages = helper.GetAllMessages();
+                        response.Successful = false;
+                    }
+                }
+
+            }
+            catch ( Exception ex )
+            {
+                response.Messages.Add( ex.Message );
+                response.Successful = false;
+            }
+            return response;
+        } //
         /// <summary>
         /// Delete request of an Organization by CTID and owning organization
         /// </summary>
@@ -176,7 +284,7 @@ namespace RegistryAPI.Controllers
                     }
                     else
                     {
-                        response.Messages = messages;
+                        response.Messages.Add(statusMessage);
                         response.Successful = false;
                     }
                 }
@@ -195,7 +303,7 @@ namespace RegistryAPI.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpDelete, Route( "organization/envelopeDelete" )]
-		public RegistryAssistantResponse EnvelopeDelete( EnvelopeDelete request )
+		public RegistryAssistantResponse CustomDelete( EnvelopeDelete request )
 		{
 			bool isValid = true;
 			List<string> messages = new List<string>();
@@ -220,8 +328,8 @@ namespace RegistryAPI.Controllers
 				}
 				else
 				{
-
-					isValid = RegistryServices.CredentialRegistry_SelfManagedKeysDelete( request.RegistryEnvelopeId, request.CTID, helper.ApiKey, ref statusMessage );
+                    RegistryServices cer = new RegistryServices( "Organization", "", request.CTID );
+                    isValid = cer.CredentialRegistry_SelfManagedKeysDelete( request.RegistryEnvelopeId, request.CTID, "registry assistant", ref statusMessage );
 
 					response.Successful = isValid;
 
@@ -234,7 +342,7 @@ namespace RegistryAPI.Controllers
 					else
 					{
 						//if not valid, could return the payload as reference?
-						response.Messages = messages;
+						response.Messages.Add(statusMessage);
 						response.Successful = false;
 					}
 				}

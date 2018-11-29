@@ -9,6 +9,7 @@ using RJ = RA.Models.Json;
 using EntityRequest = RA.Models.Input.CredentialRequest;
 using InputEntity = RA.Models.Input.Credential;
 using OutputEntity = RA.Models.Json.Credential;
+using OutputGraph = RA.Models.Json.CredentialGraph;
 using Utilities;
 
 namespace RA.Services
@@ -20,6 +21,8 @@ namespace RA.Services
     {
         static string status = "";
         static List<string> warnings = new List<string>();
+
+
         /// <summary>
         /// Publish a Credential to the Credential Registry
         /// </summary>
@@ -40,6 +43,7 @@ namespace RA.Services
             messages = helper.GetAllMessages();
             registryEnvelopeId = helper.RegistryEnvelopeId;
         }
+
         /// <summary>
         ///Publish a Credential to the Credential Registry
         /// </summary>
@@ -77,7 +81,8 @@ namespace RA.Services
                 }
                 else
                 {
-                    messages.Add( status );
+                    if ( !string.IsNullOrWhiteSpace( (status ?? "Unknown Error" ) ))
+                        messages.Add( status );
                     isValid = false;
               
                 }
@@ -85,7 +90,8 @@ namespace RA.Services
             else
             {
                 isValid = false;
-                messages.Add( status );
+                if (!string.IsNullOrWhiteSpace( status ) )
+                    messages.Add( status );
                 helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
             }
 
@@ -128,6 +134,7 @@ namespace RA.Services
             var output = new OutputEntity();
             string payload = "";
             isValid = true;
+            IsAPublishRequest = false;
 
             if ( ToMap( input, output, ref messages ) )
             {
@@ -190,7 +197,7 @@ namespace RA.Services
 				HandleCredentialAlignmentFields( input, output, ref messages );
 
 				output.ProcessStandards = AssignValidUrlAsString( input.ProcessStandards, "ProcessStandards", ref messages );
-				output.ProcessStandardsDescription = ( input.ProcessStandardsDescription ?? "" ).Length > 0 ? input.ProcessStandardsDescription : null;
+				output.ProcessStandardsDescription = ConvertWordFluff( input.ProcessStandardsDescription );
 
 				//output.CommonConditions = FormatEntityReferences( input.CommonConditions, RJ.ConditionManifest.classType, false, ref messages );
 				//output.CommonCosts = FormatEntityReferences( input.CommonCosts, RJ.CostManifest.classType, false, ref messages );
@@ -273,14 +280,14 @@ namespace RA.Services
 			output.CopyrightHolder = FormatOrganizationReferenceToList( input.CopyrightHolder, "Copyright Holder", false, ref messages );
 
             //other roles
-            output.AccreditedBy = FormatOrganizationReferences( input.AccreditedBy, "Accredited By", false, ref messages );
+            output.AccreditedBy = FormatOrganizationReferences( input.AccreditedBy, "Accredited By", false, ref messages, true);
             output.ApprovedBy = FormatOrganizationReferences( input.ApprovedBy, "Approved By", false, ref messages );
 			//moved offered by to the required section
             //output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages );
             output.RecognizedBy = FormatOrganizationReferences( input.RecognizedBy, "Recognized By", false, ref messages );
             output.RevokedBy = FormatOrganizationReferences( input.RevokedBy, "Revoked By", false, ref messages );
             output.RenewedBy = FormatOrganizationReferences( input.RenewedBy, "Renewed By", false, ref messages );
-            output.RegulatedBy = FormatOrganizationReferences( input.RegulatedBy, "Regulated By", false, ref messages );
+            output.RegulatedBy = FormatOrganizationReferences( input.RegulatedBy, "Regulated By", false, ref messages, true);
 
         }
 
@@ -290,17 +297,9 @@ namespace RA.Services
             bool isValid = true;
             string property = "";
 
-            //todo determine if will generate where not found
-            if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )
-                input.Ctid = GenerateCtid();
+            output.Ctid = FormatCtid(input.Ctid, ref messages);
+            output.CtdlId = idBaseUrl + output.Ctid;
 
-            if ( IsCtidValid( input.Ctid, ref messages ) )
-            {
-                output.Ctid = input.Ctid;
-                output.CtdlId = idUrl + output.Ctid;
-				CurrentCtid = input.Ctid;
-			}
-			//required
 			if ( string.IsNullOrWhiteSpace( input.Name ) )
 			{
 				messages.Add( FormatMessage( "Error - A name must be entered for Credential with CTID: '{0}'.", input.Ctid ) );
@@ -315,7 +314,7 @@ namespace RA.Services
                 messages.Add( FormatMessage("Error - A  description must be entered for Credential '{0}'.", input.Name) );
             }
             else
-                output.Description = input.Description;
+                output.Description = ConvertWordFluff( input.Description);
 
             if ( string.IsNullOrWhiteSpace( input.CredentialType ) )
             {
@@ -360,17 +359,12 @@ namespace RA.Services
             //18-02-20 - changed definition of AlternateNameto a list 
             if ( input.AlternateName != null && input.AlternateName.Count > 0)
                 output.AlternateName = input.AlternateName;
-            //contniue to handle single value
-            //if ( !string.IsNullOrWhiteSpace( input.AlternateName ) )
-            //{
-            //    output.AlternateName.Add( input.AlternateName );
-            //    //would like to return a warning
-            //    warnings.Add( "WARNING - Credential AlternateName string is obsolete. Please use the AlternateNames List" );
-            //}
-            //now literal
-            output.CodedNotation = AssignListToString( input.CodedNotation );
 
-			output.CredentialId = ( input.CredentialId ?? "" ).Length > 0 ? input.CredentialId : null;
+            //now literal
+            //output.CodedNotation = AssignListToString( input.CodedNotation );
+            output.CodedNotation = input.CodedNotation;
+
+            output.CredentialId = ( input.CredentialId ?? "" ).Length > 0 ? input.CredentialId : null;
             output.DateEffective = MapDate( input.DateEffective, "DateEffective", ref messages );
 			if ( input.InLanguage != null && input.InLanguage.Count > 0 )
 				output.InLanguage = input.InLanguage;
@@ -440,12 +434,12 @@ namespace RA.Services
 
 		} //
 		#region === CredentialAlignmentObject ===
-		public static void HandleCredentialAlignmentFields( InputEntity from, OutputEntity to, ref List<string> messages )
+		public static void HandleCredentialAlignmentFields( InputEntity input, OutputEntity output, ref List<string> messages )
         {
-            to.Subject = FormatCredentialAlignmentListFromStrings( from.Subject );
+            output.Subject = FormatCredentialAlignmentListFromStrings( input.Subject );
 
 			//can't depend on the codes being SOC
-			to.OccupationType = FormatCredentialAlignmentListFromList( from.OccupationType, true, ref messages );
+			output.OccupationType = FormatCredentialAlignmentListFromFrameworkItemList( input.OccupationType, true, ref messages );
 			//if ( from.OccupationType != null && from.OccupationType.Count > 0 )
    //         {
    //             //need to add a framework
@@ -458,11 +452,11 @@ namespace RA.Services
    //             to.OccupationType = null;
 
 			//can't depend on the codes being NAICS??
-			to.IndustryType = FormatCredentialAlignmentListFromList( from.IndustryType, true, ref messages );
-			if ( from.Naics != null && from.Naics.Count > 0 )
-				to.Naics = from.Naics;
+			output.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( input.IndustryType, true, ref messages );
+			if ( input.Naics != null && input.Naics.Count > 0 )
+				output.Naics = input.Naics;
 			else
-				to.Naics = null;
+				output.Naics = null;
 
 			//if ( from.IndustryType != null && from.IndustryType.Count > 0 )
 			//         {
@@ -474,23 +468,27 @@ namespace RA.Services
 			//         else
 			//             to.IndustryType = null;
 
-			if ( !string.IsNullOrWhiteSpace( from.CredentialStatusType ) )
+			if ( !string.IsNullOrWhiteSpace( input.CredentialStatusType ) )
             {
-                to.CredentialStatusType = FormatCredentialAlignment( "credentialStatusType", from.CredentialStatusType, ref messages ) ;
+                output.CredentialStatusType = FormatCredentialAlignment( "credentialStatusType", input.CredentialStatusType, ref messages ) ;
             }
             else
-                to.CredentialStatusType = null;
+                output.CredentialStatusType = null;
 
             //
-            to.AudienceLevel = FormatCredentialAlignmentVocabs( "audienceLevelType", from.AudienceLevelType, ref messages );
+            output.AudienceLevel = FormatCredentialAlignmentVocabs( "audienceLevelType", input.AudienceLevelType, ref messages );
+            //if ( UtilityManager.GetAppKeyValue( "usingCredentialAudienceType", false ) )
+                output.AudienceType = FormatCredentialAlignmentVocabs( "audienceType", input.AudienceType, ref messages );
+            //else
+            //    output.AudienceType = null;
 
-            if ( IsValidDegreeType( to.CredentialType ) )
+            if ( IsValidDegreeType( output.CredentialType ) )
             {
-                to.DegreeConcentration = FormatCredentialAlignmentListFromStrings( from.DegreeConcentration );
+                output.DegreeConcentration = FormatCredentialAlignmentListFromStrings( input.DegreeConcentration );
 
-                to.DegreeMajor = FormatCredentialAlignmentListFromStrings( from.DegreeMajor );
+                output.DegreeMajor = FormatCredentialAlignmentListFromStrings( input.DegreeMajor );
 
-                to.DegreeMinor = FormatCredentialAlignmentListFromStrings( from.DegreeMinor );
+                output.DegreeMinor = FormatCredentialAlignmentListFromStrings( input.DegreeMinor );
             }
 
 

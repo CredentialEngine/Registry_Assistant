@@ -57,9 +57,9 @@ namespace RA.Models.Input
             Revokes = new List<EntityReference>();
             Recognizes = new List<EntityReference>();
 			//
-			OwnsCredentials = new List<EntityReference>();
-			OwnsAssessments = new List<EntityReference>();
-			OwnsLearningOpportunities = new List<EntityReference>();
+			//OwnsCredentials = new List<EntityReference>();
+			//OwnsAssessments = new List<EntityReference>();
+			//OwnsLearningOpportunities = new List<EntityReference>();
 			//
 			HasConditionManifest = new List<string>();
             HasCostManifest = new List<string>();
@@ -208,23 +208,22 @@ namespace RA.Models.Input
         /// </summary>
         public List<EntityReference> Accredits { get; set; }
         public List<EntityReference> Approves { get; set; }
-        public List<EntityReference> Offers { get; set; }
+		public List<EntityReference> Recognizes { get; set; }
+		public List<EntityReference> Regulates { get; set; } = new List<EntityReference>();
 
-        public List<EntityReference> Renews { get; set; }
-        public List<EntityReference> Revokes { get; set; }
-        public List<EntityReference> Recognizes { get; set; }
-        public List<EntityReference> Regulates { get; set; } = new List<EntityReference>();
-        
         public List<EntityReference> Owns { get; set; }
-		// *** OR ***
+		public List<EntityReference> Offers { get; set; }
+		public List<EntityReference> Renews { get; set; }
+		public List<EntityReference> Revokes { get; set; }
 
 		/// <summary>
-		/// Prototype separate properties
+		/// OR Prototype separate properties
+		/// NOT USED
 		/// </summary>
-		public List<EntityReference> OwnsCredentials { get; set; }
-		public List<EntityReference> OwnsAssessments { get; set; }
+		//public List<EntityReference> OwnsCredentials { get; set; }
+		//public List<EntityReference> OwnsAssessments { get; set; }
 
-		public List<EntityReference> OwnsLearningOpportunities { get; set; }
+		//public List<EntityReference> OwnsLearningOpportunities { get; set; }
 
 
 		/// <summary>

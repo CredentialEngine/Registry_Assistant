@@ -326,6 +326,31 @@ namespace Utilities
             return encodedUrl;
         }
 
+		/// <summary>
+		/// Generate an MD5 hash of a string
+		/// </summary>
+		/// <param name="input"></param>
+		/// <returns></returns>
+		public static string GenerationMD5String( string input, bool returnAsLowerCase = true )
+		{
+			// Use input string to calculate MD5 hash
+			using ( System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create() )
+			{
+				byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes( input );
+				byte[] hashBytes = md5.ComputeHash( inputBytes );
+
+				// Convert the byte array to hexadecimal string
+				StringBuilder sb = new StringBuilder();
+				for ( int i = 0; i < hashBytes.Length; i++ )
+				{
+					sb.Append( hashBytes[ i ].ToString( "X2" ) );
+				}
+                if ( returnAsLowerCase )
+                    return sb.ToString().ToLower();
+                else
+                    return sb.ToString();
+            }
+		}
 		#endregion
 
 		#region === Path related Methods ===
@@ -361,7 +386,7 @@ namespace Utilities
             try
             {
                 //14-10-10 mp - change to explicit value from web.config
-                host = GetAppKeyValue( "siteHostName" );
+                host = GetAppKeyValue( "domainName" );
                 if ( host == "" )
                 {
                     // doing it this way so as to not break anything - HttpContext doesn't exist in a WCF web service

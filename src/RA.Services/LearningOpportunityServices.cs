@@ -81,7 +81,8 @@ namespace RA.Services
             else
             {
                 isValid = false;
-                messages.Add( status );
+                if ( !string.IsNullOrWhiteSpace( status ) )
+                    messages.Add( status );
                 helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
             }
 
@@ -107,6 +108,7 @@ namespace RA.Services
             var output = new OutputEntity();
             string payload = "";
             isValid = true;
+            IsAPublishRequest = false;
 
             if ( ToMap( request.LearningOpportunity, output, ref messages ) )
             {
@@ -176,7 +178,7 @@ namespace RA.Services
 				output.IsRequiredFor = FormatConnections( input.IsRequiredFor, ref messages );
 				output.IsRecommendedFor = FormatConnections( input.IsRecommendedFor, ref messages );
 
-				output.Teaches = FormatCompetencies( input.TeachesCompetency, ref messages );
+				output.Teaches = FormatCompetencies( input.Teaches, ref messages );
 
 				HandleAssertedINsProperties( input, output, helper, ref messages );
 			
@@ -214,11 +216,11 @@ namespace RA.Services
 			//output.OwnedBy = FormatOrganizationReferenceToList( input.OwnedBy, "Owning Organization", true, ref messages );
 			//output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages );
 
-			output.AccreditedBy = FormatOrganizationReferences( input.AccreditedBy, "Accredited By", false, ref messages );
+			output.AccreditedBy = FormatOrganizationReferences( input.AccreditedBy, "Accredited By", false, ref messages, true);
 			output.ApprovedBy = FormatOrganizationReferences( input.ApprovedBy, "Approved By", false, ref messages );
 			
 			output.RecognizedBy = FormatOrganizationReferences( input.RecognizedBy, "Recognized By", false, ref messages );
-            output.RegulatedBy = FormatOrganizationReferences( input.RegulatedBy, "Regulated By", false, ref messages );
+            output.RegulatedBy = FormatOrganizationReferences( input.RegulatedBy, "Regulated By", false, ref messages, true);
 
 
         }
@@ -229,16 +231,9 @@ namespace RA.Services
             bool isValid = true;
             string property = "";
 
-            //todo determine if will generate where not found
-            if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )
-                input.Ctid = GenerateCtid();
+            output.Ctid = FormatCtid(input.Ctid, ref messages);
+            output.CtdlId = idBaseUrl + output.Ctid;
 
-            if ( IsCtidValid( input.Ctid, ref messages ) )
-            {
-                output.Ctid = input.Ctid;
-                output.CtdlId = idUrl + output.Ctid;
-				CurrentCtid = input.Ctid;
-			}
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )
             {
@@ -254,10 +249,10 @@ namespace RA.Services
                 messages.Add( "Error - A Learning Opportunity description must be entered." );
             }
             else
-                output.Description = input.Description;
+                output.Description = ConvertWordFluff( input.Description );
 
-			//now literal
-			output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
+            //now literal
+            output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
 
 
             output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "Owning Organization", false, ref messages );
@@ -280,8 +275,9 @@ namespace RA.Services
 		public static void HandleLiteralFields( InputEntity input, OutputEntity output, ref List<string> messages )
         {
 			//now literal
-			output.CodedNotation = AssignListToString( input.CodedNotation );
-			output.VerificationMethodDescription = input.VerificationMethodDescription;
+			//output.CodedNotation = AssignListToString( input.CodedNotation );
+            output.CodedNotation = input.CodedNotation;
+            output.VerificationMethodDescription = input.VerificationMethodDescription;
             output.DeliveryTypeDescription = input.DeliveryTypeDescription;
             output.DateEffective = MapDate( input.DateEffective, "Learning Opportunity Date Effective", ref messages);
 			//should have validation for languages?
@@ -376,7 +372,12 @@ namespace RA.Services
                     output.DeliveryType.Add( FormatCredentialAlignment( "deliveryType", item, ref messages ) );
             else output.DeliveryType = null;
 
-			output.InstructionalProgramType = FormatCredentialAlignmentListFromList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
+            //if ( UtilityManager.GetAppKeyValue("usingCredentialAudienceType", false) )
+                output.AudienceType = FormatCredentialAlignmentVocabs("audienceType", input.AudienceType, ref messages);
+            //else
+             //   output.AudienceType = null;
+
+            output.InstructionalProgramType = FormatCredentialAlignmentListFromFrameworkItemList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
 			//if ( input.InstructionalProgramType != null && input.InstructionalProgramType.Count > 0 )
 			//{
 			//	foreach ( FrameworkItem item in input.InstructionalProgramType )

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -28,45 +29,52 @@ using MOPlace = RA.Models.Json.Place;
 
 using RA.Models.Json;
 using RA.Models.Input;
-
-
+using LanguageMap = RA.Models.JsonV2.LanguageMap;
+using LanguageMapList = RA.Models.JsonV2.LanguageMapList;
 namespace RA.Services
 {
 	public class ServiceHelper
 	{
-
-		private static string thisClassName = "ServiceHelper";
+        #region Properties
+        private static string thisClassName = "ServiceHelper";
 
 		static string DEFAULT_GUID = "00000000-0000-0000-0000-000000000000";
-		public static string idUrl = ServiceHelper.GetAppKeyValue( "credRegistryResourceUrl" );
+		public static string idBaseUrl = ServiceHelper.GetAppKeyValue( "credRegistryResourceUrl" );
+        public string credRegistryGraphUrl = ServiceHelper.GetAppKeyValue( "credRegistryGraphUrl" );
+        public static string codeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
+        public static bool usingSingleDirectCost = UtilityManager.GetAppKeyValue( "usingSingleDirectCost", false );
 
-		public string codeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
-		public static bool includingMinDataWithReferenceId = UtilityManager.GetAppKeyValue( "includeMinDataWithReferenceId", false );
+        public static bool IsAPublishRequest = true;
+        //this can only be true for a format request
+        public static bool includingMinDataWithReferenceId = UtilityManager.GetAppKeyValue( "includeMinDataWithReferenceId", false );
 		public static string CurrentEntityType = "";
 		public static string CurrentEntityName = "";
 		public static string CurrentCtid = "";
 		public static string LastProfileType = "";
+
 		//
 		/// <summary>
 		/// Session variable for message to display in the system console
 		/// </summary>
 		public const string SYSTEM_CONSOLE_MESSAGE = "SystemConsoleMessage";
-		public static bool GeneratingCtidIfNotFound()
+
+        static bool requiringQAOrgForQAQRoles = ServiceHelper.GetAppKeyValue("requireQAOrgForQAQRoles", false);
+        public static bool GeneratingCtidIfNotFound()
 		{
 			bool generatingCtidIfNotFound = ServiceHelper.GetAppKeyValue( "generateCtidIfNotFound", true );
 
 			return generatingCtidIfNotFound;
 		}
-
-		#region Code validation
-		/// <summary>
-		/// Validate CTID
-		/// TODO - should we generate if not found
-		/// </summary>
-		/// <param name="ctid"></param>
-		/// <param name="messages"></param>
-		/// <returns></returns>
-		public static bool IsCtidValid( string ctid, ref List<string> messages )
+        #endregion
+        #region Code validation
+        /// <summary>
+        /// Validate CTID
+        /// TODO - should we generate if not found
+        /// </summary>
+        /// <param name="ctid"></param>
+        /// <param name="messages"></param>
+        /// <returns></returns>
+        public static bool IsCtidValid( string ctid, ref List<string> messages )
 		{
 			bool isValid = true;
 
@@ -99,22 +107,251 @@ namespace RA.Services
 
 			return isValid;
 		}
-		#endregion
+        #endregion
 
-		public static string GenerateCtid()
+        public static string FormatCtid(string ctid, ref List<string> messages )
+        {
+            //todo determine if will generate where not found
+            if ( string.IsNullOrWhiteSpace(ctid) && GeneratingCtidIfNotFound() )
+                ctid = GenerateCtid();
+
+            if ( IsCtidValid(ctid, ref messages) )
+            {
+                //can't do this yet, as the registry may treat an existing records as new!!!
+                if ( UtilityManager.GetAppKeyValue("forceCtidToLowerCase", false) )
+                    ctid = ctid.ToLower();
+
+                CurrentCtid = ctid;
+            }
+
+            return ctid;
+        }
+        public static string GenerateCtid()
 		{
-			string ctid = "ce-" + Guid.NewGuid().ToString();
+			string ctid = "ce-" + Guid.NewGuid().ToString().ToLower();
 
 			return ctid;
 		}
+        #region Entity References 
+        public static List<EntityBase> FormatEntityReferences( List<EntityReference> input,
+               string classSchema,
+               bool dataIsRequired, //may not be necessary
+               ref List<string> messages )
+        {
+            if ( input == null || input.Count == 0 )
+                return null;
 
+            List<EntityBase> output = new List<EntityBase>();
+            EntityReferenceHelper helper = new EntityReferenceHelper();
+            foreach ( var target in input )
+            {
+                if ( FormatEntityReference( target, classSchema, ref helper, true, ref messages ) )
+                {
+                    if ( helper.ReturnedDataType == 1 || helper.ReturnedDataType == 2 )
+                    {
+                        output.Add( helper.EntityBaseList[0] );
+                    }
+                }
+            }
+            if ( output.Count == 0 )
+                return null;
+            else
+                return output;
+        }
+
+        /// <summary>
+        /// Format an entity reference
+        /// If classSchema is present, it will be assumed to be valid. Otherwise entity.Type will be validated
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="classSchema">can be blank, where used with generic props like offers, approves</param>
+        /// <param name="helper"></param>
+        /// <param name="dataIsRequired">True if the property is required</param>
+        /// <param name="messages"></param>
+        /// <returns></returns>
+        public static bool FormatEntityReference( EntityReference entity,
+                string classSchema,
+                ref EntityReferenceHelper helper,
+                bool dataIsRequired,
+                ref List<string> messages )
+        {
+            bool hasData = false;
+            bool isValid = true;
+            bool isUrlPresent = true;
+            helper = new EntityReferenceHelper();
+            EntityBase entityBase = new EntityBase();
+            //just in case
+            helper.EntityBaseList = new List<EntityBase>();
+            //default
+            helper.ReturnedDataType = 1;
+
+            if ( entity == null || entity.IsEmpty() )
+            {
+                //ignore
+                return false;
+            }
+
+            string statusMessage = "";
+            if ( !string.IsNullOrWhiteSpace( entity.Id ) )
+            {
+                //if valid url, then format as an id property and return
+                //Note: should this be resolvable, or just a valid uri?
+                //17-10-10 - no may not be resolvable if not yet published. Added false parm for IsUrlValid, so no url check will be done
+                if ( IsUrlValid( entity.Id, ref statusMessage, ref isUrlPresent, false ) )
+                {
+                    entityBase.NegateNonIdProperties();
+                    entityBase.CtdlId = entity.Id;
+                    //the type is not to be included with @id
+                    if ( includingMinDataWithReferenceId && !IsAPublishRequest
+                        && !string.IsNullOrWhiteSpace( entity.Name )
+                        && !string.IsNullOrWhiteSpace( entity.SubjectWebpage )
+                        )
+                    {
+                        //as means of minimizing impact of pending imports, include basic data
+                        entityBase.Name = entity.Name;
+                        entityBase.Description = entity.Description;
+                        entityBase.SubjectWebpage = entity.SubjectWebpage;
+                    }
+
+                    helper.ReturnedDataType = 1;
+                    helper.EntityBaseList.Add( entityBase );
+
+                    //consider whether a warning should be returned if additional data was included - that is, it will be ignored.
+                    //need to add separate warning messages first
+                    return true;
+                }
+                else
+                {
+                    messages.Add( string.Format( "Invalid Id property for {0} ({1}). When the Id property is provided for an entity, it must have valid format for a URL", entity.Id, classSchema ) );
+                    return false;
+                }
+            }
+            else if ( !string.IsNullOrWhiteSpace( entity.CTID ) )
+            {
+                if ( !IsCtidValid( entity.CTID, ref messages ) )
+                    return false;
+                entityBase.NegateNonIdProperties();
+
+                entityBase.CtdlId = idBaseUrl + entity.CTID;
+
+                helper.EntityBaseList.Add( entityBase );
+                return true;
+            }
+
+            // ============================================================
+            helper.ReturnedDataType = 2;
+            if ( dataIsRequired && entity.HasNecessaryProperties() == false )
+            {
+                messages.Add( string.Format( "Invalid Entity reference for {0}. Either a resolvable URL must be provided in the Id property, or all of the following properties are expected: Type: {0}, Name: {1}, and Subject Webpage {2}.", !string.IsNullOrWhiteSpace( entity.Type ) ? entity.Type : classSchema, entity.Name, entity.SubjectWebpage ) );
+                return false;
+            }
+
+            //if classSchema empty, the entity.Type must be a valid type
+            string validSchema = "";
+            //start by validating entity type
+            if ( ValidationServices.IsSchemaNameValid( entity.Type, ref validSchema ) )
+                entityBase.Type = validSchema;
+            else if ( ValidationServices.IsSchemaNameValid( classSchema, ref validSchema ) )
+            {
+                entityBase.Type = validSchema;
+            }
+            else
+            {
+                messages.Add( string.Format( "Invalid Entity Type of {0} for Name: {1}, SubjectWebpage: {2}. ", entity.Type, entity.Name, entity.SubjectWebpage ) );
+                return false;
+            }
+
+
+            //set id to null
+            entityBase.CtdlId = null;
+            int msgcount = messages.Count();
+            //at this point, all data should be present
+            //there is no reason to provide an entityBase ref id not
+
+            if ( string.IsNullOrWhiteSpace( entity.Name ) )
+            {
+                messages.Add( string.Format( "A Name must be entered with a reference for {0}.", entityBase.Type ) );
+            }
+            else
+            {
+                entityBase.Name = entity.Name;
+                hasData = true;
+            }
+            if ( !string.IsNullOrWhiteSpace( entity.Description ) )
+            {
+                entityBase.Description = entity.Description;
+            }
+
+            if ( string.IsNullOrWhiteSpace( entity.SubjectWebpage ) )
+            {
+                messages.Add( string.Format( "A Subject Webpage must be entered with entity reference for {0}.", entityBase.Type ) );
+            }
+            else
+            if ( !IsUrlValid( entity.SubjectWebpage, ref statusMessage, ref isUrlPresent ) )
+            {
+                messages.Add( string.Format( "The Subject Webpage for {0} is invalid: {1}", entityBase.Type, statusMessage ) );
+            }
+            else
+            {
+                if ( isUrlPresent )
+                {
+                    entityBase.SubjectWebpage = AssignValidUrlAsString( entity.SubjectWebpage, "Entity reference Subject Webpage", ref messages, true );
+                }
+            }
+
+            if ( !hasData )
+            {
+                if ( dataIsRequired )
+                {
+                    isValid = false;
+                    messages.Add( "Invalid Entity reference. Either a resolvable URL must provided in the Id property, or the following properties are expected: Name, and Subject Webpage." );
+                }
+            }
+            else
+            {
+                helper.EntityBaseList.Add( entityBase );
+            }
+
+            if ( messages.Count > msgcount )
+                isValid = false;
+
+            return isValid;
+        }
+
+        /// <summary>
+        /// NOT IMPLEMENTED
+        /// </summary>
+        /// <param name="inputType"></param>
+        /// <param name="outputType"></param>
+        /// <param name="messages"></param>
+        /// <returns></returns>
+        public static bool ValidateEntityRefType( string inputType,
+            ref string outputType,
+            ref List<string> messages )
+        {
+            bool isValid = false;
+            if ( string.IsNullOrWhiteSpace( inputType ) )
+            {
+                messages.Add( "Error - An entity reference type must be entered. For example: ConditionManifest, CostManifest, Digital Badge, DigitalBadge, Doctoral Degree, DoctoralDegree." );
+            }
+
+
+            else
+            {
+                messages.Add( "Error - An valid CTDL class type must be entered." );
+            }
+
+            return isValid;
+        }
+
+        #endregion
 
         #region Organization
         public static List<OrganizationBase> FormatOrganizationReferences( object orgReference,
                     string propertyName,
                     bool dataIsRequired,
                     ref List<string> messages,
-                    bool isQAOrg = false )
+                    bool isQAOrgReference = false )
         {
 
             OrganizationReference input = new OrganizationReference();
@@ -122,12 +359,12 @@ namespace RA.Services
             if ( orgReference.GetType() == typeof( List<OrganizationReference> ) )
             {
                 list = orgReference as List<OrganizationReference>;
-                return FormatOrganizationReferences( list, propertyName, dataIsRequired, ref messages, isQAOrg );
+                return FormatOrganizationReferences( list, propertyName, dataIsRequired, ref messages, isQAOrgReference );
             }
             else if ( orgReference.GetType() == typeof( OrganizationReference ) )
             {
                 input = orgReference as OrganizationReference;
-                return FormatOrganizationReferenceToList( input, propertyName, dataIsRequired, ref messages, isQAOrg );
+                return FormatOrganizationReferenceToList( input, propertyName, dataIsRequired, ref messages, isQAOrgReference );
             }
             else if ( orgReference.GetType() == typeof( Newtonsoft.Json.Linq.JObject ) )
             {
@@ -145,7 +382,7 @@ namespace RA.Services
                     if ( property.Name == "SubjectWebpage" ) input.SubjectWebpage = property.Value.ToString();
                 }
                 
-                return FormatOrganizationReferenceToList( input, propertyName, dataIsRequired, ref messages, isQAOrg );
+                return FormatOrganizationReferenceToList( input, propertyName, dataIsRequired, ref messages, isQAOrgReference );
             }
             else if ( orgReference.GetType() == typeof( Newtonsoft.Json.Linq.JArray ) )
             {
@@ -160,7 +397,7 @@ namespace RA.Services
                 //{
                 //    input = new OrganizationReference() { Id = item.First.ToString() };
                 //}
-                return FormatOrganizationReferences( items, propertyName, dataIsRequired, ref messages, isQAOrg );
+                return FormatOrganizationReferences( items, propertyName, dataIsRequired, ref messages, isQAOrgReference );
             }
             else
             {
@@ -169,6 +406,7 @@ namespace RA.Services
                 return null;
             }
         }
+
 
         /// <summary>
         /// Format list of organization references to a target list 
@@ -182,7 +420,7 @@ namespace RA.Services
 			   string propertyName,
 			   bool dataIsRequired,
 			   ref List<string> messages,
-				bool isQAOrg = false )
+				bool isQAOrgReference = false )
 		{
 			if ( input == null || input.Count == 0 )
 				return null;
@@ -191,7 +429,7 @@ namespace RA.Services
 			EntityReferenceHelper helper = new EntityReferenceHelper();
 			foreach ( var target in input )
 			{
-				if ( FormatOrganizationReference( target, propertyName, ref helper, dataIsRequired, ref messages, isQAOrg ) )
+				if ( FormatOrganizationReference( target, propertyName, ref helper, dataIsRequired, ref messages, isQAOrgReference ) )
 				{
 					if ( helper.ReturnedDataType == 1 || helper.ReturnedDataType == 2 )
 					{
@@ -199,10 +437,12 @@ namespace RA.Services
 					}
 				}
 			}
-			if ( output.Count == 0 )
-				return null;
-			else
-				return output;
+            if ( output.Count == 0 )
+                return null;
+            else
+            {
+                return output;
+            }
 		}
 
 		/// <summary>
@@ -217,11 +457,11 @@ namespace RA.Services
 			   string propertyName,
 			   bool dataIsRequired,
 			   ref List<string> messages,
-				bool isQAOrg = false )
+				bool isQAOrgReference = false )
 		{
 			List<OrganizationBase> output = new List<OrganizationBase>();
 			EntityReferenceHelper helper = new EntityReferenceHelper();
-			if ( FormatOrganizationReference( input, propertyName, ref helper, dataIsRequired, ref messages, isQAOrg ) )
+			if ( FormatOrganizationReference( input, propertyName, ref helper, dataIsRequired, ref messages, isQAOrgReference ) )
 			{
 				if ( helper.ReturnedDataType == 1 || helper.ReturnedDataType == 2 )
 				{
@@ -230,9 +470,11 @@ namespace RA.Services
 			}
 			if ( output.Count == 0 )
 				return null;
-			else
-				return output;
-		}
+            else
+            {
+                return output;
+            }
+        }
 
         /// <summary>
         /// Handle a reference to an entity such as an organizaion. 
@@ -242,13 +484,18 @@ namespace RA.Services
         /// - description
         /// </summary>
         /// <param name="entity">OrganizationReference</param>
+        /// <param name="propertyName">CTDL Property</param>
+        /// <param name="helper"></param>
+        /// <param name="dataIsRequired"></param>
+        /// <param name="messages"></param>
+        /// <param name="isQAOrgReference"></param>
         /// <returns></returns>
         public static bool FormatOrganizationReference( OrganizationReference entity,
 				string propertyName,
 				ref EntityReferenceHelper helper,
 				bool dataIsRequired,
 				ref List<string> messages,
-				bool isQAOrg = false )
+				bool isQAOrgReference = false )
 		{
 			bool hasData = false;
 			bool isValid = true;
@@ -285,7 +532,17 @@ namespace RA.Services
 					org.CtdlId = entity.Id;
 					//17-09-?? per Stuart don't include a type with an @id
 					org.Type = null;
-					helper.OrgBaseList.Add( org );
+                    if ( includingMinDataWithReferenceId && !IsAPublishRequest
+                        && !string.IsNullOrWhiteSpace( entity.Name)
+                        && !string.IsNullOrWhiteSpace( entity.SubjectWebpage )
+                        )
+                    {
+                        //as means of minimizing impact of pending imports, include basic data
+                        org.Name = entity.Name;
+                        org.Description = entity.Description;
+                        org.SubjectWebpage = entity.SubjectWebpage;
+                    }
+                    helper.OrgBaseList.Add( org );
 
 					//consider whether a warning should be returned if additional data was included - that is, it will be ignored.
 					return true;
@@ -301,7 +558,7 @@ namespace RA.Services
 				if ( !IsCtidValid( entity.CTID, ref messages ) )
 					return false;
 				org.NegateNonIdProperties();
-				org.CtdlId = idUrl + entity.CTID;
+				org.CtdlId = idBaseUrl + entity.CTID;
 				helper.OrgBaseList.Add( org );
 				return true;
 			}
@@ -317,18 +574,35 @@ namespace RA.Services
 
 			//set id to null
 			org.CtdlId = null;
-			//a type must be provided
-			//TODO - not clear if necessary??
-			bool orgReferencesRequireOrgType = UtilityManager.GetAppKeyValue( "orgReferencesRequireOrgType", false );
+            //at this point, all data should be present
+            //there is no reason to provide an org ref id not
+            int msgcount = messages.Count();
+            if ( string.IsNullOrWhiteSpace(entity.Name) )
+            {
+                messages.Add(string.Format("A Name must be entered with a reference for {0}.", org.Type));
+            }
+            else
+            {
+                org.Name = entity.Name;
+                hasData = true;
+            }
+            //a type must be provided
+            //TODO - not clear if necessary??
+            bool orgReferencesRequireOrgType = UtilityManager.GetAppKeyValue( "orgReferencesRequireOrgType", false );
 
 			string orgType = "";
-			if ( ValidateOrgType( entity.Type, ref orgType,
-				ref messages ) )
+            bool isQAOrgReferenceType = false;
+
+            if ( ValidateOrgType( entity.Type, ref orgType, ref isQAOrgReferenceType, ref messages ) )
 			{
 				org.Type = orgType;
-				//or just agent
-				// org.Type = MJ.Agent.classType;
-			}
+				//may need check for being QA if for a QA connection
+                if ( isQAOrgReference && !isQAOrgReferenceType)
+                {
+                    if ( requiringQAOrgForQAQRoles )
+                        messages.Add(string.Format("The referenced organization must have a type of ceterms:QACredentialOrganization when used in a QA connection such as Accredits, or Regulates. {0}.", org.Name));
+                }
+            }
 			else
 			{
 				if ( orgReferencesRequireOrgType )
@@ -337,19 +611,7 @@ namespace RA.Services
 					org.Type = MJ.Agent.classType;
 			}
 
-			//at this point, all data should be present
-			//there is no reason to provide an org ref id not
-			int msgcount = messages.Count();
 
-			if ( string.IsNullOrWhiteSpace( entity.Name ) )
-			{
-				messages.Add( string.Format( "A Name must be entered with a reference for {0}.", org.Type ) );
-			}
-			else
-			{
-				org.Name = entity.Name;
-				hasData = true;
-			}
 			if ( !string.IsNullOrWhiteSpace( entity.Description ) )
 			{
 				org.Description = entity.Description;
@@ -406,29 +668,32 @@ namespace RA.Services
 				isValid = false;
 
 			return isValid;
-        }
-
-               
+        }     
         
 		public static bool ValidateOrgType( string inputType,
 				ref string outputType,
+                ref bool isQAOrgReferenceType,
 				ref List<string> messages )
 		{
 			bool isValid = false;
-			if ( string.IsNullOrWhiteSpace( inputType ) )
+            isQAOrgReferenceType = false;
+
+            if ( string.IsNullOrWhiteSpace( inputType ) )
 			{
 				messages.Add( "Error - An organization type must be entered: one of  CredentialOrganization or QACredentialOrganization." );
 			}
-			else if ( "CredentialOrganization" == inputType || "ceterms:CredentialOrganization" == inputType )
+			else if ( "credentialorganization" == inputType.ToLower() || "ceterms:credentialorganization" == inputType.ToLower() )
 			{
 				outputType = "ceterms:CredentialOrganization";
 				isValid = true;
 			}
-			else if ( "QACredentialOrganization" == inputType || "ceterms:QACredentialOrganization" == inputType )
+			else if ( "qacredentialorganization" == inputType.ToLower() || "ceterms:qacredentialorganization" == inputType.ToLower() )
 			{
 				outputType = "ceterms:QACredentialOrganization";
 				isValid = true;
-			}
+                isQAOrgReferenceType = true;
+
+            }
 			else
 			{
 				messages.Add( "Error - An organization type must be entered: one of  CredentialOrganization or QACredentialOrganization." );
@@ -439,207 +704,7 @@ namespace RA.Services
 
 		#endregion
 
-		#region Entity References 
-		public static List<EntityBase> FormatEntityReferences( List<EntityReference> input,
-			   string classSchema,
-			   bool dataIsRequired, //may not be necessary
-			   ref List<string> messages )
-		{
-			if ( input == null || input.Count == 0 )
-				return null;
 
-			List<EntityBase> output = new List<EntityBase>();
-			EntityReferenceHelper helper = new EntityReferenceHelper();
-			foreach ( var target in input )
-			{
-				if ( FormatEntityReference( target, classSchema, ref helper, true, ref messages ) )
-				{
-					if ( helper.ReturnedDataType == 1 || helper.ReturnedDataType == 2 )
-					{
-						output.Add( helper.EntityBaseList[ 0 ] );
-					}
-				}
-			}
-			if ( output.Count == 0 )
-				return null;
-			else
-				return output;
-		}
-
-		/// <summary>
-		/// Format an entity reference
-		/// If classSchema is present, it will be assumed to be valid. Otherwise entity.Type will be validated
-		/// </summary>
-		/// <param name="entity"></param>
-		/// <param name="classSchema">can be blank, where used with generic props like offers, approves</param>
-		/// <param name="helper"></param>
-		/// <param name="dataIsRequired">True if the property is required</param>
-		/// <param name="messages"></param>
-		/// <returns></returns>
-		public static bool FormatEntityReference( EntityReference entity,
-				string classSchema, 
-				ref EntityReferenceHelper helper,
-				bool dataIsRequired,
-				ref List<string> messages )
-		{
-			bool hasData = false;
-			bool isValid = true;
-			bool isUrlPresent = true;
-			helper = new EntityReferenceHelper();
-			EntityBase entityBase = new EntityBase();
-			//just in case
-			helper.EntityBaseList = new List<EntityBase>();
-			//default
-			helper.ReturnedDataType = 1;
-
-			if ( entity == null || entity.IsEmpty() )
-			{
-				//ignore
-				return false;
-			}
-
-			string statusMessage = "";
-			if ( !string.IsNullOrWhiteSpace( entity.Id ) )
-			{
-				//if valid url, then format as an id property and return
-				//Note: should this be resolvable, or just a valid uri?
-				//17-10-10 - no may not be resolvable if not yet published. Added false parm for IsUrlValid, so no url check will be done
-				if ( IsUrlValid( entity.Id, ref statusMessage, ref isUrlPresent, false ) )
-				{
-					entityBase.NegateNonIdProperties();
-					entityBase.CtdlId = entity.Id;
-					//the type is not to be included with @id
-
-					helper.ReturnedDataType = 1;
-					helper.EntityBaseList.Add( entityBase );
-
-					//consider whether a warning should be returned if additional data was included - that is, it will be ignored.
-					return true;
-				}
-				else
-				{
-					messages.Add( string.Format( "Invalid Id property for {0} ({1}). When the Id property is provided for an entity, it must have valid format for a URL", entity.Id, classSchema ) );
-					return false;
-				}
-			}
-			else if ( !string.IsNullOrWhiteSpace( entity.CTID ) )
-			{
-				if ( !IsCtidValid( entity.CTID, ref messages ) )
-					return false;
-				entityBase.NegateNonIdProperties();
-				
-				entityBase.CtdlId = idUrl + entity.CTID;
-				
-				helper.EntityBaseList.Add( entityBase );
-				return true;
-			}
-
-			// ============================================================
-			helper.ReturnedDataType = 2;
-			if ( dataIsRequired && entity.HasNecessaryProperties() == false )
-			{
-				messages.Add( string.Format( "Invalid Entity reference for {0}. Either a resolvable URL must be provided in the Id property, or all of the following properties are expected: Type: {0}, Name: {1}, and Subject Webpage {2}.", !string.IsNullOrWhiteSpace( entity.Type ) ? entity.Type : classSchema, entity.Name, entity.SubjectWebpage ) );
-				return false;
-			}
-
-			//if classSchema empty, the entity.Type must be a valid type
-			string validSchema = "";
-			//start by validating entity type
-			if ( ValidationServices.IsSchemaNameValid( entity.Type, ref validSchema ) )
-				entityBase.Type = validSchema;
-			else if ( ValidationServices.IsSchemaNameValid( classSchema, ref validSchema ) )
-			{
-				entityBase.Type = validSchema;
-			} else 
-			{
-				messages.Add( string.Format( "Invalid Entity Type of {0} for Name: {1}, SubjectWebpage: {2}. ", entity.Type, entity.Name, entity.SubjectWebpage ) );
-				return false;
-			}
-
-		
-			//set id to null
-			entityBase.CtdlId = null;
-			int msgcount = messages.Count();
-			//at this point, all data should be present
-			//there is no reason to provide an entityBase ref id not
-
-			if ( string.IsNullOrWhiteSpace( entity.Name ) )
-			{
-				messages.Add( string.Format( "A Name must be entered with a reference for {0}.", entityBase.Type ) );
-			}
-			else
-			{
-				entityBase.Name = entity.Name;
-				hasData = true;
-			}
-			if ( !string.IsNullOrWhiteSpace( entity.Description ) )
-			{
-				entityBase.Description = entity.Description;
-			}
-
-			if ( string.IsNullOrWhiteSpace( entity.SubjectWebpage ) )
-			{
-				messages.Add( string.Format( "A Subject Webpage must be entered with entity reference for {0}.", entityBase.Type ) );
-			}
-			else
-			if ( !IsUrlValid( entity.SubjectWebpage, ref statusMessage, ref isUrlPresent ) )
-			{
-				messages.Add( string.Format( "The Subject Webpage for {0} is invalid: {1}", entityBase.Type, statusMessage ) );
-			}
-			else
-			{
-				if ( isUrlPresent )
-				{
-					entityBase.SubjectWebpage = AssignValidUrlAsString( entity.SubjectWebpage, "Entity reference Subject Webpage", ref messages, true );
-				}
-			}
-
-			if ( !hasData )
-			{
-				if ( dataIsRequired )
-				{
-					isValid = false;
-					messages.Add( "Invalid Entity reference. Either a resolvable URL must provided in the Id property, or the following properties are expected: Name, and Subject Webpage." );
-				}
-			}
-			else
-			{
-				helper.EntityBaseList.Add( entityBase );
-			}
-
-			if ( messages.Count > msgcount )
-				isValid = false;
-
-			return isValid;
-		}
-
-		/// <summary>
-		/// NOT IMPLEMENTED
-		/// </summary>
-		/// <param name="inputType"></param>
-		/// <param name="outputType"></param>
-		/// <param name="messages"></param>
-		/// <returns></returns>
-		public static bool ValidateEntityRefType( string inputType,
-			ref string outputType,
-			ref List<string> messages )
-		{
-			bool isValid = false;
-			if ( string.IsNullOrWhiteSpace( inputType ) )
-			{
-				messages.Add( "Error - An entity reference type must be entered. For example: ConditionManifest, CostManifest, Digital Badge, DigitalBadge, Doctoral Degree, DoctoralDegree." );
-			}
-
-
-			else
-			{
-				messages.Add( "Error - An valid CTDL class type must be entered." );
-			}
-
-			return isValid;
-		}
-
-		#endregion
 
 		#region costs 
 		public static List<MJ.CostProfile> FormatCosts( List<MI.CostProfile> costs, ref List<string> messages )
@@ -673,9 +738,8 @@ namespace RA.Services
 
 				//there is only one direct cost type. if price or other cost item data exists, there must be a direct cost - could perhaps handle in the CostProfile manager to simplify this steps
 
-
 				//cost items - should be an array. If none, add the base information
-				if ( item.CostItems.Count == 0 )
+				if (item.CostItems == null || item.CostItems.Count == 0 )
 				{
 					cp = new MJ.CostProfile();
 					cp.CostDetails = hold.CostDetails;
@@ -686,8 +750,9 @@ namespace RA.Services
 					cp.EndDate = hold.EndDate;
 					cp.Condition = hold.Condition;
 					cp.Jurisdiction = hold.Jurisdiction;
-
-					output.Add( cp );
+                    cp.DirectCostType = null;
+                    //cp.DirectCostTypes = null;
+                    output.Add( cp );
 				} else
 				{
 					foreach ( MI.CostProfileItem cpi in item.CostItems )
@@ -702,11 +767,19 @@ namespace RA.Services
 						cp.Condition = hold.Condition;
 						cp.Jurisdiction = hold.Jurisdiction;
 
-						//cp.DirectCostType = FormatCredentialAlignmentListFromString( cpi.DirectCostType );
-						cp.DirectCostType = FormatCredentialAlignmentVocabToList( "directCostType", cpi.DirectCostType, ref messages );
-						//cp.ResidencyType = FormatCredentialAlignmentListFromStrings( cpi.ResidencyType );
+                       // if (usingSingleDirectCost)
+                       // {
+                            cp.DirectCostType = FormatCredentialAlignment( "directCostType", cpi.DirectCostType, ref messages );
+                            //cp.DirectCostTypes = null;
+                            //cp.DirectCostTypes = FormatCredentialAlignmentVocabToList( "directCostType", cpi.DirectCostType, ref messages );
+                       // }
+                       // else
+                        //{
+                            //cp.DirectCostTypes = FormatCredentialAlignmentVocabToList( "directCostType", cpi.DirectCostType, ref messages );
+                            //cp.DirectCostType = null;
+                        //}
+						
 						cp.ResidencyType = FormatCredentialAlignmentVocabs( "residencyType", cpi.ResidencyType, ref messages );
-						//cp.AudienceType = FormatCredentialAlignmentListFromStrings( cpi.AudienceType );
 						cp.AudienceType = FormatCredentialAlignmentVocabs( "audienceType", cpi.AudienceType, ref messages );
 
 						cp.Price = cpi.Price;
@@ -721,28 +794,28 @@ namespace RA.Services
 		}
 		#endregion
 
-		#region ConditionManifest
-		public static List<MJ.ConditionManifest> FormatConditionManifest( List<MI.ConditionManifest> list, ref List<string> messages )
-		{
-			if ( list == null || list.Count == 0 )
-				return null;
-			var result = new List<MJ.ConditionManifest>();
-			foreach ( var input in list )
-			{
-				var cm = new MJ.ConditionManifest();
-				cm.Ctid = input.Ctid;
-				cm.Name = input.Name;
-				cm.Description = input.Description;
+		//#region ConditionManifest
+		//public static List<MJ.ConditionManifest> FormatConditionManifest( List<MI.ConditionManifest> list, ref List<string> messages )
+		//{
+		//	if ( list == null || list.Count == 0 )
+		//		return null;
+		//	var result = new List<MJ.ConditionManifest>();
+		//	foreach ( var input in list )
+		//	{
+		//		var cm = new MJ.ConditionManifest();
+		//		cm.Ctid = input.Ctid;
+		//		cm.Name = input.Name;
+		//		cm.Description = input.Description;
 
-				cm.Recommends = FormatConditionProfile( input.RecommendedConditions, ref messages );
-				cm.Requires = FormatConditionProfile( input.RequiredConditions, ref messages );
-				cm.EntryConditions = FormatConditionProfile( input.EntryConditions, ref messages );
-				cm.Corequisite = FormatConditionProfile( input.CorequisiteConditions, ref messages );
-				result.Add( cm );
-			}
-			return result;
-		}
-		#endregion
+		//		cm.Recommends = FormatConditionProfile( input.RecommendedConditions, ref messages );
+		//		cm.Requires = FormatConditionProfile( input.RequiredConditions, ref messages );
+		//		cm.EntryConditions = FormatConditionProfile( input.EntryConditions, ref messages );
+		//		cm.Corequisite = FormatConditionProfile( input.CorequisiteConditions, ref messages );
+		//		result.Add( cm );
+		//	}
+		//	return result;
+		//}
+		//#endregion
 
 		#region ConditionProfile
 		public static List<MJ.ConditionProfile> FormatConditionProfile( List<MI.ConditionProfile> profiles, ref List<string> messages )
@@ -786,7 +859,7 @@ namespace RA.Services
 				cp.Condition = input.Condition;
 				cp.SubmissionOf = input.SubmissionOf;
 
-				cp.AssertedBy = FormatOrganizationReferences( input.AssertedBy, "Asserted By", false, ref messages );
+				cp.AssertedBy = FormatOrganizationReferences( input.AssertedBy, "Asserted By", false, ref messages, false );
 				//if ( FormatOrganizationReference( input.AssertedBy, "Asserted By", ref helper, false, ref messages ) )
 				//{
 				//	if ( helper.ReturnedDataType == 1 || helper.ReturnedDataType == 2 )
@@ -921,7 +994,6 @@ namespace RA.Services
 		{
 			if ( profiles == null || profiles.Count == 0 )
 				return null;
-			string status = "";
 			EntityReferenceHelper helper = new EntityReferenceHelper();
 			var output = new List<MJ.ProcessProfile>();
 			foreach ( var input in profiles )
@@ -955,7 +1027,7 @@ namespace RA.Services
 
 				cp.Jurisdiction = MapJurisdictions( input.Jurisdiction, ref messages );
 				//cp.Region = MapRegions( input.Region, ref messages );
-				cp.ProcessingAgent = FormatOrganizationReferences( input.ProcessingAgent, "Processing Agent", false, ref messages );
+				cp.ProcessingAgent = FormatOrganizationReferences( input.ProcessingAgent, "Processing Agent", false, ref messages, false );
 
 				//targets
 				cp.TargetCredential = FormatEntityReferences( input.TargetCredential, MJ.Credential.classType, false, ref messages );
@@ -1444,10 +1516,9 @@ namespace RA.Services
 			foreach ( var item in input )
 			{
 				output = new MOPlace();
+                if ( FormatPlace(item, addressExpected, ref output, ref messages) )
+                    list.Add(output);
 
-				output = FormatPlace( item, addressExpected, ref messages );
-
-				list.Add( output );
 			}
 
 			return list;
@@ -1467,19 +1538,24 @@ namespace RA.Services
 				return;
 			if ( list == null )
 				list = new List<MOPlace>();
-			MOPlace output = FormatPlace( input, addressExpected, ref messages );
-
-			list.Add( output );
+            MOPlace output = new MOPlace();
+            if (FormatPlace( input, addressExpected, ref output, ref messages ))
+                list.Add( output );
 			//}
 
 			return;
 		}
-		public static MOPlace FormatPlace( MIPlace input, bool isAddressExpected, ref List<string> messages )
+		public static bool FormatPlace( MIPlace input, bool isAddressExpected, ref MOPlace output, ref List<string> messages )
 		{
-			//need to handle null or incomplete
-			MOPlace output = new MOPlace();
-			MJ.ContactPoint cpo = new MJ.ContactPoint();
+            bool isValid = true;
+            if ( input == null  )
+                return false;
 
+            //need to handle null or incomplete
+            //MOPlace output = new MOPlace();
+            MJ.ContactPoint cpo = new MJ.ContactPoint();
+            //NOTE: can have a place with just contact point!
+            //      - would at least a name be required?
 			if ( !string.IsNullOrWhiteSpace( input.Name ) )
 			{
 				output.Name = input.Name;
@@ -1516,6 +1592,7 @@ namespace RA.Services
 			}
 			output.Latitude = input.Latitude;
 			output.Longitude = input.Longitude;
+
 			bool hasContactPoints = false;
 			if ( input.ContactPoint != null && input.ContactPoint.Count > 0 )
 			{
@@ -1526,7 +1603,7 @@ namespace RA.Services
 						Name = cpi.Name,
 						ContactType = cpi.ContactType
 					};
-					cpo.ContactOption = cpi.ContactOption;
+					//cpo.ContactOption = cpi.ContactOption;
 					cpo.PhoneNumbers = cpi.PhoneNumbers;
 					cpo.Emails = cpi.Emails;
 					cpo.SocialMediaPages = AssignValidUrlListAsStringList( cpi.SocialMediaPages, "Social Media", ref messages );
@@ -1537,6 +1614,7 @@ namespace RA.Services
 			}
 			else
 				output.ContactPoint = null;
+
 			bool hasAddress = false;
 			if ( ( string.IsNullOrWhiteSpace( output.StreetAddress )
 					&& string.IsNullOrWhiteSpace( output.PostOfficeBoxNumber ) )
@@ -1547,7 +1625,7 @@ namespace RA.Services
 				if ( isAddressExpected )
 				{
 					messages.Add( "Error - A valid address expected. Please provide a proper address, along with any contact points." );
-					return null;
+					return false;
 				}
 			} else
 				hasAddress = true;
@@ -1557,10 +1635,10 @@ namespace RA.Services
 			)
 			{
 				messages.Add( "Error - incomplete place/address. Please provide a proper address and/or one or more proper contact points." );
-				output = null;
-			}
+                return false;
+            }
 
-			return output;
+			return isValid;
 		}
 		//[Obsolete]
 		//public static Models.Json.Address FormatAddress( PostalAddress address, ref List<string> messages )
@@ -1642,22 +1720,13 @@ namespace RA.Services
 				return null;
 			foreach ( string item in terms )
 			{
-				list.Add( FormatCredentialAlignment( item ) );
+                if (!string.IsNullOrWhiteSpace( item ))
+                    list.Add( FormatCredentialAlignment( item ) );
 			}
 
 			return list;
 		}
 
-		//public static List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromString( string term )
-		//{
-		//	List<MJ.CredentialAlignmentObject> list = new List<MJ.CredentialAlignmentObject>();
-		//	if ( string.IsNullOrWhiteSpace(term) )
-		//		return null;
-
-		//	list.Add( FormatCredentialAlignment( term ) );
-
-		//	return list;
-		//}
 		/// <summary>
 		/// Only for simple properties like subjects, with no concept scheme
 		/// </summary>
@@ -1665,6 +1734,9 @@ namespace RA.Services
 		/// <returns></returns>
 		public static MJ.CredentialAlignmentObject FormatCredentialAlignment( string name )
 		{
+            if (string.IsNullOrWhiteSpace( name ))
+                return null;
+
 			MJ.CredentialAlignmentObject ca = new MJ.CredentialAlignmentObject();
 			ca.TargetNodeName = name;
 			return ca;
@@ -1673,11 +1745,12 @@ namespace RA.Services
 		public static List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentVocabs( string ctdlProperty, List<string> terms, ref List<string> messages )
 		{
 			List<MJ.CredentialAlignmentObject> list = new List<MJ.CredentialAlignmentObject>();
-			if ( terms == null || terms.Count == 0 )
+			if ( terms == null || terms.Count == 0 || string.IsNullOrWhiteSpace( ctdlProperty ))
 				return null;
 			foreach ( string item in terms )
 			{
-				list.Add( FormatCredentialAlignment( ctdlProperty, item, ref messages ) );
+                if (!string.IsNullOrWhiteSpace( item ))
+                    list.Add( FormatCredentialAlignment( ctdlProperty, item, ref messages ) );
 			}
 
 			return list;
@@ -1704,8 +1777,8 @@ namespace RA.Services
 			MJ.CredentialAlignmentObject ca = new MJ.CredentialAlignmentObject();
 			CodeItem code = new CodeItem();
 
-			//TODO add framework
-			/*
+            //TODO add framework
+            /*
 			{
 				@type: "ceterms:CredentialAlignmentObject",
 				ceterms:framework: {
@@ -1719,11 +1792,13 @@ namespace RA.Services
 			},			 
 			 * 
 			 */
-			if ( ValidationServices.IsTermValid( ctdlProperty, term, ref code ) )
+            var ctdlUrl = Utilities.UtilityManager.GetAppKeyValue( "credRegTermsJson", "http://credreg.net/ctdl/terms/{0}/json" );
+            if ( !string.IsNullOrWhiteSpace( term) && ValidationServices.IsTermValid( ctdlProperty, term, ref code ) )
 			{
 				//IdProperty item = new IdProperty() { Id = code.SchemaName };
 				ca.TargetNode = code.SchemaName;
-				ca.TargetNodeName = code.Name;
+                ca.Framework = string.Format( ctdlUrl, code.ConceptSchemaPlain );
+                ca.TargetNodeName = code.Name;
 				ca.TargetNodeDescription = code.Description;
 				if ( !string.IsNullOrWhiteSpace( code.ParentSchemaName ) )
 					ca.FrameworkName = code.ParentSchemaName.Replace("ceterms:","");
@@ -1737,32 +1812,8 @@ namespace RA.Services
 			return ca;
 		}
 
-		//change to use same as other properties
-		//public static MJ.CredentialAlignmentObject AgentServiceFormatCredentialAlignment( string vocabulary, string name, ref List<string> messages )
-		//{
-		//    MJ.CredentialAlignmentObject ca = new MJ.CredentialAlignmentObject();
-		//    CodeItem code = new CodeItem();
-		//    if ( vocabulary.IndexOf( ":" ) == -1 )
-		//        vocabulary += ":";
-		//    //do code look up
-		//    if ( name.IndexOf( vocabulary ) == -1 )
-		//        name = vocabulary + name.Trim();
-		//    if ( ValidationServices.IsAgentServiceCodeValid( vocabulary, name, ref code ) )
-		//    {
-		//        IdProperty item = new IdProperty() { Id = name };
-		//        ca.TargetNode = item;
-		//        ca.TargetNodeName = code.Name;
-		//        ca.TargetNodeDescription = code.Description;
-		//    }
-		//    else
-		//    {
-		//        messages.Add( string.Format( "Warning - The {0} type of {1} is invalid.", vocabulary, name ) );
-		//    }
 
-		//    return ca;
-		//}
-
-		public static List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromList( List<FrameworkItem> list, bool includingCodedNotation, ref List<string> messages, string frameworkName = "", string framework = "" )
+		public static List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromFrameworkItemList( List<FrameworkItem> list, bool includingCodedNotation, ref List<string> messages, string frameworkName = "", string framework = "" )
 		{
 			if ( list == null || list.Count == 0 )
 				return null;
@@ -1774,7 +1825,7 @@ namespace RA.Services
 			foreach ( FrameworkItem item in list )
 			{
 				entity = new Models.Json.CredentialAlignmentObject();
-				entity = FormatCredentialAlignment( item, true, ref messages, frameworkName, framework );
+				entity = FormatCredentialAlignmentFrameworkItem( item, true, ref messages, frameworkName, framework );
 				if ( entity != null )
 					output.Add( entity );
 			}
@@ -1782,7 +1833,7 @@ namespace RA.Services
 			return output;
 		}   //
 
-		public static MJ.CredentialAlignmentObject FormatCredentialAlignment( FrameworkItem entity, bool includingCodedNotation, ref List<string> messages, string frameworkName = "", string framework = "" )
+		public static MJ.CredentialAlignmentObject FormatCredentialAlignmentFrameworkItem( FrameworkItem entity, bool includingCodedNotation, ref List<string> messages, string frameworkName = "", string framework = "" )
 		{
 			bool hasData = false;
             bool isUrlPresent = true;
@@ -1802,15 +1853,20 @@ namespace RA.Services
 				ca.FrameworkName = frameworkName;
 				//hasData = true;
 			}
-			//need a targetNode, normally - this is the schema name
-			//==>< N/A for framework items like industries
-			//if ( !string.IsNullOrWhiteSpace( entity. ) )
-			//{
-			//	ca.TargetNode = entity.Name;
-			//	hasData = true;
-			//}
+            //need a targetNode, normally - this is the schema name
+            //==>< N/A for framework items like industries
+            //actually should have. It can be a URI, so do we skip Url checks?
+            if ( !string.IsNullOrWhiteSpace( entity.URL ) )
+            {
+                if ( IsUrlValid( entity.URL, ref statusMessage, ref isUrlPresent, false ) )
+                {
+                    ca.TargetNode = entity.URL;
+                    //demand more data
+                    //hasData = true;
+                }
+            }
 
-			if ( !string.IsNullOrWhiteSpace( entity.Name ) )
+            if ( !string.IsNullOrWhiteSpace( entity.Name ) )
 			{
 				ca.TargetNodeName = entity.Name;
 				hasData = true;
@@ -1833,7 +1889,7 @@ namespace RA.Services
             //Framework must be a valid Url
             if ( !string.IsNullOrWhiteSpace( entity.Framework ) )
             {
-                if ( IsUrlValid( entity.Framework, ref statusMessage, ref isUrlPresent ) )
+                if ( IsUrlValid( entity.Framework, ref statusMessage, ref isUrlPresent, false ) )
                     ca.Framework = entity.Framework;
                 else
                 {
@@ -2081,7 +2137,7 @@ namespace RA.Services
 		/// <param name="messages"></param>
 		/// <param name="isRequired">If true, produce a message if url is missing</param>
 		/// <returns>null or an IdProperty</returns>
-		public static IdProperty AssignValidUrlAsPropertyId( string url, string propertyName, ref List<string> messages, bool isRequired = false )
+		public static IdProperty AssignValidUrlAsIdProperty( string url, string propertyName, ref List<string> messages, bool isRequired = false )
 		{
 			string statusMessage = "";
 			bool isUrlPresent = true;
@@ -2212,232 +2268,115 @@ namespace RA.Services
 
 			return value;
 		}
-		#region JSON helpers
-        public static string LogInputFile( CredentialRequest request, string endpoint, int appLevel = 6 )
-        {
-            string jsoninput = JsonConvert.SerializeObject( request, ServiceHelper.GetJsonSettings() );
-            LoggingHelper.WriteLogFile( appLevel, string.Format("Credential_{0}_{1}_raInput.json", endpoint, request.Credential.Ctid), jsoninput, "", false );
-            return jsoninput;
-        }
-        public static string LogInputFile( object request, string ctid, string entityType, string endpoint, int appLevel = 6 )
-        {
-            string jsoninput = JsonConvert.SerializeObject( request, ServiceHelper.GetJsonSettings() );
-            LoggingHelper.WriteLogFile( appLevel, string.Format( "{0}_{1}_{2}_raInput.json", entityType, endpoint, ctid ), jsoninput, "", false );
-            return jsoninput;
-        }
 
-        public static JsonSerializerSettings GetJsonSettings()
-        {
-            var settings = new JsonSerializerSettings()
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                DefaultValueHandling = DefaultValueHandling.Ignore,
-                ContractResolver = new EmptyNullResolver(),
-				Formatting = Formatting.Indented
-            };
 
-            return settings;
-        }
-        //Force properties to be serialized in alphanumeric order
-        public class AlphaNumericContractResolver : DefaultContractResolver
+        #region Language Map helpers
+
+        public static void AssignLanguageMap( string input, ref LanguageMap output, string title, bool isRequired, ref List<string> messages, string langauge = "en" )
         {
-            protected override System.Collections.Generic.IList<JsonProperty> CreateProperties( System.Type type, MemberSerialization memberSerialization )
+
+            output = new LanguageMap();
+            if ( string.IsNullOrWhiteSpace( input ) )
             {
-                return base.CreateProperties( type, memberSerialization ).OrderBy( m => m.PropertyName ).ToList();
+                if ( isRequired )
+                    messages.Add( string.Format( "The property {0} is required, please provide a value.", title ) );
+                return;
             }
+            output.Add( langauge, input );
+      
         }
-
-        public class EmptyNullResolver : AlphaNumericContractResolver
+        public static LanguageMap FormatLanguageMap( MI.LanguageMap input, string title, ref List<string> messages )
         {
-            protected override JsonProperty CreateProperty( MemberInfo member, MemberSerialization memberSerialization )
+
+            LanguageMap output = new LanguageMap();
+            if ( input == null )
+                return null;
+            int cntr = 0;
+            foreach ( var item in input )
             {
-                var property = base.CreateProperty( member, memberSerialization );
-                var isDefaultValueIgnored = ( ( property.DefaultValueHandling ?? DefaultValueHandling.Ignore ) & DefaultValueHandling.Ignore ) != 0;
-
-                if ( isDefaultValueIgnored )
-                    if ( !typeof( string ).IsAssignableFrom( property.PropertyType ) && typeof( IEnumerable ).IsAssignableFrom( property.PropertyType ) )
-                    {
-                        Predicate<object> newShouldSerialize = obj =>
-                        {
-                            var collection = property.ValueProvider.GetValue( obj ) as ICollection;
-                            return collection == null || collection.Count != 0;
-                        };
-                        Predicate<object> oldShouldSerialize = property.ShouldSerialize;
-                        property.ShouldSerialize = oldShouldSerialize != null ? o => oldShouldSerialize( oldShouldSerialize ) && newShouldSerialize( oldShouldSerialize ) : newShouldSerialize;
-                    }
-                    else if ( typeof( string ).IsAssignableFrom( property.PropertyType ) )
-                    {
-                        Predicate<object> newShouldSerialize = obj =>
-                        {
-                            var value = property.ValueProvider.GetValue( obj ) as string;
-                            return !string.IsNullOrEmpty( value );
-                        };
-
-                        Predicate<object> oldShouldSerialize = property.ShouldSerialize;
-                        property.ShouldSerialize = oldShouldSerialize != null ? o => oldShouldSerialize( oldShouldSerialize ) && newShouldSerialize( oldShouldSerialize ) : newShouldSerialize;
-                    }
-                return property;
+                cntr++;
+                //some validation
+                if ( ValidateLanguageCode( item.Key, title, cntr, ref messages ) )
+                    output.Add( item.Key.ToLower(), item.Value );
             }
+            if ( output.Count == 0 )
+                return null;
+            else
+                return output;
         }
-        #endregion
 
-        #region === Security related Methods ===
+      
+        public static void FormatLanguageMapList( List<string> list, ref LanguageMapList output, string title, ref List<string> messages, string langauge = "en" )
+        {
+            output = new LanguageMapList();
+            if ( list == null || list.Count == 0 )
+                return;
 
+            output.Add( langauge, list );
+            
+        }
         /// <summary>
-        /// The actual validation will be via a call to the accounts api
+        /// Format list of language maps, like keywords
+        /// "ceterms:keyword": {
+		///     "en": [ "Keyword one", "Keyword two" ],
+		///     "ru": [ "Ключевое слово", "Ключевое слово два" ]
+        ///     }
         /// </summary>
-        /// <param name="helper"></param>
-        /// <param name="statusMessage"></param>
+        /// <param name="list"></param>
+        /// <param name="title"></param>
+        /// <param name="messages"></param>
         /// <returns></returns>
-        public static bool ValidateRequest(RequestHelper helper, ref string statusMessage, bool isDeleteRequest = false)
-		{
-			bool isValid = true;
-            bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
-            if ( isDeleteRequest )
-                isTokenRequired = true;
+        public static LanguageMapList FormatLanguageMapList( MI.LanguageMapList list, string title, ref List<string> messages )
+        {
 
-            //api key will be passed in the header
-            string apiToken = "";
-            if (IsAuthTokenValid( isTokenRequired, ref apiToken, ref statusMessage) == false)
+            if ( list == null || list.Count == 0 )
+                return null;
+
+            LanguageMapList output = new LanguageMapList();
+            int cntr = 0;
+            foreach ( var item in list )
             {
+                cntr++;
+                //some validation of lang code and region
+                if ( ValidateLanguageCode( item.Key, title, cntr, ref messages ) )
+                    output.Add( item.Key.ToLower(), item.Value );
+            }
+            if ( output.Count == 0 )
+                return null;
+            else
+                return output;
+        }
+
+        private static bool ValidateLanguageCode(string languageCode, string title, int row, ref List<string> messages )
+        {
+            bool isValid = true;
+            if (string.IsNullOrWhiteSpace(languageCode))
+            {
+                messages.Add( string.Format("A valid language code was not found for property: {0}, row: {1}", title, row ));
                 return false;
             }
-            helper.ApiKey = apiToken;
-
-            if ( isTokenRequired &&
-                (string.IsNullOrWhiteSpace(helper.OwnerCtid) || 
-                 !helper.OwnerCtid.ToLower().StartsWith("ce-")  ||
-                 helper.OwnerCtid.Length != 39) 
-                )
+            int pos = languageCode.IndexOf( "-" );
+            if ( languageCode.Length < 2 || (pos > -1 && pos < 2 ))
             {
-                statusMessage = "Error - a valid CTID for the related organization must be provided.";
-            }
-            return isValid;
-		}
-
-		public static bool IsAuthTokenValid( bool isTokenRequired, ref string token, ref string message )
-		{
-			bool isValid = true;
-            //need to handle both ways. So if a token, and ctid are provided, then use them!
-            //bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
-
-            try
-            {
-                HttpContext httpContext = HttpContext.Current;
-
-                string authHeader = httpContext.Request.Headers[ "Authorization" ];
-                //registry API uses Token rather than Basic
-                if ( authHeader != null && authHeader.StartsWith( "ApiToken" ) )
-                {
-                    //Extract credentials
-                    token = authHeader.Substring( "ApiToken ".Length ).Trim();
-
-                }
-            } catch (Exception ex)
-            {
-                if ( isTokenRequired )
-                {
-                    LoggingHelper.LogError( ex, "Exception encountered attempting to get API key from request header. " );
-                }
+                messages.Add( string.Format( "A valid language code must be at least two characters in length (eg. 'en' or 'en-us' Property: {0}, Row: {1}, Language Code: {2}", title, row, languageCode ) );
+                return false;
             }
 
-            if ( isTokenRequired && string.IsNullOrWhiteSpace(token ) )
+            //quick
+            string code = languageCode.ToLower().Substring( 0, 2 );
+            if ( "en de es fr ar cs da el fi he it ja nl no pl pt sv uk zh".IndexOf( code ) > -1  )
+                return true;
+            if ( pos > 2 )
             {
-                message = "Error a valid API key must be provided in the header";
-                isValid = false;
+                code = languageCode.ToLower().Substring( 0, 3 );
+                if ( "eng deu spa ara ces dan ell fin fra heb ita jnp nld nor pol por swe ukr zho".IndexOf( code ) > -1 )
+                    return true;
             }
+            //at this point don't have a common language code.
+            messages.Add( string.Format( "An unknown/unhandled language code was encountered: Property: {0}, Row: {1}, Language Code: {2}", title, row, languageCode ) );
+            isValid = false;
 
             return isValid;
-		}
-		/// <summary>
-		/// Encrypt the text using MD5 crypto service
-		/// This is used for one way encryption of a user password - it can't be decrypted
-		/// </summary>
-		/// <param name="data"></param>
-		/// <returns></returns>
-		public static string Encrypt( string data )
-        {
-            byte[] byDataToHash = ( new UnicodeEncoding() ).GetBytes( data );
-            byte[] bytHashValue = new MD5CryptoServiceProvider().ComputeHash( byDataToHash );
-            return BitConverter.ToString( bytHashValue );
-        }
-
-        /// <summary>
-        /// Encrypt the text using the provided password (key) and CBC CipherMode
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public static string Encrypt_CBC( string text, string password )
-        {
-            RijndaelManaged rijndaelCipher = new RijndaelManaged();
-
-            rijndaelCipher.Mode = CipherMode.CBC;
-            rijndaelCipher.Padding = PaddingMode.PKCS7;
-            rijndaelCipher.KeySize = 128;
-            rijndaelCipher.BlockSize = 128;
-
-            byte[] pwdBytes = System.Text.Encoding.UTF8.GetBytes( password );
-
-            byte[] keyBytes = new byte[16];
-
-            int len = pwdBytes.Length;
-
-            if ( len > keyBytes.Length )
-                len = keyBytes.Length;
-
-            System.Array.Copy( pwdBytes, keyBytes, len );
-
-            rijndaelCipher.Key = keyBytes;
-            rijndaelCipher.IV = keyBytes;
-
-            ICryptoTransform transform = rijndaelCipher.CreateEncryptor();
-
-            byte[] plainText = Encoding.UTF8.GetBytes( text );
-
-            byte[] cipherBytes = transform.TransformFinalBlock( plainText, 0, plainText.Length );
-
-            return Convert.ToBase64String( cipherBytes );
-
-        }
-
-        /// <summary>
-        /// Decrypt the text using the provided password (key) and CBC CipherMode
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public static string Decrypt_CBC( string text, string password )
-        {
-            RijndaelManaged rijndaelCipher = new RijndaelManaged();
-
-            rijndaelCipher.Mode = CipherMode.CBC;
-            rijndaelCipher.Padding = PaddingMode.PKCS7;
-            rijndaelCipher.KeySize = 128;
-            rijndaelCipher.BlockSize = 128;
-
-            byte[] encryptedData = Convert.FromBase64String( text );
-
-            byte[] pwdBytes = System.Text.Encoding.UTF8.GetBytes( password );
-
-            byte[] keyBytes = new byte[16];
-
-            int len = pwdBytes.Length;
-
-            if ( len > keyBytes.Length )
-                len = keyBytes.Length;
-
-            System.Array.Copy( pwdBytes, keyBytes, len );
-
-            rijndaelCipher.Key = keyBytes;
-            rijndaelCipher.IV = keyBytes;
-
-            ICryptoTransform transform = rijndaelCipher.CreateDecryptor();
-
-            byte[] plainText = transform.TransformFinalBlock( encryptedData, 0, encryptedData.Length );
-
-            return Encoding.UTF8.GetString( plainText );
-
         }
 
         #endregion
@@ -2467,15 +2406,15 @@ namespace RA.Services
                 statusMessage = "A URL must begin with http or https";
                 return false;
             }
-			if ( !doingExistanceCheck )
+
+            if ( !doingExistanceCheck )
 				return true;
 
             var isOk = DoesRemoteFileExists( url, ref statusMessage );
             //optionally try other methods, or again with GET
             if ( !isOk && statusMessage == "999" )
-                isOk = true;
-            //	isOk = DoesRemoteFileExists( url, ref responseStatus, "GET" );
-            return isOk;
+                return true;
+            return isOk;            
         } //
 
 
@@ -2498,10 +2437,15 @@ namespace RA.Services
             {
                 if ( SkippingValidation( url ) )
                     return true;
-
+                SafeBrowsing.Reputation rep = SafeBrowsing.CheckUrl( url );
+                if ( rep != SafeBrowsing.Reputation.None )
+                {
+                    responseStatus = string.Format( "Url ({0}) failed SafeBrowsing check.", url );
+                    return false;
+                }
                 //Creating the HttpWebRequest
                 HttpWebRequest request = WebRequest.Create( url ) as HttpWebRequest;
-                //NOTE - do use the HEAD option, as many sites reject that type of request
+                //NOTE - do NOT use the HEAD option, as many sites reject that type of request
 				//		GET seems to be cause false 404s
                 //request.Method = "GET";
                 //var agent = HttpContext.Current.Request.AcceptTypes;
@@ -2836,6 +2780,256 @@ namespace RA.Services
 
         #endregion
 
+		#region JSON helpers
+        public static string LogInputFile( CredentialRequest request, string endpoint, int appLevel = 6 )
+        {
+            string jsoninput = JsonConvert.SerializeObject( request, ServiceHelper.GetJsonSettings() );
+            LoggingHelper.WriteLogFile( appLevel, string.Format("Credential_{0}_{1}_raInput.json", endpoint, request.Credential.Ctid), jsoninput, "", false );
+            return jsoninput;
+        }
+        public static string LogInputFile( object request, string ctid, string entityType, string endpoint, int appLevel = 6 )
+        {
+            string jsoninput = JsonConvert.SerializeObject( request, ServiceHelper.GetJsonSettings() );
+            LoggingHelper.WriteLogFile( appLevel, string.Format( "{0}_{1}_{2}_raInput.json", entityType, endpoint, ctid ), jsoninput, "", false );
+            return jsoninput;
+        }
+
+        public static JsonSerializerSettings GetJsonSettings()
+        {
+            var settings = new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                DefaultValueHandling = DefaultValueHandling.Ignore,
+                ContractResolver = new EmptyNullResolver(),
+				Formatting = Formatting.Indented,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
+            return settings;
+        }
+        //Force properties to be serialized in alphanumeric order
+        public class AlphaNumericContractResolver : DefaultContractResolver
+        {
+            protected override System.Collections.Generic.IList<JsonProperty> CreateProperties( System.Type type, MemberSerialization memberSerialization )
+            {
+                return base.CreateProperties( type, memberSerialization ).OrderBy( m => m.PropertyName ).ToList();
+            }
+        }
+
+		/// <summary>
+		/// NOTE: previously inherited from AlphaNumericContractResolver. the latter would sort by property name, which we don't want - must be @context, @id, and @graph
+		/// </summary>
+		public class EmptyNullResolver : DefaultContractResolver
+        {
+            protected override JsonProperty CreateProperty( MemberInfo member, MemberSerialization memberSerialization )
+            {
+                var property = base.CreateProperty( member, memberSerialization );
+                var isDefaultValueIgnored = ( ( property.DefaultValueHandling ?? DefaultValueHandling.Ignore ) & DefaultValueHandling.Ignore ) != 0;
+
+                if ( isDefaultValueIgnored )
+                    if ( !typeof( string ).IsAssignableFrom( property.PropertyType ) && typeof( IEnumerable ).IsAssignableFrom( property.PropertyType ) )
+                    {
+                        Predicate<object> newShouldSerialize = obj =>
+                        {
+                            var collection = property.ValueProvider.GetValue( obj ) as ICollection;
+                            return collection == null || collection.Count != 0;
+                        };
+                        Predicate<object> oldShouldSerialize = property.ShouldSerialize;
+                        property.ShouldSerialize = oldShouldSerialize != null ? o => oldShouldSerialize( oldShouldSerialize ) && newShouldSerialize( oldShouldSerialize ) : newShouldSerialize;
+                    }
+                    else if ( typeof( string ).IsAssignableFrom( property.PropertyType ) )
+                    {
+                        Predicate<object> newShouldSerialize = obj =>
+                        {
+                            var value = property.ValueProvider.GetValue( obj ) as string;
+                            return !string.IsNullOrEmpty( value );
+                        };
+
+                        Predicate<object> oldShouldSerialize = property.ShouldSerialize;
+                        property.ShouldSerialize = oldShouldSerialize != null ? o => oldShouldSerialize( oldShouldSerialize ) && newShouldSerialize( oldShouldSerialize ) : newShouldSerialize;
+                    }
+                return property;
+            }
+        }
+        #endregion
+
+        #region === Security related Methods ===
+
+        /// <summary>
+        /// The actual validation will be via a call to the accounts api
+        /// </summary>
+        /// <param name="helper"></param>
+        /// <param name="statusMessage"></param>
+        /// <returns></returns>
+        public static bool ValidateRequest(RequestHelper helper, ref string statusMessage, bool isDeleteRequest = false)
+		{
+			bool isValid = true;
+            string clientIdentifier = "";
+            bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
+            if ( isDeleteRequest )
+                isTokenRequired = true;
+
+            //api key will be passed in the header
+            string apiToken = "";
+            if (IsAuthTokenValid( isTokenRequired, ref apiToken, ref clientIdentifier, ref statusMessage) == false)
+            {
+                return false;
+            }
+            helper.ApiKey = apiToken;
+            helper.ClientIdentifier = clientIdentifier ?? "";
+
+            if ( isTokenRequired &&
+                (string.IsNullOrWhiteSpace(helper.OwnerCtid) || 
+                 !helper.OwnerCtid.ToLower().StartsWith("ce-")  ||
+                 helper.OwnerCtid.Length != 39) 
+                )
+            {
+                if (clientIdentifier.ToLower().StartsWith( "cerpublisher" ) == false)
+                {
+                    statusMessage = "Error - a valid CTID for the related organization must be provided.";
+                    return false;
+                }
+            }
+            return isValid;
+		}
+
+		public static bool IsAuthTokenValid( bool isTokenRequired, ref string token, ref string clientIdentifier, ref string message )
+		{
+			bool isValid = true;
+            //need to handle both ways. So if a token, and ctid are provided, then use them!
+            //bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
+
+            try
+            {
+                HttpContext httpContext = HttpContext.Current;
+                clientIdentifier = httpContext.Request.Headers[ "Proxy-Authorization" ];
+                string authHeader = httpContext.Request.Headers[ "Authorization" ];
+                //registry API uses ApiToken rather than Basic
+                if ( !string.IsNullOrWhiteSpace(authHeader)  )
+                {
+                    LoggingHelper.DoTrace( 4, "$$$$$$$$ Found an authorization header." + authHeader );
+                    if (authHeader.ToLower().StartsWith( "apitoken" ))
+                    {
+                        //Extract credentials
+                        authHeader = authHeader.ToLower();
+                        token = authHeader.Substring( "apitoken ".Length ).Trim();
+                    }
+                }
+            } catch (Exception ex)
+            {
+                if ( isTokenRequired )
+                {
+                    LoggingHelper.LogError( ex, "Exception encountered attempting to get API key from request header. " );
+                    isValid = false;
+                }
+            }
+
+            if ( isTokenRequired && string.IsNullOrWhiteSpace(token ) )
+            {
+                if (!string.IsNullOrWhiteSpace(clientIdentifier))
+                {
+                    if (clientIdentifier.ToLower().StartsWith( "cerpublisher" ))
+                        return true;
+                }
+                message = "Error a valid API key must be provided in the header";
+                isValid = false;
+            }
+
+            return isValid;
+		}
+		/// <summary>
+		/// Encrypt the text using MD5 crypto service
+		/// This is used for one way encryption of a user password - it can't be decrypted
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns></returns>
+		public static string Encrypt( string data )
+        {
+            byte[] byDataToHash = ( new UnicodeEncoding() ).GetBytes( data );
+            byte[] bytHashValue = new MD5CryptoServiceProvider().ComputeHash( byDataToHash );
+            return BitConverter.ToString( bytHashValue );
+        }
+
+        /// <summary>
+        /// Encrypt the text using the provided password (key) and CBC CipherMode
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public static string Encrypt_CBC( string text, string password )
+        {
+            RijndaelManaged rijndaelCipher = new RijndaelManaged();
+
+            rijndaelCipher.Mode = CipherMode.CBC;
+            rijndaelCipher.Padding = PaddingMode.PKCS7;
+            rijndaelCipher.KeySize = 128;
+            rijndaelCipher.BlockSize = 128;
+
+            byte[] pwdBytes = System.Text.Encoding.UTF8.GetBytes( password );
+
+            byte[] keyBytes = new byte[16];
+
+            int len = pwdBytes.Length;
+
+            if ( len > keyBytes.Length )
+                len = keyBytes.Length;
+
+            System.Array.Copy( pwdBytes, keyBytes, len );
+
+            rijndaelCipher.Key = keyBytes;
+            rijndaelCipher.IV = keyBytes;
+
+            ICryptoTransform transform = rijndaelCipher.CreateEncryptor();
+
+            byte[] plainText = Encoding.UTF8.GetBytes( text );
+
+            byte[] cipherBytes = transform.TransformFinalBlock( plainText, 0, plainText.Length );
+
+            return Convert.ToBase64String( cipherBytes );
+
+        }
+
+        /// <summary>
+        /// Decrypt the text using the provided password (key) and CBC CipherMode
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public static string Decrypt_CBC( string text, string password )
+        {
+            RijndaelManaged rijndaelCipher = new RijndaelManaged();
+
+            rijndaelCipher.Mode = CipherMode.CBC;
+            rijndaelCipher.Padding = PaddingMode.PKCS7;
+            rijndaelCipher.KeySize = 128;
+            rijndaelCipher.BlockSize = 128;
+
+            byte[] encryptedData = Convert.FromBase64String( text );
+
+            byte[] pwdBytes = System.Text.Encoding.UTF8.GetBytes( password );
+
+            byte[] keyBytes = new byte[16];
+
+            int len = pwdBytes.Length;
+
+            if ( len > keyBytes.Length )
+                len = keyBytes.Length;
+
+            System.Array.Copy( pwdBytes, keyBytes, len );
+
+            rijndaelCipher.Key = keyBytes;
+            rijndaelCipher.IV = keyBytes;
+
+            ICryptoTransform transform = rijndaelCipher.CreateDecryptor();
+
+            byte[] plainText = transform.TransformFinalBlock( encryptedData, 0, encryptedData.Length );
+
+            return Encoding.UTF8.GetString( plainText );
+
+        }
+
+        #endregion
+
 
         #region === Application Keys Methods ===
 
@@ -2856,7 +3050,11 @@ namespace RA.Services
         public static string GetAppKeyValue( string keyName, string defaultValue )
         {
             string appValue = "";
-
+            if (string.IsNullOrWhiteSpace(keyName))
+            {
+                LogError( string.Format( "@@@@ Error: Empty string AppKey was encoutered, using default of: {0}", defaultValue ) );
+                return defaultValue;
+            }
             try
             {
                 appValue = System.Configuration.ConfigurationManager.AppSettings[keyName];
@@ -2874,7 +3072,11 @@ namespace RA.Services
         public static int GetAppKeyValue( string keyName, int defaultValue )
         {
             int appValue = -1;
-
+            if ( string.IsNullOrWhiteSpace( keyName ) )
+            {
+                LogError( string.Format( "@@@@ Error: Empty int AppKey was encoutered, using default of: {0}", defaultValue ) );
+                return defaultValue;
+            }
             try
             {
                 appValue = Int32.Parse( System.Configuration.ConfigurationManager.AppSettings[keyName] );
@@ -2892,7 +3094,11 @@ namespace RA.Services
         public static bool GetAppKeyValue( string keyName, bool defaultValue )
         {
             bool appValue = false;
-
+            if ( string.IsNullOrWhiteSpace( keyName ) )
+            {
+                LogError( string.Format( "@@@@ Error: Empty bool AppKey was encoutered, using default of: {0}",  defaultValue ) );
+                return defaultValue;
+            }
             try
             {
                 appValue = bool.Parse( System.Configuration.ConfigurationManager.AppSettings[keyName] );
@@ -3165,6 +3371,43 @@ namespace RA.Services
         #endregion
 
         #region Common Utility Methods
+        /// <summary>
+        /// Convert characters often resulting from external programs like Word
+        /// NOTE: keep in sync with the Publisher version
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string ConvertWordFluff( string text )
+        {
+            if ( string.IsNullOrWhiteSpace( text ) )
+                return "";
+
+            if ( text.IndexOf( '\u2013' ) > -1 ) text = text.Replace( '\u2013', '-' ); // en dash
+            if ( text.IndexOf( '\u2014' ) > -1 ) text = text.Replace( '\u2014', '-' ); // em dash
+            if ( text.IndexOf( '\u2015' ) > -1 ) text = text.Replace( '\u2015', '-' ); // horizontal bar
+            if ( text.IndexOf( '\u2017' ) > -1 ) text = text.Replace( '\u2017', '_' ); // double low line
+            if ( text.IndexOf( '\u2018' ) > -1 ) text = text.Replace( '\u2018', '\'' ); // left single quotation mark
+            if ( text.IndexOf( '\u2019' ) > -1 ) text = text.Replace( '\u2019', '\'' ); // right single quotation mark
+            if ( text.IndexOf( '\u201a' ) > -1 ) text = text.Replace( '\u201a', ',' ); // single low-9 quotation mark
+            if ( text.IndexOf( '\u201b' ) > -1 ) text = text.Replace( '\u201b', '\'' ); // single high-reversed-9 quotation mark
+            if ( text.IndexOf( '\u201c' ) > -1 ) text = text.Replace( '\u201c', '\"' ); // left double quotation mark
+            if ( text.IndexOf( '\u201d' ) > -1 ) text = text.Replace( '\u201d', '\"' ); // right double quotation mark
+            if ( text.IndexOf( '\u201e' ) > -1 ) text = text.Replace( '\u201e', '\"' ); // double low-9 quotation mark
+            if ( text.IndexOf( '\u2026' ) > -1 ) text = text.Replace( "\u2026", "..." ); // horizontal ellipsis
+            if ( text.IndexOf( '\u2032' ) > -1 ) text = text.Replace( '\u2032', '\'' ); // prime
+            if ( text.IndexOf( '\u2033' ) > -1 ) text = text.Replace( '\u2033', '\"' ); // double prime
+            if ( text.IndexOf('\u2036') > -1 )
+                text = text.Replace('\u2036', '\"'); // ??
+            if ( text.IndexOf('\u0090') > -1 )
+                text = text.Replace('\u0090', 'ê'); // e circumflex
+
+            text = Regex.Replace(text, "[Õ]", "'");
+            text = Regex.Replace(text, "[Ô]", "'");
+            text = Regex.Replace(text, "[Ò]", "\"");
+            text = Regex.Replace(text, "[Ó]", "\"");
+            text = Regex.Replace(text, "[—]", "-"); //
+            return text.Trim();
+        } //
         public static string HandleApostrophes( string strValue )
         {
 

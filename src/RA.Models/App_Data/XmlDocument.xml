@@ -48,6 +48,13 @@
             Contains registry envelope identifier for a document in the registy. It should be empty for a new document. 
             </summary>
         </member>
+        <member name="P:RA.Models.Input.BaseRequest.NotConvertingFromResourceLinkToGraphLink">
+            <summary>
+            Sept. 30, 2018
+            The full registry document is now accessed via the /graph/ path. All @id (or equivalent) references should be using /graph/. If this value is false, the API will look for and convert all /resource/ urls to /graph/ urls
+            NOTE: using default of true as norm in case property not populated.
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Competency.complexityLevel">
             ProficiencyScale??
         </member>
@@ -380,11 +387,6 @@
             <summary>
             Organization performs QA on these entities
             The entities could be any of organization, credential, assessment, or learning opportunity
-            </summary>
-        </member>
-        <member name="P:RA.Models.Input.Organization.OwnsCredentials">
-            <summary>
-            Prototype separate properties
             </summary>
         </member>
         <member name="P:RA.Models.Input.Organization.HasConditionManifest">
@@ -849,11 +851,6 @@
             The URI of a competency from which this competency has been derived.
             </summary>
         </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.exactMatch">
-            <summary>
-            NOTE: temporary, will be changed to exactAlignment
-            </summary>
-        </member>
         <member name="P:RA.Models.JsonV2.CompetencyInput.isVersionOf">
             <summary>
             Competency uri
@@ -902,9 +899,73 @@
             Float
             </summary>
         </member>
-        <member name="P:RA.Models.JsonV2.Competency.exactMatch">
+        <member name="P:RA.Models.JsonV2.Competency.alignFrom">
             <summary>
-            NOTE: temporary, will be changed to exactAlignment
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.alignTo">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.crossSubjectReference">
+            <summary>
+            A relationship between this competency and a competency in a separate competency framework.
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.derivedFrom">
+            <summary>
+            The URI of a competency from which this competency has been derived.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.isVersionOf">
+            <summary>
+            Competency uri
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.broadAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.exactAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.majorAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.minorAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.narrowAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.prerequisiteAlignment">
+            <summary>
+            This competency is a prerequisite to the referenced competency.
+            Uri to a competency
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.skillEmbodied">
+            <summary>
+            Cognitive, affective, and psychomotor skills directly or indirectly embodied in this competency.
+            URI
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.weight">
+            <summary>
+            An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
+            Float
             </summary>
         </member>
         <member name="T:RA.Models.JsonV2.ProficiencyScale">
@@ -1136,115 +1197,6 @@
         <member name="T:RA.Models.JsonV2.VerificationServiceProfile">
             <summary>
             Common input class for all condition profiles
-            </summary>
-        </member>
-        <member name="T:RA.Models.Json.CompetencyInput">
-            <summary>
-            Variation of Competency that uses string instead of IdProperty
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.alignFrom">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.alignTo">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.crossSubjectReference">
-            <summary>
-            A relationship between this competency and a competency in a separate competency framework.
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.derivedFrom">
-            <summary>
-            The URI of a competency from which this competency has been derived.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.exactMatch">
-            <summary>
-            NOTE: temporary, will be changed to exactAlignment
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.isVersionOf">
-            <summary>
-            Competency uri
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.broadAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.exactAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.majorAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.minorAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.narrowAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.prerequisiteAlignment">
-            <summary>
-            This competency is a prerequisite to the referenced competency.
-            Uri to a competency
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.skillEmbodied">
-            <summary>
-            Cognitive, affective, and psychomotor skills directly or indirectly embodied in this competency.
-            URI
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.weight">
-            <summary>
-            An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
-            Float
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.Competency.exactMatch">
-            <summary>
-            NOTE: temporary, will be changed to exactAlignment
-            </summary>
-        </member>
-        <member name="T:RA.Models.Json.ProficiencyScale">
-            <summary>
-            The class of structured profiles describing discrete levels of expertise and performance mastery.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyFrameworksGraph.Graph">
-            <summary>
-            Main graph object
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyFrameworkInput.author">
-            <summary>
-            A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyFrameworkInput.conceptKeyword">
-            <summary>
-            A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyFrameworkInput.conceptTerm">
-            <summary>
-            A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
             </summary>
         </member>
         <member name="P:RA.Models.Json.ConditionManifest.Type">

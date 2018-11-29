@@ -19,6 +19,9 @@ namespace RA.Models.JsonV2
         [JsonProperty( "@context" )]
         public string Context { get; set; }
 
+        [JsonProperty( "@id" )]
+        public string CtdlId { get; set; }
+
         /// <summary>
         /// Main graph object
         /// </summary>
@@ -26,9 +29,6 @@ namespace RA.Models.JsonV2
         public object Graph { get; set; }
         //public object Graph { get; set;  }
 
-        [JsonIgnore]
-        [JsonProperty( "@id" )]
-        public string CtdlId { get; set; }
 
         [JsonIgnore]
         [JsonProperty( "@type" )]
@@ -37,9 +37,6 @@ namespace RA.Models.JsonV2
         [JsonIgnore]
         [JsonProperty( "ceterms:ctid" )]
         public string CTID { get; set; }
-
-
-
 
     }
     public class CompetencyFramework : JsonLDDocument
@@ -71,7 +68,6 @@ namespace RA.Models.JsonV2
         public List<string> author { get; set; } 
 
         
-
         [JsonProperty( PropertyName = "ceasn:conceptKeyword" )]
         public LanguageMapList conceptKeyword { get; set; }
 
@@ -137,10 +133,11 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceasn:repositoryDate" )]
         public string repositoryDate { get; set; }
 
-        [JsonProperty( PropertyName = "ceasn:rights" )]
-        public string rights { get; set; }
+		[JsonProperty( PropertyName = "ceasn:rights" )]
+		//public string rights { get; set; }
+		public List<string> rights { get; set; } = new List<string>();
 
-        [JsonProperty( PropertyName = "ceasn:rightsHolder" )]
+		[JsonProperty( PropertyName = "ceasn:rightsHolder" )]
         public string rightsHolder { get; set; }
 
         [JsonProperty( PropertyName = "ceasn:source" )]
@@ -216,7 +213,7 @@ namespace RA.Models.JsonV2
         public string dateValidUntil { get; set; }
 
         [JsonProperty( PropertyName = "ceasn:derivedFrom" )]
-        public List<string> derivedFrom { get; set; } = new List<string>();
+        public string derivedFrom { get; set; } 
 
         //???language map??
         [JsonProperty( PropertyName = "ceasn:description" )]
@@ -245,7 +242,7 @@ namespace RA.Models.JsonV2
         public LanguageMap name { get; set; } = new LanguageMap();
 
         [JsonProperty( PropertyName = "ceasn:publicationStatusType" )]
-        public List<string> publicationStatusType { get; set; } = new List<string>();
+        public string publicationStatusType { get; set; } 
 
         [JsonProperty( PropertyName = "ceasn:publisher" )]
         public List<string> publisher { get; set; } = new List<string>();
@@ -258,9 +255,10 @@ namespace RA.Models.JsonV2
         public string repositoryDate { get; set; }
 
         [JsonProperty( PropertyName = "ceasn:rights" )]
-        public string rights { get; set; }
+		//public string rights { get; set; }
+		public List<string> rights { get; set; } = new List<string>();
 
-        [JsonProperty( PropertyName = "ceasn:rightsHolder" )]
+		[JsonProperty( PropertyName = "ceasn:rightsHolder" )]
         public string rightsHolder { get; set; }
 
         [JsonProperty( PropertyName = "ceasn:source" )]

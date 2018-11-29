@@ -107,7 +107,8 @@ namespace RA.Services
 		}
 		public static string FormatAsJson( InputEntity input, ref bool isValid, ref List<string> messages )
 		{
-			var output = new OutputEntity();
+            IsAPublishRequest = false;
+            var output = new OutputEntity();
 			string payload = "";
 			isValid = true;
 
@@ -170,25 +171,27 @@ namespace RA.Services
 				output.ReviewProcess = FormatProcessProfile( input.ReviewProcess, ref messages );
 				output.RevocationProcess = FormatProcessProfile( input.RevocationProcess, ref messages );
 
-				//Following can be a variety of entities, so valid type must be provided
-				output.Approves = FormatEntityReferences( input.Approves, "AgentApproves", false, ref messages );
-				output.Owns = FormatEntityReferences( input.Owns, "AgentOwns", false, ref messages ); //Owns Credentials
-				output.Offers = FormatEntityReferences( input.Offers, "AgentOffers", false, ref messages );//Offers Credentials
+                //Following can be a variety of entities, so valid type must be provided
+                output.Accredits = FormatEntityReferences( input.Accredits, "AgentAccredits", false, ref messages );
+                output.Approves = FormatEntityReferences( input.Approves, "AgentApproves", false, ref messages );
+				output.Owns = FormatEntityReferences( input.Owns, "AgentOwns", false, ref messages ); //Owns artifacts
+				output.Offers = FormatEntityReferences( input.Offers, "AgentOffers", false, ref messages );//Offers artifacts
 
-				output.Renews = FormatEntityReferences( input.Renews, "AgentRenews", false, ref messages );//Renews Credentials
-				output.Revokes = FormatEntityReferences( input.Revokes, "AgentRevokes", false, ref messages ); //Revokes Credentials
-				output.Recognizes = FormatEntityReferences( input.Recognizes, "AgentRecognizes", false, ref messages ); //Recognizes Credentials
+                output.Renews = FormatEntityReferences( input.Renews, "AgentRenews", false, ref messages );//Renews artifacts
+                output.Revokes = FormatEntityReferences( input.Revokes, "AgentRevokes", false, ref messages ); //Revokes artifacts
+                output.Recognizes = FormatEntityReferences( input.Recognizes, "AgentRecognizes", false, ref messages ); //Recognizes artifacts
+                output.Regulates = FormatEntityReferences( input.Regulates, "AgentRegulates", false, ref messages ); //regulates artifacts
 
-				output.HasConditionManifest = AssignRegistryURIsListAsStringList( input.HasConditionManifest, "HasConditionManifest", ref messages );
+                output.HasConditionManifest = AssignRegistryURIsListAsStringList( input.HasConditionManifest, "HasConditionManifest", ref messages );
 				output.HasCostManifest = AssignRegistryURIsListAsStringList( input.HasCostManifest, "HasCostManifest", ref messages );
 
 				HandleVerificationProfiles( input, output, ref messages );
 				HandleJurisdictionAssertions( input, output, ref messages );
 
-				output.AccreditedBy = FormatOrganizationReferences( input.AccreditedBy, "Accredited By", false, ref messages );
+				output.AccreditedBy = FormatOrganizationReferences( input.AccreditedBy, "Accredited By", false, ref messages, true );
 				output.ApprovedBy = FormatOrganizationReferences( input.ApprovedBy, "Approved By", false, ref messages );
 				output.RecognizedBy = FormatOrganizationReferences( input.RecognizedBy, "Recognized By", false, ref messages );
-				output.RegulatedBy = FormatOrganizationReferences( input.RegulatedBy, "Regulated By", false, ref messages );
+				output.RegulatedBy = FormatOrganizationReferences( input.RegulatedBy, "Regulated By", false, ref messages, true  );
 
 				output.ParentOrganization = FormatOrganizationReferences( input.ParentOrganization, "ParentOrganization", false, ref messages );
 
@@ -219,16 +222,20 @@ namespace RA.Services
 		{
 			bool isValid = true;
 
-			//todo determine if will generate where not found
-			if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )
-				input.Ctid = GenerateCtid();
+            output.Ctid = FormatCtid(input.Ctid, ref messages);
+            output.CtdlId = idBaseUrl + output.Ctid;
 
-			if ( IsCtidValid( input.Ctid, ref messages ) )
-			{
-				output.Ctid = input.Ctid;
-				output.CtdlId = idUrl + output.Ctid;
-				CurrentCtid = input.Ctid;
-			}
+            //todo determine if will generate where not found
+   //         if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )
+			//	input.Ctid = GenerateCtid();
+
+			//if ( IsCtidValid( input.Ctid, ref messages ) )
+			//{
+   //             //input.Ctid = input.Ctid.ToLower();
+   //             output.Ctid = input.Ctid;
+			//	output.CtdlId = idBaseUrl + output.Ctid;
+			//	CurrentCtid = input.Ctid;
+			//}
 			if ( string.IsNullOrWhiteSpace( output.CtdlId ) )
 			{
 				messages.Add( "Error - An @Id must be provided/generated input CTID." );
@@ -248,11 +255,11 @@ namespace RA.Services
 				messages.Add( "Error - An organization description must be entered." );
 			}
 			else
-				output.Description = input.Description;
+                output.Description = ConvertWordFluff( input.Description );
 
 
-			//TODO - need output handle credentialOrgnization vs QAcredentialOrgnization
-			if ( string.IsNullOrWhiteSpace( input.Type ) )
+            //TODO - need output handle credentialOrgnization vs QAcredentialOrgnization
+            if ( string.IsNullOrWhiteSpace( input.Type ) )
 			{
 				messages.Add( "Error - An organization type must be entered: one of  CredentialOrganization or QACredentialOrganization." );
 			}
@@ -308,12 +315,13 @@ namespace RA.Services
 				output.AgentSectorType = null;
 			}
 
-			if ( (input.Address == null || input.Address.Count == 0) &&
-				( input.Email == null   || input.Email.Count == 0 ) &&
-				( input.ContactPoint == null || input.ContactPoint.Count == 0 )
+            //no longer included: 
+            //				( input.ContactPoint == null || input.ContactPoint.Count == 0 )
+            if ( (input.Address == null || input.Address.Count == 0) &&
+				( input.Email == null   || input.Email.Count == 0 ) 
 				)
 			{
-				messages.Add( "Error: At least one type of contact property, like  physical address, contact point, or email address is required." );
+				messages.Add( "Error: At least one type of contact property, like  physical address, or email address is required." );
 			}
 			return isValid;
 
@@ -329,9 +337,9 @@ namespace RA.Services
 			output.FEIN = input.Fein;
 			output.IpedsID = input.IpedsId;
 			output.OPEID = input.OpeId;
-
-			//founded date will require special handling
-			if ( !string.IsNullOrWhiteSpace( input.FoundingDate ) )
+            output.LEICode = input.LEICode;
+            //founded date will require special handling
+            if ( !string.IsNullOrWhiteSpace( input.FoundingDate ) )
 			{
 				if ( input.FoundingDate.Length == 4 && IsInteger( input.FoundingDate ) )
 					output.FoundingDate = input.FoundingDate;
@@ -368,26 +376,13 @@ namespace RA.Services
 			output.Address = FormatPlacesList( input.Address, ref messages );
 			
 			//top level contact points will be added under a default place/address
-			if ( input.ContactPoint != null && input.ContactPoint.Count > 0 )
-			{
-				Models.Input.Place contactPlaces = new Models.Input.Place();
-				contactPlaces.ContactPoint.AddRange( input.ContactPoint );
-				AppendPlaceContactPoints( contactPlaces, output.Address, ref messages, false );
-				//foreach ( var cp in input.ContactPoint )
-				//{
-				//	var ccp = new Models.Json.ContactPoint
-				//	{
-				//		Name = cp.Name,
-				//		ContactType = cp.ContactType,
-				//		Emails = cp.Emails,
-				//		PhoneNumbers = cp.PhoneNumbers,
-				//		ContactOption = cp.ContactOption
-				//	};
-				//	foreach ( var smp in cp.SocialMediaPages )
-				//		ccp.SocialMediaPages.Add( smp );
-				//	output.ContactPoint.Add( ccp );
-				//}
-			}
+            //no longer allowed at org level
+			//if ( input.ContactPoint != null && input.ContactPoint.Count > 0 )
+			//{
+			//	Models.Input.Place contactPlaces = new Models.Input.Place();
+			//	contactPlaces.ContactPoint.AddRange( input.ContactPoint );
+			//	AppendPlaceContactPoints( contactPlaces, output.Address, ref messages, false );
+			//}
 			//else
 			//	output.ContactPoint = null;
 
@@ -435,12 +430,13 @@ namespace RA.Services
 				vs.Jurisdiction = MapJurisdictions( vsp.Jurisdiction, ref messages );
 				//vs.Region = MapRegions( vsp.Region, ref messages );
 				vs.OfferedBy = FormatOrganizationReferences( vsp.OfferedBy, "Offered By", true, ref messages );
+
 				vs.TargetCredential = FormatEntityReferences( vsp.TargetCredential, RJ.Credential.classType, false, ref messages );
 
-				foreach ( var target in vsp.TargetCredential )
-					if ( FormatEntityReference( target, "Target Credential", ref helper, true, ref messages ) )
-						if ( helper.ReturnedDataType == 1 || helper.ReturnedDataType == 2 )
-							vs.TargetCredential.Add( helper.EntityBaseList[ 0 ] );
+				//foreach ( var target in vsp.TargetCredential )
+				//	if ( FormatEntityReference( target, "Target Credential", ref helper, true, ref messages ) )
+				//		if ( helper.ReturnedDataType == 1 || helper.ReturnedDataType == 2 )
+				//			vs.TargetCredential.Add( helper.EntityBaseList[ 0 ] );
 
 				output.VerificationServiceProfiles.Add( vs );
 			}
@@ -468,7 +464,7 @@ namespace RA.Services
 		public static void HandleCredentialAlignmentFields( InputEntity from, OutputEntity to, ref List<string> messages )
 		{
 			//can't depend on the codes being NAICS
-			to.IndustryType = FormatCredentialAlignmentListFromList( from.IndustryType, true, ref messages);
+			to.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( from.IndustryType, true, ref messages);
 			if ( from.Naics != null && from.Naics.Count > 0 )
 				to.Naics = from.Naics;
 			else

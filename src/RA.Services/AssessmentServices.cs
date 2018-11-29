@@ -17,7 +17,7 @@ namespace RA.Services
     {
         static string status = "";
         static List<string> warnings = new List<string>();
-        static bool isUrlPresent = true;
+
         /// <summary>
         /// Publish an Assessment to the Credential Registry
         /// </summary>
@@ -87,7 +87,8 @@ namespace RA.Services
             else
             {
                 isValid = false;
-                messages.Add( status );
+                if ( !string.IsNullOrWhiteSpace( status ) )
+                    messages.Add( status );
                 helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
             }
 
@@ -109,7 +110,7 @@ namespace RA.Services
 
 		public static string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
 		{
-			return FormatAsJson( request.Assessment, ref isValid, ref messages );
+            return FormatAsJson( request.Assessment, ref isValid, ref messages );
 		}
 		//
 		public static string FormatAsJson( InputEntity input, ref bool isValid, ref List<string> messages )
@@ -117,6 +118,7 @@ namespace RA.Services
             var output = new OutputEntity();
 			string payload = "";
             isValid = true;
+            IsAPublishRequest = false;
 
             if ( ToMap( input, output, ref messages ) )
             {
@@ -190,7 +192,7 @@ namespace RA.Services
 				output.IsRecommendedFor = FormatConnections( input.IsRecommendedFor, ref messages );
 
 				//TargetNodeName is required, so what to use for competencies
-				output.Assesses = FormatCompetencies( input.AssessesCompetency, ref messages );
+				output.Assesses = FormatCompetencies( input.Assesses, ref messages );
 
 				output.AdministrationProcess = FormatProcessProfile( input.AdministrationProcess, ref messages );
 				output.MaintenanceProcess = FormatProcessProfile( input.MaintenanceProcess, ref messages );
@@ -227,11 +229,11 @@ namespace RA.Services
 			//output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages );
 
 			//other roles
-			output.AccreditedBy = FormatOrganizationReferences( input.AccreditedBy, "Accredited By", false, ref messages );
+			output.AccreditedBy = FormatOrganizationReferences( input.AccreditedBy, "Accredited By", false, ref messages, true );
 			output.ApprovedBy = FormatOrganizationReferences( input.ApprovedBy, "Approved By", false, ref messages );
 			
 			output.RecognizedBy = FormatOrganizationReferences( input.RecognizedBy, "Recognized By", false, ref messages );
-            output.RegulatedBy = FormatOrganizationReferences( input.RegulatedBy, "Regulated By", false, ref messages );
+            output.RegulatedBy = FormatOrganizationReferences( input.RegulatedBy, "Regulated By", false, ref messages, true);
 
         }
         public static bool HandleRequiredFields( InputEntity input, OutputEntity output, ref List<string> messages )
@@ -239,16 +241,19 @@ namespace RA.Services
             bool isValid = true;
             ///string property = "";
 
+            output.Ctid = FormatCtid(input.Ctid, ref messages);
+            output.CtdlId = idBaseUrl + output.Ctid;
             //todo determine if will generate where not found
-            if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )
-                input.Ctid = GenerateCtid();
+   //         if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )
+   //             input.Ctid = GenerateCtid();
 
-            if ( IsCtidValid( input.Ctid, ref messages ) )
-            {
-                output.Ctid = input.Ctid;
-                output.CtdlId = idUrl + output.Ctid;
-				CurrentCtid = input.Ctid;
-			}
+   //         if ( IsCtidValid( input.Ctid, ref messages ) )
+   //         {
+   //             //input.Ctid = input.Ctid.ToLower();
+   //             output.Ctid = input.Ctid;
+   //             output.CtdlId = idBaseUrl + output.Ctid;
+			//	CurrentCtid = input.Ctid;
+			//}
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )
             {
@@ -264,10 +269,10 @@ namespace RA.Services
                 messages.Add( string.Format( "Error - An Assessment description must be provided for Assessment: '{0}'", input.Name ) );
 			}
             else
-                output.Description = input.Description;
+                output.Description = ConvertWordFluff( input.Description );
 
-			//now literal
-			output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
+            //now literal
+            output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
 
             output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "Owning Organization", false, ref messages );
             //output.OwnedBy = FormatOrganizationReferenceToList( input.OwnedBy, "Owning Organization", false, ref messages );
@@ -289,10 +294,11 @@ namespace RA.Services
 
         public static void HandleLiteralFields( InputEntity input, OutputEntity output, ref List<string> messages )
         {
-			//now literal, should only be one
-			output.CodedNotation = AssignListToString( input.CodedNotation );
+            //now literal, should only be one
+            //output.CodedNotation = AssignListToString( input.CodedNotation );
+            output.CodedNotation = input.CodedNotation;
 
-			output.AssessmentExample = AssignValidUrlAsString( input.AssessmentExample, "AssessmentExample", ref messages );
+            output.AssessmentExample = AssignValidUrlAsString( input.AssessmentExample, "AssessmentExample", ref messages );
 			output.AssessmentExampleDescription = input.AssessmentExampleDescription;
 
             output.AssessmentOutput = input.AssessmentOutput;
@@ -395,47 +401,25 @@ namespace RA.Services
 
 		} //
 		#region === CredentialAlignmentObject ===
-		public static void HandleCredentialAlignmentFields( InputEntity from, OutputEntity to, ref List<string> messages )
+		public static void HandleCredentialAlignmentFields( InputEntity input, OutputEntity output, ref List<string> messages )
         {
-			to.DeliveryType = FormatCredentialAlignmentVocabs( "deliveryType", from.DeliveryType, ref messages );
-			to.AssessmentMethodType = FormatCredentialAlignmentVocabs( "assessmentMethodType", from.AssessmentMethodType, ref messages );
-			to.AssessmentUseType = FormatCredentialAlignmentVocabs( "assessmentUseType", from.AssessmentUseType, ref messages );
-			to.ScoringMethodType = FormatCredentialAlignmentVocabs( "scoringMethodType", from.ScoringMethodType, ref messages );
+			output.DeliveryType = FormatCredentialAlignmentVocabs( "deliveryType", input.DeliveryType, ref messages );
+			output.AssessmentMethodType = FormatCredentialAlignmentVocabs( "assessmentMethodType", input.AssessmentMethodType, ref messages );
+			output.AssessmentUseType = FormatCredentialAlignmentVocabs( "assessmentUseType", input.AssessmentUseType, ref messages );
+			output.ScoringMethodType = FormatCredentialAlignmentVocabs( "scoringMethodType", input.ScoringMethodType, ref messages );
 
-			//if ( from.DeliveryType.Any() )
-   //             foreach ( string item in from.DeliveryType )
-   //                 to.DeliveryType.Add( FormatCredentialAlignment( "deliveryType", item, ref messages ) );
-   //         else
-   //             to.DeliveryType = null;
-
-   //         if ( from.AssessmentMethodType.Any() )
-   //             foreach ( string item in from.AssessmentMethodType )
-   //                 to.AssessmentMethodType.Add( FormatCredentialAlignment( "assessmentMethodType", item, ref messages ) );
-   //         else
-   //             to.AssessmentMethodType = null;
-
-			//if ( from.AssessmentUseType.Any() )
-			//	foreach ( string item in from.AssessmentUseType )
-			//		to.AssessmentUseType.Add( FormatCredentialAlignment( "assessmentUseType", item, ref messages ) );
-			//else
-			//	to.AssessmentUseType = null;
-
-			//if ( from.ScoringMethodType.Any() )
-   //             foreach ( string item in from.ScoringMethodType )
-   //                 to.ScoringMethodType.Add( FormatCredentialAlignment( "scoringMethodType", item, ref messages ) );
-   //         else
-   //             to.ScoringMethodType = null;
-
-			to.InstructionalProgramType = FormatCredentialAlignmentListFromList( from.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
-			//if ( from.InstructionalProgramType != null && from.InstructionalProgramType.Count > 0 )
+            output.AudienceType = FormatCredentialAlignmentVocabs("audienceType", input.AudienceType, ref messages);
+            
+            output.InstructionalProgramType = FormatCredentialAlignmentListFromFrameworkItemList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
+			//if ( input.InstructionalProgramType != null && input.InstructionalProgramType.Count > 0 )
 			//{
-			//	foreach ( FrameworkItem item in from.InstructionalProgramType )
+			//	foreach ( FrameworkItem item in input.InstructionalProgramType )
 			//	{
-			//		to.InstructionalProgramType.Add( FormatCredentialAlignment( item, true ) );
+			//		output.InstructionalProgramType.Add( FormatCredentialAlignment( item, true ) );
 			//	}
 			//}
 			//else
-			//	to.InstructionalProgramType = null;
+			//	output.InstructionalProgramType = null;
 
 		}
 

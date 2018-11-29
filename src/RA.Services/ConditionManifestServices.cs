@@ -73,17 +73,18 @@ namespace RA.Services
 
 		public static string FormatAsJson( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
 		{
-			return FormatAsJson( request.ConditionManifest, ref isValid, helper );
+            return FormatAsJson( request.ConditionManifest, ref isValid, helper );
 		}
 
-		public static string FormatAsJson( InputEntity input, ref bool isValid, RA.Models.RequestHelper helper )
+		private static string FormatAsJson( InputEntity input, ref bool isValid, RA.Models.RequestHelper helper )
 		{
 			var output = new OutputEntity();
 			helper.Payload = "";
 			isValid = true;
-			//RA.Models.RequestStatus helper = new Models.RequestStatus();
-//do this in controller
-			helper.CodeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
+            IsAPublishRequest = false;
+            //RA.Models.RequestStatus helper = new Models.RequestStatus();
+            //do this in controller
+            helper.CodeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
 			
 
 			if ( ToMap( input, output, ref helper ) )
@@ -144,20 +145,13 @@ namespace RA.Services
 		public static bool HandleRequiredFields( InputEntity input, OutputEntity output, ref List<string> messages )
 		{
 			bool isValid = true;
-			///string property = "";
+            ///string property = "";
 
-			//todo determine if will generate where not found
-			if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )
-				input.Ctid = GenerateCtid();
+            output.Ctid = FormatCtid(input.Ctid, ref messages);
+            output.CtdlId = idBaseUrl + output.Ctid;
 
-			if ( IsCtidValid( input.Ctid, ref messages ) )
-			{
-				output.Ctid = input.Ctid;
-				output.CtdlId = idUrl + output.Ctid;
-				CurrentCtid = input.Ctid;
-			}
-			//required
-			if ( string.IsNullOrWhiteSpace( input.Name ) )
+            //required
+            if ( string.IsNullOrWhiteSpace( input.Name ) )
 			{
 				messages.Add( "Error - An Condition Manifest name must be entered." );
 			}
@@ -171,9 +165,9 @@ namespace RA.Services
 				messages.Add( "Error - An Condition Manifest description must be entered." );
 			}
 			else
-				output.Description = input.Description;
+                output.Description = ConvertWordFluff( input.Description );
 
-			output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
+            output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
 
 			output.ConditionManifestOf = FormatOrganizationReferenceToList( input.ConditionManifestOf, "Owning Organization", true, ref messages );
 

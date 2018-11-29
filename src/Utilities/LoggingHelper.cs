@@ -88,18 +88,18 @@ namespace Utilities
                     "\r\nType: " + ex.GetType().ToString() + ";" + 
                     "\r\nSession Id - " + sessionId + "____IP - " + remoteIP +
                     "\r\rReferrer: " + lRefererPage + ";" +
-                    "\r\nException: " + ex.Message.ToString() + ";" + 
+                    "\r\nException: " + exceptions + ";" + 
                     "\r\nStack Trace: " + ex.StackTrace.ToString() +
                     "\r\nServer\\Template: " + path +
                     "\r\nUrl: " + url;
 
-				if ( ex.InnerException != null && ex.InnerException.Message != null )
-				{
-					errMsg += "\r\n****Inner exception: " + ex.InnerException.Message;
+				//if ( ex.InnerException != null && ex.InnerException.Message != null )
+				//{
+				//	errMsg += "\r\n****Inner exception: " + ex.InnerException.Message;
 
-					if ( ex.InnerException.InnerException != null && ex.InnerException.InnerException.Message != null )
-						errMsg += "\r\n@@@@@@Inner-Inner exception: " + ex.InnerException.InnerException.Message;
-				}
+				//	if ( ex.InnerException.InnerException != null && ex.InnerException.InnerException.Message != null )
+				//		errMsg += "\r\n@@@@@@Inner-Inner exception: " + ex.InnerException.InnerException.Message;
+				//}
 
                 if ( parmsString.Length > 0 )
                     errMsg += "\r\nParameters: " + parmsString;
@@ -323,7 +323,8 @@ namespace Utilities
                         file.WriteLine(msg);
                         file.Close();
                     }
-                }
+					Console.WriteLine( message );
+				}
             }
             catch
             {
@@ -348,12 +349,18 @@ namespace Utilities
 
 					string logFile = UtilityManager.GetAppKeyValue( "path.log.file", "C:\\LOGS.txt" );
 					string outputFile = logFile.Replace( "[date]", datePrefix ).Replace( "[filename]", filename );
-					if ( outputFile.IndexOf( "json.txt" ) > 1 )
-						outputFile = outputFile.Replace( "json.txt", "json" );
-					else if ( outputFile.IndexOf( "json.json" ) > 1 )
+					if ( outputFile.IndexOf( "csv.txt" ) > 1 )
+						outputFile = outputFile.Replace( "csv.txt", "csv" );
+                    else if ( outputFile.IndexOf( "csv.json" ) > 1 )
+                        outputFile = outputFile.Replace( "csv.json", "csv" );
+                    else if ( outputFile.IndexOf( "json.txt" ) > 1 )
+                        outputFile = outputFile.Replace( "json.txt", "json" );
+                    else if ( outputFile.IndexOf( "json.json" ) > 1 )
 						outputFile = outputFile.Replace( "json.json", "json" );
+                    else if ( outputFile.IndexOf( "txt.json" ) > 1 )
+                        outputFile = outputFile.Replace( "txt.json", "txt" );
 
-					if ( appendingText )
+                    if ( appendingText )
 					{
 						StreamWriter file = File.AppendText( outputFile );
 
@@ -390,19 +397,25 @@ namespace Utilities
 				{
 					msg = "\n " + System.DateTime.Now.ToString() + " - " + message;
 
-					string datePrefix = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
-					string logFile = UtilityManager.GetAppKeyValue( "path.botTrace.log", "" );
-					if ( logFile.Length > 5 )
-					{
-						string outputFile = logFile.Replace( "[date]", datePrefix );
+                    string datePrefix1 = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
+                    string datePrefix = System.DateTime.Today.ToString( "yyyy-dd" );
+                    string logFile = UtilityManager.GetAppKeyValue( "path.botTrace.log", "" );
+                    if (!string.IsNullOrWhiteSpace( logFile ))
+                    {
+                        string outputFile = logFile.Replace( "[date]", datePrefix );
+                        if (File.Exists( outputFile ))
+                        {
+                            if (File.GetLastWriteTime( outputFile ).Month != DateTime.Now.Month)
+                                File.Delete( outputFile );
+                        }
 
-						StreamWriter file = File.AppendText( outputFile );
+                        StreamWriter file = File.AppendText( outputFile );
 
-						file.WriteLine( msg );
-						file.Close();
-					}
+                        file.WriteLine( msg );
+                        file.Close();
+                    }
 
-				}
+                }
 			}
 			catch
 			{

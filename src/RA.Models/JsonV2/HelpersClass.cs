@@ -62,13 +62,13 @@ namespace RA.Models.JsonV2
         /// Name of the entity (required)
         /// </summary>
         [JsonProperty( PropertyName = "ceterms:name" )]
-        public string Name { get; set; }
+        public LanguageMap Name { get; set; } = new LanguageMap();
 
         /// <summary>
         /// Description of the entity (optional)
         /// </summary>
         [JsonProperty( PropertyName = "ceterms:description" )]
-        public string Description { get; set; }
+        public LanguageMap Description { get; set; } = new LanguageMap();
 
         /// <summary>
         /// Subject webpage of the entity

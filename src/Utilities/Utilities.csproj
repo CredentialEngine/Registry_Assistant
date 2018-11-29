@@ -99,6 +99,7 @@
     <Compile Include="JsonHelper.cs" />
     <Compile Include="LoggingHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SafeBrowsing.cs" />
     <Compile Include="UtilityManager.cs" />
   </ItemGroup>
   <ItemGroup>

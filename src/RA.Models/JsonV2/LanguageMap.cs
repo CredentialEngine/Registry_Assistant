@@ -23,7 +23,13 @@ namespace RA.Models.JsonV2
 
         public override string ToString()
         {
-            return ToString( "en" );
+            //if nothing found for default, should return first one
+            string value = ToString( "en" );
+            if ( string.IsNullOrWhiteSpace( value ) )
+            {
+                value = this.FirstOrDefault().Value;
+            }
+            return value;
         }
         public string ToString( string languageCode )
         {

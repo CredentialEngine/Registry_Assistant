@@ -84,7 +84,7 @@ namespace RA.Models.Input
 
         public LanguageMap name { get; set; } = new LanguageMap();
 
-        public List<string> publicationStatusType { get; set; } = new List<string>();
+        public string publicationStatusType { get; set; }
 
         public List<string> publisher { get; set; } = new List<string>();
 
@@ -93,9 +93,9 @@ namespace RA.Models.Input
 
         public string repositoryDate { get; set; }
 
-        public string rights { get; set; }
+		public List<string> rights { get; set; } = new List<string>();
 
-        public string rightsHolder { get; set; }
+		public string rightsHolder { get; set; }
 
         public List<string> source { get; set; } = new List<string>();
 

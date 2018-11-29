@@ -50,10 +50,13 @@ namespace Utilities
 
 		} //
 
-		public static bool SendEmail( string toEmail, string subject, string message )
+		public static bool SendEmail( string toEmail, string subject, string message, bool ccAdmin = false )
 		{
 			string fromEmail = UtilityManager.GetAppKeyValue( "contactUsMailFrom", "mparsons@siuccwd.com" );
-			return SendEmail( toEmail, fromEmail, subject, message, "", "" );
+            string ccEmail = "";
+            if (ccAdmin)
+                ccEmail = UtilityManager.GetAppKeyValue("contactUsMailTo", "cwd.mparsons@ad.siu.edu");
+            return SendEmail( toEmail, fromEmail, subject, message, ccEmail, "" );
 
 		} //
 
@@ -304,7 +307,7 @@ namespace Utilities
         public static string GetSendingDomain( string emailName, string emailPrefix )
         {
             string env = UtilityManager.GetAppKeyValue( "envType" );
-            if ( env != "prod" )
+            if ( env != "production" )
                 emailName = env + " - " + emailName;
             return emailName + " <" + emailPrefix + "@" + UtilityManager.GetAppKeyValue( "MailgunSendingDomainName" ) + ">";
         }

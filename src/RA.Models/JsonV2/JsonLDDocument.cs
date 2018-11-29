@@ -14,7 +14,8 @@ namespace RA.Models.JsonV2
 		{
 			Context = "http://credreg.net/ctdl/schema/context/json";
 		}
-		[JsonProperty( "@context" )]
+        [JsonIgnore]
+        [JsonProperty( "@context" )]
 		public string Context { get; set; }
 		//public Dictionary<string, object> Context { get; set; }
 	}

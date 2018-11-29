@@ -123,7 +123,7 @@ namespace RA.Models.Json
         public LanguageMap name { get; set; } = new LanguageMap();
 
         [ JsonProperty( PropertyName = "ceasn:publicationStatusType" )]
-        public List<string> publicationStatusType { get; set; } = new List<string>();
+        public string publicationStatusType { get; set; } 
 
         [JsonProperty( PropertyName = "ceasn:publisher" )]
         public List<string> publisher { get; set; } = new List<string>();
@@ -243,9 +243,9 @@ namespace RA.Models.Json
         public LanguageMap name { get; set; } = new LanguageMap();
 
         [JsonProperty( PropertyName = "ceasn:publicationStatusType" )]
-        public List<string> publicationStatusType { get; set; } = new List<string>();
+		public string publicationStatusType { get; set; }
 
-        [JsonProperty( PropertyName = "ceasn:publisher" )]
+		[JsonProperty( PropertyName = "ceasn:publisher" )]
         public List<string> publisher { get; set; } = new List<string>();
 
         [JsonProperty( PropertyName = "ceasn:publisherName" )]
