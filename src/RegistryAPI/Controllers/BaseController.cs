@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace RegistryAPI.Controllers
 {
@@ -18,5 +20,22 @@ namespace RegistryAPI.Controllers
 
 			return message;
 		}
+		//
+
+		public class JsonResponseMessage : HttpResponseMessage
+		{
+			public JsonResponseMessage( object data, bool valid, string status, object extra )
+			{
+				Content = new StringContent( JsonConvert.SerializeObject( new { data = data, valid = valid, status = status, extra = extra } ), Encoding.UTF8, "application/json" );
+			}
+		}
+		//
+
+		public JsonResponseMessage JsonResponse( object data, bool valid, string status, object extra = null )
+		{
+			return new JsonResponseMessage( data, valid, status, extra );
+		}
+		//
     }
+
 }

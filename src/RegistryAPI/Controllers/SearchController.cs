@@ -4,23 +4,24 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web;
+using System.Web.Http;
 using Utilities;
 using RA.Services;
 using Services = RA.Services.ServiceHelperV2;
 using RA.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Web.Mvc;
 
 namespace RegistryAPI.Controllers
 {
-    public class SearchController : Controller
+    public class SearchController : BaseController
     {
         string thisClassName = "SearchController";
 		Services services = new Services();
 
-		[Route( "search/tempsearch" )]
+		[HttpGet, Route( "search/tempsearch" )]
 		public string TempSearch()
 		{
 			//Test server
@@ -29,7 +30,7 @@ namespace RegistryAPI.Controllers
 			{
 				Skip = 0,
 				Take = 10,
-				Query = "{ \"@type\": [\"ceterms:Certificate\"] }"
+				Query = JObject.Parse( "{ \"@type\": [\"ceterms:Certificate\"] }" )
 			} );
 
 			return JsonConvert.SerializeObject( data );
@@ -41,337 +42,169 @@ namespace RegistryAPI.Controllers
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		[Route( "search/ctdl" )]
-		public JsonResult Ctdl( SearchRequest request )
+		[HttpPost, Route( "search/ctdl" )]
+		public JsonResponseMessage Ctdl( SearchRequest request )
 		{
+			//Cast the Query to a JObject
+			var requestQuery = new JObject();
 			try
 			{
-				//Ensure query exists
-				if ( request == null )
+				requestQuery = ( JObject ) request.Query;
+				if ( requestQuery == null || requestQuery.ToString() == "{}" )
 				{
-					return JsonHelper.GetJsonWithWrapper( null, false, "Error: You must provide a valid search request.", null );
-				}
-
-				//Track query data for statistics
-				var queryJson = GremlinServices.JsonStringToDictionary( request.Query );
-				var queryTargetTypes = GremlinServices.GetQueryMainTargetTypes( request.Query );
-
-				//Clamp page number and size
-				request.Skip = request.Skip < 0 ? 0 : request.Skip;
-				request.Take = request.Take < 0 ? 5 : request.Take > 100 ? 100 : request.Take;
-
-				//Get API key
-				//Note - the search API in the accounts system expects there to be an API key (this is how it looks up the organization), and will fail if it is empty/null
-				var apiKeyHeader = Request.Headers[ "Authorization" ] ?? "";
-				var authorizationParts = apiKeyHeader.ToLower().Split( ' ' );
-				var authorizationType = authorizationParts.Count() == 2 ? authorizationParts[ 0 ] : null;
-				var apiKey = authorizationParts.Count() == 2 ? authorizationParts[ 1 ] : null;
-				if ( string.IsNullOrWhiteSpace( apiKeyHeader ) || string.IsNullOrWhiteSpace( authorizationType ) || string.IsNullOrWhiteSpace( apiKey ) )
-				{
-					return JsonHelper.GetJsonWithWrapper( null, false, "Error: You must provide an API key via the Authorization header using the format: Authorization: ApiToken [YOUR API KEY]", null );
-				}
-
-				//Prepare the search
-				var rawContextSets = GremlinServices.GetCTDLAndCTDLASNContexts();
-				var context = new GremlinServices.GremlinContext( true, rawContextSets );
-				var gremlinQuery = GremlinServices.CTDLQueryToGremlinQuery( request.Query, request.Skip, request.Take, context );
-				var searchAPIURL = UtilityManager.GetAppKeyValue( "accountsSearchApi" );
-				var consumeRequest = new AccountConsumeRequest()
-				{
-					ApiKey = apiKey,
-					Skip = request.Skip,
-					Take = request.Take,
-					CTDLQuery = request.Query,
-					GremlinQuery = gremlinQuery
-				};
-
-				//Do the search
-				var client = new HttpClient();
-				var result = client.PostAsync( searchAPIURL, new StringContent( JsonConvert.SerializeObject( consumeRequest ), Encoding.UTF8, "application/json" ) ).Result;
-				var resultContent = result.Content.ReadAsStringAsync().Result;
-				var totalResults = 0;
-				var resultData = GremlinServices.JsonStringToDictionary( resultContent );
-				if ( ( bool ) resultData[ "valid" ] == false )
-				{
-					//Forward the error
-					return JsonHelper.GetJsonWithWrapper( resultData[ "data" ], ( bool ) resultData[ "valid" ], ( string ) resultData[ "status" ], resultData[ "extra" ] );
-				}
-				else
-				{
-					//Return the results
-					var resultJson = GremlinServices.GremlinResponseToDictionarySearchResults( (string) resultData[ "data" ], ref totalResults );
-					return JsonHelper.GetJsonWithWrapper( resultJson, result.IsSuccessStatusCode, "", new { TotalResults = totalResults, GremlinQuery = gremlinQuery } );
+					throw new Exception();
 				}
 			}
-			catch ( Exception ex )
+			catch
 			{
-				return JsonHelper.GetJsonWithWrapper( null, false, ex.Message, null );
+				return JsonResponse( null, false, "Error: Please provide a well-formatted CTDL JSON query.", null );
 			}
+
+			//Enable tracking query data for statistics (this is also done in the accounts system)
+			var queryTargetTypes = GremlinServices.GetQueryMainTargetTypes( requestQuery );
+
+			//Clamp page number and size
+			request.Skip = request.Skip < 0 ? 0 : request.Skip;
+			request.Take = request.Take < 0 ? 5 : request.Take > 100 ? 100 : request.Take;
+
+			//Prepare the query
+			var rawContextSets = GremlinServices.GetCTDLAndCTDLASNContexts();
+			var context = new GremlinServices.GremlinContext( true, rawContextSets );
+			var gremlinQuery = GremlinServices.CTDLQueryToGremlinQuery( requestQuery, request.Skip, request.Take, context );
+			var consumeRequest = new AccountConsumeRequest()
+			{
+				Skip = request.Skip,
+				Take = request.Take,
+				CTDLQuery = requestQuery,
+				GremlinQuery = gremlinQuery
+			};
+
+			//Do the search
+			return Search( consumeRequest );
 		}
-
-
+		//
 
 		/// <summary>
-		/// Search endpoint expecting Gremlin formatted query
+		/// Search endpoint expecting query in Gremlin Query String format
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		[HttpPost, Route( "search/graph" )]
-        public JsonResult GraphSearch( SearchRequest request )
-        {
-            bool isValid = true;
-            List<string> messages = new List<string>();
-            var response = new ApiResponse();
-            string statusMessage = "";
-            RA.Models.RequestHelper helper = new RequestHelper();
-
-            try
-            {
-                if ( request == null )
-                {
-					return JsonHelper.GetJsonWithWrapper( null, false, "Error: You must provide a valid search request.", null );
+		[HttpPost, Route("search/gremlin")]
+		public JsonResponseMessage Gremlin( SearchRequest request )
+		{
+			//Cast the Query to a string
+			var requestQuery = "";
+			try
+			{
+				requestQuery = (( string ) request.Query).Replace( "\n", "" );
+				if ( string.IsNullOrWhiteSpace( requestQuery ) || requestQuery.IndexOf( "g.V()" ) != 0 )
+				{
+					throw new Exception();
 				}
+			}
+			catch
+			{
+				return JsonResponse( null, false, "Error: Please provide a well-formatted Gremlin query.", null );
+			}
 
-                if ( !ValidateRequest( request, helper, ref messages ) )
-                {
-                    response.Messages = messages;
-					return JsonHelper.GetJsonWithWrapper( null, false, string.Join( ",", messages.ToArray() ), null );
-				}
-                else
-                {
-					//Clamp page number and size
-					request.Skip = request.Skip < 0 ? 0 : request.Skip;
-					request.Take = request.Take < 0 ? 5 : request.Take > 100 ? 100 : request.Take;
+			//Can't track statistics data
+			//Can't clamp page number and size
 
-					//Prepare the search
-					var rawContextSets = GremlinServices.GetCTDLAndCTDLASNContexts();
-					var context = new GremlinServices.GremlinContext( true, rawContextSets );
-					var gremlinQuery = GremlinServices.CTDLQueryToGremlinQuery( request.Query, request.Skip, request.Take, context );
+			//Prepare the query
+			var consumeRequest = new AccountConsumeRequest()
+			{
+				GremlinQuery = requestQuery,
+				IsGremlinOnly = true
+			};
+
+			return Search( consumeRequest );
+		}
+		//
+
+		private JsonResponseMessage Search( AccountConsumeRequest consumeRequest )
+		{
+			try
+			{
+				//The bulk of the search process is the same regardless of CTDL JSON or Raw Gremlin
+				var client = new HttpClient();
+				HttpResponseMessage result;
+				var totalResults = 0;
+
+				//Handle the query based on whether or not we are in the sandbox (determined by requiring API key)
+				var requiringAPIKey = System.Configuration.ConfigurationManager.AppSettings[ "requiringHeaderToken" ] == "true";
+
+				//Do the search via the accounts system
+				if ( requiringAPIKey )
+				{
+					//Get API key
+					//Note - the search API in the accounts system expects there to be an API key (this is how it looks up the organization), and will fail if it is empty/null
+					var apiKeyHeader = HttpContext.Current.Request.Headers[ "Authorization" ] ?? "";
+					var authorizationParts = apiKeyHeader.ToLower().Split( ' ' );
+					var authorizationType = authorizationParts.Count() == 2 ? authorizationParts[ 0 ] : null;
+					var apiKey = authorizationParts.Count() == 2 ? authorizationParts[ 1 ] : null;
+					consumeRequest.ApiKey = apiKey;
+					if ( string.IsNullOrWhiteSpace( apiKeyHeader ) || string.IsNullOrWhiteSpace( authorizationType ) || string.IsNullOrWhiteSpace( apiKey ) )
+					{
+						return JsonResponse( null, false, "Error: You must provide an API key via the Authorization header using the format: Authorization: ApiToken [YOUR API KEY]", null );
+					}
+
+					//Do the search via the accounts system
 					var searchAPIURL = UtilityManager.GetAppKeyValue( "accountsSearchApi" );
-					var consumeRequest = new AccountConsumeRequest()
-					{
-						ApiKey = helper.ApiKey,
-						Skip = request.Skip,
-						Take = request.Take,
-						CTDLQuery = request.Query,
-						GremlinQuery = gremlinQuery
-					};
-
-					//Do the search
-					var client = new HttpClient();
-					var result = client.PostAsync( searchAPIURL, new StringContent( JsonConvert.SerializeObject( consumeRequest ), Encoding.UTF8, "application/json" ) ).Result;
+					result = client.PostAsync( searchAPIURL, new StringContent( JsonConvert.SerializeObject( consumeRequest ), Encoding.UTF8, "application/json" ) ).Result;
 					var resultContent = result.Content.ReadAsStringAsync().Result;
-					var totalResults = 0;
 					var resultData = GremlinServices.JsonStringToDictionary( resultContent );
-					if ( ( bool )resultData[ "valid" ] == false )
+
+					//Handle the result
+					if ( ( bool ) resultData[ "valid" ] == true )
 					{
-						//Forward the error
-						return JsonHelper.GetJsonWithWrapper( resultData[ "data" ], ( bool )resultData[ "valid" ], ( string )resultData[ "status" ], resultData[ "extra" ] );
+						//Return the results
+						var resultJson = GremlinServices.GremlinResponseToDictionarySearchResults( (string) resultData[ "data" ], ref totalResults );
+						return JsonResponse( resultJson, true, "okay", new { TotalResults = totalResults, GremlinQuery = consumeRequest.GremlinQuery } );
 					}
 					else
 					{
-						//Return the results
-						var resultJson = GremlinServices.GremlinResponseToDictionarySearchResults( ( string )resultData[ "data" ], ref totalResults );
-						return JsonHelper.GetJsonWithWrapper( resultJson, result.IsSuccessStatusCode, "", new { TotalResults = totalResults, GremlinQuery = gremlinQuery } );
+						//Forward the error
+						return JsonResponse( resultData[ "data" ], ( bool ) resultData[ "valid" ], ( string ) resultData[ "status" ], resultData[ "extra" ] );
 					}
+				}
+				//Query against the Registry directly
+				else
+				{
+					//Do the search via the registry directly, using Credential Engine's keys
+					var searchAPIURL = UtilityManager.GetAppKeyValue( "GremlinSearchEndpoint" );
+					var registryAuthorizationToken = UtilityManager.GetAppKeyValue( "CredentialRegistryAuthorizationToken" ); //Admin-level access to the registry for CE's account
+					client.DefaultRequestHeaders.TryAddWithoutValidation( "Authorization", "ApiToken " + registryAuthorizationToken );
+					result = client.PostAsync( searchAPIURL, new StringContent( "{ \"gremlin\": \"" + consumeRequest.GremlinQuery + "\" }", Encoding.UTF8, "application/json" ) ).Result;
+					var resultContent = result.Content.ReadAsStringAsync().Result;
+					var resultData = GremlinServices.GremlinResponseToDictionarySearchResults( resultContent, ref totalResults );
 
+					//Handle the result
+					if ( result.IsSuccessStatusCode )
+					{
+						//Return the results
+						return JsonResponse( resultData, true, "okay", new { TotalResults = totalResults, GremlinQuery = consumeRequest.GremlinQuery } );
+					}
+					else
+					{
+						//Forward the error
+						return JsonResponse( null, false, "Error: " + result.ReasonPhrase, null );
+					}
+				}
 
-					//old
-					//do the search request
-					//response.Payload = PostRequests( request, helper.ApiKey, ref isValid, ref statusMessage );
-     //               response.Successful = isValid;
-
-     //               if ( isValid )
-     //               {
-     //                   if ( helper.Messages.Count > 0 )
-     //                       response.Messages = helper.GetAllMessages();
-     //               }
-     //               else
-     //               {
-     //                   //if not valid, could return the payload as reference?
-     //                   //response.Messages = messages;
-     //                   response.Messages = helper.GetAllMessages();
-     //               }
-                }
-            }
-            catch ( Exception ex )
-            {
-                //response.Messages.Add( ex.Message );
-                //response.Successful = false;
-				return JsonHelper.GetJsonWithWrapper( null, false, ex.Message, null );
 			}
-
-            //return response;
-        }
-
-
-        /// <summary>
-        /// The actual validation will be via a call to the accounts api
-        /// </summary>
-        /// <param name="helper"></param>
-        /// <param name="statusMessage"></param>
-        /// <returns></returns>
-        private bool ValidateRequest( SearchRequest request, RequestHelper helper, ref List<string> messages, bool isDeleteRequest = false )
-        {
-            bool isValid = true;
-            string clientIdentifier = "";
-
-
-			bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
-            if ( isDeleteRequest )
-                isTokenRequired = true;
-
-            //api key will be passed in the header
-            string apiToken = "";
-			string statusMessage = "";
-
-			if ( RA.Services.ServiceHelper.IsAuthTokenValid( isTokenRequired, ref apiToken, ref clientIdentifier, ref statusMessage ) == false )
-            {
-				messages.Add( statusMessage );
-                return false;
-            }
-            helper.ApiKey = apiToken;
-            helper.ClientIdentifier = clientIdentifier ?? "";
-
-            if ( isTokenRequired )
-            {
-                if ( clientIdentifier.ToLower().StartsWith( "cerpublisher" ) == false )
-                {
-                    messages.Add( "Error - a valid CTID for the related organization must be provided.");
-                    return false;
-                }
-            }
-
-			//if ( string.IsNullOrWhiteSpace( request.OrganizationIdentifier ) )
-			//{
-			//	messages.Add( "Error - a valid Organization Identifier must be provided.");
-			//	return false;
-			//} else if ( !services.IsCtidValid( request.OrganizationIdentifier, ref messages ) )
-
-			if ( string.IsNullOrWhiteSpace(request.Query) )
+			catch ( Exception ex )
 			{
-				messages.Add( "Error - a valid query must be provided.");
+				return JsonResponse( null, false, ex.Message, null );
 			}
+		}
+		//
 
-			if ( request.Skip < 0 )
-			{
-				request.Skip = 0;
-			}
-
-			if ( messages.Count > 0 )
-				return false;
-
-			return isValid;
-        }
-
-        private string PostRequests ( SearchRequest request,
-                string apiKey,
-                ref bool valid,
-                ref string status)
-        {
-            valid = true;
-            List<string> messages = new List<string>();
-			AccountConsumeRequest apr = new AccountConsumeRequest
-			{
-				ApiKey = apiKey,
-				Skip = request.Skip,
-				Take = request.Take,
-				CTDLQuery = request.Query
-			};
-
-			//already serialized!
-			string postBody = JsonConvert.SerializeObject( apr );
-
-            //get accounts url
-            string serviceUri = UtilityManager.GetAppKeyValue( "accountsSearchApi" );       
-            string contents = "";
-
-            try
-            {
-                using ( var client = new HttpClient() )
-                {
-                    client.DefaultRequestHeaders.
-                        Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
- 
-                    var task = client.PostAsync( serviceUri,
-                        new StringContent( postBody, Encoding.UTF8, "application/json" ) );
-                    task.Wait();
-                    var response = task.Result;
-                    //should get envelope_id from contents?
-                    //the accounts endpoint will return the registry response verbatim 
-                    contents = task.Result.Content.ReadAsStringAsync().Result;
-
-                    if ( response.IsSuccessStatusCode == false )
-                    {
-                        //note the accounts publish will always return successful otherwise any error messages get lost
-                        if ( contents.ToLower().IndexOf( "accountresponse" ) > 0 )
-                        {
-                            AccountConsumeResponse acctResponse = JsonConvert.DeserializeObject<AccountConsumeResponse>( contents );
-                            if ( acctResponse.Messages != null && acctResponse.Messages.Count > 0 )
-                            {
-                                status = string.Join( ",", acctResponse.Messages.ToArray() );
-                                messages.AddRange( acctResponse.Messages );
-                            }
-                        }
-                    
-                        else
-                        {
-                            status = contents;
-                            messages.Add( status );
-                        }
-                        //
-                        valid = false;
-                        string queryString = RegistryServices.GetRequestContext();
-                        //now null:
-                        //+ "\n\rERRORS:\n\r " + string.Join( ",", contentsJson.Errors.ToArray() )
-                        LoggingHelper.LogError(   " RegistryServices.Consuming Failed:"
-                            + "\n\rURL:\n\r " + queryString
-                            + "\n\rRESPONSE:\n\r " + JsonConvert.SerializeObject( response )
-                            + "\n\rCONTENTS:\n\r " + JsonConvert.SerializeObject( contents ),
-                            false, "CredentialRegistry consuming failed for "  );
-                   
-                        LoggingHelper.WriteLogFile( 5,  "_query_failed.json", request.Query, "", false );
-                    }
-                    else
-                    {
-                        //accounts publisher can return errors like: {"data":null,"valid":false,"status":"Error: Owning organization not found.","extra":null}
-                        if ( contents.ToLower().IndexOf( "{\"data\":" ) == 0 && contents.ToLower().IndexOf( "error:" ) > -1 )
-                        {
-                            valid = false;
-                            status = UtilityManager.ExtractNameValue( contents, "Error", ":", "\"" );
-                            messages.Add( status );
-
-                        }
-                       
-                        else
-                        {
-                            valid = true;//maybe
-                            LoggingHelper.DoTrace( 7, "contents after successful search.\r\n" + contents );
-                        }
-
-                    }
-
-                    return contents;
-                }
-            }
-            catch ( Exception ex )
-            {
-
-                LoggingHelper.LogError( ex, "SearchController.PostRequests: " + contents );
-                valid = false;
-                status = "Failed on Registry Consuming: " + LoggingHelper.FormatExceptions( ex );
-                messages.Add( status );
-                return status;
-            }
-
-        }
-		
     }
     public class SearchRequest
     {
 		public int Skip { get; set; }
 		public int Take { get; set; }
-		public string Query { get; set; }
+		public JToken Query { get; set; }
     }
    
     public class RequestMessage

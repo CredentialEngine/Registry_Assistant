@@ -40,9 +40,14 @@ namespace RA.Services
 		public static List<string> GetQueryMainTargetTypes( string rawQuery )
 		{
 			var data = JObject.Parse( rawQuery );
-			var type = data.Properties().FirstOrDefault( m => m.Name == "@type" );
+			return GetQueryMainTargetTypes( data );
+		}
+		public static List<string> GetQueryMainTargetTypes( JObject query )
+		{
+			var type = query.Properties().FirstOrDefault( m => m.Name == "@type" );
 			return type == null ? new List<string>() : type.Type == JTokenType.Array ? type.ToList().ConvertAll( m => m.ToString() ).ToList() : new List<string>() { type.ToString() };
 		}
+		//
 
 		public static Dictionary<string, object> JsonStringToDictionary( string rawData )
 		{

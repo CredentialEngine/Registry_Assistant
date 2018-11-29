@@ -9,11 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-
 using Utilities;
 //using JWT;
 //using J2 = Utilities.JsonWebToken2;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using CredentialRegistry;
 
 namespace RA.Services
@@ -234,8 +234,8 @@ namespace RA.Services
 
                             if ( UtilityManager.GetAppKeyValue( "loggingPublishingHistory", false ) )
                             {
-                                //HistoryServices mgr = new HistoryServices();
-                                //mgr.Add( "N/A", payload, "Self Publish", PublishingEntityType, CtdlType, EntityCtid, SerializedInput, crEnvelopeId, ref status );
+                                HistoryServices mgr = new HistoryServices();
+                                mgr.Add( "N/A", payload, "Self Publish", PublishingEntityType, CtdlType, EntityCtid, SerializedInput, crEnvelopeId, ref status );
                             }
                         }
 
@@ -426,8 +426,8 @@ namespace RA.Services
 
 
                             if ( UtilityManager.GetAppKeyValue( "loggingPublishingHistory", false ) ) {
-                                //HistoryServices mgr = new HistoryServices();
-                                //mgr.Add( dataOwnerCTID, payload, apr.publishMethodURI, PublishingEntityType, CtdlType, EntityCtid, SerializedInput, crEnvelopeId, ref status );
+                                HistoryServices mgr = new HistoryServices();
+                                mgr.Add( dataOwnerCTID, payload, apr.publishMethodURI, PublishingEntityType, CtdlType, EntityCtid, SerializedInput, crEnvelopeId, ref status );
                             }
                         }
 
@@ -863,8 +863,9 @@ namespace RA.Services
 		public string ConsumeMethodURI { get; set; } = "consumingMethod:SearchApi";
 		public int Skip { get; set; }
 		public int Take { get; set; }
-		public string CTDLQuery { get; set; } //Used for statistics/logging purposes when the query is passed to the accounts system
+		public JObject CTDLQuery { get; set; } //Used for statistics/logging purposes when the query is passed to the accounts system
 		public string GremlinQuery { get; set; } //Used to actually perform the query when the query is proxied through the accounts system
+		public bool IsGremlinOnly { get; set; } //Helps the account system figure out how to handle this query
 
 	}
 
