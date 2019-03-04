@@ -9,6 +9,7 @@ using RA.Models;
 using RA.Models.Input;
 using Newtonsoft.Json;
 using RA.Services;
+using ServiceHelper = RA.Services.ServiceHelperV2;
 using Utilities;
 
 namespace RegistryAPI.Controllers
@@ -27,12 +28,12 @@ namespace RegistryAPI.Controllers
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		[HttpPost, Route( "costManifest/format" )]
-		public RegistryAssistantResponse Format( CostManifestRequest request )
-		{
-			var response = FormatV2( request );
-			response.Messages.Add( FormatObsoleteEndpoint( controller, "formatV2" ) );
-			return response;
+		//[HttpPost, Route( "costManifest/format" )]
+		//public RegistryAssistantResponse Format( CostManifestRequest request )
+		//{
+		//	var response = FormatV2( request );
+		//	response.Messages.Add( FormatObsoleteEndpoint( controller, "formatV2" ) );
+		//	return response;
 			//bool isValid = true;
 			//var response = new RegistryAssistantResponse();
 
@@ -77,19 +78,19 @@ namespace RegistryAPI.Controllers
 			//	response.Successful = false;
 			//}
 			//return response;
-		} //
+		//} //
 
 		/// <summary>
 		/// Publish a CostManifest to the Credential Engine Registry
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		[HttpPost, Route( "costManifest/publish" )]
-		public RegistryAssistantResponse Publish( CostManifestRequest request )
-		{
-			var response = PublishV2( request );
-			response.Messages.Add( FormatObsoleteEndpoint( controller, "publishV2" ) );
-			return response;
+		//[HttpPost, Route( "costManifest/publish" )]
+		//public RegistryAssistantResponse Publish( CostManifestRequest request )
+		//{
+		//	var response = PublishV2( request );
+		//	response.Messages.Add( FormatObsoleteEndpoint( controller, "publishV2" ) );
+		//	return response;
 			//bool isValid = true;
 			//List<string> messages = new List<string>();
 			//var response = new RegistryAssistantResponse();
@@ -147,14 +148,14 @@ namespace RegistryAPI.Controllers
 			//	response.Successful = false;
 			//}
 			//return response;
-		} //
+		//} //
         /// <summary>
         /// Handle request to format a CostManifest document as CTDL Json-LD
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost, Route( "costManifest/formatv2" )]
-        public RegistryAssistantResponse FormatV2( CostManifestRequest request )
+        [HttpPost, Route( "costManifest/format" )]
+        public RegistryAssistantResponse Format( CostManifestRequest request )
         {
             bool isValid = true;
             var response = new RegistryAssistantResponse();
@@ -207,8 +208,8 @@ namespace RegistryAPI.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost, Route( "costManifest/publishv2" )]
-        public RegistryAssistantResponse PublishV2( CostManifestRequest request )
+        [HttpPost, Route( "costManifest/publish" )]
+        public RegistryAssistantResponse Publish( CostManifestRequest request )
         {
             bool isValid = true;
             List<string> messages = new List<string>();

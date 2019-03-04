@@ -64,10 +64,13 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:name" )]
         public LanguageMap Name { get; set; } = new LanguageMap();
 
-        /// <summary>
-        /// Description of the entity (optional)
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:description" )]
+		[JsonProperty( PropertyName = "rdfs:label" )]
+		public LanguageMap Label { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Description of the entity (optional)
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:description" )]
         public LanguageMap Description { get; set; } = new LanguageMap();
 
         /// <summary>
@@ -101,17 +104,6 @@ namespace RA.Models.JsonV2
 
     }
 
-    public class LanguageString
-	{
-		[JsonProperty( "en" )]
-		public string Value { get; set; }
-
-		[JsonProperty( "es" )]
-		public string esValue { get; set; }
-
-		[JsonProperty( "de" )]
-		public string deValue { get; set; }
-	}
 
 	public class IdentifierValue
 	{

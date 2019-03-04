@@ -82,6 +82,30 @@ namespace RA.Services
                 if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
 					cer.IsManagedRequest = true;
 
+				bool recordWasFound = false;
+				bool usedCEKeys = false;
+				string message = "";
+				var result = HistoryServices.GetMostRecentHistory( "LearningOpportunity", output.Ctid, ref recordWasFound, ref usedCEKeys, ref message );
+				if ( recordWasFound ) //found previous
+				{
+					if ( usedCEKeys && cer.IsManagedRequest )
+					{
+						LoggingHelper.DoTrace( 5, "LearningOpportunity publish. Was managed request. Overriding to CE publish." );
+						cer.IsManagedRequest = false;   //should record override
+						cer.OverrodeOriginalRequest = true;
+					}
+					else if ( !usedCEKeys && !cer.IsManagedRequest )
+					{
+						//this should not happen. Means used publisher
+						cer.IsManagedRequest = true;   //should record override
+						cer.OverrodeOriginalRequest = true;
+					}
+				}
+				else
+				{
+					//eventually will always do managed
+				}
+
 				string identifier = "LearningOpportunity_" + request.LearningOpportunity.Ctid;
 				if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
 				{
@@ -244,8 +268,8 @@ namespace RA.Services
 				//for example, for a credential, it would be via a condition profile, and we have no facility for the latter, only part of a credential
 				output.IsPartOf = FormatEntityReferencesList( input.IsPartOfLearningOpportunity, OutputEntity.classType, false, ref messages );
 
-				output.CommonConditions = AssignValidUrlListAsStringList( input.CommonConditions, "CommonConditions", ref messages );
-				output.CommonCosts = AssignValidUrlListAsStringList( input.CommonCosts, "CommonCosts", ref messages );
+				output.CommonConditions = AssignValidUrlListAsStringList( input.CommonConditions, "CommonConditions", ref messages, false );
+				output.CommonCosts = AssignValidUrlListAsStringList( input.CommonCosts, "CommonCosts", ref messages, false );
 
 				output.FinancialAssistance = MapFinancialAssitance( input.FinancialAssistance, ref messages );
 
@@ -422,6 +446,9 @@ namespace RA.Services
 		#region === CredentialAlignmentObject ===
 		public void HandleCredentialAlignmentFields( InputEntity input, OutputEntity output, ref List<string> messages )
         {
+
+			output.Subject = FormatCredentialAlignmentListFromStrings( input.Subject );
+
 			if ( input.LearningMethodType.Any() )
 				foreach ( string item in input.LearningMethodType )
 					output.LearningMethodType.Add( FormatCredentialAlignment( "learningMethodType", item, ref messages ) );
@@ -433,30 +460,29 @@ namespace RA.Services
                     output.DeliveryType.Add( FormatCredentialAlignment( "deliveryType", item, ref messages ) );
             else output.DeliveryType = null;
 
-            //if ( UtilityManager.GetAppKeyValue("usingCredentialAudienceType", false) )
-                output.AudienceType = FormatCredentialAlignmentVocabs("audienceType", input.AudienceType, ref messages);
-            //else
-            //    output.AudienceType = null;
+			output.AudienceType = FormatCredentialAlignmentVocabs( "audienceType", input.AudienceType, ref messages );
 
-            output.InstructionalProgramType = FormatCredentialAlignmentListFromFrameworkItemList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
-			//if ( input.InstructionalProgramType != null && input.InstructionalProgramType.Count > 0 )
-			//{
-			//	foreach ( FrameworkItem item in input.InstructionalProgramType )
-			//	{
-			//		output.InstructionalProgramType.Add( FormatCredentialAlignment( item, true ) );
-			//	}
-			//}
+			//frameworks
+			//can't depend on the codes being SOC
+			output.OccupationType = FormatCredentialAlignmentListFromFrameworkItemList( input.OccupationType, true, ref messages );
+			//output.AlternativeOccupationType = AssignLanguageMapList( input.AlternativeOccupationType, input.AlternativeOccupationType_Map, "Credential AlternativeOccupationType", ref messages );
+
+			//can't depend on the codes being NAICS??
+			output.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( input.IndustryType, true, ref messages );
+			//if ( input.Naics != null && input.Naics.Count > 0 )
+			//	output.Naics = input.Naics;
 			//else
-			//	output.InstructionalProgramType = null;
+			//	output.Naics = null;
+			//output.AlternativeIndustryType = AssignLanguageMapList( input.AlternativeIndustryType, input.AlternativeIndustryType_Map, "Credential AlternativeIndustryType", ref messages );
+			//
+			output.InstructionalProgramType = FormatCredentialAlignmentListFromFrameworkItemList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
+			//
+			//output.AlternativeInstructionalProgramType = AssignLanguageMapList( input.AlternativeInstructionalProgramType, input.AlternativeInstructionalProgramType_Map, "Credential AlternativeInstructionalProgramType", ref messages );
+			//
 
-			output.Subject = FormatCredentialAlignmentListFromStrings( input.Subject );
 
-			//if ( input.Subject.Any() )
-   //             foreach ( var item in input.Subject )
-   //                 output.Subject.Add( FormatCredentialAlignment( item ) );
-   //         else output.Subject = null;
-        }
-        //see common methods in ServiceHelper
-        #endregion  
-    }
+		}
+		//see common methods in ServiceHelper
+		#endregion
+	}
 }

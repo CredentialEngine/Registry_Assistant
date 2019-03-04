@@ -1,0 +1,65 @@
+﻿{
+	"envelope_community": "ce_registry",
+	"envelope_id": "48542838-5c7c-4fee-a9c1-7e5b07335518",
+	"envelope_ceterms_ctid": "ce-7e91ce94-9342-4ac7-a2c6-6d099ad457b5",
+	"envelope_ctdl_type": "ceterms:CostManifest",
+	"envelope_type": "resource_data",
+	"envelope_version": "1.0.0",
+	"resource": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.ew0KICAiQGNvbnRleHQiOiAiaHR0cDovL2NyZWRyZWcubmV0L2N0ZGwvc2NoZW1hL2NvbnRleHQvanNvbiIsDQogICJAaWQiOiAiaHR0cHM6Ly9jcmVkZW50aWFsZW5naW5lcmVnaXN0cnkub3JnL2dyYXBoL2NlLTdlOTFjZTk0LTkzNDItNGFjNy1hMmM2LTZkMDk5YWQ0NTdiNSIsDQogICJAZ3JhcGgiOiBbDQogICAgew0KICAgICAgIkB0eXBlIjogImNldGVybXM6Q29zdE1hbmlmZXN0IiwNCiAgICAgICJAaWQiOiAiaHR0cHM6Ly9jcmVkZW50aWFsZW5naW5lcmVnaXN0cnkub3JnL3Jlc291cmNlcy9jZS03ZTkxY2U5NC05MzQyLTRhYzctYTJjNi02ZDA5OWFkNDU3YjUiLA0KICAgICAgImNldGVybXM6Y3RpZCI6ICJjZS03ZTkxY2U5NC05MzQyLTRhYzctYTJjNi02ZDA5OWFkNDU3YjUiLA0KICAgICAgImNldGVybXM6bmFtZSI6IHsNCiAgICAgICAgImVuIjogIlByaW9yIExlYXJuaW5nIEFzc2Vzc21lbnQiDQogICAgICB9LA0KICAgICAgImNldGVybXM6ZGVzY3JpcHRpb24iOiB7DQogICAgICAgICJlbiI6ICJQcmlvciBMZWFybmluZyBBc3Nlc3NtZW50cyBjb3N0ICQxNTAgcGVyIGFzc2Vzc21lbnQuIg0KICAgICAgfSwNCiAgICAgICJjZXRlcm1zOmNvc3RNYW5pZmVzdE9mIjogWw0KICAgICAgICAiaHR0cHM6Ly9jcmVkZW50aWFsZW5naW5lcmVnaXN0cnkub3JnL2dyYXBoL2NlLUE3RjYyMDJFLTA3MEItNDYyQy1BQjA1LUU1REMxRDlGMjFGOSINCiAgICAgIF0sDQogICAgICAiY2V0ZXJtczpjb3N0RGV0YWlscyI6ICJodHRwczovL3d3dy5ub2N0aWJ1c2luZXNzLmNvbS9wcmlvci1sZWFybmluZy1hc3Nlc3NtZW50L2NyZWRpdC1yZWNvbW1lbmRhdGlvbnMtZm9yLXByaW9yLWxlYXJuaW5nIg0KICAgIH0NCiAgXQ0KfQ.TO-NCa_LD6wyPs33aHVFF_DVma8TT6Q_2TzX7dAx9l6W-SD6y3fxkdd_1__iY7ROgh9Z43i4gtitQL0IY2L8ijgBHsPwLxilQC8i3GeeEdWkXkX3WkGUWlBfrQ7MtRD-bgni4uG7ykocsMYWhJfw_LT3_MJjNH42PWCNnvidOFKlOWb7GG7nUxAJqPNkdWF3P0spWGfCR5oEQ2Zey1vjLy793MFAX9UC5uDOMRj2BDh6Snrv_o4ofTMP47jPdcEMcttKCkMDmDHqBf9-uCnXx_eXLOLEg9M1YRwzfgh4BftX_2P0sF7HwtBhqeW63CtqSKKBAop-wCVcD2cKMt_SumFEZJHrCHfc6DFTXIoP4e8wzEdKKAT5s3Z6Rnn97tj1rSApEuKWMs7WjK87Ra4jRPb6u5fC5hP7vWKpjg4k1mplGRMM4cR-fhZ1hMrFl6TxKig6hBBFHWyqiMMB9-3RDbl58K47X22aFApagm5RA2Leq5RVIXXKRBkxFuv5hxPrwFK-OeTNx4P87cVb0TAaPdjT1BZFrB4I1n2mXGjigkCn_1iFEd0xl-bsj8f4NlbSW6WPBwhs3cCWMxpntyOwv1SIiGn17B2B54MIXAWybC-OiVIEpxkvYk4WSESlK4U_BCPV4kuQfVp9_wfqRjVhUSf2NU4_P2HxoIp6TKeuzls",
+	"decoded_resource": {
+		"@context": "http://credreg.net/ctdl/schema/context/json",
+		"@id": "https://credentialengineregistry.org/graph/ce-7e91ce94-9342-4ac7-a2c6-6d099ad457b5",
+		"@graph": [
+			{
+				"@id": "https://credentialengineregistry.org/resources/ce-7e91ce94-9342-4ac7-a2c6-6d099ad457b5",
+				"@type": "ceterms:CostManifest",
+				"ceterms:ctid": "ce-7e91ce94-9342-4ac7-a2c6-6d099ad457b5",
+				"ceterms:name": {
+					"en": "Prior Learning Assessment"
+				},
+				"ceterms:costDetails": "https://www.noctibusiness.com/prior-learning-assessment/credit-recommendations-for-prior-learning",
+				"ceterms:description": {
+					"en": "Prior Learning Assessments cost $150 per assessment."
+				},
+				"ceterms:costManifestOf": [
+					"https://credentialengineregistry.org/graph/ce-A7F6202E-070B-462C-AB05-E5DC1D9F21F9"
+				]
+			}
+		]
+	},
+	"resource_format": "json",
+	"resource_encoding": "jwt",
+	"resource_public_key": "-----BEGIN RSA PUBLIC KEY-----\nMIICCgKCAgEAuvC6aDDGq4eKc0zgagoqXCzWwSHtczP4FAHGyQIGArZJdrwFfUg5\nKIaL0uQjjkbA5SanoP/w5xJhA8ilA2TjIPTc1Kpkjq2RBrALOPtsRVc9pbWjg1jb\nKgg4KBi0MM965K3njeKiVy1REQ9i2z1xik40c2TXBoppXHoRfpznHV+BrIVO/85z\nHPov8GBLlmfZmrz2CqiI32aGHMqFEEfGcuRvq01KEbZUz5iTtx/TRLPpM6Akefa6\nDYlBlxcd9vEzJE8yQVg6RAPJiRcQG1xUDYqkF1Ys1XCFfZGT97bNHYLrtW+OW2EP\nLvMtPlEUtoVVy54z+WnFFi6LHOugHSAJkWnPM5LqfmAahkD1kJ6Pcib3vqzsdw1/\nhJxB++AlBS8MTVdbYme7XT/BgzTLg1Vyy9szsqSix2faZPWQxMN2px7YkRQx9MUs\nGO6BGJ8Pg3DHUspLYubEBZSSggw7l0Yb96s3SNacbSlF8bvHfeSbw/UenNEAeOcG\n8gi7H50rYpJrTnaCF9mtfRnnjSC8eH21DteJKyyXarWaXIWaAwQ7QpIpFGOdjKrf\nEGuMcmLCpAd8Ci2f6RKqQVpFw1irzietPHcp02d36P7Vx/zNYwjqZMhyO2JnILr+\npHpoPD3Ju2pCBFszEcXAzHnTUwJpATl6rjOxm4qNKAAkF3Zua4zHNsECAwEAAQ==\n-----END RSA PUBLIC KEY-----\n",
+	"publisher_id": null,
+	"secondary_publisher_id": null,
+	"node_headers": {
+		"resource_digest": "9/9h7O4/DWawUVfsjGrZGOiX26V09qcglrBdT7n/W3Q=",
+		"revision_history": [
+			{
+				"head": true,
+				"event": "create",
+				"created_at": "2019-02-08 17:08:46 UTC",
+				"actor": null,
+				"url": "/ce-registry/envelopes/48542838-5c7c-4fee-a9c1-7e5b07335518"
+			}
+		],
+		"created_at": "2019-02-08 17:08:46 UTC",
+		"updated_at": "2019-02-08 17:08:46 UTC",
+		"deleted_at": null
+	},
+	"inner_resource": {
+		"@id": "https://credentialengineregistry.org/resources/ce-7e91ce94-9342-4ac7-a2c6-6d099ad457b5",
+		"@type": "ceterms:CostManifest",
+		"ceterms:ctid": "ce-7e91ce94-9342-4ac7-a2c6-6d099ad457b5",
+		"ceterms:name": {
+			"en": "Prior Learning Assessment"
+		},
+		"ceterms:costDetails": "https://www.noctibusiness.com/prior-learning-assessment/credit-recommendations-for-prior-learning",
+		"ceterms:description": {
+			"en": "Prior Learning Assessments cost $150 per assessment."
+		},
+		"ceterms:costManifestOf": [
+			"https://credentialengineregistry.org/graph/ce-A7F6202E-070B-462C-AB05-E5DC1D9F21F9"
+		]
+	}
+}

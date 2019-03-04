@@ -26,7 +26,6 @@ namespace RA.Models.JsonV2
             EstimatedCost = new List<CostProfile>();
             EstimatedDuration = new List<DurationProfile>();
             ScoringMethodType = new List<CredentialAlignmentObject>();
-			InstructionalProgramType = new List<CredentialAlignmentObject>();
 
 			Requires = new List<ConditionProfile>();
             Corequisite = new List<ConditionProfile>();
@@ -64,7 +63,7 @@ namespace RA.Models.JsonV2
             CommonConditions = new List<string>();
             CommonCosts = new List<string>();
             FinancialAssistance = new List<FinancialAlignmentObject>();
-			InstructionalProgramType = new List<CredentialAlignmentObject>();
+
 			VersionIdentifier = new List<IdentifierValue>();
 		}
 
@@ -177,10 +176,28 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:scoringMethodType" )]
         public List<CredentialAlignmentObject> ScoringMethodType { get; set; }
 
+		//frameworks
+		[JsonProperty( PropertyName = "ceterms:occupationType" )]
+		public List<CredentialAlignmentObject> OccupationType { get; set; } = new List<CredentialAlignmentObject>();
+
+		[JsonProperty( PropertyName = "ceterms:alternativeOccupationType" )]
+		public LanguageMapList AlternativeOccupationType { get; set; } = new LanguageMapList();
+
+		[JsonProperty( PropertyName = "ceterms:industryType" )]
+		public List<CredentialAlignmentObject> IndustryType { get; set; } = new List<CredentialAlignmentObject>();
+
+		//[JsonProperty( PropertyName = "ceterms:naics" )]
+		//public List<string> Naics { get; set; } = new List<string>();
+
+		[JsonProperty( PropertyName = "ceterms:alternativeIndustryType" )]
+		public LanguageMapList AlternativeIndustryType { get; set; } = new LanguageMapList();
 
 		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
-		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; }
-
+		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; } = new List<CredentialAlignmentObject>();
+		//
+		[JsonProperty( PropertyName = "ceterms:alternativeInstructionalProgramType" )]
+		public LanguageMapList AlternativeInstructionalProgramType { get; set; } = new LanguageMapList();
+		//
 		[JsonProperty( PropertyName = "ceterms:creditHourType" )]
         public LanguageMap CreditHourType { get; set; }
 

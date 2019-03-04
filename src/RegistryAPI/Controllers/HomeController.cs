@@ -14,5 +14,12 @@ namespace RegistryAPI.Controllers
 
 			return View();
 		}
+
+		//public ActionResult CredentialGuidance()
+		//{
+		//	ViewBag.Title = "Credential Guidance";
+
+		//	return View();
+		//}
 	}
 }

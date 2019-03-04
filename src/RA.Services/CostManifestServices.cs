@@ -196,7 +196,7 @@ namespace RA.Services
                 if ( isUrlPresent )
 					output.CostDetails = input.CostDetails;
 
-           output.CostManifestOf = FormatOrganizationReferenceToList( input.OwningOrganization, "Owning Organization", true, ref messages );
+           output.CostManifestOf = FormatOrganizationReferenceToList( input.CostManifestOf, "Owning Organization", true, ref messages );
 
 
             return isValid;

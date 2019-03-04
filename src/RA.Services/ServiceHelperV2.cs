@@ -34,15 +34,15 @@ namespace RA.Services
         private static string thisClassName = "ServiceHelper";
 
 		static readonly string DEFAULT_GUID = "00000000-0000-0000-0000-000000000000";
-		public string idBaseUrl = ServiceHelper.GetAppKeyValue( "credRegistryResourceUrl" );
-        public string credRegistryGraphUrl = ServiceHelper.GetAppKeyValue( "credRegistryGraphUrl" );
+		public string idBaseUrl = GetAppKeyValue( "credRegistryResourceUrl" );
+        public string credRegistryGraphUrl = GetAppKeyValue( "credRegistryGraphUrl" );
         public readonly string SystemDefaultLanguageForMaps = "en";
         public static string DefaultLanguageForMaps  = "en";
         public static string LanguageCodes_2Characters = "en de es fr ar cs da el fi he it ja nl no pl pt sv uk zh";
         public static string LanguageCodes_3Characters = "eng deu spa fra ara ces dan ell fin heb ita jnp nld nor pol por swe ukr zho";
         public bool IsAPublishRequest = true;
         public bool ConvertingFromResourceLinkToGraphLink = true;
-        public List<BlankNode> BlankNodes = new List<BlankNode>();
+        public List<MJ.BlankNode> BlankNodes = new List<MJ.BlankNode>();
         public string codeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
         public bool usingSingleDirectCost = UtilityManager.GetAppKeyValue( "usingSingleDirectCost", false );
 		public static int MinimumDescriptionLength = UtilityManager.GetAppKeyValue( "minDescriptionTextLength", 25 );
@@ -60,10 +60,10 @@ namespace RA.Services
 		/// </summary>
 		public const string SYSTEM_CONSOLE_MESSAGE = "SystemConsoleMessage";
 
-        static bool requiringQAOrgForQAQRoles = ServiceHelper.GetAppKeyValue("requireQAOrgForQAQRoles", false);
+        static bool requiringQAOrgForQAQRoles = GetAppKeyValue("requireQAOrgForQAQRoles", false);
         public bool GeneratingCtidIfNotFound()
 		{
-			bool generatingCtidIfNotFound = ServiceHelper.GetAppKeyValue( "generateCtidIfNotFound", true );
+			bool generatingCtidIfNotFound = GetAppKeyValue( "generateCtidIfNotFound", true );
 
 			return generatingCtidIfNotFound;
 		}
@@ -100,7 +100,7 @@ namespace RA.Services
 				return false;
 			}
 			//now we have the proper length and format, the remainder must be a valid guid
-			if ( !ServiceHelper.IsValidGuid( ctid.Substring( 3, 36 ) ) )
+			if ( !IsValidGuid( ctid.Substring( 3, 36 ) ) )
 			{
 				//actually we could add this if missing - but maybe should NOT
 				messages.Add( "Error - Invalid CTID format. The proper format is ce-UUID. ex. ce-84365AEA-57A5-4B5A-8C1C-EAE95D7A8C9B" );
@@ -148,7 +148,7 @@ namespace RA.Services
             {
                 return bnodeId;
             }
-            BlankNode bn = new BlankNode() { BNodeId = GenerateBNodeId(), Type = type, SubjectWebpage = subjectWebpage ?? "" };
+			MJ.BlankNode bn = new MJ.BlankNode() { BNodeId = GenerateBNodeId(), Type = type, SubjectWebpage = subjectWebpage ?? "" };
             bn.Name = Assign( name, DefaultLanguageForMaps );
             bn.Description = Assign( description, DefaultLanguageForMaps );
             BlankNodes.Add( bn );
@@ -161,7 +161,7 @@ namespace RA.Services
             {
                 return bnodeId;
             }
-            BlankNode bn = new BlankNode() { BNodeId = GenerateBNodeId(), Type = entityBase.Type, SubjectWebpage = entityBase.SubjectWebpage ?? "" };
+			MJ.BlankNode bn = new MJ.BlankNode() { BNodeId = GenerateBNodeId(), Type = entityBase.Type, SubjectWebpage = entityBase.SubjectWebpage ?? "" };
             bn.Name = Assign( entityBase.Name, DefaultLanguageForMaps );
             bn.Description = Assign( entityBase.Description, DefaultLanguageForMaps );
             BlankNodes.Add( bn );
@@ -175,7 +175,7 @@ namespace RA.Services
             {
                 return bnodeId;
             }
-            BlankNode bn = new BlankNode() { BNodeId = GenerateBNodeId(), Type = entityBase.Type, SubjectWebpage = entityBase.SubjectWebpage ?? "" };
+			MJ.BlankNode bn = new MJ.BlankNode() { BNodeId = GenerateBNodeId(), Type = entityBase.Type, SubjectWebpage = entityBase.SubjectWebpage ?? "" };
             bn.Name = Assign( entityBase.Name, DefaultLanguageForMaps );
             bn.Description = Assign( entityBase.Description, DefaultLanguageForMaps );
             BlankNodes.Add( bn );
@@ -342,7 +342,7 @@ namespace RA.Services
             }
             else
             {
-                messages.Add( string.Format( "Invalid Entity Type of {0} for Name: {1}, SubjectWebpage: {2}. ", entity.Type, entity.Name, entity.SubjectWebpage ) );
+                messages.Add( string.Format( "Invalid Entity Type of {0} for Name: {1}, SubjectWebpage: {2}. ", entity.Type ?? "missing", entity.Name, entity.SubjectWebpage ) );
                 return false;
             }
 
@@ -1080,11 +1080,11 @@ namespace RA.Services
 				cp.ExternalInputType = FormatCredentialAlignmentVocabs( "externalInputType", input.ExternalInputType, ref messages );
 
 				//short replacement method
-				cp.ProcessMethod = AssignValidUrlAsString( input.ProcessMethod, "Process Method", ref messages );
+				cp.ProcessMethod = AssignValidUrlAsString( input.ProcessMethod, "Process Method", ref messages, false );
 
-				cp.ProcessStandards = AssignValidUrlAsString( input.ProcessStandards, "Process Standards", ref messages );
+				cp.ProcessStandards = AssignValidUrlAsString( input.ProcessStandards, "Process Standards", ref messages, false );
 
-				cp.ScoringMethodExample = AssignValidUrlAsString( input.ScoringMethodExample, "Scoring Method Example", ref messages );
+				cp.ScoringMethodExample = AssignValidUrlAsString( input.ScoringMethodExample, "Scoring Method Example", ref messages, false );
 
 				cp.Jurisdiction = MapJurisdictions( input.Jurisdiction, ref messages );
 				//cp.Region = MapRegions( input.Region, ref messages );
@@ -1657,7 +1657,7 @@ namespace RA.Services
         /// <param name="terms"></param>
         /// <param name="messages"></param>
         /// <returns></returns>
-		public List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentVocabs( string ctdlProperty, List<string> terms, ref List<string> messages )
+		public List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentVocabs( string ctdlProperty, List<string> terms, ref List<string> messages, string alias = "" )
 		{
 			List<MJ.CredentialAlignmentObject> list = new List<MJ.CredentialAlignmentObject>();
 			if ( terms == null || terms.Count == 0 || string.IsNullOrWhiteSpace( ctdlProperty ))
@@ -1665,7 +1665,7 @@ namespace RA.Services
 			foreach ( string item in terms )
 			{
                 if (!string.IsNullOrWhiteSpace( item ))
-                    list.Add( FormatCredentialAlignment( ctdlProperty, item, ref messages ) );
+                    list.Add( FormatCredentialAlignment( ctdlProperty, item, ref messages, alias ) );
 			}
 
 			return list;
@@ -1687,7 +1687,7 @@ namespace RA.Services
 		/// <param name="name"></param>
 		/// <param name="messages"></param>
 		/// <returns></returns>
-		public MJ.CredentialAlignmentObject FormatCredentialAlignment( string ctdlProperty, string term, ref List<string> messages )
+		public MJ.CredentialAlignmentObject FormatCredentialAlignment( string ctdlProperty, string term, ref List<string> messages, string alias = "" )
 		{
 			MJ.CredentialAlignmentObject output = new MJ.CredentialAlignmentObject();
 			CodeItem code = new CodeItem();
@@ -1723,22 +1723,48 @@ namespace RA.Services
 			}
 			else
 			{
-				messages.Add( string.Format( "The {0} type of {1} is invalid.", ctdlProperty, term ) );
+				messages.Add( string.Format( "The {0} type of {1} is invalid.", string.IsNullOrWhiteSpace(alias) ? ctdlProperty : alias, term ) );
 				output = null;
 			}
 
 			return output;
 		}
 
-        /// <summary>
-        /// Format CAO for frameworks like occupations, NAICS, and CIPS
-        /// </summary>
-        /// <param name="list"></param>
-        /// <param name="includingCodedNotation"></param>
-        /// <param name="messages"></param>
-        /// <param name="frameworkName"></param>
-        /// <param name="framework"></param>
-        /// <returns></returns>
+		public List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromCodeList( List<string> list, string frameworkName, string framework,  ref List<string> messages )
+		{
+			if ( list == null || list.Count == 0 )
+				return null;
+
+			List<MJ.CredentialAlignmentObject> output = new List<MJ.CredentialAlignmentObject>();
+			MJ.CredentialAlignmentObject entity = new MJ.CredentialAlignmentObject();
+			FrameworkItem fi = new FrameworkItem();
+			//need to add a framework
+			foreach ( var item in list )
+			{
+				entity = new MJ.CredentialAlignmentObject();
+				//need ability to lookup codes
+				fi = new FrameworkItem()
+				{
+					Framework = framework,
+					FrameworkName = frameworkName,
+				};
+				entity = FormatCredentialAlignmentFrameworkItem( fi, true, ref messages, frameworkName, framework );
+				if ( entity != null )
+					output.Add( entity );
+			}
+
+			return output;
+		}   //
+
+			/// <summary>
+			/// Format CAO for frameworks like occupations, NAICS, and CIPS
+			/// </summary>
+			/// <param name="list"></param>
+			/// <param name="includingCodedNotation"></param>
+			/// <param name="messages"></param>
+			/// <param name="frameworkName"></param>
+			/// <param name="framework"></param>
+			/// <returns></returns>
 		public List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromFrameworkItemList( List<FrameworkItem> list, bool includingCodedNotation, ref List<string> messages, string frameworkName = "", string framework = "" )
 		{
 			if ( list == null || list.Count == 0 )
@@ -1759,6 +1785,15 @@ namespace RA.Services
 			return output;
 		}   //
 
+		/// <summary>
+		/// Format a Credential Alignment Object
+		/// </summary>
+		/// <param name="entity"></param>
+		/// <param name="includingCodedNotation"></param>
+		/// <param name="messages"></param>
+		/// <param name="frameworkName">Helper, where if not provided in FrameworkItem, will be used.</param>
+		/// <param name="framework">Helper, where if not provided in FrameworkItem, will be used.</param>
+		/// <returns></returns>
 		public MJ.CredentialAlignmentObject FormatCredentialAlignmentFrameworkItem( FrameworkItem entity, bool includingCodedNotation, ref List<string> messages, string frameworkName = "", string framework = "" )
 		{
 			bool hasData = false;
@@ -1780,11 +1815,11 @@ namespace RA.Services
             //need a targetNode, normally - this is the schema name
             //==>< N/A for framework items like industries
             //actually should have. It can be a URI, so do we skip Url checks?
-            if ( !string.IsNullOrWhiteSpace( entity.URL ) )
+            if ( !string.IsNullOrWhiteSpace( entity.TargetNode ) )
             {
-                if ( IsUrlValid( entity.URL, ref statusMessage, ref isUrlPresent, false ) )
+                if ( IsUrlValid( entity.TargetNode, ref statusMessage, ref isUrlPresent, false ) )
                 {
-                    ca.TargetNode = entity.URL;
+                    ca.TargetNode = entity.TargetNode;
                     //demand more data
                     //hasData = true;
                 }
@@ -1911,6 +1946,7 @@ namespace RA.Services
 		#endregion
 
 		#region ID property helpers
+		[Obsolete]
 		public List<string> AssignEntityReferenceListAsStringList( List<EntityReference> list, ref List<string> messages )
 		{
 			List<string> urlList = new List<string>();
@@ -1931,7 +1967,16 @@ namespace RA.Services
 			else
 				return urlList;
 		}
-		public string AssignValidUrlAsString( string url, string propertyName, ref List<string> messages, bool isRequired = false )
+		/// <summary>
+		/// Validate a URL and return standardized string
+		/// </summary>
+		/// <param name="url"></param>
+		/// <param name="propertyName"></param>
+		/// <param name="messages"></param>
+		/// <param name="isRequired"></param>
+		/// <param name="doingExistanceCheck">Defaults to true. Set false for registry URIs that may not exists yet.</param>
+		/// <returns></returns>
+		public string AssignValidUrlAsString( string url, string propertyName, ref List<string> messages, bool isRequired, bool doingExistanceCheck = true  )
 		{
 			string statusMessage = "";
 			bool isUrlPresent = true;
@@ -1941,8 +1986,8 @@ namespace RA.Services
 					messages.Add( string.Format( "The {0} URL is a required property.", propertyName ) );
 				return null;
 			}
-
-			if ( !IsUrlValid( url, ref statusMessage, ref isUrlPresent ) )
+			url = url.Trim();
+			if ( !IsUrlValid( url, ref statusMessage, ref isUrlPresent, doingExistanceCheck ) )
 			{
 				if ( isUrlPresent )
 				{
@@ -1950,30 +1995,36 @@ namespace RA.Services
 				}
 				return null;
 			}
-
+			url = url.TrimEnd('/');
 			return url;
 		} //
-		public List<string> AssignValidUrlAsStringList( string url, string propertyName, ref List<string> messages, bool isRequired = false )
+		public List<string> AssignValidUrlAsStringList( string url, string propertyName, ref List<string> messages, bool isRequired, bool doingExistanceCheck = true )
 		{
 			string status = "";
 			bool isUrlPresent = true;
 			List<string> urlList = new List<string>();
-			if ( string.IsNullOrWhiteSpace( url ) )
+			string output = AssignValidUrlAsString( url, propertyName, ref messages, isRequired, doingExistanceCheck );
+			if ( !string.IsNullOrWhiteSpace(output ))
 			{
-				if ( isRequired )
-					messages.Add( string.Format( "The {0} URL is a required property.", propertyName ) );
-				return null;
+				urlList.Add( url );
 			}
 
-			if ( !IsUrlValid( url, ref status, ref isUrlPresent ) )
-				messages.Add( string.Format( "The URL for {0} is invalid. ", propertyName ) + status );
-			else
-			{
-				if ( isUrlPresent )
-				{
-					urlList.Add( url );
-				}
-			}
+			//if ( string.IsNullOrWhiteSpace( url ) )
+			//{
+			//	if ( isRequired )
+			//		messages.Add( string.Format( "The {0} URL is a required property.", propertyName ) );
+			//	return null;
+			//}
+
+			//if ( !IsUrlValid( url, ref status, ref isUrlPresent ) )
+			//	messages.Add( string.Format( "The URL for {0} is invalid. ", propertyName ) + status );
+			//else
+			//{
+			//	if ( isUrlPresent )
+			//	{
+			//		urlList.Add( url );
+			//	}
+			//}
 
 			return urlList;
 		}
@@ -1986,7 +2037,7 @@ namespace RA.Services
 		/// <param name="title"></param>
 		/// <param name="messages"></param>
 		/// <returns></returns>
-		public List<string> AssignValidUrlListAsStringList( List<string> list, string title, ref List<string> messages )
+		public List<string> AssignValidUrlListAsStringList( List<string> list, string propertyName, ref List<string> messages, bool doingExistanceCheck = true )
 		{
 			string status = "";
 			bool isUrlPresent = true;
@@ -1997,18 +2048,23 @@ namespace RA.Services
 			foreach ( string url in list )
 			{
 				cntr++;
-				if ( !string.IsNullOrWhiteSpace( url ) )
+				string output = AssignValidUrlAsString( url, propertyName, ref messages, false, doingExistanceCheck );
+				if ( !string.IsNullOrWhiteSpace( output ) )
 				{
-					if ( !IsUrlValid( url, ref status, ref isUrlPresent ) )
-						messages.Add( string.Format( "The URL #{0}: {1} for list: {2} is invalid. ", cntr, url, title ) + status );
-					else
-					{
-						if ( isUrlPresent )
-						{
-							urlList.Add( url );
-						}
-					}
+					urlList.Add( url );
 				}
+				//if ( !string.IsNullOrWhiteSpace( url ) )
+				//{
+				//	if ( !IsUrlValid( url, ref status, ref isUrlPresent ) )
+				//		messages.Add( string.Format( "The URL #{0}: {1} for list: {2} is invalid. ", cntr, url, propertyName ) + status );
+				//	else
+				//	{
+				//		if ( isUrlPresent )
+				//		{
+				//			urlList.Add( url );
+				//		}
+				//	}
+				//}
 			}
 			if ( cntr == 0 )
 				return null;
@@ -2020,10 +2076,10 @@ namespace RA.Services
 		/// This method is for a list of strings that contain registry URIs. These are properly formed URIs but may not yet exist in the registry, so no existance check will be done.
 		/// </summary>
 		/// <param name="list"></param>
-		/// <param name="title"></param>
+		/// <param name="propertyName"></param>
 		/// <param name="messages"></param>
 		/// <returns></returns>
-		public List<string> AssignRegistryURIsListAsStringList( List<string> list, string title, ref List<string> messages )
+		public List<string> AssignRegistryURIsListAsStringList( List<string> list, string propertyName, ref List<string> messages )
 		{
 			string status = "";
 			bool isUrlPresent = true;
@@ -2038,7 +2094,7 @@ namespace RA.Services
 				{
 					//check if valid format, but skip existance check
 					if ( !IsUrlValid( url, ref status, ref isUrlPresent, false ) )
-						messages.Add( string.Format( "The URL #{0}: {1} for list: {2} is invalid. ", cntr, url, title ) + status );
+						messages.Add( string.Format( "The URL #{0}: {1} for list: {2} is invalid. ", cntr, url, propertyName ) + status );
 					else
 					{
 						if ( isUrlPresent )
@@ -2197,10 +2253,44 @@ namespace RA.Services
 
 			return value;
 		}
+		public List<string> AssignListToList( List<string> list )
+		{
+
+			if ( list == null || list.Count == 0 )
+				return null;
+			List<string> value = new List<string>();
+			value.AddRange( list );
+
+			return value;
+		}
 
 
-        #region Language Map helpers
-        public MJ.LanguageMap Assign( string input, string language )
+		#region Language Map helpers
+		public MJ.LanguageMap AssignLanguageMap( string input, MI.LanguageMap inputMap, string propertyName, string language, string parentCtid, bool isRequired, ref List<string> messages )
+		{
+			MJ.LanguageMap output = new MJ.LanguageMap();
+
+			if ( string.IsNullOrWhiteSpace( input ) )
+			{
+				if ( inputMap == null || inputMap.Count == 0 )
+				{
+					if ( isRequired )
+						messages.Add( FormatMessage( "Error - A string or language map must be entered for {0} with CTID: '{0}'.", propertyName, parentCtid ) );
+				}
+				else
+				{
+					output = AssignLanguageMap( inputMap, propertyName, ref messages );
+				}
+			}
+			else
+			{
+				output = Assign( input, DefaultLanguageForMaps );
+			}
+			
+
+			return output;
+		}
+		public MJ.LanguageMap Assign( string input, string language )
         {
             if ( string.IsNullOrWhiteSpace( input ) )
                 return null;
@@ -2302,10 +2392,10 @@ namespace RA.Services
         /// Format list of strings as a language map list with single entry with default language of 'en'
         /// </summary>
         /// <param name="list"></param>
-        /// <param name="title"></param>
+        /// <param name="property"></param>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public MJ.LanguageMapList FormatLanguageMapList( List<string> list, string title, ref List<string> messages )
+        public MJ.LanguageMapList FormatLanguageMapList( List<string> list, string property, ref List<string> messages )
         {
 
             if ( list == null || list.Count == 0 )
@@ -2324,10 +2414,10 @@ namespace RA.Services
         ///     }
         /// </summary>
         /// <param name="list"></param>
-        /// <param name="title"></param>
+        /// <param name="property"></param>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public MJ.LanguageMapList FormatLanguageMapList( MI.LanguageMapList list, string title, ref List<string> messages )
+        public MJ.LanguageMapList AssignLanguageMapList( MI.LanguageMapList list, string property, ref List<string> messages )
         {
 
             if ( list == null || list.Count == 0 )
@@ -2340,7 +2430,7 @@ namespace RA.Services
                 cntr++;
                 //some validation of lang code and region
                 string lang = item.Key;
-                if ( ValidateLanguageCode( title, cntr, true, ref lang, ref messages ) )
+                if ( ValidateLanguageCode( property, cntr, true, ref lang, ref messages ) )
                     output.Add( lang.ToLower(), item.Value );
             }
             if ( output.Count == 0 )
@@ -2354,6 +2444,15 @@ namespace RA.Services
             return AssignLanguageMapList( list, mapList, property, DefaultLanguageForMaps, ref messages );
         }
 
+		/// <summary>
+		/// Assign a LanguageMapList from either a list of strings or a LanguageMapList
+		/// </summary>
+		/// <param name="list"></param>
+		/// <param name="mapList"></param>
+		/// <param name="property"></param>
+		/// <param name="language"></param>
+		/// <param name="messages"></param>
+		/// <returns></returns>
         public MJ.LanguageMapList AssignLanguageMapList( List<string> list, MI.LanguageMapList mapList, string property, string language, ref List<string> messages )
         {
 
@@ -2440,12 +2539,12 @@ namespace RA.Services
             return output;
         }
 
-        public static bool ValidateLanguageCode(string languageCode, string title, ref List<string> messages )
+        public static bool ValidateLanguageCode(string languageCode, string property, ref List<string> messages )
         {
             bool isValid = true;
             if (string.IsNullOrWhiteSpace(languageCode))
             {
-                messages.Add( string.Format("A valid language code was not found for property: {0}", title ));
+                messages.Add( string.Format("A valid language code was not found for property: {0}", property ));
                 return false;
             }
             languageCode = languageCode.Trim();
@@ -2456,7 +2555,7 @@ namespace RA.Services
             int pos = languageCode.IndexOf( "-" );
             if ( languageCode.Length < 2 || (pos > -1 && pos < 2 ))
             {
-                messages.Add( string.Format( "A valid language code must be at least two characters in length (eg. 'en' or 'en-us' Property: {0}, Language Code: {1}", title, languageCode ) );
+                messages.Add( string.Format( "A valid language code must be at least two characters in length (eg. 'en' or 'en-us' Property: {0}, Language Code: {1}", property, languageCode ) );
                 return false;
             }
 
@@ -2471,20 +2570,20 @@ namespace RA.Services
                     return true;
             }
             //at this point don't have a common language code.
-            messages.Add( string.Format( "An unknown/unhandled language code was encountered: Property: {0},  Language Code: {1}", title, languageCode ) );
+            messages.Add( string.Format( "An unknown/unhandled language code was encountered: Property: {0},  Language Code: {1}", property, languageCode ) );
             isValid = false;
 
             return isValid;
         }
 
-        public static bool ValidateLanguageCode( string title, int row, bool isExpected, ref string languageCode, ref List<string> messages )
+        public static bool ValidateLanguageCode( string property, int row, bool isExpected, ref string languageCode, ref List<string> messages )
         {
             bool isValid = true;
             if ( string.IsNullOrWhiteSpace( languageCode ) )
             {
                 if ( isExpected )
                 {
-                    messages.Add( string.Format( "A valid language code was not found for property: {0}, row: {1}", title, row ) );
+                    messages.Add( string.Format( "A valid language code was not found for property: {0}, row: {1}", property, row ) );
                     return false;
                 }
                 else
@@ -2499,7 +2598,7 @@ namespace RA.Services
             int pos = languageCode.IndexOf( "-" );
             if ( languageCode.Length < 2 || ( pos > -1 && pos < 2 ) )
             {
-                messages.Add( string.Format( "A valid language code must be at least two characters in length (eg. 'en' or 'en-us' Property: {0}, Row: {1}, Language Code: {2}", title, row, languageCode ) );
+                messages.Add( string.Format( "A valid language code must be at least two characters in length (eg. 'en' or 'en-us' Property: {0}, Row: {1}, Language Code: {2}", property, row, languageCode ) );
                 return false;
             }
 
@@ -2514,7 +2613,7 @@ namespace RA.Services
                     return true;
             }
             //at this point don't have a common language code.
-            messages.Add( string.Format( "An unknown/unhandled language code was encountered: Property: {0}, Row: {1}, Language Code: {2}", title, row, languageCode ) );
+            messages.Add( string.Format( "An unknown/unhandled language code was encountered: Property: {0}, Row: {1}, Language Code: {2}", property, row, languageCode ) );
             isValid = false;
 
             return isValid;
@@ -2975,20 +3074,20 @@ namespace RA.Services
         #endregion
 
 		#region JSON helpers
-        public string LogInputFile( CredentialRequest request, string endpoint, int appLevel = 6 )
+        public static string LogInputFile( CredentialRequest request, string endpoint, int appLevel = 6 )
         {
-            string jsoninput = JsonConvert.SerializeObject( request, ServiceHelper.GetJsonSettings() );
+            string jsoninput = JsonConvert.SerializeObject( request, GetJsonSettings() );
             LoggingHelper.WriteLogFile( appLevel, string.Format("Credential_{0}_{1}_raInput.json", endpoint, request.Credential.Ctid), jsoninput, "", false );
             return jsoninput;
         }
-        public string LogInputFile( object request, string ctid, string entityType, string endpoint, int appLevel = 6 )
+		public static string LogInputFile( object request, string ctid, string entityType, string endpoint, int appLevel = 6 )
         {
-            string jsoninput = JsonConvert.SerializeObject( request, ServiceHelper.GetJsonSettings() );
+            string jsoninput = JsonConvert.SerializeObject( request, GetJsonSettings() );
             LoggingHelper.WriteLogFile( appLevel, string.Format( "{0}_{1}_{2}_raInput.json", entityType, endpoint, ctid ), jsoninput, "", false );
             return jsoninput;
         }
 
-        public JsonSerializerSettings GetJsonSettings()
+		public static JsonSerializerSettings GetJsonSettings()
         {
             var settings = new JsonSerializerSettings()
             {
@@ -3042,27 +3141,28 @@ namespace RA.Services
                 return property;
             }
         }
-        #endregion
+		#endregion
 
-        #region === Security related Methods ===
+		#region === Security related Methods ===
 
-        /// <summary>
-        /// The actual validation will be via a call to the accounts api
-        /// </summary>
-        /// <param name="helper"></param>
-        /// <param name="statusMessage"></param>
-        /// <returns></returns>
-        public bool ValidateRequest(RequestHelper helper, ref string statusMessage, bool isDeleteRequest = false)
+		/// <summary>
+		/// The actual validation will be via a call to the accounts api
+		/// </summary>
+		/// <param name="helper"></param>
+		/// <param name="statusMessage"></param>
+		/// <returns></returns>
+		public static bool ValidateRequest(RequestHelper helper, ref string statusMessage, bool isDeleteRequest = false)
 		{
 			bool isValid = true;
             string clientIdentifier = "";
             bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
-            if ( isDeleteRequest )
+			var apiPublisherIdentifier = UtilityManager.GetAppKeyValue( "apiPublisherIdentifier" );
+			if ( isDeleteRequest )
                 isTokenRequired = true;
 
             //api key will be passed in the header
             string apiToken = "";
-            if (IsAuthTokenValid( isTokenRequired, ref apiToken, ref clientIdentifier, ref statusMessage) == false)
+            if (IsAuthTokenValid( isTokenRequired, apiPublisherIdentifier, ref apiToken, ref clientIdentifier, ref statusMessage) == false)
             {
                 return false;
             }
@@ -3075,22 +3175,24 @@ namespace RA.Services
                  helper.OwnerCtid.Length != 39) 
                 )
             {
-                if (clientIdentifier.ToLower().StartsWith( "cerpublisher" ) == false)
+				if ( clientIdentifier == apiPublisherIdentifier )
+					return true;
+				else
                 {
-                    statusMessage = "Error - a valid CTID for the related organization must be provided.";
+                    statusMessage = "Error - the provided security elements for this request have not be adequately provided.";
                     return false;
                 }
             }
             return isValid;
 		}
 
-		public bool IsAuthTokenValid( bool isTokenRequired, ref string token, ref string clientIdentifier, ref string message )
+		public static bool IsAuthTokenValid( bool isTokenRequired, string apiPublisherIdentifier, ref string token, ref string clientIdentifier, ref string message )
 		{
 			bool isValid = true;
-            //need to handle both ways. So if a token, and ctid are provided, then use them!
-            //bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
-
-            try
+			//need to handle both ways. So if a token, and ctid are provided, then use them!
+			//bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
+			//var apiPublisherIdentifier = UtilityManager.GetAppKeyValue( "apiPublisherIdentifier" );
+			try
             {
                 HttpContext httpContext = HttpContext.Current;
                 clientIdentifier = httpContext.Request.Headers[ "Proxy-Authorization" ];
@@ -3119,7 +3221,7 @@ namespace RA.Services
             {
                 if (!string.IsNullOrWhiteSpace(clientIdentifier))
                 {
-                    if (clientIdentifier.ToLower().StartsWith( "cerpublisher" ))
+                    if (clientIdentifier == apiPublisherIdentifier )
                         return true;
                 }
                 message = "Error a valid API key must be provided in the header";
@@ -3228,17 +3330,17 @@ namespace RA.Services
         /// Gets the value of an application key from web.config. Returns blanks if not found
         /// </summary>
         /// <remarks>This clientProperty is explicitly thread safe.</remarks>
-        public string GetAppKeyValue( string keyName )
+        public static string GetAppKeyValue( string keyName )
         {
 
             return GetAppKeyValue( keyName, "" );
         } //
 
-        /// <summary>
-        /// Gets the value of an application key from web.config. Returns the default value if not found
-        /// </summary>
-        /// <remarks>This clientProperty is explicitly thread safe.</remarks>
-        public string GetAppKeyValue( string keyName, string defaultValue )
+		/// <summary>
+		/// Gets the value of an application key from web.config. Returns the default value if not found
+		/// </summary>
+		/// <remarks>This clientProperty is explicitly thread safe.</remarks>
+		public static string GetAppKeyValue( string keyName, string defaultValue )
         {
             string appValue = "";
             if (string.IsNullOrWhiteSpace(keyName))
@@ -3260,7 +3362,7 @@ namespace RA.Services
 
             return appValue;
         } //
-        public int GetAppKeyValue( string keyName, int defaultValue )
+		public static int GetAppKeyValue( string keyName, int defaultValue )
         {
             int appValue = -1;
             if ( string.IsNullOrWhiteSpace( keyName ) )
@@ -3282,7 +3384,7 @@ namespace RA.Services
 
             return appValue;
         } //
-        public bool GetAppKeyValue( string keyName, bool defaultValue )
+		public static bool GetAppKeyValue( string keyName, bool defaultValue )
         {
             bool appValue = false;
             if ( string.IsNullOrWhiteSpace( keyName ) )
@@ -3304,27 +3406,27 @@ namespace RA.Services
 
             return appValue;
         } //
-        #endregion
+		#endregion
 
-        #region Error Logging ================================================
-        /// <summary>
-        /// Format an exception and message, and then log it
-        /// </summary>
-        /// <param name="ex">Exception</param>
-        /// <param name="message">Additional message regarding the exception</param>
-        public void LogError( Exception ex, string message, string subject = "Registry Assistant Application Exception encountered" )
+		#region Error Logging ================================================
+		/// <summary>
+		/// Format an exception and message, and then log it
+		/// </summary>
+		/// <param name="ex">Exception</param>
+		/// <param name="message">Additional message regarding the exception</param>
+		public static void LogError( Exception ex, string message, string subject = "Registry Assistant Application Exception encountered" )
         {
             bool notifyAdmin = false;
             LogError( ex, message, notifyAdmin, subject );
         }
 
-        /// <summary>
-        /// Format an exception and message, and then log it
-        /// </summary>
-        /// <param name="ex">Exception</param>
-        /// <param name="message">Additional message regarding the exception</param>
-        /// <param name="notifyAdmin">If true, an email will be sent to admin</param>
-        public void LogError( Exception ex, string message, bool notifyAdmin, string subject = "Registry Assistant Application Exception encountered" )
+		/// <summary>
+		/// Format an exception and message, and then log it
+		/// </summary>
+		/// <param name="ex">Exception</param>
+		/// <param name="message">Additional message regarding the exception</param>
+		/// <param name="notifyAdmin">If true, an email will be sent to admin</param>
+		public static void LogError( Exception ex, string message, bool notifyAdmin, string subject = "Registry Assistant Application Exception encountered" )
         {
 
             string sessionId = "unknown";
@@ -3370,15 +3472,15 @@ namespace RA.Services
         } //
 
 
-        /// <summary>
-        /// Write the message to the log file.
-        /// </summary>
-        /// <remarks>
-        /// The message will be appended to the log file only if the flag "logErrors" (AppSetting) equals yes.
-        /// The log file is configured in the web.config, appSetting: "error.log.path"
-        /// </remarks>
-        /// <param name="message">Message to be logged.</param>
-        public void LogError( string message, string subject = "Registry Assistant Application Exception encountered" )
+		/// <summary>
+		/// Write the message to the log file.
+		/// </summary>
+		/// <remarks>
+		/// The message will be appended to the log file only if the flag "logErrors" (AppSetting) equals yes.
+		/// The log file is configured in the web.config, appSetting: "error.log.path"
+		/// </remarks>
+		/// <param name="message">Message to be logged.</param>
+		public static void LogError( string message, string subject = "Registry Assistant Application Exception encountered" )
         {
 
             if ( GetAppKeyValue( "notifyOnException", "no" ).ToLower() == "yes" )
@@ -3391,16 +3493,16 @@ namespace RA.Services
             }
 
         } //
-          /// <summary>
-          /// Write the message to the log file.
-          /// </summary>
-          /// <remarks>
-          /// The message will be appended to the log file only if the flag "logErrors" (AppSetting) equals yes.
-          /// The log file is configured in the web.config, appSetting: "error.log.path"
-          /// </remarks>
-          /// <param name="message">Message to be logged.</param>
-          /// <param name="notifyAdmin"></param>
-        public void LogError( string message, bool notifyAdmin, string subject = "Registry Assistant Application Exception encountered" )
+		  /// <summary>
+		  /// Write the message to the log file.
+		  /// </summary>
+		  /// <remarks>
+		  /// The message will be appended to the log file only if the flag "logErrors" (AppSetting) equals yes.
+		  /// The log file is configured in the web.config, appSetting: "error.log.path"
+		  /// </remarks>
+		  /// <param name="message">Message to be logged.</param>
+		  /// <param name="notifyAdmin"></param>
+		public static void LogError( string message, bool notifyAdmin, string subject = "Registry Assistant Application Exception encountered" )
         {
             if ( GetAppKeyValue( "logErrors" ).ToString().Equals( "yes" ) )
             {
@@ -3448,7 +3550,7 @@ namespace RA.Services
         /// <returns>True id message was sent successfully, otherwise false</returns>
         public bool NotifyAdmin( string subject, string message )
         {
-            string emailTo = UtilityManager.GetAppKeyValue( "systemAdminEmail", "mparsons@siuccwd.com" );
+            string emailTo = UtilityManager.GetAppKeyValue( "systemAdminEmail", "cwd-mparsons@ad.siu.edu" );
             //work on implementing some specific routing based on error type
 
 
@@ -3456,12 +3558,12 @@ namespace RA.Services
         }
 
 
-        /// <summary>
-        /// Handle trace requests - typically during development, but may be turned on to track code flow in production.
-        /// </summary>
-        /// <param name="message">Trace message</param>
-        /// <remarks>This is a helper method that defaults to a trace level of 10</remarks>
-        public void DoTrace( string message )
+		/// <summary>
+		/// Handle trace requests - typically during development, but may be turned on to track code flow in production.
+		/// </summary>
+		/// <param name="message">Trace message</param>
+		/// <remarks>This is a helper method that defaults to a trace level of 10</remarks>
+		public static void DoTrace( string message )
         {
             //default level to 8
             //should get app key value
@@ -3471,23 +3573,23 @@ namespace RA.Services
             DoTrace( appTraceLevel, message, true );
         }
 
-        /// <summary>
-        /// Handle trace requests - typically during development, but may be turned on to track code flow in production.
-        /// </summary>
-        /// <param name="level"></param>
-        /// <param name="message"></param>
-        public void DoTrace( int level, string message )
+		/// <summary>
+		/// Handle trace requests - typically during development, but may be turned on to track code flow in production.
+		/// </summary>
+		/// <param name="level"></param>
+		/// <param name="message"></param>
+		public static void DoTrace( int level, string message )
         {
             DoTrace( level, message, true );
         }
 
-        /// <summary>
-        /// Handle trace requests - typically during development, but may be turned on to track code flow in production.
-        /// </summary>
-        /// <param name="level"></param>
-        /// <param name="message"></param>
-        /// <param name="showingDatetime">If true, precede message with current date-time, otherwise just the message> The latter is useful for data dumps</param>
-        public void DoTrace( int level, string message, bool showingDatetime )
+		/// <summary>
+		/// Handle trace requests - typically during development, but may be turned on to track code flow in production.
+		/// </summary>
+		/// <param name="level"></param>
+		/// <param name="message"></param>
+		/// <param name="showingDatetime">If true, precede message with current date-time, otherwise just the message> The latter is useful for data dumps</param>
+		public static void DoTrace( int level, string message, bool showingDatetime )
         {
             //TODO: Future provide finer control at the control level
             string msg = "";
@@ -3525,40 +3627,6 @@ namespace RA.Services
 
         }
 
-        public void DoBotTrace( int level, string message )
-        {
-            string msg = "";
-            int appTraceLevel = 0;
-
-            try
-            {
-                appTraceLevel = GetAppKeyValue( "botTraceLevel", 5 );
-
-                //Allow if the requested level is <= the application thresh hold
-                if ( level <= appTraceLevel )
-                {
-                    msg = "\n " + System.DateTime.Now.ToString() + " - " + message;
-
-                    string datePrefix = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
-                    string logFile = GetAppKeyValue( "path.botTrace.log", "" );
-                    if ( logFile.Length > 5 )
-                    {
-                        string outputFile = logFile.Replace( "[date]", datePrefix );
-
-                        StreamWriter file = File.AppendText( outputFile );
-
-                        file.WriteLine( msg );
-                        file.Close();
-                    }
-
-                }
-            }
-            catch
-            {
-                //ignore errors
-            }
-
-        }
         #endregion
 
         #region Common Utility Methods
@@ -3592,12 +3660,56 @@ namespace RA.Services
             if ( text.IndexOf('\u0090') > -1 )
                 text = text.Replace('\u0090', 'ê'); // e circumflex
 
-            text = Regex.Replace(text, "[Õ]", "'");
-            text = Regex.Replace(text, "[Ô]", "'");
-            text = Regex.Replace(text, "[Ò]", "\"");
-            text = Regex.Replace(text, "[Ó]", "\"");
-            text = Regex.Replace(text, "[—]", "-"); //
-            return text.Trim();
+			text = text.Replace( "â€™", "'" );
+			text = text.Replace( "â€\"", "-" );
+
+			text = Regex.Replace( text, "[Õ]", "'" );
+			text = Regex.Replace( text, "[Ô]", "'" );
+			text = Regex.Replace( text, "[Ò]", "\"" );
+			text = Regex.Replace( text, "[Ó]", "\"" );
+			text = Regex.Replace( text, "[Ñ]", " -" ); //Ñ
+			text = Regex.Replace( text, "[Ž]", "é" );
+			text = Regex.Replace( text, "[ˆ]", "à" );
+			text = Regex.Replace( text, "[Ð]", "-" );
+			//
+			text = text.Replace( "‡", "á" ); //Ã³
+
+			text = text.Replace( "ÃƒÂ³", "ó" ); //
+			text = text.Replace( "Ã³", "ó" ); //
+											  //é
+			text = text.Replace( "ÃƒÂ©", "é" ); //
+			text = text.Replace( "Ã©", "é" ); //
+
+			text = text.Replace( "ÃƒÂ¡", "á" ); //
+			text = text.Replace( "Ã¡", "á" ); //Ã¡
+			text = text.Replace( "ÃƒÂ", "à" ); //
+											   //
+			text = text.Replace( "ÃƒÂ±", "ñ" ); //Ã
+			text = text.Replace( "ÃƒÂ-", "í" ); //???? same as à
+			text = text.Replace( "ÃƒÂ­­", "í" ); //
+
+			text = text.Replace( "ÃƒÂº", "ú" ); //
+			text = text.Replace( "’", "í" ); //
+			text = text.Replace( "œ", "ú" ); //
+			text = text.Replace( "quÕˆ", "qu'à" ); //
+			text = text.Replace( "qu'ˆ", "qu'à" ); //
+			text = text.Replace( "ci—n ", "ción " );
+			//"Â¨"
+			text = text.Replace( "Â¨", "®" ); //
+
+			text = text.Replace( "teor'as", "teorías" ); // 
+			text = text.Replace( "log'as", "logías" ); //
+			text = text.Replace( "ense–anza", "enseñanza" ); //
+
+
+			text = text.Replace( "ou�ll", "ou'll" ); //
+			text = text.Replace( "�s", "'s" ); // 
+
+			text = Regex.Replace( text, "[—]", "-" ); //
+
+			text = Regex.Replace( text, "[�]", " " ); //could be anything
+													  //covered above
+			return text.Trim();
         } //
         public string HandleApostrophes( string strValue )
         {
@@ -3653,7 +3765,7 @@ namespace RA.Services
 		{
 			return string.Format( message, parm1, parm2 );
 		}
-		public string GetCurrentIP()
+		public static string GetCurrentIP()
 		{
 			string remoteIP = "";
 			try

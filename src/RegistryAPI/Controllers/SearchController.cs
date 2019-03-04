@@ -150,6 +150,10 @@ namespace RegistryAPI.Controllers
 
 					//Do the search via the accounts system
 					var searchAPIURL = UtilityManager.GetAppKeyValue( "accountsSearchApi" );
+					if( Request.Headers.Referrer != null )
+					{
+						client.DefaultRequestHeaders.Referrer = Request.Headers.Referrer;
+					}
 					result = client.PostAsync( searchAPIURL, new StringContent( JsonConvert.SerializeObject( consumeRequest ), Encoding.UTF8, "application/json" ) ).Result;
 					var resultContent = result.Content.ReadAsStringAsync().Result;
 					var resultData = GremlinServices.JsonStringToDictionary( resultContent );

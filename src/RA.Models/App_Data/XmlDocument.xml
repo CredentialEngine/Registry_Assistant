@@ -55,13 +55,358 @@
             NOTE: using default of true as norm in case property not populated.
             </summary>
         </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.CtdlId">
+            <summary>
+            A unique URI for this framework. 
+            If not entered, a credential registry URI will be generated using the CTID.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.Ctid">
+            <summary>
+            Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a credential, learning opportunity competency, or assessment recognizes the entity in transactions with the external environment (e.g., in verifiable claims involving a credential).
+            required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.alignFrom">
+            <summary>
+            A competency framework or competency from which this competency framework or competency is aligned.
+            An alignment is an assertion of some degree of equivalency between the subject and the object of the assertion.
+            List of URIs to frameworks
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.alignTo">
+            <summary>
+            A competency framework or competency to which this competency framework or competency is aligned.
+            An alignment is an assertion of some degree of equivalency between the subject and the object of the assertion.
+            List of URIs to frameworks
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.author">
+            <summary>
+            A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
+            List of Names
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.conceptKeyword">
+            <summary>
+            A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
+            The conceptKeyword property is used in ASN-conforming data solely to denote the significant topicality of the competency using free-text keywords and phrases derived and assigned by the indexer, e.g., "George Washington", "Ayers Rock", etc.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.conceptTerm">
+            <summary>
+            Concept Term
+            Definition:	en-US: A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
+            List of URIs to concepts
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.creator">
+            <summary>
+            An entity primarily responsible for making this competency framework or competency.
+            The creator property is used with non-canonical statements created by a third party.
+            List of URIs to the creator
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.dateCopyrighted">
+            <summary>
+            Date Copyrighted
+            Date of a statement of copyright for this competency framework, such as ©2017.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.dateCreated">
+            <summary>
+            Date of creation of this competency framework or competency.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.dateModified">
+            <summary>
+            The date on which this framework or competency was most recently modified in some way.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.dateValidFrom">
+            <summary>
+            Beginning date of validity of this competency framework.
+            Where the competency document is valid for a given period of time, use both the dateValidFrom and dateValidUntil properties.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.dateValidUntil">
+            <summary>
+            End date of validity of this competency framework.
+            Where the standard document is valid for a given period of time, use both the dateValidFrom and dateValidUntil properties.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.derivedFrom">
+            <summary>
+            Derived From
+            Definition:	en-US: A third party version of the entity being reference that has been modified in meaning through editing, extension or refinement.
+            List of URIs to frameworks
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.description">
+            <summary>
+            A short description of this competency framework.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.educationLevelType">
+            <summary>
+            Education Level Type
+            Definition:	en-US:A general statement describing the education or training context. Alternatively, a more specific statement of the location of the audience in terms of its progression through an education or training context.
+            Best practice is to use terms from the http://purl.org/ctdl/terms/AudienceLevel concept scheme.
+            List of URIs to concepts
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.hasTopChild">
+            <summary>
+            List of the top competencies, those that are directly connected to the framework. Provide either a CTID for a competency that is include in the Competencies property, or the full URI formatted like the following:
+            "https://credentialengineregistry.org/resources/ce-b1e0eca2-7a19-49e9-8841-fa16ddf8396d"
+            List of URIs to competencies.
+            NOTE: or just provide the CTIDs, and the system will format the proper URI for the current environment.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.identifier">
+            <summary>
+            Identifier
+            Definition:	en-US: An alternative URI by which this competency framework or competency is identified.
+            List of URIs 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.inLanguage">
+            <summary>
+            In Language
+            Definition:	en-US: The primary language used in or by this competency framework or competency.The primary language used in or by this competency framework or competency.
+            This is the language the text is primarily written in, even if it makes use of other languages. For example, a competency for teaching spanish to english-speaking students would primarily be in english, because that is the language used to convey the material.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.license">
+            <summary>
+            A legal document giving official permission to do something with this competency framework.
+            Value must be the URI to a license document (e.g., Creative Commons license or bespoke license).
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.localSubject">
+            <summary>
+            The text string denoting the subject of the competency framework or competency as designated by the promulgating agency.
+            The localSubject property and subject property may or may not point to the same subject. If so, enter the text string for the subject as the value of this property and the URI for that subject in the subject property.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.name">
+            <summary>
+            The name or title of this competency framework.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.publicationStatusType">
+            <summary>
+            The publication status of the of this competency framework.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.publisher">
+            <summary>
+            An agent responsible for making this entity available.
+            Also referred to as the promulgating agency of the entity.
+            List of URIs, for example to a ceterms:CredentialOrganization
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.publisherName">
+            <summary>
+            Name of an agent responsible for making this entity available.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.repositoryDate">
+            <summary>
+            The date this competency framework was added to the repository.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.rights">
+            <summary>
+            Formerly a URI, 
+            19-01-18 Now a language string!!
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.rightsHolder">
+            <summary>
+            An agent owning or managing rights over this competency framework.
+            URL
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.source">
+            <summary>
+             The original competency framework which this competency framework is based on or derived from.
+             URI
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.CompetencyFramework.tableOfContents">
+            <summary>
+            A list of sub-units of this competency framework.
+            The table of contents is a "manifest", or a hierarchic, ordered, syntactic representation of the competencies that are part of this competency framework.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.Ctid">
+            <summary>
+            Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a credential, learning opportunity competency, or assessment recognizes the entity in transactions with the external environment (e.g., in verifiable claims involving a credential).
+            required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.competencyText">
+            <summary>
+            The text of the competency.
+            This property should be used to provide the actual text of the competency statement. To provide information about the competency other than the text itself, use the comment property.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.alignFrom">
+            <summary>
+            A competency framework or competency from which this competency framework or competency is aligned.
+            An alignment is an assertion of some degree of equivalency between the subject and the object of the assertion.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.alignTo">
+            <summary>
+            A competency framework or competency to which this competency framework or competency is aligned.
+            An alignment is an assertion of some degree of equivalency between the subject and the object of the assertion.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.altCodedNotation">
+            <summary>
+            Alternative Coded Notation
+            An alphanumeric notation or ID code identifying this competency in common use among end-users.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.author">
+            <summary>
+            A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
+            List of Names
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.broadAlignment">
+            <summary>
+            Broad Alignment
+            The referenced competency covers all of the relevant concepts in this competency as well as relevant concepts not found in this competency.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.codedNotation">
+            <summary>
+            Coded Notation
+            Definition:	en-US: An alphanumeric notation or ID code as defined by the promulgating body to identify this competency.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.comment">
+            <summary>
+            Comment
+            Definition:	en-US: Supplemental text provided by the promulgating body that clarifies the nature, scope or use of this competency.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.competencyCategory">
+            <summary>
+            Competency Category
+            Definition:	en-US: The textual label identifying the category of the competency as designated by the promulgating body.
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Competency.complexityLevel">
-            ProficiencyScale??
+            <summary>
+            Complexity Level
+            Definition:	en-US: The expected performance level of a learner or professional as defined by a competency.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.comprisedOf">
+            <summary>
+            Comprised Of
+            Definition:	en-US: This competency includes, comprehends or encompasses, in whole or in part, the meaning, nature or importance of the referenced competency.
+            List of URIs
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.conceptKeyword">
+            <summary>
+            Concept Keyword
+            Definition:	en-US: A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.conceptTerm">
+            <summary>
+            Concept Term
+            Definition:	en-US: A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
+            List of URIs to a concept
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.creator">
+            <summary>
+            An entity primarily responsible for making this competency framework or competency.
+            The creator property is used with non-canonical statements created by a third party.
+            List of URIs to the creator
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.crossSubjectReference">
+            <summary>
+            Cross-Subject Reference
+            Definition:	en-US: A relationship between this competency and a competency in a separate competency framework.
+            List of URIs to competencies
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.dateCreated">
+            <summary>
+            Date of creation of this competency framework or competency.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.dateModified">
+            <summary>
+            The date on which this framework or competency was most recently modified in some way.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.derivedFrom">
+            <summary>
+            Derived From
+            Definition:	en-US: A third party version of the entity being reference that has been modified in meaning through editing, extension or refinement.
+            List of URIs to competencies
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.educationLevelType">
+            <summary>
+            Education Level Type
+            Definition:	en-US:A general statement describing the education or training context. Alternatively, a more specific statement of the location of the audience in terms of its progression through an education or training context.
+            Best practice is to use terms from the http://purl.org/ctdl/terms/AudienceLevel concept scheme.
+            List of URIs to concepts
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.exactAlignment">
+            <summary>
+            Exact Alignment
+            Definition:	en-US: The relevant concepts in this competency and the referenced competency are coextensive.
+            List of URIs to competencies
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.hasChild">
+            <summary>
+            Has Child
+            Definition:	en-US: The referenced competency is lower in some arbitrary hierarchy than this competency.List of URIs for child competencies under this competency
+            Provide either a CTID for a competency that is include in the Competencies property, or the full URI formatted like the following:
+            "https://credentialengineregistry.org/resources/ce-b1e0eca2-7a19-49e9-8841-fa16ddf8396d"
+            List of URIs to competencies.
+            NOTE: or just provide the CTIDs, and the system will format the proper URI for the current environment.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.identifier">
+            <summary>
+            Identifier
+            Definition:	en-US: An alternative URI by which this competency framework or competency is identified.
+            List of URIs 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.inLanguage">
+            <summary>
+            In Language
+            Definition:	en-US: The primary language used in or by this competency framework or competency.The primary language used in or by this competency framework or competency.
+            This is the language the text is primarily written in, even if it makes use of other languages. For example, a competency for teaching spanish to english-speaking students would primarily be in english, because that is the language used to convey the material.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.isChildOf">
+            <summary>
+            Is Child Of
+            Definition:	en-US: The referenced competency is higher in some arbitrary hierarchy than this competency.
+            List of URIs to competencies.
+            NOTE: or just provide the CTIDs, and the system will format the proper URI for the current environment.
+            </summary>
         </member>
         <member name="P:RA.Models.Input.ConditionManifestRequest.ConditionManifest">
             <summary>
-            consider allowing multiple?
-            Probably too many complications
+            Condition Manifest for an organization
             </summary>
         </member>
         <member name="P:RA.Models.Input.ConditionManifest.Name_Map">
@@ -222,10 +567,64 @@
             general has more opportunity for errors
             </summary>
         </member>
+        <member name="P:RA.Models.Input.Credential.ApprovedBy">
+            <summary>
+            List of Organizations that approve this credential
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:RA.Models.Input.Credential.OfferedBy" -->
+        <member name="P:RA.Models.Input.Credential.RecognizedBy">
+            <summary>
+            List of Organizations that recognize this credential
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.RegulatedBy">
+            <summary>
+            List of Organizations that regulate this credential
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.RenewedBy">
+            <summary>
+            List of Organizations that renew this credential
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.RevokedBy">
+            <summary>
+            List of Organizations that can revoke this credential
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.HasPart">
+            <summary>
+            List of credentials that are part of this credential
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.IsPartOf">
+            <summary>
+            List of credentials where this credential is a part of.
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Credential.JurisdictionAssertions">
             <summary>
             Handling assertions in jurisdictions
             The current approach is to use a one record per asserting organization. The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.ONET_Codes">
+            <summary>
+            List of valid O*Net codes. See:
+            https://www.onetonline.org/find/
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.Naics">
+            <summary>
+            List of valid NAICS codes. See:
+            https://www.naics.com/search/
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Credential.CIP_Codes">
+            <summary>
+            List of valid Classification of Instructional Program codes. See:
+            https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
             </summary>
         </member>
         <member name="T:RA.Models.Input.RevocationProfile">
@@ -287,6 +686,24 @@
         <member name="P:RA.Models.Input.LearningOpportunity.OfferedBy">
             <summary>
             Organization(s) that offer this resource
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.LearningOpportunity.ONET_Codes">
+            <summary>
+            List of valid O*Net codes. See:
+            https://www.onetonline.org/find/
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.LearningOpportunity.InstructionalProgramType">
+            <summary>
+            List of valid NAICS codes. See:
+            https://www.naics.com/search/
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.LearningOpportunity.CIP_Codes">
+            <summary>
+            List of valid Classification of Instructional Program codes. See:
+            https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
             </summary>
         </member>
         <member name="P:RA.Models.Input.LearningOpportunity.HasPart">
@@ -401,7 +818,7 @@
             A cost manifest can never be a third party reference, so a url is expected
             </summary>
         </member>
-        <member name="P:RA.Models.Input.CompetencyFrameworksGraph.Graph">
+        <member name="P:RA.Models.Input.CompetencyFrameworkGraph.Graph">
             <summary>
             Main graph object
             </summary>
@@ -666,6 +1083,11 @@
             CIP
             </summary>
         </member>
+        <member name="P:RA.Models.Input.FrameworkItem.TargetNode">
+            <summary>
+            URI for the FrameworkItem
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Jurisdiction.MainJurisdiction">
             <summary>
             TBD - does it make sense to offer providing the full GeoCoordinates.
@@ -688,6 +1110,49 @@
             ceterms:geoURI
             Entity that describes the longitude, latitude and other location details of a place.
             </summary>
+        </member>
+        <member name="M:RA.Models.Input.LanguageMap.#ctor(System.String)">
+            <summary>
+            Add a language map using a default language
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="M:RA.Models.Input.LanguageMap.#ctor(System.String,System.String)">
+            <summary>
+            Add a language map using a passed language code and string
+            </summary>
+            <param name="languageCode"></param>
+            <param name="text"></param>
+        </member>
+        <member name="P:RA.Models.Input.BlankNode.Id">
+            <summary>
+            An identifier for use with blank nodes, to minimize duplicates
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.BlankNode.Type">
+            <summary>
+            the type of the entity must be provided. examples
+            ceterms:AssessmentProfile
+            ceterms:LearningOpportunityProfile
+            ceterms:ConditionManifest
+            ceterms:CostManifest
+            or the many credential subclasses!!
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.BlankNode.Name">
+            <summary>
+            Name of the entity (required)
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.BlankNode.Description">
+            <summary>
+            Description of the entity (optional)
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.BlankNode.SubjectWebpage">
+            <summary>
+            Subject webpage of the entity
+            </summary> (required)
         </member>
         <member name="T:RA.Models.Input.OrganizationReference">
             <summary>
@@ -825,78 +1290,9 @@
              type
             </summary>
         </member>
-        <member name="T:RA.Models.JsonV2.CompetencyInput">
+        <member name="T:RA.Models.JsonV2.Competency">
             <summary>
             Variation of Competency that uses string instead of IdProperty
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.alignFrom">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.alignTo">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.crossSubjectReference">
-            <summary>
-            A relationship between this competency and a competency in a separate competency framework.
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.derivedFrom">
-            <summary>
-            The URI of a competency from which this competency has been derived.
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.isVersionOf">
-            <summary>
-            Competency uri
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.broadAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.exactAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.majorAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.minorAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.narrowAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.prerequisiteAlignment">
-            <summary>
-            This competency is a prerequisite to the referenced competency.
-            Uri to a competency
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.skillEmbodied">
-            <summary>
-            Cognitive, affective, and psychomotor skills directly or indirectly embodied in this competency.
-            URI
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyInput.weight">
-            <summary>
-            An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
-            Float
             </summary>
         </member>
         <member name="P:RA.Models.JsonV2.Competency.alignFrom">
@@ -978,19 +1374,15 @@
             Main graph object
             </summary>
         </member>
-        <member name="P:RA.Models.JsonV2.CompetencyFrameworkInput.author">
+        <member name="P:RA.Models.JsonV2.CompetencyFramework.hasTopChild">
             <summary>
-            A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
+            Top-level child competency of a competency framework.
             </summary>
         </member>
-        <member name="P:RA.Models.JsonV2.CompetencyFrameworkInput.conceptKeyword">
+        <member name="P:RA.Models.JsonV2.CompetencyFramework.rights">
             <summary>
-            A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
-            </summary>
-        </member>
-        <member name="P:RA.Models.JsonV2.CompetencyFrameworkInput.conceptTerm">
-            <summary>
-            A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
+            19-01-18 Changed to a language string
+            Hide until changed in CaSS
             </summary>
         </member>
         <member name="P:RA.Models.JsonV2.ConditionManifest.Type">
@@ -1199,6 +1591,127 @@
             Common input class for all condition profiles
             </summary>
         </member>
+        <member name="P:RA.Models.Json.Agent.Type">
+            <summary>
+            The type of organization is one of :
+            - CredentialOrganization
+            - QACredentialOrganization
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.AssessmentProfile.Type">
+            <summary>
+             type
+            </summary>
+        </member>
+        <member name="T:RA.Models.Json.CompetencyInput">
+            <summary>
+            Variation of Competency that uses string instead of IdProperty
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.alignFrom">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.alignTo">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.crossSubjectReference">
+            <summary>
+            A relationship between this competency and a competency in a separate competency framework.
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.derivedFrom">
+            <summary>
+            The URI of a competency from which this competency has been derived.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.exactMatch">
+            <summary>
+            NOTE: temporary, will be changed to exactAlignment
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.isVersionOf">
+            <summary>
+            Competency uri
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.broadAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.exactAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.majorAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.minorAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.narrowAlignment">
+            <summary>
+            Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.prerequisiteAlignment">
+            <summary>
+            This competency is a prerequisite to the referenced competency.
+            Uri to a competency
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.skillEmbodied">
+            <summary>
+            Cognitive, affective, and psychomotor skills directly or indirectly embodied in this competency.
+            URI
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyInput.weight">
+            <summary>
+            An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
+            Float
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.Competency.exactMatch">
+            <summary>
+            NOTE: temporary, will be changed to exactAlignment
+            </summary>
+        </member>
+        <member name="T:RA.Models.Json.ProficiencyScale">
+            <summary>
+            The class of structured profiles describing discrete levels of expertise and performance mastery.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyFrameworksGraph.Graph">
+            <summary>
+            Main graph object
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyFrameworkInput.author">
+            <summary>
+            A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyFrameworkInput.conceptKeyword">
+            <summary>
+            A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Json.CompetencyFrameworkInput.conceptTerm">
+            <summary>
+            A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
+            </summary>
+        </member>
         <member name="P:RA.Models.Json.ConditionManifest.Type">
             <summary>
             entity type
@@ -1240,18 +1753,6 @@
             <summary>
             OwnedBy
             Will either by an Id array, or a thin organization array
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.Agent.Type">
-            <summary>
-            The type of organization is one of :
-            - CredentialOrganization
-            - QACredentialOrganization
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.AssessmentProfile.Type">
-            <summary>
-             type
             </summary>
         </member>
         <member name="T:RA.Models.Json.CredentialAlignmentObject">

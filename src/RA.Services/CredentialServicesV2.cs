@@ -68,7 +68,44 @@ namespace RA.Services
                 if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
                     cer.IsManagedRequest = true;
 
-                string identifier = "Credential_" + request.Credential.Ctid;
+				// need to generalize this
+				bool recordWasFound = false;
+				bool usedCEKeys = false;
+				string message = "";
+				var result = HistoryServices.GetMostRecentHistory( "Credential", output.Ctid, ref recordWasFound, ref usedCEKeys, ref message );
+				if ( recordWasFound ) //found previous
+				{
+					LoggingHelper.DoTrace( 6, string.Format( "Credential publish. Found a previous publish for CTID: {0}, Used CEKeys: {1}, PublishMethodURI: {2} ", output.Ctid, usedCEKeys, result.PublishMethodURI) );
+					if (result.DataOwnerCTID.ToLower() != cer.PublishingForOrgCtid.ToLower() )
+					{
+						//don't allow but may be moot if validating the apiKey owner ctid combination
+						messages.Add( FormatMessage( "Suspcious request. The provided data owner CTID is different from the data owner CTID used for previous requests. This condition is not allowed. Credential type: ({0}), Credential '{1}'.", output.CredentialType, request.Credential.Name ) );
+						helper.SetMessages( messages );
+						LoggingHelper.DoTrace( 5, "Credential publish. Was managed request. Overriding to CE publish." );
+						isValid = false;
+						return; //===================
+
+					} else 
+					//want to always the original publishing keys - which will always be proper in the last
+					if ( usedCEKeys && cer.IsManagedRequest )
+					{
+						LoggingHelper.DoTrace( 5, "Credential publish. Was managed request. Overriding to CE publish." );
+						cer.IsManagedRequest = false;   //should record override
+						cer.OverrodeOriginalRequest = true;
+
+					} else if ( !usedCEKeys && !cer.IsManagedRequest )
+					{
+						//this should not happen. Means used publisher
+						cer.IsManagedRequest = true;   //should record override
+						cer.OverrodeOriginalRequest = true;
+					}
+				} else 
+				{
+					//eventually will always do managed
+					//cer.IsManagedRequest = true;
+				}
+
+				string identifier = "Credential_" + request.Credential.Ctid;
                 if ( cer.Publish(helper.Payload, submitter, identifier, ref status, ref crEnvelopeId) )
                 {
                     //for now need to ensure envelopid is returned
@@ -293,11 +330,11 @@ namespace RA.Services
 
 				HandleCredentialAlignmentFields( input, output, ref messages );
 
-				output.ProcessStandards = AssignValidUrlAsString( input.ProcessStandards, "ProcessStandards", ref messages );
+				output.ProcessStandards = AssignValidUrlAsString( input.ProcessStandards, "ProcessStandards", ref messages, false );
                 output.ProcessStandardsDescription = AssignLanguageMap( ConvertSpecialInput( input.ProcessStandardsDescription ), input.ProcessStandardsDescription_Map,"ProcessStandardsDescription",  DefaultLanguageForMaps, ref messages );
 
-                output.CommonConditions = AssignValidUrlListAsStringList( input.CommonConditions, "CommonConditions", ref messages );
-				output.CommonCosts = AssignValidUrlListAsStringList( input.CommonCosts, "CommonCosts", ref messages );
+                output.CommonConditions = AssignValidUrlListAsStringList( input.CommonConditions, "CommonConditions", ref messages, false );
+				output.CommonCosts = AssignValidUrlListAsStringList( input.CommonCosts, "CommonCosts", ref messages, false );
 
 				if ( input.HasPart.Count > 0 )
 				{
@@ -343,7 +380,7 @@ namespace RA.Services
 						var rp = new RJ.RevocationProfile();
 						rp.Description = Assign(r.Description, DefaultLanguageForMaps);
 						rp.DateEffective = MapDate( r.DateEffective, "DateEffective", ref messages );
-						rp.RevocationCriteria = AssignValidUrlAsString( r.RevocationCriteria, "RevocationCriteria", ref messages );
+						rp.RevocationCriteria = AssignValidUrlAsString( r.RevocationCriteria, "RevocationCriteria", ref messages, false );
 						rp.RevocationCriteriaDescription = Assign(r.RevocationCriteriaDescription, DefaultLanguageForMaps);
 						rp.Jurisdiction = MapJurisdictions( r.Jurisdiction, ref messages );
 						list.Add( rp );
@@ -503,12 +540,12 @@ namespace RA.Services
         {
 
 
-            to.AvailableOnlineAt = AssignValidUrlAsStringList( from.AvailableOnlineAt, "AvailableOnlineAt", ref messages );
-            to.AvailabilityListing = AssignValidUrlAsStringList( from.AvailabilityListing, "AvailabilityListing", ref messages );
+            to.AvailableOnlineAt = AssignValidUrlAsStringList( from.AvailableOnlineAt, "AvailableOnlineAt", ref messages, false );
+            to.AvailabilityListing = AssignValidUrlAsStringList( from.AvailabilityListing, "AvailabilityListing", ref messages, false );
 
-            to.Image = AssignValidUrlAsString( from.Image, "Image", ref messages );
-            to.PreviousVersion = AssignValidUrlAsString( from.PreviousVersion, "PreviousVersion", ref messages );
-            to.LatestVersion = AssignValidUrlAsString( from.LatestVersion, "LatestVersion", ref messages );
+            to.Image = AssignValidUrlAsString( from.Image, "Image", ref messages, false );
+            to.PreviousVersion = AssignValidUrlAsString( from.PreviousVersion, "PreviousVersion", ref messages, false );
+            to.LatestVersion = AssignValidUrlAsString( from.LatestVersion, "LatestVersion", ref messages, false );
 
 
         }
@@ -564,16 +601,6 @@ namespace RA.Services
         {
             output.Subject = FormatCredentialAlignmentListFromStrings( input.Subject );
 
-			//can't depend on the codes being SOC
-			output.OccupationType = FormatCredentialAlignmentListFromFrameworkItemList( input.OccupationType, true, ref messages );
-
-			//can't depend on the codes being NAICS??
-			output.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( input.IndustryType, true, ref messages );
-			if ( input.Naics != null && input.Naics.Count > 0 )
-				output.Naics = input.Naics;
-			else
-				output.Naics = null;
-
 			if ( !string.IsNullOrWhiteSpace( input.CredentialStatusType ) )
             {
                 output.CredentialStatusType = FormatCredentialAlignment( "credentialStatusType", input.CredentialStatusType, ref messages ) ;
@@ -581,12 +608,31 @@ namespace RA.Services
             else
                 output.CredentialStatusType = null;
 
-            //
-            output.AudienceLevel = FormatCredentialAlignmentVocabs( "audienceLevelType", input.AudienceLevelType, ref messages );
-            output.AudienceType = FormatCredentialAlignmentVocabs( "audienceType", input.AudienceType, ref messages );
-            
+			//frameworks
+			//can't depend on the codes being SOC
+			output.OccupationType = FormatCredentialAlignmentListFromFrameworkItemList( input.OccupationType, true, ref messages );
+			//output.AlternativeOccupationType = AssignLanguageMapList( input.AlternativeOccupationType, input.AlternativeOccupationType_Map, "Credential AlternativeOccupationType", ref messages );
 
-            if ( IsValidDegreeType( output.CredentialType ) )
+			//can't depend on the codes being NAICS??
+			output.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( input.IndustryType, true, ref messages );
+			if ( input.Naics != null && input.Naics.Count > 0 )
+				output.Naics = input.Naics;
+			else
+				output.Naics = null;
+			//output.AlternativeIndustryType = AssignLanguageMapList( input.AlternativeIndustryType, input.AlternativeIndustryType_Map, "Credential AlternativeIndustryType", ref messages );
+			//
+			output.InstructionalProgramType = FormatCredentialAlignmentListFromFrameworkItemList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
+			//
+			//output.AlternativeInstructionalProgramType = AssignLanguageMapList( input.AlternativeInstructionalProgramType, input.AlternativeInstructionalProgramType_Map, "Credential AlternativeInstructionalProgramType", ref messages );
+			//
+			output.AudienceLevel = FormatCredentialAlignmentVocabs( "audienceLevelType", input.AudienceLevelType, ref messages );
+            output.AudienceType = FormatCredentialAlignmentVocabs( "audienceType", input.AudienceType, ref messages );
+
+			output.AssessmentDeliveryType = FormatCredentialAlignmentVocabs( "deliveryType", input.AssessmentDeliveryType, ref messages, "assessmentDeliveryType" );
+			output.LearningDeliveryType = FormatCredentialAlignmentVocabs( "deliveryType", input.LearningDeliveryType, ref messages, "learningDeliveryType" );
+
+
+			if ( IsValidDegreeType( output.CredentialType ) )
             {
                 output.DegreeConcentration = FormatCredentialAlignmentListFromStrings( input.DegreeConcentration, input.DegreeConcentration_Map );
 

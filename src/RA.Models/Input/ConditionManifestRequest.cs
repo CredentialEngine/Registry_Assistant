@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
+﻿using System.Collections.Generic;
 
 namespace RA.Models.Input
 {
@@ -11,19 +6,15 @@ namespace RA.Models.Input
 	{
 		public ConditionManifestRequest()
 		{
-			//ConditionManifests = new List<ConditionManifest>();
 			ConditionManifest = new ConditionManifest();
 		}
 
 		/// <summary>
-		/// consider allowing multiple?
-		/// Probably too many complications
+		/// Condition Manifest for an organization
 		/// </summary>
-		//public List<ConditionManifest> ConditionManifests { get; set; }
-
 		public ConditionManifest ConditionManifest { get; set; }
 
-
+		//public List<BlankNode> BlankNodes = new List<BlankNode>();
 	}
 
 	public class ConditionManifest
@@ -58,12 +49,7 @@ namespace RA.Models.Input
         /// Organization that owns this ConditionManifest
         /// </summary>
         public OrganizationReference ConditionManifestOf { get; set; } = new OrganizationReference();
-        //Alias
-        public OrganizationReference OwningOrganization
-        {
-            get { return ConditionManifestOf; }
-            set { ConditionManifestOf = value; }
-        }
+
 
         /// <summary>
         /// Required condition profiles

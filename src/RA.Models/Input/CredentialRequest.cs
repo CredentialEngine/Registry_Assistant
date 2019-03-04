@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using RA.Models;
-using LM = RA.Models.JsonV2;
+﻿using System.Collections.Generic;
 namespace RA.Models.Input
 {
 	/// <summary>
@@ -21,6 +14,7 @@ namespace RA.Models.Input
 		/// Credential Input Class
 		/// </summary>
 		public Credential Credential { get; set; }
+		//public List<BlankNode> BlankNodes = new List<BlankNode>();
 
 	}
 
@@ -176,16 +170,40 @@ namespace RA.Models.Input
 		/// general has more opportunity for errors
 		/// </summary>
 		public List<OrganizationReference> AccreditedBy { get; set; }
+
+		/// <summary>
+		/// List of Organizations that approve this credential
+		/// </summary>
 		public List<OrganizationReference> ApprovedBy { get; set; }
+		/// List of Organizations that offer this credential
+		/// </summary>
 		public List<OrganizationReference> OfferedBy { get; set; }
+		/// <summary>
+		/// List of Organizations that recognize this credential
+		/// </summary>
 		public List<OrganizationReference> RecognizedBy { get; set; }
+		/// <summary>
+		/// List of Organizations that regulate this credential
+		/// </summary>
 		public List<OrganizationReference> RegulatedBy { get; set; }
+		/// <summary>
+		/// List of Organizations that renew this credential
+		/// </summary>
 		public List<OrganizationReference> RenewedBy { get; set; }
+		/// <summary>
+		/// List of Organizations that can revoke this credential
+		/// </summary>
 		public List<OrganizationReference> RevokedBy { get; set; }
 
+		/// <summary>
+		/// List of credentials that are part of this credential
+		/// </summary>
+		public List<EntityReference> HasPart { get; set; }
 
-        public List<EntityReference> HasPart { get; set; }
-        public List<EntityReference> IsPartOf { get; set; }
+		/// <summary>
+		/// List of credentials where this credential is a part of.
+		/// </summary>
+		public List<EntityReference> IsPartOf { get; set; }
 
 
         #region INs
@@ -214,10 +232,37 @@ namespace RA.Models.Input
         public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
         public List<string> AudienceLevelType { get; set; }
         public List<string> AudienceType { get; set; }
+		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
+		public List<string> LearningDeliveryType { get; set; } = new List<string>();
 
-        public List<FrameworkItem> OccupationType { get; set; }
+		//
+		public List<FrameworkItem> OccupationType { get; set; }
+		//public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+		//public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// List of valid O*Net codes. See:
+		/// https://www.onetonline.org/find/
+		/// </summary>
+		public List<string> ONET_Codes { get; set; } = new List<string>();
+
 		public List<FrameworkItem> IndustryType { get; set; }
+		//public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+		//public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// List of valid NAICS codes. See:
+		/// https://www.naics.com/search/
+		/// </summary>
 		public List<string> Naics { get; set; }
+
+		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
+		//public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
+		//public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// List of valid Classification of Instructional Program codes. See:
+		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
+		/// </summary>
+		public List<string> CIP_Codes { get; set; } = new List<string>();
+
 		public List<string> Keyword { get; set; }
         public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
         public List<string> DegreeConcentration { get; set; }

@@ -4,39 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using RA.Models.Json;
 
 namespace RA.Models.JsonV2
 {
-    //public class CredentialGraph
-    //{
-    //    [JsonIgnore]
-    //    public static string classType = "ceterms:Credential";
-    //    public CredentialGraph()
-    //    {
-    //        Type = classType;
-    //        Context = "http://credreg.net/ctdlasn/schema/context/json";
-    //    }
-    //    [JsonProperty("@context")]
-    //    public string Context { get; set; }
-
-
-    //    [JsonProperty("@id")]
-    //    public string CtdlId { get; set; }
-
-    //    /// <summary>
-    //    /// Main graph object
-    //    /// </summary>
-    //    [JsonProperty( "@graph" )]
-    //    public List<object> Graph { get; set; } = new List<object>();
-        
-    //    [JsonProperty("@type")]
-    //    public string Type { get; set; }
-
-    //    [JsonProperty("ceterms:ctid")]
-    //    public string CTID { get; set; }
-
-    //}
     public class Credential : JsonLDDocument
     {
 		[JsonIgnore]
@@ -44,9 +14,6 @@ namespace RA.Models.JsonV2
 		public Credential()
         {
 			Subject = new List<CredentialAlignmentObject>();
-			OccupationType = new List<CredentialAlignmentObject>();
-            IndustryType = new List<CredentialAlignmentObject>();
-			Naics = new List<string>();
             SubjectWebpage = null;
 			HasPart = null;
 			IsPartOf = null;
@@ -184,16 +151,29 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:subject" )]
         public List<CredentialAlignmentObject> Subject { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:occupationType" )]
-        public List<CredentialAlignmentObject> OccupationType { get; set; }
+		//frameworks
+		[JsonProperty( PropertyName = "ceterms:occupationType" )]
+		public List<CredentialAlignmentObject> OccupationType { get; set; } = new List<CredentialAlignmentObject>();
 
-        [JsonProperty( PropertyName = "ceterms:industryType" )]
-        public List<CredentialAlignmentObject> IndustryType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:alternativeOccupationType" )]
+		public LanguageMapList AlternativeOccupationType { get; set; } = new LanguageMapList();
+
+		[JsonProperty( PropertyName = "ceterms:industryType" )]
+		public List<CredentialAlignmentObject> IndustryType { get; set; } = new List<CredentialAlignmentObject>();
 
 		[JsonProperty( PropertyName = "ceterms:naics" )]
-		public List<string> Naics { get; set; }
+		public List<string> Naics { get; set; } = new List<string>();
 
-        [JsonProperty( PropertyName = "ceterms:keyword" )]
+		[JsonProperty( PropertyName = "ceterms:alternativeIndustryType" )]
+		public LanguageMapList AlternativeIndustryType { get; set; } = new LanguageMapList();
+
+		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
+		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; } = new List<CredentialAlignmentObject>();
+		//
+		[JsonProperty( PropertyName = "ceterms:alternativeInstructionalProgramType" )]
+		public LanguageMapList AlternativeInstructionalProgramType { get; set; } = new LanguageMapList();
+		//
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
         public LanguageMapList Keyword { get; set; } = new LanguageMapList();
 
 
@@ -209,7 +189,13 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:audienceType" )]
         public List<CredentialAlignmentObject> AudienceType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:degreeConcentration" )]
+		[JsonProperty( PropertyName = "ceterms:assessmentDeliveryType" )]
+		public List<CredentialAlignmentObject> AssessmentDeliveryType { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:learningDeliveryType" )]
+		public List<CredentialAlignmentObject> LearningDeliveryType { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:degreeConcentration" )]
         public List<CredentialAlignmentObject> DegreeConcentration { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:degreeMajor" )]

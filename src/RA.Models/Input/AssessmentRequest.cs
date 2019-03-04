@@ -10,7 +10,7 @@ namespace RA.Models.Input
 		}
 
 		public Assessment Assessment { get; set; }
-
+		//public List<BlankNode> BlankNodes = new List<BlankNode>();
 
 	}
 	public class Assessment
@@ -31,7 +31,6 @@ namespace RA.Models.Input
 			JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
 			DeliveryType = new List<string>();
 
-            InstructionalProgramType = new List<FrameworkItem>();
             EstimatedCost = new List<CostProfile>();
             EstimatedDuration = new List<DurationProfile>();
 			//
@@ -167,7 +166,19 @@ namespace RA.Models.Input
         public string ProcessStandardsDescription { get; set; }
         public LanguageMap ProcessStandardsDescription_Map { get; set; } = new LanguageMap();
 
-        public List<FrameworkItem> InstructionalProgramType { get; set; }
+		//
+		public List<FrameworkItem> OccupationType { get; set; }
+		//public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+		//public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
+
+		public List<FrameworkItem> IndustryType { get; set; }
+		//public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+		//public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+
+		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
+		//public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
+		//public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
+		//
 		public bool? IsProctored { get; set; }
         public bool? HasGroupEvaluation { get; set; }
         public bool? HasGroupParticipation { get; set; }

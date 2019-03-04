@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace RA.Models.Input
 {
@@ -10,21 +6,18 @@ namespace RA.Models.Input
 	{
 		public CostManifestRequest()
 		{
-			//CostManifests = new List<CostManifest>();
 			CostManifest = new CostManifest();
 		}
-		//TODO - only allow single or multiple???
 		public CostManifest CostManifest { get; set; }
-		//public List<CostManifest> CostManifests { get; set; }
 
-
+		//public List<BlankNode> BlankNodes = new List<BlankNode>();
 	}
 
 	public class CostManifest
 	{
 		public CostManifest()
 		{
-			OwningOrganization = new OrganizationReference();
+			//OwningOrganization = new OrganizationReference();
 			EstimatedCost = new List<CostProfile>();
 		}
 
@@ -55,12 +48,12 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Organization that owns this CostManifest
 		/// </summary>
-		public OrganizationReference CostManifestOf { get; set; }
-        public OrganizationReference OwningOrganization
-        {
-            get { return CostManifestOf; }
-            set { CostManifestOf = value; }
-        }
+		public OrganizationReference CostManifestOf { get; set; } = new OrganizationReference();
+        //public OrganizationReference OwningOrganization
+        //{
+        //    get { return CostManifestOf; }
+        //    set { CostManifestOf = value; }
+        //}
         public List<CostProfile> EstimatedCost { get; set; }
 	}
 }

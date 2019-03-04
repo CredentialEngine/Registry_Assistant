@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
-using RA.Models.Json;
 using System.ComponentModel;
 
 namespace RA.Models.JsonV2
@@ -128,6 +127,9 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:industryType" )]
         public List<CredentialAlignmentObject> IndustryType { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:alternativeIndustryType" )]
+		public LanguageMapList AlternativeIndustryType { get; set; } = new LanguageMapList();
 
 		[JsonProperty( PropertyName = "ceterms:naics" )]
 		public List<string> Naics { get; set; }

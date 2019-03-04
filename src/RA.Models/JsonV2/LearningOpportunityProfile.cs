@@ -23,7 +23,6 @@ namespace RA.Models.JsonV2
             AvailableOnlineAt = new List<string>();
 			LearningMethodType = new List<CredentialAlignmentObject>();
 			DeliveryType = new List<CredentialAlignmentObject>();
-            InstructionalProgramType = new List<CredentialAlignmentObject>();
             EstimatedDuration = new List<DurationProfile>();
             EstimatedCost = new List<CostProfile>();
             CreditUnitType = new CredentialAlignmentObject();
@@ -149,8 +148,28 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:creditUnitTypeDescription" )]
         public LanguageMap CreditUnitTypeDescription { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
-        public List<CredentialAlignmentObject> InstructionalProgramType { get; set; }
+		//frameworks
+		[JsonProperty( PropertyName = "ceterms:occupationType" )]
+		public List<CredentialAlignmentObject> OccupationType { get; set; } = new List<CredentialAlignmentObject>();
+
+		[JsonProperty( PropertyName = "ceterms:alternativeOccupationType" )]
+		public LanguageMapList AlternativeOccupationType { get; set; } = new LanguageMapList();
+
+		[JsonProperty( PropertyName = "ceterms:industryType" )]
+		public List<CredentialAlignmentObject> IndustryType { get; set; } = new List<CredentialAlignmentObject>();
+
+		//[JsonProperty( PropertyName = "ceterms:naics" )]
+		//public List<string> Naics { get; set; } = new List<string>();
+
+		[JsonProperty( PropertyName = "ceterms:alternativeIndustryType" )]
+		public LanguageMapList AlternativeIndustryType { get; set; } = new LanguageMapList();
+
+		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
+		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; } = new List<CredentialAlignmentObject>();
+		//
+		[JsonProperty( PropertyName = "ceterms:alternativeInstructionalProgramType" )]
+		public LanguageMapList AlternativeInstructionalProgramType { get; set; } = new LanguageMapList();
+		//
 
 
 		[JsonProperty( PropertyName = "ceterms:teaches" )]

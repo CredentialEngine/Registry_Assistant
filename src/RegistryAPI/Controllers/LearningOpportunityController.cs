@@ -9,6 +9,7 @@ using RA.Models;
 using RA.Models.Input;
 using Newtonsoft.Json;
 using RA.Services;
+using ServiceHelper = RA.Services.ServiceHelperV2;
 using Utilities;
 
 namespace RegistryAPI.Controllers
@@ -29,12 +30,12 @@ namespace RegistryAPI.Controllers
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		[HttpPost, Route( "learningopportunity/format" )]
-		public RegistryAssistantResponse Format( LearningOpportunityRequest request )
-		{
-			var response = FormatV2( request );
-			response.Messages.Add( FormatObsoleteEndpoint( controller, "formatV2" ) );
-			return response;
+		//[HttpPost, Route( "learningopportunity/format" )]
+		//public RegistryAssistantResponse Format( LearningOpportunityRequest request )
+		//{
+		//	var response = FormatV2( request );
+		//	response.Messages.Add( FormatObsoleteEndpoint( controller, "formatV2" ) );
+		//	return response;
 			//bool isValid = true;
 			//List<string> messages = new List<string>();
 			//var response = new RegistryAssistantResponse();
@@ -62,19 +63,19 @@ namespace RegistryAPI.Controllers
 			//	response.Successful = false;
 			//}
 			//return response;
-		} //
+		//} //
 
 		/// <summary>
 		/// Publish a Learning Opportunity to the Credential Engine Registry
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		[HttpPost, Route( "learningopportunity/publish" )]
-		public RegistryAssistantResponse Publish( LearningOpportunityRequest request )
-		{
-			var response = PublishV2( request );
-			response.Messages.Add( FormatObsoleteEndpoint( controller, "publishV2" ) );
-			return response;
+		//[HttpPost, Route( "learningopportunity/publish" )]
+		//public RegistryAssistantResponse Publish( LearningOpportunityRequest request )
+		//{
+		//	var response = PublishV2( request );
+		//	response.Messages.Add( FormatObsoleteEndpoint( controller, "publishV2" ) );
+		//	return response;
 			//bool isValid = true;
 			//List<string> messages = new List<string>();
 			//var response = new RegistryAssistantResponse();
@@ -132,14 +133,14 @@ namespace RegistryAPI.Controllers
 			//	response.Successful = false;
 			//}
 			//return response;
-		} //
+		//} //
         /// <summary>
         /// Handle request to format a Learning Opportunity document as CTDL Json-LD
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost, Route( "learningopportunity/formatv2" )]
-        public RegistryAssistantResponse FormatV2( LearningOpportunityRequest request )
+        [HttpPost, Route( "learningopportunity/format" )]
+        public RegistryAssistantResponse Format( LearningOpportunityRequest request )
         {
             bool isValid = true;
             List<string> messages = new List<string>();
@@ -175,8 +176,8 @@ namespace RegistryAPI.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost, Route( "learningopportunity/publishv2" )]
-        public RegistryAssistantResponse PublishV2( LearningOpportunityRequest request )
+        [HttpPost, Route( "learningopportunity/publish" )]
+        public RegistryAssistantResponse Publish( LearningOpportunityRequest request )
         {
             bool isValid = true;
             List<string> messages = new List<string>();

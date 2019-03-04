@@ -80,12 +80,37 @@ namespace RA.Services
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
 
-                CER cer = new CER( "Assessment", output.Type, output.Ctid, helper.SerializedInput);
-                cer.PublisherAuthorizationToken = helper.ApiKey;
-                cer.PublishingForOrgCtid = helper.OwnerCtid;
+				CER cer = new CER( "Assessment", output.Type, output.Ctid, helper.SerializedInput )
+				{
+					PublisherAuthorizationToken = helper.ApiKey,
+					PublishingForOrgCtid = helper.OwnerCtid
+				};
 
-                if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
 					cer.IsManagedRequest = true;
+				bool recordWasFound = false;
+				bool usedCEKeys = false;
+				string message = "";
+				var result = HistoryServices.GetMostRecentHistory( "Assessment", output.Ctid, ref recordWasFound, ref usedCEKeys, ref message );
+				if ( recordWasFound ) //found previous
+				{
+					if ( usedCEKeys && cer.IsManagedRequest )
+					{
+						LoggingHelper.DoTrace( 5, "Assessment publish. Was managed request. Overriding to CE publish." );
+						cer.IsManagedRequest = false;   //should record override
+						cer.OverrodeOriginalRequest = true;
+					}
+					else if ( !usedCEKeys && !cer.IsManagedRequest )
+					{
+						//this should not happen. Means used publisher
+						cer.IsManagedRequest = true;   //should record override
+						cer.OverrodeOriginalRequest = true;
+					}
+				}
+				else
+				{
+					//eventually will always do managed
+				}
 
 				string identifier = "Assessment_" + request.Assessment.Ctid;
 
@@ -221,8 +246,6 @@ namespace RA.Services
 
                 output.Keyword = AssignLanguageMapList( input.Keyword, input.Keyword_Map, "Assessment Keywords", ref messages );
 
-                output.Subject = FormatCredentialAlignmentListFromStrings( input.Subject );
-
 				output.Jurisdiction = MapJurisdictions( input.Jurisdiction, ref messages );
 
 				output.AvailableAt = FormatAvailableAtList( input.AvailableAt, ref messages );
@@ -259,8 +282,8 @@ namespace RA.Services
 				HandleAssertedINsProperties( input, output, helper, ref messages );
 		
 				//17-10-19 changing these to strings, as these should never(?) be 3rd party
-				output.CommonConditions = AssignValidUrlListAsStringList( input.CommonConditions, "CommonConditions", ref messages );
-				output.CommonCosts = AssignValidUrlListAsStringList( input.CommonCosts, "CommonCosts", ref messages );
+				output.CommonConditions = AssignValidUrlListAsStringList( input.CommonConditions, "CommonConditions", ref messages, false );
+				output.CommonCosts = AssignValidUrlListAsStringList( input.CommonCosts, "CommonCosts", ref messages, false );
 
 				output.FinancialAssistance = MapFinancialAssitance( input.FinancialAssistance, ref messages );
 
@@ -364,7 +387,7 @@ namespace RA.Services
             //output.CodedNotation = AssignListToString( input.CodedNotation );
             output.CodedNotation = input.CodedNotation;
 
-            output.AssessmentExample = AssignValidUrlAsString( input.AssessmentExample, "AssessmentExample", ref messages );
+            output.AssessmentExample = AssignValidUrlAsString( input.AssessmentExample, "AssessmentExample", ref messages, false );
             output.AssessmentExampleDescription = AssignLanguageMap( ConvertSpecialInput( input.AssessmentExampleDescription ), input.AssessmentExampleDescription_Map, "AssessmentExampleDescription", DefaultLanguageForMaps,  ref messages );
 
             output.AssessmentOutput = AssignLanguageMap( ConvertSpecialInput( input.AssessmentOutput ), input.AssessmentOutput_Map, "AssessmentOutput", DefaultLanguageForMaps, ref messages );
@@ -426,8 +449,8 @@ namespace RA.Services
 			//foreach ( var field in input.ExternalResearch )
    //             output.ExternalResearch = HandleSingleUrlField( field, "ExternalResearch", ref messages );
 
-			output.ProcessStandards = AssignValidUrlAsString( input.ProcessStandards, "Process Standards", ref messages );
-			output.ScoringMethodExample = AssignValidUrlAsString( input.ScoringMethodExample, "Scoring Method Example", ref messages );
+			output.ProcessStandards = AssignValidUrlAsString( input.ProcessStandards, "Process Standards", ref messages, false );
+			output.ScoringMethodExample = AssignValidUrlAsString( input.ScoringMethodExample, "Scoring Method Example", ref messages, false );
 
 		}
 
@@ -470,29 +493,35 @@ namespace RA.Services
 		#region === CredentialAlignmentObject ===
 		public void HandleCredentialAlignmentFields( InputEntity input, OutputEntity output, ref List<string> messages )
         {
+			output.Subject = FormatCredentialAlignmentListFromStrings( input.Subject );
+
 			output.DeliveryType = FormatCredentialAlignmentVocabs( "deliveryType", input.DeliveryType, ref messages );
 			output.AssessmentMethodType = FormatCredentialAlignmentVocabs( "assessmentMethodType", input.AssessmentMethodType, ref messages );
 			output.AssessmentUseType = FormatCredentialAlignmentVocabs( "assessmentUseType", input.AssessmentUseType, ref messages );
 			output.ScoringMethodType = FormatCredentialAlignmentVocabs( "scoringMethodType", input.ScoringMethodType, ref messages );
 
             output.AudienceType = FormatCredentialAlignmentVocabs("audienceType", input.AudienceType, ref messages);
-            
-            output.InstructionalProgramType = FormatCredentialAlignmentListFromFrameworkItemList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
-			//if ( input.InstructionalProgramType != null && input.InstructionalProgramType.Count > 0 )
-			//{
-			//	foreach ( FrameworkItem item in input.InstructionalProgramType )
-			//	{
-			//		output.InstructionalProgramType.Add( FormatCredentialAlignment( item, true ) );
-			//	}
-			//}
-			//else
-			//	output.InstructionalProgramType = null;
 
+			//frameworks
+			//can't depend on the codes being SOC
+			output.OccupationType = FormatCredentialAlignmentListFromFrameworkItemList( input.OccupationType, true, ref messages );
+
+			//output.AlternativeOccupationType = AssignLanguageMapList( input.AlternativeOccupationType, input.AlternativeOccupationType_Map, "Credential AlternativeOccupationType", ref messages );
+
+			//can't depend on the codes being NAICS??
+			output.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( input.IndustryType, true, ref messages );
+
+			//output.AlternativeIndustryType = AssignLanguageMapList( input.AlternativeIndustryType, input.AlternativeIndustryType_Map, "Credential AlternativeIndustryType", ref messages );
+			//
+			output.InstructionalProgramType = FormatCredentialAlignmentListFromFrameworkItemList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
+			//
+			//output.AlternativeInstructionalProgramType = AssignLanguageMapList( input.AlternativeInstructionalProgramType, input.AlternativeInstructionalProgramType_Map, "Credential AlternativeInstructionalProgramType", ref messages );
+			//
 		}
 
-        //see common methods in ServiceHelper
-        #endregion
+		//see common methods in ServiceHelper
+		#endregion
 
 
-    }
+	}
 }

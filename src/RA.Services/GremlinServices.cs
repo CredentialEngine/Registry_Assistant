@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Runtime.Caching;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 
 namespace RA.Services
 {
@@ -178,14 +179,7 @@ namespace RA.Services
 
 			//Apply Query
 			//Hierarchical query structure, transforming CTDL JSON into Gremlin
-			var properties = (( JObject ) token).Properties().ToList();
-			if ( properties.Count() > 0 )
-			{
-				foreach ( var property in properties )
-				{
-					HandleGremlin( property.Name, property.Value, nextPart, context, false );
-				}
-			}
+			HandleGremlin( null, token, nextPart, context, true ); //Setting the property argument to null triggers the top-level handling, which basically just skips the extra .and() layer
 
 			//Finish Query
 			//...)
@@ -260,7 +254,7 @@ namespace RA.Services
 						return "";
 					}
 
-					var value = DirectValue.ToString().Replace( "\\", "" );
+					var value = DirectValue.ToString();
 					if ( DirectValue.Type == JTokenType.String )
 					{
 						return value.Length > 0 ? (PrintStringValueWithoutQuotes ? value : "'" + value + "'") : "";
@@ -364,9 +358,10 @@ namespace RA.Services
 
 			public void AddDefaultHandlers()
 			{
-				Handlers.Add( new TermGroupHandler( "search:andTerms", "and" ) );
-				Handlers.Add( new TermGroupHandler( "search:orTerms", "or" ) );
+				//Handlers.Add( new TermGroupHandler( "search:andTerms", "and" ) );
+				//Handlers.Add( new TermGroupHandler( "search:orTerms", "or" ) );
 				//Handlers.Add( new TermGroupHandler( "search:notTerms", "not" ) ); //.not() doesn't seem to work like .and() and .or()
+				Handlers.Add( new TermGroupHandler() );
 				Handlers.Add( new AnyValueHandler() );
 			}
 
@@ -441,17 +436,17 @@ namespace RA.Services
 			public List<string> AppliesToTerms { get; set; }
 			public virtual void ArrayHandler( string property, JArray token, GremlinItem container, GremlinContext context )
 			{
-				//If it is an array of objects, use out('property').or(...)
+				//If it is an array of objects, use both('property').or(...)
 				var innerContainer = new GremlinItem();
 				if ( token.First().Type == JTokenType.Object )
 				{
-					innerContainer = new GremlinItem( "out", property ) { SkipIfEmptyNext = true };
+					innerContainer = new GremlinItem( "both", property ) { SkipIfEmptyNext = true };
 					innerContainer.Next = new GremlinItem( "or", "" );
 					foreach ( var item in token )
 					{
 						HandleGremlin( property, item, innerContainer.Next, context, true );
 					}
-					//Don't allow ending in .out(...)
+					//Don't allow ending in .both(...)
 					//TODO: test this to see if the .SkipIfEmptyNext setting makes this redundant
 					if ( string.IsNullOrWhiteSpace( innerContainer.Next.ToString() ) )
 					{
@@ -482,10 +477,30 @@ namespace RA.Services
 				//Should this really happen at the HandleGremlin() level?
 				var searchValue = tokenProperties.FirstOrDefault( m => m.Name == "search:value" );
 				var searchOperator = GetStringValue( tokenProperties, "search:operator" );
-				if ( searchValue != null )
+				var normalProperties = tokenProperties.Where( m => !m.Name.Contains( "search:" ) || m.Name == "search:termGroup" ).ToList();
+				//Top-layer handling
+				if ( property == null )
+				{
+					foreach( var item in normalProperties )
+					{
+						HandleGremlin( item.Name, item.Value, container, context, false );
+					}
+				}
+				//Value handling
+				else if ( searchValue != null )
 				{
 					innerContainer = new GremlinItem( searchOperator == "search:andTerms" ? "and" : "or", "" ); //Default: or
-					HandleGremlin( property, searchValue.Value, innerContainer, context, isInArray );  //Should isInArray be true? false? dynamic?
+					if( searchValue.Value.Type == JTokenType.Array )
+					{
+						foreach( var item in searchValue.Values() )
+						{
+							HandleGremlin( property, item, innerContainer, context, false );
+						}
+					}
+					else
+					{
+						HandleGremlin( property, searchValue.Value, innerContainer, context, false );  //Should isInArray be true? false? dynamic?
+					}
 																									   //Don't allow empty values
 					if ( string.IsNullOrWhiteSpace( innerContainer.ToString() ) )
 					{
@@ -498,11 +513,11 @@ namespace RA.Services
 					if ( isInArray )
 					{
 						innerContainer = new GremlinItem( searchOperator == "search:orTerms" ? "or" : "and", "" ); //Default: and
-						foreach ( var itemProperty in tokenProperties )
+						foreach ( var itemProperty in normalProperties )
 						{
 							HandleGremlin( itemProperty.Name, itemProperty.Value, innerContainer, context, false );
 						}
-						//Don't allow ending in .out(...)
+						//Don't allow ending in .both(...)
 						//TODO: test this to see if the .SkipIfEmptyNext setting makes this redundant
 						if ( string.IsNullOrWhiteSpace( innerContainer.ToString() ) )
 						{
@@ -511,13 +526,13 @@ namespace RA.Services
 					}
 					else
 					{
-						innerContainer = new GremlinItem( "out", new GremlinItem( property ) ) { SkipIfEmptyNext = true };
+						innerContainer = new GremlinItem( "both", new GremlinItem( property ) ) { SkipIfEmptyNext = true };
 						innerContainer.Next = new GremlinItem( searchOperator == "search:orTerms" ? "or" : "and", "" ); //Default: and
-						foreach ( var itemProperty in tokenProperties )
+						foreach ( var itemProperty in normalProperties )
 						{
 							HandleGremlin( itemProperty.Name, itemProperty.Value, innerContainer.Next, context, false );
 						}
-						//Don't allow ending in .out(...)
+						//Don't allow ending in .both(...)
 						//TODO: test this to see if the .SkipIfEmptyNext setting makes this redundant
 						if ( string.IsNullOrWhiteSpace( innerContainer.Next.ToString() ) )
 						{
@@ -532,26 +547,43 @@ namespace RA.Services
 			public virtual void ValueHandler( string property, JValue token, GremlinItem container, GremlinContext context )
 			{
 				//Handle the value
-				container.Arguments.Add( new GremlinItem( "has", new List<GremlinItem>() { new GremlinItem( property ), new GremlinItem( token ) } ) );
+
+				//Regex treatment for (most) string values - this is partially to handle URL properties that can't be distinguished from URI properties since @context uses @id for both
+				if( token.Type == JTokenType.String && property != "@type" )
+				{
+					var wrappedValue = WrapTextInRegex( ( string ) token );
+					container.Arguments.Add( new GremlinItem( "has", new List<GremlinItem>() { new GremlinItem( property ), new GremlinItem( wrappedValue ) } ) );
+				}
+				//Other value types
+				else
+				{
+					container.Arguments.Add( new GremlinItem( "has", new List<GremlinItem>() { new GremlinItem( property ), new GremlinItem( token ) } ) );
+				}
 			}
 			//
 
 			public enum TextMatchType { StartsWith, EndsWith, Contains, ExactMatch }
 			public static string WrapTextInRegex( string text, TextMatchType matchType = TextMatchType.Contains, bool isCaseSensitive = false, bool wrapExactMatchInQuotes = true )
 			{
-				var insertText = text.ToString().Replace( "/", "\\/" ).Replace( "\\", "" );
-				var exactMatchNoRegex = text.ToString().Replace( "\\", "" );
-				var caseSensitivityText = isCaseSensitive ? "" : "(?i)";
+				var escapeSpecialCharacters = new List<string>() { "[", "^", "$", "|", "?", "+", "(", ")", "{", "}", "/", "*" };
+				var insertText = (text ?? "").ToString().Replace( "\\", "" ); //Remove backslashes
+				foreach ( var character in escapeSpecialCharacters ) {
+					insertText = insertText.Replace( character, "." ); //Replace special characters with .
+				}
+				//insertText = Regex.Replace( insertText, "(?:er|ing)(\\s|$)", "(?:|s|er|ing)$1", RegexOptions.IgnoreCase ); //Handling for -ing words
+				insertText = Regex.Replace( insertText, "(?:y|e|s|es|ies|er|ing|ement)(\\s|$)", "(?:y|e|s|es|ies|er|ing|ement)$1", RegexOptions.IgnoreCase ); //Handling for -ies words
+				var exactMatchNoRegex = text.ToString().Replace( "\\", "" ); //Remove backslashes from non-regex string
+				var caseSensitiveText = isCaseSensitive ? "" : "(?i)";
 				switch ( matchType )
 				{
 					case TextMatchType.StartsWith:
-					return "test({x,y -> x ==~ y}, /" + caseSensitivityText + insertText + ".*/)";
+					return "test({x,y -> x ==~ y}, /" + caseSensitiveText + insertText + ".*/)";
 					case TextMatchType.EndsWith:
-					return "test({x,y -> x ==~ y}, /" + caseSensitivityText + ".*" + insertText + "/)";
+					return "test({x,y -> x ==~ y}, /" + caseSensitiveText + ".*" + insertText + "/)";
 					case TextMatchType.Contains:
-					return "test({x,y -> x ==~ y}, /" + caseSensitivityText + ".*" + insertText + ".*/)";
+					return "test({x,y -> x ==~ y}, /" + caseSensitiveText + ".*" + insertText + ".*/)";
 					case TextMatchType.ExactMatch:
-					return isCaseSensitive ? "test({x,y -> x ==~ y}, /" + caseSensitivityText + insertText + "/)" : wrapExactMatchInQuotes ? ("'" + exactMatchNoRegex + "'") : exactMatchNoRegex;
+					return isCaseSensitive ? "test({x,y -> x ==~ y}, /" + caseSensitiveText + insertText + "/)" : wrapExactMatchInQuotes ? ("'" + exactMatchNoRegex + "'") : exactMatchNoRegex;
 					default:
 					return wrapExactMatchInQuotes ? ("'" + exactMatchNoRegex + "'") : exactMatchNoRegex;
 				}
@@ -664,7 +696,7 @@ namespace RA.Services
 
 			public static void AddArgumentIfNotNull( GremlinItem holder, string method, string property, string function, JToken value )
 			{
-				if ( value != null )
+				if ( value != null && !string.IsNullOrWhiteSpace( value.ToString() ) )
 				{
 					//e.g. has('ceterms:price', gte(500))
 					holder.Arguments.Add( new GremlinItem( method, new List<GremlinItem>() { new GremlinItem( property ), new GremlinItem( function, value ) } ) );
@@ -674,13 +706,44 @@ namespace RA.Services
 		}
 		//
 
-		//Handle and(), or(), and not() term groups
-		//NOTE - should phase this out in favor of structured queries
-		//e.g. "ceterms:property": { "search:value": [ "value 1", "value 2"], "search:operator": "search:andTerms" }
-		//May not be necessary
+		//Handle term groups
+		//e.g. { "search:termGroup": { "ceterms:name": "some text", "ceterms:description": "some text", "search:operator": "search:orTerms" } }
+		//e.g. { "search:termGroup": [ { "ceterms:name": "some text", "ceterms:description": "some text" }, { "ceterms:keyword": "some other text" } ] }
 		public class TermGroupHandler : DefaultGremlinHandler
 		{
-			public TermGroupHandler( string searchTerm, string gremlinMethod )
+			public TermGroupHandler()
+			{
+				AppliesToTerms = new List<string>() { "search:termGroup" };
+			}
+
+			public override void ArrayHandler( string property, JArray token, GremlinItem container, GremlinContext context )
+			{
+				//Avoid the use of an "both" since the property here is search:termGroup by forcing isInArray to true
+				var innerContainer = new GremlinItem( "or", "" ); //No reason to evaluate a set of term groups as an AND since AND is the default handling for objects
+				foreach( var item in token )
+				{
+					HandleGremlin( property, item, innerContainer, context, true );
+				}
+				if ( !string.IsNullOrWhiteSpace( innerContainer.ToString() ) )
+				{
+					container.Arguments.Add( innerContainer );
+				}
+			}
+			public override void ObjectHandler( string property, JObject token, GremlinItem container, GremlinContext context, bool isInArray )
+			{
+				//Avoid the use of an "both" since the property here is search:termGroup by forcing isInArray to true
+				base.ObjectHandler( property, token, container, context, true );
+			}
+		}
+		//
+
+		//Handle and(), or(), and not() term groups
+		//NOTE - should phase this both in favor of structured queries
+		//e.g. "ceterms:property": { "search:value": [ "value 1", "value 2"], "search:operator": "search:andTerms" }
+		//May not be necessary
+		public class TermGroupHandler2 : DefaultGremlinHandler
+		{
+			public TermGroupHandler2( string searchTerm, string gremlinMethod )
 			{
 				SearchTerm = searchTerm;
 				GremlinMethod = gremlinMethod;
@@ -728,7 +791,9 @@ namespace RA.Services
 			}
 			public static GremlinItem AnyValueForProperty( string property )
 			{
-				return new GremlinItem( "or", new List<GremlinItem>() { new GremlinItem( "has", property ), new GremlinItem( "out", property ) } );
+				//Check for both value properties and both() properties
+				return new GremlinItem( "or", new List<GremlinItem>() { new GremlinItem( "has", property ), new GremlinItem( "both", property ) } );
+				//return new GremlinItem( "has", property );
 			}
 		}
 		//
@@ -752,11 +817,28 @@ namespace RA.Services
 				var searchValue = GetStringValue( properties, "search:value" );
 				var matchType = GetTextMatchType( properties );
 				var isCaseSensitive = GetTextCaseSensitive( properties );
+				var searchValues = GetStringListValue( properties, "search:value" );
+				var searchOperator = GetStringValue( properties, "search:operator" );
+				var wrapper = new GremlinItem();
 
-				//Add the query part
-				var wrapper = new GremlinItem( "has", property );
-				var targetValue = WrapTextInRegex( searchValue, matchType, isCaseSensitive );
-				wrapper.Arguments.Add( new GremlinItem( targetValue ) { PrintStringValueWithoutQuotes = true } );
+				if( searchValues != null )
+				{
+					wrapper = new GremlinItem( searchOperator == "search:andTerms" ? "and" : "or", "" ); //Default: and
+					foreach( var item in searchValues )
+					{
+						var targetValue = WrapTextInRegex( item, matchType, isCaseSensitive );
+						var innerWrapper = new GremlinItem( "has", property );
+						innerWrapper.Arguments.Add( new GremlinItem( targetValue ) { PrintStringValueWithoutQuotes = true } );
+						wrapper.Arguments.Add( innerWrapper );
+					}
+				}
+				else
+				{
+					//Add the query part
+					wrapper = new GremlinItem( "has", property );
+					var targetValue = WrapTextInRegex( searchValue, matchType, isCaseSensitive );
+					wrapper.Arguments.Add( new GremlinItem( targetValue ) { PrintStringValueWithoutQuotes = true } );
+				}
 
 				//Add the data
 				container.Arguments.Add( wrapper );
@@ -804,8 +886,8 @@ namespace RA.Services
 
 				//Custom handling for text values to accommodate the jump from the property name to the actual value with any unknown language code in between
 				//e.g. "ceterms:keyword": [ "keyword 1", "keyword 2", "keyword 3" ]
-				//e.g. out('ceterms:keyword').properties().or(hasValue(test(...)),hasValue(test(...)))
-				var wrapper = new GremlinItem( "out", property );
+				//e.g. both('ceterms:keyword').properties().or(hasValue(test(...)),hasValue(test(...)))
+				var wrapper = new GremlinItem( "both", property );
 				wrapper.Next = new GremlinItem( "properties().or", "" );
 				foreach ( var item in normalValues )
 				{
@@ -850,7 +932,7 @@ namespace RA.Services
 
 				//isInArray should never be true - maybe log it if it is?
 				//Otherwise, handling would need to be setup here
-				var wrapper = new GremlinItem( "out", property );
+				var wrapper = new GremlinItem( "both", property );
 
 				//Handle based on which keys are present
 				//Using singular search:value
@@ -885,7 +967,9 @@ namespace RA.Services
 				else
 				{
 					//Update the wrapper
-					//e.g., out("ceterms:name").or/and(has('en', test(...)),has('fr', test(...)))
+					//e.g., both("ceterms:name").and(or(has('en', test(...1)),has('en', test(...2))))
+					//e.g., both("ceterms:name").and(or(has('en', test(...1)),has('en', test(...2))), or(has('fr', test(...3))))
+					//e.g., both("ceterms:name").or(or(has('en', test(...1)),has('en', test(...2))), or(has('fr', test(...3))))
 					wrapper.Next = new GremlinItem( searchOperator == "search:orTerms" ? "or" : "and", "" );
 					foreach ( var prop in langProperties )
 					{
@@ -893,10 +977,15 @@ namespace RA.Services
 						//e.g. "en": [ "name 1", "name 2" ]
 						if ( prop.Value.Type == JTokenType.Array )
 						{
+							var valueListWrapper = new GremlinItem( "or", "" );
 							foreach ( var val in prop.Value )
 							{
 								var has = HasLanguageValues( prop.Name, val.ToString(), searchMatchType, searchCaseSensitive );
-								wrapper.Next.Arguments.Add( has );
+								valueListWrapper.Arguments.Add( has );
+							}
+							if ( !string.IsNullOrWhiteSpace( valueListWrapper.ToString() ) )
+							{
+								wrapper.Next.Arguments.Add( valueListWrapper );
 							}
 						}
 						//Singular values
@@ -941,14 +1030,14 @@ namespace RA.Services
 				var wrappedValue = WrapTextInRegex( token.ToString() );
 
 				//Add the query part
-				//out('ceterms:name')
-				var wrapper = new GremlinItem( "out", property );
+				//both('ceterms:name')
+				var wrapper = new GremlinItem( "both", property );
 
 				//Add the properties
-				//out('ceterms:name').properties().hasValue('test...')
+				//both('ceterms:name').properties().hasValue('test...')
 				wrapper.Next = new GremlinItem( "properties().hasValue", new GremlinItem( wrappedValue ) { PrintStringValueWithoutQuotes = true } );
 
-				//Add the data, but don't allow .out(...) with no followup
+				//Add the data, but don't allow .both(...) with no followup
 				if ( !string.IsNullOrWhiteSpace( wrapper.Next.ToString() ) )
 				{
 					container.Arguments.Add( wrapper );

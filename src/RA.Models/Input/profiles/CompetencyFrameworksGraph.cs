@@ -9,7 +9,7 @@ using System.Collections;
 
 namespace RA.Models.Input
 {
-    public class CompetencyFrameworksGraph
+    public class CompetencyFrameworkGraph
     {
 
         /// <summary>

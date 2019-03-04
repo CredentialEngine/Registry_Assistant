@@ -20,6 +20,7 @@ namespace RA.Services
 {
 	public class RegistryServices
 	{
+		public const string CE_PUBLISH_METHOD = "Self Publish";
 		public RegistryServices( string entityType, string ctdlType, string ctid)
 		{
             PublishingEntityType = entityType;
@@ -43,8 +44,9 @@ namespace RA.Services
         public string EntityCtid { get; set; }
         public string SerializedInput { get; set; } = "";
         public bool IsManagedRequest { get; set; }
-        public bool SkippingValidation { get; set; }
-        public bool IsManagedRequestOld { get; set; }
+		public bool OverrodeOriginalRequest { get; set; }
+		public bool SkippingValidation { get; set; }
+  
 		#region Publishing
 
 		/// <summary>
@@ -68,7 +70,7 @@ namespace RA.Services
 					this.PublishingForOrgCtid,
 					submitter, identifier, ref successful, ref statusMessage, ref crEnvelopeId );
 			else
-				SelfPublish( payload, submitter, identifier, ref successful, ref statusMessage, ref crEnvelopeId, SkippingValidation );
+				SelfPublish( payload, submitter, this.PublishingForOrgCtid, identifier, ref successful, ref statusMessage, ref crEnvelopeId, SkippingValidation );
 			
 				
 			return successful;
@@ -87,6 +89,7 @@ namespace RA.Services
 		/// <returns></returns>
 		public string SelfPublish( string payload,
 				string submitter,
+				string dataOwnerCTID,
 				string identifier,
 				ref bool valid,
 				ref string status,
@@ -123,12 +126,10 @@ namespace RA.Services
 				{
 					Envelope envelope = new Envelope();
 					RegistryHandler.CreateEnvelope( publicKeyPath, privateKeyPath, payload, envelope );
-                    if ( environment != "sandbox" )
-                    {
-                        envelope.EnvelopeCetermsCtid = EntityCtid;
-                        envelope.EnvelopeCtdlType = CtdlType;
-                    }
-					postBody = JsonConvert.SerializeObject( envelope, new ServiceHelperV2().GetJsonSettings() );
+                    envelope.EnvelopeCetermsCtid = EntityCtid;
+                    envelope.EnvelopeCtdlType = CtdlType;
+                   
+					postBody = JsonConvert.SerializeObject( envelope, ServiceHelperV2.GetJsonSettings() );
 
 					LoggingHelper.DoTrace( 7, "RegistryServices.SelfPublish - ADD envelope: \r\n" + postBody );
 				}
@@ -139,12 +140,10 @@ namespace RA.Services
 
 					//now embed 
 					envelope.EnvelopeIdentifier = crEnvelopeId;
-                    if ( environment != "sandbox" )
-                    {
-                        envelope.EnvelopeCetermsCtid = EntityCtid;
-                        envelope.EnvelopeCtdlType = CtdlType;
-                    }
-                    postBody = JsonConvert.SerializeObject( envelope, new ServiceHelperV2().GetJsonSettings() );
+					envelope.EnvelopeCetermsCtid = EntityCtid;
+					envelope.EnvelopeCtdlType = CtdlType;
+					
+					postBody = JsonConvert.SerializeObject( envelope, ServiceHelperV2.GetJsonSettings() );
 
 					LoggingHelper.DoTrace( 5, string.Format( "RegistryServices.SelfPublish - updating existing envelopeId: {0}. update envelope: \r\n", crEnvelopeId )  );
 					LoggingHelper.DoTrace( 7, "RegistryServices.SelfPublish - update envelope: \r\n" + postBody );
@@ -235,7 +234,7 @@ namespace RA.Services
                             if ( UtilityManager.GetAppKeyValue( "loggingPublishingHistory", false ) )
                             {
                                 HistoryServices mgr = new HistoryServices();
-                                mgr.Add( "N/A", payload, "Self Publish", PublishingEntityType, CtdlType, EntityCtid, SerializedInput, crEnvelopeId, ref status );
+                                mgr.Add( string.IsNullOrWhiteSpace(dataOwnerCTID) ? "missing" : dataOwnerCTID, payload, CE_PUBLISH_METHOD, PublishingEntityType, CtdlType, EntityCtid, SerializedInput, crEnvelopeId, ref status );
                             }
                         }
 
@@ -280,17 +279,19 @@ namespace RA.Services
 		{
 			valid = true;
 			List<string> messages = new List<string>();
-			AccountPublishRequest apr = new AccountPublishRequest();
-			apr.payloadJSON = payload;
-			apr.apiKey = apiKey;
-			apr.dataOwnerCTID = dataOwnerCTID;
-            apr.publishMethodURI = "publishMethod:RegistryAssistant";
-            apr.publishingEntityType = PublishingEntityType;
-            apr.ctdlType = CtdlType;
-            apr.entityCtid = EntityCtid;
-            apr.serializedInput = SerializedInput;
+			AccountPublishRequest apr = new AccountPublishRequest
+			{
+				payloadJSON = payload,
+				apiKey = apiKey,
+				dataOwnerCTID = dataOwnerCTID,
+				publishMethodURI = "publishMethod:RegistryAssistant",
+				publishingEntityType = PublishingEntityType,
+				ctdlType = CtdlType,
+				entityCtid = EntityCtid,
+				serializedInput = SerializedInput
+			};
 
-            LoggingHelper.DoTrace( 6, "RegistryServices.ManagedPublishThroughAcccounts - dataOwnerCTID: \r\n" + dataOwnerCTID );
+			LoggingHelper.DoTrace( 6, "RegistryServices.ManagedPublishThroughAcccounts - dataOwnerCTID: \r\n" + dataOwnerCTID );
 			
 			//get accounts url
 			string serviceUri = UtilityManager.GetAppKeyValue( "accountsPublishApi" );
@@ -313,7 +314,7 @@ namespace RA.Services
             }
 
             //already serialized!
-            string postBody = JsonConvert.SerializeObject( apr, new ServiceHelperV2().GetJsonSettings() );
+            string postBody = JsonConvert.SerializeObject( apr, ServiceHelperV2.GetJsonSettings() );
             string contents = "";
 
 			try

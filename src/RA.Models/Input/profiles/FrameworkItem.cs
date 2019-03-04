@@ -20,12 +20,23 @@ namespace RA.Models.Input
         public LanguageMap FrameworkName_Map { get; set; } = new LanguageMap();
 
         public string CodedNotation { get; set; }
+		//targetNodeName
 		public string Name { get; set; }
         public LanguageMap Name_Map { get; set; } = new LanguageMap();
-        public string Description { get; set; }
+		//targetNodeDescription
+		public string Description { get; set; }
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
-		
 
-		public string URL { get; set; }
+		/// <summary>
+		/// URI for the FrameworkItem
+		/// </summary>
+		public string TargetNode { get; set; }
+		/// <summary>
+		/// URL for the framework item, translated to TargetNode
+		/// </summary>
+		//public string URL {
+		//	get { return TargetNode; }
+		//	set { TargetNode = value; }
+		//}
 	}
 }

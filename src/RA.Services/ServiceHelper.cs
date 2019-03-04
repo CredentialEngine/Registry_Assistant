@@ -1856,11 +1856,11 @@ namespace RA.Services
             //need a targetNode, normally - this is the schema name
             //==>< N/A for framework items like industries
             //actually should have. It can be a URI, so do we skip Url checks?
-            if ( !string.IsNullOrWhiteSpace( entity.URL ) )
+            if ( !string.IsNullOrWhiteSpace( entity.TargetNode ) )
             {
-                if ( IsUrlValid( entity.URL, ref statusMessage, ref isUrlPresent, false ) )
+                if ( IsUrlValid( entity.TargetNode, ref statusMessage, ref isUrlPresent, false ) )
                 {
-                    ca.TargetNode = entity.URL;
+                    ca.TargetNode = entity.TargetNode;
                     //demand more data
                     //hasData = true;
                 }

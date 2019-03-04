@@ -9,6 +9,7 @@ using RA.Models;
 using RA.Models.Input;
 using Newtonsoft.Json;
 using RA.Services;
+using ServiceHelper = RA.Services.ServiceHelperV2;
 using Utilities;
 
 namespace RegistryAPI.Controllers
@@ -29,13 +30,13 @@ namespace RegistryAPI.Controllers
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		[HttpPost, Route( "organization/format" )]
-		[Obsolete]
-		public RegistryAssistantResponse Format( OrganizationRequest request)
-		{
-			var response = FormatV2( request );
-			response.Messages.Add( FormatObsoleteEndpoint( controller, "formatV2" ) );
-			return response;
+		//[HttpPost, Route( "organization/format" )]
+		//[Obsolete]
+		//public RegistryAssistantResponse Format( OrganizationRequest request)
+		//{
+		//	var response = FormatV2( request );
+		//	response.Messages.Add( FormatObsoleteEndpoint( controller, "formatV2" ) );
+		//	return response;
 			//bool isValid = true;
 			//List<string> messages = new List<string>();
 			//var response = new RegistryAssistantResponse();
@@ -63,7 +64,7 @@ namespace RegistryAPI.Controllers
 			//	response.Successful = false;
 			//}
 			//return response;
-		} //
+		//} //
 
 
 		/// <summary>
@@ -71,12 +72,12 @@ namespace RegistryAPI.Controllers
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		[HttpPost, Route( "organization/publish" )]
-		public RegistryAssistantResponse Publish( OrganizationRequest request )
-		{
-			var response = PublishV2( request );
-			response.Messages.Add( FormatObsoleteEndpoint( controller, "publishV2" ) );
-			return response;
+		//[HttpPost, Route( "organization/publish" )]
+		//public RegistryAssistantResponse Publish( OrganizationRequest request )
+		//{
+		//	var response = PublishV2( request );
+		//	response.Messages.Add( FormatObsoleteEndpoint( controller, "publishV2" ) );
+		//	return response;
 			//bool isValid = true;
 			//List<string> messages = new List<string>();
 			//var response = new RegistryAssistantResponse();
@@ -135,14 +136,14 @@ namespace RegistryAPI.Controllers
 			//	response.Successful = false;
 			//}
 			//return response;
-		} //
+		//} //
         /// <summary>
         /// Handle request to format an Organization document as CTDL Json-LD
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost, Route( "organization/formatv2" )]
-        public RegistryAssistantResponse FormatV2( OrganizationRequest request )
+        [HttpPost, Route( "organization/format" )]
+        public RegistryAssistantResponse Format( OrganizationRequest request )
         {
             bool isValid = true;
             List<string> messages = new List<string>();
@@ -179,8 +180,8 @@ namespace RegistryAPI.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost, Route( "organization/publishv2" )]
-        public RegistryAssistantResponse PublishV2( OrganizationRequest request )
+        [HttpPost, Route( "organization/publish" )]
+        public RegistryAssistantResponse Publish( OrganizationRequest request )
         {
             bool isValid = true;
             List<string> messages = new List<string>();

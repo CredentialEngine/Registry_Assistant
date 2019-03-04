@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
-    public class CompetencyFrameworksGraph
+	public class CompetencyFrameworksGraph
     {
         [JsonIgnore]
         public static string classType = "ceasn:CompetencyFramework";
@@ -54,7 +50,7 @@ namespace RA.Models.JsonV2
         public string CtdlId { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:ctid" )]
-        public string Ctid { get; set; }
+        public string CTID { get; set; }
 
 
 
@@ -83,8 +79,10 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceasn:dateCreated" )]
         public string dateCreated { get; set; }
 
+		[JsonProperty( PropertyName = "ceasn:dateModified" )]
+		public string dateModified { get; set; }
 
-        [JsonProperty( PropertyName = "ceasn:dateValidFrom" )]
+		[JsonProperty( PropertyName = "ceasn:dateValidFrom" )]
         public string dateValidFrom { get; set; }
 
         [JsonProperty( PropertyName = "ceasn:dateValidUntil" )]
@@ -101,7 +99,10 @@ namespace RA.Models.JsonV2
         [ JsonProperty( PropertyName = "ceasn:educationLevelType" )]
         public List<string> educationLevelType { get; set; } = new List<string>();
 
-        [JsonProperty( PropertyName = "ceasn:hasTopChild" )]
+		/// <summary>
+		/// Top-level child competency of a competency framework.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:hasTopChild" )]
         public List<string> hasTopChild { get; set; } = new List<string>();
 
         [JsonProperty( PropertyName = "ceasn:identifier" )]
@@ -133,9 +134,14 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceasn:repositoryDate" )]
         public string repositoryDate { get; set; }
 
+		/// <summary>
+		/// 19-01-18 Changed to a language string
+		/// Hide until changed in CaSS
+		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:rights" )]
-		//public string rights { get; set; }
-		public List<string> rights { get; set; } = new List<string>();
+		public LanguageMap rights { get; set; } = new LanguageMap();
+		//public object rights { get; set; }
+		//public List<string> rights { get; set; } = new List<string>();
 
 		[JsonProperty( PropertyName = "ceasn:rightsHolder" )]
         public string rightsHolder { get; set; }
@@ -146,126 +152,124 @@ namespace RA.Models.JsonV2
         //
         [JsonProperty( PropertyName = "ceasn:tableOfContents" )]
         public LanguageMap tableOfContents { get; set; } = new LanguageMap();
-
-        [JsonProperty( PropertyName = "ceasn:competency" )]
-        public List<Competency> competency { get; set; } = new List<Competency>();
     }
 
-    public class CompetencyFrameworkInput 
-    {
-        [JsonIgnore]
-        public static string classType = "ceasn:CompetencyFramework";
-        public CompetencyFrameworkInput()
-        {
-            Type = classType;
-        }
-        [JsonProperty( "@type" )]
-        public string Type { get; set; }
+	//  public class CompetencyFrameworkInput 
+	//  {
+	//      [JsonIgnore]
+	//      public static string classType = "ceasn:CompetencyFramework";
+	//      public CompetencyFrameworkInput()
+	//      {
+	//          Type = classType;
+	//      }
+	//      [JsonProperty( "@type" )]
+	//      public string Type { get; set; }
 
-        [JsonProperty( "@id" )]
-        public string CtdlId { get; set; }
+	//      [JsonProperty( "@id" )]
+	//      public string CtdlId { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:ctid" )]
-        public string CTID { get; set; }
-
-
-
-        [JsonProperty( PropertyName = "ceasn:alignFrom" )]
-        public List<string> alignFrom { get; set; } = new List<string>();
-
-        [JsonProperty( PropertyName = "ceasn:alignTo" )]
-        public List<string> alignTo { get; set; } = new List<string>();
-
-        /// <summary>
-        /// A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
-        /// </summary>
-        [JsonProperty( "ceasn:author" )]
-        public List<string> author { get; set; }
+	//      [JsonProperty( PropertyName = "ceterms:ctid" )]
+	//      public string CTID { get; set; }
 
 
-        /// <summary>
-        /// A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceasn:conceptKeyword" )]
-        //public object conceptKeyword { get; set; }
-        public LanguageMapList conceptKeyword { get; set; }
 
-        /// <summary>
-        /// A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceasn:conceptTerm" )]
-        public List<string> conceptTerm { get; set; } = new List<string>();
+	//      [JsonProperty( PropertyName = "ceasn:alignFrom" )]
+	//      public List<string> alignFrom { get; set; } = new List<string>();
 
-        [JsonProperty( PropertyName = "ceasn:creator" )]
-        public List<string> creator { get; set; } = new List<string>();
+	//      [JsonProperty( PropertyName = "ceasn:alignTo" )]
+	//      public List<string> alignTo { get; set; } = new List<string>();
 
-        [JsonProperty( PropertyName = "ceasn:dateCopyrighted" )]
-        public string dateCopyrighted { get; set; }
-
-        [JsonProperty( PropertyName = "ceasn:dateCreated" )]
-        public string dateCreated { get; set; }
+	//      /// <summary>
+	//      /// A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
+	//      /// </summary>
+	//      [JsonProperty( "ceasn:author" )]
+	//      public List<string> author { get; set; }
 
 
-        [JsonProperty( PropertyName = "ceasn:dateValidFrom" )]
-        public string dateValidFrom { get; set; }
+	//      /// <summary>
+	//      /// A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
+	//      /// </summary>
+	//      [JsonProperty( PropertyName = "ceasn:conceptKeyword" )]
+	//      //public object conceptKeyword { get; set; }
+	//      public LanguageMapList conceptKeyword { get; set; }
 
-        [JsonProperty( PropertyName = "ceasn:dateValidUntil" )]
-        public string dateValidUntil { get; set; }
+	//      /// <summary>
+	//      /// A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
+	//      /// </summary>
+	//      [JsonProperty( PropertyName = "ceasn:conceptTerm" )]
+	//      public List<string> conceptTerm { get; set; } = new List<string>();
 
-        [JsonProperty( PropertyName = "ceasn:derivedFrom" )]
-        public string derivedFrom { get; set; } 
+	//      [JsonProperty( PropertyName = "ceasn:creator" )]
+	//      public List<string> creator { get; set; } = new List<string>();
 
-        //???language map??
-        [JsonProperty( PropertyName = "ceasn:description" )]
-        public LanguageMap description { get; set; } = new LanguageMap();
+	//      [JsonProperty( PropertyName = "ceasn:dateCopyrighted" )]
+	//      public string dateCopyrighted { get; set; }
 
-        [JsonProperty( PropertyName = "ceasn:educationLevelType" )]
-        public List<string> educationLevelType { get; set; } = new List<string>();
-
-        [JsonProperty( PropertyName = "ceasn:hasTopChild" )]
-        public List<string> hasTopChild { get; set; } = new List<string>();
-
-        [JsonProperty( PropertyName = "ceasn:identifier" )]
-        public List<string> identifier { get; set; } = new List<string>();
-
-        [JsonProperty( PropertyName = "ceasn:inLanguage" )]
-        public List<string> inLanguage { get; set; } = new List<string>();
-
-        [JsonProperty( PropertyName = "ceasn:license" )]
-        public string license { get; set; }
-
-        [JsonProperty( PropertyName = "ceasn:localSubject" )]
-        public LanguageMapList localSubject { get; set; } = new LanguageMapList();
+	//      [JsonProperty( PropertyName = "ceasn:dateCreated" )]
+	//      public string dateCreated { get; set; }
 
 
-        [JsonProperty( PropertyName = "ceasn:name" )]
-        public LanguageMap name { get; set; } = new LanguageMap();
+	//      [JsonProperty( PropertyName = "ceasn:dateValidFrom" )]
+	//      public string dateValidFrom { get; set; }
 
-        [JsonProperty( PropertyName = "ceasn:publicationStatusType" )]
-        public string publicationStatusType { get; set; } 
+	//      [JsonProperty( PropertyName = "ceasn:dateValidUntil" )]
+	//      public string dateValidUntil { get; set; }
 
-        [JsonProperty( PropertyName = "ceasn:publisher" )]
-        public List<string> publisher { get; set; } = new List<string>();
+	//      [JsonProperty( PropertyName = "ceasn:derivedFrom" )]
+	//      public string derivedFrom { get; set; } 
 
-        [JsonProperty( PropertyName = "ceasn:publisherName" )]
-        //public object publisherName { get; set; }
-        public LanguageMapList publisherName { get; set; } = new LanguageMapList();
+	//      //???language map??
+	//      [JsonProperty( PropertyName = "ceasn:description" )]
+	//      public LanguageMap description { get; set; } = new LanguageMap();
 
-        [JsonProperty( PropertyName = "ceasn:repositoryDate" )]
-        public string repositoryDate { get; set; }
+	//      [JsonProperty( PropertyName = "ceasn:educationLevelType" )]
+	//      public List<string> educationLevelType { get; set; } = new List<string>();
 
-        [JsonProperty( PropertyName = "ceasn:rights" )]
-		//public string rights { get; set; }
-		public List<string> rights { get; set; } = new List<string>();
+	//      [JsonProperty( PropertyName = "ceasn:hasTopChild" )]
+	//      public List<string> hasTopChild { get; set; } = new List<string>();
 
-		[JsonProperty( PropertyName = "ceasn:rightsHolder" )]
-        public string rightsHolder { get; set; }
+	//      [JsonProperty( PropertyName = "ceasn:identifier" )]
+	//      public List<string> identifier { get; set; } = new List<string>();
 
-        [JsonProperty( PropertyName = "ceasn:source" )]
-        public List<string> source { get; set; } = new List<string>();
+	//      [JsonProperty( PropertyName = "ceasn:inLanguage" )]
+	//      public List<string> inLanguage { get; set; } = new List<string>();
 
-        //
-        [JsonProperty( PropertyName = "ceasn:tableOfContents" )]
-        public LanguageMap tableOfContents { get; set; } = new LanguageMap();
-    }
+	//      [JsonProperty( PropertyName = "ceasn:license" )]
+	//      public string license { get; set; }
+
+	//      [JsonProperty( PropertyName = "ceasn:localSubject" )]
+	//      public LanguageMapList localSubject { get; set; } = new LanguageMapList();
+
+
+	//      [JsonProperty( PropertyName = "ceasn:name" )]
+	//      public LanguageMap name { get; set; } = new LanguageMap();
+
+	//      [JsonProperty( PropertyName = "ceasn:publicationStatusType" )]
+	//      public string publicationStatusType { get; set; } 
+
+	//      [JsonProperty( PropertyName = "ceasn:publisher" )]
+	//      public List<string> publisher { get; set; } = new List<string>();
+
+	//      [JsonProperty( PropertyName = "ceasn:publisherName" )]
+	//      //public object publisherName { get; set; }
+	//      public LanguageMapList publisherName { get; set; } = new LanguageMapList();
+
+	//      [JsonProperty( PropertyName = "ceasn:repositoryDate" )]
+	//      public string repositoryDate { get; set; }
+
+	//      [JsonProperty( PropertyName = "ceasn:rights" )]
+	//public object rights { get; set; }
+	////public LanguageMap rights { get; set; } = new LanguageMap();
+	////public List<string> rights { get; set; } = new List<string>();
+
+	//[JsonProperty( PropertyName = "ceasn:rightsHolder" )]
+	//      public string rightsHolder { get; set; }
+
+	//      [JsonProperty( PropertyName = "ceasn:source" )]
+	//      public List<string> source { get; set; } = new List<string>();
+
+	//      //
+	//      [JsonProperty( PropertyName = "ceasn:tableOfContents" )]
+	//      public LanguageMap tableOfContents { get; set; } = new LanguageMap();
+	//  }
 }

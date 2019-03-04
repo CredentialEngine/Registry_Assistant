@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace RA.Models.Input
 {
-    /// <summary>
-    /// Class used with an Organization format or publish request
-    /// </summary>
-    public class OrganizationRequest : BaseRequest
+	/// <summary>
+	/// Class used with an Organization format or publish request
+	/// </summary>
+	public class OrganizationRequest : BaseRequest
 	{
         public OrganizationRequest()
         {
@@ -21,9 +17,10 @@ namespace RA.Models.Input
         /// </summary>
         public Organization Organization { get; set; }
 
-    }
+		//public List<BlankNode> BlankNodes = new List<BlankNode>();
+	}
 
-    public class Organization
+	public class Organization
     {
         public Organization()
         {
@@ -183,6 +180,8 @@ namespace RA.Models.Input
         public string MissionAndGoalsStatementDescription { get; set; }
 
         public List<FrameworkItem> IndustryType { get; set; }
+		//public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+		//public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
 		public List<string> Naics { get; set; }
 
         public List<string> Email { get; set; }

@@ -5,8 +5,9 @@ using System.Web.Http;
 using RA.Models;
 using RA.Models.Input;
 using EntityRequest = RA.Models.Input.CompetencyFrameworkRequest;
-using CASSEntityRequest = RA.Models.Input.CASSCompetencyFrameworkRequest;
+using CASSEntityRequest = RA.Models.Input.CompetencyFrameworkGraphRequest;
 using RA.Services;
+using ServiceHelper = RA.Services.ServiceHelperV2;
 using Utilities;
 
 namespace RegistryAPI.Controllers
@@ -19,19 +20,21 @@ namespace RegistryAPI.Controllers
         CompetencyServices manager = new CompetencyServices();
 
         /// <summary>
-        /// Request to publish a competence framework and all related competencies
+        /// Request to publish a competence framework and all related competencies.
+		/// Note: this endpoint is not publically available at this time. 
+		/// Expected availability is March 8, 2019
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         [ HttpPost, Route( "CompetencyFramework/publish" )]
-        private RegistryAssistantResponse Publish( EntityRequest request )
+        public RegistryAssistantResponse Publish( EntityRequest request )
         {
             bool isValid = true;
             //List<string> messages = new List<string>();
             var response = new RegistryAssistantResponse();
             if (1 == 1)
             {
-                response.Messages.Add( "Error - this endpoint is not available to the public at this time." );
+                response.Messages.Add( "NOTICE - this endpoint is not available to the public at this time." );
                 return response;
             }
 
@@ -89,15 +92,26 @@ namespace RegistryAPI.Controllers
             //}
             //return response;
         }
+		//[HttpPost, Route( "CompetencyFramework/publishFromCass" )]
+		//public RegistryAssistantResponse CassPublishV1( CASSEntityRequest request )
+		//{
 
-        /// <summary>
-        /// Publish competency frameworks that have been exported from CASS
-        /// The input will already be in the proper format. 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost, Route( "CompetencyFramework/publishFromCass" )]
-        public RegistryAssistantResponse CassPublish( CASSEntityRequest request )
+		//	return GraphPublish( request );
+		//}
+		//[HttpPost, Route( "CompetencyFramework/publishFromCassV2" )]
+		//public RegistryAssistantResponse CassPublishV2( CASSEntityRequest request )
+		//{
+
+		//	return GraphPublish( request );
+		//}
+		/// <summary>
+		/// Publish competency frameworks that have been exported from CASS
+		/// The input will already be in the proper format. 
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+		[HttpPost, Route( "CompetencyFramework/publishGraph" )]
+        public RegistryAssistantResponse GraphPublish( CASSEntityRequest request )
         {
             bool isValid = true;
             //List<string> messages = new List<string>();
@@ -127,7 +141,7 @@ namespace RegistryAPI.Controllers
                     helper.SerializedInput = ServiceHelper.LogInputFile( request, request.CTID, "CompetencyFramework", "Publish", 5 );
                     string origCTID = request.CTID ?? "";
 
-                    manager.PublishFromCASS( request, ref isValid, helper );
+                    manager.PublishGraph( request, ref isValid, helper );
 
                     response.CTID = request.CTID;
                     response.Payload = helper.Payload;
@@ -157,12 +171,12 @@ namespace RegistryAPI.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost, Route( "CompetencyFramework/publishFromCassV2" )]
-        public RegistryAssistantResponse CassPublishV2( CASSEntityRequest request )
-        {
+        //[HttpPost, Route( "CompetencyFramework/publishFromCassV2" )]
+        //public RegistryAssistantResponse CassPublishV2( CASSEntityRequest request )
+        //{
             
-            return CassPublish( request);
-        }
+        //    return CassPublish( request);
+        //}
 
 		/// <summary>
 		/// All deletes are done thru the publisher at this time
@@ -207,6 +221,67 @@ namespace RegistryAPI.Controllers
 					}
 					else
 					{
+						response.Messages.Add( statusMessage );
+						response.Successful = false;
+					}
+				}
+			}
+			catch ( Exception ex )
+			{
+				response.Messages.Add( ex.Message );
+				response.Successful = false;
+			}
+			return response;
+		} //
+
+		/// <summary>
+		/// Delete request of an CompetencyFramework by EnvelopeId and CTID
+		/// </summary>
+		/// <param name="request"></param>
+		/// <returns></returns>
+		[HttpDelete, Route( "CompetencyFramework/envelopeDelete" )]
+		private RegistryAssistantResponse CustomDelete( EnvelopeDelete request )
+		{
+			bool isValid = true;
+			List<string> messages = new List<string>();
+			var response = new RegistryAssistantResponse();
+			string statusMessage = "";
+
+			try
+			{
+				//envelopeId is not applicable for managed keys!, could have a separate endpoint?
+				if ( request == null
+					|| string.IsNullOrWhiteSpace( request.CTID )
+					|| string.IsNullOrWhiteSpace( request.PublishForOrganizationIdentifier )
+					|| string.IsNullOrWhiteSpace( request.RegistryEnvelopeId )
+					)
+				{
+					response.Messages.Add( "Error - please provide a valid delete request with a CTID, the envelope Id, and the owning organization." );
+					return response;
+				}
+				//ACTUALLY not used directly here, will need mechanism to ensure a valid request. 
+				helper.OwnerCtid = request.PublishForOrganizationIdentifier;
+				if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage, true ) )
+				{
+					response.Messages.Add( statusMessage );
+				}
+				else
+				{
+					//only valid token at this time is from CER
+					RegistryServices cer = new RegistryServices( "CompetencyFramework", "", request.CTID );
+					isValid = cer.CredentialRegistry_SelfManagedKeysDelete( request.RegistryEnvelopeId, request.CTID, "registry assistant", ref statusMessage );
+
+					response.Successful = isValid;
+
+					if ( isValid )
+					{
+						response.Successful = true;
+						response.RegistryEnvelopeIdentifier = request.RegistryEnvelopeId;
+						response.CTID = request.CTID;
+					}
+					else
+					{
+						//if not valid, could return the payload as reference?
 						response.Messages.Add( statusMessage );
 						response.Successful = false;
 					}

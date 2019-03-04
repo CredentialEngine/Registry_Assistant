@@ -159,6 +159,12 @@ namespace RA.Services
 		{
 			bool isValid = false;
 			validSchema = "";
+			if ( string.IsNullOrWhiteSpace( classSchema ))
+			{
+				validSchema = "";
+				return false;
+			}
+				
 			//prefix if necessary
 			if ( classSchema.IndexOf( "ceterms" ) == -1 )
 				classSchema = "ceterms:" + classSchema;

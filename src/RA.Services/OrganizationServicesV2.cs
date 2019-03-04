@@ -82,8 +82,32 @@ namespace RA.Services
                 };
                 if (cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32)
                     cer.IsManagedRequest = true;
-
-                string identifier = "Organization_" + request.Organization.Ctid;
+				//
+				bool recordWasFound = false;
+				bool usedCEKeys = false;
+				string message = "";
+				var result = HistoryServices.GetMostRecentHistory( "Organization", output.Ctid, ref recordWasFound, ref usedCEKeys, ref message );
+				if ( recordWasFound ) //found previous
+				{
+					if ( usedCEKeys && cer.IsManagedRequest )
+					{
+						LoggingHelper.DoTrace( 5, "Organization publish. Was managed request. Overriding to CE publish." );
+						cer.IsManagedRequest = false;   //should record override
+						cer.OverrodeOriginalRequest = true;
+					}
+					else if ( !usedCEKeys && !cer.IsManagedRequest )
+					{
+						//this should not happen. Means used publisher
+						cer.IsManagedRequest = true;   //should record override
+						cer.OverrodeOriginalRequest = true;
+					}
+				}
+				else
+				{
+					//eventually will always do managed
+				}
+				//
+				string identifier = "Organization_" + request.Organization.Ctid;
 
                 if (cer.Publish(helper.Payload, submitter, identifier, ref status, ref crEnvelopeId))
                 {
@@ -239,8 +263,8 @@ namespace RA.Services
                 output.Recognizes = FormatEntityReferencesList( input.Recognizes, "AgentRecognizes", false, ref messages ); //Recognizes artifacts
                 output.Regulates = FormatEntityReferencesList( input.Regulates, "AgentRegulates", false, ref messages ); //regulates artifacts
 
-                output.HasConditionManifest = AssignRegistryURIsListAsStringList( input.HasConditionManifest, "HasConditionManifest", ref messages );
-				output.HasCostManifest = AssignRegistryURIsListAsStringList( input.HasCostManifest, "HasCostManifest", ref messages );
+                output.HasConditionManifest = AssignValidUrlListAsStringList( input.HasConditionManifest, "HasConditionManifest", ref messages,false );
+				output.HasCostManifest = AssignValidUrlListAsStringList( input.HasCostManifest, "HasCostManifest", ref messages, false );
 
 				HandleVerificationProfiles( input, output, ref messages );
 				HandleJurisdictionAssertions( input, output, ref messages );
@@ -498,14 +522,14 @@ namespace RA.Services
 
 		public void HandleUrlFields( InputEntity input, OutputEntity output, ref List<string> messages )
 		{
-			output.Image = AssignValidUrlAsString( input.Image, "Image", ref messages );
+			output.Image = AssignValidUrlAsString( input.Image, "Image", ref messages, false );
 
 			output.AvailabilityListing = AssignValidUrlListAsStringList( input.AvailabilityListing, "Availability Listing", ref messages );
 
-			output.MissionAndGoalsStatement = AssignValidUrlAsString( input.MissionAndGoalsStatement, "Mission and Goals Statement", ref messages );
+			output.MissionAndGoalsStatement = AssignValidUrlAsString( input.MissionAndGoalsStatement, "Mission and Goals Statement", ref messages, false );
 			//output.MissionAndGoalsStatement = AssignValidUrlListAsStringList( input.MissionAndGoalsStatement, "Mission and Goals Statement", ref messages );
 
-			output.AgentPurpose = AssignValidUrlAsString( input.AgentPurpose, "Agent Purpose", ref messages );
+			output.AgentPurpose = AssignValidUrlAsString( input.AgentPurpose, "Agent Purpose", ref messages, false );
 			//output.AgentPurpose = AssignValidUrlListAsStringList( input.AgentPurpose, "Agent Purpose", ref messages );
 
 			output.SocialMedia = AssignValidUrlListAsStringList( input.SocialMedia, "Social Media", ref messages );
@@ -524,15 +548,7 @@ namespace RA.Services
 			else
 				to.Naics = null;
 
-			//if ( from.IndustryType != null && from.IndustryType.Count > 0 )
-			//{
-			//	foreach ( FrameworkItem item in from.IndustryType )
-			//	{
-			//		to.IndustryType.Add( FormatCredentialAlignment( item, true ) );
-			//	}
-			//}
-			//else
-			//	to.IndustryType = null;
+			//to.AlternativeIndustryType = AssignLanguageMapList( from.AlternativeIndustryType, from.AlternativeIndustryType_Map, "Organization AlternativeIndustryType", ref messages );
 
 			if ( from.ServiceType != null && from.ServiceType.Count > 0 )
 			{
@@ -540,8 +556,6 @@ namespace RA.Services
 			}
 			else
 				to.ServiceType = null;
-
-
 
 		}
 

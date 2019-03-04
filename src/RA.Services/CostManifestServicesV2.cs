@@ -55,8 +55,32 @@ namespace RA.Services
                     PublisherAuthorizationToken = helper.ApiKey,
                     PublishingForOrgCtid = helper.OwnerCtid
                 };
-
-                if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+				//
+				bool recordWasFound = false;
+				bool usedCEKeys = false;
+				string message = "";
+				var result = HistoryServices.GetMostRecentHistory( "CostManifest", output.Ctid, ref recordWasFound, ref usedCEKeys, ref message );
+				if ( recordWasFound ) //found previous
+				{
+					if ( usedCEKeys && cer.IsManagedRequest )
+					{
+						LoggingHelper.DoTrace( 5, "CostManifest publish. Was managed request. Overriding to CE publish." );
+						cer.IsManagedRequest = false;   //should record override
+						cer.OverrodeOriginalRequest = true;
+					}
+					else if ( !usedCEKeys && !cer.IsManagedRequest )
+					{
+						//this should not happen. Means used publisher
+						cer.IsManagedRequest = true;   //should record override
+						cer.OverrodeOriginalRequest = true;
+					}
+				}
+				else
+				{
+					//eventually will always do managed
+				}
+				//
+				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
                     cer.IsManagedRequest = true;
 
                 string identifier = "CostManifest_" + request.CostManifest.Ctid;
@@ -242,7 +266,7 @@ namespace RA.Services
                 if ( isUrlPresent )
                 output.CostDetails = input.CostDetails;
 
-            output.CostManifestOf = FormatOrganizationReferenceToList( input.OwningOrganization, "Owning Organization", true, ref messages );
+            output.CostManifestOf = FormatOrganizationReferenceToList( input.CostManifestOf, "Owning Organization", true, ref messages );
 
 
             return isValid;
