@@ -30,7 +30,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My CostManifest Name",
 				Description = "This is some text that describes my assessment.",
-				CTID = myCTID,
+				Ctid = myCTID,
 				CostDetails = "http://www.credreg.net/assessment/1234",
 				CostManifestOf = new OrganizationReference()
 				{
@@ -52,12 +52,13 @@ namespace RA.SamplesForDocumentation
 				PaymentPattern = "yearly",
 				DirectCostType = "costType:Application"
 			} );
-			myEntity.EstimatedCosts.Add( cp );
+			myEntity.EstimatedCost.Add( cp );
 
 			//This holds the assessment and the identifier (CTID) for the owning organization
 			var myData = new CostManifestRequest()
 			{
 				CostManifest = myEntity,
+				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 
@@ -86,82 +87,5 @@ namespace RA.SamplesForDocumentation
 			return result;
 		}
 
-		public class CostManifestRequest
-		{
-			public CostManifest CostManifest { get; set; }
-			public string PublishForOrganizationIdentifier { get; set; }
-		}
-
-		public class CostManifest
-		{
-			public string Name { get; set; }
-			public OrganizationReference CostManifestOf { get; set; } = new OrganizationReference();
-			public string Description { get; set; }
-			public string CostDetails { get; set; }
-			public string CTID { get; set; }
-			public List<CostProfile> EstimatedCosts { get; set; } = new List<CostProfile>();
-			//Other properties
-		}
-
-		public class CostProfile
-		{
-			public string Name { get; set; }
-			public string Description { get; set; }
-			public string CostDetails { get; set; }
-			public string Currency { get; set; }
-			/// <summary>
-			/// Start date or effective date of this cost profile
-			/// </summary>
-			public string StartDate { get; set; }
-			/// <summary>
-			/// End date or expiry date of this cost profile
-			/// </summary>
-			public string EndDate { get; set; }
-			/// <summary>
-			/// List of condtions, containing:
-			/// A single condition or aspect of experience that refines the conditions under which the resource being described is applicable.
-			/// </summary>
-			public List<string> Condition { get; set; }
-			public List<CostProfileItem> CostItems { get; set; } = new List<CostProfileItem>();
-			//Othe properties
-		}
-		public class CostProfileItem
-		{
-			/// <summary>
-			/// Initialize
-			/// </summary>
-			public CostProfileItem()
-			{
-				ResidencyType = new List<string>();
-				AudienceType = new List<string>();
-			}
-
-			/// <summary>
-			/// Must be a valid CTDL cost type
-			/// </summary>
-			public string DirectCostType { get; set; }
-			/// <summary>
-			/// List of Residency items
-			/// </summary>
-			public List<string> ResidencyType { get; set; }
-
-			/// <summary>
-			/// List of Audience Types
-			/// </summary>
-			public List<string> AudienceType { get; set; }
-
-			/// <summary>
-			/// Payment Pattern
-			/// </summary>
-			public string PaymentPattern { get; set; }
-			/// <summary>
-			/// Price for this cost - optional
-			/// </summary>
-			public decimal Price { get; set; }
-
-
-
-
-		}
 	}
 }

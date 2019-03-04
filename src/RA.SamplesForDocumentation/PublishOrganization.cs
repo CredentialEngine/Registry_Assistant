@@ -25,11 +25,11 @@ namespace RA.SamplesForDocumentation
 			DataService.SaveOrganizationCTID( myOrgCTID );
 
 			//A simple organization object - see below for sample class definition
-			var myOrg = new SampleOrganization()
+			var myOrg = new Organization()
 			{
 				Name = "My Organization Name",
 				Description = "This is some text that describes my organization.",
-				CTID = myOrgCTID,
+				Ctid = myOrgCTID,
 				SubjectWebpage = "http://example.com",
 				Type = "ceterms:CredentialOrganization",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
@@ -103,11 +103,11 @@ namespace RA.SamplesForDocumentation
 			var myOrgCTID = "ce-" + Guid.NewGuid().ToString();
 			DataService.SaveOrganizationCTID( myOrgCTID );
 			//A simple organization object - see below for sample class definition
-			var myOrg = new SampleOrganization()
+			var myOrg = new Organization()
 			{
 				Name = "My Organization Name",
 				Description = "This is some text that describes my organization.",
-				CTID = myOrgCTID,
+				Ctid = myOrgCTID,
 				SubjectWebpage = "http://example.com",
 				Type = "ceterms:CredentialOrganization",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
@@ -145,35 +145,6 @@ namespace RA.SamplesForDocumentation
 			{
 			}
 		}
-		public class OrganizationRequest
-		{
-			public SampleOrganization Organization { get; set; }
-			public string PublishForOrganizationIdentifier { get; set; }
-		}
-		public class SampleOrganization
-		{
-			public string Type { get; set; }
-			public string Name { get; set; }
-			public string Description { get; set; }
-			public string SubjectWebpage { get; set; }
-			public string CTID { get; set; }
-			public string Image { get; set; }
-			public string AgentPurpose { get; set; }
-			public string AgentPurposeDescription { get; set; }
-			public List<string> AgentType { get; set; }
-			public List<string> Address { get; set; }
-			public List<string> Email { get; set; }
-			public List<string> SocialMedia { get; set; }
-			public List<string> Keyword { get; set; }
-			public List<string> ServiceType { get; set; }
-			public string AgentSectorType { get; set; }
-			public List<OrganizationReference> ParentOrganization { get; set; }
-			public List<OrganizationReference> Department { get; set; }
-			public List<OrganizationReference> AccreditedBy { get; set; }
-			public List<OrganizationReference> ApprovedBy { get; set; }
-			public List<OrganizationReference> RecognizedBy { get; set; }
-			public List<OrganizationReference> RegulatedBy { get; set; }
 
-		}
 	}
 }

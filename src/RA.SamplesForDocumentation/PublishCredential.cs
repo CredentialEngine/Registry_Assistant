@@ -24,13 +24,13 @@ namespace RA.SamplesForDocumentation
 			DataService.SaveCredentialCTID( myCredCTID );
 
 			//A simple credential object - see below for sample class definition
-			var myCred = new SampleCredential()
+			var myCred = new Credential()
 			{
 				Name = "My Credential Name",
 				Description = "This is some text that describes my credential.",
-				CTID = myCredCTID,
+				Ctid = myCredCTID,
 				SubjectWebpage = "http://example.com/credential/1234",
-				Type = "ceterms:Certificate",
+				CredentialType = "ceterms:Certificate",
 				InLanguage = new List<string>() { "en-US" },
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				Naics = new List<string>() { "333922", "333923", "333924" }
@@ -58,6 +58,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new CredentialRequest()
 			{
 				Credential = myCred,
+				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//Serialize the credential request object
@@ -80,33 +81,6 @@ namespace RA.SamplesForDocumentation
 			return result;
 		}
 
-
-		public class CredentialRequest
-		{
-			public SampleCredential Credential { get; set; }
-			public string PublishForOrganizationIdentifier { get; set; }
-		}
-		public class SampleCredential
-		{
-			public string Type { get; set; }
-			public string Name { get; set; }
-			public string Description { get; set; }
-			public string SubjectWebpage { get; set; }
-			public string CTID { get; set; }
-			public List<string> InLanguage { get; set; }
-			public List<OrganizationReference> OwnedBy { get; set; }
-			public List<OrganizationReference> AccreditedBy { get; set; }
-			public string DateEffective { get; set; }
-			public List<string> Keyword { get; set; }
-
-
-			public List<string> AudienceLevelType { get; set; }
-			public List<string> Naics { get; set; }
-			public List<string> OccupationType { get; set; }
-			public List<ConditionProfile> Requires { get; set; }
-			public List<ConditionProfile> Recommends { get; set; }
-			//Other properties
-		}
 
 		public class DataService
 		{

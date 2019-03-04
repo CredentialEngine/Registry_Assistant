@@ -26,11 +26,11 @@ namespace RA.SamplesForDocumentation
 			//DataService.SaveLearningOpportunityCTID( myLoppCTID );
 
 			//A simple learning opportunity object - see below for sample class definition
-			var myLopp = new SampleLearningOpportunity()
+			var myLopp = new LearningOpportunity()
 			{
 				Name = "My Learning Opportunity Name",
 				Description = "This is some text that describes my learning opportunity.",
-				CTID = myLoppCTID,
+				Ctid = myLoppCTID,
 				SubjectWebpage = "http://www.credreg.net/learningopportunity/1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				LearningMethodType = new List<string>() { "learnMethod:Lecture", "learnMethod:Laboratory" },
@@ -48,6 +48,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new LearningOpportunityRequest()
 			{
 				LearningOpportunity = myLopp,
+				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 
@@ -77,31 +78,4 @@ namespace RA.SamplesForDocumentation
 		}
 	};
 
-	public class LearningOpportunityRequest
-	{
-		public SampleLearningOpportunity LearningOpportunity { get; set; }
-		public string PublishForOrganizationIdentifier { get; set; }
-	}
-	public class SampleLearningOpportunity
-	{
-		public string Name { get; set; }
-		public string Description { get; set; }
-		public string SubjectWebpage { get; set; }
-		public string CTID { get; set; }
-		public List<string> Keyword { get; set; }
-		public List<string> LearningMethodType { get; set; }
-		public List<string> AudienceLevelType { get; set; }
-		public List<string> DeliveryType { get; set; }
-		public List<ConditionProfile> Requires { get; set; }
-		public List<ConditionProfile> Recommends { get; set; }
-		//Other properties
-	}
-
-	public class ConditionProfile
-	{
-		public string Name { get; set; }
-		public string Description { get; set; }
-		public List<string> Condition { get; set; }
-		//Othe properties
-	}
 }

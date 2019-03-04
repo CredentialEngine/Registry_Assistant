@@ -25,11 +25,11 @@ namespace RA.SamplesForDocumentation
 			//DataService.SaveAssessmentCTID( myCTID );
 
 			//A simple assessment object - see below for sample class definition
-			var myAsmt = new SampleAssessment()
+			var myAsmt = new Assessment()
 			{
 				Name = "My Assessment Name",
 				Description = "This is some text that describes my assessment.",
-				CTID = myCTID,
+				Ctid = myCTID,
 				SubjectWebpage = "http://www.credreg.net/assessment/1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				AssessmentMethodType = new List<string>() { "assessMethod:Exam", "assessMethod:Performance" },
@@ -47,6 +47,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new AssessmentRequest()
 			{
 				Assessment = myAsmt,
+				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 
@@ -75,33 +76,6 @@ namespace RA.SamplesForDocumentation
 			return result;
 		}
 
-		public class AssessmentRequest
-		{
-			public SampleAssessment Assessment { get; set; }
-			public string PublishForOrganizationIdentifier { get; set; }
-		}
 
-		public class SampleAssessment
-		{
-			public string Name { get; set; }
-			public string Description { get; set; }
-			public string SubjectWebpage { get; set; }
-			public string CTID { get; set; }
-			public List<string> Keyword { get; set; }
-			public List<string> AssessmentMethodType { get; set; }
-			public List<string> AssessmentUseType { get; set; }
-			public List<string> DeliveryType { get; set; }
-			public List<ConditionProfile> Requires { get; set; }
-			public List<ConditionProfile> Recommends { get; set; }
-			//Other properties
-		}
-
-		public class ConditionProfile
-		{
-			public string Name { get; set; }
-			public string Description { get; set; }
-			public List<string> Condition { get; set; }
-			//Othe properties
-		}
 	}
 }

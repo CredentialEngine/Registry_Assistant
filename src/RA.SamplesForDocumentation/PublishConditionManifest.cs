@@ -29,7 +29,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My ConditionManifest Name",
 				Description = "This is some text that describes my assessment.",
-				CTID = myCTID,
+				Ctid = myCTID,
 				SubjectWebpage = "http://example.com?t=subjectwebpage",
 				//if this ID/CTID is not known, use a third party reference
 				ConditionManifestOf = new OrganizationReference()
@@ -50,9 +50,10 @@ namespace RA.SamplesForDocumentation
 				};
 
 			//This holds the assessment and the identifier (CTID) for the owning organization
-			var myData = new CostManifestRequest()
+			var myData = new ConditionManifestRequest()
 			{
 				ConditionManifest = myEntity,
+				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 
@@ -79,23 +80,6 @@ namespace RA.SamplesForDocumentation
 
 			//Return the result
 			return result;
-		}
-
-		public class CostManifestRequest
-		{
-			public ConditionManifest ConditionManifest { get; set; }
-			public string PublishForOrganizationIdentifier { get; set; }
-		}
-
-		public class ConditionManifest
-		{
-			public string Name { get; set; }
-			public OrganizationReference ConditionManifestOf { get; set; } = new OrganizationReference();
-			public string Description { get; set; }
-			public string SubjectWebpage { get; set; } //URL
-			public string CTID { get; set; }
-			public List<ConditionProfile> RequiredConditions { get; set; } = new List<ConditionProfile>();
-			//Other properties
 		}
 
 	}
