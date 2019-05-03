@@ -12,7 +12,7 @@ namespace RA.Models.Input
 	///			   May not actually be required, if description used. If UnitText is provided, then a value is required.	
 	/// Required: Provide a valid concept in UnitText or description
 	/// </summary>
-	public class QuantitiveValue
+	public class QuantitativeValue
 	{
 		/// <summary>
 		/// Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. For example:

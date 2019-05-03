@@ -137,7 +137,7 @@ namespace RA.Models.JsonV2
         public List<CostProfile> EstimatedCost { get; set; }
 		//
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
-		public List<QuantitiveValue> CreditValue { get; set; } = null;
+		public List<QuantitativeValue> CreditValue { get; set; } = null;
 		//
 		[JsonProperty( PropertyName = "ceterms:creditHourType" )]
         public LanguageMap CreditHourType { get; set; }

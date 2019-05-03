@@ -199,16 +199,16 @@ namespace RA.Models.JsonV2
 		public LanguageMapList AlternativeInstructionalProgramType { get; set; } = new LanguageMapList();
 		//
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
-		public List<QuantitiveValue> CreditValue { get; set; } = null;
+		public List<QuantitativeValue> CreditValue { get; set; } = null;
 		//
-		[JsonProperty( PropertyName = "ceterms:creditHourType" )]
-        public LanguageMap CreditHourType { get; set; }
+		//[JsonProperty( PropertyName = "ceterms:creditHourType" )]
+  //      public LanguageMap CreditHourType { get; set; }
+
+  //      [JsonProperty( PropertyName = "ceterms:creditHourValue" )]
+  //      public decimal CreditHourValue { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:creditUnitType" )]
         public CredentialAlignmentObject CreditUnitType { get; set; }
-
-        [JsonProperty( PropertyName = "ceterms:creditHourValue" )]
-        public decimal CreditHourValue { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:creditUnitValue" )]
         public decimal CreditUnitValue { get; set; }

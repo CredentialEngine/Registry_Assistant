@@ -7,11 +7,11 @@ using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
-	public class QuantitiveValue
+	public class QuantitativeValue
 	{
-		public QuantitiveValue()
+		public QuantitativeValue()
 		{
-			Type = "schema:QuantitiveValue";
+			Type = "schema:QuantitativeValue";
 		}
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }

@@ -127,7 +127,7 @@ namespace RA.Models.Input
 
 		//Credit Information
 		//
-		public QuantitiveValue CreditValue { get; set; } = new QuantitiveValue();
+		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
 		public string CreditHourType { get; set; }
 		public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();

@@ -83,7 +83,7 @@ namespace RA.Models.Input
         public decimal Weight { get; set; }
 		//Credit Information
 		//
-		public QuantitiveValue CreditValue { get; set; } = new QuantitiveValue();
+		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
 		public string CreditHourType { get; set; }
         public decimal CreditHourValue { get; set; }
@@ -151,7 +151,7 @@ namespace RA.Models.Input
 		public decimal Weight { get; set; }
 
 		//Credit Information
-		public QuantitiveValue CreditValue { get; set; } = new QuantitiveValue();
+		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
 		public string CreditHourType { get; set; }
         public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
