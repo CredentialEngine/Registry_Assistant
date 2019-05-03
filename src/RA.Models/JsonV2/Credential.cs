@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
+
 namespace RA.Models.JsonV2
 {
+
     public class Credential : JsonLDDocument
     {
 		[JsonIgnore]
@@ -17,7 +19,7 @@ namespace RA.Models.JsonV2
             SubjectWebpage = null;
 			HasPart = null;
 			IsPartOf = null;
-			AudienceLevel = new List<CredentialAlignmentObject>();
+			AudienceLevelType = new List<CredentialAlignmentObject>();
             AudienceType = new List<CredentialAlignmentObject>();
             AvailableOnlineAt = new List<string>();
             AvailabilityListing = new List<string>();
@@ -184,7 +186,7 @@ namespace RA.Models.JsonV2
         public List<string> CopyrightHolder { get; set; } = null;
 		
 		[JsonProperty( PropertyName = "ceterms:audienceLevelType" )]
-        public List<CredentialAlignmentObject> AudienceLevel { get; set; }
+        public List<CredentialAlignmentObject> AudienceLevelType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:audienceType" )]
         public List<CredentialAlignmentObject> AudienceType { get; set; }

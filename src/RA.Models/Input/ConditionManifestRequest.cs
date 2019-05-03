@@ -55,11 +55,7 @@ namespace RA.Models.Input
         /// Required condition profiles
         /// </summary>
         public List<ConditionProfile> Requires { get; set; }
-        public List<ConditionProfile> RequiredConditions
-        {
-            get { return Requires; }
-            set { Requires = value; }
-        }
+
         /// <summary>
         /// Renewed condition profiles
         /// </summary>

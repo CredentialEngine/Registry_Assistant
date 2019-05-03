@@ -17,14 +17,14 @@ namespace RA.Models
         public string ApiKey { get; set; } = "";
         public string OwnerCtid { get; set; } = "";
         public string ClientIdentifier { get; set; } = "";
-
-        /// <summary>
-        /// CodeValidationType - actions for code validation
-        /// rigid-concepts must match ctdl 
-        /// warn - allow exceptions, return a warning message
-        /// skip - no validation of concept scheme concepts
-        /// </summary>
-        public string CodeValidationType { get; set; }
+		public bool IsPublisherRequest { get; set; }
+		/// <summary>
+		/// CodeValidationType - actions for code validation
+		/// rigid-concepts must match ctdl 
+		/// warn - allow exceptions, return a warning message
+		/// skip - no validation of concept scheme concepts
+		/// </summary>
+		public string CodeValidationType { get; set; }
         public string SerializedInput { get; set; }
         public string Payload { get; set; }
 		/// <summary>
@@ -51,16 +51,27 @@ namespace RA.Models
 			foreach(RequestMessage msg in Messages.OrderBy(m => m.IsWarning))
 			{
 				if ( msg.IsWarning )
-					prefix = "Warning - ";
-				else
+				{
+					if ( msg.Message.ToLower().IndexOf( "warning" ) == -1 )
+						prefix = "Warning - ";
+				}
+				else if ( msg.Message.ToLower().IndexOf( "error" ) == -1 )
 					prefix = "Error - ";
+
 				messages.Add( prefix + msg.Message );
 			}
 			
 
 			return messages;
 		}
+		public void SetWarningMessages( List<string> messages )
+		{
+			foreach ( string msg in messages )
+			{
+				AddWarning( msg );
+			}
 
+		}
 		public void SetMessages( List<string> messages )
 		{
 			//just treat all as errors for now

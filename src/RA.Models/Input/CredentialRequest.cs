@@ -235,9 +235,9 @@ namespace RA.Models.Input
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
 		public List<string> LearningDeliveryType { get; set; } = new List<string>();
 
-		//
+		//List of occupations from a published framework, that is with a web URL
 		public List<FrameworkItem> OccupationType { get; set; }
-		//public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
 		//public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid O*Net codes. See:
@@ -246,7 +246,7 @@ namespace RA.Models.Input
 		public List<string> ONET_Codes { get; set; } = new List<string>();
 
 		public List<FrameworkItem> IndustryType { get; set; }
-		//public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
 		//public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid NAICS codes. See:
@@ -255,7 +255,7 @@ namespace RA.Models.Input
 		public List<string> Naics { get; set; }
 
 		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
-		//public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
+		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
 		//public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid Classification of Instructional Program codes. See:

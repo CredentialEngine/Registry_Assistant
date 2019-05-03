@@ -257,8 +257,8 @@ namespace RA.Models.JsonV2
 		/// A relationship between this competency and a competency in a separate competency framework.
 		/// Competency uris
 		/// </summary>
-		[JsonProperty( PropertyName = "ceasn:crossSubjectReference" )]
-		public List<string> crossSubjectReference { get; set; } = new List<string>();
+		//[JsonProperty( PropertyName = "ceasn:crossSubjectReference" )]
+		//public List<string> crossSubjectReference { get; set; } = new List<string>();
 
 		[JsonProperty( PropertyName = "ceasn:dateCreated" )]
 		public string dateCreated { get; set; }
@@ -306,8 +306,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceasn:listID" )]
 		public string listID { get; set; }
 
-		[JsonProperty( PropertyName = "ceasn:localSubject" )]
-		public LanguageMapList localSubject { get; set; }
+		//[JsonProperty( PropertyName = "ceasn:localSubject" )]
+		//public LanguageMapList localSubject { get; set; }
 
 		#region alignments
 		/// <summary>
@@ -315,6 +315,13 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:broadAlignment" )]
 		public List<string> broadAlignment { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Resource being described includes, comprehends or encompass, in whole or in part, the meaning, nature or importance of the resource being referenced.
+		/// Range Includes: ceasn:Competency, ceasn:Concept
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:encompasses" )]
+		public List<string> encompasses { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Competency uris

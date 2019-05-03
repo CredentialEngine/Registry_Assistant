@@ -6,9 +6,10 @@ namespace RA.Models.JsonV2
 {
     public class GraphContainer
     {
-        [JsonIgnore]
-        public static string classType = "ceterms:Credential";
-        public GraphContainer()
+		[JsonIgnore]
+		public static string ceasnContext = "http://credreg.net/ctdlasn/schema/context/json";
+
+		public GraphContainer()
         {
             Context = "http://credreg.net/ctdlasn/schema/context/json";
         }

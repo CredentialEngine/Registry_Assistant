@@ -8,7 +8,7 @@
         public string DefaultLanguage { get; set; }
         /// <summary>
         /// Identifier for Organization which Owns the data being published
-        /// 2017-12-13 - this will be the CTID for the owning org.
+        /// 2017-12-13 - this will be the CTID for the owning org, even if publisher is third party.
         /// </summary>
         public string PublishForOrganizationIdentifier { get; set; }
 

@@ -82,8 +82,11 @@ namespace RA.Models.JsonV2
 
         [JsonProperty( PropertyName = "ceterms:weight" )]
         public decimal Weight { get; set; }
-
-        [JsonProperty( PropertyName = "ceterms:creditHourType" )]
+		//
+		[JsonProperty( PropertyName = "ceterms:creditValue" )]
+		public List<QuantitiveValue> CreditValue { get; set; } = null;
+		//
+		[JsonProperty( PropertyName = "ceterms:creditHourType" )]
         public LanguageMap CreditHourType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:creditHourValue" )]

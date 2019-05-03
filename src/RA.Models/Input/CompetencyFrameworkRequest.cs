@@ -8,8 +8,6 @@ namespace RA.Models.Input
         {
             CompetencyFramework = new CompetencyFramework();
         }
-		//doesn't make sense here. will be in framework
-        public string CTID { get; set; }
         public CompetencyFramework CompetencyFramework { get; set; } = new CompetencyFramework();
 
 		public List<Competency> Competencies { get; set; } = new List<Competency>();
@@ -151,6 +149,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> identifier { get; set; } = new List<string>();
 
+		public List<string> altIdentifier { get; set; } = new List<string>();
 		/// <summary>
 		/// In Language
 		/// Definition:	en-US: The primary language used in or by this competency framework or competency.The primary language used in or by this competency framework or competency.
@@ -297,8 +296,8 @@ namespace RA.Models.Input
 		/// Competency Category
 		/// Definition:	en-US: The textual label identifying the category of the competency as designated by the promulgating body.
 		/// </summary>
-		public List<string> competencyCategory { get; set; } = new List<string>();
-		public LanguageMapList competencyCategory_maplist { get; set; } = new LanguageMapList();
+		public string competencyCategory { get; set; } 
+		public LanguageMap competencyCategory_map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Complexity Level
@@ -365,7 +364,11 @@ namespace RA.Models.Input
 		/// List of URIs to concepts
 		/// </summary>
 		public List<string> educationLevelType { get; set; } = new List<string>();
-
+		/// <summary>
+		/// Resource being described includes, comprehends or encompass, in whole or in part, the meaning, nature or importance of the resource being referenced.
+		/// Range Includes: ceasn:Competency, ceasn:Concept
+		/// </summary>
+		public List<string> encompasses { get; set; } = new List<string>();
 		/// <summary>
 		/// Exact Alignment
 		/// Definition:	en-US: The relevant concepts in this competency and the referenced competency are coextensive.
@@ -404,6 +407,9 @@ namespace RA.Models.Input
 		/// NOTE: or just provide the CTIDs, and the system will format the proper URI for the current environment.
 		/// </summary>
 		public List<string> isChildOf { get; set; } = new List<string>();
+		/// <summary>
+		/// Indicates that this competency is at the top of the framework.
+		/// </summary>
 		public string isTopChildOf { get; set; }
 
 		public string isPartOf { get; set; }

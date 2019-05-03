@@ -17,6 +17,7 @@ namespace RA.Models.JsonV2
 			InLanguage = new List<string>();
             //Keyword = new List<string>();
 
+			AudienceLevelType = new List<CredentialAlignmentObject>();
             AudienceType = new List<CredentialAlignmentObject>();
             AvailabilityListing = new List<string>();
             Subject = new List<CredentialAlignmentObject>();
@@ -113,6 +114,8 @@ namespace RA.Models.JsonV2
 
         [JsonProperty( PropertyName = "ceterms:availableOnlineAt" )] //URL
         public List<string> AvailableOnlineAt { get; set; }
+		[JsonProperty( PropertyName = "ceterms:audienceLevelType" )]
+        public List<CredentialAlignmentObject> AudienceLevelType { get; set; }
 
         [JsonProperty(PropertyName = "ceterms:audienceType")]
         public List<CredentialAlignmentObject> AudienceType { get; set; }
@@ -132,8 +135,11 @@ namespace RA.Models.JsonV2
 
         [JsonProperty( PropertyName = "ceterms:estimatedCost" )]
         public List<CostProfile> EstimatedCost { get; set; }
-
-        [JsonProperty( PropertyName = "ceterms:creditHourType" )]
+		//
+		[JsonProperty( PropertyName = "ceterms:creditValue" )]
+		public List<QuantitiveValue> CreditValue { get; set; } = null;
+		//
+		[JsonProperty( PropertyName = "ceterms:creditHourType" )]
         public LanguageMap CreditHourType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:creditUnitType" )]

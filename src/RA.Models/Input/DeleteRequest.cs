@@ -13,7 +13,12 @@
         /// </summary>
         public string PublishForOrganizationIdentifier { get; set; }
 
-    }
+		/// Envelope Identifier
+		/// Optional property, used where the publishing entity wishes to store the identifier.
+		/// Contains registry envelope identifier for a document in the registy. 
+		/// </summary>
+		public string RegistryEnvelopeId { get; set; }
+	}
 
     public class EnvelopeDelete
     {

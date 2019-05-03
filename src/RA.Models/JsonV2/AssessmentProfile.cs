@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
@@ -137,7 +134,10 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:availableOnlineAt" )] //URL
         public List<string> AvailableOnlineAt { get; set; }
 
-        [JsonProperty(PropertyName = "ceterms:audienceType")]
+		[JsonProperty( PropertyName = "ceterms:audienceLevelType" )]
+		public List<CredentialAlignmentObject> AudienceLevelType { get; set; }
+
+		[JsonProperty(PropertyName = "ceterms:audienceType")]
         public List<CredentialAlignmentObject> AudienceType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:deliveryType" )]
@@ -197,6 +197,9 @@ namespace RA.Models.JsonV2
 		//
 		[JsonProperty( PropertyName = "ceterms:alternativeInstructionalProgramType" )]
 		public LanguageMapList AlternativeInstructionalProgramType { get; set; } = new LanguageMapList();
+		//
+		[JsonProperty( PropertyName = "ceterms:creditValue" )]
+		public List<QuantitiveValue> CreditValue { get; set; } = null;
 		//
 		[JsonProperty( PropertyName = "ceterms:creditHourType" )]
         public LanguageMap CreditHourType { get; set; }

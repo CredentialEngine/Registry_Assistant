@@ -31,12 +31,6 @@ namespace RA.Models.Input
 		/// URI for the FrameworkItem
 		/// </summary>
 		public string TargetNode { get; set; }
-		/// <summary>
-		/// URL for the framework item, translated to TargetNode
-		/// </summary>
-		//public string URL {
-		//	get { return TargetNode; }
-		//	set { TargetNode = value; }
-		//}
+
 	}
 }

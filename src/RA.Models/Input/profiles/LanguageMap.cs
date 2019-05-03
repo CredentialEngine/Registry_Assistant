@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -117,11 +118,14 @@ namespace RA.Models.Input
     }
     //
 
-    //probably will not use this format
+    //JSON LD fomrat
     public class LanguageItem
     {
-        public string Language { get; set; }
-        public string Text { get; set; }
+		[JsonProperty( PropertyName = "@language" )]
+		public string Language { get; set; }
+
+		[JsonProperty( PropertyName = "@value" )]
+		public string Value { get; set; }
     }
 
 }
