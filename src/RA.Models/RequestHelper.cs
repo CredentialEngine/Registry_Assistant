@@ -13,11 +13,15 @@ namespace RA.Models
 			Messages = new List<RequestMessage>();
 			HasErrors = false;
 			CodeValidationType = "warn";
+			IsPublishRequestType = true;
 		}
         public string ApiKey { get; set; } = "";
         public string OwnerCtid { get; set; } = "";
         public string ClientIdentifier { get; set; } = "";
+
+		//true if originates from publisher
 		public bool IsPublisherRequest { get; set; }
+		public bool IsPublishRequestType { get; set; }
 		/// <summary>
 		/// CodeValidationType - actions for code validation
 		/// rigid-concepts must match ctdl 
@@ -31,7 +35,7 @@ namespace RA.Models
 		/// return the registr envelope id
 		/// </summary>
 		public string RegistryEnvelopeId { get; set; }
-
+		
 		public List<RequestMessage> Messages { get; set; }
 		public bool HasErrors { get; set; }
 		public void AddError( string message )

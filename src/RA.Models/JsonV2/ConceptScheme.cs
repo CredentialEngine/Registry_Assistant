@@ -11,7 +11,7 @@ namespace RA.Models.JsonV2
 		public ConceptSchemeGraph()
 		{
 			Type = classType;
-			Context = "http://credreg.net/ctdlasn/schema/context/json";
+			Context = "https://credreg.net/ctdlasn/schema/context/json";
 		}
 		[JsonProperty( "@context" )]
 		public string Context { get; set; }
@@ -198,8 +198,17 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "skos:topConceptOf" )]
 		public string TopConceptOf { get; set; }
 
+		[JsonProperty( PropertyName = "ceasn:comment" )]
+		public LanguageMapList Comment { get; set; }
 
+		[JsonProperty( PropertyName = "navy:codeNEC" )]
+		public string CodeNEC { get; set; }
 
+		[JsonProperty( PropertyName = "navy:legacyCodeNEC" )]
+		public string LegacyCodeNEC { get; set; }
+
+		[JsonProperty( PropertyName = "navy:SourceCareerFieldCode" )]
+		public List<string> SourceCareerFieldCode { get; set; } 
 
 	}
 }

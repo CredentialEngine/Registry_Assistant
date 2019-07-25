@@ -10,7 +10,7 @@ namespace RA.Models.JsonV2
         public CompetencyFrameworksGraph()
         {
             Type = classType;
-            Context = "http://credreg.net/ctdlasn/schema/context/json";
+            Context = "https://credreg.net/ctdlasn/schema/context/json";
         }
         [JsonProperty( "@context" )]
         public string Context { get; set; }
@@ -40,7 +40,7 @@ namespace RA.Models.JsonV2
         [JsonIgnore]
         public static string classType = "ceasn:CompetencyFramework";
 		[JsonIgnore]
-		public static string thisContext = "http://credreg.net/ctdlasn/schema/context/json";
+		public static string thisContext = "https://credreg.net/ctdlasn/schema/context/json";
 		public CompetencyFramework()
         {
             Type = classType;
@@ -163,7 +163,14 @@ namespace RA.Models.JsonV2
         //
         [JsonProperty( PropertyName = "ceasn:tableOfContents" )]
         public LanguageMap tableOfContents { get; set; } = new LanguageMap();
-    }
+
+		[JsonProperty( PropertyName = "ceterms:occupationType" )]
+		public List<CredentialAlignmentObject> OccupationType { get; set; } = new List<CredentialAlignmentObject>();
+
+		[JsonProperty( PropertyName = "ceterms:industryType" )]
+		public List<CredentialAlignmentObject> IndustryType { get; set; } = new List<CredentialAlignmentObject>();
+
+	}
 
 
 }

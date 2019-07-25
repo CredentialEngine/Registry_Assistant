@@ -28,8 +28,9 @@ namespace RA.Services
             isValid = true;
             string crEnvelopeId = request.RegistryEnvelopeId;
             string submitter = "";
+			List<string> messages = new List<string>();
 
-            var output = new OutputEntity();
+			var output = new OutputEntity();
             OutputGraph og = new OutputGraph();
 
             if ( ToMap( request, output, ref helper ) )
@@ -53,51 +54,58 @@ namespace RA.Services
                 CER cer = new CER( "CostManifest", output.Type, output.Ctid, helper.SerializedInput )
                 {
                     PublisherAuthorizationToken = helper.ApiKey,
-                    PublishingForOrgCtid = helper.OwnerCtid
+					IsPublisherRequest = helper.IsPublisherRequest,
+					EntityName = CurrentEntityName,
+					PublishingForOrgCtid = helper.OwnerCtid
                 };
+
 				//
-				bool recordWasFound = false;
-				bool usedCEKeys = false;
-				string message = "";
-				var result = HistoryServices.GetMostRecentHistory( "CostManifest", output.Ctid, ref recordWasFound, ref usedCEKeys, ref message );
-				if ( recordWasFound ) //found previous
+				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
 				{
-					if ( usedCEKeys && cer.IsManagedRequest )
+					cer.IsManagedRequest = true;
+					//get publisher org
+					string publisherCTID = "";
+					if ( SupportServices.GetPublishingOrgByApiKey( cer.PublisherAuthorizationToken, ref publisherCTID, ref messages ) )
 					{
-						LoggingHelper.DoTrace( 5, "CostManifest publish. Was managed request. Overriding to CE publish." );
-						cer.IsManagedRequest = false;   //should record override
-						cer.OverrodeOriginalRequest = true;
+						cer.PublishingByOrgCtid = publisherCTID;
 					}
-					else if ( !usedCEKeys && !cer.IsManagedRequest )
+					else
 					{
-						//this should not happen. Means used publisher
-						cer.IsManagedRequest = true;   //should record override
-						cer.OverrodeOriginalRequest = true;
+						//should be an error message returned
+						isValid = false;
+						helper.SetMessages( messages );
+						LoggingHelper.DoTrace( 4, string.Format( "CostManifest Services.Publish. Validate ApiKey failed. Org Ctid: {0}, Document Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.Ctid, cer.PublisherAuthorizationToken ) );
+						return; //===================
 					}
 				}
 				else
-				{
-					//eventually will always do managed
-				}
+					cer.PublishingByOrgCtid = cer.PublishingForOrgCtid;
+
 				//
-				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
-                    cer.IsManagedRequest = true;
+				if ( !SupportServices.ValidateAgainstPastRequest( "CostManifest", output.Ctid, ref cer, ref messages ) )
+				{
+					isValid = false;
+					//helper.SetMessages( messages );
+					//return; //===================
+				}
+				else
+				{
 
-                string identifier = "CostManifest_" + request.CostManifest.Ctid;
+					string identifier = "CostManifest_" + request.CostManifest.Ctid;
+					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					{
+						//for now need to ensure envelopid is returned
+						helper.RegistryEnvelopeId = crEnvelopeId;
 
-                if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
-                {
-                    //for now need to ensure envelopid is returned
-                    helper.RegistryEnvelopeId = crEnvelopeId;
-
-                    string msg = string.Format( "<p>Published CostManifest: {0}</p><p>CostDetails  webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", request.CostManifest.Name, output.CostDetails, output.Ctid, crEnvelopeId );
-                    NotifyOnPublish( "CostManifest", msg );
-                }
-                else
-                {
-                    helper.AddError( status );
-                    isValid = false;
-                }
+						string msg = string.Format( "<p>Published CostManifest: {0}</p><p>CostDetails  webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", request.CostManifest.Name, output.CostDetails, output.Ctid, crEnvelopeId );
+						NotifyOnPublish( "CostManifest", msg );
+					}
+					else
+					{
+						helper.AddError( status );
+						isValid = false;
+					}
+				}
             }
             else
             {
@@ -119,7 +127,9 @@ namespace RA.Services
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
-        }
+			helper.SetWarningMessages( warningMessages );
+			helper.SetMessages( messages );
+		}
         //
 
         public string FormatAsJson( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
@@ -171,8 +181,8 @@ namespace RA.Services
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
-
-            return helper.Payload;
+			helper.SetWarningMessages( warningMessages );
+			return helper.Payload;
         }
 
         /// <summary>
@@ -221,7 +231,7 @@ namespace RA.Services
             }
             catch ( Exception ex )
             {
-                LogError( ex, "CostManifestServices.ToMap" );
+				LoggingHelper.LogError( ex, "CostManifestServices.ToMap" );
                 messages.Add( ex.Message );
             }
             if ( messages.Count > 0 )
@@ -237,8 +247,8 @@ namespace RA.Services
         {
             bool isValid = true;
             string statusMessage = "";
-            output.Ctid = FormatCtid( input.Ctid, ref messages );
-            output.CtdlId = idBaseUrl + output.Ctid;
+			CurrentCtid = output.Ctid = FormatCtid( input.Ctid, "Cost Manifest", ref messages );
+            output.CtdlId = credRegistryResourceUrl + output.Ctid;
 
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )
@@ -258,7 +268,7 @@ namespace RA.Services
                 output.Name = Assign( input.Name, DefaultLanguageForMaps );
                 CurrentEntityName = input.Name;
             }
-            output.Description = AssignLanguageMap( ConvertSpecialInput( input.Description ), input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+            output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
 
             if ( !IsUrlValid( input.CostDetails, ref statusMessage, ref isUrlPresent ) )
                 messages.Add( "The CostDetails is invalid" );

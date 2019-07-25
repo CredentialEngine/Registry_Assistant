@@ -27,102 +27,94 @@ namespace RA.Services
         /// <param name="request"></param>
         /// <param name="isValid"></param>
         /// <param name="messages"></param>
-        public static void Publish(EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId)
-        {
-            RA.Models.RequestHelper helper = new Models.RequestHelper();
-            helper.RegistryEnvelopeId = registryEnvelopeId;
-            helper.ApiKey = apiKey;
-            helper.OwnerCtid = request.PublishForOrganizationIdentifier;
+        //public static void Publish(EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId)
+        //{
+        //    RA.Models.RequestHelper helper = new Models.RequestHelper();
+        //    helper.RegistryEnvelopeId = registryEnvelopeId;
+        //    helper.ApiKey = apiKey;
+        //    helper.OwnerCtid = request.PublishForOrganizationIdentifier;
 
-            Publish(request, ref isValid, helper);
+        //    Publish(request, ref isValid, helper);
 
-            payload = helper.Payload;
-            messages = helper.GetAllMessages();
-            registryEnvelopeId = helper.RegistryEnvelopeId;
-        }
+        //    payload = helper.Payload;
+        //    messages = helper.GetAllMessages();
+        //    registryEnvelopeId = helper.RegistryEnvelopeId;
+        //}
         /// <summary>
         ///Publish an organization to the Credential Registry
         /// </summary>
         /// <param name="request"></param>
         /// <param name="isValid"></param>
         /// <param name="helper"></param>
-        public static void Publish(EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper)
-        {
-            isValid = true;
-            string crEnvelopeId = request.RegistryEnvelopeId;
-            //submitter is not a person for this api, rather the organization
-            //may want to do a lookup via the api key?
-            string submitter = "";
+    //    public static void Publish(EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper)
+    //    {
+    //        isValid = true;
+    //        string crEnvelopeId = request.RegistryEnvelopeId;
+    //        //submitter is not a person for this api, rather the organization
+    //        //may want to do a lookup via the api key?
+    //        string submitter = "";
 
-            var output = new Agent();
-            List<string> messages = new List<string>();
-            if (ToMap(request.Organization, output, ref messages))
-            {
-                helper.Payload = JsonConvert.SerializeObject(output, ServiceHelper.GetJsonSettings());
+    //        var output = new Agent();
+    //        List<string> messages = new List<string>();
+    //        if (ToMap(request.Organization, output, ref messages))
+    //        {
+    //            helper.Payload = JsonConvert.SerializeObject(output, ServiceHelper.GetJsonSettings());
 
-                CER cer = new CER( "Organization", output.Type, output.Ctid, helper.SerializedInput); 
-                cer.PublisherAuthorizationToken = helper.ApiKey;
-                cer.PublishingForOrgCtid = helper.OwnerCtid;
-                if (cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32)
-                    cer.IsManagedRequest = true;
+				//CER cer = new CER( "Organization", output.Type, output.Ctid, helper.SerializedInput )
+				//{
+				//	PublisherAuthorizationToken = helper.ApiKey,
+				//	IsPublisherRequest = helper.IsPublisherRequest,
+				//	PublishingForOrgCtid = helper.OwnerCtid
+				//};
+				//if (cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32)
+    //                cer.IsManagedRequest = true;
 
-                string identifier = "Organization_" + request.Organization.Ctid;
+    //            string identifier = "Organization_" + request.Organization.Ctid;
 
-                if (cer.Publish(helper.Payload, submitter, identifier, ref status, ref crEnvelopeId))
-                {
-                    helper.RegistryEnvelopeId = crEnvelopeId;
-                    string msg = string.Format("<p>Published organization: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage.ToString(), output.Ctid, crEnvelopeId);
-                    NotifyOnPublish("Organization", msg);
-                }
-                else
-                {
-                    messages.Add(status);
-                    isValid = false;
-                }
-            }
-            else
-            {
-                isValid = false;
-                helper.Payload = JsonConvert.SerializeObject(output, ServiceHelper.GetJsonSettings());
-            }
-            helper.SetMessages(messages);
-        }
+    //            if (cer.Publish(helper.Payload, submitter, identifier, ref status, ref crEnvelopeId))
+    //            {
+    //                helper.RegistryEnvelopeId = crEnvelopeId;
+    //                string msg = string.Format("<p>Published organization: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage.ToString(), output.Ctid, crEnvelopeId);
+    //                NotifyOnPublish("Organization", msg);
+    //            }
+    //            else
+    //            {
+    //                messages.Add(status);
+    //                isValid = false;
+    //            }
+    //        }
+    //        else
+    //        {
+    //            isValid = false;
+    //            helper.Payload = JsonConvert.SerializeObject(output, ServiceHelper.GetJsonSettings());
+    //        }
+    //        helper.SetMessages(messages);
+    //    }
         //
 
-        //Used for demo page - NA 6/5/2017
-        //public static string DemoPublish( OutputEntity ctdlFormattedAgent, ref bool isValid, ref List<string> messages, ref string rawResponse, bool forceSkipValidation = false )
-        //{
-        //	isValid = true;
-        //	var crEnvelopeId = "";
-        //	var payload = JsonConvert.SerializeObject( ctdlFormattedAgent, ServiceHelper.GetJsonSettings() );
-        //	var identifier = "agent_" + ctdlFormattedAgent.Ctid;
-        //	rawResponse = new CER().Publish( payload, "", identifier, ref isValid, ref status, ref crEnvelopeId, forceSkipValidation );
 
-        //	return crEnvelopeId;
-        //}
+  //      public static string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
+		//{
+		//	return FormatAsJson( request.Organization, ref isValid, ref messages );
+		//}
+		//public static string FormatAsJson( InputEntity input, ref bool isValid, ref List<string> messages )
+		//{
+  //          IsAPublishRequest = false;
+  //          var output = new OutputEntity();
+		//	string payload = "";
+		//	isValid = true;
 
-        public static string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
-		{
-			return FormatAsJson( request.Organization, ref isValid, ref messages );
-		}
-		public static string FormatAsJson( InputEntity input, ref bool isValid, ref List<string> messages )
-		{
-            IsAPublishRequest = false;
-            var output = new OutputEntity();
-			string payload = "";
-			isValid = true;
+		//	if ( ToMap( input, output, ref messages ) )
+		//		payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+		//	else
+		//	{
+		//		isValid = false;
+		//		//do payload anyway
+		//		payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+		//	}
 
-			if ( ToMap( input, output, ref messages ) )
-				payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
-			else
-			{
-				isValid = false;
-				//do payload anyway
-				payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
-			}
-
-			return payload;
-		}
+		//	return payload;
+		//}
 
 
 		/// <summary>
@@ -223,7 +215,7 @@ namespace RA.Services
 			bool isValid = true;
 
             output.Ctid = FormatCtid(input.Ctid, ref messages);
-            output.CtdlId = idBaseUrl + output.Ctid;
+            output.CtdlId = credRegistryResourceUrl + output.Ctid;
 
             //todo determine if will generate where not found
    //         if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )
@@ -233,7 +225,7 @@ namespace RA.Services
 			//{
    //             //input.Ctid = input.Ctid.ToLower();
    //             output.Ctid = input.Ctid;
-			//	output.CtdlId = idBaseUrl + output.Ctid;
+			//	output.CtdlId = credRegistryResourceUrl + output.Ctid;
 			//	CurrentCtid = input.Ctid;
 			//}
 			if ( string.IsNullOrWhiteSpace( output.CtdlId ) )
@@ -374,15 +366,16 @@ namespace RA.Services
 			//	messages.Add( "Error - A valid email must be entered." );
 			//}
 			output.Address = FormatPlacesList( input.Address, ref messages );
-			
+
 			//top level contact points will be added under a default place/address
-            //no longer allowed at org level
-			//if ( input.ContactPoint != null && input.ContactPoint.Count > 0 )
-			//{
-			//	Models.Input.Place contactPlaces = new Models.Input.Place();
-			//	contactPlaces.ContactPoint.AddRange( input.ContactPoint );
-			//	AppendPlaceContactPoints( contactPlaces, output.Address, ref messages, false );
-			//}
+			//no longer allowed at org level
+			if ( input.ContactPoint != null && input.ContactPoint.Count > 0 )
+			{
+				messages.Add( "ContactPoint cannot be entered at the organization level. Instead add to the address." );
+				//Models.Input.Place contactPlaces = new Models.Input.Place();
+				//contactPlaces.ContactPoint.AddRange( input.ContactPoint );
+				//AppendPlaceContactPoints( contactPlaces, output.Address, ref messages, false );
+			}
 			//else
 			//	output.ContactPoint = null;
 

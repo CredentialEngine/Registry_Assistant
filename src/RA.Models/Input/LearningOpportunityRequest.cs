@@ -58,7 +58,7 @@ namespace RA.Models.Input
 			AvailableAt = new List<Place>();
 			CommonConditions = new List<string>();
 			CommonCosts = new List<string>();
-			FinancialAssistance = new List<Input.FinancialAlignmentObject>();
+			//FinancialAssistanceOLD = new List<Input.FinancialAlignmentObject>();
 
 			HasPart = new List<EntityReference>();
 			IsPartOfLearningOpportunity = new List<EntityReference>();
@@ -221,8 +221,8 @@ namespace RA.Models.Input
 
 		public List<string> CommonCosts { get; set; }
 		public List<string> CommonConditions { get; set; }
-		public List<FinancialAlignmentObject> FinancialAssistance { get; set; }
-
+		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
+		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 	}
 }

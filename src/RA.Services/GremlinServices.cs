@@ -14,10 +14,11 @@ namespace RA.Services
 {
 	public class GremlinServices
 	{
-		public static List<JObject> GremlinResponseToJObjectSearchResults( string rawGremlinResponse, ref int totalResults )
+		public static List<JObject> GremlinResponseToJObjectSearchResults( string rawGremlinResponse, ref int totalResults, ref List<JObject> relatedItems )
 		{
 			var results = new List<JObject>();
 			var rawData = JObject.Parse( rawGremlinResponse );
+			relatedItems = relatedItems ?? new List<JObject>();
 
 			//Try to get results, or return an empty list
 			//The gremlin queries are configured to return a value consisting of a two-item array where:
@@ -25,8 +26,9 @@ namespace RA.Services
 			//The second item contains a list of results, constrained by the query's skip/limit parameters
 			try
 			{
-				totalResults = ( int ) rawData[ "result" ][ "data" ][ "@value" ].FirstOrDefault( m => ( string ) m[ "@type" ] == "g:Int64" )[ "@value" ];
-				results = (( JArray ) rawData[ "result" ][ "data" ][ "@value" ].FirstOrDefault( m => ( string ) m[ "@type" ] == "g:List" )[ "@value" ]).ToList().ConvertAll( m => ( JObject ) m ).ToList();
+				totalResults = ( int ) rawData[ "result" ][ "data" ][ "@value" ][ 0 ][ "@value" ];
+				results = (( JArray ) rawData[ "result" ][ "data" ][ "@value" ][ 1 ][ "@value" ]).ToList().ConvertAll( m => ( JObject ) m ).ToList();
+				relatedItems = (( JArray ) rawData[ "result" ][ "data" ][ "@value" ][ 2 ][ "@value" ]).ToList().ConvertAll( m => ( JObject ) m ).ToList();
 			}
 			catch
 			{
@@ -58,9 +60,11 @@ namespace RA.Services
 		}
 		//
 
-		public static List<Dictionary<string, object>> GremlinResponseToDictionarySearchResults( string rawGremlinResponse, ref int totalResults )
+		public static List<Dictionary<string, object>> GremlinResponseToDictionarySearchResults( string rawGremlinResponse, ref int totalResults, ref List<Dictionary<string, object>> relatedItems )
 		{
-			var data = GremlinResponseToJObjectSearchResults( rawGremlinResponse, ref totalResults );
+			var relatedObjects = new List<JObject>();
+			var data = GremlinResponseToJObjectSearchResults( rawGremlinResponse, ref totalResults, ref relatedObjects );
+			relatedItems = relatedObjects.ConvertAll( m => JObjectToDictionary( m ) ).ToList();
 			return data.ConvertAll( m => JObjectToDictionary( m ) ).ToList();
 		}
 		public static Dictionary<string, object> JObjectToDictionary( JObject token )
@@ -156,14 +160,14 @@ namespace RA.Services
 		}
 		//
 
-		public static string CTDLQueryToGremlinQuery( string jsonText, int skip, int take, GremlinContext context = null )
+		public static string CTDLQueryToGremlinQuery( string jsonText, int skip, int take, string orderBy = "", bool orderDescending = false, GremlinContext context = null )
 		{
 			var token = JObject.Parse( jsonText );
-			return CTDLQueryToGremlinQuery( token, skip, take, context );
+			return CTDLQueryToGremlinQuery( token, skip, take, orderBy, orderDescending, context );
 		}
 		//
 
-		public static string CTDLQueryToGremlinQuery( JObject token, int skip, int take, GremlinContext context = null )
+		public static string CTDLQueryToGremlinQuery( JObject token, int skip, int take, string orderBy = "", bool orderDescending = false, GremlinContext context = null )
 		{
 			//Initialize context
 			context = context ?? new GremlinContext( true );
@@ -184,15 +188,21 @@ namespace RA.Services
 			//Finish Query
 			//...)
 			//.union(__.count(),__.select('main').skip(0).limit(10).values('__payload').fold())
-			var union = nextPart
-				.SetNext( new GremlinItem( "union", "" ) );
-			union.Arguments.Add( new GremlinItem( "count", "" ) { AllowEmptyArguments = true } );
+			nextPart.SetNext( new GremlinItem( "union", "" ) );
+			var union = nextPart.Next;
+			union.Arguments.Add( new GremlinItem( "select('main').count()" ) { AllowEmptyArguments = true, PrintStringValueWithoutQuotes = true, IsDirectValue = true } );
 			var finish = new GremlinItem( "select", "main" );
+
 			finish
+				//.SetNext( new GremlinItem( "order", new GremlinItem( "local" ) { PrintStringValueWithoutQuotes = true } ) )
+				//.SetNext( new GremlinItem( "by", new GremlinItem( ( string.IsNullOrWhiteSpace(orderBy) ? "out('ceterms:name').values('en')," : "'" + orderBy + "'," ) + (orderDescending ? "decr" : "incr") ) { PrintStringValueWithoutQuotes = true } ) )
 				.SetNext( new GremlinItem( "skip", skip ) )
 				.SetNext( new GremlinItem( "limit", take ) )
-				.SetNext( new GremlinItem( "values", "__payload" ) )
-				.SetNext( new GremlinItem( "fold", "" ) { AllowEmptyArguments = true } );
+				.SetNext( new GremlinItem( "union", "" ) { AllowEmptyArguments = true } );
+
+			finish.Next.Next.Next.Arguments.Add( new GremlinItem( "__.values('__payload').fold()" ) { IsDirectValue = true, AllowEmptyArguments = true, PrintStringValueWithoutQuotes = true } ); //Main results
+			finish.Next.Next.Next.Arguments.Add( new GremlinItem( "union(__.out().has('@id',test({x,y -> x ==~ y}, /(?i)_:.*/)).values('__payload'),__.out().hasNot('@id').out().has('@id',test({x,y -> x ==~ y}, /(?i)_:.*/)).values('__payload'),__.out().hasNot('@id').out().hasNot('@id').out().has('@id',test({x,y -> x ==~ y}, /(?i)_:.*/)).values('__payload')).dedup().fold()" ) { AllowEmptyArguments = true, PrintStringValueWithoutQuotes = true } ); //Try to capture blank nodes
+
 			union.Arguments.Add( finish );
 
 			//Call .ToString() - this triggers the internal .ToString() methods recursively
@@ -371,6 +381,7 @@ namespace RA.Services
 				var languageMapProperties = new List<string>();
 				var stringProperties = new List<string>();
 				var numberProperties = new List<string>();
+				var uriProperties = new List<string>();
 
 				//Document processing
 				foreach ( var context in rawContextDocuments )
@@ -400,6 +411,12 @@ namespace RA.Services
 								{
 									numberProperties.Add( prop.Name );
 								}
+
+								//URI and URL properties
+								if( valueProperty.Name == "@type" && valueProperty.Value.Type == JTokenType.String && (string) valueProperty.Value == "@id" )
+								{
+									uriProperties.Add( prop.Name );
+								}
 							}
 						}
 					}
@@ -421,6 +438,11 @@ namespace RA.Services
 				if ( numberProperties.Count() > 0 )
 				{
 					Handlers.Add( new NumberHandler( numberProperties.Distinct().ToList() ) );
+				}
+
+				if( uriProperties.Count() > 0 )
+				{
+					//Handlers.Add( new UriHandler( uriProperties.Distinct().ToList() ) );
 				}
 			}
 		}
@@ -481,9 +503,17 @@ namespace RA.Services
 				//Top-layer handling
 				if ( property == null )
 				{
-					foreach( var item in normalProperties )
+					var sendToNext = container;
+					//Enable or searches at the root level - leave the outermost wrapping "and()" by injecting a new "or()"
+					if( searchOperator == "search:orTerms" )
 					{
-						HandleGremlin( item.Name, item.Value, container, context, false );
+						sendToNext = new GremlinItem( "or", "" );
+						container.Arguments.Add( sendToNext );
+					}
+					//Handling
+					foreach ( var item in normalProperties )
+					{
+						HandleGremlin( item.Name, item.Value, sendToNext, context, false );
 					}
 				}
 				//Value handling
@@ -552,7 +582,13 @@ namespace RA.Services
 				if( token.Type == JTokenType.String && property != "@type" )
 				{
 					var wrappedValue = WrapTextInRegex( ( string ) token );
-					container.Arguments.Add( new GremlinItem( "has", new List<GremlinItem>() { new GremlinItem( property ), new GremlinItem( wrappedValue ) } ) );
+					var orWrapper = new GremlinItem( "or", "" );
+					//URI/URL properties are not well distinguished, so check for both 
+					//.or(has('property',test),out('propertyname').has('@id',test()))
+					orWrapper.Arguments.Add( new GremlinItem( "has", "" ) { Arguments = new List<GremlinItem>() { new GremlinItem( property ), new GremlinItem( wrappedValue ) { PrintStringValueWithoutQuotes = true } } } );
+					orWrapper.Arguments.Add( new GremlinItem( "out", property ) { AllowEmptyArguments = true, Next = new GremlinItem( "has", "" ) { Arguments = new List<GremlinItem>() { new GremlinItem( "@id" ), new GremlinItem( wrappedValue ) { PrintStringValueWithoutQuotes = true } } } } );
+					container.Arguments.Add( orWrapper );
+					//container.Arguments.Add( new GremlinItem( "has", new List<GremlinItem>() { new GremlinItem( property ), new GremlinItem( wrappedValue ) { PrintStringValueWithoutQuotes = true } } ) );
 				}
 				//Other value types
 				else
@@ -1094,5 +1130,128 @@ namespace RA.Services
 			void ValueHandler( string property, JValue token, GremlinItem container, GremlinContext context );
 		}
 		//
+
+		public enum DescriptionSetType { NoDescriptionSet, Organization, CompetencyFramework, Credential, Assessment, LearningOpportunityProfile, EverythingOwnedByOrganization }
+		public static string CTDLQueryToDescriptionSetQuery( JObject token, int skip, int take, DescriptionSetType dspType, string orderBy = "", bool orderDescending = false, GremlinContext context = null )
+		{
+			//Initialize context
+			context = context ?? new GremlinContext( true );
+
+			//Start Query
+			//g.V().has('@id').as('main')
+			//.and(...
+			var query = new GremlinItem( "g.V", "" ) { AllowEmptyArguments = true };
+			var startPart = query
+				.SetNext( new GremlinItem( "has", new List<GremlinItem>() {
+					//Filter out any node that isn't a top-level node
+					new GremlinItem( "@id" ),
+					new GremlinItem( DefaultGremlinHandler.WrapTextInRegex( "http", DefaultGremlinHandler.TextMatchType.StartsWith ) ) { PrintStringValueWithoutQuotes = true }
+				} ) );
+
+			//Enforce valid DSP types
+			var credentialTypes = new List<string>() { "ceterms:ApprenticeshipCertificate", "ceterms:AssociateDegree", "ceterms:BachelorDegree", "ceterms:Badge", "ceterms:Certificate", "ceterms:Certification", "ceterms:Degree", "ceterms:DigitalBadge", "ceterms:Diploma", "ceterms:DoctoralDegree", "ceterms:GeneralEducationDevelopment", "ceterms:JourneymanCertificate", "ceterms:License", "ceterms:MasterCertificate", "ceterms:MasterDegree", "ceterms:MicroCredential", "ceterms:OpenBadge", "ceterms:ProfessionalDoctorate", "ceterms:QualityAssuranceCredential", "ceterms:ResearchDoctorate", "ceterms:SecondarySchoolDiploma" };
+			var organizationTypes = new List<string>() { "ceterms:CredentialOrganization", "ceterms:QACredentialOrganization" };
+			var selectedTypes = new List<string>();
+			if( token.Property( "@type" ) != null )
+			{
+				var typeValue = token.Property( "@type" ).Value;
+				selectedTypes = typeValue.Type == JTokenType.Array ? typeValue.ToObject<List<string>>() : new List<string>() { typeValue.ToString() };
+			}
+			switch ( dspType )
+			{
+				case DescriptionSetType.Organization:
+				{
+					var valid = organizationTypes.Where( m => selectedTypes.Contains( m ) ).ToList();
+					token[ "@type" ] = JToken.FromObject( valid.Count() == 0 ? organizationTypes : valid );
+					break;
+				}
+				case DescriptionSetType.Credential:
+				{
+					var valid = credentialTypes.Where( m => selectedTypes.Contains( m ) ).ToList();
+					token[ "@type" ] = JToken.FromObject( valid.Count() == 0 ? credentialTypes : valid );
+					break;
+				}
+				case DescriptionSetType.Assessment:
+				{
+					token[ "@type" ] = "ceterms:AssessmentProfile";
+					break;
+				}
+				case DescriptionSetType.LearningOpportunityProfile:
+				{
+					token[ "@type" ] = "ceterms:LearningOpportunityProfile";
+					break;
+				}
+				case DescriptionSetType.CompetencyFramework:
+				{
+					token[ "@type" ] = "ceasn:CompetencyFramework";
+					break;
+				}
+
+				default:
+				break;
+			}
+
+			var nextPart = startPart
+				.SetNext( new GremlinItem( "as", "main" ) )
+				.SetNext( new GremlinItem( "and", "" ) );
+
+			//Apply Query
+			//Hierarchical query structure, transforming CTDL JSON into Gremlin
+			HandleGremlin( null, token, nextPart, context, true ); //Setting the property argument to null triggers the top-level handling, which basically just skips the extra .and() layer
+
+			//Finish Query
+			//...)
+			//.union(__.count(),__.select('main').skip(0).limit(10).values('__payload').fold())
+			var union = nextPart
+				.SetNext( new GremlinItem( "union", "" ) );
+
+			var count = new GremlinItem( "select('main').count()" ) { AllowEmptyArguments = true, PrintStringValueWithoutQuotes = true, IsDirectValue = true };
+			union.Arguments.Add( count );
+
+			var finish = new GremlinItem( "select", "main" );
+			finish
+				.SetNext( new GremlinItem( "skip", skip ) )
+				.SetNext( new GremlinItem( "limit", take ) )
+				.SetNext( new GremlinItem( "union", "" ) { AllowEmptyArguments = true } );
+
+			var finalUnion = finish.Next.Next.Next;
+			finalUnion.Arguments.Add( new GremlinItem( "__.values('__payload').fold()" ) { AllowEmptyArguments = true, PrintStringValueWithoutQuotes = true, IsDirectValue = true } );
+
+			switch ( dspType )
+			{
+				case DescriptionSetType.Organization:
+				{
+					finalUnion.Arguments.Add( new GremlinItem( "union(__.bothE().hasLabel(within('ceterms:owns','ceterms:offers','ceterms:accredits','ceterms:approves','ceterms:regulates','ceterms:recognizes','ceterms:renews','ceterms:revokes','ceterms:hasConditionManifest','ceterms:hasCostManifest','ceterms:ownedBy','ceterms:accreditedBy','ceterms:approvedBy','ceterms:regulatedBy','ceterms:parentOrganization','ceterms:subOrganization','ceterms:department','ceasn:creator','ceasn:publisher','ceasn:rightsHolder')).bothV().as('connections').where('connections',neq('main')).union(__.values('__payload'),__.has('@type','ceasn:CompetencyFramework').union(__.outE().hasLabel(within('ceasn:conceptTerm','ceasn:educationLevelType','ceasn:publicationStatusType')).inV().union(__.values('__payload'),__.out('skos:inScheme').values('__payload')),__.in('ceasn:isPartOf').union(__.values('__payload'),__.outE().hasLabel(within('ceasn:conceptTerm','ceasn:educationLevelType')).inV().union(__.values('__payload'),__.out('skos:inScheme').values('__payload')))))).dedup().fold()" ) { AllowEmptyArguments = true, IsDirectValue = true, PrintStringValueWithoutQuotes = true } );
+					break;
+				}
+				case DescriptionSetType.CompetencyFramework:
+				{
+					finalUnion.Arguments.Add( new GremlinItem( "union(__.bothE().hasLabel(within('ceasn:isPartOf','ceasn:creator','ceasn:publisher','ceasn:rightsHolder','ceasn:conceptTerm','ceasn:educationLevelType','ceasn:publicationStatusType','ceasn:alignFrom','ceasn:alignTo')).bothV().as('connections').where('connections',neq('main')).union(__.values('__payload'),__.out('skos:inScheme').values('__payload'),__.in('ceasn:isPartOf').values('__payload'),__.outE().hasLabel(within('ceasn:conceptTerm','ceasn:educationLevelType','ceasn:complexityLevel')).inV().union(__.values('__payload'),__.out('skos:inScheme').values('__payload')),__.outE().hasLabel(within('ceasn:alignFrom','ceasn:alignTo','ceasn:broadAlignment','ceasn:exactAlignment','ceasn:majorAlignment','ceasn:minorAlignment','ceasn:narrowAlignment','ceasn:prerequisiteAlignment')).inV().union(__.values('__payload'),__.out('ceasn:isPartOf').values('__payload')),__.in('ceterms:targetNode').union(__.in('ceterms:targetCompetency').in().values('__payload'),__.in('ceterms:assesses').union(__.values('__payload'),__.in('ceterms:targetAssessment').in().values('__payload')),__.in('ceterms:teaches').union(__.values('__payload'),__.in('ceterms:targetLearningOpportunity').in().values('__payload'))))).dedup().fold()" ) { AllowEmptyArguments = true, IsDirectValue = true, PrintStringValueWithoutQuotes = true } );
+					break;
+				}
+				case DescriptionSetType.Credential:
+				case DescriptionSetType.LearningOpportunityProfile:
+				case DescriptionSetType.Assessment:
+				{
+					finalUnion.Arguments.Add( new GremlinItem( "union(__.outE().hasLabel(within('ceterms:teaches','ceterms:assesses')).inV().out('ceterms:targetNode').union(__.values('__payload'),__.outE().hasLabel(within('ceasn:conceptTerm','ceasn:educationLevelType')).inV().union(__.values('__payload'),__.out('skos:inScheme').values('__payload')),__.out('ceasn:isPartOf').union(__.values('__payload'),__.outE().hasLabel(within('ceasn:conceptTerm','ceasn:educationLevelType','ceasn:publicationStatusType')).inV().union(__.values('__payload'),__.out('skos:inScheme').values('__payload')))),__.outE().hasLabel(within('ceterms:ownedBy','ceterms:offeredBy','ceterms:accreditedBy','ceterms:approvedBy','ceterms:regulatedBy','ceterms:revokedBy','ceterms:commonConditions','ceterms:commonCosts','ceterms:isPartOf','ceterms:hasPart','ceterms:majorAlignment','ceterms:minorAlignment','ceterms:narrowAlignment','ceterms:broadAlignment')).inV().values('__payload'),__.outE().hasLabel(within('ceterms:requires','ceterms:recommends','ceterms:advancedStandingFrom','ceterms:preparationFrom','ceterms:isRequiredFor','ceterms:isRecommendedFor','ceterms:isAdvancedStandingFor','ceterms:isPreparationFor','ceterms:prerequisite','ceterms:corequisite')).inV().union(__.out('ceterms:targetCredential').values('__payload'),__.out('ceterms:targetCompetency').out('ceterms:targetNode').union(__.values('__payload'),__.outE().hasLabel(within('ceasn:conceptTerm','ceasn:educationLevelType')).inV().union(__.values('__payload'),__.out('skos:inScheme').values('__payload')),__.out('ceasn:isPartOf').union(__.values('__payload'),__.outE().hasLabel(within('ceasn:conceptTerm','ceasn:educationLevelType','ceasn:publicationStatusType')).inV().union(__.values('__payload'),__.out('skos:inScheme').values('__payload')))),__.outE().hasLabel(within('ceterms:targetAssessment','ceterms:targetLearningOpportunity')).inV().union(__.values('__payload'),__.outE().hasLabel(within('ceterms:assesses','ceterms:teaches')).inV().out('ceterms:targetNode').union(__.values('__payload'),__.outE().hasLabel(within('ceasn:conceptTerm','ceasn:educationLevelType')).inV().union(__.values('__payload'),__.out('skos:inScheme').values('__payload')),__.out('ceasn:isPartOf').union(__.values('__payload'),__.outE().hasLabel(within('ceasn:conceptTerm','ceasn:educationLevelType','ceasn:publicationStatusType')).inV().union(__.values('__payload'),__.out('skos:inScheme').values('__payload'))))))).dedup().fold()" ) { AllowEmptyArguments = true, PrintStringValueWithoutQuotes = true } );
+					break;
+				}
+				case DescriptionSetType.EverythingOwnedByOrganization:
+				{
+					finalUnion.Arguments.Add( new GremlinItem( "union(__.bothE().hasLabel(within('ceterms:owns','ceterms:ownedBy','ceterms:copyrightHolder','ceterms:department','ceterms:subOrganization','ceasn:creator','ceasn:publisher','ceasn:rightsHolder')).bothV().as('connections').where('connections',neq('main')).union(__.values('__payload'),__.has('@type','ceasn:CompetencyFramework').in('ceasn:isPartOf').union(__.values('__payload'),__.out().has('@id',test({x,y -> x ==~ y}, /(?i)_:.*/)).values('__payload')),__.out().has('@id',test({x,y -> x ==~ y}, /(?i)_:.*/)).values('__payload'),__.out().hasNot('@id').out().has('@id',test({x,y -> x ==~ y}, /(?i)_:.*/)).values('__payload'),__.out().hasNot('@id').out().hasNot('@id').out().has('@id',test({x,y -> x ==~ y}, /(?i)_:.*/)).values('__payload')),__.out().has('@id',test({x,y -> x ==~ y}, /(?i)_:.*/)).values('__payload')).dedup().fold()" ) { AllowEmptyArguments = true, PrintStringValueWithoutQuotes = true } );
+					break;
+				}
+
+				default: break;
+			}
+
+			union.Arguments.Add( finish );
+
+			//Call .ToString() - this triggers the internal .ToString() methods recursively
+			var gremlin = query.ToString();
+			return gremlin;
+		}
+		//
+
 	}
 }

@@ -15,6 +15,9 @@ namespace RA.Models.Input
 	/// </summary>
 	public class FrameworkItem
 	{
+		/// <summary>
+		/// URL for framework
+		/// </summary>
 		public string Framework { get; set; }
 		public string FrameworkName { get; set; }
         public LanguageMap FrameworkName_Map { get; set; } = new LanguageMap();

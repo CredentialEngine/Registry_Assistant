@@ -16,6 +16,7 @@ namespace RA.Models
 		public string PublishingEntityType { get; set; }
 		public string CtdlType { get; set; }
 		public string EntityCtid { get; set; }
+		public string EntityName { get; set; }
 		public string PublishInput { get; set; }
 		public string PublishPayload { get; set; }
 		public string Environment { get; set; }

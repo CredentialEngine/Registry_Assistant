@@ -20,8 +20,6 @@ namespace RA.Services
     public class CredentialServices : ServiceHelper
     {
         static string status = "";
-        static List<string> warnings = new List<string>();
-
 
         /// <summary>
         /// Publish a Credential to the Credential Registry
@@ -30,19 +28,19 @@ namespace RA.Services
         /// <param name="isValid"></param>
         /// <param name="messages"></param>
         /// <param name="payload"></param>
-        public static void Publish(EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId)
-        {
-            RA.Models.RequestHelper helper = new Models.RequestHelper();
-            helper.RegistryEnvelopeId = registryEnvelopeId;
-            helper.ApiKey = apiKey;
-            helper.OwnerCtid = request.PublishForOrganizationIdentifier;
+        //public static void Publish(EntityRequest request, string apiKey, ref bool isValid, ref List<string> messages, ref string payload, ref string registryEnvelopeId)
+        //{
+        //    RA.Models.RequestHelper helper = new Models.RequestHelper();
+        //    helper.RegistryEnvelopeId = registryEnvelopeId;
+        //    helper.ApiKey = apiKey;
+        //    helper.OwnerCtid = request.PublishForOrganizationIdentifier;
 
-            Publish(request, ref isValid, helper);
+        //    Publish(request, ref isValid, helper);
 
-            payload = helper.Payload;
-            messages = helper.GetAllMessages();
-            registryEnvelopeId = helper.RegistryEnvelopeId;
-        }
+        //    payload = helper.Payload;
+        //    messages = helper.GetAllMessages();
+        //    registryEnvelopeId = helper.RegistryEnvelopeId;
+        //}
 
         /// <summary>
         ///Publish a Credential to the Credential Registry
@@ -50,107 +48,82 @@ namespace RA.Services
         /// <param name="request"></param>
         /// <param name="isValid"></param>
         /// <param name="helper"></param>
-        public static void Publish(EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper)
-        {
-            isValid = true;
-            string crEnvelopeId = request.RegistryEnvelopeId;
-            //submitter is not a person for this api, rather the organization
-            //may want to do a lookup via the api key?
-            string submitter = "";
-            List<string> messages = new List<string>();
-            var output = new OutputEntity();
-            if ( ToMap( request.Credential, output, ref messages ) )
-            {
-                if ( warnings.Count > 0 )
-                    messages.AddRange( warnings );
+    //    public static void Publish(EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper)
+    //    {
+    //        isValid = true;
+    //        string crEnvelopeId = request.RegistryEnvelopeId;
+    //        //submitter is not a person for this api, rather the organization
+    //        //may want to do a lookup via the api key?
+    //        string submitter = "";
+    //        List<string> messages = new List<string>();
+    //        var output = new OutputEntity();
+    //        if ( ToMap( request.Credential, output, ref messages ) )
+    //        {
 
-                helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
-                CER cer = new CER("Credential", output.CredentialType, output.Ctid, helper.SerializedInput); 
-                cer.PublisherAuthorizationToken = helper.ApiKey;
-                cer.PublishingForOrgCtid = helper.OwnerCtid;
-                if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32)
-					cer.IsManagedRequest = true;
+    //            helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+				//CER cer = new CER( "Credential", output.CredentialType, output.Ctid, helper.SerializedInput )
+				//{
+				//	PublisherAuthorizationToken = helper.ApiKey,
+				//	IsPublisherRequest = helper.IsPublisherRequest,
+				//	PublishingForOrgCtid = helper.OwnerCtid
+				//};
+				//if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32)
+				//	cer.IsManagedRequest = true;
 
-                string identifier = "Credential_" + request.Credential.Ctid;
-                if ( cer.Publish(helper.Payload, submitter, identifier, ref status, ref crEnvelopeId) )
-                {
-                    //for now need to ensure envelopid is returned
-                    helper.RegistryEnvelopeId = crEnvelopeId;
-                    string msg = string.Format( "<p>Published credential: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId);
-					NotifyOnPublish( "Credential", msg );
-                }
-                else
-                {
-                    if ( !string.IsNullOrWhiteSpace( (status ?? "Unknown Error" ) ))
-                        messages.Add( status );
-                    isValid = false;
+    //            string identifier = "Credential_" + request.Credential.Ctid;
+    //            if ( cer.Publish(helper.Payload, submitter, identifier, ref status, ref crEnvelopeId) )
+    //            {
+    //                //for now need to ensure envelopid is returned
+    //                helper.RegistryEnvelopeId = crEnvelopeId;
+    //                string msg = string.Format( "<p>Published credential: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId);
+				//	NotifyOnPublish( "Credential", msg );
+    //            }
+    //            else
+    //            {
+    //                if ( !string.IsNullOrWhiteSpace( (status ?? "Unknown Error" ) ))
+    //                    messages.Add( status );
+    //                isValid = false;
               
-                }
-            }
-            else
-            {
-                isValid = false;
-                if (!string.IsNullOrWhiteSpace( status ) )
-                    messages.Add( status );
-                helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
-            }
+    //            }
+    //        }
+    //        else
+    //        {
+    //            isValid = false;
+    //            if (!string.IsNullOrWhiteSpace( status ) )
+    //                messages.Add( status );
+    //            helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+    //        }
 
-            helper.SetMessages(messages);
-        }
+    //        helper.SetMessages(messages);
+    //    }
 
-        /// <summary>
-        /// Used for demo page - NA 6/5/2017
-        /// ACTUALLY SHOULD NOT ALLOW PUBLISH FROM DEMO - at least until can publish without envelope id.
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="isValid"></param>
-        /// <param name="messages"></param>
-        /// <param name="rawResponse"></param>
-        /// <param name="forceSkipValidation"></param>
-        /// <returns></returns>
-        //public static string DemoPublish( OutputEntity input, ref bool isValid,
-        //    ref List<string> messages,
-        //    ref string rawResponse,
-        //    bool forceSkipValidation = false )
+        //public static string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
         //{
-        //    isValid = true;
-        //    var crEnvelopeId = "";
-        //    var payload = JsonConvert.SerializeObject( input, ServiceHelper.GetJsonSettings() );
-        //    var identifier = "credential_" + input.Ctid;
-        //    //crEnvelopeId = input.RegistryEnvelopeId;
-
-        //    rawResponse = new CER().Publish( payload, "", identifier, ref isValid, ref status, ref crEnvelopeId, forceSkipValidation );
-
-        //    return crEnvelopeId;
+        //    return FormatAsJson( request.Credential, ref isValid, ref messages );
         //}
-
-        public static string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
-        {
-            return FormatAsJson( request.Credential, ref isValid, ref messages );
-        }
         //
-        public static string FormatAsJson( InputEntity input, ref bool isValid, ref List<string> messages )
-        {
-            var output = new OutputEntity();
-            string payload = "";
-            isValid = true;
-            IsAPublishRequest = false;
+        //public static string FormatAsJson( InputEntity input, ref bool isValid, ref List<string> messages )
+        //{
+        //    var output = new OutputEntity();
+        //    string payload = "";
+        //    isValid = true;
+        //    IsAPublishRequest = false;
 
-            if ( ToMap( input, output, ref messages ) )
-            {
-                payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
-                if ( warnings.Count > 0 )
-                    messages.AddRange( warnings );
-            }
-            else
-            {
-                isValid = false;
-                //do payload anyway
-                payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
-            }
+        //    if ( ToMap( input, output, ref messages ) )
+        //    {
+        //        payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+        //        if ( warningMessages.Count > 0 )
+        //            messages.AddRange( warningMessages );
+        //    }
+        //    else
+        //    {
+        //        isValid = false;
+        //        //do payload anyway
+        //        payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+        //    }
 
-            return payload;
-        }
+        //    return payload;
+        //}
 
 
         /// <summary>
@@ -267,8 +240,8 @@ namespace RA.Services
             if ( messages.Count > 0 )
             {
                 isValid = false;
-                if ( warnings.Count > 0 )
-                    messages.AddRange( warnings );
+                if ( warningMessages.Count > 0 )
+                    messages.AddRange( warningMessages );
             }
 
             return isValid;
@@ -298,7 +271,7 @@ namespace RA.Services
             string property = "";
 
             output.Ctid = FormatCtid(input.Ctid, ref messages);
-            output.CtdlId = idBaseUrl + output.Ctid;
+            output.CtdlId = credRegistryResourceUrl + output.Ctid;
 
 			if ( string.IsNullOrWhiteSpace( input.Name ) )
 			{

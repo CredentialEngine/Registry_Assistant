@@ -22,6 +22,7 @@ namespace RA.Services
 
         static string status = "";
 		static bool isUrlPresent = true;
+		
         /// <summary>
         /// Publish a Credential to the Credential Registry
         /// </summary>
@@ -55,7 +56,9 @@ namespace RA.Services
             string submitter = "";
             List<string> messages = new List<string>();
             var output = new OutputEntity();
-            OutputGraph og = new OutputGraph();
+			if ( environment != "production" )
+				output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
+			OutputGraph og = new OutputGraph();
 
             if ( ToMap( request, output, ref messages ) )
             {
@@ -75,50 +78,59 @@ namespace RA.Services
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
 
-                CER cer = new CER( "LearningOpportunity", output.Type, output.Ctid, helper.SerializedInput);
-                cer.PublisherAuthorizationToken = helper.ApiKey;
-                cer.PublishingForOrgCtid = helper.OwnerCtid;
-
-                if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+				CER cer = new CER( "LearningOpportunity", output.Type, output.Ctid, helper.SerializedInput )
+				{
+					PublisherAuthorizationToken = helper.ApiKey,
+					IsPublisherRequest = helper.IsPublisherRequest,
+					EntityName = CurrentEntityName,
+					PublishingForOrgCtid = helper.OwnerCtid
+				};
+				//
+				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+				{
 					cer.IsManagedRequest = true;
-
-				bool recordWasFound = false;
-				bool usedCEKeys = false;
-				string message = "";
-				var result = HistoryServices.GetMostRecentHistory( "LearningOpportunity", output.Ctid, ref recordWasFound, ref usedCEKeys, ref message );
-				if ( recordWasFound ) //found previous
-				{
-					if ( usedCEKeys && cer.IsManagedRequest )
+					//get publisher org
+					string publisherCTID = "";
+					if ( SupportServices.GetPublishingOrgByApiKey( cer.PublisherAuthorizationToken, ref publisherCTID, ref messages ) )
 					{
-						LoggingHelper.DoTrace( 5, "LearningOpportunity publish. Was managed request. Overriding to CE publish." );
-						cer.IsManagedRequest = false;   //should record override
-						cer.OverrodeOriginalRequest = true;
+						cer.PublishingByOrgCtid = publisherCTID;
 					}
-					else if ( !usedCEKeys && !cer.IsManagedRequest )
+					else
 					{
-						//this should not happen. Means used publisher
-						cer.IsManagedRequest = true;   //should record override
-						cer.OverrodeOriginalRequest = true;
+						//should be an error message returned
+						isValid = false;
+						helper.SetMessages( messages );
+						LoggingHelper.DoTrace( 4, string.Format( "LearningOpportunityServices.Publish. Validate ApiKey failed. Org Ctid: {0}, Document Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.Ctid, cer.PublisherAuthorizationToken ) );
+						return; //===================
 					}
 				}
 				else
-				{
-					//eventually will always do managed
-				}
+					cer.PublishingByOrgCtid = cer.PublishingForOrgCtid;
 
-				string identifier = "LearningOpportunity_" + request.LearningOpportunity.Ctid;
-				if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+				//
+				if ( !SupportServices.ValidateAgainstPastRequest( "LearningOpportunity", output.Ctid, ref cer, ref messages ) )
 				{
-                    //for now need to ensure envelopid is returned
-                    helper.RegistryEnvelopeId = crEnvelopeId;
-
-                    string msg = string.Format( "<p>Published LearningOpportunity: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
-					NotifyOnPublish( "LearningOpportunity", msg );
-				}
-				else
-				{
-					messages.Add( status );
 					isValid = false;
+					//helper.SetMessages( messages );
+					//return; //===================
+				}
+				else
+				{
+
+					string identifier = "LearningOpportunity_" + request.LearningOpportunity.Ctid;
+					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					{
+						//for now need to ensure envelopid is returned
+						helper.RegistryEnvelopeId = crEnvelopeId;
+
+						string msg = string.Format( "<p>Published LearningOpportunity: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
+						NotifyOnPublish( "LearningOpportunity", msg );
+					}
+					else
+					{
+						messages.Add( status );
+						isValid = false;
+					}
 				}
 			}
             else
@@ -142,8 +154,8 @@ namespace RA.Services
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
-
-            helper.SetMessages( messages );
+			helper.SetWarningMessages( warningMessages );
+			helper.SetMessages( messages );
 
         }
         public string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
@@ -192,8 +204,9 @@ namespace RA.Services
 
                 payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
-
-            return payload;
+			if ( warningMessages.Count > 0 )
+				messages.AddRange( warningMessages );
+			return payload;
         }
 
         /// <summary>
@@ -268,10 +281,11 @@ namespace RA.Services
 				//for example, for a credential, it would be via a condition profile, and we have no facility for the latter, only part of a credential
 				output.IsPartOf = FormatEntityReferencesList( input.IsPartOfLearningOpportunity, OutputEntity.classType, false, ref messages );
 
-				output.CommonConditions = AssignValidUrlListAsStringList( input.CommonConditions, "CommonConditions", ref messages, false );
-				output.CommonCosts = AssignValidUrlListAsStringList( input.CommonCosts, "CommonCosts", ref messages, false );
+				output.CommonConditions = AssignRegistryResourceURIsListAsStringList( input.CommonConditions, "CommonConditions", ref messages, false );
+				output.CommonCosts = AssignRegistryResourceURIsListAsStringList( input.CommonCosts, "CommonCosts", ref messages, false );
 
-				output.FinancialAssistance = MapFinancialAssitance( input.FinancialAssistance, ref messages );
+				//output.FinancialAssistanceOLD = MapFinancialAssistance( input.FinancialAssistanceOLD, ref messages );
+				output.FinancialAssistance = MapFinancialAssistance( input.FinancialAssistance, ref messages );
 
 				output.VersionIdentifier = AssignIdentifierListToList( input.VersionIdentifier, ref messages );
 
@@ -280,7 +294,7 @@ namespace RA.Services
 			}
 			catch ( Exception ex )
 			{
-				LogError( ex, "LearningOpportunityServices.ToMap" );
+				LoggingHelper.LogError( ex, "LearningOpportunityServices.ToMap" );
 				messages.Add( ex.Message );
 			}
 
@@ -310,8 +324,8 @@ namespace RA.Services
         {
             bool isValid = true;
 
-            output.Ctid = FormatCtid(input.Ctid, ref messages);
-            output.CtdlId = idBaseUrl + output.Ctid;
+			CurrentCtid = output.Ctid = FormatCtid(input.Ctid, "LearningOpportunity", ref messages);
+            output.CtdlId = credRegistryResourceUrl + output.Ctid;
 
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )
@@ -331,7 +345,7 @@ namespace RA.Services
                 output.Name = Assign( input.Name, DefaultLanguageForMaps );
                 CurrentEntityName = input.Name;
             }
-            output.Description = AssignLanguageMap( ConvertSpecialInput( input.Description ), input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+            output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
 
             //now literal
             output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
@@ -364,33 +378,52 @@ namespace RA.Services
             //now literal
             //output.CodedNotation = AssignListToString( input.CodedNotation );
             output.CodedNotation = input.CodedNotation;
-            output.DeliveryTypeDescription = AssignLanguageMap( ConvertSpecialInput( input.DeliveryTypeDescription ), input.DeliveryTypeDescription_Map, "DeliveryTypeDescription", DefaultLanguageForMaps, ref messages );
-            output.VerificationMethodDescription = AssignLanguageMap( ConvertSpecialInput( input.VerificationMethodDescription ), input.VerificationMethodDescription_Map,"VerificationMethodDescription",  DefaultLanguageForMaps, ref messages );
+            output.DeliveryTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.DeliveryTypeDescription ), input.DeliveryTypeDescription_Map, "DeliveryTypeDescription", DefaultLanguageForMaps, ref messages );
+            output.VerificationMethodDescription = AssignLanguageMap( ConvertSpecialCharacters( input.VerificationMethodDescription ), input.VerificationMethodDescription_Map,"VerificationMethodDescription",  DefaultLanguageForMaps, ref messages );
 
             output.DateEffective = MapDate( input.DateEffective, "Learning Opportunity Date Effective", ref messages);
 
-			if ( ValidateCreditUnitOrHoursProperties( input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref messages ) )
+			//
+			output.CreditUnitType = null;
+			output.CreditValue = AssignQuantitiveValue( input.CreditValue, "CreditValue", "LearningOpportunity", ref messages );
+			//at this point could have had no data, or bad data
+			if ( output.CreditValue == null )
 			{
-                output.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialInput( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription",  DefaultLanguageForMaps,ref messages );
-                //credential alignment object
-                if ( !string.IsNullOrWhiteSpace( input.CreditUnitType ) )
-				{
-					output.CreditUnitType =  FormatCredentialAlignment( "creditUnitType", input.CreditUnitType, ref messages ) ;
-				}
-				else
-					output.CreditUnitType = null;
+				//check legacy
+				output.CreditValue = AssignQuantitiveValue( "LearningOpportunity", input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref messages );
 
-				output.CreditUnitValue = input.CreditUnitValue;
-                output.CreditHourType = AssignLanguageMap( ConvertSpecialInput( input.CreditHourType ), input.CreditHourType_Map, "CreditHourType",  DefaultLanguageForMaps, ref messages );
-                output.CreditHourValue = input.CreditHourValue;
+				//apparantly will still allow just a description. TBD: is it allowed if creditValue is provided?
+				output.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription", DefaultLanguageForMaps, ref messages );
 			}
-			else
-			{
-				output.CreditUnitType = null;
-			}
+
+			#region old credit code
+			//
+			//bool hasData = false;
+			//RJ.QuantitativeValue qv = new RJ.QuantitativeValue();
+			//if ( AssignQuantitiveValue( input.CreditValue, "CreditValue", "LearningOpportunity", ref qv, ref messages ) )
+			//{
+			//	output.CreditValue = new List<RJ.QuantitativeValue> { qv };
+			//}
+			////at this point could have had no data, or bad data
+			//else if ( !usingQuantitiveValue )
+			//{
+			//	if ( ValidateCreditUnitOrHoursProperties( input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref hasData, ref messages ) )
+			//	{
+			//		output.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription", DefaultLanguageForMaps, ref messages );
+			//		//credential alignment object
+			//		if ( !string.IsNullOrWhiteSpace( input.CreditUnitType ) )
+			//		{
+			//			output.CreditUnitType = FormatCredentialAlignment( "creditUnitType", input.CreditUnitType, ref messages );
+			//		}
+			//		output.CreditUnitValue = input.CreditUnitValue;
+			//		output.CreditHourType = AssignLanguageMap( ConvertSpecialCharacters( input.CreditHourType ), input.CreditHourType_Map, "CreditHourType", DefaultLanguageForMaps, ref messages );
+			//		output.CreditHourValue = input.CreditHourValue;
+			//	}
+			//}
+			#endregion
 		}
 
-        public void HandleUrlFields( InputEntity from, OutputEntity to, ref List<string> messages )
+		public void HandleUrlFields( InputEntity from, OutputEntity to, ref List<string> messages )
         {
 			//17-11-27 Added a requirement check for these in the required section
 			to.AvailableOnlineAt = AssignValidUrlListAsStringList( from.AvailableOnlineAt, "Available Online At", ref messages );
@@ -460,15 +493,21 @@ namespace RA.Services
                     output.DeliveryType.Add( FormatCredentialAlignment( "deliveryType", item, ref messages ) );
             else output.DeliveryType = null;
 
+			//
+			output.AudienceLevelType = FormatCredentialAlignmentVocabs( "audienceLevelType", input.AudienceLevelType, ref messages );
 			output.AudienceType = FormatCredentialAlignmentVocabs( "audienceType", input.AudienceType, ref messages );
 
 			//frameworks
 			//can't depend on the codes being SOC
 			output.OccupationType = FormatCredentialAlignmentListFromFrameworkItemList( input.OccupationType, true, ref messages );
+			//append to OccupationType
+			output.OccupationType = AppendCredentialAlignmentListFromList( input.AlternativeOccupationType, null, "", "", "AlternativeOccupationType", output.OccupationType, ref messages );
 			//output.AlternativeOccupationType = AssignLanguageMapList( input.AlternativeOccupationType, input.AlternativeOccupationType_Map, "Credential AlternativeOccupationType", ref messages );
 
 			//can't depend on the codes being NAICS??
 			output.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( input.IndustryType, true, ref messages );
+			//append to IndustryType
+			output.IndustryType = AppendCredentialAlignmentListFromList( input.AlternativeIndustryType, null, "", "", "AlternativeIndustryType", output.IndustryType, ref messages );
 			//if ( input.Naics != null && input.Naics.Count > 0 )
 			//	output.Naics = input.Naics;
 			//else
@@ -476,6 +515,8 @@ namespace RA.Services
 			//output.AlternativeIndustryType = AssignLanguageMapList( input.AlternativeIndustryType, input.AlternativeIndustryType_Map, "Credential AlternativeIndustryType", ref messages );
 			//
 			output.InstructionalProgramType = FormatCredentialAlignmentListFromFrameworkItemList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
+			//append to InstructionalProgramType
+			output.InstructionalProgramType = AppendCredentialAlignmentListFromList( input.AlternativeInstructionalProgramType, null, "", "", "AlternativeInstructionalProgramType", output.InstructionalProgramType, ref messages );
 			//
 			//output.AlternativeInstructionalProgramType = AssignLanguageMapList( input.AlternativeInstructionalProgramType, input.AlternativeInstructionalProgramType_Map, "Credential AlternativeInstructionalProgramType", ref messages );
 			//

@@ -116,15 +116,11 @@ namespace RA.Models.Input
         /// http://dbpedia.com/Stanford_University
         /// </summary>
         public string Id { get; set; }
-        /// <summary>
-        /// An identifier for use with blank nodes, to minimize duplicates
-        /// TBD - a better name!
-        /// </summary>
-        public string BNodeId { get; set; }
 
         /// <summary>
         /// Optionally, a CTID can be entered instead of an Id. 
-        /// Only enter Id or CTID, but not both
+		/// A CTID is recommended for flexibility.
+        /// Only enter Id or CTID, but not both.
         /// </summary>
         public string CTID { get; set; }
 
@@ -146,23 +142,26 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Name { get; set; }
 
+		/// <summary>
+		/// Subject webpage of the entity (required)
+		/// This should be for the referenced entity. 
+		/// For example, if the reference is for an organization, the subject webpage should be on the organization site.
+		/// </summary>
+		public string SubjectWebpage { get; set; }
 
-        /// <summary>
-        /// Subject webpage of the entity
-        /// </summary> (required)
-        public string SubjectWebpage { get; set; }
+		/// <summary>
+		/// Description of the entity (optional)
+		/// This should be the general description of the entity. 
+		/// For example, for an organization, the description should be about the organization specifically not, how the organization is related to, or interacts with the refering entity. 
+		/// </summary>
+		public string Description { get; set; }
 
-        /// <summary>
-        /// Description of the entity (optional)
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Check if all properties for a reference request are present
-        /// 17-08-27 We do need a type if only providing reference data
-        /// </summary>
-        /// <returns></returns>
-        public bool HasNecessaryProperties()
+		/// <summary>
+		/// Check if all properties for a reference request are present
+		/// 17-08-27 We do need a type if only providing reference data
+		/// </summary>
+		/// <returns></returns>
+		public bool HasNecessaryProperties()
 		{
 			//	|| string.IsNullOrWhiteSpace( Description )
 			if ( string.IsNullOrWhiteSpace( Name )

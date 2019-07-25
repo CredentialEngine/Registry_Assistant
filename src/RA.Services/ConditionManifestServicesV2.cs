@@ -34,6 +34,7 @@ namespace RA.Services
 			isValid = true;
 			string crEnvelopeId = request.RegistryEnvelopeId;
 			string submitter = "";
+			List<string> messages = new List<string>();
 
 			var output = new OutputEntity();
             OutputGraph og = new OutputGraph();
@@ -58,49 +59,56 @@ namespace RA.Services
                 CER cer = new CER( "ConditionManifest", output.Type, output.Ctid, helper.SerializedInput )
                 {
                     PublisherAuthorizationToken = helper.ApiKey,
-                    PublishingForOrgCtid = helper.OwnerCtid
+					IsPublisherRequest = helper.IsPublisherRequest,
+					EntityName = CurrentEntityName,
+					PublishingForOrgCtid = helper.OwnerCtid
                 };
 
-                if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+				{
 					cer.IsManagedRequest = true;
-				//
-				bool recordWasFound = false;
-				bool usedCEKeys = false;
-				string message = "";
-				var result = HistoryServices.GetMostRecentHistory( "ConditionManifest", output.Ctid, ref recordWasFound, ref usedCEKeys, ref message );
-				if ( recordWasFound ) //found previous
-				{
-					if ( usedCEKeys && cer.IsManagedRequest )
+					//get publisher org
+					string publisherCTID = "";
+					if ( SupportServices.GetPublishingOrgByApiKey( cer.PublisherAuthorizationToken, ref publisherCTID, ref messages ) )
 					{
-						LoggingHelper.DoTrace( 5, "ConditionManifest publish. Was managed request. Overriding to CE publish." );
-						cer.IsManagedRequest = false;   //should record override
-						cer.OverrodeOriginalRequest = true;
+						cer.PublishingByOrgCtid = publisherCTID;
 					}
-					else if ( !usedCEKeys && !cer.IsManagedRequest )
+					else
 					{
-						//this should not happen. Means used publisher
-						cer.IsManagedRequest = true;   //should record override
-						cer.OverrodeOriginalRequest = true;
-					}
-				}
-				else
-				{
-					//eventually will always do managed
-				}
-				//
-				string identifier = "ConditionManifest_" + request.ConditionManifest.Ctid;
-				if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
-				{
-					//for now need to ensure envelopid is returned
-					helper.RegistryEnvelopeId = crEnvelopeId;
+						//should be an error message returned
 
-					string msg = string.Format( "<p>Published ConditionManifest: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", request.ConditionManifest.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
-					NotifyOnPublish( "ConditionManifest", msg );
+						isValid = false;
+						helper.SetMessages( messages );
+						LoggingHelper.DoTrace( 4, string.Format( "ConditionManifest Services.Publish. Validate ApiKey failed. Org Ctid: {0}, Document Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.Ctid, cer.PublisherAuthorizationToken ) );
+						return; //===================
+					}
+				}
+				else
+					cer.PublishingByOrgCtid = cer.PublishingForOrgCtid;
+				//
+				if ( !SupportServices.ValidateAgainstPastRequest( "ConditionManifest", output.Ctid, ref cer, ref messages ) )
+				{
+					isValid = false;
+					//helper.SetMessages( messages );
+					//return; //===================
 				}
 				else
 				{
-					helper.AddError( status );
-					isValid = false;
+
+					string identifier = "ConditionManifest_" + request.ConditionManifest.Ctid;
+					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					{
+						//for now need to ensure envelopid is returned
+						helper.RegistryEnvelopeId = crEnvelopeId;
+
+						string msg = string.Format( "<p>Published ConditionManifest: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", request.ConditionManifest.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
+						NotifyOnPublish( "ConditionManifest", msg );
+					}
+					else
+					{
+						helper.AddError( status );
+						isValid = false;
+					}
 				}
 			}
 			else
@@ -123,6 +131,8 @@ namespace RA.Services
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
+			helper.SetWarningMessages( warningMessages );
+			helper.SetMessages( messages );
 		}
 
 		public string FormatAsJson( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
@@ -175,7 +185,7 @@ namespace RA.Services
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
-
+			helper.SetWarningMessages( warningMessages );
 			return helper.Payload;
 		}
 
@@ -203,7 +213,7 @@ namespace RA.Services
 
 				output.Recommends = FormatConditionProfile( input.RecommendedConditions, ref messages );
                 output.Renewal = FormatConditionProfile( input.RenewedConditions, ref messages );
-                output.Requires = FormatConditionProfile( input.RequiredConditions, ref messages );
+                output.Requires = FormatConditionProfile( input.Requires, ref messages );
 				output.EntryConditions = FormatConditionProfile( input.EntryConditions, ref messages );
 				output.Corequisite = FormatConditionProfile( input.CorequisiteConditions, ref messages );
 
@@ -221,7 +231,7 @@ namespace RA.Services
 			}
 			catch ( Exception ex )
 			{
-				LogError( ex, "ConditionManifestServices.ToMap" );
+				LoggingHelper.LogError( ex, "ConditionManifestServices.ToMap" );
 				messages.Add( ex.Message );
 			}
 
@@ -236,10 +246,10 @@ namespace RA.Services
 		public bool HandleRequiredFields( InputEntity input, OutputEntity output, ref List<string> messages )
 		{
 			bool isValid = true;
-            ///string property = "";
+			///string property = "";
 
-            output.Ctid = FormatCtid(input.Ctid, ref messages);
-            output.CtdlId = idBaseUrl + output.Ctid;
+			CurrentCtid = output.Ctid = FormatCtid(input.Ctid, "Condition Manifest", ref messages);
+            output.CtdlId = credRegistryResourceUrl + output.Ctid;
 
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )
@@ -259,7 +269,7 @@ namespace RA.Services
                 output.Name = Assign( input.Name, DefaultLanguageForMaps );
                 CurrentEntityName = input.Name;
             }
-            output.Description = AssignLanguageMap( ConvertSpecialInput( input.Description ), input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+            output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
 
             output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
 

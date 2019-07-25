@@ -61,7 +61,7 @@ namespace RA.Models.JsonV2
 			ReviewProcess = new List<ProcessProfile>();
 			RevocationProcess = new List<ProcessProfile>();
 			
-			FinancialAssistance = new List<FinancialAlignmentObject>();
+			//FinancialAssistanceOLD = new List<FinancialAlignmentObject>();
             CredentialStatusType = new CredentialAlignmentObject();
             AdvancedStandingFrom = new List<ConditionProfile>();
             IsAdvancedStandingFor = new List<ConditionProfile>();
@@ -218,7 +218,7 @@ namespace RA.Models.JsonV2
         public List<DurationProfile> EstimatedDuration { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:renewalFrequency" )]
-		public string RenewalFrequency { get; set; }
+		public string RenewalFrequency { get; set; } //duration item
 
 
 		#region Condition Profiles
@@ -263,10 +263,14 @@ namespace RA.Models.JsonV2
         public List<ProcessProfile> RevocationProcess { get; set; }
 		#endregion
 
-		[JsonProperty( PropertyName = "ceterms:financialAssistance" )]
-        public List<FinancialAlignmentObject> FinancialAssistance { get; set; }
+		//[JsonIgnore]
+		//[JsonProperty( PropertyName = "ceterms:financialAssistanceOLD" )]
+  //      //public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:credentialStatusType" )]
+		[JsonProperty( PropertyName = "ceterms:financialAssistance" )]
+		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:credentialStatusType" )]
         public CredentialAlignmentObject CredentialStatusType { get; set; }
 
 		#region Connections

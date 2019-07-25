@@ -225,8 +225,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public string tableOfContents { get; set; }
 		public LanguageMap tableOfContents_map { get; set; } = new LanguageMap();
+		public List<FrameworkItem> OccupationType { get; set; }
+	
+		public List<FrameworkItem> IndustryType { get; set; }
 
-    }
+
+	}
 
     public class Competency 
     {
@@ -397,8 +401,9 @@ namespace RA.Models.Input
 		/// In Language
 		/// Definition:	en-US: The primary language used in or by this competency framework or competency.The primary language used in or by this competency framework or competency.
 		/// This is the language the text is primarily written in, even if it makes use of other languages. For example, a competency for teaching spanish to english-speaking students would primarily be in english, because that is the language used to convey the material.
-		/// </summary>
-		public List<string> inLanguage { get; set; } = new List<string>();
+		///// </summary>
+		//[Obsolete]
+		//public List<string> inLanguage { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Is Child Of

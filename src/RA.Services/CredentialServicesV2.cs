@@ -21,7 +21,6 @@ namespace RA.Services
     public class CredentialServicesV2 : ServiceHelperV2
     {
         static string status = "";
-        static List<string> warnings = new List<string>();
 
         /// <summary>
         /// Publish a Credential to the Credential Registry as an @graph
@@ -39,11 +38,10 @@ namespace RA.Services
             List<string> messages = new List<string>();
             var output = new OutputEntity();
             OutputGraph og = new OutputGraph();
-
+			if ( environment != "production" )
+				output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
             if ( ToMap(request, output, ref messages) )
             {
-                if ( warnings.Count > 0 )
-                    messages.AddRange(warnings);
 
                 og.Graph.Add( output );
                 //TODO - is there other info needed, like in context?
@@ -63,63 +61,65 @@ namespace RA.Services
                 CER cer = new CER( "Credential", output.CredentialType, output.Ctid, helper.SerializedInput )
                 {
                     PublisherAuthorizationToken = helper.ApiKey,
-                    PublishingForOrgCtid = helper.OwnerCtid
+					IsPublisherRequest = helper.IsPublisherRequest,
+					EntityName = CurrentEntityName,
+					PublishingForOrgCtid = helper.OwnerCtid
                 };
-                if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
-                    cer.IsManagedRequest = true;
+				//
+				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+				{
+					cer.IsManagedRequest = true;
+					//get publisher org
+					string publisherCTID = "";
+					if ( SupportServices.GetPublishingOrgByApiKey( cer.PublisherAuthorizationToken, ref publisherCTID, ref messages ) )
+					{
+						cer.PublishingByOrgCtid = publisherCTID;
+					}
+					else
+					{
+						//should be an error message returned
+						isValid = false;
+						helper.SetMessages( messages );
+						LoggingHelper.DoTrace( 4, string.Format( "Credential Services.Publish. Validate ApiKey failed. Org Ctid: {0}, Document Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.Ctid, cer.PublisherAuthorizationToken ) );
+						return; //===================
+					}
+				}
+				else
+					cer.PublishingByOrgCtid = cer.PublishingForOrgCtid;
 
 				// need to generalize this
-				bool recordWasFound = false;
-				bool usedCEKeys = false;
-				string message = "";
-				var result = HistoryServices.GetMostRecentHistory( "Credential", output.Ctid, ref recordWasFound, ref usedCEKeys, ref message );
-				if ( recordWasFound ) //found previous
+				/* check if previously published
+				 * - if found, use the same publishing method
+				 * 
+				 * 
+				 */
+				if ( !SupportServices.ValidateAgainstPastRequest( "Credential", output.Ctid, ref cer, ref messages ) )
 				{
-					LoggingHelper.DoTrace( 6, string.Format( "Credential publish. Found a previous publish for CTID: {0}, Used CEKeys: {1}, PublishMethodURI: {2} ", output.Ctid, usedCEKeys, result.PublishMethodURI) );
-					if (result.DataOwnerCTID.ToLower() != cer.PublishingForOrgCtid.ToLower() )
-					{
-						//don't allow but may be moot if validating the apiKey owner ctid combination
-						messages.Add( FormatMessage( "Suspcious request. The provided data owner CTID is different from the data owner CTID used for previous requests. This condition is not allowed. Credential type: ({0}), Credential '{1}'.", output.CredentialType, request.Credential.Name ) );
-						helper.SetMessages( messages );
-						LoggingHelper.DoTrace( 5, "Credential publish. Was managed request. Overriding to CE publish." );
-						isValid = false;
-						return; //===================
-
-					} else 
-					//want to always the original publishing keys - which will always be proper in the last
-					if ( usedCEKeys && cer.IsManagedRequest )
-					{
-						LoggingHelper.DoTrace( 5, "Credential publish. Was managed request. Overriding to CE publish." );
-						cer.IsManagedRequest = false;   //should record override
-						cer.OverrodeOriginalRequest = true;
-
-					} else if ( !usedCEKeys && !cer.IsManagedRequest )
-					{
-						//this should not happen. Means used publisher
-						cer.IsManagedRequest = true;   //should record override
-						cer.OverrodeOriginalRequest = true;
-					}
-				} else 
-				{
-					//eventually will always do managed
-					//cer.IsManagedRequest = true;
+					isValid = false;
+					//helper.SetMessages( messages );
+					LoggingHelper.DoTrace( 4, string.Format( "Credential Services.Publish. Validate ApiKey failed. Org Ctid: {0}, Document Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.Ctid, cer.PublisherAuthorizationToken ) );
+					//return; //===================
 				}
+				else
+				{
 
-				string identifier = "Credential_" + request.Credential.Ctid;
-                if ( cer.Publish(helper.Payload, submitter, identifier, ref status, ref crEnvelopeId) )
-                {
-                    //for now need to ensure envelopid is returned
-                    helper.RegistryEnvelopeId = crEnvelopeId;
-                    string msg = string.Format("<p>Published credential: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId);
-                    NotifyOnPublish("Credential", msg);
-                }
-                else
-                {
-                    if ( !string.IsNullOrWhiteSpace(( status ?? "Unknown Error" )) )
-                        messages.Add(status);
-                    isValid = false;
 
-                }
+					string identifier = "Credential_" + request.Credential.Ctid;
+					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					{
+						//for now need to ensure envelopid is returned
+						helper.RegistryEnvelopeId = crEnvelopeId;
+						string msg = string.Format( "<p>Published credential: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
+						NotifyOnPublish( "Credential", msg );
+					}
+					else
+					{
+						if ( !string.IsNullOrWhiteSpace( ( status ?? "Unknown Error" ) ) )
+							messages.Add( status );
+						isValid = false;
+
+					}
+				}
             }
             else
             {
@@ -143,8 +143,8 @@ namespace RA.Services
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
-
-            helper.SetMessages(messages);
+			helper.SetWarningMessages( warningMessages );
+			helper.SetMessages(messages);
         }
 
         public string FormatAsJson(EntityRequest request, ref bool isValid, ref List<string> messages)
@@ -175,8 +175,7 @@ namespace RA.Services
                 og.Context = output.Context;
 
                 payload = JsonConvert.SerializeObject(og, GetJsonSettings());
-                if ( warnings.Count > 0 )
-                    messages.AddRange(warnings);
+
             }
             else
             {
@@ -198,8 +197,9 @@ namespace RA.Services
 
                 payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
-
-            return payload;
+			if ( warningMessages.Count > 0 )
+				messages.AddRange( warningMessages );
+			return payload;
         }
 
 
@@ -232,15 +232,14 @@ namespace RA.Services
                 }
             }
 
-            if ( request.NotConvertingFromResourceLinkToGraphLink )
-                ConvertingFromResourceLinkToGraphLink = false;
+            //if ( request.NotConvertingFromResourceLinkToGraphLink )
+            //    ConvertingFromResourceLinkToGraphLink = false;
 
             try
 			{
-                //HandleRequiredFields
-                //HandleRequiredFields( input, output, ref messages );
-                output.Ctid = FormatCtid( input.Ctid, ref messages );
-                output.CtdlId = idBaseUrl + output.Ctid;
+				//HandleRequiredFields
+				CurrentCtid = output.Ctid = FormatCtid( input.Ctid, "Credential", ref messages );
+                output.CtdlId = credRegistryResourceUrl + output.Ctid;
                 //establish language. make a common method
                 output.InLanguage = PopulateInLanguage( input.InLanguage, "Credential", input.Name, hasDefaultLanguage, ref messages );
 
@@ -261,7 +260,7 @@ namespace RA.Services
                     output.Name = Assign( input.Name, DefaultLanguageForMaps );
                     CurrentEntityName = input.Name;
                 }
-                output.Description = AssignLanguageMap( ConvertSpecialInput( input.Description ), input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+                output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
 
                 
                 if ( string.IsNullOrWhiteSpace( input.CredentialType ) )
@@ -331,10 +330,10 @@ namespace RA.Services
 				HandleCredentialAlignmentFields( input, output, ref messages );
 
 				output.ProcessStandards = AssignValidUrlAsString( input.ProcessStandards, "ProcessStandards", ref messages, false );
-                output.ProcessStandardsDescription = AssignLanguageMap( ConvertSpecialInput( input.ProcessStandardsDescription ), input.ProcessStandardsDescription_Map,"ProcessStandardsDescription",  DefaultLanguageForMaps, ref messages );
+                output.ProcessStandardsDescription = AssignLanguageMap( ConvertSpecialCharacters( input.ProcessStandardsDescription ), input.ProcessStandardsDescription_Map,"ProcessStandardsDescription",  DefaultLanguageForMaps, ref messages );
 
-                output.CommonConditions = AssignValidUrlListAsStringList( input.CommonConditions, "CommonConditions", ref messages, false );
-				output.CommonCosts = AssignValidUrlListAsStringList( input.CommonCosts, "CommonCosts", ref messages, false );
+                output.CommonConditions = AssignRegistryResourceURIsListAsStringList( input.CommonConditions, "CommonConditions", ref messages, false );
+				output.CommonCosts = AssignRegistryResourceURIsListAsStringList( input.CommonCosts, "CommonCosts", ref messages, false );
 
 				if ( input.HasPart.Count > 0 )
 				{
@@ -361,7 +360,8 @@ namespace RA.Services
 				output.ReviewProcess = FormatProcessProfile( input.ReviewProcess, ref messages );
 				output.RevocationProcess = FormatProcessProfile( input.RevocationProcess, ref messages );
 
-				output.FinancialAssistance = MapFinancialAssitance( input.FinancialAssistance, ref messages );
+				//output.FinancialAssistanceOLD = MapFinancialAssistance( input.FinancialAssistanceOLD, ref messages );
+				output.FinancialAssistance = MapFinancialAssistance( input.FinancialAssistance, ref messages );
 
 				output.AdvancedStandingFrom = FormatConnections( input.AdvancedStandingFrom, ref messages );
 				output.IsAdvancedStandingFor = FormatConnections( input.IsAdvancedStandingFor, ref messages );
@@ -392,15 +392,13 @@ namespace RA.Services
 			}
 			catch ( Exception ex )
 			{
-				LogError( ex, "CredentialServices.ToMap" );
+				LoggingHelper.LogError( ex, "CredentialServices.ToMap" );
 				messages.Add( ex.Message );
 			}
             //how output handle warning messages?
             if ( messages.Count > 0 )
             {
                 isValid = false;
-                if ( warnings.Count > 0 )
-                    messages.AddRange( warnings );
             }
 
             return isValid;
@@ -430,7 +428,7 @@ namespace RA.Services
    //         string property = "";
 
    //         output.Ctid = FormatCtid(input.Ctid, ref messages);
-   //         output.CtdlId = idBaseUrl + output.Ctid;
+   //         output.CtdlId = credRegistryResourceUrl + output.Ctid;
 
    //         //todo determine if will generate where not found
    //         //         if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )
@@ -441,7 +439,7 @@ namespace RA.Services
    //         //             //can't do this yet, as the registry may treat an existing records as new!!!
    //         //             //input.Ctid = input.Ctid.ToLower();
    //         //             output.Ctid = input.Ctid;
-   //         //             output.CtdlId = idBaseUrl + output.Ctid;
+   //         //             output.CtdlId = credRegistryResourceUrl + output.Ctid;
    //         //	CurrentCtid = input.Ctid;
    //         //}
 
@@ -478,7 +476,7 @@ namespace RA.Services
    //         }
    //         else
    //         {
-   //             output.Description = Assign(ConvertSpecialInput( input.Description ));
+   //             output.Description = Assign(ConvertSpecialCharacters( input.Description ));
    //         }
 
    //         if ( string.IsNullOrWhiteSpace( input.CredentialType ) )
@@ -544,8 +542,8 @@ namespace RA.Services
             to.AvailabilityListing = AssignValidUrlAsStringList( from.AvailabilityListing, "AvailabilityListing", ref messages, false );
 
             to.Image = AssignValidUrlAsString( from.Image, "Image", ref messages, false );
-            to.PreviousVersion = AssignValidUrlAsString( from.PreviousVersion, "PreviousVersion", ref messages, false );
-            to.LatestVersion = AssignValidUrlAsString( from.LatestVersion, "LatestVersion", ref messages, false );
+            to.PreviousVersion = AssignRegistryResourceURIAsString( from.PreviousVersion, "PreviousVersion", ref messages, false );
+            to.LatestVersion = AssignRegistryResourceURIAsString( from.LatestVersion, "LatestVersion", ref messages, false );
 
 
         }
@@ -611,7 +609,11 @@ namespace RA.Services
 			//frameworks
 			//can't depend on the codes being SOC
 			output.OccupationType = FormatCredentialAlignmentListFromFrameworkItemList( input.OccupationType, true, ref messages );
-			//output.AlternativeOccupationType = AssignLanguageMapList( input.AlternativeOccupationType, input.AlternativeOccupationType_Map, "Credential AlternativeOccupationType", ref messages );
+			//no longer using as concrete property, just used for simple list of strings
+			//append to OccupationType
+			output.OccupationType = AppendCredentialAlignmentListFromList( input.AlternativeOccupationType, null, "","", "AlternativeOccupationType", output.OccupationType, ref messages );
+
+			//output.AlternativeOccupationType = AssignLanguageMapList( input.AlternativeOccupationType, input.AlternativeOccupationType_Map, "Credential AlternativeOccupationType", ref output.OccupationType, ref messages );
 
 			//can't depend on the codes being NAICS??
 			output.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( input.IndustryType, true, ref messages );
@@ -619,13 +621,17 @@ namespace RA.Services
 				output.Naics = input.Naics;
 			else
 				output.Naics = null;
+			//append to IndustryType
+			output.IndustryType = AppendCredentialAlignmentListFromList( input.AlternativeIndustryType, null, "", "", "AlternativeIndustryType", output.IndustryType, ref messages );
 			//output.AlternativeIndustryType = AssignLanguageMapList( input.AlternativeIndustryType, input.AlternativeIndustryType_Map, "Credential AlternativeIndustryType", ref messages );
 			//
 			output.InstructionalProgramType = FormatCredentialAlignmentListFromFrameworkItemList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
+			//append to InstructionalProgramType
+			output.InstructionalProgramType = AppendCredentialAlignmentListFromList( input.AlternativeInstructionalProgramType, null, "", "", "AlternativeInstructionalProgramType", output.InstructionalProgramType, ref messages );
 			//
 			//output.AlternativeInstructionalProgramType = AssignLanguageMapList( input.AlternativeInstructionalProgramType, input.AlternativeInstructionalProgramType_Map, "Credential AlternativeInstructionalProgramType", ref messages );
 			//
-			output.AudienceLevel = FormatCredentialAlignmentVocabs( "audienceLevelType", input.AudienceLevelType, ref messages );
+			output.AudienceLevelType = FormatCredentialAlignmentVocabs( "audienceLevelType", input.AudienceLevelType, ref messages );
             output.AudienceType = FormatCredentialAlignmentVocabs( "audienceType", input.AudienceType, ref messages );
 
 			output.AssessmentDeliveryType = FormatCredentialAlignmentVocabs( "deliveryType", input.AssessmentDeliveryType, ref messages, "assessmentDeliveryType" );

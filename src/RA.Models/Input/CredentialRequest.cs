@@ -14,8 +14,9 @@ namespace RA.Models.Input
 		/// Credential Input Class
 		/// </summary>
 		public Credential Credential { get; set; }
-		//public List<BlankNode> BlankNodes = new List<BlankNode>();
-
+		
+		//OR if doing bulk upload
+		public List<Credential> Credentials { get; set; }
 	}
 
 	public class Credential
@@ -62,7 +63,7 @@ namespace RA.Models.Input
 			HasPart = new List<EntityReference>();
 			IsPartOf = new List<EntityReference>();
 
-			FinancialAssistance = new List<Input.FinancialAlignmentObject>();
+			//FinancialAssistanceOLD = new List<Input.FinancialAlignmentObject>();
 			AdvancedStandingFrom = new List<Connections>();
 			IsAdvancedStandingFor = new List<Connections>();
 			PreparationFrom = new List<Connections>();
@@ -302,9 +303,9 @@ namespace RA.Models.Input
 		public List<ProcessProfile> ComplaintProcess { get; set; }
 		public List<ProcessProfile> ReviewProcess { get; set; }
 		public List<ProcessProfile> RevocationProcess { get; set; }
-		public List<FinancialAlignmentObject> FinancialAssistance { get; set; }
+		////public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
+		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 
-		
 		public List<RevocationProfile> Revocation { get; set; }
 		
 	}

@@ -7,11 +7,11 @@ namespace RA.Models.JsonV2
     public class GraphContainer
     {
 		[JsonIgnore]
-		public static string ceasnContext = "http://credreg.net/ctdlasn/schema/context/json";
+		public static string ceasnContext = "https://credreg.net/ctdlasn/schema/context/json";
 
 		public GraphContainer()
         {
-            Context = "http://credreg.net/ctdlasn/schema/context/json";
+            Context = "https://credreg.net/ctdlasn/schema/context/json";
         }
         [JsonProperty( "@context" )]
         public string Context { get; set; }

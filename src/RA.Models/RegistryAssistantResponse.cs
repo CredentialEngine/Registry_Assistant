@@ -16,8 +16,12 @@ namespace RA.Models
 			Messages = new List<string>();
 			Payload = "";
 		}
-		public bool Successful { get; set; }
 
+		/// True if action was successfull, otherwise false
+		public bool Successful { get; set; }
+		/// <summary>
+		/// List of error or warning messages
+		/// </summary>
 		public List<string> Messages { get; set; }
 
 		public string CTID { get; set; }
@@ -42,5 +46,23 @@ namespace RA.Models
 		/// Payload of request to registry, containing properties formatted as CTDL - JSON-LD
 		/// </summary>
 		public string Payload { get; set; }
+	}
+
+	public class RegistryAssistantDeleteResponse
+	{
+		public RegistryAssistantDeleteResponse()
+		{
+			Messages = new List<string>();
+		}
+		/// <summary>
+		/// True if delete was successfull, otherwise false
+		/// </summary>
+		public bool Successful { get; set; }
+
+		/// <summary>
+		/// List of error or warning messages
+		/// </summary>
+		public List<string> Messages { get; set; }
+
 	}
 }

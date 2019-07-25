@@ -56,11 +56,14 @@ namespace RA.Services
             {
                 helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 
-                CER cer = new CER( "LearningOpportunity", output.Type, output.Ctid, helper.SerializedInput);
-                cer.PublisherAuthorizationToken = helper.ApiKey;
-                cer.PublishingForOrgCtid = helper.OwnerCtid;
+				CER cer = new CER( "LearningOpportunity", output.Type, output.Ctid, helper.SerializedInput )
+				{
+					PublisherAuthorizationToken = helper.ApiKey,
+					IsPublisherRequest = helper.IsPublisherRequest,
+					PublishingForOrgCtid = helper.OwnerCtid
+				};
 
-                if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
 					cer.IsManagedRequest = true;
 
 				string identifier = "LearningOpportunity_" + request.LearningOpportunity.Ctid;
@@ -191,7 +194,7 @@ namespace RA.Services
 				output.CommonConditions = AssignValidUrlListAsStringList( input.CommonConditions, "CommonConditions", ref messages );
 				output.CommonCosts = AssignValidUrlListAsStringList( input.CommonCosts, "CommonCosts", ref messages );
 
-				output.FinancialAssistance = MapFinancialAssitance( input.FinancialAssistance, ref messages );
+				output.FinancialAssistanceOLD = MapFinancialAssistance( input.FinancialAssistanceOLD, ref messages );
 
 				output.VersionIdentifier = AssignIdentifierListToList( input.VersionIdentifier );
 
@@ -232,7 +235,7 @@ namespace RA.Services
             string property = "";
 
             output.Ctid = FormatCtid(input.Ctid, ref messages);
-            output.CtdlId = idBaseUrl + output.Ctid;
+            output.CtdlId = credRegistryResourceUrl + output.Ctid;
 
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )

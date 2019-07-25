@@ -35,7 +35,7 @@ namespace RA.Models.Input
 		{
 			ConceptScheme = new ConceptScheme();
 		}
-		public string CTID { get; set; }
+		//public string CTID { get; set; }
 
 		public ConceptScheme ConceptScheme { get; set; } = new ConceptScheme();
 
@@ -219,8 +219,18 @@ namespace RA.Models.Input
 		public List<string> Related{ get; set; } = new List<string>();
 		public List<string> RelatedMatch { get; set; } = new List<string>();
 
+		public List<string> Comment { get; set; } = new List<string>();
+		public LanguageMapList Comment_Map { get; set; } = new LanguageMapList();
+
+		public string CodeNEC { get; set; }
+		public string LegacyCodeNEC { get; set; }
+		public List<string> SourceCareerFieldCode { get; set; } = new List<string>();
 	}
 
-
-
+	//public class MilitaryConcept : Concept
+	//{
+	//	public string CodeNEC { get; set; }
+	//	public string LegacyCodeNEC { get; set; }
+	//	public string SourceCareerFieldCode { get; set; }
+	//}
 }

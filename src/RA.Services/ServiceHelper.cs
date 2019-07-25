@@ -38,13 +38,12 @@ namespace RA.Services
         #region Properties
         private static string thisClassName = "ServiceHelper";
 
-		static string DEFAULT_GUID = "00000000-0000-0000-0000-000000000000";
-		public static string idBaseUrl = ServiceHelper.GetAppKeyValue( "credRegistryResourceUrl" );
+		public static string credRegistryResourceUrl = ServiceHelper.GetAppKeyValue( "credRegistryResourceUrl" );
         public string credRegistryGraphUrl = ServiceHelper.GetAppKeyValue( "credRegistryGraphUrl" );
         public static string codeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
         public static bool usingSingleDirectCost = UtilityManager.GetAppKeyValue( "usingSingleDirectCost", false );
-
-        public static bool IsAPublishRequest = true;
+		public static List<string> warningMessages = new List<string>();
+		public static bool IsAPublishRequest = true;
         //this can only be true for a format request
         public static bool includingMinDataWithReferenceId = UtilityManager.GetAppKeyValue( "includeMinDataWithReferenceId", false );
 		public static string CurrentEntityType = "";
@@ -232,7 +231,7 @@ namespace RA.Services
                     return false;
                 entityBase.NegateNonIdProperties();
 
-                entityBase.CtdlId = idBaseUrl + entity.CTID;
+                entityBase.CtdlId = credRegistryResourceUrl + entity.CTID;
 
                 helper.EntityBaseList.Add( entityBase );
                 return true;
@@ -558,7 +557,7 @@ namespace RA.Services
 				if ( !IsCtidValid( entity.CTID, ref messages ) )
 					return false;
 				org.NegateNonIdProperties();
-				org.CtdlId = idBaseUrl + entity.CTID;
+				org.CtdlId = credRegistryResourceUrl + entity.CTID;
 				helper.OrgBaseList.Add( org );
 				return true;
 			}
@@ -921,7 +920,7 @@ namespace RA.Services
 				cp.TargetAssessment = FormatEntityReferences( input.TargetAssessment, MJ.AssessmentProfile.classType, false, ref messages );
 				cp.TargetLearningOpportunity = FormatEntityReferences( input.TargetLearningOpportunity, MJ.LearningOpportunityProfile.classType, false, ref messages );
 
-				cp.TargetCompetency = FormatCompetencies( input.RequiresCompetency, ref messages );
+				cp.TargetCompetency = FormatCompetencies( input.TargetCompetency, ref messages );
 
 
 				list.Add( cp );
@@ -1176,7 +1175,7 @@ namespace RA.Services
 		}
 		#endregion
 
-		public static List<MJ.FinancialAlignmentObject> MapFinancialAssitance( List<Models.Input.FinancialAlignmentObject> list, ref List<string> messages )
+		public static List<MJ.FinancialAlignmentObject> MapFinancialAssistance( List<Models.Input.FinancialAlignmentObject> list, ref List<string> messages )
 		{
 			List<MJ.FinancialAlignmentObject> output = new List<MJ.FinancialAlignmentObject>();
 			if ( list == null || list.Count == 0 )
@@ -2720,7 +2719,7 @@ namespace RA.Services
         public static bool IsValidGuid( string field )
         {
             Guid guidOutput;
-            if ( ( field == null || field.ToString() == DEFAULT_GUID ) )
+            if ( ( field == null || field.ToString() == Guid.Empty.ToString() ) )
                 return false;
             else if ( !Guid.TryParse( field, out guidOutput ) )
                 return false;
@@ -3257,7 +3256,7 @@ namespace RA.Services
         /// <returns>True id message was sent successfully, otherwise false</returns>
         public static bool NotifyAdmin( string subject, string message )
         {
-            string emailTo = UtilityManager.GetAppKeyValue( "systemAdminEmail", "mparsons@siuccwd.com" );
+            string emailTo = UtilityManager.GetAppKeyValue( "systemAdminEmail", "cwd-mparsons@siu.edu" );
             //work on implementing some specific routing based on error type
 
 

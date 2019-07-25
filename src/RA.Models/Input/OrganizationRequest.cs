@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RA.Models.Input
 {
@@ -178,22 +179,26 @@ namespace RA.Models.Input
         public List<IdentifierValue> AlternativeIdentifier { get; set; }
 		public string MissionAndGoalsStatement { get; set; }
         public string MissionAndGoalsStatementDescription { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap MissionAndGoalsStatementDescription_Map { get; set; } = new LanguageMap();
 
-        public List<FrameworkItem> IndustryType { get; set; }
+		public List<FrameworkItem> IndustryType { get; set; }
 		//public List<string> AlternativeIndustryType { get; set; } = new List<string>();
 		//public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
 		public List<string> Naics { get; set; }
 
         public List<string> Email { get; set; }
 
-        //all phone numbers are entered in contact points
-
-        public List<ContactPoint> ContactPoint { get; set; }
-        /// <summary>
-        /// A resource that unambiguously indicates the identity of the resource being described.
-        /// Resources that may indicate identity include, but are not limited to, descriptions of entities in open databases such as DBpedia and Wikidata or social media accounts such as FaceBook and LinkedIn.
-        /// </summary>
-        public List<string> SameAs { get; set; }
+		//NOTE: ContactPoint can only be entered with Address
+		[Obsolete]
+		public List<ContactPoint> ContactPoint { get; set; } = new List<ContactPoint>();
+		/// <summary>
+		/// A resource that unambiguously indicates the identity of the resource being described.
+		/// Resources that may indicate identity include, but are not limited to, descriptions of entities in open databases such as DBpedia and Wikidata or social media accounts such as FaceBook and LinkedIn.
+		/// </summary>
+		public List<string> SameAs { get; set; }
         public List<string> AvailabilityListing { get; set; }
         
         public List<Jurisdiction> Jurisdiction { get; set; }

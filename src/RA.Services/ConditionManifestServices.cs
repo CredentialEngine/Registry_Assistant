@@ -30,24 +30,35 @@ namespace RA.Services
         /// <param name="request"></param>
         /// <param name="isValid"></param>
         /// <param name="helper"></param>
-        public static void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
+        public void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
 		{
 			isValid = true;
 			string crEnvelopeId = request.RegistryEnvelopeId;
 			string submitter = "";
+			List<string> messages = new List<string>();
 
 			var output = new OutputEntity();
 			if ( ToMap( request.ConditionManifest, output, ref helper ) )
 			{
 				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 
-                CER cer = new CER( "ConditionManifest", output.Type, output.Ctid, helper.SerializedInput); 
-                cer.PublisherAuthorizationToken = helper.ApiKey;
-				cer.PublishingForOrgCtid = helper.OwnerCtid;
+				CER cer = new CER( "ConditionManifest", output.Type, output.Ctid, helper.SerializedInput )
+				{
+					PublisherAuthorizationToken = helper.ApiKey,
+					IsPublisherRequest = helper.IsPublisherRequest,
+					EntityName = CurrentEntityName,
+					PublishingForOrgCtid = helper.OwnerCtid
+				};
 
 				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
 					cer.IsManagedRequest = true;
-
+				//
+				if ( !SupportServices.ValidateAgainstPastRequest( "ConditionManifest", output.Ctid, ref cer, ref messages ) )
+				{
+					isValid = false;
+					helper.SetMessages( messages );
+					return; //===================
+				}
 				string identifier = "ConditionManifest_" + request.ConditionManifest.Ctid;
 				if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
 				{
@@ -112,7 +123,7 @@ namespace RA.Services
 
 				output.Recommends = FormatConditionProfile( input.RecommendedConditions, ref messages );
                 output.Renewal = FormatConditionProfile( input.RenewedConditions, ref messages );
-                output.Requires = FormatConditionProfile( input.RequiredConditions, ref messages );
+                output.Requires = FormatConditionProfile( input.Requires, ref messages );
 				output.EntryConditions = FormatConditionProfile( input.EntryConditions, ref messages );
 				output.Corequisite = FormatConditionProfile( input.CorequisiteConditions, ref messages );
 
@@ -148,7 +159,7 @@ namespace RA.Services
             ///string property = "";
 
             output.Ctid = FormatCtid(input.Ctid, ref messages);
-            output.CtdlId = idBaseUrl + output.Ctid;
+            output.CtdlId = credRegistryResourceUrl + output.Ctid;
 
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )

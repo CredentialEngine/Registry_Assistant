@@ -28,7 +28,7 @@ namespace RA.Models.Input
 			TargetAssessment = new List<EntityReference>();
 			TargetCredential = new List<EntityReference>();
 			TargetLearningOpportunity = new List<EntityReference>();
-			RequiresCompetency = new List<CredentialAlignmentObject>();
+			TargetCompetency = new List<CredentialAlignmentObject>();
 
 
 			Jurisdiction = new List<Input.Jurisdiction>();
@@ -107,7 +107,8 @@ namespace RA.Models.Input
         public List<EntityReference> TargetCredential { get; set; }
         public List<EntityReference> TargetLearningOpportunity { get; set; }
 
-		public List<CredentialAlignmentObject> RequiresCompetency { get; set; }
+		//targetCompetency is typicall a competency required for the parent of this condition profile
+		public List<CredentialAlignmentObject> TargetCompetency { get; set; }
 		public List<ConditionProfile> AlternativeCondition { get; set; }
  
     } 

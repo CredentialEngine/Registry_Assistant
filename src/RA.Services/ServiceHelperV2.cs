@@ -32,12 +32,21 @@ namespace RA.Services
 	{
         #region Properties
         private static string thisClassName = "ServiceHelper";
+		public static string ceasnContext = "https://credreg.net/ctdlasn/schema/context/json";
+		public static string ctdlContext = "https://credreg.net/ctdl/schema/context/json";
+		public static string environment = UtilityManager.GetAppKeyValue( "environment", "unknown" );
 
-		static readonly string DEFAULT_GUID = "00000000-0000-0000-0000-000000000000";
-		public string idBaseUrl = GetAppKeyValue( "credRegistryResourceUrl" );
+		public string credRegistryResourceUrl = GetAppKeyValue( "credRegistryResourceUrl" );
         public string credRegistryGraphUrl = GetAppKeyValue( "credRegistryGraphUrl" );
-        public readonly string SystemDefaultLanguageForMaps = "en";
-        public static string DefaultLanguageForMaps  = "en";
+		public string credentialRegistryBaseUrl = GetAppKeyValue( "credentialRegistryBaseUrl" );
+		public string credentialFinderDetailUrl = GetAppKeyValue( "credentialFinderDetailUrl" );
+		public bool isFrameworkDateCreatedRequired = GetAppKeyValue( "frameworkDateCreatedIsRequired", true );
+		public bool isFrameworkCreatorRequired = GetAppKeyValue( "frameworkCreatorIsRequired", true );
+		public bool isFrameworkPublisherRequired = GetAppKeyValue( "frameworkPublisherIsRequired", true );
+		public bool usingQuantitiveValue = GetAppKeyValue( "usingQuantitiveValue", true );
+
+		public readonly string SystemDefaultLanguageForMaps = "en-US";
+        public static string DefaultLanguageForMaps  = "en-US";
         public static string LanguageCodes_2Characters = "en de es fr ar cs da el fi he it ja nl no pl pt sv uk zh";
         public static string LanguageCodes_3Characters = "eng deu spa fra ara ces dan ell fin heb ita jnp nld nor pol por swe ukr zho";
         public bool IsAPublishRequest = true;
@@ -46,6 +55,8 @@ namespace RA.Services
         public string codeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
         public bool usingSingleDirectCost = UtilityManager.GetAppKeyValue( "usingSingleDirectCost", false );
 		public static int MinimumDescriptionLength = UtilityManager.GetAppKeyValue( "minDescriptionTextLength", 25 );
+
+		public List<string> warningMessages = new List<string>();
 
 		//this can only be true for a format request
 		public bool includingMinDataWithReferenceId = UtilityManager.GetAppKeyValue( "includeMinDataWithReferenceId", false );
@@ -68,28 +79,33 @@ namespace RA.Services
 			return generatingCtidIfNotFound;
 		}
         #endregion
-        #region Code validation
-        /// <summary>
-        /// Validate CTID
-        /// TODO - should we generate if not found
-        /// </summary>
-        /// <param name="ctid"></param>
-        /// <param name="messages"></param>
-        /// <returns></returns>
-        public bool IsCtidValid( string ctid, ref List<string> messages )
+		public ServiceHelperV2 ()
+		{
+			DefaultLanguageForMaps = SystemDefaultLanguageForMaps;
+		}
+		#region Code validation
+		/// <summary>
+		/// Validate CTID
+		/// TODO - should we generate if not found
+		/// </summary>
+		/// <param name="ctid"></param>
+		/// <param name="messages"></param>
+		/// <returns></returns>
+		public bool IsCtidValid( string ctid, string property, ref List<string> messages, bool isRequired = true )
 		{
 			bool isValid = true;
 
 			if ( string.IsNullOrWhiteSpace( ctid ) )
 			{
-				messages.Add( "Error - A CTID property must be entered." );
+				if ( isRequired )
+					messages.Add( "Error - A CTID must be entered for " + property );
 				return false;
 			}
 			//just in case, handle old formats
-			ctid = ctid.Replace( "urn:ctid:", "ce-" );
+			//ctid = ctid.Replace( "urn:ctid:", "ce-" );
 			if ( ctid.Length != 39 )
 			{
-				messages.Add( "Error - Invalid CTID format. The proper format is ce-UUID. ex. ce-84365AEA-57A5-4B5A-8C1C-EAE95D7A8C9B" );
+				messages.Add( string.Format("Error - Invalid CTID format for {0}. The proper format is ce-UUID. ex. ce-84365aea-57a5-4b5a-8c1c-eae95d7a8c9b (with all lowercase letters)", property ));
 				return false;
 			}
 
@@ -103,7 +119,7 @@ namespace RA.Services
 			if ( !IsValidGuid( ctid.Substring( 3, 36 ) ) )
 			{
 				//actually we could add this if missing - but maybe should NOT
-				messages.Add( "Error - Invalid CTID format. The proper format is ce-UUID. ex. ce-84365AEA-57A5-4B5A-8C1C-EAE95D7A8C9B" );
+				messages.Add( string.Format( "Error - Invalid CTID format for {0}. The proper format is ce-UUID. ex. ce-84365aea-57a5-4b5a-8c1c-eae95d7a8c9b (with all lowercase letters)", property ) );
 				return false;
 			}
 
@@ -111,25 +127,26 @@ namespace RA.Services
 		}
         #endregion
 
-        public string FormatCtid(string ctid, ref List<string> messages )
+        public string FormatCtid(string ctid, string property, ref List<string> messages )
         {
             //todo determine if will generate where not found
             if ( string.IsNullOrWhiteSpace(ctid) && GeneratingCtidIfNotFound() )
                 ctid = GenerateCtid();
 
-            if ( IsCtidValid(ctid, ref messages) )
+            if ( IsCtidValid(ctid, property, ref messages) )
             {
                 //can't do this yet, as the registry may treat an existing records as new!!!
-                if ( UtilityManager.GetAppKeyValue( "forceCtidToLowerCase", false ) )
-                {
-                    if ( ctid != ctid.ToLower() )
-                    {
-                        //perhaps log for delete handling
-                        LoggingHelper.DoTrace( 2, string.Format("WARNING - ENCOUNTERED CTID THAT WAS UPPER CASE: {0}, setting to lowercase", ctid) );
-                    }
+                //if ( UtilityManager.GetAppKeyValue( "forceCtidToLowerCase", false ) )
+                //{
+                    //if ( ctid != ctid.ToLower() )
+                    //{
+                    //    //perhaps log for delete handling
+                    //    LoggingHelper.DoTrace( 2, string.Format("WARNING - ENCOUNTERED CTID THAT WAS UPPER CASE: {0}, setting to lowercase", ctid) );
+                    //}
                     ctid = ctid.ToLower();
-                }
-                CurrentCtid = ctid;
+                //}
+				//don't want to arbitrarily to this for a child class, should only be for the parent!!!!
+                //CurrentCtid = ctid;
             }
 
             return ctid;
@@ -141,7 +158,7 @@ namespace RA.Services
 			return ctid;
 		}
 
-        public string AddBlankNode(string type, string name, string description, string subjectWebpage)
+		public string AddBlankNode(string type, string name, string description, string subjectWebpage)
         {
             string bnodeId = "";
             if ( DoesBNodeExist( name, description, subjectWebpage, ref bnodeId ) )
@@ -283,29 +300,11 @@ namespace RA.Services
                     {
                         entity.Id = entity.Id.Replace( "/resources/ce-", "/graph/ce-" );
                     }
-                    idUrl = entity.Id;
+                    idUrl = entity.Id.ToLower();
 
                     entityBase.NegateNonIdProperties();
                     
-                    entityBase.CtdlId = entity.Id;
-                    //the type is not to be included with @id
-                    //if ( includingMinDataWithReferenceId && !IsAPublishRequest
-                    //    && !string.IsNullOrWhiteSpace( entity.Name )
-                    //    && !string.IsNullOrWhiteSpace( entity.SubjectWebpage )
-                    //    )
-                    //{
-                    //    //as means of minimizing impact of pending imports, include basic data
-                    //    //if format only, add a blank node, and add some notes
-                    //    entityBase.Name = entity.Name + " [debugging]";
-                    //    entityBase.Description = entity.Description;
-                    //    entityBase.SubjectWebpage = entity.SubjectWebpage;
-
-                    //    AddBlankNode( entity.Type, entity.Name, entity.Description, entity.SubjectWebpage );
-                    //}
-
-                    //helper.ReturnedDataType = 1;
-                    //helper.EntityBaseList.Add( entityBase );
-
+                    entityBase.CtdlId = idUrl;
                     return true;
                 }
                 else
@@ -316,10 +315,10 @@ namespace RA.Services
             }
             else if ( !string.IsNullOrWhiteSpace( entity.CTID ) )
             {
-                if ( !IsCtidValid( entity.CTID, ref messages ) )
+                if ( !IsCtidValid( entity.CTID, classSchema ?? "entityReference", ref messages ) )
                     return false;
                 entityBase.NegateNonIdProperties();
-                idUrl = credRegistryGraphUrl + entity.CTID;
+                idUrl = credRegistryGraphUrl + entity.CTID.ToLower();
                 return true;
             }
 
@@ -434,6 +433,15 @@ namespace RA.Services
         #endregion
 
         #region Organization references
+		/// <summary>
+		/// Handle where an organization reference could be a list of a single object
+		/// </summary>
+		/// <param name="orgReference"></param>
+		/// <param name="propertyName"></param>
+		/// <param name="dataIsRequired"></param>
+		/// <param name="messages"></param>
+		/// <param name="isQAOrgReference"></param>
+		/// <returns></returns>
         public List<string> FormatOrganizationReferences( object orgReference,
                     string propertyName,
                     bool dataIsRequired,
@@ -621,25 +629,13 @@ namespace RA.Services
                     {
                         entity.Id = entity.Id.Replace( "/resources/ce-", "/graph/ce-" );
                     }
-                    idUrl = entity.Id;
+                    idUrl = entity.Id.ToLower();
 
                     org.NegateNonIdProperties();
                    
-                    org.CtdlId = entity.Id;
+                    org.CtdlId = idUrl;
 					//17-09-?? per Stuart don't include a type with an @id
 					org.Type = null;
-                    //if ( includingMinDataWithReferenceId && !IsAPublishRequest
-                    //    && !string.IsNullOrWhiteSpace( entity.Name)
-                    //    && !string.IsNullOrWhiteSpace( entity.SubjectWebpage )
-                    //    )
-                    //{
-                    //    //as means of minimizing impact of pending imports, include basic data
-                    //    org.Name = entity.Name;
-                    //    org.Description = entity.Description;
-                    //    org.SubjectWebpage = entity.SubjectWebpage;
-
-                    //    AddBlankNode( entity.Type, entity.Name, entity.Description, entity.SubjectWebpage );
-                    //}
 
 					//consider whether a warning should be returned if additional data was included - that is, it will be ignored.
 					return true;
@@ -652,13 +648,10 @@ namespace RA.Services
 			}
 			else if ( !string.IsNullOrWhiteSpace( entity.CTID ) )
 			{
-				if ( !IsCtidValid( entity.CTID, ref messages ) )
+				if ( !IsCtidValid( entity.CTID, propertyName, ref messages ) )
 					return false;
 				org.NegateNonIdProperties();
-                idUrl = credRegistryGraphUrl + entity.CTID;
-
-                //org.CtdlId = credRegistryGraphUrl + entity.CTID;
-				//helper.OrgBaseList.Add( org );
+                idUrl = credRegistryGraphUrl + entity.CTID.ToLower();
 				return true;
 			}
 
@@ -824,14 +817,17 @@ namespace RA.Services
 				//NEED validation
 				hold.Currency = item.Currency;
 
-                hold.Name = AssignLanguageMap( ConvertSpecialInput( item.Name ), item.Name_Map,  "Cost Name", DefaultLanguageForMaps, ref messages );
-                hold.Description = AssignLanguageMap( ConvertSpecialInput( item.Description ), item.Description_Map, "Cost Description", DefaultLanguageForMaps, ref messages, true );
+                hold.Name = AssignLanguageMap( ConvertSpecialCharacters( item.Name ), item.Name_Map,  "Cost Name", DefaultLanguageForMaps, ref messages );
+                hold.Description = AssignLanguageMap( ConvertSpecialCharacters( item.Description ), item.Description_Map, "Cost Description", DefaultLanguageForMaps, ref messages, true );
                 hold.CostDetails = AssignValidUrlAsString( item.CostDetails, "Cost Details", ref messages, true );
 
-				hold.EndDate = item.EndDate;
-				hold.StartDate = item.StartDate;
+				//hold.EndDate = item.EndDate;
+				//hold.StartDate = item.StartDate;
+				hold.StartDate = MapDate( item.StartDate, "CostProfile StartDate", ref messages );
+				hold.EndDate = MapDate( item.EndDate, "CostProfile EndDate", ref messages );
 
-                hold.Condition = AssignLanguageMapList( item.Condition, item.Condition_Map, "Cost Conditions", ref messages );
+
+				hold.Condition = AssignLanguageMapList( item.Condition, item.Condition_Map, "Cost Conditions", ref messages );
 
                 hold.Jurisdiction = MapJurisdictions( item.Jurisdiction, ref messages );
 				//cp.Region = MapRegions( item.Region, ref messages );
@@ -869,6 +865,7 @@ namespace RA.Services
 
                        // if (usingSingleDirectCost)
                        // {
+					   if (!string.IsNullOrWhiteSpace( cpi.DirectCostType ) )
                             cp.DirectCostType = FormatCredentialAlignment( "directCostType", cpi.DirectCostType, ref messages );
                             //cp.DirectCostTypes = null;
                             //cp.DirectCostTypes = FormatCredentialAlignmentVocabToList( "directCostType", cpi.DirectCostType, ref messages );
@@ -883,7 +880,7 @@ namespace RA.Services
 						cp.AudienceType = FormatCredentialAlignmentVocabs( "audienceType", cpi.AudienceType, ref messages );
 
 						cp.Price = cpi.Price;
-                        cp.PaymentPattern = AssignLanguageMap( ConvertSpecialInput( cpi.PaymentPattern ), cpi.PaymentPattern_Map, "PaymentPattern",  DefaultLanguageForMaps, ref messages );
+                        cp.PaymentPattern = AssignLanguageMap( ConvertSpecialCharacters( cpi.PaymentPattern ), cpi.PaymentPattern_Map, "PaymentPattern",  DefaultLanguageForMaps, ref messages );
 
                         output.Add( cp );
 					}
@@ -908,60 +905,83 @@ namespace RA.Services
 
 			foreach ( var input in profiles )
 			{
-				var cp = new MJ.ConditionProfile();
-                cp.Name = AssignLanguageMap( ConvertSpecialInput( input.Name ), input.Name_Map,  "Condition Name",DefaultLanguageForMaps, ref messages, false );
-                cp.Description = AssignLanguageMap( ConvertSpecialInput( input.Description ), input.Description_Map, "Condition Description", DefaultLanguageForMaps, ref messages, true );
+				var output = new MJ.ConditionProfile
+				{
+					Name = AssignLanguageMap( ConvertSpecialCharacters( input.Name ), input.Name_Map, "Condition Name", DefaultLanguageForMaps, ref messages, false ),
+					Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Condition Description", DefaultLanguageForMaps, ref messages, true )
+				};
 
-                //should only be one SWP
-                //foreach ( string subjectWebpage in input.SubjectWebpage )
-                //{    }
-                if ( !IsUrlValid( input.SubjectWebpage, ref status, ref isUrlPresent ) )
+				//should only be one SWP
+				//foreach ( string subjectWebpage in input.SubjectWebpage )
+				//{    }
+				if ( !IsUrlValid( input.SubjectWebpage, ref status, ref isUrlPresent ) )
 					messages.Add( string.Format( "The Condtion Profile Subject Webpage is invalid ({0}). ", input.SubjectWebpage ) + status );
 				else
 				{
 					if ( isUrlPresent )
 					{
-						cp.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Condition Profile Subject Webpage", ref messages, false );
+						output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Condition Profile Subject Webpage", ref messages, false );
 
 					}
 				}
 
-				cp.AudienceLevelType = FormatCredentialAlignmentVocabs( "audienceLevelType", input.AudienceLevelType, ref messages );
-				cp.AudienceType = FormatCredentialAlignmentVocabs( "audienceType", input.AudienceType, ref messages );
+				output.AudienceLevelType = FormatCredentialAlignmentVocabs( "audienceLevelType", input.AudienceLevelType, ref messages );
+				output.AudienceType = FormatCredentialAlignmentVocabs( "audienceType", input.AudienceType, ref messages );
 
-				cp.DateEffective = MapDate( input.DateEffective, "DateEffective", ref messages );
+				output.DateEffective = MapDate( input.DateEffective, "DateEffective", ref messages );
 
-                cp.Condition = AssignLanguageMapList( input.Condition, input.Condition_Map, "Condition Profile Conditions", ref messages );
-                cp.SubmissionOf = AssignLanguageMapList( input.SubmissionOf, input.SubmissionOf_Map, "Condition Profile SubmissionOf", ref messages );
+                output.Condition = AssignLanguageMapList( input.Condition, input.Condition_Map, "Condition Profile Conditions", ref messages );
+                output.SubmissionOf = AssignLanguageMapList( input.SubmissionOf, input.SubmissionOf_Map, "Condition Profile SubmissionOf", ref messages );
 
-                cp.AssertedBy = FormatOrganizationReferences( input.AssertedBy, "Asserted By", false, ref messages, false );
+				//special case where the AssertedBy property could be a list or a single class
+                output.AssertedBy = FormatOrganizationReferences( input.AssertedBy, "Asserted By", false, ref messages, false );
 
-				cp.Experience = input.Experience;
-				cp.MinimumAge = input.MinimumAge;
-				cp.YearsOfExperience = input.YearsOfExperience;
-				cp.Weight = input.Weight;
+				output.Experience = input.Experience;
+				output.MinimumAge = input.MinimumAge;
+				output.YearsOfExperience = input.YearsOfExperience;
+				output.Weight = input.Weight;
 
-				if ( ValidateCreditUnitOrHoursProperties( input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref messages ) )
+				//
+				output.CreditUnitType = null;
+				output.CreditValue = AssignQuantitiveValue( input.CreditValue, "CreditValue", "ConditionProfile", ref messages );
+				//at this point could have had no data, or bad data
+				if ( output.CreditValue == null )
 				{
-                    cp.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialInput( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription", DefaultLanguageForMaps, ref messages );
-                    //credential alignment object
-                    if ( !string.IsNullOrWhiteSpace( input.CreditUnitType ) )
-					{
-						cp.CreditUnitType = FormatCredentialAlignment( "creditUnitType", input.CreditUnitType, ref messages ) ;
-					}
-					else
-						cp.CreditUnitType = null;
+					//check legacy
+					output.CreditValue = AssignQuantitiveValue( "ConditionProfile", input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref messages );
 
-					cp.CreditUnitValue = input.CreditUnitValue;
-                    cp.CreditHourType = AssignLanguageMap( ConvertSpecialInput( input.CreditHourType ), input.CreditHourType_Map,"CreditHourType",  DefaultLanguageForMaps, ref messages );
-                    cp.CreditHourValue = input.CreditHourValue;
-				} else
-				{
-					cp.CreditUnitType = null;
+					//apparantly will still allow just a description. TBD: is it allowed if creditValue is provided?
+					output.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription", DefaultLanguageForMaps, ref messages );
 				}
 
-				cp.AlternativeCondition = FormatConditionProfile( input.AlternativeCondition, ref messages );
-				cp.EstimatedCost = FormatCosts( input.EstimatedCost, ref messages );
+				//bool hasData = false;
+				//MJ.QuantitativeValue qv = new MJ.QuantitativeValue();
+				//if ( AssignQuantitiveValue( input.CreditValue, "CreditValue", "ConditionProfile", ref qv, ref messages ) )
+				//{
+				//	output.CreditValue = new List<MJ.QuantitativeValue>
+				//	{
+				//		qv
+				//	};
+				//}
+				//else if ( !usingQuantitiveValue )
+				//{
+				//	if ( ValidateCreditUnitOrHoursProperties( input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref hasData, ref messages ) )
+				//	{
+				//		output.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription", DefaultLanguageForMaps, ref messages );
+				//		//credential alignment object
+				//		if ( !string.IsNullOrWhiteSpace( input.CreditUnitType ) )
+				//		{
+				//			output.CreditUnitType = FormatCredentialAlignment( "creditUnitType", input.CreditUnitType, ref messages );
+				//		}
+
+				//		output.CreditUnitValue = input.CreditUnitValue;
+				//		output.CreditHourType = AssignLanguageMap( ConvertSpecialCharacters( input.CreditHourType ), input.CreditHourType_Map, "CreditHourType", DefaultLanguageForMaps, ref messages );
+				//		output.CreditHourValue = input.CreditHourValue;
+				//	}
+				//}
+
+				output.AlternativeCondition = FormatConditionProfile( input.AlternativeCondition, ref messages );
+				output.EstimatedCost = FormatCosts( input.EstimatedCost, ref messages );
 
 				//jurisdictions
 				JurisdictionProfile newJp = new JurisdictionProfile();
@@ -969,24 +989,24 @@ namespace RA.Services
 				{
 					newJp = MapToJurisdiction( jp, ref messages );
 					if ( newJp != null )
-						cp.Jurisdiction.Add( newJp );
+						output.Jurisdiction.Add( newJp );
 				}
 				foreach ( var jp in input.ResidentOf )
 				{
 					newJp = MapToJurisdiction( jp, ref messages );
 					if ( newJp != null )
-						cp.ResidentOf.Add( newJp );
+						output.ResidentOf.Add( newJp );
 				}
 
 				//targets
-				cp.TargetCredential = FormatEntityReferencesList( input.TargetCredential, MJ.Credential.classType, false, ref messages );
-				cp.TargetAssessment = FormatEntityReferencesList( input.TargetAssessment, MJ.AssessmentProfile.classType, false, ref messages );
-				cp.TargetLearningOpportunity = FormatEntityReferencesList( input.TargetLearningOpportunity, MJ.LearningOpportunityProfile.classType, false, ref messages );
+				output.TargetCredential = FormatEntityReferencesList( input.TargetCredential, MJ.Credential.classType, false, ref messages );
+				output.TargetAssessment = FormatEntityReferencesList( input.TargetAssessment, MJ.AssessmentProfile.classType, false, ref messages );
+				output.TargetLearningOpportunity = FormatEntityReferencesList( input.TargetLearningOpportunity, MJ.LearningOpportunityProfile.classType, false, ref messages );
 
-				cp.TargetCompetency = FormatCompetencies( input.RequiresCompetency, ref messages );
+				output.TargetCompetency = FormatCompetencies( input.TargetCompetency, ref messages );
 
 
-				list.Add( cp );
+				list.Add( output );
 			}
 
 			return list;
@@ -994,58 +1014,80 @@ namespace RA.Services
 		#endregion
 
 		#region Connections
-		public List<MJ.ConditionProfile> FormatConnections( List<MI.Connections> requires, ref List<string> messages )
+		public List<MJ.ConditionProfile> FormatConnections( List<MI.Connections> inputList, ref List<string> messages )
 		{
-			if ( requires == null || requires.Count == 0 )
+			if ( inputList == null || inputList.Count == 0 )
 				return null;
 
 			var list = new List<MJ.ConditionProfile>();
 			EntityReferenceHelper helper = new EntityReferenceHelper();
-			foreach ( var input in requires )
+			foreach ( var input in inputList )
 			{
-				var cp = new MJ.ConditionProfile();
+				var output = new MJ.ConditionProfile();
                 string idUrl = "";
-                //cp.AssertedBy = FormatOrganizationReferenceToList( item.AssertedBy, "Asserted By", true, ref messages );
+                //output.AssertedBy = FormatOrganizationReferenceToList( item.AssertedBy, "Asserted By", true, ref messages );
                 if ( FormatOrganizationReference( input.AssertedBy, "Asserted By", ref idUrl, false, ref messages ) )
 				{
                     if ( !string.IsNullOrWhiteSpace( idUrl ) )
                     {
-                        if ( cp.AssertedBy == null )
-                            cp.AssertedBy = new List<string>();
+                        if ( output.AssertedBy == null )
+                            output.AssertedBy = new List<string>();
 
-                        cp.AssertedBy.Add( idUrl);
-						//cp.AssertedBy = helper.OrgBaseList[ 0 ] ;
+                        output.AssertedBy.Add( idUrl);
+						//output.AssertedBy = helper.OrgBaseList[ 0 ] ;
                         
 					}
 				}
 
-				if ( ValidateCreditUnitOrHoursProperties( input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref messages ) )
+				output.CreditUnitType = null;
+				output.CreditValue = AssignQuantitiveValue( input.CreditValue, "CreditValue", "ConditionProfile", ref messages );
+				//at this point could have had no data, or bad data
+				if ( output.CreditValue == null )
 				{
-                    cp.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialInput( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription", DefaultLanguageForMaps, ref messages );
-                    //credential alignment object
-                    if ( !string.IsNullOrWhiteSpace( input.CreditUnitType ) )
-					{
-						cp.CreditUnitType = FormatCredentialAlignment( "creditUnitType", input.CreditUnitType, ref messages );
-					}
-					else
-						cp.CreditUnitType = null;
+					//check legacy
+					output.CreditValue = AssignQuantitiveValue( "ConditionProfile", input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref messages );
 
-					cp.CreditUnitValue = input.CreditUnitValue;
-                    cp.CreditHourType = AssignLanguageMap( ConvertSpecialInput( input.CreditHourType ), input.CreditHourType_Map, "CreditHourType", DefaultLanguageForMaps, ref messages );
-                    cp.CreditHourValue = input.CreditHourValue;
+					//apparantly will still allow just a description. TBD: is it allowed if creditValue is provided?
+					output.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription", DefaultLanguageForMaps, ref messages );
 				}
 
-                cp.Name = AssignLanguageMap( ConvertSpecialInput( input.Name ), input.Name_Map, "Condition Name", DefaultLanguageForMaps, ref messages, false );
-                cp.Description = AssignLanguageMap( ConvertSpecialInput( input.Description ), input.Description_Map, "Condition Description", DefaultLanguageForMaps, ref messages, true );
-                cp.Weight = input.Weight;
+				//bool hasData = false;
+				//MJ.QuantitativeValue qv = new MJ.QuantitativeValue();
+				//if ( AssignQuantitiveValue( input.CreditValue, "CreditValue", "ConditionProfile", ref qv, ref messages ) )
+				//{
+				//	output.CreditValue = new List<MJ.QuantitativeValue>
+				//	{
+				//		qv
+				//	};
+				//}
+				//else if ( !usingQuantitiveValue )
+				//{
+				//	if ( ValidateCreditUnitOrHoursProperties( input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref hasData, ref messages ) )
+				//	{
+				//		output.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription", DefaultLanguageForMaps, ref messages );
+				//		//credential alignment object
+				//		if ( !string.IsNullOrWhiteSpace( input.CreditUnitType ) )
+				//		{
+				//			output.CreditUnitType = FormatCredentialAlignment( "creditUnitType", input.CreditUnitType, ref messages );
+				//		}
+
+				//		output.CreditUnitValue = input.CreditUnitValue;
+				//		output.CreditHourType = AssignLanguageMap( ConvertSpecialCharacters( input.CreditHourType ), input.CreditHourType_Map, "CreditHourType", DefaultLanguageForMaps, ref messages );
+				//		output.CreditHourValue = input.CreditHourValue;
+				//	}
+				//}
+
+                output.Name = AssignLanguageMap( ConvertSpecialCharacters( input.Name ), input.Name_Map, "Condition Name", DefaultLanguageForMaps, ref messages, false );
+                output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Condition Description", DefaultLanguageForMaps, ref messages, true );
+                output.Weight = input.Weight;
 
 				//targets
 				//must have at least one target
-				cp.TargetCredential = FormatEntityReferencesList( input.TargetCredential, MJ.Credential.classType, false, ref messages );
-				cp.TargetAssessment = FormatEntityReferencesList( input.TargetAssessment, MJ.AssessmentProfile.classType, false, ref messages );
-				cp.TargetLearningOpportunity = FormatEntityReferencesList( input.TargetLearningOpportunity, MJ.LearningOpportunityProfile.classType, false, ref messages );
+				output.TargetCredential = FormatEntityReferencesList( input.TargetCredential, MJ.Credential.classType, false, ref messages );
+				output.TargetAssessment = FormatEntityReferencesList( input.TargetAssessment, MJ.AssessmentProfile.classType, false, ref messages );
+				output.TargetLearningOpportunity = FormatEntityReferencesList( input.TargetLearningOpportunity, MJ.LearningOpportunityProfile.classType, false, ref messages );
 
-				list.Add( cp );
+				list.Add( output );
 			}
 
 			return list;
@@ -1064,14 +1106,14 @@ namespace RA.Services
 				var cp = new MJ.ProcessProfile
 				{
 					DateEffective = MapDate( input.DateEffective, "DateEffective", ref messages ),
-                    Description = AssignLanguageMap( ConvertSpecialInput( input.Description ), input.Description_Map, "Process Profile Description", DefaultLanguageForMaps, ref messages, true ),
+                    Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Process Profile Description", DefaultLanguageForMaps, ref messages, true ),
 
-                    ProcessFrequency = AssignLanguageMap( ConvertSpecialInput( input.ProcessFrequency ), input.ProcessFrequency_Map, "ProcessFrequency", DefaultLanguageForMaps, ref messages, false ),
-                    ProcessMethodDescription = AssignLanguageMap( ConvertSpecialInput( input.ProcessMethodDescription ), input.ProcessMethodDescription_Map, "ProcessMethodDescription", DefaultLanguageForMaps, ref messages, false ),
-                    ProcessStandardsDescription = AssignLanguageMap( ConvertSpecialInput( input.ProcessStandardsDescription ), input.ProcessStandardsDescription_Map, "ProcessStandardsDescription", DefaultLanguageForMaps, ref messages, false ),
-                    ScoringMethodDescription = AssignLanguageMap( ConvertSpecialInput( input.ScoringMethodDescription ), input.ScoringMethodDescription_Map, "ScoringMethodDescription",DefaultLanguageForMaps,  ref messages, false ),
-                    ScoringMethodExampleDescription = AssignLanguageMap( ConvertSpecialInput( input.ScoringMethodExampleDescription ), input.ScoringMethodExampleDescription_Map, "ScoringMethodExampleDescription", DefaultLanguageForMaps,  ref messages, false ),
-                    VerificationMethodDescription = AssignLanguageMap( ConvertSpecialInput( input.VerificationMethodDescription ), input.VerificationMethodDescription_Map, "VerificationMethodDescription", DefaultLanguageForMaps, ref messages, false )
+                    ProcessFrequency = AssignLanguageMap( ConvertSpecialCharacters( input.ProcessFrequency ), input.ProcessFrequency_Map, "ProcessFrequency", DefaultLanguageForMaps, ref messages, false ),
+                    ProcessMethodDescription = AssignLanguageMap( ConvertSpecialCharacters( input.ProcessMethodDescription ), input.ProcessMethodDescription_Map, "ProcessMethodDescription", DefaultLanguageForMaps, ref messages, false ),
+                    ProcessStandardsDescription = AssignLanguageMap( ConvertSpecialCharacters( input.ProcessStandardsDescription ), input.ProcessStandardsDescription_Map, "ProcessStandardsDescription", DefaultLanguageForMaps, ref messages, false ),
+                    ScoringMethodDescription = AssignLanguageMap( ConvertSpecialCharacters( input.ScoringMethodDescription ), input.ScoringMethodDescription_Map, "ScoringMethodDescription",DefaultLanguageForMaps,  ref messages, false ),
+                    ScoringMethodExampleDescription = AssignLanguageMap( ConvertSpecialCharacters( input.ScoringMethodExampleDescription ), input.ScoringMethodExampleDescription_Map, "ScoringMethodExampleDescription", DefaultLanguageForMaps,  ref messages, false ),
+                    VerificationMethodDescription = AssignLanguageMap( ConvertSpecialCharacters( input.VerificationMethodDescription ), input.VerificationMethodDescription_Map, "VerificationMethodDescription", DefaultLanguageForMaps, ref messages, false )
                 };
 
 				cp.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Process Profile Subject Webpage", ref messages, false );
@@ -1159,21 +1201,17 @@ namespace RA.Services
 			//List<string> list = new List<string>();
 			var cp = new MJ.DurationProfile();
 			string duration = "";
-			//int cntr = 0;
-			//foreach ( MI.DurationItem item in input )
-			//{	}
-				//cntr++;
-				//cp = new MJ.DurationProfile{};
-				if ( DurationHasValue( input ) )
-				{
-					duration = AsSchemaDuration( input );
-				}
-				else
-				{
+			if ( DurationHasValue( input ) )
+			{
+				duration = AsSchemaDuration( input );
+			}
+			else
+			{
 				//ignore
-					//messages.Add( string.Format( "Duration Item error - For {0}, please provide at least one value for the duration item.", propertyName ) );
-					//continue;
-				}
+				//messages.Add( string.Format( "Duration Item error - For {0}, please provide at least one value for the duration item.", propertyName ) );
+				//continue;
+				return null;
+			}
 		
 			return duration;
 		}
@@ -1237,34 +1275,53 @@ namespace RA.Services
 		}
 		#endregion
 
-		public List<MJ.FinancialAlignmentObject> MapFinancialAssitance( List<Models.Input.FinancialAlignmentObject> list, ref List<string> messages )
+		//public List<MJ.FinancialAlignmentObject> MapFinancialAssistance( List<Models.Input.FinancialAlignmentObject> list, ref List<string> messages )
+		//{
+		//	List<MJ.FinancialAlignmentObject> output = new List<MJ.FinancialAlignmentObject>();
+		//	if ( list == null || list.Count == 0 )
+		//		return null;
+		//	MJ.FinancialAlignmentObject jp = new MJ.FinancialAlignmentObject();
+		//	foreach ( var item in list )
+		//	{
+		//		var fa = new MJ.FinancialAlignmentObject
+		//		{
+		//			AlignmentType = item.AlignmentType,
+		//			Framework = AssignValidUrlAsString( item.Framework, "Framework", ref messages, false ),
+		//			FrameworkName = AssignLanguageMap( item.FrameworkName, item.FrameworkName_Map,"Framework Name", DefaultLanguageForMaps, ref messages ),
+		//			TargetNode = AssignValidUrlAsString( item.TargetNode, "TargetNode", ref messages, false ),
+		//			TargetNodeDescription = AssignLanguageMap( item.TargetNodeDescription, item.TargetNodeDescription_Map, "TargetNode Description", DefaultLanguageForMaps, ref messages ),
+  //                  TargetNodeName = AssignLanguageMap( item.TargetNodeName, item.TargetNodeName_Map, "TargetNode Name", DefaultLanguageForMaps, ref messages ),
+  //                  Weight = item.Weight
+		//		};
+		//		fa.AlignmentDate = MapDate( item.AlignmentDate, "AlignmentDate", ref messages );
+
+		//		//if ( usingPendingSchemaVersion )
+		//		fa.CodedNotation = item.CodedNotation;
+
+		//		output.Add( fa );
+		//	}
+		//	return output;
+		//}
+
+		public List<MJ.FinancialAssistanceProfile> MapFinancialAssistance( List<Models.Input.FinancialAssistanceProfile> list, ref List<string> messages )
 		{
-			List<MJ.FinancialAlignmentObject> output = new List<MJ.FinancialAlignmentObject>();
+			List<MJ.FinancialAssistanceProfile> output = new List<MJ.FinancialAssistanceProfile>();
 			if ( list == null || list.Count == 0 )
 				return null;
-			MJ.FinancialAlignmentObject jp = new MJ.FinancialAlignmentObject();
+			MJ.FinancialAssistanceProfile jp = new MJ.FinancialAssistanceProfile();
 			foreach ( var item in list )
 			{
-				var fa = new MJ.FinancialAlignmentObject
+				var fa = new MJ.FinancialAssistanceProfile
 				{
-					AlignmentType = item.AlignmentType,
-					Framework = item.Framework,
-					FrameworkName = AssignLanguageMap( item.FrameworkName, item.FrameworkName_Map,"Framework Name", DefaultLanguageForMaps, ref messages ),
-					TargetNode = item.TargetNode,
-					TargetNodeDescription = AssignLanguageMap( item.TargetNodeDescription, item.TargetNodeDescription_Map, "TargetNode Description", DefaultLanguageForMaps, ref messages ),
-                    TargetNodeName = AssignLanguageMap( item.TargetNodeName, item.TargetNodeName_Map, "TargetNode Name", DefaultLanguageForMaps, ref messages ),
-                    Weight = item.Weight
+					Name = AssignLanguageMap( item.Name, item.Name_Map, "FinancialAssistance Name", DefaultLanguageForMaps, ref messages ),
+					Description = AssignLanguageMap( item.Description, item.Description_Map, "FinancialDescription", DefaultLanguageForMaps, ref messages ),
+					SubjectWebpage = AssignValidUrlAsString( item.SubjectWebpage, "Subject Webpage", ref messages, false ) //??
 				};
-				fa.AlignmentDate = MapDate( item.AlignmentDate, "AlignmentDate", ref messages );
-
-				//if ( usingPendingSchemaVersion )
-				fa.CodedNotation = item.CodedNotation;
-
 				output.Add( fa );
 			}
+
 			return output;
 		}
-
 		#region === Jurisdictions/addresses ===
 		public List<JurisdictionProfile> MapJurisdictions( List<Models.Input.Jurisdiction> list, ref List<string> messages )
 		{
@@ -1556,8 +1613,25 @@ namespace RA.Services
 				output.ContactPoint = null;
 
 			bool hasAddress = false;
+			//do we have any valid address fields?
+			if ( ( !string.IsNullOrWhiteSpace( input.Address1 )
+					|| !string.IsNullOrWhiteSpace( input.PostOfficeBoxNumber )
+					) &&
+					( string.IsNullOrWhiteSpace( input.City )
+					|| string.IsNullOrWhiteSpace( input.AddressRegion )
+					|| string.IsNullOrWhiteSpace( input.PostalCode ) )
+					)
+			{
+				//missing somthing
+
+					messages.Add( string.Format("A valid address is expected. Please provide a proper address. Address1: {0}, Address2: {1}, POBox: {5} City:{2}, Region: {3}, PostalCode: {4}", input.Address1 ?? "", input.Address2 ?? "", input.City ?? "*missing*", input.AddressRegion ?? "*missing*", input.PostalCode ?? "*missing*", input.PostOfficeBoxNumber ?? "" ) );
+					return false;
+				
+			}
+
 			if ( ( string.IsNullOrWhiteSpace( input.Address1 )
-					&& string.IsNullOrWhiteSpace( input.PostOfficeBoxNumber ) )
+					&& string.IsNullOrWhiteSpace( input.PostOfficeBoxNumber ) 
+					)
 					|| string.IsNullOrWhiteSpace( input.City )
 					|| string.IsNullOrWhiteSpace( input.AddressRegion )
 					|| string.IsNullOrWhiteSpace( input.PostalCode ) )
@@ -1580,10 +1654,232 @@ namespace RA.Services
 
 			return isValid;
 		}
-	
+
 		#endregion
 
-		public bool ValidateCreditUnitOrHoursProperties( decimal creditHourValue, string creditHourType, string creditUnitType, decimal creditUnitValue, string creditUnitTypeDescription, ref List<string> messages )
+		#region Handle Credit Units
+		public List<MJ.QuantitativeValue> AssignQuantitiveValue( MI.QuantitativeValue input, string propertyName, string parentEntityType, ref List<string> messages, string conceptScheme = "creditUnitType" )
+		{
+			if ( input == null )
+			{
+				return null;
+			}
+			var list = new List<MJ.QuantitativeValue>();
+			var output = new MJ.QuantitativeValue();
+			int currentCount = messages.Count();
+			//check if empty
+			if ( input.Value == 0 && input.MinValue == 0 && input.MaxValue == 0 
+				&& string.IsNullOrWhiteSpace( input.Description )
+				&& (input.Description_Map == null || input.Description_Map.Count() == 0)
+				&& string.IsNullOrWhiteSpace( input.UnitText )
+				)
+			{ 
+				return null;
+			}
+
+			//if no values, can have description alone, but not unit text
+			if ( input.Value == 0 && input.MinValue == 0 && input.MaxValue == 0 )
+			{
+				if ( string.IsNullOrWhiteSpace( input.Description )
+					&& (input.Description_Map == null || input.Description_Map.Count() == 0 )
+					&& !string.IsNullOrWhiteSpace( input.UnitText )
+					)
+				{
+					messages.Add( string.Format( "Where no values are entered for a QuantitativeValue, a description is required, the UnitText is not enough for: '{0}' {1}.", parentEntityType, propertyName ) );
+					return null;
+				}
+				//here we have at least a desc
+				output = new MJ.QuantitativeValue
+				{
+					Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, propertyName + " Description", DefaultLanguageForMaps, ref messages, false )
+				};
+				//not sure it makes sense to allow units without values?
+				if ( !string.IsNullOrWhiteSpace( input.UnitText ) )
+					output.UnitText = FormatCredentialAlignment( "creditUnitType", input.UnitText, ref messages );
+
+				list.Add( output );
+				return list;
+			}
+
+			//have at least one value
+
+			if ( input.Value < 0 )
+				messages.Add( string.Format( "The unit value for: '{0}' {1} must be greater than zero.", parentEntityType, propertyName ) );
+
+			if ( input.MinValue < 0 )
+				messages.Add( string.Format( "The minimum unit value for: '{0}' {1} must be greater than zero.", parentEntityType, propertyName ) );
+
+			if ( input.MaxValue < 0 || input.MinValue > input.MaxValue)
+				messages.Add( string.Format( "When a MaxValue is provided for: '{0}' {1}, it must be greater than zero (and greater than the MinValue.", parentEntityType, propertyName ) );
+
+			if ( input.Value > 0 )
+			{
+				if ( input.MinValue != 0 || input.MaxValue != 0 )
+				{
+					messages.Add( string.Format( "When a Value is provided, NEITHER Min Value or Max Values may be provided for: '{0}' {1}", parentEntityType, propertyName ) );
+				}
+			}
+			else if ( input.MinValue <= 0 || input.MaxValue <= 0 ) 
+			{
+				messages.Add( string.Format( "When specifying a range for credit value, both Min Value and Max Values must be provided for:'{0}' {1}", parentEntityType, propertyName ) );
+			}
+
+			if ( currentCount < messages.Count() )
+				return null;
+			//
+			output = new MJ.QuantitativeValue
+			{
+				Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, propertyName + " Description", DefaultLanguageForMaps, ref messages, false ),
+				Value = input.Value,
+				MinValue = input.MinValue,
+				MaxValue = input.MaxValue
+			};
+			//not required. but at this point there are values
+			if ( string.IsNullOrWhiteSpace( input.UnitText ) )
+			{
+				//must have desc and/or unitText
+				if ( output.Description == null || output.Description.Count == 0 )
+				{
+					messages.Add( string.Format( "Either UnitText or Credit Unit Description are required when values are present in the QuantitativeValue of: '{0}' for '{1}'", propertyName, parentEntityType ) );
+					return null;
+				}
+			}
+			else
+			{
+				//credential alignment object
+				//may only allow english
+				//var text = AssignLanguageMap( input.UnitText, input.UnitText_Map, parentEntityType + " Credit Value", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
+				//NOTE: need to consider concept schemes other than creditUnitType
+				output.UnitText = FormatCredentialAlignment( "creditUnitType", input.UnitText, ref messages );
+			}
+			list.Add( output );
+			return list;
+		}
+		public bool AssignQuantitiveValue( MI.QuantitativeValue input, string propertyName, string parentEntityType, ref MJ.QuantitativeValue output, ref List<string> messages, string conceptScheme = "creditUnitType" )
+		{
+			output = null;
+			if ( input == null )
+			{
+				return false;
+			}
+			int currentCount = messages.Count();
+			//check if empty
+			if ( input.Value == 0 && input.MinValue == 0 && input.MaxValue == 0
+				&& string.IsNullOrWhiteSpace( input.Description )
+				&& ( input.Description_Map == null || input.Description_Map.Count() == 0 )
+				&& string.IsNullOrWhiteSpace( input.UnitText )
+				)
+			{
+				return false;
+			}
+
+			//if no values, can have description alone, but not unit text
+			if ( input.Value == 0 && input.MinValue == 0 && input.MaxValue == 0 )
+			{
+				if ( string.IsNullOrWhiteSpace( input.Description )
+					&& ( input.Description_Map == null || input.Description_Map.Count() == 0 )
+					&& !string.IsNullOrWhiteSpace( input.UnitText )
+					)
+				{
+					messages.Add( string.Format( "Where no values are entered for a QuantitativeValue, a description is required, the UnitText is not enough for: '{0}' {1}.", parentEntityType, propertyName ) );
+					return false;
+				}
+				//here we have at least a desc
+				output = new MJ.QuantitativeValue
+				{
+					Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, propertyName + " Description", DefaultLanguageForMaps, ref messages, false ),
+					//not sure it makes sense to allow units without values?
+					UnitText = FormatCredentialAlignment( "creditUnitType", input.UnitText, ref messages )
+				};
+				return true;
+			}
+
+			//have at least one value
+
+			if ( input.Value < 0 )
+				messages.Add( string.Format( "The unit value for: '{0}' {1} must be greater than zero.", parentEntityType, propertyName ) );
+
+			if ( input.MinValue < 0 )
+				messages.Add( string.Format( "The minimum unit value for: '{0}' {1} must be greater than zero.", parentEntityType, propertyName ) );
+
+			if ( input.MaxValue < 0 || input.MinValue > input.MaxValue )
+				messages.Add( string.Format( "When a MaxValue is provided for: '{0}' {1}, it must be greater than zero (and greater than the MinValue.", parentEntityType, propertyName ) );
+
+			if ( input.Value > 0 )
+			{
+				if ( input.MinValue != 0 || input.MaxValue != 0 )
+				{
+					messages.Add( string.Format( "When a Value is provided, NEITHER Min Value or Max Values may be provided for: '{0}' {1}", parentEntityType, propertyName ) );
+					return false;
+				}
+			}
+			else if ( input.MinValue <= 0 || input.MaxValue <= 0 )
+			{
+				messages.Add( string.Format( "When specifying a range for credit value, both Min Value and Max Values must be provided for:'{0}' {1}", parentEntityType, propertyName ) );
+				return false;
+			}
+			if ( currentCount < messages.Count() )
+				return false;
+			//
+			output = new MJ.QuantitativeValue
+			{
+				Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, propertyName + " Description", DefaultLanguageForMaps, ref messages, false ),
+				Value = input.Value,
+				MinValue = input.MinValue,
+				MaxValue = input.MaxValue
+			};
+			//not required. but at this point there are values
+			if ( string.IsNullOrWhiteSpace( input.UnitText ) )
+			{
+				//must have desc and/or unitText
+				if ( output.Description == null || output.Description.Count == 0 )
+				{
+					messages.Add( string.Format( "Either UnitText or Credit Unit Description are required when values are present in the QuantitativeValue of: '{0}' for '{1}'", propertyName, parentEntityType ) );
+					return false;
+				}
+			}
+			else
+			{
+				//credential alignment object
+				//may only allow english
+				//var text = AssignLanguageMap( input.UnitText, input.UnitText_Map, parentEntityType + " Credit Value", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
+				//NOTE: need to consider concept schemes other than creditUnitType
+				output.UnitText = FormatCredentialAlignment( "creditUnitType", input.UnitText, ref messages );
+			}
+
+			return true;
+		}
+		public List<MJ.QuantitativeValue> AssignQuantitiveValue( string entity, decimal creditHourValue, string creditHourType, string creditUnitType, decimal creditUnitValue, string creditUnitTypeDescription, ref List<string> messages )
+		{
+			bool hasData = false;
+			if ( ValidateCreditUnitOrHoursProperties( creditHourValue, creditHourType, creditUnitType, creditUnitValue, creditUnitTypeDescription, ref hasData, ref messages ) )
+			{
+				if ( hasData )
+				{
+					//return warning
+					warningMessages.Add( "WARNING: The Credit Unit/Hour properties are obsolete. Use CreditValue instead." );
+					//will not have a range
+					MI.QuantitativeValue iqv = new MI.QuantitativeValue
+					{
+						Value = creditUnitValue > 0 ? creditUnitValue : creditHourValue > 0 ? creditHourValue : 0,
+						UnitText = creditUnitType ?? "",
+						Description = creditUnitTypeDescription ?? "",
+						//Description_Map = input.Description_Map
+					};
+					if ( ( creditHourType ?? "" ).Length > 0 )
+					{
+						//19-05-01 hour vocabs not set, so set to description
+						iqv.Description = creditHourType;
+					}
+
+					return AssignQuantitiveValue( iqv, "CreditValue", entity, ref messages );
+
+				}
+			}
+
+			return null;
+		}
+		public bool ValidateCreditUnitOrHoursProperties( decimal creditHourValue, string creditHourType, string creditUnitType, decimal creditUnitValue, string creditUnitTypeDescription, ref bool hasData, ref List<string> messages )
 		{
 			//can only have credit hours properties, or credit unit properties, not both
 			bool hasCreditHourData = false;
@@ -1600,9 +1896,12 @@ namespace RA.Services
 				messages.Add( "Error: Data can be entered for Credit Hour related properties or Credit Unit related properties, but not for both." );
 				return false;
 			}
+			else if ( hasCreditHourData || hasCreditUnitData )
+				hasData = true;
 
 			return true;
 		}
+		#endregion
 
 		#region === CredentialAlignmentObject ===
 		public List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromStrings( List<string> terms )
@@ -1645,18 +1944,30 @@ namespace RA.Services
             if (string.IsNullOrWhiteSpace( name ))
                 return null;
 
-			MJ.CredentialAlignmentObject ca = new MJ.CredentialAlignmentObject();
-			ca.TargetNodeName = Assign(name, DefaultLanguageForMaps);
+			MJ.CredentialAlignmentObject ca = new MJ.CredentialAlignmentObject
+			{
+				TargetNodeName = Assign( name, DefaultLanguageForMaps )
+			};
 			return ca;
 		}
+		public MJ.CredentialAlignmentObject FormatCredentialAlignment( string name, MI.LanguageMap inputMap  )
+		{
+			if ( string.IsNullOrWhiteSpace( name ) )
+				return null;
 
-        /// <summary>
-        /// Assign CAO for properties with concepts
-        /// </summary>
-        /// <param name="ctdlProperty"></param>
-        /// <param name="terms"></param>
-        /// <param name="messages"></param>
-        /// <returns></returns>
+			MJ.CredentialAlignmentObject ca = new MJ.CredentialAlignmentObject
+			{
+				TargetNodeName = Assign( name, DefaultLanguageForMaps )
+			};
+			return ca;
+		}
+		/// <summary>
+		/// Assign CAO for properties with concepts
+		/// </summary>
+		/// <param name="ctdlProperty"></param>
+		/// <param name="terms"></param>
+		/// <param name="messages"></param>
+		/// <returns></returns>
 		public List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentVocabs( string ctdlProperty, List<string> terms, ref List<string> messages, string alias = "" )
 		{
 			List<MJ.CredentialAlignmentObject> list = new List<MJ.CredentialAlignmentObject>();
@@ -1691,9 +2002,12 @@ namespace RA.Services
 		{
 			MJ.CredentialAlignmentObject output = new MJ.CredentialAlignmentObject();
 			CodeItem code = new CodeItem();
-
-            //TODO add framework
-            /*
+			if ( string.IsNullOrWhiteSpace( term ))
+			{
+				return null;
+			}
+			//TODO add framework
+			/*
 			{
 				@type: "ceterms:CredentialAlignmentObject",
 				ceterms:framework: {
@@ -1707,50 +2021,128 @@ namespace RA.Services
 			},			 
 			 * 
 			 */
-            //json
-            var ctdlUrl = Utilities.UtilityManager.GetAppKeyValue( "credRegTermsJson", "http://credreg.net/ctdl/terms/{0}/json" );
-            
-			if ( !string.IsNullOrWhiteSpace( term) && ValidationServices.IsTermValid( ctdlProperty, term, ref code ) )
+			//json
+				var ctdlUrl = Utilities.UtilityManager.GetAppKeyValue( "credRegTermsJson", "http://credreg.net/ctdl/terms/{0}/json" );
+
+			if ( ValidationServices.IsTermValid( ctdlProperty, term, ref code ) )
 			{
 				//IdProperty item = new IdProperty() { Id = code.SchemaName };
 				output.TargetNode = code.SchemaName;
-                output.Framework =  string.Format(ctdlUrl, code.ConceptSchemaPlain);
-                //*******these can only have one language, as controlled
-                output.TargetNodeName = Assign( code.Name, SystemDefaultLanguageForMaps );
-				output.TargetNodeDescription = Assign( code.Description, DefaultLanguageForMaps);
+				output.Framework = string.Format( ctdlUrl, code.ConceptSchemaPlain );
+				//*******these can only have one language, as controlled
+				output.TargetNodeName = Assign( code.Name, SystemDefaultLanguageForMaps );
+				output.TargetNodeDescription = Assign( code.Description, DefaultLanguageForMaps );
 				if ( !string.IsNullOrWhiteSpace( code.ParentSchemaName ) )
-					output.FrameworkName = Assign(code.ParentSchemaName.Replace("ceterms:",""), DefaultLanguageForMaps );
+					output.FrameworkName = Assign( code.ParentSchemaName.Replace( "ceterms:", "" ), DefaultLanguageForMaps );
+			}
+			else if ( ctdlProperty == "creditUnitType" )
+			{
+				//check for values not on credreg yet
+				if ( ValidatePendingCreditUnitValues( term, ref code ) )
+				{
+					output.TargetNode = code.SchemaName;
+					output.Framework = string.Format( ctdlUrl, code.ConceptSchemaPlain );
+					//*******these can only have one language, as controlled
+					output.TargetNodeName = Assign( code.Name, SystemDefaultLanguageForMaps );
+					output.TargetNodeDescription = Assign( code.Description, DefaultLanguageForMaps );
+				}
+				else
+				{
+					messages.Add( string.Format( "The {0} type of {1} is invalid.", string.IsNullOrWhiteSpace( alias ) ? ctdlProperty : alias, term ) );
+					output = null;
+				} 
 			}
 			else
 			{
-				messages.Add( string.Format( "The {0} type of {1} is invalid.", string.IsNullOrWhiteSpace(alias) ? ctdlProperty : alias, term ) );
+				messages.Add( string.Format( "The {0} type of {1} is invalid.", string.IsNullOrWhiteSpace( alias ) ? ctdlProperty : alias, term ) );
 				output = null;
 			}
 
 			return output;
 		}
-
-		public List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromCodeList( List<string> list, string frameworkName, string framework,  ref List<string> messages )
+		private bool ValidatePendingCreditUnitValues( string term, ref CodeItem code )
 		{
-			if ( list == null || list.Count == 0 )
-				return null;
+			bool isValid = true;
+			string validTerms = "Quarter Hours QuarterHours Semester Hours SemesterHours Clock Hours ClockHours";
+			string pendingTerms = "Contact Hours ContactHours CreditHour Credit Hour";
+			//orginal method will set to null
+			code = new CodeItem();
 
-			List<MJ.CredentialAlignmentObject> output = new List<MJ.CredentialAlignmentObject>();
+			string label = "";
+			term = term.Contains( ':' ) ? term.Split( ':' )[ 1 ] : term;
+			if ( "quarter hours quarterhours".IndexOf( term.ToLower() ) > -1 )
+			{
+				code.SchemaName = "credUnit:QuarterHours";
+				code.ConceptSchemaPlain = "QuarterHours";
+				code.Name = "Quarter Hours";
+			}
+			else if ( "semester hours semesterhours".IndexOf( term.ToLower() ) > -1 )
+			{
+				code.SchemaName = "credUnit:SemesterHours";
+				code.ConceptSchemaPlain = "SemesterHours";
+				code.Name = "Semester Hours";
+			}
+			else if ( "clock hours clockhours".IndexOf( term.ToLower() ) > -1 )
+			{
+				code.SchemaName = "credUnit:ClockHours";
+				code.ConceptSchemaPlain = "ClockHours";
+				code.Name = "Clock Hours";
+			}
+			else
+				return false;
+
+
+			return isValid;
+		}
+		public List<MJ.CredentialAlignmentObject> AppendCredentialAlignmentListFromList( List<string> list, MI.LanguageMap mapList, string frameworkName, string framework, string property, List<MJ.CredentialAlignmentObject> output,  ref List<string> messages )
+		{
 			MJ.CredentialAlignmentObject entity = new MJ.CredentialAlignmentObject();
 			FrameworkItem fi = new FrameworkItem();
-			//need to add a framework
-			foreach ( var item in list )
+
+			if ( list == null || list.Count == 0 )
 			{
-				entity = new MJ.CredentialAlignmentObject();
-				//need ability to lookup codes
-				fi = new FrameworkItem()
+				if ( mapList == null || mapList.Count == 0 )
 				{
-					Framework = framework,
-					FrameworkName = frameworkName,
-				};
-				entity = FormatCredentialAlignmentFrameworkItem( fi, true, ref messages, frameworkName, framework );
-				if ( entity != null )
-					output.Add( entity );
+					return output;
+				}
+				else
+				{
+					if ( output == null )
+						output = new List<MJ.CredentialAlignmentObject>();
+					int cntr = 0;
+					foreach ( var item in mapList )
+					{
+						cntr++;
+						entity = new MJ.CredentialAlignmentObject();
+						fi = new FrameworkItem();
+						//some validation of lang code and region
+						string lang = item.Key;
+						if ( ValidateLanguageCode( property, cntr, true, ref lang, ref messages ) )
+						{
+							fi.Name_Map.Add( lang.ToLower(), item.Value );
+						}
+					}
+				}
+				return output;
+			} else
+			{
+				if ( output == null )
+					output = new List<MJ.CredentialAlignmentObject>();
+				//need to add a framework
+				foreach ( var item in list )
+				{
+					entity = new MJ.CredentialAlignmentObject();
+					//need ability to lookup codes
+					fi = new FrameworkItem()
+					{
+						Framework = framework,
+						FrameworkName = frameworkName,
+						Name = item
+					};
+					entity = FormatCredentialAlignmentFrameworkItem( fi, true, ref messages, frameworkName, framework );
+					if ( entity != null )
+						output.Add( entity );
+				}
 			}
 
 			return output;
@@ -1819,7 +2211,8 @@ namespace RA.Services
             {
                 if ( IsUrlValid( entity.TargetNode, ref statusMessage, ref isUrlPresent, false ) )
                 {
-                    ca.TargetNode = entity.TargetNode;
+					//should we arbitrarily make all Urls lowercase or just registry Urls?
+                    ca.TargetNode = AssignUrl(entity.TargetNode);
                     //demand more data
                     //hasData = true;
                 }
@@ -1848,12 +2241,15 @@ namespace RA.Services
             //Framework must be a valid Url
             if ( !string.IsNullOrWhiteSpace( entity.Framework ) )
             {
-                if ( IsUrlValid( entity.Framework, ref statusMessage, ref isUrlPresent, false ) )
-                    ca.Framework = entity.Framework;
-                else
-                {
-                    messages.Add( string.Format( "The Framework in a Credential Alignment Object must be a valid URI. Framework: {0}, targetNodeName: {1}, Message: {2}.", entity.Framework, ca.TargetNodeName, statusMessage ) );
-                }
+				if ( IsUrlValid( entity.Framework, ref statusMessage, ref isUrlPresent, false ) )
+				{
+					if ( isUrlPresent )
+						ca.Framework = AssignUrl(entity.Framework);
+				}
+				else
+				{
+					messages.Add( string.Format( "The Framework in a Credential Alignment Object must be a valid URI. Framework: {0}, targetNodeName: {1}, Message: {2}.", entity.Framework, ca.TargetNodeName, statusMessage ) );
+				}
             }
             else if ( !string.IsNullOrWhiteSpace( framework ) )
             {
@@ -1967,65 +2363,27 @@ namespace RA.Services
 			else
 				return urlList;
 		}
+
+
+
 		/// <summary>
-		/// Validate a URL and return standardized string
+		/// Validate a URL and return as a List
 		/// </summary>
 		/// <param name="url"></param>
 		/// <param name="propertyName"></param>
 		/// <param name="messages"></param>
 		/// <param name="isRequired"></param>
-		/// <param name="doingExistanceCheck">Defaults to true. Set false for registry URIs that may not exists yet.</param>
+		/// <param name="doingExistanceCheck"></param>
 		/// <returns></returns>
-		public string AssignValidUrlAsString( string url, string propertyName, ref List<string> messages, bool isRequired, bool doingExistanceCheck = true  )
-		{
-			string statusMessage = "";
-			bool isUrlPresent = true;
-			if ( string.IsNullOrWhiteSpace( url ) )
-			{
-				if ( isRequired )
-					messages.Add( string.Format( "The {0} URL is a required property.", propertyName ) );
-				return null;
-			}
-			url = url.Trim();
-			if ( !IsUrlValid( url, ref statusMessage, ref isUrlPresent, doingExistanceCheck ) )
-			{
-				if ( isUrlPresent )
-				{
-					messages.Add( string.Format( "The {0} URL is invalid. {1}", propertyName, statusMessage ) );
-				}
-				return null;
-			}
-			url = url.TrimEnd('/');
-			return url;
-		} //
 		public List<string> AssignValidUrlAsStringList( string url, string propertyName, ref List<string> messages, bool isRequired, bool doingExistanceCheck = true )
 		{
-			string status = "";
-			bool isUrlPresent = true;
+
 			List<string> urlList = new List<string>();
 			string output = AssignValidUrlAsString( url, propertyName, ref messages, isRequired, doingExistanceCheck );
 			if ( !string.IsNullOrWhiteSpace(output ))
 			{
 				urlList.Add( url );
 			}
-
-			//if ( string.IsNullOrWhiteSpace( url ) )
-			//{
-			//	if ( isRequired )
-			//		messages.Add( string.Format( "The {0} URL is a required property.", propertyName ) );
-			//	return null;
-			//}
-
-			//if ( !IsUrlValid( url, ref status, ref isUrlPresent ) )
-			//	messages.Add( string.Format( "The URL for {0} is invalid. ", propertyName ) + status );
-			//else
-			//{
-			//	if ( isUrlPresent )
-			//	{
-			//		urlList.Add( url );
-			//	}
-			//}
-
 			return urlList;
 		}
 
@@ -2051,20 +2409,8 @@ namespace RA.Services
 				string output = AssignValidUrlAsString( url, propertyName, ref messages, false, doingExistanceCheck );
 				if ( !string.IsNullOrWhiteSpace( output ) )
 				{
-					urlList.Add( url );
+					urlList.Add( output );
 				}
-				//if ( !string.IsNullOrWhiteSpace( url ) )
-				//{
-				//	if ( !IsUrlValid( url, ref status, ref isUrlPresent ) )
-				//		messages.Add( string.Format( "The URL #{0}: {1} for list: {2} is invalid. ", cntr, url, propertyName ) + status );
-				//	else
-				//	{
-				//		if ( isUrlPresent )
-				//		{
-				//			urlList.Add( url );
-				//		}
-				//	}
-				//}
 			}
 			if ( cntr == 0 )
 				return null;
@@ -2073,50 +2419,171 @@ namespace RA.Services
 		}
 
 		/// <summary>
-		/// This method is for a list of strings that contain registry URIs. These are properly formed URIs but may not yet exist in the registry, so no existance check will be done.
+		/// Validate a URL and return standardized string.
+		/// NOTE this method is not to be used with CTIDs - use AssignRegistryResourceURIAsString
+		/// </summary>
+		/// <param name="url"></param>
+		/// <param name="propertyName"></param>
+		/// <param name="messages"></param>
+		/// <param name="isRequired"></param>
+		/// <param name="doingExistanceCheck">Defaults to true. Set false for registry URIs that may not exists yet.</param>
+		/// <returns></returns>
+		public string AssignValidUrlAsString( string url, string propertyName, ref List<string> messages, bool isRequired, bool doingExistanceCheck = true )
+		{
+			string statusMessage = "";
+			bool isUrlPresent = true;
+			if ( string.IsNullOrWhiteSpace( url ) )
+			{
+				if ( isRequired )
+					messages.Add( string.Format( "The {0} URL is a required property.", propertyName ) );
+				return null;
+			}
+			List<string> temp = new List<string>();
+			url = url.Trim();
+			//NOTE this method is not to be used with CTIDs
+			if ( IsCtidValid( url, propertyName, ref temp ) )
+			{
+				//NO: don't use this method with CTIDs
+				//url = credRegistryGraphUrl + url.ToLower().Trim();
+				//return url;
+				messages.Add( string.Format( "A CTID is not valid to be provided for the '{0}' property.", propertyName ) );
+				return null;
+			}
+
+			if ( !IsUrlValid( url, ref statusMessage, ref isUrlPresent, doingExistanceCheck ) )
+			{
+				if ( isUrlPresent )
+				{
+					messages.Add( string.Format( "The {0} URL is invalid. {1}", propertyName, statusMessage ) );
+				}
+				return null;
+			}
+			url = AssignUrl( url.TrimEnd( '/' ) );
+			return url;
+		} //
+
+		/// <summary>
+		/// This method is for a list of strings that contain registry URIs. 
+		/// These are properly formed URIs but may not yet exist in the registry, so no existance check will be done. If a valid CTID is provided, it will be formatted as a /resource/ URL
 		/// </summary>
 		/// <param name="list"></param>
 		/// <param name="propertyName"></param>
 		/// <param name="messages"></param>
+		/// <param name="formatAsGraph"></param>
+		/// <param name="isRequired"></param>
 		/// <returns></returns>
-		public List<string> AssignRegistryURIsListAsStringList( List<string> list, string propertyName, ref List<string> messages )
+		public List<string> AssignRegistryResourceURIsListAsStringList( List<string> list, string propertyName, ref List<string> messages, bool formatAsGraph = false, bool isRequired = false )
 		{
-			string status = "";
-			bool isUrlPresent = true;
+			//string status = "";
+			//bool isUrlPresent = true;
 			List<string> urlList = new List<string>();
+			List<string> temp = new List<string>();
 			if ( list == null || list.Count == 0 )
+			{
+				if ( isRequired )
+				{
+					messages.Add( string.Format( "The property: '{0}' is required, and has not been provided.", propertyName ) );
+				}
 				return null;
+			}
 			int cntr = 0;
-			foreach ( string url in list )
+			foreach ( string item in list )
 			{
 				cntr++;
-				if ( !string.IsNullOrWhiteSpace( url ) )
+				string output = AssignRegistryResourceURIAsString( item, propertyName, ref messages, formatAsGraph );
+				if ( !string.IsNullOrWhiteSpace( output ) )
 				{
-					//check if valid format, but skip existance check
-					if ( !IsUrlValid( url, ref status, ref isUrlPresent, false ) )
-						messages.Add( string.Format( "The URL #{0}: {1} for list: {2} is invalid. ", cntr, url, propertyName ) + status );
-					else
-					{
-						if ( isUrlPresent )
-						{
-							urlList.Add( url );
-						}
-					}
+					urlList.Add( output );
 				}
+
+
+				//===================
+				//cntr++;
+				//if ( !string.IsNullOrWhiteSpace( item ) )
+				//{
+				//	//as optional want to skip error messages
+				//	if (IsCtidValid(item, propertyName, ref temp))
+				//	{
+				//		if ( formatAsGraph )
+				//			urlList.Add( credRegistryGraphUrl + item.ToLower().Trim() );
+				//		else
+				//			urlList.Add( credRegistryResourceUrl + item.ToLower().Trim() );
+				//		continue;
+				//	}
+				//	//check if valid format, but skip existance check
+				//	if ( !IsUrlValid( item, ref status, ref isUrlPresent, false ) )
+				//		messages.Add( string.Format( "The URL #{0}: {1} for list: {2} is invalid. ", cntr, item, propertyName ) + status );
+				//	else
+				//	{
+				//		if ( isUrlPresent )
+				//		{
+				//			urlList.Add( item.ToLower() );
+				//		}
+				//	}
+				//}
 			}
-			if ( cntr == 0 )
+
+			if ( cntr == 0 || urlList.Count == 0 )
 				return null;
 			else
 				return urlList;
 		}
-		/// <summary>
-		/// Validate a URL, and if valid assign to an IdProperty
-		/// </summary>
-		/// <param name="url">Url to validate</param>
-		/// <param name="propertyName">Literal for property name - for messages</param>
-		/// <param name="messages"></param>
-		/// <param name="isRequired">If true, produce a message if url is missing</param>
-		/// <returns>null or an IdProperty</returns>
+
+		public string AssignRegistryResourceURIAsString( string url, string propertyName, ref List<string> messages, bool formatAsGraph = false, bool isRequired = false )
+		{
+			string statusMessage = "";
+			bool isUrlPresent = true;
+			if ( string.IsNullOrWhiteSpace( url ) )
+			{
+				if ( isRequired )
+					messages.Add( string.Format( "The {0} URL is a required property.", propertyName ) );
+				return null;
+			}
+			List<string> temp = new List<string>();
+			url = url.Trim();
+			//helper to accept a ctid
+			if ( IsCtidValid( url, propertyName, ref temp ) )
+			{
+				if ( formatAsGraph )
+					url = credRegistryGraphUrl + url.ToLower().Trim();
+				else
+					url = credRegistryResourceUrl + url.ToLower().Trim();
+
+				return url;
+			}
+
+			if ( !IsUrlValid( url, ref statusMessage, ref isUrlPresent, false ) )
+			{
+				if ( isUrlPresent )
+				{
+					messages.Add( string.Format( "The {0} URL is invalid. {1}", propertyName, statusMessage ) );
+				}
+				return null;
+			}
+			url = AssignUrl( url.TrimEnd( '/' ) );
+			return url;
+		} //
+
+		//force registry urls to lowercase
+		public string AssignUrl( string url )
+		{
+			if ( url.ToLower().IndexOf( "/resources/ce-" ) > -1 
+				|| url.ToLower().IndexOf( "/graph/ce-") > -1)
+			{
+				return url.ToLower();
+			} else 
+				return url;
+		} //
+
+		  /// <summary>
+		  /// Validate a URL, and if valid assign to an IdProperty
+		  /// </summary>
+		  /// <param name="url">Url to validate</param>
+		  /// <param name="propertyName">Literal for property name - for messages</param>
+		  /// <param name="messages"></param>
+		  /// <param name="isRequired">If true, produce a message if url is missing</param>
+		  /// <returns>null or an IdProperty</returns>
+		[Obsolete]
 		public IdProperty AssignValidUrlAsIdProperty( string url, string propertyName, ref List<string> messages, bool isRequired = false )
 		{
 			string statusMessage = "";
@@ -2138,10 +2605,11 @@ namespace RA.Services
 				return null;
 			}
 
-			idProp = new IdProperty() { Id = url };
+			idProp = new IdProperty() { Id = url.ToLower() };
 
 			return idProp;
 		} //
+		[Obsolete]
 		public List<IdProperty> AssignValidUrlAsPropertyIdList( string url, string propertyName, ref List<string> messages, bool isRequired = false )
 		{
 			string status = "";
@@ -2160,14 +2628,14 @@ namespace RA.Services
 			{
 				if ( isUrlPresent )
 				{
-					IdProperty item = new IdProperty() { Id = url };
+					IdProperty item = new IdProperty() { Id = url.ToLower() };
 					urlId.Add( item );
 				}
 			}
 
 			return urlId;
 		}
-
+		[Obsolete]
 		public List<IdProperty> AssignValidUrlAsPropertyIdList( List<string> list, string title, ref List<string> messages )
 		{
 			string status = "";
@@ -2187,7 +2655,7 @@ namespace RA.Services
 					{
 						if ( isUrlPresent )
 						{
-							urlId.Add( new IdProperty() { Id = url } );
+							urlId.Add( new IdProperty() { Id = url.ToLower() } );
 						}
 					}
 				}
@@ -2266,6 +2734,11 @@ namespace RA.Services
 
 
 		#region Language Map helpers
+		public MJ.LanguageMap AssignLanguageMap( string input, MI.LanguageMap inputMap, string property, ref List<string> messages, bool isRequired = false )
+		{
+			return AssignLanguageMap( input, inputMap, property, DefaultLanguageForMaps, ref messages, isRequired );
+		}
+
 		public MJ.LanguageMap AssignLanguageMap( string input, MI.LanguageMap inputMap, string propertyName, string language, string parentCtid, bool isRequired, ref List<string> messages )
 		{
 			MJ.LanguageMap output = new MJ.LanguageMap();
@@ -2275,7 +2748,7 @@ namespace RA.Services
 				if ( inputMap == null || inputMap.Count == 0 )
 				{
 					if ( isRequired )
-						messages.Add( FormatMessage( "Error - A string or language map must be entered for {0} with CTID: '{0}'.", propertyName, parentCtid ) );
+						messages.Add( FormatMessage( "Error - A string or language map must be entered for {0} with CTID: '{1}'.", propertyName, parentCtid ) );
 				}
 				else
 				{
@@ -2355,10 +2828,7 @@ namespace RA.Services
                 return output;
         }
 
-        public MJ.LanguageMap AssignLanguageMap( string input, MI.LanguageMap inputMap, string property, ref List<string> messages, bool isRequired = false )
-        {
-            return AssignLanguageMap( input, inputMap, property, DefaultLanguageForMaps, ref messages, isRequired );
-        }
+
 
         public MJ.LanguageMap AssignLanguageMap( string input, MI.LanguageMap inputMap, string property, string language, ref List<string> messages, bool isRequired = false, int minimumLength = 0 )
         {
@@ -2388,14 +2858,39 @@ namespace RA.Services
             return output;
         }
 
-        /// <summary>
-        /// Format list of strings as a language map list with single entry with default language of 'en'
-        /// </summary>
-        /// <param name="list"></param>
-        /// <param name="property"></param>
-        /// <param name="messages"></param>
-        /// <returns></returns>
-        public MJ.LanguageMapList FormatLanguageMapList( List<string> list, string property, ref List<string> messages )
+		public MJ.LanguageMap AssignLanguageMap( List<LanguageItem> input, string property, string language, string parentCtid, ref List<string> messages, bool isRequired = false )
+		{
+
+			MJ.LanguageMap output = new MJ.LanguageMap();
+			if ( input == null )
+			{
+				if ( isRequired )
+					messages.Add( FormatMessage( "A value must be entered for property: '{0}' with CTID: '{0}'.", property, parentCtid ) );
+				return null;
+			}
+			int cntr = 0;
+			foreach ( var item in input )
+			{
+				cntr++;
+				//some validation
+				string lang = item.Language.Trim();
+				if ( ValidateLanguageCode( property, cntr, true, ref lang, ref messages ) )
+					output.Add( lang.ToLower(), item.Value );
+			}
+			if ( output.Count == 0 )
+				return null;
+			else
+				return output;
+		}
+
+		/// <summary>
+		/// Format list of strings as a language map list with single entry with default language of 'en'
+		/// </summary>
+		/// <param name="list"></param>
+		/// <param name="property"></param>
+		/// <param name="messages"></param>
+		/// <returns></returns>
+		public MJ.LanguageMapList FormatLanguageMapList( List<string> list, string property, ref List<string> messages )
         {
 
             if ( list == null || list.Count == 0 )
@@ -2492,7 +2987,47 @@ namespace RA.Services
                 return output;
         }
 
-        public List<string> PopulateInLanguage( List<string> input, string entityType, string entityName, bool hasDefaultLanguage, ref List<string> messages)
+		/// <summary>
+		/// Assign a language map list from a list of language items
+		/// </summary>
+		/// <param name="list"></param>
+		/// <param name="property"></param>
+		/// <param name="language"></param>
+		/// <param name="messages"></param>
+		/// <returns></returns>
+		public MJ.LanguageMapList AssignLanguageMapList( List<LanguageItem> list, string property, string language, ref List<string> messages )
+		{
+			if ( list == null || list.Count == 0 )
+				return null;
+
+			MJ.LanguageMapList output = new MJ.LanguageMapList();
+			int cntr = 0;
+			foreach ( var item in list )
+			{
+				cntr++;
+				if ( item == null )
+					continue;
+				//some validation of lang code and region
+				string lang = item.Language ?? "".Trim();
+				List<string> values = new List<string>() { item.Value ?? "".Trim() };
+				if ( ValidateLanguageCode( property, cntr, true, ref lang, ref messages ) )
+					output.Add( lang.ToLower(), values );
+			}
+			if ( output.Count == 0 )
+				return null;
+			else
+				return output;
+		}
+
+		public bool HasData(MJ.LanguageMap input)
+		{
+			if ( input != null && input.ToString().Length > 0 )
+				return true;
+			else
+				return false;
+		}
+
+		public List<string> PopulateInLanguage( List<string> input, string entityType, string entityName, bool hasDefaultLanguage, ref List<string> messages)
         {
             List<string> output = new List<string>();
             if ( input != null && input.Count > 0 )
@@ -2538,8 +3073,47 @@ namespace RA.Services
             }
             return output;
         }
+		public List<string> PopulateInLanguage( string input, string entityType, string entityName, bool hasDefaultLanguage, ref List<string> messages )
+		{
+			List<string> output = new List<string>();
+			if ( string.IsNullOrWhiteSpace( input ) )
+			{
+				//make configurable. Default to english if not found
+				if ( UtilityManager.GetAppKeyValue( "ra.RequiringLanguage", false ) && !hasDefaultLanguage )
+				{
+					messages.Add( string.Format( "At least one language (InLanguage) must be provided for {0}: '{1}'", entityType, entityName ) );
+				}
+				else
+				{
+					if (!string.IsNullOrWhiteSpace( DefaultLanguageForMaps ) )
+						output.Add( DefaultLanguageForMaps );
+				}
+				return output;
+			}
 
-        public static bool ValidateLanguageCode(string languageCode, string property, ref List<string> messages )
+			string lang = input.Trim();
+			if ( ValidateLanguageCode( "InLanguage", 1, false, ref lang, ref messages ) )
+			{
+				output.Add( lang );
+				if ( !hasDefaultLanguage )
+				{
+					DefaultLanguageForMaps = lang;
+					hasDefaultLanguage = true;
+				}
+			}
+
+			//output.InLanguage = input.InLanguage;
+			if ( !hasDefaultLanguage )
+				{
+					//should not happen unless first item in list had error, or was empty
+					DefaultLanguageForMaps = SystemDefaultLanguageForMaps;
+					if ( output.Count() == 0 )
+						output.Add( DefaultLanguageForMaps );
+				}
+		
+			return output;
+		}
+		public static bool ValidateLanguageCode(string languageCode, string property, ref List<string> messages )
         {
             bool isValid = true;
             if (string.IsNullOrWhiteSpace(languageCode))
@@ -2549,7 +3123,7 @@ namespace RA.Services
             }
             languageCode = languageCode.Trim();
             if ( languageCode.ToLower() == "english" )
-                languageCode = "en";
+                languageCode = "en-US";
             else if ( languageCode.ToLower() == "spanish" )
                 languageCode = "es";
             int pos = languageCode.IndexOf( "-" );
@@ -2576,12 +3150,12 @@ namespace RA.Services
             return isValid;
         }
 
-        public static bool ValidateLanguageCode( string property, int row, bool isExpected, ref string languageCode, ref List<string> messages )
+        public static bool ValidateLanguageCode( string property, int row, bool langIsExpected, ref string languageCode, ref List<string> messages )
         {
             bool isValid = true;
             if ( string.IsNullOrWhiteSpace( languageCode ) )
             {
-                if ( isExpected )
+                if ( langIsExpected )
                 {
                     messages.Add( string.Format( "A valid language code was not found for property: {0}, row: {1}", property, row ) );
                     return false;
@@ -2591,7 +3165,7 @@ namespace RA.Services
             }
             languageCode = languageCode.Trim();
             if ( languageCode.ToLower() == "english" )
-                languageCode = "en";
+                languageCode = "en-US";
             else if ( languageCode.ToLower() == "spanish" )
                 languageCode = "es";
 
@@ -2699,8 +3273,13 @@ namespace RA.Services
                 statusMessage = "A URL must begin with http or https";
                 return false;
             }
-
-            if ( !doingExistanceCheck )
+			//hack for pattern like https://https://www.sscc.edu
+			if ( url.LastIndexOf( "//" ) > url.IndexOf( "//" ) )
+			{
+				statusMessage = "Invalid format, contains multiple sets of '//'";
+				return false;
+			}
+			if ( !doingExistanceCheck )
 				return true;
 
             var isOk = DoesRemoteFileExists( url, ref statusMessage );
@@ -2738,15 +3317,21 @@ namespace RA.Services
                 }
                 //Creating the HttpWebRequest
                 HttpWebRequest request = WebRequest.Create( url ) as HttpWebRequest;
-                //NOTE - do NOT use the HEAD option, as many sites reject that type of request
+				//NOTE - do NOT use the HEAD option, as many sites reject that type of request
 				//		GET seems to be cause false 404s
-                //request.Method = "GET";
-                //var agent = HttpContext.Current.Request.AcceptTypes;
+				//request.Method = "GET";
+				//var agent = HttpContext.Current.Request.AcceptTypes;
 
-                //the following also results in false 404s
-                //request.ContentType = "text/html;charset=\"utf-8\";image/*";
-                //UserAgent appears OK
-                request.UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1309.0 Safari/537.17";
+				//the following also results in false 404s
+				//request.ContentType = "text/html;charset=\"utf-8\";image/*";
+				//testing
+				request.AllowAutoRedirect = true;
+				request.Timeout = 10000;  //10 seconds
+				request.KeepAlive = false;
+				request.Accept = "*/*";
+
+				//UserAgent appears OK
+				request.UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1309.0 Safari/537.17";
 
 				//users may be providing urls to sites that have invalid ssl certs installed.You can ignore those cert problems if you put this line in before you make the actual web request:
 				ServicePointManager.ServerCertificateValidationCallback = new System.Net.Security.RemoteCertificateValidationCallback( AcceptAllCertifications );
@@ -2764,11 +3349,42 @@ namespace RA.Services
 
                         return DoesRemoteFileExists( url, ref responseStatus );
                     }
-                    else
-                    {
-                        LoggingHelper.DoTrace( 5, string.Format( "Url validation failed for: {0}, using method: GET, with status of: {1}", url, response.StatusCode ) );
-                    }
-                }
+					else
+					{
+						var urlStatusCode = ( int )response.StatusCode;
+						if ( urlStatusCode == 301 )
+						{
+							//for ( int i = 0; i < response.Headers.Count; ++i )
+							//	Console.WriteLine( "\nHeader Name:{0}, Value :{1}", response.Headers.Keys[ i ], response.Headers[ i ] );
+							string location = response.Headers.GetValues( "Location" ).FirstOrDefault();
+							if ( !string.IsNullOrWhiteSpace( location ) )
+							{
+								string clearUrl = url.Replace( "http://", "" ).Replace( "https://", "" ).Trim( '/' );
+								string clearLoc = location.Replace( "http://", "" ).Replace( "https://", "" ).Trim( '/' );
+								//L: http://www.tesu.edu/about/mission
+								//U: http://www.tesu.edu/about/mission.cfm
+								if ( location.Replace( "https", "http" ).Trim( '/' ) == url.Trim( '/' )
+									|| location.ToLower().Trim( '/' ) == url.ToLower().Trim( '/' )
+									|| url.ToLower().IndexOf( location.ToLower() ) == 0 //redirect just trims an extension
+									|| clearLoc.ToLower().IndexOf( clearUrl.ToLower() ) > 0
+									)
+								{
+									return true;
+								}
+								else if ( location.Replace( "mobile.twitter", "twitter" ).ToLower().Trim( '/' ) == url.ToLower().Trim( '/' )
+									|| location == "https://www.linkedin.com/error_pages/unsupported-browser.html"
+									)
+								{
+									//Redirect to: https://www.linkedin.com/error_pages/unsupported-browser.html
+									return true;
+								}
+
+							}
+
+						}
+						LoggingHelper.DoTrace( 5, string.Format( "Url validation failed for: {0}, using method: GET, with status of: {1}", url, response.StatusCode ) );
+					}
+				}
                 responseStatus = response.StatusCode.ToString();
 
                 return ( response.StatusCode == HttpStatusCode.OK );
@@ -3003,7 +3619,38 @@ namespace RA.Services
 
         } //end
 
-        public bool IsValidGuid( Guid field )
+		/// <summary>
+		/// Only check for valid year
+		/// </summary>
+		/// <param name="date"></param>
+		/// <param name="dateName"></param>
+		/// <param name="messages"></param>
+		/// <param name="doingReasonableCheck"></param>
+		/// <returns></returns>
+		public string MapYear( string date, string dateName, ref List<string> messages, bool doingReasonableCheck = true )
+		{
+			if ( string.IsNullOrWhiteSpace( date ) )
+				return null;
+
+			var year = 0;
+			if ( Int32.TryParse( date, out year ) )
+			{
+				if ( year < 1800 || year > DateTime.Now.Year )
+				{
+					messages.Add( string.Format( "Error - {0} is out of range (prior to 1800 or greater than the current year) ", dateName ) );
+					return null;
+				}
+			}
+			else
+			{
+				messages.Add( string.Format( "Error - {0} is not a valid year.", dateName ) );
+				return null;
+			}
+			return date;
+
+		} //end
+
+		public bool IsValidGuid( Guid field )
         {
             if ( ( field == null || field == Guid.Empty ) )
                 return false;
@@ -3013,7 +3660,7 @@ namespace RA.Services
         public bool IsValidGuid( string field )
         {
             Guid guidOutput;
-            if ( ( field == null || field.ToString() == DEFAULT_GUID ) )
+            if ( ( field == null || field.ToString() == Guid.Empty.ToString() ) )
                 return false;
             else if ( !Guid.TryParse( field, out guidOutput ) )
                 return false;
@@ -3076,13 +3723,13 @@ namespace RA.Services
 		#region JSON helpers
         public static string LogInputFile( CredentialRequest request, string endpoint, int appLevel = 6 )
         {
-            string jsoninput = JsonConvert.SerializeObject( request, GetJsonSettings() );
+            string jsoninput = JsonConvert.SerializeObject( request, ServiceHelperV2.GetJsonSettings() );
             LoggingHelper.WriteLogFile( appLevel, string.Format("Credential_{0}_{1}_raInput.json", endpoint, request.Credential.Ctid), jsoninput, "", false );
             return jsoninput;
         }
 		public static string LogInputFile( object request, string ctid, string entityType, string endpoint, int appLevel = 6 )
         {
-            string jsoninput = JsonConvert.SerializeObject( request, GetJsonSettings() );
+            string jsoninput = JsonConvert.SerializeObject( request, ServiceHelperV2.GetJsonSettings() );
             LoggingHelper.WriteLogFile( appLevel, string.Format( "{0}_{1}_{2}_raInput.json", entityType, endpoint, ctid ), jsoninput, "", false );
             return jsoninput;
         }
@@ -3143,194 +3790,14 @@ namespace RA.Services
         }
 		#endregion
 
-		#region === Security related Methods ===
+
+		#region === Application Keys Methods ===
 
 		/// <summary>
-		/// The actual validation will be via a call to the accounts api
+		/// Gets the value of an application key from web.config. Returns blanks if not found
 		/// </summary>
-		/// <param name="helper"></param>
-		/// <param name="statusMessage"></param>
-		/// <returns></returns>
-		public static bool ValidateRequest(RequestHelper helper, ref string statusMessage, bool isDeleteRequest = false)
-		{
-			bool isValid = true;
-            string clientIdentifier = "";
-            bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
-			var apiPublisherIdentifier = UtilityManager.GetAppKeyValue( "apiPublisherIdentifier" );
-			if ( isDeleteRequest )
-                isTokenRequired = true;
-
-            //api key will be passed in the header
-            string apiToken = "";
-            if (IsAuthTokenValid( isTokenRequired, apiPublisherIdentifier, ref apiToken, ref clientIdentifier, ref statusMessage) == false)
-            {
-                return false;
-            }
-            helper.ApiKey = apiToken;
-            helper.ClientIdentifier = clientIdentifier ?? "";
-
-            if ( isTokenRequired &&
-                (string.IsNullOrWhiteSpace(helper.OwnerCtid) || 
-                 !helper.OwnerCtid.ToLower().StartsWith("ce-")  ||
-                 helper.OwnerCtid.Length != 39) 
-                )
-            {
-				if ( clientIdentifier == apiPublisherIdentifier )
-					return true;
-				else
-                {
-                    statusMessage = "Error - the provided security elements for this request have not be adequately provided.";
-                    return false;
-                }
-            }
-            return isValid;
-		}
-
-		public static bool IsAuthTokenValid( bool isTokenRequired, string apiPublisherIdentifier, ref string token, ref string clientIdentifier, ref string message )
-		{
-			bool isValid = true;
-			//need to handle both ways. So if a token, and ctid are provided, then use them!
-			//bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
-			//var apiPublisherIdentifier = UtilityManager.GetAppKeyValue( "apiPublisherIdentifier" );
-			try
-            {
-                HttpContext httpContext = HttpContext.Current;
-                clientIdentifier = httpContext.Request.Headers[ "Proxy-Authorization" ];
-                string authHeader = httpContext.Request.Headers[ "Authorization" ];
-                //registry API uses ApiToken rather than Basic
-                if ( !string.IsNullOrWhiteSpace(authHeader)  )
-                {
-                    LoggingHelper.DoTrace( 4, "$$$$$$$$ Found an authorization header." + authHeader );
-                    if (authHeader.ToLower().StartsWith( "apitoken" ))
-                    {
-                        //Extract credentials
-                        authHeader = authHeader.ToLower();
-                        token = authHeader.Substring( "apitoken ".Length ).Trim();
-                    }
-                }
-            } catch (Exception ex)
-            {
-                if ( isTokenRequired )
-                {
-                    LoggingHelper.LogError( ex, "Exception encountered attempting to get API key from request header. " );
-                    isValid = false;
-                }
-            }
-
-            if ( isTokenRequired && string.IsNullOrWhiteSpace(token ) )
-            {
-                if (!string.IsNullOrWhiteSpace(clientIdentifier))
-                {
-                    if (clientIdentifier == apiPublisherIdentifier )
-                        return true;
-                }
-                message = "Error a valid API key must be provided in the header";
-                isValid = false;
-            }
-
-            return isValid;
-		}
-		/// <summary>
-		/// Encrypt the text using MD5 crypto service
-		/// This is used for one way encryption of a user password - it can't be decrypted
-		/// </summary>
-		/// <param name="data"></param>
-		/// <returns></returns>
-		public string Encrypt( string data )
-        {
-            byte[] byDataToHash = ( new UnicodeEncoding() ).GetBytes( data );
-            byte[] bytHashValue = new MD5CryptoServiceProvider().ComputeHash( byDataToHash );
-            return BitConverter.ToString( bytHashValue );
-        }
-
-        /// <summary>
-        /// Encrypt the text using the provided password (key) and CBC CipherMode
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public string Encrypt_CBC( string text, string password )
-        {
-            RijndaelManaged rijndaelCipher = new RijndaelManaged();
-
-            rijndaelCipher.Mode = CipherMode.CBC;
-            rijndaelCipher.Padding = PaddingMode.PKCS7;
-            rijndaelCipher.KeySize = 128;
-            rijndaelCipher.BlockSize = 128;
-
-            byte[] pwdBytes = System.Text.Encoding.UTF8.GetBytes( password );
-
-            byte[] keyBytes = new byte[16];
-
-            int len = pwdBytes.Length;
-
-            if ( len > keyBytes.Length )
-                len = keyBytes.Length;
-
-            System.Array.Copy( pwdBytes, keyBytes, len );
-
-            rijndaelCipher.Key = keyBytes;
-            rijndaelCipher.IV = keyBytes;
-
-            ICryptoTransform transform = rijndaelCipher.CreateEncryptor();
-
-            byte[] plainText = Encoding.UTF8.GetBytes( text );
-
-            byte[] cipherBytes = transform.TransformFinalBlock( plainText, 0, plainText.Length );
-
-            return Convert.ToBase64String( cipherBytes );
-
-        }
-
-        /// <summary>
-        /// Decrypt the text using the provided password (key) and CBC CipherMode
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public string Decrypt_CBC( string text, string password )
-        {
-            RijndaelManaged rijndaelCipher = new RijndaelManaged();
-
-            rijndaelCipher.Mode = CipherMode.CBC;
-            rijndaelCipher.Padding = PaddingMode.PKCS7;
-            rijndaelCipher.KeySize = 128;
-            rijndaelCipher.BlockSize = 128;
-
-            byte[] encryptedData = Convert.FromBase64String( text );
-
-            byte[] pwdBytes = System.Text.Encoding.UTF8.GetBytes( password );
-
-            byte[] keyBytes = new byte[16];
-
-            int len = pwdBytes.Length;
-
-            if ( len > keyBytes.Length )
-                len = keyBytes.Length;
-
-            System.Array.Copy( pwdBytes, keyBytes, len );
-
-            rijndaelCipher.Key = keyBytes;
-            rijndaelCipher.IV = keyBytes;
-
-            ICryptoTransform transform = rijndaelCipher.CreateDecryptor();
-
-            byte[] plainText = transform.TransformFinalBlock( encryptedData, 0, encryptedData.Length );
-
-            return Encoding.UTF8.GetString( plainText );
-
-        }
-
-        #endregion
-
-
-        #region === Application Keys Methods ===
-
-        /// <summary>
-        /// Gets the value of an application key from web.config. Returns blanks if not found
-        /// </summary>
-        /// <remarks>This clientProperty is explicitly thread safe.</remarks>
-        public static string GetAppKeyValue( string keyName )
+		/// <remarks>This clientProperty is explicitly thread safe.</remarks>
+		public static string GetAppKeyValue( string keyName )
         {
 
             return GetAppKeyValue( keyName, "" );
@@ -3345,7 +3812,7 @@ namespace RA.Services
             string appValue = "";
             if (string.IsNullOrWhiteSpace(keyName))
             {
-                LogError( string.Format( "@@@@ Error: Empty string AppKey was encoutered, using default of: {0}", defaultValue ) );
+				LoggingHelper.LogError( string.Format( "@@@@ Error: Empty string AppKey was encoutered, using default of: {0}", defaultValue ) );
                 return defaultValue;
             }
             try
@@ -3357,7 +3824,7 @@ namespace RA.Services
             catch
             {
                 appValue = defaultValue;
-                LogError( string.Format( "@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue ) );
+				LoggingHelper.LogError( string.Format( "@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue ) );
             }
 
             return appValue;
@@ -3367,7 +3834,7 @@ namespace RA.Services
             int appValue = -1;
             if ( string.IsNullOrWhiteSpace( keyName ) )
             {
-                LogError( string.Format( "@@@@ Error: Empty int AppKey was encoutered, using default of: {0}", defaultValue ) );
+				LoggingHelper.LogError( string.Format( "@@@@ Error: Empty int AppKey was encoutered, using default of: {0}", defaultValue ) );
                 return defaultValue;
             }
             try
@@ -3379,7 +3846,7 @@ namespace RA.Services
             catch
             {
                 appValue = defaultValue;
-                LogError( string.Format( "@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue ) );
+				LoggingHelper.LogError( string.Format( "@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue ) );
             }
 
             return appValue;
@@ -3389,7 +3856,7 @@ namespace RA.Services
             bool appValue = false;
             if ( string.IsNullOrWhiteSpace( keyName ) )
             {
-                LogError( string.Format( "@@@@ Error: Empty bool AppKey was encoutered, using default of: {0}",  defaultValue ) );
+				LoggingHelper.LogError( string.Format( "@@@@ Error: Empty bool AppKey was encoutered, using default of: {0}",  defaultValue ) );
                 return defaultValue;
             }
             try
@@ -3401,24 +3868,24 @@ namespace RA.Services
             catch
             {
                 appValue = defaultValue;
-                LogError( string.Format( "@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue ) );
+				LoggingHelper.LogError( string.Format( "@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue ) );
             }
 
             return appValue;
         } //
 		#endregion
 
-		#region Error Logging ================================================
+		#region Error Logging - OBSOLETE HANDLED BY COMMON PROJECT ==========
 		/// <summary>
 		/// Format an exception and message, and then log it
 		/// </summary>
 		/// <param name="ex">Exception</param>
 		/// <param name="message">Additional message regarding the exception</param>
-		public static void LogError( Exception ex, string message, string subject = "Registry Assistant Application Exception encountered" )
-        {
-            bool notifyAdmin = false;
-            LogError( ex, message, notifyAdmin, subject );
-        }
+		//public static void LogError( Exception ex, string message, string subject = "Registry Assistant Application Exception encountered" )
+  //      {
+  //          bool notifyAdmin = false;
+  //          LogError( ex, message, notifyAdmin, subject );
+  //      }
 
 		/// <summary>
 		/// Format an exception and message, and then log it
@@ -3426,50 +3893,50 @@ namespace RA.Services
 		/// <param name="ex">Exception</param>
 		/// <param name="message">Additional message regarding the exception</param>
 		/// <param name="notifyAdmin">If true, an email will be sent to admin</param>
-		public static void LogError( Exception ex, string message, bool notifyAdmin, string subject = "Registry Assistant Application Exception encountered" )
-        {
+		//public static void LogError( Exception ex, string message, bool notifyAdmin, string subject = "Registry Assistant Application Exception encountered" )
+  //      {
 
-            string sessionId = "unknown";
-            string remoteIP = "unknown";
-            string path = "unknown";
-            //string queryString = "unknown";
-            string url = "unknown";
-            string parmsString = "";
+  //          string sessionId = "unknown";
+  //          string remoteIP = "unknown";
+  //          string path = "unknown";
+  //          //string queryString = "unknown";
+  //          string url = "unknown";
+  //          string parmsString = "";
 
-            try
-            {
-                if ( UtilityManager.GetAppKeyValue( "notifyOnException", "no" ).ToLower() == "yes" )
-                    notifyAdmin = true;
+  //          try
+  //          {
+  //              if ( UtilityManager.GetAppKeyValue( "notifyOnException", "no" ).ToLower() == "yes" )
+  //                  notifyAdmin = true;
 
-                string serverName = GetAppKeyValue( "serverName", "unknown" );
+  //              string serverName = GetAppKeyValue( "serverName", "unknown" );
 
-            }
-            catch
-            {
-                //eat any additional exception
-            }
+  //          }
+  //          catch
+  //          {
+  //              //eat any additional exception
+  //          }
 
-            try
-            {
-                string errMsg = message +
-                    "\r\nType: " + ex.GetType().ToString() + ";" +
-                    "\r\nSession Id - " + sessionId + "____IP - " + remoteIP +
-                    "\r\nException: " + ex.Message.ToString() + ";" +
-                    "\r\nStack Trace: " + ex.StackTrace.ToString() +
-                    "\r\nServer\\Template: " + path +
-                    "\r\nUrl: " + url;
+  //          try
+  //          {
+  //              string errMsg = message +
+  //                  "\r\nType: " + ex.GetType().ToString() + ";" +
+  //                  "\r\nSession Id - " + sessionId + "____IP - " + remoteIP +
+  //                  "\r\nException: " + ex.Message.ToString() + ";" +
+  //                  "\r\nStack Trace: " + ex.StackTrace.ToString() +
+  //                  "\r\nServer\\Template: " + path +
+  //                  "\r\nUrl: " + url;
 
-                if ( parmsString.Length > 0 )
-                    errMsg += "\r\nParameters: " + parmsString;
+  //              if ( parmsString.Length > 0 )
+  //                  errMsg += "\r\nParameters: " + parmsString;
 
-                LogError( errMsg, notifyAdmin );
-            }
-            catch
-            {
-                //eat any additional exception
-            }
+  //              LogError( errMsg, notifyAdmin );
+  //          }
+  //          catch
+  //          {
+  //              //eat any additional exception
+  //          }
 
-        } //
+  //      } //
 
 
 		/// <summary>
@@ -3480,19 +3947,19 @@ namespace RA.Services
 		/// The log file is configured in the web.config, appSetting: "error.log.path"
 		/// </remarks>
 		/// <param name="message">Message to be logged.</param>
-		public static void LogError( string message, string subject = "Registry Assistant Application Exception encountered" )
-        {
+		//public static void LogError( string message, string subject = "Registry Assistant Application Exception encountered" )
+  //      {
 
-            if ( GetAppKeyValue( "notifyOnException", "no" ).ToLower() == "yes" )
-            {
-                LogError( message, true, subject );
-            }
-            else
-            {
-                LogError( message, false, subject );
-            }
+  //          if ( GetAppKeyValue( "notifyOnException", "no" ).ToLower() == "yes" )
+  //          {
+  //              LogError( message, true, subject );
+  //          }
+  //          else
+  //          {
+  //              LogError( message, false, subject );
+  //          }
 
-        } //
+  //      } //
 		  /// <summary>
 		  /// Write the message to the log file.
 		  /// </summary>
@@ -3502,36 +3969,51 @@ namespace RA.Services
 		  /// </remarks>
 		  /// <param name="message">Message to be logged.</param>
 		  /// <param name="notifyAdmin"></param>
-		public static void LogError( string message, bool notifyAdmin, string subject = "Registry Assistant Application Exception encountered" )
-        {
-            if ( GetAppKeyValue( "logErrors" ).ToString().Equals( "yes" ) )
-            {
-                try
-                {
-                    string datePrefix = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
-                    string logFile = GetAppKeyValue( "path.error.log", "C:\\VOS_LOGS.txt" );
-                    string outputFile = logFile.Replace( "[date]", datePrefix );
+		//public static void LogError( string message, bool notifyAdmin, string subject = "Registry Assistant Application Exception encountered" )
+  //      {
+  //          if ( GetAppKeyValue( "logErrors" ).ToString().Equals( "yes" ) )
+  //          {
+  //              try
+  //              {
+		//			string datePrefix1 = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
+		//			string datePrefix = System.DateTime.Today.ToString( "yyyy-dd" );
+		//			string logFile = UtilityManager.GetAppKeyValue( "path.error.log", "" );
+		//			if ( !string.IsNullOrWhiteSpace( logFile ) )
+		//			{
+		//				string outputFile = logFile.Replace( "[date]", datePrefix );
 
-                    StreamWriter file = File.AppendText( outputFile );
-                    file.WriteLine( DateTime.Now + ": " + message );
-                    file.WriteLine( "---------------------------------------------------------------------" );
-                    file.Close();
+		//				if ( File.Exists( outputFile ) )
+		//				{
+		//					if ( File.GetLastWriteTime( outputFile ).Month != DateTime.Now.Month )
+		//						File.Delete( outputFile );
+		//				}
+		//				else
+		//				{
+		//					System.IO.FileInfo f = new System.IO.FileInfo( outputFile );
+		//					f.Directory.Create(); // If the directory already exists, this method does nothing.
+		//										  //just incase, create folders
+		//										  //FileSystemHelper.CreateDirectory( outputFile );
+		//				}
 
-                    if ( notifyAdmin )
-                    {
-                        if ( GetAppKeyValue( "notifyOnException", "no" ).ToLower() == "yes" )
-                        {
-                            EmailManager.NotifyAdmin( subject, message );
-                        }
-                    }
-                }
-                catch ( Exception ex )
-                {
-                    //eat any additional exception
-                    DoTrace( 5, thisClassName + ".LogError(string message, bool notifyAdmin). Exception: " + ex.Message );
-                }
-            }
-        } //
+		//				StreamWriter file = File.AppendText( outputFile );
+		//				file.WriteLine( DateTime.Now + ": " + message );
+		//				file.WriteLine( "---------------------------------------------------------------------" );
+		//				file.Close();
+
+		//				if ( notifyAdmin )
+		//				{
+		//					if ( ShouldMessagesBeSkipped( message ) == false )
+		//						EmailManager.NotifyAdmin( subject, message );
+		//				}
+		//			}
+		//		}
+  //              catch ( Exception ex )
+  //              {
+  //                  //eat any additional exception
+  //                  DoTrace( 5, thisClassName + ".LogError(string message, bool notifyAdmin). Exception: " + ex.Message );
+  //              }
+  //          }
+  //      } //
 
 		public void NotifyOnPublish( string type, string message )
 		{
@@ -3550,7 +4032,7 @@ namespace RA.Services
         /// <returns>True id message was sent successfully, otherwise false</returns>
         public bool NotifyAdmin( string subject, string message )
         {
-            string emailTo = UtilityManager.GetAppKeyValue( "systemAdminEmail", "cwd-mparsons@ad.siu.edu" );
+            string emailTo = UtilityManager.GetAppKeyValue( "systemAdminEmail", "cwd-mparsons@siu.edu" );
             //work on implementing some specific routing based on error type
 
 
@@ -3563,25 +4045,25 @@ namespace RA.Services
 		/// </summary>
 		/// <param name="message">Trace message</param>
 		/// <remarks>This is a helper method that defaults to a trace level of 10</remarks>
-		public static void DoTrace( string message )
-        {
-            //default level to 8
-            //should get app key value
-            int appTraceLevel = UtilityManager.GetAppKeyValue( "appTraceLevel", 8 );
-            if ( appTraceLevel < 8 )
-                appTraceLevel = 8;
-            DoTrace( appTraceLevel, message, true );
-        }
+		//public void DoTrace( string message )
+		//{
+		//    //default level to 8
+		//    //should get app key value
+		//    int appTraceLevel = UtilityManager.GetAppKeyValue( "appTraceLevel", 8 );
+		//    if ( appTraceLevel < 8 )
+		//        appTraceLevel = 8;
+		//    DoTrace( appTraceLevel, message, true );
+		//}
 
 		/// <summary>
 		/// Handle trace requests - typically during development, but may be turned on to track code flow in production.
 		/// </summary>
 		/// <param name="level"></param>
 		/// <param name="message"></param>
-		public static void DoTrace( int level, string message )
-        {
-            DoTrace( level, message, true );
-        }
+		//public static void DoTrace( int level, string message )
+		//      {
+		//          DoTrace( level, message, true );
+		//      }
 
 		/// <summary>
 		/// Handle trace requests - typically during development, but may be turned on to track code flow in production.
@@ -3589,79 +4071,121 @@ namespace RA.Services
 		/// <param name="level"></param>
 		/// <param name="message"></param>
 		/// <param name="showingDatetime">If true, precede message with current date-time, otherwise just the message> The latter is useful for data dumps</param>
-		public static void DoTrace( int level, string message, bool showingDatetime )
-        {
-            //TODO: Future provide finer control at the control level
-            string msg = "";
-            int appTraceLevel = 0;
-            //bool useBriefFormat = true;
+		//public static void DoTrace( int level, string message, bool showingDatetime )
+		//      {
+		//          //TODO: Future provide finer control at the control level
+		//          string msg = "";
+		//          int appTraceLevel = 0;
+		//          //bool useBriefFormat = true;
 
-            try
-            {
-                appTraceLevel = GetAppKeyValue( "appTraceLevel", 1 );
+		//          try
+		//          {
+		//              appTraceLevel = GetAppKeyValue( "appTraceLevel", 1 );
 
-                //Allow if the requested level is <= the application thresh hold
-                if ( level <= appTraceLevel )
-                {
-                    if ( showingDatetime )
-                        msg = "\n " + System.DateTime.Now.ToString() + " - " + message;
-                    else
-                        msg = "\n " + message;
+		//              //Allow if the requested level is <= the application thresh hold
+		//              if ( level <= appTraceLevel )
+		//              {
+		//                  if ( showingDatetime )
+		//                      msg = "\n " + System.DateTime.Now.ToString() + " - " + message;
+		//                  else
+		//                      msg = "\n " + message;
 
 
-                    string datePrefix = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
-                    string logFile = GetAppKeyValue( "path.trace.log", "C:\\VOS_LOGS.txt" );
-                    string outputFile = logFile.Replace( "[date]", datePrefix );
+		//                  string datePrefix = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
+		//                  string logFile = GetAppKeyValue( "path.trace.log", "C:\\VOS_LOGS.txt" );
+		//                  string outputFile = logFile.Replace( "[date]", datePrefix );
 
-                    StreamWriter file = File.AppendText( outputFile );
+		//                  StreamWriter file = File.AppendText( outputFile );
 
-                    file.WriteLine( msg );
-                    file.Close();
+		//                  file.WriteLine( msg );
+		//                  file.Close();
 
-                }
-            }
-            catch
-            {
-                //ignore errors
-            }
+		//              }
+		//          }
+		//          catch
+		//          {
+		//              //ignore errors
+		//          }
 
-        }
+		//      }
 
-        #endregion
+		#endregion
 
-        #region Common Utility Methods
-        /// <summary>
-        /// Convert characters often resulting from external programs like Word
-        /// NOTE: keep in sync with the Publisher version
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public string ConvertSpecialInput( string text )
-        {
-            if ( string.IsNullOrWhiteSpace( text ) )
-                return "";
+		#region Common Utility Methods
+		/// <summary>
+		/// Convert characters often resulting from external programs like Word
+		/// NOTE: keep in sync with the Publisher version in BaseFactory
+		/// </summary>
+		/// <param name="text"></param>
+		/// <returns></returns>
+		public static string ConvertSpecialCharacters( string text )
+		{
+			//, ref bool hasChanged
+			//hasChanged = false;
+			if ( string.IsNullOrWhiteSpace( text ) )
+				return "";
+			string orginal = text.Trim();
+			if ( ContainsUnicodeCharacter( text ) )
+			{
 
-            if ( text.IndexOf( '\u2013' ) > -1 ) text = text.Replace( '\u2013', '-' ); // en dash
-            if ( text.IndexOf( '\u2014' ) > -1 ) text = text.Replace( '\u2014', '-' ); // em dash
-            if ( text.IndexOf( '\u2015' ) > -1 ) text = text.Replace( '\u2015', '-' ); // horizontal bar
-            if ( text.IndexOf( '\u2017' ) > -1 ) text = text.Replace( '\u2017', '_' ); // double low line
-            if ( text.IndexOf( '\u2018' ) > -1 ) text = text.Replace( '\u2018', '\'' ); // left single quotation mark
-            if ( text.IndexOf( '\u2019' ) > -1 ) text = text.Replace( '\u2019', '\'' ); // right single quotation mark
-            if ( text.IndexOf( '\u201a' ) > -1 ) text = text.Replace( '\u201a', ',' ); // single low-9 quotation mark
-            if ( text.IndexOf( '\u201b' ) > -1 ) text = text.Replace( '\u201b', '\'' ); // single high-reversed-9 quotation mark
-            if ( text.IndexOf( '\u201c' ) > -1 ) text = text.Replace( '\u201c', '\"' ); // left double quotation mark
-            if ( text.IndexOf( '\u201d' ) > -1 ) text = text.Replace( '\u201d', '\"' ); // right double quotation mark
-            if ( text.IndexOf( '\u201e' ) > -1 ) text = text.Replace( '\u201e', '\"' ); // double low-9 quotation mark
-            if ( text.IndexOf( '\u2026' ) > -1 ) text = text.Replace( "\u2026", "..." ); // horizontal ellipsis
-            if ( text.IndexOf( '\u2032' ) > -1 ) text = text.Replace( '\u2032', '\'' ); // prime
-            if ( text.IndexOf( '\u2033' ) > -1 ) text = text.Replace( '\u2033', '\"' ); // double prime
-            if ( text.IndexOf('\u2036') > -1 )
-                text = text.Replace('\u2036', '\"'); // ??
-            if ( text.IndexOf('\u0090') > -1 )
-                text = text.Replace('\u0090', 'ê'); // e circumflex
-
+				if ( text.IndexOf( '\u2013' ) > -1 )
+					text = text.Replace( '\u2013', '-' ); // en dash
+				if ( text.IndexOf( '\u2014' ) > -1 )
+					text = text.Replace( '\u2014', '-' ); // em dash
+				if ( text.IndexOf( '\u2015' ) > -1 )
+					text = text.Replace( '\u2015', '-' ); // horizontal bar
+				if ( text.IndexOf( '\u2017' ) > -1 )
+					text = text.Replace( '\u2017', '_' ); // double low line
+				if ( text.IndexOf( '\u2018' ) > -1 )
+					text = text.Replace( '\u2018', '\'' ); // left single quotation mark
+				if ( text.IndexOf( '\u2019' ) > -1 )
+					text = text.Replace( '\u2019', '\'' ); // right single quotation mark
+				if ( text.IndexOf( '\u201a' ) > -1 )
+					text = text.Replace( '\u201a', ',' ); // single low-9 quotation mark
+				if ( text.IndexOf( '\u201b' ) > -1 )
+					text = text.Replace( '\u201b', '\'' ); // single high-reversed-9 quotation mark
+				if ( text.IndexOf( '\u201c' ) > -1 )
+					text = text.Replace( '\u201c', '\"' ); // left double quotation mark
+				if ( text.IndexOf( '\u201d' ) > -1 )
+					text = text.Replace( '\u201d', '\"' ); // right double quotation mark
+				if ( text.IndexOf( '\u201e' ) > -1 )
+					text = text.Replace( '\u201e', '\"' ); // double low-9 quotation mark
+				if ( text.IndexOf( '\u201f' ) > -1 )
+					text = text.Replace( '\u201f', '\"' ); // ???
+				if ( text.IndexOf( '\u2026' ) > -1 )
+					text = text.Replace( "\u2026", "..." ); // horizontal ellipsis
+				if ( text.IndexOf( '\u2032' ) > -1 )
+					text = text.Replace( '\u2032', '\'' ); // prime
+				if ( text.IndexOf( '\u2033' ) > -1 )
+					text = text.Replace( '\u2033', '\"' ); // double prime
+				if ( text.IndexOf( '\u2036' ) > -1 )
+					text = text.Replace( '\u2036', '\"' ); // ??
+				if ( text.IndexOf( '\u0090' ) > -1 )
+					text = text.Replace( '\u0090', 'ê' ); // e circumflex
+			}
 			text = text.Replace( "â€™", "'" );
 			text = text.Replace( "â€\"", "-" );
+			text = text.Replace( "\"â€ú", "-" );
+			text = text.Replace( "â€¢", "-" );
+			text = text.Replace( "Ã¢â‚¬Â¢", "-" );
+			text = text.Replace( "ÃƒÂ¢Ã¢,Â¬Ã¢\"Â¢s", "'s" );
+			text = text.Replace( "Ãƒ,Ã,Â ", " " );
+
+			//
+			//
+			//don't do this as \r is valid
+			//text = text.Replace( "\\\\r", "" );
+
+			text = text.Replace( "\u009d", " " ); //
+			text = text.Replace( "Ã,Â", "" ); //
+			text = text.Replace( ".Â", " " ); //
+
+			text = Regex.Replace( text, "’", "'" );
+			text = Regex.Replace( text, "“", "'" );
+			text = Regex.Replace( text, "”", "'" );
+			//BIZARRE
+			text = Regex.Replace( text, "Ã¢â,¬â\"¢", "'" );
+			text = Regex.Replace( text, "–", "-" );
 
 			text = Regex.Replace( text, "[Õ]", "'" );
 			text = Regex.Replace( text, "[Ô]", "'" );
@@ -3684,13 +4208,19 @@ namespace RA.Services
 			text = text.Replace( "Ã¡", "á" ); //Ã¡
 			text = text.Replace( "ÃƒÂ", "à" ); //
 											   //
-			text = text.Replace( "ÃƒÂ±", "ñ" ); //Ã
+			text = text.Replace( "ÃƒÂ±", "ñ" ); //
+			text = text.Replace( "Â±", "ñ" ); //"Ã±"
+											  //
 			text = text.Replace( "ÃƒÂ-", "í" ); //???? same as à
-			text = text.Replace( "ÃƒÂ­­", "í" ); //
-
-			text = text.Replace( "ÃƒÂº", "ú" ); //
+			text = text.Replace( "ÃƒÂ­­", "í" ); //"Ã­as" "gÃ­a" "gÃ­as"
+			text = text.Replace( "gÃ­as", "gías" ); //"Ã­as" "gÃ­a" "gÃ­as"
 			text = text.Replace( "’", "í" ); //
+
+
+			text = text.Replace( "ÃƒÂº", "ú" ); //"Ãº"
+			text = text.Replace( "Âº", "ú" ); //"Ãº"
 			text = text.Replace( "œ", "ú" ); //
+
 			text = text.Replace( "quÕˆ", "qu'à" ); //
 			text = text.Replace( "qu'ˆ", "qu'à" ); //
 			text = text.Replace( "ci—n ", "ción " );
@@ -3700,18 +4230,51 @@ namespace RA.Services
 			text = text.Replace( "teor'as", "teorías" ); // 
 			text = text.Replace( "log'as", "logías" ); //
 			text = text.Replace( "ense–anza", "enseñanza" ); //
+															 //
+			text = text.Replace( "Ã¢â,¬Ãº", "\"" ); //
+			text = text.Replace( "Ã¢â,¬Â", "\"" ); //
+												   //
+
+			//not sure if should do this arbitrarily here?
+			if ( text.IndexOf( "Ã" ) > -1 || text.IndexOf( "Â" ) > -1 )
+			{
+				//string queryString = GetWebUrl();
+				//LoggingHelper.DoTrace( 1, string.Format("@#@#@# found text containing Ã or Â, setting to blank. URL: {0}, Text:\r{1}", queryString, text ) );
+				text = text.Replace( "Ã", "" ); //
+				text = text.Replace( ",Â", "," ); //
+				text = text.Replace( "Â", "" ); //
+
+			}
 
 
 			text = text.Replace( "ou�ll", "ou'll" ); //
 			text = text.Replace( "�s", "'s" ); // 
-
+			text = text.Replace( "�", "" ); // 
 			text = Regex.Replace( text, "[—]", "-" ); //
 
 			text = Regex.Replace( text, "[�]", " " ); //could be anything
 													  //covered above
+
+			//text = Regex.Replace(text, "[«»\u201C\u201D\u201E\u201F\u2033\u2036]", "\"");
+			//text = Regex.Replace(text, "[\u2026]", "...");
+
+			//
+
+			if ( orginal != text.Trim() )
+			{
+				//should report any changes
+				//hasChanged = true;
+				//text = orginal;
+			}
 			return text.Trim();
-        } //
-        public string HandleApostrophes( string strValue )
+		} //
+		public static bool ContainsUnicodeCharacter( string input )
+		{
+			const int MaxAnsiCode = 255;
+
+			return input.Any( c => c > MaxAnsiCode );
+		}
+		public string HandleApostrophes( string strValue )
         {
 
             if ( strValue.IndexOf( "'" ) > -1 )

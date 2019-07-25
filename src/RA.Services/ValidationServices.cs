@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web;
 using Newtonsoft.Json;
-
+using Utilities;
 //may want an alternative to this
 //using CtdlHelper = Factories;
 
@@ -38,7 +38,16 @@ namespace RA.Services
 			"ceterms:ResearchDoctorate",
 			"ceterms:SecondarySchoolDiploma"
 		};
-
+		static List<string> credentialGroupTypes = new List<string>()
+		{
+			"ceterms:Diploma",
+			"ceterms:Degree",
+			"ceterms:Doctorate"
+		};
+		/*
+		 * Badge, Certificate, Diploma, Degree, Doctorate
+		 * 
+		 */
 		static List<string> otherClassTypes = new List<string>()
 		{
 			"ceterms:CredentialOrganization",
@@ -112,7 +121,7 @@ namespace RA.Services
 			if ( credentialType.IndexOf( "ceterms" ) == -1 )
 				credentialType = "ceterms:" + credentialType;
 			validSchema = "";
-			string exists = credentialTypes.FirstOrDefault( s => s == credentialType );
+			string exists = credentialTypes.FirstOrDefault( s => s.ToLower() == credentialType.ToLower() );
 			//or maybe loop thru and check case independent
 			foreach ( string s in credentialTypes )
 			{
@@ -124,7 +133,15 @@ namespace RA.Services
 					break;
 				}
 			}
-
+			if (!isValid)
+			{
+				var groupTypes = UtilityManager.GetAppKeyValue( "includeGeneralCredentialTypes" );
+				if (groupTypes.IndexOf(credentialType) > -1)
+				{
+					validSchema = credentialType;
+					isValid = true;
+				}
+			}
 			return isValid;
 		}
 

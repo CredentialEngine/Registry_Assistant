@@ -35,12 +35,14 @@ namespace RA.Services
             {
                 helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 
-                CER cer = new CER( "CostManifest", output.Type, output.Ctid, helper.SerializedInput); 
+				CER cer = new CER( "CostManifest", output.Type, output.Ctid, helper.SerializedInput )
+				{
+					PublisherAuthorizationToken = helper.ApiKey,
+					IsPublisherRequest = helper.IsPublisherRequest,
+					PublishingForOrgCtid = helper.OwnerCtid
+				};
 
-                cer.PublisherAuthorizationToken = helper.ApiKey;
-                cer.PublishingForOrgCtid = helper.OwnerCtid;
-
-                if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
 					cer.IsManagedRequest = true;
 
 				string identifier = "CostManifest_" + request.CostManifest.Ctid;
@@ -161,7 +163,7 @@ namespace RA.Services
             bool isValid = true;
             string statusMessage = "";
             output.Ctid = FormatCtid(input.Ctid, ref messages);
-            output.CtdlId = idBaseUrl + output.Ctid;
+            output.CtdlId = credRegistryResourceUrl + output.Ctid;
 
             //todo determine if will generate where not found
    //         if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )

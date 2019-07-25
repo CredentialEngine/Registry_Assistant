@@ -59,7 +59,7 @@ namespace RA.Models.JsonV2
 			
             CommonConditions = new List<string>();
             CommonCosts = new List<string>();
-            FinancialAssistance = new List<FinancialAlignmentObject>();
+            //FinancialAssistanceOLD = new List<FinancialAlignmentObject>();
 
 			VersionIdentifier = new List<IdentifierValue>();
 		}
@@ -307,9 +307,12 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:availableAt" )]
 		public List<Place> AvailableAt { get; set; }
         
-        [JsonProperty( PropertyName = "ceterms:financialAssistance" )]
-        public List<FinancialAlignmentObject> FinancialAssistance { get; set; }
+		//[JsonIgnore]
+		//[JsonProperty( PropertyName = "ceterms:financialAssistanceOLD" )]
+		////public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:financialAssistance" )]
+		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
 		public List<IdentifierValue> VersionIdentifier { get; set; }

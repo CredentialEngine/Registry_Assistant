@@ -30,6 +30,12 @@
             Organization(s) that offer this resource
             </summary>
         </member>
+        <member name="P:RA.Models.Input.Assessment.CreditUnitType">
+            <summary>
+            Provide a valid concept from the CreditUnitType concept scheme
+            https://credreg.net/ctdl/terms/creditUnitType
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.BaseRequest.DefaultLanguage">
             <summary>
             DefaultLanguage is used with Language maps where there is more than one entry for InLanguage, and the user doesn't want to have the first language in the list be the language used with language maps. 
@@ -38,7 +44,7 @@
         <member name="P:RA.Models.Input.BaseRequest.PublishForOrganizationIdentifier">
             <summary>
             Identifier for Organization which Owns the data being published
-            2017-12-13 - this will be the CTID for the owning org.
+            2017-12-13 - this will be the CTID for the owning org, even if publisher is third party.
             </summary>
         </member>
         <member name="P:RA.Models.Input.BaseRequest.RegistryEnvelopeId">
@@ -48,7 +54,7 @@
             Contains registry envelope identifier for a document in the registy. It should be empty for a new document. 
             </summary>
         </member>
-        <member name="P:RA.Models.Input.BaseRequest.NotConvertingFromResourceLinkToGraphLink">
+        <member name="P:RA.Models.Input.BaseRequest.BetaTestingAuthorizationKey">
             <summary>
             Sept. 30, 2018
             The full registry document is now accessed via the /graph/ path. All @id (or equivalent) references should be using /graph/. If this value is false, the API will look for and convert all /resource/ urls to /graph/ urls
@@ -365,6 +371,12 @@
             List of URIs to concepts
             </summary>
         </member>
+        <member name="P:RA.Models.Input.Competency.encompasses">
+            <summary>
+            Resource being described includes, comprehends or encompass, in whole or in part, the meaning, nature or importance of the resource being referenced.
+            Range Includes: ceasn:Competency, ceasn:Concept
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Competency.exactAlignment">
             <summary>
             Exact Alignment
@@ -389,19 +401,109 @@
             List of URIs 
             </summary>
         </member>
-        <member name="P:RA.Models.Input.Competency.inLanguage">
-            <summary>
-            In Language
-            Definition:	en-US: The primary language used in or by this competency framework or competency.The primary language used in or by this competency framework or competency.
-            This is the language the text is primarily written in, even if it makes use of other languages. For example, a competency for teaching spanish to english-speaking students would primarily be in english, because that is the language used to convey the material.
-            </summary>
-        </member>
         <member name="P:RA.Models.Input.Competency.isChildOf">
             <summary>
             Is Child Of
             Definition:	en-US: The referenced competency is higher in some arbitrary hierarchy than this competency.
             List of URIs to competencies.
             NOTE: or just provide the CTIDs, and the system will format the proper URI for the current environment.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Competency.isTopChildOf">
+            <summary>
+            Indicates that this competency is at the top of the framework.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConceptSchemeGraph.Graph">
+            <summary>
+            Main graph object
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConceptScheme.CTID">
+            <summary>
+            CTID - identifier for Concept Scheme. 
+            This will have to be extracted from the id
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:RA.Models.Input.ConceptScheme.Description" -->
+        <member name="P:RA.Models.Input.ConceptScheme.Description_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:RA.Models.Input.ConceptScheme.HistoryNote" -->
+        <member name="P:RA.Models.Input.ConceptScheme.HistoryNote_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConceptScheme.InLanguage">
+            <summary>
+            Language. Required unless defaultLanguage is provided
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConceptScheme.Publisher">
+            <summary>
+            URI
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConceptScheme.Name">
+            <summary>
+            Name of the Concept Scheme - required
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConceptScheme.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConceptScheme.Source">
+            <summary>
+            Source of concept scheme - required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConceptScheme.HasTopConcept">
+            <summary>
+            Top Concepts - list of CTIDs or actual registry URIs
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Concept.CTID">
+            <summary>
+            CTID - identifier for concept. 
+            Format: ce-UUID (lowercase)
+            example: ce-a044dbd5-12ec-4747-97bd-a8311eb0a042
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Concept.DateModified">
+             <summary>
+            Last modified date for concept
+             </summary>
+        </member>
+        <member name="P:RA.Models.Input.Concept.Definition">
+            <summary>
+            Concetpt description 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Concept.Definition_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Concept.PrefLabel">
+            <summary>
+            Concept 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Concept.PrefLabel_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Concept.TopConceptOf">
+            <summary>
+            URI to the concept scheme
             </summary>
         </member>
         <member name="P:RA.Models.Input.ConditionManifestRequest.ConditionManifest">
@@ -644,6 +746,7 @@
             2017-12-13 - this will be the CTID for the owning org.
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "P:RA.Models.Input.DeleteRequest.RegistryEnvelopeId" -->
         <member name="P:RA.Models.Input.EnvelopeDelete.RegistryEnvelopeId">
             <summary>
             Envelope Identifier
@@ -794,6 +897,11 @@
             Url for Organization image
             </summary>
         </member>
+        <member name="P:RA.Models.Input.Organization.MissionAndGoalsStatementDescription_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Organization.SameAs">
             <summary>
             A resource that unambiguously indicates the identity of the resource being described.
@@ -816,6 +924,226 @@
             <summary>
             Reference to cost manifests
             A cost manifest can never be a third party reference, so a url is expected
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayRequest.PathwayComponents">
+            <summary>
+            Pathway Components
+            </summary>
+        </member>
+        <member name="T:RA.Models.Input.Pathway">
+            <summary>
+            Resource composed of a structured set of PathwayComponents defining points along a route to fulfillment of a goal or objective.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Pathway.Name">
+            <summary>
+            Pathway Name
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Pathway.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Pathway.Description">
+            <summary>
+            Pathway Description 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Pathway.Description_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Pathway.HasChild">
+            <summary>
+            This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
+            Provide the CTID or the full URI for the target environment. 
+            Reference to another Pathway would have to be an a URI.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Pathway.HasDestinationComponent">
+            <summary>
+            Goal or destination node of the pathway. 
+            Provide the CTID or the full URI for the target environment. 
+            URI for a ceterms:PathwayComponent
+            Multipicity: Single
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Pathway.OwnedBy">
+            <summary>
+            Organization that owns this resource
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Pathway.OfferedBy">
+            <summary>
+            Organization(s) that offer this resource
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.PathwayComponentType">
+            <summary>
+            Type of PathwayComponent. 
+            Valid values (with or without ceterms:) :
+            ceterms:AssessmentComponent	
+            ceterms:BasicComponent	
+            ceterms:CocurricularComponent	
+            ceterms:CompetencyComponent	
+            ceterms:CourseComponent 	
+            ceterms:CredentialComponent 	
+            ceterms:ExtracurricularComponent 	
+            ceterms:JobComponent 	
+            ceterms:WorkExperienceComponent
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.Description">
+            <summary>
+            PathwayComponent Description 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.Description_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.HasCondition">
+            <summary>
+            Resource(s) that describes what must be done to complete a PathwayComponent, or part thereof, as determined by the issuer of the Pathway.
+            Provide the CTID or the full URI for the target environment. 
+            ceterms:ComponentCondition
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.HasChild">
+            <summary>
+            This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
+            Provide the CTID or the full URI for the target environment. 
+            ceterms:PathwayComponent
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.IsChildOf">
+            <summary>
+            The referenced resource is higher in some arbitrary hierarchy than this resource.
+            Provide the CTID or the full URI for the target environment. 
+            ceterms:PathwayComponent
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.IsDestinationComponentOf">
+            <summary>
+            Pathway for which this resource is the goal or destination.
+            Like IsTopChildOf
+            Provide the CTID or the full URI for the target environment. 
+            ceterms:Pathway
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.Name">
+            <summary>
+            PathwayComponent Name
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.Points">
+            <summary>
+            Points associated with this resource, or points possible.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.Preceeds">
+            <summary>
+            Resource that logically comes after this resource.
+            This property indicates a simple or suggested ordering of resources; if a required ordering is intended, use ceterms:prerequisite instead.
+            Provide the CTID or the full URI for the target environment. 
+            ceterms:ComponentCondition
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.Prerequisite">
+            <summary>
+            Resource(s) that is required as a prior condition to this resource.
+            Provide the CTID or the full URI for the target environment. 
+            ceterms:ComponentCondition
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.SourceData">
+            <summary>
+            URL to structured data representing the resource.
+            The preferred data serialization is JSON-LD or some other serialization of RDF.
+            URL
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.SubjectWebpage">
+            <summary>
+            The webpage that describes this entity.
+            URL
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.ComponentCategory">
+            <summary>
+            Component Category
+            Identifies the type of PathwayComponent subclass not explicitly covered in the current array of PathwayComponent subclasses.
+            Used by: 
+            ceterms:BasicComponent,	ceterms:CocurricularComponent, ceterms:ExtracurricularComponent 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.ComponentCategory_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.ProgramTerm">
+            <summary>
+            ProgramTerm
+            Categorization of a term sequence based on the normative time between entry into a program of study and its completion such as "1st quarter", "2nd quarter"..."5th quarter".
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.ProgramTerm_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.PathwayComponent.CredentialType">
+            <summary>
+            Type of credential such as badge, certification, bachelor degree.
+            The credential type as defined in CTDL. Use EntityReference to provide one of: CTID, Registry URI, or 'blank node'
+            Used by: 
+            ceterms:CredentialComponent 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ComponentCondition.Description">
+            <summary>
+            ComponentCondition Description 
+            Required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ComponentCondition.Description_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ComponentCondition.Name">
+            <summary>
+            ComponentCondition Name
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ComponentCondition.Name_Map">
+            <summary>
+            Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ComponentCondition.RequiredNumber">
+            <summary>
+            Number of targetComponent resources that must be fulfilled in order to satisfy the ComponentCondition.
+            Integer
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ComponentCondition.TargetComponent">
+            <summary>
+            Candidate PathwayComponent for the ComponentCondition as determined by applying the RuleSet.
+            Provide the CTID or the full URI for the target environment. 
+            ceterms:PathwayComponent
             </summary>
         </member>
         <member name="P:RA.Models.Input.CompetencyFrameworkGraph.Graph">
@@ -1068,12 +1396,6 @@
             Enter either the Duration_ISO8601 value, or the necessary combination of years, months, weeks, etc
             </summary>
         </member>
-        <member name="T:RA.Models.Input.FinancialAlignmentObject">
-            <summary>
-            Common input class for all Financial Alignment profiles
-            2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
-            </summary>
-        </member>
         <member name="T:RA.Models.Input.FrameworkItem">
             <summary>
             Coded Framework
@@ -1081,6 +1403,11 @@
             SOC - occupations
             NAICS - industries
             CIP
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.FrameworkItem.Framework">
+            <summary>
+            URL for framework
             </summary>
         </member>
         <member name="P:RA.Models.Input.FrameworkItem.TargetNode">
@@ -1200,16 +1527,11 @@
             http://dbpedia.com/Stanford_University
             </summary>
         </member>
-        <member name="P:RA.Models.Input.EntityReference.BNodeId">
-            <summary>
-            An identifier for use with blank nodes, to minimize duplicates
-            TBD - a better name!
-            </summary>
-        </member>
         <member name="P:RA.Models.Input.EntityReference.CTID">
             <summary>
             Optionally, a CTID can be entered instead of an Id. 
-            Only enter Id or CTID, but not both
+            A CTID is recommended for flexibility.
+            Only enter Id or CTID, but not both.
             </summary>
         </member>
         <member name="P:RA.Models.Input.EntityReference.Type">
@@ -1229,12 +1551,16 @@
         </member>
         <member name="P:RA.Models.Input.EntityReference.SubjectWebpage">
             <summary>
-            Subject webpage of the entity
-            </summary> (required)
+            Subject webpage of the entity (required)
+            This should be for the referenced entity. 
+            For example, if the reference is for an organization, the subject webpage should be on the organization site.
+            </summary>
         </member>
         <member name="P:RA.Models.Input.EntityReference.Description">
             <summary>
             Description of the entity (optional)
+            This should be the general description of the entity. 
+            For example, for an organization, the description should be about the organization specifically not, how the organization is related to, or interacts with the refering entity. 
             </summary>
         </member>
         <member name="M:RA.Models.Input.EntityReference.HasNecessaryProperties">
@@ -1243,6 +1569,31 @@
             17-08-27 We do need a type if only providing reference data
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:RA.Models.Input.AssessmentComponent">
+            <summary>
+            Resource that identifies a direct, indirect, formative, and summative evaluation or estimation of the nature, ability, or quality of a resource, performance, or outcome of an action.
+            </summary>
+        </member>
+        <member name="T:RA.Models.Input.BasicComponent">
+            <summary>
+            Resource that identifies a resource not otherwise covered by the enumerated PathwayComponent subclasses.
+            </summary>
+        </member>
+        <member name="T:RA.Models.Input.CocurricularComponent">
+            <summary>
+            Resource that identifies an activity, program, or informal learning experience such as a civic or service activity that supplements and complements the curriculum.
+            </summary>
+        </member>
+        <member name="T:RA.Models.Input.ExtracurricularComponent">
+            <summary>
+            Resource that identifies an activity, program, or informal learning experience that may be offered or provided by a school, college, or other organization that is not connected to a curriculum.
+            </summary>
+        </member>
+        <member name="T:RA.Models.Input.CourseComponent">
+            <summary>
+            Resource that identifies a structured sequence of one or more learning activities that aims to develop a prescribed set of knowledge, skill, or ability of learners.
+            </summary>
         </member>
         <member name="T:RA.Models.Input.Place">
             <summary>
@@ -1272,10 +1623,84 @@
             Alternately can provide a language map
             </summary>
         </member>
+        <member name="T:RA.Models.Input.QuantitativeValue">
+            <summary>
+            Class for providing data about a propery like LearningOpportunity.CreditValue.
+            Required?: Provide a single value or a Min and Max value.
+            		   May not actually be required, if description used. If UnitText is provided, then a value is required.	
+            Required: Provide a valid concept in UnitText or description
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.QuantitativeValue.UnitText">
+            <summary>
+            Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. For example:
+            creditUnit:ContinuingEducationUnit or ContinuingEducationUnit
+            <see cref="!:https://credreg.net/ctdl/terms/creditUnitType"/> 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.QuantitativeValue.Description">
+            <summary>
+            Optional description of the credit, using either a string value or as a language map
+            </summary>
+        </member>
         <member name="T:RA.Models.Input.VerificationServiceProfile">
             <summary>
             Common input class for all verification profiles
             2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.SkosConceptSchemeGraph.Graph">
+            <summary>
+            Main graph object
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.SkosConceptScheme.Id">
+            <summary>
+            URI of concept scheme
+            OR, more likely be the namespace:Name
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.SkosConceptScheme.CTID">
+            <summary>
+            CTID - identifier for Concept Scheme. 
+            This will have to be extracted from the id
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.SkosConceptScheme.Description">
+            <summary>
+            Concept Scheme description 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.SkosConceptScheme.Title">
+            <summary>
+            Name of the Concept Scheme
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.SkosConcept.CTID">
+            <summary>
+            CTID - identifier for concept. 
+            Format: ce-UUID (lowercase)
+            example: ce-a044dbd5-12ec-4747-97bd-a8311eb0a042
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.SkosConcept.DateModified">
+             <summary>
+            Last modified date for concept
+             </summary>
+        </member>
+        <member name="P:RA.Models.Input.SkosConcept.Definition">
+            <summary>
+            Concept description 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.SkosConcept.PrefLabel">
+            <summary>
+            Concept name - required
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.SkosConcept.TopConceptOf">
+            <summary>
+            URI to the concept scheme
             </summary>
         </member>
         <member name="P:RA.Models.JsonV2.Agent.Type">
@@ -1305,7 +1730,7 @@
             Competency uris
             </summary>
         </member>
-        <member name="P:RA.Models.JsonV2.Competency.crossSubjectReference">
+        <member name="P:RA.Models.JsonV2.Competency.dateCreated">
             <summary>
             A relationship between this competency and a competency in a separate competency framework.
             Competency uris
@@ -1324,6 +1749,12 @@
         <member name="P:RA.Models.JsonV2.Competency.broadAlignment">
             <summary>
             Competency uris
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.encompasses">
+            <summary>
+            Resource being described includes, comprehends or encompass, in whole or in part, the meaning, nature or importance of the resource being referenced.
+            Range Includes: ceasn:Competency, ceasn:Concept
             </summary>
         </member>
         <member name="P:RA.Models.JsonV2.Competency.exactAlignment">
@@ -1383,6 +1814,16 @@
             <summary>
             19-01-18 Changed to a language string
             Hide until changed in CaSS
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.ConceptSchemeGraph.Graph">
+            <summary>
+            Main graph object
+            </summary>
+        </member>
+        <member name="T:RA.Models.JsonV2.Concept">
+            <summary>
+            Concept
             </summary>
         </member>
         <member name="P:RA.Models.JsonV2.ConditionManifest.Type">
@@ -1489,11 +1930,6 @@
             An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
             </summary>
         </member>
-        <member name="T:RA.Models.JsonV2.FinancialAlignmentObject">
-            <summary>
-            Common input class for all verification profiles
-            </summary>
-        </member>
         <member name="P:RA.Models.JsonV2.GraphContainer.Graph">
             <summary>
             Main graph object
@@ -1581,6 +2017,102 @@
             The type of the referenced entity
             </summary>
         </member>
+        <member name="P:RA.Models.JsonV2.Pathway.InLanguage">
+            <summary>
+            TBD - will there be an inLanguage?
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Pathway.HasChild">
+            <summary>
+            This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
+            Reference to another Pathway would have to be an a URI.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Pathway.HasDestinationComponent">
+            <summary>
+            Goal or destination node of the pathway. 
+            URI for a ceterms:PathwayComponent
+            Multipicity: Single
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.PathwayComponent.PathwayComponentType">
+            <summary>
+            Need a custom mapping to @type based on input value
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.PathwayComponent.InLanguage">
+            <summary>
+            TBD - will there be an inLanguage?
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.PathwayComponent.HasCondition">
+            <summary>
+            Resource(s) that describes what must be done to complete a PathwayComponent, or part thereof, as determined by the issuer of the Pathway.
+            ceterms:ComponentCondition
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.PathwayComponent.HasChild">
+            <summary>
+            This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
+            ceterms:PathwayComponent
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.PathwayComponent.IsChildOf">
+            <summary>
+            The referenced resource is higher in some arbitrary hierarchy than this resource.
+            ceterms:PathwayComponent
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.PathwayComponent.IsDestinationComponentOf">
+            <summary>
+            Pathway for which this resource is the goal or destination.
+            Like IsTopChildOf
+            ceterms:Pathway
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.PathwayComponent.Points">
+            <summary>
+            Points associated with this resource, or points possible.
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.PathwayComponent.Preceeds">
+            <summary>
+            Resource that logically comes after this resource.
+            This property indicates a simple or suggested ordering of resources; if a required ordering is intended, use ceterms:prerequisite instead.
+            ceterms:ComponentCondition
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.PathwayComponent.Prerequisite">
+            <summary>
+            Resource(s) that is required as a prior condition to this resource.
+            ceterms:ComponentCondition
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.PathwayComponent.SourceData">
+            <summary>
+            URL to structured data representing the resource.
+            The preferred data serialization is JSON-LD or some other serialization of RDF.
+            URL
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.PathwayComponent.SubjectWebpage">
+            <summary>
+            The webpage that describes this entity.
+            URL
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.ComponentCondition.RequiredNumber">
+            <summary>
+            Number of targetComponent resources that must be fulfilled in order to satisfy the ComponentCondition.
+            Integer
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.ComponentCondition.TargetComponent">
+            <summary>
+            Candidate PathwayComponent for the ComponentCondition as determined by applying the RuleSet.
+            ceterms:PathwayComponent
+            </summary>
+        </member>
         <member name="T:RA.Models.JsonV2.ProcessProfile">
             <summary>
             Common input class for all condition profiles
@@ -1591,301 +2123,32 @@
             Common input class for all condition profiles
             </summary>
         </member>
-        <member name="P:RA.Models.Json.Agent.Type">
-            <summary>
-            The type of organization is one of :
-            - CredentialOrganization
-            - QACredentialOrganization
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.AssessmentProfile.Type">
-            <summary>
-             type
-            </summary>
-        </member>
-        <member name="T:RA.Models.Json.CompetencyInput">
-            <summary>
-            Variation of Competency that uses string instead of IdProperty
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.alignFrom">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.alignTo">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.crossSubjectReference">
-            <summary>
-            A relationship between this competency and a competency in a separate competency framework.
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.derivedFrom">
-            <summary>
-            The URI of a competency from which this competency has been derived.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.exactMatch">
-            <summary>
-            NOTE: temporary, will be changed to exactAlignment
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.isVersionOf">
-            <summary>
-            Competency uri
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.broadAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.exactAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.majorAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.minorAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.narrowAlignment">
-            <summary>
-            Competency uris
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.prerequisiteAlignment">
-            <summary>
-            This competency is a prerequisite to the referenced competency.
-            Uri to a competency
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.skillEmbodied">
-            <summary>
-            Cognitive, affective, and psychomotor skills directly or indirectly embodied in this competency.
-            URI
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyInput.weight">
-            <summary>
-            An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
-            Float
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.Competency.exactMatch">
-            <summary>
-            NOTE: temporary, will be changed to exactAlignment
-            </summary>
-        </member>
-        <member name="T:RA.Models.Json.ProficiencyScale">
-            <summary>
-            The class of structured profiles describing discrete levels of expertise and performance mastery.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyFrameworksGraph.Graph">
-            <summary>
-            Main graph object
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyFrameworkInput.author">
-            <summary>
-            A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyFrameworkInput.conceptKeyword">
-            <summary>
-            A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CompetencyFrameworkInput.conceptTerm">
-            <summary>
-            A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.ConditionManifest.Type">
-            <summary>
-            entity type
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.ConditionProfile.AssertedBy">
-            <summary>
-            Organization that asserts this condition
-            NOTE: It must be serialized to a List
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.ContactPoint.ContactType">
-            <summary>
-            Specification of the type of contact
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.ContactPoint.PhoneNumbers">
-            <summary>
-            An option available on this contact point.
-            For example, a toll-free number or support for hearing-impaired callers.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CostManifest.Type">
-            <summary>
-            entity type
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CredentialGraph.Graph">
-            <summary>
-            Main graph object
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.Credential.CredentialType">
-            <summary>
-            Need a custom mapping to @type based on input value
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.Credential.OwnedBy">
-            <summary>
-            OwnedBy
-            Will either by an Id array, or a thin organization array
-            </summary>
-        </member>
-        <member name="T:RA.Models.Json.CredentialAlignmentObject">
-            <summary>
-            Credential Alignment Object
-            Modifications
-            2017-10-17 TargetNodeName is now required!
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CredentialAlignmentObject.Type">
-            <summary>
-            Need a custom mapping to @type based on input value
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CredentialAlignmentObject.TargetNode">
-            <summary>
-            Target Node
-            The node of a framework targeted by the alignment. Must be a valid URL.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CredentialAlignmentObject.AlignmentDate">
-            <summary>
-            Alignment Date
-            The date the alignment was made.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CredentialAlignmentObject.AlignmentType">
-            <summary>
-            Alignment Type
-            A category of alignment between the learning resource and the framework node.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CredentialAlignmentObject.CodedNotation">
-            <summary>
-            Coded Notation
-            A short set of alpha-numeric symbols that uniquely identifies a resource and supports its discovery.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CredentialAlignmentObject.Framework">
-            <summary>
-            Framework URL
-            The framework to which the resource being described is aligned.Must be a valid URL.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CredentialAlignmentObject.FrameworkName">
-            <summary>
-            Framework Name
-            The name of the framework to which the resource being described is aligned. 
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CredentialAlignmentObject.TargetNodeDescription">
-            <summary>
-            Target Description
-            The description of a node in an established educational framework.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CredentialAlignmentObject.TargetNodeName">
-            <summary>
-            Target Node Name
-            The name of a node in an established educational framework.
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.CredentialAlignmentObject.Weight">
-            <summary>
-            Weight
-            An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
-            </summary>
-        </member>
-        <member name="T:RA.Models.Json.FinancialAlignmentObject">
-            <summary>
-            Common input class for all verification profiles
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.EntityReferenceHelper.ReturnedDataType">
-            <summary>
-            indicate data returned
-            0 - none; 1 - Id list; 2 - org lsit
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.JurisdictionProfile.MainJurisdiction">
-            <summary>
-            The main jurisdiction, commonly a country name.
-            The schema is defined as an array. However, the RA, and editor only allow a single MainJurisdiction
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.JurisdictionProfile.AssertedBy">
-            <summary>
-            Asserted by is typically only explicitly entered for jurisdiction assertions the INs
-            NOTE: It must be serialized to a List
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.LearningOpportunityProfile.Type">
-            <summary>
-            Need a custom mapping to @type based on input value
-            ceterms:CredentialOrganization, oR
-            ceterms:QACredentialOrganization
-            </summary>
-        </member>
-        <member name="T:RA.Models.Json.OrganizationBase">
-            <summary>
-            Base class to use for references to organizations that are not in the registry
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.OrganizationBase.Type">
-            <summary>
-            The type of organization is one of :
-            - CredentialOrganization
-            - QACredentialOrganization
-            </summary>
-        </member>
-        <member name="T:RA.Models.Json.EntityBase">
-            <summary>
-            Base class to use for references to entities that are not in the registry
-            </summary>
-        </member>
-        <member name="P:RA.Models.Json.EntityBase.Type">
-            <summary>
-            The type of the referenced entity
-            </summary>
-        </member>
-        <member name="T:RA.Models.Json.ProcessProfile">
-            <summary>
-            Common input class for all condition profiles
-            </summary>
-        </member>
-        <member name="T:RA.Models.Json.VerificationServiceProfile">
-            <summary>
-            Common input class for all condition profiles
-            </summary>
-        </member>
         <member name="T:RA.Models.RegistryAssistantResponse">
             <summary>
             Registry Assistant Response
+            </summary>
+        </member>
+        <member name="P:RA.Models.RegistryAssistantResponse.Successful">
+            True if action was successfull, otherwise false
+        </member>
+        <member name="P:RA.Models.RegistryAssistantResponse.Messages">
+            <summary>
+            List of error or warning messages
+            </summary>
+        </member>
+        <member name="P:RA.Models.RegistryAssistantResponse.EnvelopeUrl">
+            <summary>
+            URL for the registry envelope that contains the document just add/updated
+            </summary>
+        </member>
+        <member name="P:RA.Models.RegistryAssistantResponse.GraphUrl">
+            <summary>
+            URL for the graph endpoint for the document just add/updated
+            </summary>
+        </member>
+        <member name="P:RA.Models.RegistryAssistantResponse.CredentialFinderUrl">
+            <summary>
+            Credential Finder Detail Page URL for the document just published (within 30 minutes of publishing)
             </summary>
         </member>
         <member name="P:RA.Models.RegistryAssistantResponse.RegistryEnvelopeIdentifier">
@@ -1896,6 +2159,16 @@
         <member name="P:RA.Models.RegistryAssistantResponse.Payload">
             <summary>
             Payload of request to registry, containing properties formatted as CTDL - JSON-LD
+            </summary>
+        </member>
+        <member name="P:RA.Models.RegistryAssistantDeleteResponse.Successful">
+            <summary>
+            True if delete was successfull, otherwise false
+            </summary>
+        </member>
+        <member name="P:RA.Models.RegistryAssistantDeleteResponse.Messages">
+            <summary>
+            List of error or warning messages
             </summary>
         </member>
         <member name="P:RA.Models.RequestHelper.CodeValidationType">

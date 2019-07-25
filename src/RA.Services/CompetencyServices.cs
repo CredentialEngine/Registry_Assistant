@@ -13,7 +13,6 @@ using InputEntity = RA.Models.Input.CompetencyFramework;
 using OutputEntity = RA.Models.JsonV2.CompetencyFramework;
 using OutputGraph = RA.Models.JsonV2.CompetencyFrameworksGraph;
 using OutputCompetency = RA.Models.JsonV2.Competency;
-
 using ServiceHelper = RA.Services.ServiceHelperV2;
 using GraphContainer = RA.Models.JsonV2.GraphContainer;
 using Newtonsoft.Json;
@@ -25,7 +24,7 @@ namespace RA.Services
 	public class CompetencyServices : ServiceHelperV2
 	{
 		static string status = "";
-		static List<string> warnings = new List<string>();
+
 		List<OutputCompetency> outputCompetencies = new List<RJ.Competency>();
 
 		#region graph publish
@@ -35,7 +34,7 @@ namespace RA.Services
 		/// <param name="request"></param>
 		/// <param name="isValid"></param>
 		/// <param name="helper"></param>
-		public void PublishGraph( CASSEntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
+		public void PublishGraph( CASSEntityRequest request, ref bool isValid, RA.Models.RequestHelper helper, ref string outputCTID )
 		{
 			isValid = true;
 			string crEnvelopeId = request.RegistryEnvelopeId;
@@ -44,38 +43,85 @@ namespace RA.Services
 			//may want to do a lookup via the api key?
 			string submitter = "";
 			List<string> messages = new List<string>();
-			var output = new OutputGraph();
-			OutputCompetency oc = new OutputCompetency();
-			List<OutputCompetency> compList = new List<RJ.Competency>();
+			//consider making configurable?
+			
+			GraphContainer og = new GraphContainer();
+			var output = new OutputEntity();
 
 			CompetencyFrameworkGraph input = request.CompetencyFrameworkGraph;// 
-			if ( ToMapFromGraph( input, request.CTID, output, ref messages ) )
-			{
 
-				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+			if ( ToMapFromGraph( input, ref output, ref messages ) )
+			{
+				og.Graph.Add( output );
+				//TODO - is there other info needed, like in context?
+				if ( outputCompetencies != null && outputCompetencies.Count > 0 )
+				{
+					foreach ( var item in outputCompetencies )
+					{
+						og.Graph.Add( item );
+					}
+				}
+				//
+				og.CtdlId = credRegistryGraphUrl + output.CTID;
+				og.CTID = output.CTID;
+				outputCTID = output.CTID;
+				og.Type = "ceasn:CompetencyFramework"; //ignored anyway
+				og.Context = ceasnContext;
+
+				helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
 
 				//will need to extract a ctid?
-				CER cer = new CER( "CompetencyFramework", output.Type, output.CTID, helper.SerializedInput );
-				cer.PublisherAuthorizationToken = helper.ApiKey;
-				cer.PublishingForOrgCtid = helper.OwnerCtid;
-				cer.SkippingValidation = true;
+				CER cer = new CER( "CompetencyFramework", output.Type, output.CTID, helper.SerializedInput )
+				{
+					PublisherAuthorizationToken = helper.ApiKey,
+					PublishingForOrgCtid = helper.OwnerCtid,
+					IsPublisherRequest = helper.IsPublisherRequest,
+					EntityName = CurrentEntityName,
+					SkippingValidation = true
+				};
 
 				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
-					cer.IsManagedRequest = true;
-
-				string identifier = "CompetencyFramework_" + output.CTID;
-				if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
 				{
-					//for now need to ensure envelopid is returned
-					helper.RegistryEnvelopeId = crEnvelopeId;
+					cer.IsManagedRequest = true;
+					//get publisher org
+					string publisherCTID = "";
+					if ( SupportServices.GetPublishingOrgByApiKey( cer.PublisherAuthorizationToken, ref publisherCTID, ref messages ) )
+					{
+						cer.PublishingByOrgCtid = publisherCTID;
+					}
+					else
+					{
+						//should be an error message returned
 
-					string msg = string.Format( "<p>Published Competency Framework</p><p>CTID: {0}</p> <p>EnvelopeId: {1}</p> ", output.CTID, crEnvelopeId );
-					NotifyOnPublish( "CompetencyFramework", msg );
+						isValid = false;
+						helper.SetMessages( messages );
+						LoggingHelper.DoTrace( 4, string.Format( "CompetencyServices.PublishGraph. Validate ApiKey failed. Org Ctid: {0}, Document Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.CTID, cer.PublisherAuthorizationToken ) );
+						return; //===================
+					}
 				}
 				else
+					cer.PublishingByOrgCtid = cer.PublishingForOrgCtid;
+				//
+				if ( !SupportServices.ValidateAgainstPastRequest( "CompetencyFramework_", output.CTID, ref cer, ref messages ) )
 				{
-					messages.Add( status );
 					isValid = false;
+					//return; //===================
+				} else
+				{
+					string identifier = "CompetencyFramework_" + output.CTID;
+					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					{
+						//for now need to ensure envelopid is returned
+						helper.RegistryEnvelopeId = crEnvelopeId;
+
+						string msg = string.Format( "<p>Published Competency Framework</p><p>CTID: {0}</p> <p>EnvelopeId: {1}</p> ", output.CTID, crEnvelopeId );
+						NotifyOnPublish( "CompetencyFramework", msg );
+					}
+					else
+					{
+						messages.Add( status );
+						isValid = false;
+					}
 				}
 				//}
 			}
@@ -83,7 +129,7 @@ namespace RA.Services
 			{
 				helper.HasErrors = true;
 				isValid = false;
-				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelperV2.GetJsonSettings() );
 			}
 			helper.SetMessages( messages );
 			return;
@@ -99,45 +145,72 @@ namespace RA.Services
 		/// <param name="output"></param>
 		/// <param name="messages"></param>
 		/// <returns></returns>
-		public bool ToMapFromGraph( CompetencyFrameworkGraph input, string requestCTID, OutputGraph output, ref List<string> messages )
+		public bool ToMapFromGraph( CompetencyFrameworkGraph input, ref OutputEntity output, ref List<string> messages )
 		{
 			CurrentEntityType = "CASSCompetencyFramework";
 			bool isValid = true;
 
 			//TODO - if from CASS, just pass thru, with minimum validation
-			output.Graph = input.Graph;
+			//output.Graph = input.Graph;
 			int competenciesCount = 0;
 			try
 			{
-				RJ.CompetencyFramework framework = GetFramework( input.Graph, ref competenciesCount );
-				if ( framework == null || string.IsNullOrWhiteSpace( framework.CTID ) )
+				output = GetFramework( input.Graph, ref competenciesCount, ref messages );
+				if ( output == null || string.IsNullOrWhiteSpace( output.CTID ) )
 				{
 					messages.Add( "A ceasn:CompetencyFramework document was not found." );
 				}
 				else
 				{
-					if ( !string.IsNullOrWhiteSpace( requestCTID ) )
-					{
-						output.CTID = requestCTID;
-					}
-					else
-					if ( !string.IsNullOrWhiteSpace( framework.CTID ) )
-					{
-						//LoggingHelper.DoTrace( 4, string.Format( "CompetencyServices.PublishFromCASS. DIFFERENCES IN CTIDs. request.CTID: {0}, framework.CTID: {1}", ( requestCTID ?? "" ), framework.CTID ) );
-						output.CTID = framework.CTID;
-					}
+					//CHECK for required fields
+					CurrentCtid = output.CTID = FormatCtid( output.CTID, "CompetencyFramework", ref messages );
+
+					if ( !HasData( output.name ) )
+						messages.Add( "A name must be provided for the competency framework." );
 					else
 					{
-						messages.Add( "A CTID for the competency framework was not found in the request object or competency framework." );
+						CurrentEntityName = output.name.ToString();
 					}
+					if ( !HasData( output.description ) )
+						messages.Add( "A description must be provided for the competency framework." );
+					if ( output.hasTopChild == null || output.hasTopChild.Count() == 0 )
+					{
+						//messages.Add( "Error: hasTopChild has to have at least one entry." );
+					}
+					if ( output.inLanguage == null || output.inLanguage.Count() == 0 )
+						messages.Add( "At least one entry must be provided for the inLanguage of a competency framework." );
+
+					//if ( output.creator == null || output.creator.Count() == 0 )
+					//{
+					//	if ( isFrameworkCreatorRequired )
+					//		messages.Add( "At least one entry must be provided for the creator of a competency framework." );
+					//}
+					if ( output.publisher == null || output.publisher.Count() == 0 )
+					{
+						if ( isFrameworkPublisherRequired )
+							messages.Add( "At least one entry must be provided for the publisher of a competency framework." );
+					}
+
+					if ( string.IsNullOrWhiteSpace( output.dateCreated ) )
+					{
+						if ( isFrameworkDateCreatedRequired )
+							messages.Add( "A dateCreated must be provided for the competency framework." );
+					}
+					else if ( !IsDate( output.dateCreated ) )
+						messages.Add( "DateCreated is invalid." );
+					//temp =====================
+					output.publicationStatusType = ( output.publicationStatusType ?? "" ).Replace( "/vocab/publicationStatus", "/vocabs/publicationStatus" );
+					// =========================
 					if ( competenciesCount == 0 )
 						messages.Add( "No documents of type ceasn:Competency were found." );
+
+					output.CtdlId = credRegistryResourceUrl + output.CTID;
 				}
-				output.CtdlId = credRegistryGraphUrl + output.CTID;
+
 			}
 			catch ( Exception ex )
 			{
-				LogError( ex, "CompetencyServices.ToMapFromCASS" );
+				LoggingHelper.LogError( ex, "CompetencyServices.ToMapFromGraph" );
 				messages.Add( ex.Message );
 			}
 			if ( messages.Count > 0 )
@@ -145,7 +218,7 @@ namespace RA.Services
 
 			return isValid;
 		}
-		private RJ.CompetencyFramework GetFramework( object graph, ref int competenciesCount )
+		private OutputEntity GetFramework( object graph, ref int competenciesCount, ref List<string> messages )
 		{
 			//string ctid = "";
 			competenciesCount = 0;
@@ -153,7 +226,7 @@ namespace RA.Services
 			{
 				return null;
 			}
-			RJ.CompetencyFramework entity = new RJ.CompetencyFramework();
+			var entity = new OutputEntity();
 			Newtonsoft.Json.Linq.JArray jarray = ( Newtonsoft.Json.Linq.JArray )graph;
 			foreach ( var token in jarray )
 			{
@@ -161,7 +234,7 @@ namespace RA.Services
 				{
 					if ( token.ToString().IndexOf( "ceasn:CompetencyFramework" ) > -1 )
 					{
-						entity = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<RJ.CompetencyFramework>();
+						entity = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<OutputEntity>();
 
 						//RJ.CompetencyFrameworkInput cf = ( RJ.CompetencyFrameworkInput ) JsonConvert.DeserializeObject( token.ToString() );
 						if ( competenciesCount == 0 && jarray.Count > 1 )
@@ -169,11 +242,34 @@ namespace RA.Services
 							//18-09-25 the competency framework is now first in the export document
 							competenciesCount = jarray.Count - 1;
 						}
-						return entity;
+						//handle map 
+						//if (entity.exactAlignment != null && entity.exactAlignment.Count() > 0)
+						//{
+						//	if ( entity.source != null && entity.source.Count() > 0 )
+						//	{
+						//		entity.exactAlignment = null;
+						//	} else
+						//	{
+						//		entity.source = AssignListToList( entity.exactAlignment );
+						//		entity.exactAlignment = null;
+						//	}
+						//}
+						//return entity;
 					}
 					else if ( token.ToString().IndexOf( "ceasn:Competency" ) > -1 )
 					{
 						competenciesCount++;
+						var competency = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<RJ.Competency>();
+						if ( !HasData( competency.competencyText ) )
+							messages.Add( string.Format( "The property competencyText must be provided for the compentency (#{0}), CTID: {1}.", competenciesCount, competency.Ctid ) );
+
+						if ( string.IsNullOrWhiteSpace( competency.isTopChildOf ) )
+						{
+							//if no top scheme, then must have
+							if ( competency.isChildOf == null || competency.isChildOf.Count() == 0 )
+								messages.Add( string.Format( "Either the isTopChildOf or the isChildOf property must be provided for the compentency (#{0}).", competenciesCount ) );
+						}
+						outputCompetencies.Add( competency );
 						//ignore
 						//var c1 = token.ToString().Replace( "exactMatch", "exactAlignment" );
 						//var c2 = ( ( Newtonsoft.Json.Linq.JObject ) c1 ).ToObject<RJ.CompetencyInput>();
@@ -255,17 +351,8 @@ namespace RA.Services
 			var output = new OutputEntity();
 			GraphContainer og = new GraphContainer();
 
-			/*
-             * current approach:
-             * - multiple publish
-             * - framework
-             * - one envelope for each competency
-             * 
-             */
 			if ( ToMap( request, output, ref messages ) )
 			{
-				if ( warnings.Count > 0 )
-					messages.AddRange( warnings );
 
 				og.Graph.Add( output );
 				//add competencies
@@ -276,30 +363,69 @@ namespace RA.Services
 						og.Graph.Add( item );
 					}
 				}
+				//
+				og.CtdlId = credRegistryGraphUrl + output.CTID;
+				og.CTID = output.CTID;
+				og.Type = output.Type; // "ceasn:CompetencyFramework";
+				og.Context = ceasnContext;
+				//
+				helper.Payload = JsonConvert.SerializeObject( og, ServiceHelperV2.GetJsonSettings() );
 
-				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
-
-				CER cer = new CER( "CompetencyFramework", output.Type, output.CTID, helper.SerializedInput );
-				cer.PublisherAuthorizationToken = helper.ApiKey;
-				cer.PublishingForOrgCtid = helper.OwnerCtid;
+				CER cer = new CER( "CompetencyFramework", og.Type, output.CTID, helper.SerializedInput )
+				{
+					PublisherAuthorizationToken = helper.ApiKey,
+					IsPublisherRequest = helper.IsPublisherRequest,
+					EntityName = CurrentEntityName,
+					PublishingForOrgCtid = helper.OwnerCtid
+				};
 
 				if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
-					cer.IsManagedRequest = true;
-
-				string identifier = "CompetencyFramework_" + request.CompetencyFramework.Ctid;
-
-				if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
 				{
-					//for now need to ensure envelopid is returned
-					helper.RegistryEnvelopeId = crEnvelopeId;
+					cer.IsManagedRequest = true;
+					//get publisher org
+					string publisherCTID = "";
+					if ( SupportServices.GetPublishingOrgByApiKey( cer.PublisherAuthorizationToken, ref publisherCTID, ref messages ) )
+					{
+						cer.PublishingByOrgCtid = publisherCTID;
+					}
+					else
+					{
+						//should be an error message returned
 
-					string msg = string.Format( "<p>Published CompetencyFramework: {0}</p><p>sourcewebpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.name, output.source, output.CTID, crEnvelopeId );
-					//NotifyOnPublish( "CompetencyFramework", msg );
+						isValid = false;
+						helper.SetMessages( messages );
+						LoggingHelper.DoTrace( 4, string.Format( "CompetencyServices.Publish. Validate ApiKey failed. Org Ctid: {0}, Document Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.CTID, cer.PublisherAuthorizationToken ) );
+						return; //===================
+					}
+				}
+				else
+					cer.PublishingByOrgCtid = cer.PublishingForOrgCtid;
+
+				//
+				if ( !SupportServices.ValidateAgainstPastRequest( "CompetencyFramework_", output.CTID, ref cer, ref messages ) )
+				{
+					isValid = false;
+					//helper.SetMessages( messages );
+					//return; //===================
 				}
 				else
 				{
-					messages.Add( status );
-					isValid = false;
+
+					string identifier = "CompetencyFramework_" + request.CompetencyFramework.Ctid;
+
+					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					{
+						//for now need to ensure envelopid is returned
+						helper.RegistryEnvelopeId = crEnvelopeId;
+
+						string msg = string.Format( "<p>Published CompetencyFramework: {0}</p><p>CTID: {1}</p> <p>EnvelopeId: {2}</p> ", output.name, output.CTID, crEnvelopeId );
+						//NotifyOnPublish( "CompetencyFramework", msg );
+					}
+					else
+					{
+						messages.Add( status );
+						isValid = false;
+					}
 				}
 			}
 			else
@@ -307,15 +433,16 @@ namespace RA.Services
 				isValid = false;
 				if ( !string.IsNullOrWhiteSpace( status ) )
 					messages.Add( status );
-				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelperV2.GetJsonSettings() );
 			}
-
+			helper.SetWarningMessages( warningMessages );
 			helper.SetMessages( messages );
 		}
 
 		//
 		public string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
 		{
+			GraphContainer og = new GraphContainer();
 			var output = new OutputEntity();
 			string payload = "";
 			isValid = true;
@@ -323,15 +450,33 @@ namespace RA.Services
 
 			if ( ToMap( request, output, ref messages ) )
 			{
-				payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+				
+				//payload = JsonConvert.SerializeObject( output, ServiceHelperV2.GetJsonSettings() );
 			}
 			else
 			{
 				isValid = false;
 				//do payload anyway
-				payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
+				//payload = JsonConvert.SerializeObject( output, ServiceHelperV2.GetJsonSettings() );
 			}
-
+			og.Graph.Add( output );
+			//add competencies
+			if ( outputCompetencies != null && outputCompetencies.Count > 0 )
+			{
+				foreach ( var item in outputCompetencies )
+				{
+					og.Graph.Add( item );
+				}
+			}
+			//
+			og.CtdlId = credRegistryGraphUrl + output.CTID;
+			og.CTID = output.CTID;
+			og.Type = output.Type; // "ceasn:CompetencyFramework";
+			og.Context = ceasnContext;
+			//
+			payload = JsonConvert.SerializeObject( og, ServiceHelperV2.GetJsonSettings() );
+			if ( warningMessages.Count > 0 )
+				messages.AddRange( warningMessages );
 			return payload;
 		}
 		public bool ToMap( EntityRequest request, OutputEntity output, ref List<string> messages )
@@ -350,25 +495,30 @@ namespace RA.Services
 					hasDefaultLanguage = true;
 				}
 			}
-			output.inLanguage = input.inLanguage;
+
+			#region  Populate the competency framework
+
+			//output.inLanguage = input.inLanguage;
 			output.inLanguage = PopulateInLanguage( input.inLanguage, "Competency Framework", "Competency Framework", hasDefaultLanguage, ref messages );
 			try
 			{
 				//??????????????????
 				//output.CtdlId = AssignValidUrlAsPropertyIdList( input.creator, "Framework creator", ref messages );
-				if ( IsCtidValid( input.Ctid, ref messages ) )
+				if ( IsCtidValid( input.Ctid, "Competency Framework CTID", ref messages ) )
 				{
 					//input.Ctid = input.Ctid.ToLower();
 					output.CTID = input.Ctid;
-					output.CtdlId = idBaseUrl + output.CTID;
+					output.CtdlId = credRegistryResourceUrl + output.CTID;
 					CurrentCtid = input.Ctid;
 				}
 
 				output.name = AssignLanguageMap( input.name, input.name_map, "Competency Framework", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
-				output.description = AssignLanguageMap( input.description, input.description_map, "Competency Framework Description", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
+				CurrentEntityName = output.name.ToString();
+				
+				output.description = AssignLanguageMap( input.description, input.description_map, "Competency Framework Description", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
 
-				output.alignFrom = AssignValidUrlListAsStringList( input.alignFrom, "Framework alignFrom", ref messages );
-				output.alignTo = AssignValidUrlListAsStringList( input.alignTo, "Framework alignTo", ref messages );
+				output.alignFrom = AssignRegistryResourceURIsListAsStringList( input.alignFrom, "Framework alignFrom", ref messages );
+				output.alignTo = AssignRegistryResourceURIsListAsStringList( input.alignTo, "Framework alignTo", ref messages );
 
 				output.author = input.author;
 				//language map  TBD
@@ -376,10 +526,28 @@ namespace RA.Services
 
 				output.conceptTerm = AssignValidUrlListAsStringList( input.conceptTerm, "Framework conceptTerm", ref messages );
 
-				output.creator = AssignValidUrlListAsStringList( input.creator, "Framework creator", ref messages );
+				output.creator = AssignRegistryResourceURIsListAsStringList( input.creator, "Framework creator", ref messages );
+				if ( output.creator == null || output.creator.Count() == 0 )
+				{
+					//if ( isFrameworkCreatorRequired )
+					//	messages.Add( "At least one entry must be provided for the creator of a competency framework." );
+				}
+				if ( output.publisher == null || output.publisher.Count() == 0 )
+				{
+					if ( isFrameworkPublisherRequired )
+						messages.Add( "At least one entry must be provided for the publisher of a competency framework." );
+				}
 
 				output.dateCopyrighted = MapDate(input.dateCopyrighted, "dateCopyrighted", ref messages);
 				output.dateCreated = MapDate( input.dateCreated, "dateCreated", ref messages );
+
+				if ( string.IsNullOrWhiteSpace( output.dateCreated ) )
+				{
+					//always require this for direct calls
+					//if ( isFrameworkDateCreatedRequired )
+						messages.Add( "A dateCreated must be provided for the competency framework." );
+				}
+
 				output.dateModified = MapDate( input.dateModified, "dateModified", ref messages );
 				output.dateValidFrom = MapDate( input.dateValidFrom, "dateValidFrom", ref messages );
 				output.dateValidUntil = MapDate( input.dateValidUntil, "dateValidUntil", ref messages );
@@ -387,34 +555,48 @@ namespace RA.Services
 				output.derivedFrom = AssignValidUrlAsString( input.derivedFrom, "Framework derivedFrom", ref messages, false );
 
 
-				output.educationLevelType = AssignValidUrlListAsStringList( input.educationLevelType, "Framework educationLevelType", ref messages );
-				output.hasTopChild = AssignValidUrlListAsStringList( input.hasTopChild, "Framework hasTopChild", ref messages );
+				output.educationLevelType = AssignRegistryResourceURIsListAsStringList( input.educationLevelType, "Framework educationLevelType", ref messages );
+				output.hasTopChild = AssignRegistryResourceURIsListAsStringList( input.hasTopChild, "Framework hasTopChild", ref messages );
 				if ( output.hasTopChild == null || output.hasTopChild.Count == 0 )
 				{
-					messages.Add( "Error: at least one competency must be referenced in the hasTopChild property of a competency framework." );
+					//messages.Add( "At least one competency must be referenced in the hasTopChild property of a competency framework." );
 				}
 				output.identifier = AssignValidUrlListAsStringList( input.identifier, "Framework identifier", ref messages );
-				
+				output.altIdentifier = AssignListToList( input.altIdentifier);
+
 				output.license = AssignValidUrlAsString( input.license, "Framework license", ref messages, false );
 				//output.localSubject = FormatLanguageMapList( input.localSubject, "Framework localSubject", ref messages );
 
 				output.publicationStatusType = AssignValidUrlAsString( input.publicationStatusType, "Framework publicationStatusType", ref messages, false );
-				output.publisher = AssignValidUrlListAsStringList( input.publisher, "Framework publisher", ref messages );
+				//temp =====================
+				output.publicationStatusType = ( output.publicationStatusType ?? "" ).Replace( "/vocab/publicationStatus", "/vocabs/publicationStatus" );
+				// =========================
+				output.publisher = AssignRegistryResourceURIsListAsStringList( input.publisher, "Framework publisher", ref messages );
 				output.publisherName = AssignLanguageMapList( input.publisherName_map, "Framework publisherName", ref messages );
 				output.repositoryDate = input.repositoryDate;
 				//
 				//output.rights = AssignValidUrlAsString( input.rights, "Framework rights", ref messages );
-				output.rights = AssignLanguageMap( input.rights, input.rights_map, "Competency Framework Rights", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
+				output.rights = AssignLanguageMap( input.rights, input.rights_map, "Competency Framework Rights", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
 				//output.rights = AssignLanguageMap( input.rights_map, "Framework rights", ref messages );
 
 				output.rightsHolder = AssignValidUrlAsString( input.rightsHolder, "Framework rightsHolder", ref messages, false );
 				output.source = AssignValidUrlListAsStringList( input.source, "Framework source", ref messages );
-
+				
 				output.tableOfContents = AssignLanguageMap( input.tableOfContents_map, "Framework tableOfContents", ref messages );
 
+				output.OccupationType = FormatCredentialAlignmentListFromFrameworkItemList( input.OccupationType, true, ref messages );
+
+				output.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( input.IndustryType, true, ref messages );
+
+
+
+				#endregion
+
+
+				#region  Populate the competencies
 				if ( request.Competencies == null || request.Competencies.Count == 0 )
 				{
-					messages.Add( "Error: at least one competency must be included with a competency framework." );
+					messages.Add( "At least one competency must be included with a competency framework." );
 				}
 				else
 				{
@@ -425,16 +607,17 @@ namespace RA.Services
 					{
 						competency = new OutputCompetency();
 						compCntr++;
-						if ( ToMapCompetency( item, competency, hasDefaultLanguage, compCntr, ref messages ) )
+						if ( ToMapCompetency( item, competency, output, hasDefaultLanguage, compCntr, ref messages ) )
 						{
 							outputCompetencies.Add( competency );
 						}
 					}
 				}
+				#endregion
 			}
 			catch ( Exception ex )
 			{
-				LogError( ex, "CompetencyServices.ToMap" );
+				LoggingHelper.LogError( ex, "CompetencyServices.ToMap" );
 				messages.Add( ex.Message );
 			}
 
@@ -444,61 +627,78 @@ namespace RA.Services
 			return isValid;
 		}
 
-		public bool ToMapCompetency( RA.Models.Input.Competency input, OutputCompetency output, bool hasDefaultLanguage, int compCntr, ref List<string> messages )
+		public bool ToMapCompetency( RA.Models.Input.Competency input, OutputCompetency output, OutputEntity framework, bool hasDefaultLanguage, int compCntr, ref List<string> messages )
 		{
 			bool isValid = true;
 			//
-			output.Ctid = FormatCtid( input.Ctid, ref messages );
-			output.CtdlId = idBaseUrl + output.Ctid;
+			CurrentCtid = output.Ctid = FormatCtid( input.Ctid, string.Format("Competency (#{0})", compCntr), ref messages );
+			output.CtdlId = credRegistryResourceUrl + output.Ctid;
 			//establish language. make a common method
-			output.inLanguage = PopulateInLanguage( input.inLanguage, "Competency", string.Format( "#", compCntr ), hasDefaultLanguage, ref messages );
+			//output.inLanguage = PopulateInLanguage( input.inLanguage, "Competency", string.Format( "#", compCntr ), hasDefaultLanguage, ref messages );
 			//
 			output.competencyText = AssignLanguageMap( input.competencyText, input.competencyText_map, "competencyText", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
 			//
 			output.comment = AssignLanguageMapList( input.comment, input.comment_map, "comment", DefaultLanguageForMaps, ref messages );
 
-
 			output.complexityLevel = AssignValidUrlListAsStringList( input.complexityLevel, "complexityLevel", ref messages, false );
 			output.competencyText = AssignLanguageMap( input.competencyText, input.competencyText_map, "competencyText", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
 
-			output.alignFrom = AssignValidUrlListAsStringList( input.alignFrom, "alignFrom", ref messages, false );
-			output.alignTo = AssignValidUrlListAsStringList( input.alignTo, "alignTo", ref messages, false );
+			output.alignFrom = AssignRegistryResourceURIsListAsStringList( input.alignFrom, "alignFrom", ref messages, false );
+			output.alignTo = AssignRegistryResourceURIsListAsStringList( input.alignTo, "alignTo", ref messages, false );
 
 			output.altCodedNotation = AssignListToList( input.altCodedNotation);
 			output.author = AssignListToList(input.author);
 			output.codedNotation = input.codedNotation;
 			output.complexityLevel = AssignListToList( input.complexityLevel);
-			output.comprisedOf = AssignValidUrlListAsStringList( input.comprisedOf, "comprisedOf", ref messages, false );
+			output.comprisedOf = AssignRegistryResourceURIsListAsStringList( input.comprisedOf, "comprisedOf", ref messages, false );
 			output.conceptKeyword = AssignLanguageMapList( input.conceptKeyword, input.conceptKeyword_maplist, "conceptKeyword", DefaultLanguageForMaps, ref messages );
 
-			output.conceptTerm = AssignValidUrlListAsStringList( input.conceptTerm, "conceptTerm", ref messages, false );
+			output.conceptTerm = AssignRegistryResourceURIsListAsStringList( input.conceptTerm, "conceptTerm", ref messages, false );
 			output.creator = input.creator;
 
 			output.dateCreated = MapDate( input.dateCreated, "dateCreated", ref messages );
-			output.dateModified = MapDate( input.dateModified, "dateModified", ref messages );
-			output.derivedFrom = input.derivedFrom;
-			output.educationLevelType = input.educationLevelType;
+			if ( string.IsNullOrWhiteSpace( output.dateCreated ) )
+			{
+				if ( isFrameworkDateCreatedRequired )
+				{
+					if ( string.IsNullOrWhiteSpace( framework.dateCreated ) )
+						messages.Add( "A dateCreated must be provided for the competency." );
+					else
+						output.dateCreated = framework.dateCreated;
+				}
+			}
 
-			output.hasChild = AssignValidUrlListAsStringList( input.hasChild, "hasChild", ref messages, false );
+			output.dateModified = MapDate( input.dateModified, "dateModified", ref messages );
+			output.derivedFrom = AssignValidUrlAsString( input.derivedFrom, "Competency derivedFrom", ref messages, false );
+			output.educationLevelType = input.educationLevelType;
+			output.encompasses = AssignRegistryResourceURIsListAsStringList( input.encompasses, "encompasses", ref messages, false );
+			output.hasChild = AssignRegistryResourceURIsListAsStringList( input.hasChild, "hasChild", ref messages, false );
 
 			output.identifier = input.identifier;
-			output.broadAlignment = AssignValidUrlListAsStringList( input.broadAlignment, "broadAlignment", ref messages, false );
 
-			output.isChildOf = AssignValidUrlListAsStringList( input.isChildOf, "isChildOf", ref messages, false );
-			output.isPartOf = input.isPartOf;
-			output.isTopChildOf = input.isTopChildOf;
+			output.isChildOf = AssignRegistryResourceURIsListAsStringList( input.isChildOf, "isChildOf", ref messages, false );
+			if ( string.IsNullOrWhiteSpace( input.isPartOf ) )
+			{
+				messages.Add( "A value must be provided for isPartOf for the competency: '" + output.competencyText.ToString() + "' " );
+			}
+			else
+			{
+				output.isPartOf = AssignRegistryResourceURIAsString( input.isPartOf, "Competency isPartOf", ref messages, true );
+			}
+			output.isTopChildOf = AssignRegistryResourceURIAsString( input.isTopChildOf, "Compentency isTopChildOf", ref messages, false );
 
 			//
 			output.isVersionOf = input.isVersionOf;
 			output.listID = input.listID;
-			output.localSubject = AssignLanguageMapList( input.localSubject, input.localSubject_maplist, "conceptKeyword", DefaultLanguageForMaps, ref messages );
+			output.competencyCategory = AssignLanguageMap( input.competencyCategory, input.competencyCategory_map, "competencyCategory", DefaultLanguageForMaps, ref messages );
 
-			output.broadAlignment = AssignValidUrlListAsStringList( input.broadAlignment, "broadAlignment", ref messages, false );
-			output.majorAlignment = AssignValidUrlListAsStringList( input.majorAlignment, "majorAlignment", ref messages, false );
-			output.minorAlignment = AssignValidUrlListAsStringList( input.minorAlignment, "minorAlignment", ref messages, false );
-			output.narrowAlignment = AssignValidUrlListAsStringList( input.narrowAlignment, "narrowAlignment", ref messages, false );
-			output.prerequisiteAlignment = AssignValidUrlListAsStringList( input.prerequisiteAlignment, "prerequisiteAlignment", ref messages, false );
-			output.skillEmbodied = AssignValidUrlListAsStringList( input.skillEmbodied, "skillEmbodied", ref messages, false );
+			output.broadAlignment = AssignRegistryResourceURIsListAsStringList( input.broadAlignment, "broadAlignment", ref messages, false );
+			output.exactAlignment = AssignRegistryResourceURIsListAsStringList( input.exactAlignment, "exactAlignment", ref messages, false );
+			output.majorAlignment = AssignRegistryResourceURIsListAsStringList( input.majorAlignment, "majorAlignment", ref messages, false );
+			output.minorAlignment = AssignRegistryResourceURIsListAsStringList( input.minorAlignment, "minorAlignment", ref messages, false );
+			output.narrowAlignment = AssignRegistryResourceURIsListAsStringList( input.narrowAlignment, "narrowAlignment", ref messages, false );
+			output.prerequisiteAlignment = AssignRegistryResourceURIsListAsStringList( input.prerequisiteAlignment, "prerequisiteAlignment", ref messages, false );
+			output.skillEmbodied = AssignRegistryResourceURIsListAsStringList( input.skillEmbodied, "skillEmbodied", ref messages, false );
 		
 			output.weight = input.weight;
 

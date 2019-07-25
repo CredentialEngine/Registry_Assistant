@@ -283,8 +283,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceasn:identifier" )]
 		public List<string> identifier { get; set; } = new List<string>();
 
-		[JsonProperty( PropertyName = "ceasn:inLanguage" )]
-		public List<string> inLanguage { get; set; } = new List<string>();
+		//[JsonProperty( PropertyName = "ceasn:inLanguage" )]
+		//public List<string> inLanguage { get; set; } = new List<string>();
 
 		[JsonProperty( PropertyName = "ceasn:isChildOf" )]
 		public List<string> isChildOf { get; set; } = new List<string>();
