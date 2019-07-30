@@ -83,6 +83,8 @@
     <Compile Include="RA.Models\Input\profiles\ProcessProfile.cs" />
     <Compile Include="RA.Models\Input\profiles\VerificationServiceProfile.cs" />
     <Compile Include="RA.Models\RegistryAssistantResponse.cs" />
+    <Compile Include="SampleModels\BaseModel.cs" />
+    <Compile Include="SampleModels\Credential.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="EnvelopeSamples\AssessmentEnvelope.json" />
