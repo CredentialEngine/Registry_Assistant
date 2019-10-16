@@ -28,6 +28,9 @@ namespace RA.Models.Input
         public List<RAPlace> JurisdictionException { get; set; }
 	}
 
+	/// <summary>
+	/// Organization makes an assertion for specific jurisdiction(s). 
+	/// </summary>
 	public class JurisdictionAssertedInProfile 
 	{
 		public JurisdictionAssertedInProfile ()

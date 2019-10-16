@@ -48,9 +48,7 @@ namespace RA.Services
 			GraphContainer og = new GraphContainer();
 			var output = new OutputEntity();
 
-			CompetencyFrameworkGraph input = request.CompetencyFrameworkGraph;// 
-
-			if ( ToMapFromGraph( input, ref output, ref messages ) )
+			if ( ToMapFromGraph( request, ref output, ref messages ) )
 			{
 				og.Graph.Add( output );
 				//TODO - is there other info needed, like in context?
@@ -62,7 +60,7 @@ namespace RA.Services
 					}
 				}
 				//
-				og.CtdlId = credRegistryGraphUrl + output.CTID;
+				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 				og.CTID = output.CTID;
 				outputCTID = output.CTID;
 				og.Type = "ceasn:CompetencyFramework"; //ignored anyway
@@ -77,6 +75,7 @@ namespace RA.Services
 					PublishingForOrgCtid = helper.OwnerCtid,
 					IsPublisherRequest = helper.IsPublisherRequest,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					SkippingValidation = true
 				};
 
@@ -109,11 +108,11 @@ namespace RA.Services
 				} else
 				{
 					string identifier = "CompetencyFramework_" + output.CTID;
-					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
-
+						CheckIfChanged( helper, cer.WasChanged );
 						string msg = string.Format( "<p>Published Competency Framework</p><p>CTID: {0}</p> <p>EnvelopeId: {1}</p> ", output.CTID, crEnvelopeId );
 						NotifyOnPublish( "CompetencyFramework", msg );
 					}
@@ -129,7 +128,7 @@ namespace RA.Services
 			{
 				helper.HasErrors = true;
 				isValid = false;
-				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelperV2.GetJsonSettings() );
+				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 			}
 			helper.SetMessages( messages );
 			return;
@@ -145,10 +144,12 @@ namespace RA.Services
 		/// <param name="output"></param>
 		/// <param name="messages"></param>
 		/// <returns></returns>
-		public bool ToMapFromGraph( CompetencyFrameworkGraph input, ref OutputEntity output, ref List<string> messages )
+		public bool ToMapFromGraph(CASSEntityRequest request, ref OutputEntity output, ref List<string> messages )
 		{
 			CurrentEntityType = "CASSCompetencyFramework";
 			bool isValid = true;
+			CompetencyFrameworkGraph input = request.CompetencyFrameworkGraph;// 
+			Community = request.Community ?? "";
 
 			//TODO - if from CASS, just pass thru, with minimum validation
 			//output.Graph = input.Graph;
@@ -204,7 +205,7 @@ namespace RA.Services
 					if ( competenciesCount == 0 )
 						messages.Add( "No documents of type ceasn:Competency were found." );
 
-					output.CtdlId = credRegistryResourceUrl + output.CTID;
+					output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 				}
 
 			}
@@ -364,18 +365,19 @@ namespace RA.Services
 					}
 				}
 				//
-				og.CtdlId = credRegistryGraphUrl + output.CTID;
+				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 				og.CTID = output.CTID;
 				og.Type = output.Type; // "ceasn:CompetencyFramework";
 				og.Context = ceasnContext;
 				//
-				helper.Payload = JsonConvert.SerializeObject( og, ServiceHelperV2.GetJsonSettings() );
+				helper.Payload = JsonConvert.SerializeObject( og, ServiceHelper.GetJsonSettings() );
 
 				CER cer = new CER( "CompetencyFramework", og.Type, output.CTID, helper.SerializedInput )
 				{
 					PublisherAuthorizationToken = helper.ApiKey,
 					IsPublisherRequest = helper.IsPublisherRequest,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					PublishingForOrgCtid = helper.OwnerCtid
 				};
 
@@ -413,11 +415,11 @@ namespace RA.Services
 
 					string identifier = "CompetencyFramework_" + request.CompetencyFramework.Ctid;
 
-					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
-
+						CheckIfChanged( helper, cer.WasChanged );
 						string msg = string.Format( "<p>Published CompetencyFramework: {0}</p><p>CTID: {1}</p> <p>EnvelopeId: {2}</p> ", output.name, output.CTID, crEnvelopeId );
 						//NotifyOnPublish( "CompetencyFramework", msg );
 					}
@@ -433,7 +435,7 @@ namespace RA.Services
 				isValid = false;
 				if ( !string.IsNullOrWhiteSpace( status ) )
 					messages.Add( status );
-				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelperV2.GetJsonSettings() );
+				helper.Payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 			}
 			helper.SetWarningMessages( warningMessages );
 			helper.SetMessages( messages );
@@ -451,13 +453,13 @@ namespace RA.Services
 			if ( ToMap( request, output, ref messages ) )
 			{
 				
-				//payload = JsonConvert.SerializeObject( output, ServiceHelperV2.GetJsonSettings() );
+				//payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 			}
 			else
 			{
 				isValid = false;
 				//do payload anyway
-				//payload = JsonConvert.SerializeObject( output, ServiceHelperV2.GetJsonSettings() );
+				//payload = JsonConvert.SerializeObject( output, ServiceHelper.GetJsonSettings() );
 			}
 			og.Graph.Add( output );
 			//add competencies
@@ -469,12 +471,12 @@ namespace RA.Services
 				}
 			}
 			//
-			og.CtdlId = credRegistryGraphUrl + output.CTID;
+			og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 			og.CTID = output.CTID;
 			og.Type = output.Type; // "ceasn:CompetencyFramework";
 			og.Context = ceasnContext;
 			//
-			payload = JsonConvert.SerializeObject( og, ServiceHelperV2.GetJsonSettings() );
+			payload = JsonConvert.SerializeObject( og, ServiceHelper.GetJsonSettings() );
 			if ( warningMessages.Count > 0 )
 				messages.AddRange( warningMessages );
 			return payload;
@@ -483,6 +485,8 @@ namespace RA.Services
 		{
 			CurrentEntityType = "CompetencyFramework";
 			bool isValid = true;
+			Community = request.Community ?? "";
+
 			RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
 			InputEntity input = request.CompetencyFramework;
 			bool hasDefaultLanguage = false;
@@ -508,7 +512,7 @@ namespace RA.Services
 				{
 					//input.Ctid = input.Ctid.ToLower();
 					output.CTID = input.Ctid;
-					output.CtdlId = credRegistryResourceUrl + output.CTID;
+					output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 					CurrentCtid = input.Ctid;
 				}
 
@@ -527,6 +531,10 @@ namespace RA.Services
 				output.conceptTerm = AssignValidUrlListAsStringList( input.conceptTerm, "Framework conceptTerm", ref messages );
 
 				output.creator = AssignRegistryResourceURIsListAsStringList( input.creator, "Framework creator", ref messages );
+				// =========================
+				output.publisher = AssignRegistryResourceURIsListAsStringList( input.publisher, "Framework publisher", ref messages );
+				output.publisherName = AssignLanguageMapList( input.publisherName_map, "Framework publisherName", ref messages );
+
 				if ( output.creator == null || output.creator.Count() == 0 )
 				{
 					//if ( isFrameworkCreatorRequired )
@@ -570,9 +578,7 @@ namespace RA.Services
 				output.publicationStatusType = AssignValidUrlAsString( input.publicationStatusType, "Framework publicationStatusType", ref messages, false );
 				//temp =====================
 				output.publicationStatusType = ( output.publicationStatusType ?? "" ).Replace( "/vocab/publicationStatus", "/vocabs/publicationStatus" );
-				// =========================
-				output.publisher = AssignRegistryResourceURIsListAsStringList( input.publisher, "Framework publisher", ref messages );
-				output.publisherName = AssignLanguageMapList( input.publisherName_map, "Framework publisherName", ref messages );
+				
 				output.repositoryDate = input.repositoryDate;
 				//
 				//output.rights = AssignValidUrlAsString( input.rights, "Framework rights", ref messages );
@@ -632,7 +638,7 @@ namespace RA.Services
 			bool isValid = true;
 			//
 			CurrentCtid = output.Ctid = FormatCtid( input.Ctid, string.Format("Competency (#{0})", compCntr), ref messages );
-			output.CtdlId = credRegistryResourceUrl + output.Ctid;
+			output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
 			//establish language. make a common method
 			//output.inLanguage = PopulateInLanguage( input.inLanguage, "Competency", string.Format( "#", compCntr ), hasDefaultLanguage, ref messages );
 			//
@@ -683,7 +689,7 @@ namespace RA.Services
 			}
 			else
 			{
-				output.isPartOf = AssignRegistryResourceURIAsString( input.isPartOf, "Competency isPartOf", ref messages, true );
+				output.isPartOf = AssignRegistryResourceURIAsString( input.isPartOf, "Competency isPartOf", ref messages, false);
 			}
 			output.isTopChildOf = AssignRegistryResourceURIAsString( input.isTopChildOf, "Compentency isTopChildOf", ref messages, false );
 
@@ -699,8 +705,16 @@ namespace RA.Services
 			output.narrowAlignment = AssignRegistryResourceURIsListAsStringList( input.narrowAlignment, "narrowAlignment", ref messages, false );
 			output.prerequisiteAlignment = AssignRegistryResourceURIsListAsStringList( input.prerequisiteAlignment, "prerequisiteAlignment", ref messages, false );
 			output.skillEmbodied = AssignRegistryResourceURIsListAsStringList( input.skillEmbodied, "skillEmbodied", ref messages, false );
-		
+			//
+			output.knowledgeEmbodied = AssignRegistryResourceURIsListAsStringList( input.knowledgeEmbodied, "knowledgeEmbodied", ref messages, false );
+			//
+			output.taskEmbodied = AssignRegistryResourceURIsListAsStringList( input.taskEmbodied, "taskEmbodied", ref messages, false );
+			//
 			output.weight = input.weight;
+
+			//navy extension
+			output.hasSourceIdentifier = AssignRegistryResourceURIsListAsStringList( input.hasSourceIdentifier, "hasSourceIdentifier", ref messages, false );
+
 
 
 			return isValid;

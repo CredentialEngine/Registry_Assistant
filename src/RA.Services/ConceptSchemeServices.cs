@@ -31,7 +31,7 @@ namespace RA.Services
 		public bool isConceptschemeDateCreatedRequired = GetAppKeyValue( "conceptSchemeDateCreatedIsRequired", true );
 
 		#region publish from graph
-		public void PublishGraph( GraphConceptSchemeRequest request, ref bool isValid, RA.Models.RequestHelper helper )
+		public void PublishGraph( GraphRequest request, ref bool isValid, RA.Models.RequestHelper helper )
 		{
 			isValid = true;
 			string crEnvelopeId = request.RegistryEnvelopeId;
@@ -44,10 +44,7 @@ namespace RA.Services
 			GraphContainer og = new GraphContainer();
 			var output = new OutputEntity();
 
-
-			ConceptSchemeGraph input = request.ConceptSchemeGraph;// 
-
-			if ( ToMapFromGraph( input, ref output, ref messages ) )
+			if ( ToMapFromGraph( request, ref output, ref messages ) )
 			{
 
 				if ( output.InLanguage.Count() > 0 )
@@ -64,8 +61,8 @@ namespace RA.Services
 					}
 				}
 				//
-				og.CtdlId = credRegistryGraphUrl + output.CTID;
-				og.CTID = output.CTID;
+				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
+				og.CTID = request.CTID = output.CTID;
 				og.Type = "skos:ConceptScheme"; //ignored anyway
 				og.Context = ceasnContext;
 				//
@@ -78,6 +75,7 @@ namespace RA.Services
 					PublisherAuthorizationToken = helper.ApiKey,
 					PublishingForOrgCtid = helper.OwnerCtid,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					IsPublisherRequest = helper.IsPublisherRequest,
 					SkippingValidation = true
 				};
@@ -113,11 +111,11 @@ namespace RA.Services
 				{
 					//
 					string identifier = "ConceptScheme_" + output.CTID;
-					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
-
+						CheckIfChanged( helper, cer.WasChanged );
 						string msg = string.Format( "<p>Published Concept Scheme</p><p>CTID: {0}</p> <p>EnvelopeId: {1}</p> ", output.CTID, crEnvelopeId );
 						NotifyOnPublish( "ConceptScheme", msg );
 					}
@@ -137,17 +135,34 @@ namespace RA.Services
 			helper.SetMessages( messages );
 			return;
 		}
-		public bool ToMapFromGraph( ConceptSchemeGraph input, ref OutputEntity output, ref List<string> messages )
+		public bool ToMapFromGraph(GraphRequest request, ref OutputEntity output, ref List<string> messages )
 		{
 			CurrentEntityType = "ConceptScheme";
 			bool isValid = true;
-
+			var input = request.GraphInput;// 
+			Community = request.Community ?? "";
+			bool hasDefaultLanguage = false;
+			if ( !string.IsNullOrWhiteSpace( request.DefaultLanguage ) )
+			{
+				//validate
+				if ( ValidateLanguageCode( request.DefaultLanguage, "request.DefaultLanguage", ref messages ) )
+				{
+					DefaultLanguageForMaps = request.DefaultLanguage;
+					hasDefaultLanguage = true;
+				}
+			}
 			//TODO - if from CASS, just pass thru, with minimum validation
 			//output.Graph = input.Graph;
 			int conceptsCount = 0;
 			try
 			{
-				output = GetConceptScheme( input.Graph, ref conceptsCount, ref messages );
+				if ( request.HasLanguageMaps )
+				{
+					output = GetConceptScheme( input.Graph, ref conceptsCount, ref messages );
+				} else
+				{
+					output = GetConceptSchemeFromPlainGraph( request, hasDefaultLanguage, ref conceptsCount, ref messages );
+				}
 				if ( output == null || string.IsNullOrWhiteSpace( output.CTID ) )
 				{
 					messages.Add( "A skos:ConceptScheme document was not found." );
@@ -169,11 +184,11 @@ namespace RA.Services
 						messages.Add( "HasTopConcept is a required property." );
 					else
 					{
-						//check hasTopConcepts for purls?
-						foreach (var item in output.HasTopConcept)
-						{
+						//check hasTopConcepts for purls? why??
+						//foreach (var item in output.HasTopConcept)
+						//{
 
-						}
+						//}
 					}
 					if ( string.IsNullOrWhiteSpace( output.DateCreated ) )
 					{
@@ -193,13 +208,13 @@ namespace RA.Services
 					else
 					{
 						//temp =====================
-						output.PublicationStatusType = ( output.PublicationStatusType ?? "" ).Replace( "/vocab/publicationStatus", "/vocabs/publicationStatus" );
+						//output.PublicationStatusType = ( output.PublicationStatusType ?? "" ).Replace( "/vocab/publicationStatus", "/vocabs/publicationStatus" );
 						// =========================
 					}
 					if ( conceptsCount == 0 )
 						messages.Add( "No documents of type skos:Concept were found for this concept scheme." );
 				}
-				output.CtdlId = credRegistryResourceUrl + output.CTID;
+				output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 			}
 			catch ( Exception ex )
 			{
@@ -240,7 +255,7 @@ namespace RA.Services
 					}
 				}
 				//
-				og.CtdlId = credRegistryGraphUrl + output.CTID;
+				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 				og.CTID = output.CTID;
 				og.Type = "skos:ConceptScheme"; //ignored anyway
 				og.Context = ceasnContext;
@@ -251,6 +266,7 @@ namespace RA.Services
 					PublisherAuthorizationToken = helper.ApiKey,
 					IsPublisherRequest = helper.IsPublisherRequest,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					PublishingForOrgCtid = helper.OwnerCtid
 				};
 
@@ -285,13 +301,13 @@ namespace RA.Services
 				else
 				{
 					//
-					string identifier = "ConceptScheme_" + request.ConceptScheme.CTID;
+					string identifier = "ConceptScheme_" + request.ConceptScheme.Ctid;
 
-					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
-
+						CheckIfChanged( helper, cer.WasChanged );
 						//string msg = string.Format( "<p>Published ConceptScheme: {0}</p><p>sourcewebpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.name, output.source, output.CTID, crEnvelopeId );
 						//NotifyOnPublish( "ConceptScheme", msg );
 					}
@@ -342,7 +358,7 @@ namespace RA.Services
 				}
 			}
 			//
-			og.CtdlId = credRegistryGraphUrl + output.CTID;
+			og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 			og.CTID = output.CTID;
 			og.Type = output.Type; // "ceasn:CompetencyFramework";
 			og.Context = ceasnContext;
@@ -354,6 +370,8 @@ namespace RA.Services
 		{
 			CurrentEntityType = "ConceptScheme";
 			bool isValid = true;
+			Community = request.Community ?? "";
+
 			RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
 			InputEntity input = request.ConceptScheme;
 			bool hasDefaultLanguage = false;
@@ -375,13 +393,13 @@ namespace RA.Services
 				//id - assume the schema name
 				//actually id may just be the schema name for this concept scheme ex: ceterms:Audience
 				//19-03-12 make required input
-				CurrentCtid = output.CTID = FormatCtid( input.CTID, "ConceptScheme", ref messages );
+				CurrentCtid = output.CTID = FormatCtid( input.Ctid, "ConceptScheme", ref messages );
 				//output.CTID = ExtractCtid( input.Id, "Skos Concept Scheme", ref messages ).ToLower();
-				output.CtdlId = credRegistryResourceUrl + output.CTID;
+				output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 
 				output.altIdentifier = AssignListToList( input.altIdentifier );
 				output.ChangeNote = AssignLanguageMapList( input.ChangeNote, input.ChangeNote_Map, "ChangeNote", DefaultLanguageForMaps, ref messages );
-				output.ConceptKeywork = AssignLanguageMapList( input.ConceptKeyword, input.ConceptKeyword_Map, "ConceptKeywork", DefaultLanguageForMaps, ref messages );
+				output.ConceptKeyword = AssignLanguageMapList( input.ConceptKeyword, input.ConceptKeyword_Map, "ConceptKeywork", DefaultLanguageForMaps, ref messages );
 				output.ConceptTerm = AssignRegistryResourceURIsListAsStringList( input.ConceptTerm, "ConceptTerm", ref messages );
 
 				output.Creator = AssignValidUrlAsStringList( input.Creator, "Concept scheme creator", ref messages, false, false );
@@ -399,8 +417,11 @@ namespace RA.Services
 
 				//allow CTID or full URI
 				//temp hack for navy
-				if ( output.CTID != "ce-8387d1d5-1992-4c3f-a76d-6b09fd928dd9" && output.CTID != "ce-8387d1d5-2019-4c3f-a76d-6b09fd928dd9" )
+				// output.CTID != "ce-8387d1d5-1992-4c3f-a76d-6b09fd928dd9" && output.CTID != "ce-8387d1d5-2019-4c3f-a76d-6b09fd928dd9"
+				if ( !request.GenerateHasTopChild )
+				{
 					output.HasTopConcept = AssignRegistryResourceURIsListAsStringList( input.HasTopConcept, "Concept scheme HasTopConcept", ref messages, false, true );
+				}
 				//history note is not compatible from skos format
 				//output.HistoryNote = AssignRegistryURIsListAsStringList( input.HistoryNote, "Concept scheme HistoryNote", ref messages );
 				output.HistoryNote = AssignLanguageMap( input.HistoryNote, input.HistoryNote_Map, "HistoryNote", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
@@ -448,17 +469,22 @@ namespace RA.Services
 						if ( ToMapConcept( item, concept, hasDefaultLanguage, compCntr, ref messages ) )
 						{
 							//for Navy
-							if ( output.CTID  == "ce-8387d1d5-1992-4c3f-a76d-6b09fd928dd9" || output.CTID == "ce-8387d1d5-2019-4c3f-a76d-6b09fd928dd9" )
+							//if ( output.CTID  == "ce-8387d1d5-1992-4c3f-a76d-6b09fd928dd9" || output.CTID == "ce-8387d1d5-2019-4c3f-a76d-6b09fd928dd9" )
+							if ( request.GenerateHasTopChild )
 							{
 								if ( output.HasTopConcept == null )
 									output.HasTopConcept = new List<string>();
 
 								output.HasTopConcept.Add( concept.CtdlId );
-								//or set to InScheme
-								concept.TopConceptOf = output.CtdlId;
+								
 								//if ( compCntr > 900 )
 								//	break;
 							}
+							//or set to InScheme
+							//only do this all concepts are top
+							if ( request.GenerateIsTopChild )
+								concept.TopConceptOf = output.CtdlId;
+
 							outputConcepts.Add( concept );
 						}
 					}
@@ -481,7 +507,7 @@ namespace RA.Services
 			bool isValid = true;
 			output.CTID = FormatCtid( input.CTID, string.Format( "Concept (#{0})", compCntr), ref messages );
 
-			output.CtdlId = credRegistryResourceUrl + output.CTID;
+			output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 			output.AltLabel = AssignLanguageMapList( input.AltLabel, input.AltLabel_Map, "AltLabel", DefaultLanguageForMaps, ref messages );
 			output.Broader = AssignRegistryResourceURIAsString( input.Broader, string.Format( "Broader - Concept (#{0})", compCntr ), ref messages, false, false );
 			output.BroadMatch = AssignRegistryResourceURIsListAsStringList( input.BroadMatch, "BroadMatch", ref messages );
@@ -495,8 +521,9 @@ namespace RA.Services
 			output.Narrower = AssignRegistryResourceURIsListAsStringList( input.Narrower, "Narrower", ref messages );
 			output.NarrowMatch = AssignRegistryResourceURIsListAsStringList( input.NarrowMatch, "NarrowerMatch", ref messages );
 			output.Related= AssignRegistryResourceURIsListAsStringList( input.Related, "Related", ref messages );
-			output.RelatedMatch = AssignRegistryResourceURIsListAsStringList( input.RelatedMatch, "RelatedMatch", ref messages );
-
+			//output.RelatedMatch = AssignRegistryResourceURIsListAsStringList( input.RelatedMatch, "RelatedMatch", ref messages );
+			//SupersededBy
+			output.SupersededBy = AssignRegistryResourceURIAsString( input.SupersededBy, "SupersededBy", ref messages, false, false );
 			output.HiddenLabel = AssignLanguageMapList( input.HiddenLabel, input.HiddenLabel_Map, "HiddenLabel", DefaultLanguageForMaps, ref messages );
 
 			//TODO - handle where the ConceptScheme is supplied and need to convert to URI
@@ -514,7 +541,6 @@ namespace RA.Services
 			//TEMP navy
 			if ( CurrentCtid == "ce-8387d1d5-1992-4c3f-a76d-6b09fd928dd9" || CurrentCtid == "ce-8387d1d5-2019-4c3f-a76d-6b09fd928dd9" )
 			{
-				output.Comment = AssignLanguageMapList( input.Comment, input.Comment_Map, "Comment", DefaultLanguageForMaps, ref messages );
 				output.CodeNEC = input.CodeNEC;
 				output.LegacyCodeNEC = input.LegacyCodeNEC;
 				output.SourceCareerFieldCode = AssignListToList( input.SourceCareerFieldCode );
@@ -523,11 +549,83 @@ namespace RA.Services
 			return isValid;
 		}
 
+		public bool ToMapConcept(RA.Models.JsonV2.ConceptPlain input, OutputConcept output, bool hasDefaultLanguage, int compCntr, ref List<string> messages)
+		{
+			bool isValid = true;
+			try
+			{
+				output.CTID = FormatCtid( input.CTID, string.Format( "Concept (#{0})", compCntr ), ref messages );
 
+				output.CtdlId = SupportServices.FormatRegistryUrl( ResourceTypeUrl, output.CTID, Community );
+				output.AltLabel = AssignLanguageMapList( AssignObjectToList(input.AltLabel, "AltLabel", ref messages), null, "AltLabel", DefaultLanguageForMaps, ref messages );
+				output.Broader = AssignRegistryResourceURIAsString( input.Broader, string.Format( "Broader - Concept (#{0})", compCntr ), ref messages, false, false );
+				output.BroadMatch = AssignRegistryResourceURIsListAsStringList( input.BroadMatch, "BroadMatch", ref messages );
+
+				output.ChangeNote = AssignLanguageMapList( input.ChangeNote, null, "ChangeNote", DefaultLanguageForMaps, ref messages );
+				output.CloseMatch = AssignRegistryResourceURIsListAsStringList( input.CloseMatch, "CloseMatch", ref messages );
+
+				output.PrefLabel = AssignLanguageMap( input.PrefLabel, null, "PrefLabel", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
+				output.Definition = AssignLanguageMap( input.Definition, null, "Definition", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
+				output.ExactMatch = AssignRegistryResourceURIsListAsStringList( input.ExactMatch, "ExactMatch", ref messages );
+				output.Narrower = AssignRegistryResourceURIsListAsStringList( input.Narrower, "Narrower", ref messages );
+				output.NarrowMatch = AssignRegistryResourceURIsListAsStringList( input.NarrowMatch, "NarrowerMatch", ref messages );
+				output.Related = AssignRegistryResourceURIsListAsStringList( input.Related, "Related", ref messages );
+				//output.RelatedMatch = AssignRegistryResourceURIsListAsStringList( input.RelatedMatch, "RelatedMatch", ref messages );
+				//SupersededBy
+				output.SupersededBy = AssignRegistryResourceURIAsString( input.SupersededBy, "SupersededBy", ref messages, false, false );
+				output.HiddenLabel = AssignLanguageMapList( input.HiddenLabel, null, "HiddenLabel", DefaultLanguageForMaps, ref messages );
+
+
+				//output.InLanguage = PopulateInLanguage( input.Language, "Language", string.Format( "#", compCntr ), hasDefaultLanguage, ref messages );
+				if ( !string.IsNullOrWhiteSpace( input.Notation ) )
+					output.Notation = input.Notation;
+
+				output.Note = AssignLanguageMapList( input.Note, null, "Note", DefaultLanguageForMaps, ref messages );
+
+				//TODO - handle where could be list or string
+
+				//TODO - handle where the ConceptScheme is supplied and need to convert to URI
+				//output.InScheme = AssignRegistryResourceURIAsString( input.InScheme, "InScheme", ref messages, false, false );
+				if ( input.InScheme != null && input.InScheme.Count() > 0 )
+				{
+					output.InScheme = AssignRegistryResourceURIAsString( input.InScheme[ 0 ], "InScheme", ref messages, false, false );
+				}
+				//Newtonsoft.Json.Linq.JArray
+				//var tt = input.TopConceptOfTest == null ? "null" :  input.TopConceptOfTest.GetType().ToString();
+				//System.String
+				//var tt2 = input.TopConceptOfTest2 == null ? "null" : input.TopConceptOfTest2.GetType().ToString();
+				string ttt1 = AssignObjectToString( input.TopConceptOfTest );
+				string ttt2 = AssignObjectToString( input.TopConceptOfTest2 );
+				//if ( input.TopConceptOfTest.GetType() == typeof( Newtonsoft.Json.Linq.JArray ) )
+				//{
+
+				//}
+				//else if ( input.TopConceptOfTest.GetType() == typeof( System.String ) )
+				//{
+
+				//}
+				//if ( input.TopConceptOf != null )
+				//{
+				//	output.TopConceptOf = AssignRegistryResourceURIAsString( input.TopConceptOf, "TopConceptOf", ref messages, false, false );
+				//}
+				if ( input.TopConceptOf != null && input.TopConceptOf.Count() > 0 )
+				{
+					output.TopConceptOf = AssignRegistryResourceURIAsString( input.TopConceptOf[ 0 ], "TopConceptOf", ref messages, false, false );
+				}
+			}
+			catch(Exception ex)
+			{
+				LoggingHelper.LogError( ex, string.Format("Exception on ConceptScheme: {0}, Concept#{1}: {2}", CurrentCtid,  compCntr, ex.Message) );
+				messages.Add( string.Format( "Exception on Concept#{0}: {1}", compCntr, ex.Message ) );
+				isValid = false;
+			}
+			return isValid;
+		}
 		private OutputEntity GetConceptScheme( object graph, ref int conceptsCount, ref List<string> messages )
 		{
 			//string ctid = "";
 			conceptsCount = 0;
+			//int conceptsCntr = 0;
 			if ( graph == null )
 			{
 				return null;
@@ -549,9 +647,8 @@ namespace RA.Services
 						if ( conceptsCount == 0 && jarray.Count > 1 )
 						{
 							//18-09-25 the conceptScheme is now first in the export document
-							conceptsCount = jarray.Count - 1;
+							//conceptsCount = jarray.Count - 1;
 						}
-
 						//return entity;
 					}
 					else if ( token.ToString().IndexOf( "skos:Concept" ) > -1 || token.ToString().IndexOf( "Concept" ) > -1 )
@@ -566,7 +663,7 @@ namespace RA.Services
 						{
 							//if no top scheme, then must have
 							if ( string.IsNullOrWhiteSpace( concept.Broader ) )
-								messages.Add( string.Format( "Either the TopConceptOf or the Broader property must be provided for the concept (#{0}).", conceptsCount ) );
+								warningMessages.Add( string.Format( "Either the TopConceptOf or the Broader property must be provided for the concept '{0}'(#{1}).", concept.PrefLabel, conceptsCount ) );
 						}
 						outputConcepts.Add( concept );
 						//ignore
@@ -583,6 +680,142 @@ namespace RA.Services
 			}
 			//no ctid found, so????
 			return entity;
+		}
+
+
+		private OutputEntity GetConceptSchemeFromPlainGraph(GraphRequest request, bool hasDefaultLanguage, ref int conceptsCount, ref List<string> messages)
+		{
+			//string ctid = "";
+			conceptsCount = 0;
+			object graph = request.GraphInput.Graph;// 
+			if ( graph == null )
+			{
+				return null;
+			}
+			var mainEntity = new Dictionary<string, object>();
+			var payload = graph.ToString();
+
+
+			//
+			var output = new OutputEntity();
+			OutputConcept concept = new OutputConcept();
+			Newtonsoft.Json.Linq.JArray jarray = ( Newtonsoft.Json.Linq.JArray )graph;
+			foreach ( var token in jarray )
+			{
+				if ( token.GetType() == typeof( Newtonsoft.Json.Linq.JObject ) )
+				{
+					if ( token.ToString().IndexOf( "skos:ConceptScheme" ) > -1 || token.ToString().IndexOf( "ConceptScheme" ) > -1 )
+					{
+						var input = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<RJ.ConceptSchemePlain>();
+						#region  Populate the concept scheme 
+
+						CurrentCtid = output.CTID = FormatCtid( input.CTID, "ConceptScheme", ref messages );
+						output.CtdlId = SupportServices.FormatRegistryUrl( ResourceTypeUrl, output.CTID, Community );
+						output.InLanguage = PopulateInLanguage( input.InLanguage, "concept scheme", "concept scheme", hasDefaultLanguage, ref messages );
+
+						output.altIdentifier = AssignListToList( input.altIdentifier );
+						output.ChangeNote = AssignLanguageMapList( input.ChangeNote, null, "ChangeNote", DefaultLanguageForMaps, ref messages );
+						output.ConceptKeyword = AssignLanguageMapList( input.ConceptKeyword, null, "ConceptKeywork", DefaultLanguageForMaps, ref messages );
+						output.ConceptTerm = AssignRegistryResourceURIsListAsStringList( input.ConceptTerm, "ConceptTerm", ref messages );
+
+						output.Creator = AssignValidUrlListAsStringList( input.Creator, "Concept scheme creator", ref messages, false );
+
+						//this actually is a year, not datetime!
+						output.DateCopyrighted = MapYear( input.DateCopyrighted, "DateCopyrighted", ref messages );
+						output.DateCreated = MapDate( input.DateCreated, "DateCreated", ref messages );
+						if ( string.IsNullOrWhiteSpace( output.DateCreated ) )
+						{
+							//always require this for direct calls
+							//if ( isConceptschemeDateCreatedRequired )
+							//messages.Add( "A DateCreated must be provided for the concept scheme." );
+						}
+						output.DateModified = MapDate( input.DateModified, "DateModified", ref messages );
+
+						//allow CTID or full URI
+						if ( !request.GenerateHasTopIsTopChild )
+						{
+							output.HasTopConcept = AssignRegistryResourceURIsListAsStringList( input.HasTopConcept, "Concept scheme HasTopConcept", ref messages, false, true );
+						}
+						//history note is not compatible from skos format
+						//output.HistoryNote = AssignRegistryURIsListAsStringList( input.HistoryNote, "Concept scheme HistoryNote", ref messages );
+						output.HistoryNote = AssignLanguageMap( input.HistoryNote, null, "HistoryNote", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
+
+						output.License = AssignValidUrlAsString( input.License, "License", ref messages, false, false );
+
+						output.Name = AssignLanguageMap( input.Name, null, "Concept Scheme Title", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
+
+						CurrentEntityName = output.Name.ToString();
+
+						output.Description = AssignLanguageMap( input.Description, null, "Concept Scheme Description", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
+
+						//this url will likely be a purl to the particular status
+						//	http://purl.org/ctdlasn/vocabs/publicationStatus/Draft
+						output.PublicationStatusType = AssignValidUrlAsString( input.PublicationStatusType, "PublicationStatusType", ref messages, true, false );
+
+
+						//temp =====================
+						output.PublicationStatusType = ( output.PublicationStatusType ?? "" ).Replace( "/vocab/publicationStatus", "/vocabs/publicationStatus" );
+						// =========================
+
+						output.Publisher = AssignRegistryResourceURIAsString( input.Publisher, "Publisher", ref messages, false, false );
+						output.PublisherName = AssignLanguageMap( input.PublisherName, null, "PublisherName", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
+						output.Rights = AssignLanguageMap( input.Rights, null, "Rights", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
+						output.RightsHolder = AssignValidUrlAsString( input.RightsHolder, "RightsHolder", ref messages, false, false );
+						output.Source = AssignValidUrlAsString( input.Source, "ConceptScheme.Source", ref messages, true, false );
+						#endregion
+
+						if ( conceptsCount == 0 && jarray.Count > 1 )
+						{
+							//18-09-25 the conceptScheme is now first in the export document
+							//conceptsCount = jarray.Count - 1;
+						}
+						
+						//return entity;
+					}
+					else if ( token.ToString().IndexOf( "skos:Concept" ) > -1 || token.ToString().IndexOf( "Concept" ) > -1 )
+					{
+						conceptsCount++;
+						var conceptPlain = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<RJ.ConceptPlain>();
+						concept = new OutputConcept();
+
+						if ( ToMapConcept( conceptPlain, concept, hasDefaultLanguage, conceptsCount, ref messages ) )
+						{
+							if ( request.GenerateHasTopIsTopChild )
+							{
+								if ( output.HasTopConcept == null )
+									output.HasTopConcept = new List<string>();
+
+								output.HasTopConcept.Add( concept.CtdlId );
+								//or set to InScheme
+								concept.TopConceptOf = output.CtdlId;
+								//if ( compCntr > 900 )
+								//	break;
+							}
+
+							//if ( string.IsNullOrWhiteSpace( concept.PrefLabel ) )
+							//	messages.Add( string.Format( "A pref label must be provided for the concept (#{0}).", conceptsCount ) );
+							if ( string.IsNullOrWhiteSpace( concept.InScheme ) )
+								messages.Add( string.Format( "The InScheme property must be provided for the concept (#{0}).", conceptsCount ) );
+							if ( string.IsNullOrWhiteSpace( concept.TopConceptOf ) )
+							{
+								//if no top scheme, then must have
+								if ( string.IsNullOrWhiteSpace( concept.Broader ) )
+									warningMessages.Add( string.Format( "Either the TopConceptOf or the Broader property must be provided for the concept '{0}'(#{1}).", concept.PrefLabel, conceptsCount ) );
+							}
+							outputConcepts.Add( concept );
+						}
+
+
+					}
+				}
+
+				else
+				{
+					//error
+				}
+			}
+
+			return output;
 		}
 		#endregion
 
@@ -621,13 +854,13 @@ namespace RA.Services
 					}
 				}
 				//
-				og.CtdlId = credRegistryGraphUrl + output.CTID;
+				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 				og.CTID = output.CTID;
 				og.Type = "skos:ConceptScheme"; //ignored anyway
 				og.Context = ceasnContext;
 				//
 				helper.Payload = JsonConvert.SerializeObject( og, ServiceHelperV2.GetJsonSettings() );
-				//helper.Payload = JsonConvert.SerializeObject( output, ServiceHelperV2.GetJsonSettings() );
+				
 
 				//will need to extract a ctid?
 				CER cer = new CER( "ConceptScheme", output.Type, output.CTID, helper.SerializedInput )
@@ -635,6 +868,7 @@ namespace RA.Services
 					PublisherAuthorizationToken = helper.ApiKey,
 					PublishingForOrgCtid = helper.OwnerCtid,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					IsPublisherRequest = helper.IsPublisherRequest,
 					SkippingValidation = true
 				};
@@ -666,7 +900,7 @@ namespace RA.Services
 				}
 				//
 				string identifier = "ConceptScheme_" + output.CTID;
-				if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+				if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 				{
 					//for now need to ensure envelopid is returned
 					helper.RegistryEnvelopeId = crEnvelopeId;
@@ -735,7 +969,7 @@ namespace RA.Services
 					if ( conceptsCount == 0 )
 						messages.Add( "No documents of type skos:Concept were found for this concept scheme." );
 				}
-				output.CtdlId = credRegistryResourceUrl + output.CTID;
+				output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 			}
 			catch ( Exception ex )
 			{
@@ -824,7 +1058,7 @@ namespace RA.Services
 						{
 							//if no top scheme, then must have
 							if ( string.IsNullOrWhiteSpace( concept.Broader ) )
-								messages.Add( string.Format( "Either the TopConceptOf or the Broader property must be provided for the concept (#{0}).", conceptsCount ) );
+								warningMessages.Add( string.Format( "Either the TopConceptOf or the Broader property must be provided for the concept '{0}'(#{1}).", concept.PrefLabel, conceptsCount ) );
 						}
 						outputConcepts.Add( concept );
 						//ignore
@@ -880,7 +1114,7 @@ namespace RA.Services
 					}
 				}
 				//
-				og.CtdlId = credRegistryGraphUrl + output.CTID;
+				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 				og.CTID = output.CTID;
 				og.Type = "skos:ConceptScheme"; //ignored anyway
 				og.Context = ceasnContext;
@@ -895,6 +1129,7 @@ namespace RA.Services
 					PublisherAuthorizationToken = helper.ApiKey,
 					PublishingForOrgCtid = helper.OwnerCtid,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					IsPublisherRequest = helper.IsPublisherRequest,
 					SkippingValidation = true
 				};
@@ -914,7 +1149,7 @@ namespace RA.Services
 
 						isValid = false;
 						helper.SetMessages( messages );
-						LoggingHelper.DoTrace( 4, string.Format( "ConceptScheme.PublishFromSkos. Validate ApiKey failed. Org Ctid: {0},  Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.CTID, cer.PublisherAuthorizationToken ) );
+						LoggingHelper.DoTrace( 4, string.Format( "ConceptScheme.PublishFromSkos. Validate ApiKey failed. Org CTID: {0},  CTID: {1}, apiKey: {2}", helper.OwnerCtid, output.CTID, cer.PublisherAuthorizationToken ) );
 						return; //===================
 					}
 				}
@@ -926,7 +1161,7 @@ namespace RA.Services
 				}
 				//
 				string identifier = "ConceptScheme_" + output.CTID;
-				if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+				if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 				{
 					//for now need to ensure envelopid is returned
 					helper.RegistryEnvelopeId = crEnvelopeId;
@@ -989,10 +1224,10 @@ namespace RA.Services
 				//19-03-12 make required input
 				CurrentCtid = output.CTID = FormatCtid( input.CTID, "SkosConceptScheme", ref messages );
 				//output.CTID = ExtractCtid( input.Id, "Skos Concept Scheme", ref messages ).ToLower();
-				output.CtdlId = credRegistryResourceUrl + output.CTID;;
+				output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);;
 
 				//output.ChangeNote = AssignLanguageMapList( input.ChangeNote, "ChangeNote", DefaultLanguageForMaps, ref messages );
-				output.ConceptKeywork = AssignLanguageMapList( input.ConceptKeyword, "ConceptKeywork", DefaultLanguageForMaps, ref messages );
+				output.ConceptKeyword = AssignLanguageMapList( input.ConceptKeyword, "ConceptKeywork", DefaultLanguageForMaps, ref messages );
 				//output.ConceptTerm = AssignRegistryURIsListAsStringList( input.ConceptTerm, "", ref messages );
 
 				output.Creator = AssignValidUrlAsStringList( input.Creator, "Concept scheme creator", ref messages, false, false );
@@ -1061,7 +1296,7 @@ namespace RA.Services
 			bool isValid = true;
 			output.CTID = FormatCtid( input.CTID, string.Format( "Concept (#{0})", compCntr ), ref messages );
 			
-			output.CtdlId = credRegistryResourceUrl + output.CTID;
+			output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 			output.AltLabel = AssignLanguageMapList( input.AltLabel, "AltLabel", DefaultLanguageForMaps, ref messages );
 			//output.Broader = AssignRegistryResourceURIAsString( input.Broader, "Broader", ref messages, false, false );
 			output.BroadMatch = AssignRegistryResourceURIsListAsStringList( input.BroadMatch, "BroadMatch", ref messages );

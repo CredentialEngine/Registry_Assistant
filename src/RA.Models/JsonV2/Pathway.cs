@@ -36,11 +36,14 @@ namespace RA.Models.JsonV2
 		public List<string> InLanguage { get; set; }
 
 		/// <summary>
-		/// This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
-		/// Reference to another Pathway would have to be an a URI.
+		/// This property identifies a child pathwayComponent(s) in the downward path.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:hasChild" )]
-		public List<string> HasChild { get; set; } = new List<string>();
+		public List<PathwayComponent> HasChild { get; set; }
+
+		/// Could use blank nodes. That is a blank node URI to a PathwayComponent
+		[JsonProperty( PropertyName = "ceasn:hasChild" )]
+		public List<string> HasChildUri { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Goal or destination node of the pathway. 
@@ -48,7 +51,7 @@ namespace RA.Models.JsonV2
 		/// Multipicity: Single
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:hasDestinationComponent" )]
-		public string HasDestinationComponent { get; set; }
+		public List<string> HasDestinationComponent { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
 		public List<string> OwnedBy { get; set; }
@@ -56,6 +59,12 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:offeredBy" )]
 		public List<string> OfferedBy { get; set; }
 
+		/// <summary>
+		/// The webpage that describes this pathway.
+		/// URL
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
+		public string SubjectWebpage { get; set; }
 
 	}
 
@@ -78,19 +87,19 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceasn:codedNotation" )]
 		public string CodedNotation { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:name" )]
-		public LanguageMap Name { get; set; } = new LanguageMap();
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// TBD - will there be an inLanguage?
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:inLanguage" )]
-		public List<string> InLanguage { get; set; }
 
 		/// <summary>
+		/// This property identifies a child pathwayComponent(s) in the downward path.
+		/// ceterms:PathwayComponent
+		/// Could use blank nodes. That is a blank node URI to a PathwayComponent
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:hasChild" )]
+		public List<string> HasChild { get; set; } = new List<string>();
+	/// <summary>
 		/// Resource(s) that describes what must be done to complete a PathwayComponent, or part thereof, as determined by the issuer of the Pathway.
 		/// ceterms:ComponentCondition
 		/// </summary>
@@ -98,12 +107,10 @@ namespace RA.Models.JsonV2
 		public List<string> HasCondition { get; set; } = new List<string>();
 
 		/// <summary>
-		/// This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
-		/// ceterms:PathwayComponent
+		/// TBD - will there be an inLanguage?
 		/// </summary>
-		[JsonProperty( PropertyName = "ceasn:hasChild" )]
-		public List<string> HasChild { get; set; } = new List<string>();
-
+		[JsonProperty( PropertyName = "ceterms:inLanguage" )]
+		public List<string> InLanguage { get; set; }
 		/// <summary>
 		/// The referenced resource is higher in some arbitrary hierarchy than this resource.
 		/// ceterms:PathwayComponent
@@ -120,6 +127,9 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:isDestinationComponentOf" )]
 		public List<string> IsDestinationComponentOf { get; set; } = new List<string>();
 
+
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap Name { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Points associated with this resource, or points possible.
@@ -174,15 +184,14 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "@id" )]
 		public string CtdlId { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:ctid" )]
-		public string CTID { get; set; }
-
-
-		[JsonProperty( PropertyName = "ceterms:name" )]
-		public LanguageMap Name { get; set; } = new LanguageMap();
+		//[JsonProperty( PropertyName = "ceterms:ctid" )]
+		//public string CTID { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; } = new LanguageMap();
+
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap Name { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Number of targetComponent resources that must be fulfilled in order to satisfy the ComponentCondition.

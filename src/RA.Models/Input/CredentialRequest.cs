@@ -63,7 +63,6 @@ namespace RA.Models.Input
 			HasPart = new List<EntityReference>();
 			IsPartOf = new List<EntityReference>();
 
-			//FinancialAssistanceOLD = new List<Input.FinancialAlignmentObject>();
 			AdvancedStandingFrom = new List<Connections>();
 			IsAdvancedStandingFor = new List<Connections>();
 			PreparationFrom = new List<Connections>();
@@ -137,12 +136,8 @@ namespace RA.Models.Input
         public List<string> InLanguage { get; set; }
         #endregion
 
-        #region *** Required if available Properties ***
-
-        #endregion
 
 
-        public string DateEffective { get; set; }
         /// <summary>
         /// AlternateName
         /// </summary>
@@ -155,6 +150,7 @@ namespace RA.Models.Input
         public string Image { get; set; }
 
 
+
 		/// <summary>
 		/// AvailableOnlineAt URL
 		/// </summary>
@@ -165,7 +161,19 @@ namespace RA.Models.Input
         public string AvailabilityListing { get; set; }
         public List<Place> AvailableAt { get; set; }
 
+		public string CodedNotation { get; set; }
+		/// <summary>
+		/// ISIC Revision 4 Code
+		/// </summary>
+		public string ISICV4 { get; set; }
+
 		public OrganizationReference CopyrightHolder { get; set; }
+		public string CredentialId { get; set; }
+
+		public string DateEffective { get; set; }
+
+
+		#region -- QA BY --
 		/// <summary>
 		/// could use general input or specific
 		/// general has more opportunity for errors
@@ -176,6 +184,7 @@ namespace RA.Models.Input
 		/// List of Organizations that approve this credential
 		/// </summary>
 		public List<OrganizationReference> ApprovedBy { get; set; }
+		/// <summary>
 		/// List of Organizations that offer this credential
 		/// </summary>
 		public List<OrganizationReference> OfferedBy { get; set; }
@@ -195,6 +204,7 @@ namespace RA.Models.Input
 		/// List of Organizations that can revoke this credential
 		/// </summary>
 		public List<OrganizationReference> RevokedBy { get; set; }
+		#endregion 
 
 		/// <summary>
 		/// List of credentials that are part of this credential
@@ -217,18 +227,19 @@ namespace RA.Models.Input
 	
 		#endregion
 
-
-		public string CredentialId { get; set; }
-		//public string VersionIdentifier { get; set; }
-		public List<IdentifierValue> VersionIdentifier { get; set; }
-		public string CodedNotation { get; set; }
-
 		public string ProcessStandards { get; set; }
 		public string ProcessStandardsDescription { get; set; }
         public LanguageMap ProcessStandardsDescription_Map { get; set; } = new LanguageMap();
 
-        public string LatestVersion { get; set; }
-		public string PreviousVersion { get; set; }
+		public List<string> Keyword { get; set; }
+		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+
+		public string LatestVersion { get; set; } //URL
+		public string PreviousVersion { get; set; } //URL
+		public string NextVersion { get; set; } //URL
+		public string SupersededBy { get; set; } //URL
+		public string Supersedes { get; set; } //URL
+
 		public List<string> Subject { get; set; }
         public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
         public List<string> AudienceLevelType { get; set; }
@@ -264,38 +275,51 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
 
-		public List<string> Keyword { get; set; }
-        public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
-        public List<string> DegreeConcentration { get; set; }
+		#region Properties allowed only for degree types
+
+		public List<string> DegreeConcentration { get; set; }
         public LanguageMapList DegreeConcentration_Map { get; set; } = new LanguageMapList();
         public List<string> DegreeMajor { get; set; }
         public LanguageMapList DegreeMajor_Map { get; set; } = new LanguageMapList();
         public List<string> DegreeMinor { get; set; }
         public LanguageMapList DegreeMinor_Map { get; set; } = new LanguageMapList();
-        //external classes
-        public List<CostProfile> EstimatedCost { get; set; }
+		#endregion
+
+		//external classes
+
+		public List<string> CommonCosts { get; set; }
+		public List<string> CommonConditions { get; set; }
+		public List<CostProfile> EstimatedCost { get; set; }
 
 		public List<DurationProfile> EstimatedDuration { get; set; }
-		public DurationItem RenewalFrequency { get; set; }
-		
+		//[obsolete]
+		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; } = new List<FinancialAlignmentObject>();
+		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 		public List<Jurisdiction> Jurisdiction { get; set; }
-		// public List<GeoCoordinates> Region { get; set; }
+		public DurationItem RenewalFrequency { get; set; }
+		public List<RevocationProfile> Revocation { get; set; }
 
+		public List<IdentifierValue> VersionIdentifier { get; set; }
+		
+
+		#region -- Condition Profiles --
 		public List<ConditionProfile> Requires { get; set; }
 		public List<ConditionProfile> Recommends { get; set; }
 		public List<ConditionProfile> Corequisite { get; set; }
 		public List<ConditionProfile> Renewal { get; set; }
+		#endregion
 
-		public List<string> CommonCosts { get; set; }
-		public List<string> CommonConditions { get; set; }
 
+		#region -- Connections Profiles --
 		public List<Connections> AdvancedStandingFrom { get; set; }
 		public List<Connections> IsAdvancedStandingFor { get; set; }
 		public List<Connections> IsPreparationFor { get; set; }
 		public List<Connections> IsRecommendedFor { get; set; }
 		public List<Connections> IsRequiredFor { get; set; }
 		public List<Connections> PreparationFrom { get; set; }
+		#endregion
 
+		#region -- Process Profiles --
 		public List<ProcessProfile> AdministrationProcess { get; set; }
 		public List<ProcessProfile> DevelopmentProcess { get; set; }
 		public List<ProcessProfile> MaintenanceProcess { get; set; }
@@ -303,11 +327,9 @@ namespace RA.Models.Input
 		public List<ProcessProfile> ComplaintProcess { get; set; }
 		public List<ProcessProfile> ReviewProcess { get; set; }
 		public List<ProcessProfile> RevocationProcess { get; set; }
-		////public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
-		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
+		#endregion
 
-		public List<RevocationProfile> Revocation { get; set; }
-		
+
 	}
 
 	/// <summary>

@@ -14,9 +14,7 @@ namespace RA.Models.Input
 	{
 		public Place()
 		{
-			ContactPoint = new List<Input.ContactPoint>();
 		}
-
 
 		public string Name { get; set; }
         public LanguageMap Name_Map { get; set; } = new LanguageMap();
@@ -33,6 +31,9 @@ namespace RA.Models.Input
 		public string City { get; set; }
         public LanguageMap City_Map { get; set; } = new LanguageMap();
 
+		/// <summary>
+		/// AddressRegion - State, Province, etc
+		/// </summary>
         public string AddressRegion { get; set; }
         public LanguageMap AddressRegion_Map { get; set; } = new LanguageMap();
         public string PostalCode { get; set; }
@@ -45,7 +46,7 @@ namespace RA.Models.Input
 		public double Longitude { get; set; }
 
 		public string GeoURI { get; set; }
-		public List<ContactPoint> ContactPoint { get; set; }
+		public List<ContactPoint> ContactPoint { get; set; } = new List<Input.ContactPoint>();
 	}
 
 	public class ContactPoint
@@ -55,26 +56,27 @@ namespace RA.Models.Input
 			PhoneNumbers = new List<string>();
 			Emails = new List<string>();
 			SocialMediaPages = new List<string>();
-			//ContactOption = new List<string>();
 		}
-
+		/// <summary>
+		/// Name of the Contact Point 
+		/// </summary>
 		public string Name { get; set; }
 
 		/// <summary>
 		/// Specification of the type of contact
+		/// Example: Registration
 		/// </summary>
 		public string ContactType { get; set; }
 
-		/// <summary>
-		/// An option available on this contact point.
-		/// For example, a toll-free number or support for hearing-impaired callers.
-		/// </summary>
-		//public List<string> ContactOption { get; set; }
-
 		public List<string> PhoneNumbers { get; set; }
+		/// <summary>
+		/// List of email addresses
+		/// </summary>
 		public List<string> Emails { get; set; }
+		/// <summary>
+		/// List of URIs to social media pages
+		/// </summary>
 		public List<string> SocialMediaPages { get; set; }
-
 
 	}
 }

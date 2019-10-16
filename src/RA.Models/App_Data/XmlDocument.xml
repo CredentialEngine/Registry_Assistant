@@ -54,11 +54,9 @@
             Contains registry envelope identifier for a document in the registy. It should be empty for a new document. 
             </summary>
         </member>
-        <member name="P:RA.Models.Input.BaseRequest.BetaTestingAuthorizationKey">
+        <member name="P:RA.Models.Input.BaseRequest.Community">
             <summary>
-            Sept. 30, 2018
-            The full registry document is now accessed via the /graph/ path. All @id (or equivalent) references should be using /graph/. If this value is false, the API will look for and convert all /resource/ urls to /graph/ urls
-            NOTE: using default of true as norm in case property not populated.
+            Leave blank for default
             </summary>
         </member>
         <member name="P:RA.Models.Input.CompetencyFramework.CtdlId">
@@ -414,24 +412,34 @@
             Indicates that this competency is at the top of the framework.
             </summary>
         </member>
-        <member name="P:RA.Models.Input.ConceptSchemeGraph.Graph">
+        <member name="P:RA.Models.Input.ConceptSchemeRequest.GenerateHasTopChild">
             <summary>
-            Main graph object
+            Generate HasTop/IsTopChild
+            if true, the HasTopChild property is not included in the input document. The HasTopChild property in the JSON document will be generated from the Concept list.
+            Should only be used where the structure is flat. That is there are no concepts have child concepts.
             </summary>
         </member>
-        <member name="P:RA.Models.Input.ConceptScheme.CTID">
+        <member name="P:RA.Models.Input.ConceptScheme.Ctid">
             <summary>
             CTID - identifier for Concept Scheme. 
             This will have to be extracted from the id
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "P:RA.Models.Input.ConceptScheme.Description" -->
+        <member name="P:RA.Models.Input.ConceptScheme.Description">
+            <summary>
+            Concept Scheme description - required
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.ConceptScheme.Description_Map">
             <summary>
             Alternately can provide a language map
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "P:RA.Models.Input.ConceptScheme.HistoryNote" -->
+        <member name="P:RA.Models.Input.ConceptScheme.HistoryNote">
+            <summary>
+            Concept Scheme description 
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.ConceptScheme.HistoryNote_Map">
             <summary>
             Alternately can provide a language map
@@ -499,6 +507,11 @@
         <member name="P:RA.Models.Input.Concept.PrefLabel_Map">
             <summary>
             Alternately can provide a language map
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Concept.SupersededBy">
+            <summary>
+            Indicates the entity that supersedes this entity.
             </summary>
         </member>
         <member name="P:RA.Models.Input.Concept.TopConceptOf">
@@ -663,6 +676,11 @@
             AvailabilityListing URL
             </summary>
         </member>
+        <member name="P:RA.Models.Input.Credential.ISICV4">
+            <summary>
+            ISIC Revision 4 Code
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Credential.AccreditedBy">
             <summary>
             could use general input or specific
@@ -674,7 +692,11 @@
             List of Organizations that approve this credential
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "P:RA.Models.Input.Credential.OfferedBy" -->
+        <member name="P:RA.Models.Input.Credential.OfferedBy">
+            <summary>
+            List of Organizations that offer this credential
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Credential.RecognizedBy">
             <summary>
             List of Organizations that recognize this credential
@@ -746,7 +768,18 @@
             2017-12-13 - this will be the CTID for the owning org.
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "P:RA.Models.Input.DeleteRequest.RegistryEnvelopeId" -->
+        <member name="P:RA.Models.Input.DeleteRequest.RegistryEnvelopeId">
+            <summary>
+            Envelope Identifier
+            Optional property, used where the publishing entity wishes to store the identifier.
+            Contains registry envelope identifier for a document in the registy. 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.DeleteRequest.Community">
+            <summary>
+            Leave blank for default
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.EnvelopeDelete.RegistryEnvelopeId">
             <summary>
             Envelope Identifier
@@ -763,6 +796,11 @@
             <summary>
             Identifier for Organization which Owns the data being published
             2017-12-13 - this will be the CTID for the owning org.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.EnvelopeDelete.Community">
+            <summary>
+            Leave blank for default
             </summary>
         </member>
         <member name="P:RA.Models.Input.LearningOpportunity.Name_Map">
@@ -876,7 +914,9 @@
         <member name="P:RA.Models.Input.Organization.AgentType">
             <summary>
             The type of the described agent.
-            Must provide valid organization types
+            Must provide valid organization types.
+            May provide with or without the orgType namespace
+            orgType:CertificationBody
             </summary>
         </member>
         <member name="P:RA.Models.Input.Organization.AgentSectorType">
@@ -895,6 +935,17 @@
         <member name="P:RA.Models.Input.Organization.Image">
             <summary>
             Url for Organization image
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.ISICV4">
+            <summary>
+            ISIC Revision 4 Code
+            The International Standard of Industrial Classification of All Economic Activities (ISIC), Revision 4 code for a particular organization, business person, or place.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.Organization.NcesID">
+            <summary>
+            Identifier comprised of a 12 digit code issued by the National Center for Education Statistics (NCES) for educational institutions where the first 7 digits are the NCES District ID.
             </summary>
         </member>
         <member name="P:RA.Models.Input.Organization.MissionAndGoalsStatementDescription_Map">
@@ -957,11 +1008,18 @@
             Alternately can provide a language map
             </summary>
         </member>
+        <member name="P:RA.Models.Input.Pathway.SubjectWebpage">
+            <summary>
+            The webpage that describes this entity.
+            URL
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.Pathway.HasChild">
             <summary>
             This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
             Provide the CTID or the full URI for the target environment. 
-            Reference to another Pathway would have to be an a URI.
+            It would be a burden to have a user provide a blank node Id.
+            However, we could recommend that a CTID is provided, and just convert.
             </summary>
         </member>
         <member name="P:RA.Models.Input.Pathway.HasDestinationComponent">
@@ -969,7 +1027,7 @@
             Goal or destination node of the pathway. 
             Provide the CTID or the full URI for the target environment. 
             URI for a ceterms:PathwayComponent
-            Multipicity: Single
+            Multipicity: Many
             </summary>
         </member>
         <member name="P:RA.Models.Input.Pathway.OwnedBy">
@@ -1146,6 +1204,16 @@
             ceterms:PathwayComponent
             </summary>
         </member>
+        <member name="T:RA.Models.Input.GraphInput">
+            <summary>
+            The plain graph doesn't include language maps
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.GraphInput.Graph">
+            <summary>
+            Main graph object
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.CompetencyFrameworkGraph.Graph">
             <summary>
             Main graph object
@@ -1183,6 +1251,11 @@
             <summary>
             List of condtions, containing:
             A single condition or aspect of experience that refines the conditions under which the resource being described is applicable.
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ConditionProfile.SubmissionOf">
+            <summary>
+            Aug. 2019 - changed to be list of URIs. Use SubmissionOfDescription for text values.
             </summary>
         </member>
         <member name="P:RA.Models.Input.ConditionProfile.AssertedBy">
@@ -1421,6 +1494,11 @@
             Will be useful where the request can be populated programatically.
             </summary>
         </member>
+        <member name="T:RA.Models.Input.JurisdictionAssertedInProfile">
+            <summary>
+            Organization makes an assertion for specific jurisdiction(s). 
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.JurisdictionAssertedInProfile.AssertedBy">
             <summary>
             Organization that asserts this condition
@@ -1601,21 +1679,42 @@
             NOTE: Use either the string or LanguageMap equivalent property, but not both
             </summary>
         </member>
+        <member name="P:RA.Models.Input.Place.AddressRegion">
+            <summary>
+            AddressRegion - State, Province, etc
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ContactPoint.Name">
+            <summary>
+            Name of the Contact Point 
+            </summary>
+        </member>
         <member name="P:RA.Models.Input.ContactPoint.ContactType">
             <summary>
             Specification of the type of contact
+            Example: Registration
             </summary>
         </member>
-        <member name="P:RA.Models.Input.ContactPoint.PhoneNumbers">
+        <member name="P:RA.Models.Input.ContactPoint.Emails">
             <summary>
-            An option available on this contact point.
-            For example, a toll-free number or support for hearing-impaired callers.
+            List of email addresses
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ContactPoint.SocialMediaPages">
+            <summary>
+            List of URIs to social media pages
             </summary>
         </member>
         <member name="T:RA.Models.Input.ProcessProfile">
             <summary>
             Common input class for all process profiles 
             2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
+            </summary>
+        </member>
+        <member name="P:RA.Models.Input.ProcessProfile.Description">
+            <summary>
+            Process Profile Description
+            REQUIRED
             </summary>
         </member>
         <member name="P:RA.Models.Input.ProcessProfile.Description_Map">
@@ -1635,7 +1734,7 @@
             <summary>
             Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. For example:
             creditUnit:ContinuingEducationUnit or ContinuingEducationUnit
-            <see cref="!:https://credreg.net/ctdl/terms/creditUnitType"/> 
+            <see cref="!:Http://credreg.net/ctdl/terms/creditUnitType"/> 
             </summary>
         </member>
         <member name="P:RA.Models.Input.QuantitativeValue.Description">
@@ -1789,10 +1888,28 @@
             URI
             </summary>
         </member>
+        <member name="P:RA.Models.JsonV2.Competency.knowledgeEmbodied">
+            <summary>
+            Body of information embodied either directly or indirectly in this competency.
+            URI
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.taskEmbodied">
+            <summary>
+            Specifically defined piece of work embodied either directly or indirectly in this competency.
+            URI
+            </summary>
+        </member>
         <member name="P:RA.Models.JsonV2.Competency.weight">
             <summary>
             An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
             Float
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Competency.hasSourceIdentifier">
+            <summary>
+            Has Source Identifier
+             A collection of identifiers related to this resource.
             </summary>
         </member>
         <member name="T:RA.Models.JsonV2.ProficiencyScale">
@@ -1822,6 +1939,11 @@
             </summary>
         </member>
         <member name="T:RA.Models.JsonV2.Concept">
+            <summary>
+            Concept
+            </summary>
+        </member>
+        <member name="T:RA.Models.JsonV2.ConceptPlain">
             <summary>
             Concept
             </summary>
@@ -1856,6 +1978,11 @@
         <member name="P:RA.Models.JsonV2.Credential.CredentialType">
             <summary>
             Need a custom mapping to @type based on input value
+            </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Credential.ISICV4">
+            <summary>
+            ISIC Revision 4 Code
             </summary>
         </member>
         <member name="P:RA.Models.JsonV2.Credential.OwnedBy">
@@ -2024,9 +2151,11 @@
         </member>
         <member name="P:RA.Models.JsonV2.Pathway.HasChild">
             <summary>
-            This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
-            Reference to another Pathway would have to be an a URI.
+            This property identifies a child pathwayComponent(s) in the downward path.
             </summary>
+        </member>
+        <member name="P:RA.Models.JsonV2.Pathway.HasChildUri">
+            Could use blank nodes. That is a blank node URI to a PathwayComponent
         </member>
         <member name="P:RA.Models.JsonV2.Pathway.HasDestinationComponent">
             <summary>
@@ -2035,14 +2164,22 @@
             Multipicity: Single
             </summary>
         </member>
+        <member name="P:RA.Models.JsonV2.Pathway.SubjectWebpage">
+            <summary>
+            The webpage that describes this pathway.
+            URL
+            </summary>
+        </member>
         <member name="P:RA.Models.JsonV2.PathwayComponent.PathwayComponentType">
             <summary>
             Need a custom mapping to @type based on input value
             </summary>
         </member>
-        <member name="P:RA.Models.JsonV2.PathwayComponent.InLanguage">
+        <member name="P:RA.Models.JsonV2.PathwayComponent.HasChild">
             <summary>
-            TBD - will there be an inLanguage?
+            This property identifies a child pathwayComponent(s) in the downward path.
+            ceterms:PathwayComponent
+            Could use blank nodes. That is a blank node URI to a PathwayComponent
             </summary>
         </member>
         <member name="P:RA.Models.JsonV2.PathwayComponent.HasCondition">
@@ -2051,10 +2188,9 @@
             ceterms:ComponentCondition
             </summary>
         </member>
-        <member name="P:RA.Models.JsonV2.PathwayComponent.HasChild">
+        <member name="P:RA.Models.JsonV2.PathwayComponent.InLanguage">
             <summary>
-            This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
-            ceterms:PathwayComponent
+            TBD - will there be an inLanguage?
             </summary>
         </member>
         <member name="P:RA.Models.JsonV2.PathwayComponent.IsChildOf">
@@ -2157,6 +2293,19 @@
             </summary>
         </member>
         <member name="P:RA.Models.RegistryAssistantResponse.Payload">
+            <summary>
+            Payload of request to registry, containing properties formatted as CTDL - JSON-LD
+            </summary>
+        </member>
+        <member name="P:RA.Models.RegistryAssistantFormatResponse.Successful">
+            True if action was successfull, otherwise false
+        </member>
+        <member name="P:RA.Models.RegistryAssistantFormatResponse.Messages">
+            <summary>
+            List of error or warning messages
+            </summary>
+        </member>
+        <member name="P:RA.Models.RegistryAssistantFormatResponse.Payload">
             <summary>
             Payload of request to registry, containing properties formatted as CTDL - JSON-LD
             </summary>

@@ -21,7 +21,6 @@ namespace RA.Services
     {
 
         static string status = "";
-		static bool isUrlPresent = true;
 		
         /// <summary>
         /// Publish a Credential to the Credential Registry
@@ -56,8 +55,8 @@ namespace RA.Services
             string submitter = "";
             List<string> messages = new List<string>();
             var output = new OutputEntity();
-			if ( environment != "production" )
-				output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
+			//if ( environment != "production" )
+				//output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
 			OutputGraph og = new OutputGraph();
 
             if ( ToMap( request, output, ref messages ) )
@@ -71,7 +70,7 @@ namespace RA.Services
                         og.Graph.Add( item );
                     }
                 }
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -83,6 +82,7 @@ namespace RA.Services
 					PublisherAuthorizationToken = helper.ApiKey,
 					IsPublisherRequest = helper.IsPublisherRequest,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					PublishingForOrgCtid = helper.OwnerCtid
 				};
 				//
@@ -118,7 +118,7 @@ namespace RA.Services
 				{
 
 					string identifier = "LearningOpportunity_" + request.LearningOpportunity.Ctid;
-					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
@@ -147,7 +147,7 @@ namespace RA.Services
                         og.Graph.Add( item );
                     }
                 }
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -177,7 +177,7 @@ namespace RA.Services
                     }
                 }
 
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -197,7 +197,7 @@ namespace RA.Services
                     }
                 }
 
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -224,7 +224,9 @@ namespace RA.Services
         {
 			CurrentEntityType = "LearningOpportunity";
 			bool isValid = true;
-            RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
+			Community = request.Community ?? "";
+
+			RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
             InputEntity input = request.LearningOpportunity;
             bool hasDefaultLanguage = false;
 
@@ -325,7 +327,7 @@ namespace RA.Services
             bool isValid = true;
 
 			CurrentCtid = output.Ctid = FormatCtid(input.Ctid, "LearningOpportunity", ref messages);
-            output.CtdlId = credRegistryResourceUrl + output.Ctid;
+            output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
 
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )
@@ -379,12 +381,13 @@ namespace RA.Services
             //output.CodedNotation = AssignListToString( input.CodedNotation );
             output.CodedNotation = input.CodedNotation;
             output.DeliveryTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.DeliveryTypeDescription ), input.DeliveryTypeDescription_Map, "DeliveryTypeDescription", DefaultLanguageForMaps, ref messages );
-            output.VerificationMethodDescription = AssignLanguageMap( ConvertSpecialCharacters( input.VerificationMethodDescription ), input.VerificationMethodDescription_Map,"VerificationMethodDescription",  DefaultLanguageForMaps, ref messages );
+			//19-07-30 removed
+			//output.VerificationMethodDescription = AssignLanguageMap( ConvertSpecialCharacters( input.VerificationMethodDescription ), input.VerificationMethodDescription_Map,"VerificationMethodDescription",  DefaultLanguageForMaps, ref messages );
 
-            output.DateEffective = MapDate( input.DateEffective, "Learning Opportunity Date Effective", ref messages);
+			output.DateEffective = MapDate( input.DateEffective, "Learning Opportunity Date Effective", ref messages);
 
 			//
-			output.CreditUnitType = null;
+			//output.CreditUnitType = null;
 			output.CreditValue = AssignQuantitiveValue( input.CreditValue, "CreditValue", "LearningOpportunity", ref messages );
 			//at this point could have had no data, or bad data
 			if ( output.CreditValue == null )

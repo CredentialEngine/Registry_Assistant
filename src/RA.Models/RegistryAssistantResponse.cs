@@ -48,6 +48,26 @@ namespace RA.Models
 		public string Payload { get; set; }
 	}
 
+	public class RegistryAssistantFormatResponse
+	{
+		public RegistryAssistantFormatResponse()
+		{
+			Messages = new List<string>();
+			Payload = "";
+		}
+
+		/// True if action was successfull, otherwise false
+		public bool Successful { get; set; }
+		/// <summary>
+		/// List of error or warning messages
+		/// </summary>
+		public List<string> Messages { get; set; }
+
+		/// <summary>
+		/// Payload of request to registry, containing properties formatted as CTDL - JSON-LD
+		/// </summary>
+		public string Payload { get; set; }
+	}
 	public class RegistryAssistantDeleteResponse
 	{
 		public RegistryAssistantDeleteResponse()

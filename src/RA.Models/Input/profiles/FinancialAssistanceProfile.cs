@@ -14,6 +14,7 @@ namespace RA.Models.Input
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 		public string SubjectWebpage { get; set; }
+		public List<string> FinancialAssistanceType { get; set; } = new List<string>();
 
 	}
 }

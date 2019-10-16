@@ -35,7 +35,9 @@ namespace RA.Models
 		/// return the registr envelope id
 		/// </summary>
 		public string RegistryEnvelopeId { get; set; }
-		
+		public string EnvelopeUrl { get; set; }
+		public string GraphUrl { get; set; }
+
 		public List<RequestMessage> Messages { get; set; }
 		public bool HasErrors { get; set; }
 		public void AddError( string message )
@@ -47,6 +49,8 @@ namespace RA.Models
 		{
 			Messages.Add( new Models.RequestMessage() { Message = message, IsWarning = true } );
 		}
+		
+		public bool WasChanged { get; set; }
 
 		public List<string> GetAllMessages()
 		{

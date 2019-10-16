@@ -56,8 +56,8 @@ namespace RA.Services
             string submitter = "";
 
             var output = new OutputEntity();
-			if ( environment != "production" )
-				output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
+			//if ( environment != "production" )
+				//output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
 			OutputGraph og = new OutputGraph();
             List<string> messages = new List<string>();
             if (ToMap(request, output, helper, ref messages ))
@@ -71,18 +71,20 @@ namespace RA.Services
                         og.Graph.Add( item );
                     }
                 }
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
+				bool isTrustedPartner = false;
 
 				CER cer = new CER( "Organization", output.Type, output.Ctid, helper.SerializedInput )
 				{
 					PublisherAuthorizationToken = helper.ApiKey,
 					IsPublisherRequest = helper.IsPublisherRequest,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					PublishingForOrgCtid = helper.OwnerCtid
                 };
 				//
@@ -91,7 +93,8 @@ namespace RA.Services
 					cer.IsManagedRequest = true;
 					//get publisher org
 					string publisherCTID = "";
-					if ( SupportServices.GetPublishingOrgByApiKey( cer.PublisherAuthorizationToken, ref publisherCTID, ref messages ) )
+					
+					if ( SupportServices.GetPublishingOrgByApiKey( cer.PublisherAuthorizationToken, ref publisherCTID, ref messages, ref isTrustedPartner ) )
 					{
 						cer.PublishingByOrgCtid = publisherCTID;
 					}
@@ -105,8 +108,11 @@ namespace RA.Services
 					}
 				} else
 					cer.PublishingByOrgCtid = cer.PublishingForOrgCtid;
-				//
-				if ( !SupportServices.ValidateAgainstPastRequest( "Organization", output.Ctid, ref cer, ref messages ) )
+
+				//also return if previously published
+				//if first time for an organization, and publisher is a trusted partner, check if org is in accounts
+				bool recordWasFound = false;
+				if ( !SupportServices.ValidateAgainstPastRequest( "Organization", output.Ctid, ref cer, ref messages, ref recordWasFound ) )
 				{
 					isValid = false;
 					//helper.SetMessages( messages );
@@ -114,12 +120,17 @@ namespace RA.Services
 				}
 				else
 				{
-
+					if ( !recordWasFound && isTrustedPartner )
+					{
+						//check if org exists in accounts, and create if not
+						HandleFirstPublishForTrustedPartner( request, ref messages );
+					}
 					string identifier = "Organization_" + request.Organization.Ctid;
 
-					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
 						helper.RegistryEnvelopeId = crEnvelopeId;
+						CheckIfChanged( helper, cer.WasChanged );
 						string msg = string.Format( "<p>Published organization: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", request.Organization.Name, output.SubjectWebpage.ToString(), output.Ctid, crEnvelopeId );
 						NotifyOnPublish( "Organization", msg );
 					}
@@ -130,7 +141,7 @@ namespace RA.Services
 					}
 				}
             }
-            else
+            else //errors found
             {
                 isValid = false;
                 og.Graph.Add( output );
@@ -142,16 +153,34 @@ namespace RA.Services
                         og.Graph.Add( item );
                     }
                 }
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
+
 			helper.SetWarningMessages( warningMessages );
 			helper.SetMessages(messages);
-        }
+		}
+		//
+
+		public bool HandleFirstPublishForTrustedPartner(EntityRequest request, ref List<string> messages)
+		{
+			bool isValid = true;
+			bool recordExists = false;
+			//check if exists
+			if ( !SupportServices.FindOwningOrgByCTID( request.PublishForOrganizationIdentifier, ref recordExists, ref messages ) )
+			{
+				//hmm, if actual error occurs, do we stop or fall thru? If not in accounts, will get error
+			}
+			if (!recordExists)
+			{
+				//add to accounts
+			}
+			return isValid;
+		}
         //
 
         public string FormatAsJson( EntityRequest request, RA.Models.RequestHelper helper, ref bool isValid, ref List<string> messages )
@@ -174,7 +203,7 @@ namespace RA.Services
                     }
                 }
 
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -195,7 +224,7 @@ namespace RA.Services
                 }
 
 
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -223,7 +252,9 @@ namespace RA.Services
 		{
 			CurrentEntityType = "Organization";
 			bool isValid = true;
-            InputEntity input = request.Organization;
+			Community = request.Community ?? "";
+
+			InputEntity input = request.Organization;
             if ( !string.IsNullOrWhiteSpace( request.DefaultLanguage ) )
             {
                 //validate
@@ -238,14 +269,14 @@ namespace RA.Services
 			{
 
 				CurrentCtid= output.Ctid = FormatCtid( input.Ctid, "Organization", ref messages );
-				output.CtdlId = credRegistryResourceUrl + output.Ctid;
+				output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
 
 				HandleRequiredFields( input, output, ref messages );
 
 				output.ParentOrganization = FormatOrganizationReferences( input.ParentOrganization, "ParentOrganization", false, ref messages );
 				//TODO - we need to have an edit that a top level org cannot be created unless matches the CTID of the publishing org
 				//otherwise must indicate a parent org
-				if ( !string.IsNullOrWhiteSpace(output.Ctid) && output.Ctid != helper.OwnerCtid )
+				if ( !string.IsNullOrWhiteSpace(output.Ctid) && output.Ctid.ToLower() != helper.OwnerCtid.ToLower() )
 				{
 					//must be a child org, so  
 					if ( input.ParentOrganization == null || input.ParentOrganization.Count == 0 )
@@ -253,7 +284,7 @@ namespace RA.Services
 					else
 					{
 						//e
-						var exists = input.ParentOrganization.FirstOrDefault( a => a.CTID == helper.OwnerCtid );
+						var exists = input.ParentOrganization.FirstOrDefault( a => a.CTID.ToLower() == helper.OwnerCtid.ToLower() );
 						if (exists == null || string.IsNullOrWhiteSpace(exists.CTID))
 							messages.Add( "Error: Organization is not a registered organization. The organization has a different CTID than the owing organization and a parent organization was not found that matches the CTID of the owning organization." );
 					}
@@ -392,6 +423,7 @@ namespace RA.Services
 				foreach ( var item in input.AgentType )
 				{
 					//output.AgentType.Add( FormatCredentialAlignment( item ) );
+					//should be concept scheme of organizationType
 					output.AgentType.Add( FormatCredentialAlignment( "agentType", item, ref messages ) );
 				}
 			}
@@ -436,14 +468,25 @@ namespace RA.Services
 			//
 			output.AgentPurposeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.AgentPurposeDescription ), input.AgentPurposeDescription_Map, "AgentPurposeDescription",  DefaultLanguageForMaps, ref messages );
 
-            output.DUNS = input.Duns;
-			output.FEIN = input.Fein;
-			output.IpedsID = input.IpedsId;
-			output.OPEID = input.OpeId;
-            output.LEICode = input.LEICode;
-            
-            //founded date will require special handling
-            if ( !string.IsNullOrWhiteSpace( input.FoundingDate ) )
+            output.DUNS = string.IsNullOrWhiteSpace((input.Duns ?? "").Trim()) ? "" : ( input.Duns ?? "" ).Trim() ;
+			output.FEIN = string.IsNullOrWhiteSpace( ( input.Fein ?? "" ).Trim() ) ? "" : ( input.Fein ?? "" ).Trim();
+			output.IpedsID = string.IsNullOrWhiteSpace( ( input.IpedsId ?? "" ).Trim() ) ? "" : ( input.IpedsId ?? "" ).Trim();
+			output.OPEID = string.IsNullOrWhiteSpace( ( input.OpeId ?? "" ).Trim() ) ? "" : ( input.OpeId ?? "" ).Trim();
+			output.LEICode = string.IsNullOrWhiteSpace( ( input.LEICode ?? "" ).Trim() ) ? "" : ( input.LEICode ?? "" ).Trim();
+			output.ISICV4 = MapIsicV4( input.ISICV4 );
+
+			if ( !string.IsNullOrWhiteSpace( ( input.NcesID ?? "" ) ))
+			{
+				if ( ( input.NcesID ?? "").Length != 12)
+				{
+					messages.Add( "Error: The organization NcesID must be a 12 digit code." );
+				} else
+					output.NcesID = string.IsNullOrWhiteSpace( ( input.NcesID ?? "" ).Trim() ) ? "" : ( input.NcesID ?? "" ).Trim();
+			}
+			
+			//
+			//founded date will require special handling
+			if ( !string.IsNullOrWhiteSpace( input.FoundingDate ) )
 			{
 				if ( input.FoundingDate.Length == 4 && IsInteger( input.FoundingDate ) )
 					output.FoundingDate = input.FoundingDate;
@@ -631,6 +674,7 @@ namespace RA.Services
 			string ctdlType = "";
 			try
 			{
+				//TODO - doesn't handle a community!!
 				string payload = RegistryServices.GetResourceByCtid( request.Organization.Ctid, ref ctdlType, ref statusMessage );
 
 				if ( string.IsNullOrWhiteSpace( payload ) )
@@ -689,7 +733,7 @@ namespace RA.Services
 							og.Graph.Add( item );
 						}
 					}
-					og.CtdlId = credRegistryGraphUrl + output.Ctid;
+					og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
 					og.CTID = output.Ctid;
 					og.Type = output.Type;
 					og.Context = output.Context;
@@ -701,6 +745,7 @@ namespace RA.Services
 						PublisherAuthorizationToken = helper.ApiKey,
 						IsPublisherRequest = helper.IsPublisherRequest,
 						EntityName = CurrentEntityName,
+						Community = request.Community ?? "",
 						PublishingForOrgCtid = helper.OwnerCtid
 					};
 					//
@@ -733,7 +778,7 @@ namespace RA.Services
 					}
 
 					string identifier = "Organization_" + request.Organization.Ctid;
-					if ( cer.Publish( helper.Payload, "", identifier, ref status, ref crEnvelopeId ) )
+					if ( cer.Publish( helper, "", identifier, ref status, ref crEnvelopeId ) )
 					{
 						helper.RegistryEnvelopeId = crEnvelopeId;
 						string msg = string.Format( "<p>Published organization: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", request.Organization.Name, output.SubjectWebpage.ToString(), output.Ctid, crEnvelopeId );

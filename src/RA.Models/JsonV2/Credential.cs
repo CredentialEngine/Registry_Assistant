@@ -106,6 +106,11 @@ namespace RA.Models.JsonV2
 
         [JsonProperty( PropertyName = "ceterms:image" )]
         public string Image { get; set; } //Image URL
+		/// <summary>
+		/// ISIC Revision 4 Code
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:isicV4" )]
+		public string ISICV4 { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
         public string SubjectWebpage { get; set; }
@@ -150,7 +155,16 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:previousVersion" )]
         public string PreviousVersion { get; set; } //URL
 
-        [JsonProperty( PropertyName = "ceterms:subject" )]
+		[JsonProperty( PropertyName = "ceterms:nextVersion" )]
+		public string NextVersion { get; set; } //URL
+
+		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
+		public string SupersededBy { get; set; } //URL
+
+		[JsonProperty( PropertyName = "ceterms:supersedes" )]
+		public string Supersedes { get; set; } //URL
+
+		[JsonProperty( PropertyName = "ceterms:subject" )]
         public List<CredentialAlignmentObject> Subject { get; set; }
 
 		//frameworks
@@ -265,7 +279,7 @@ namespace RA.Models.JsonV2
 
 		//[JsonIgnore]
 		//[JsonProperty( PropertyName = "ceterms:financialAssistanceOLD" )]
-  //      //public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
+  //      public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:financialAssistance" )]
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; }

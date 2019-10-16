@@ -17,9 +17,7 @@ namespace RA.Services
 {
 	public class AssessmentServicesV2 : ServiceHelperV2
     {
-        static string status = "";
-       
-
+        
         /// <summary>
         /// Publish an Assessment to the Credential Registry
         /// </summary>
@@ -30,15 +28,15 @@ namespace RA.Services
         {
 			isValid = true;
             string crEnvelopeId = request.RegistryEnvelopeId;
-
-            //submitter is not a person for this api, rather the organization
-            //may want to do a lookup via the api key?
-            string submitter = "";
+			string status = "";
+			//submitter is not a person for this api, rather the organization
+			//may want to do a lookup via the api key?
+			string submitter = "";
             List<string> messages = new List<string>();
             var output = new OutputEntity();
             OutputGraph og = new OutputGraph();
-			if ( environment != "production" )
-				output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
+			//if ( environment != "production" )
+				//output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
 
 			if ( ToMap( request, output, ref messages ) )
 			{
@@ -52,18 +50,20 @@ namespace RA.Services
                     }
                 }
                 //this must be: /graph/
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
-                og.CTID = output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
+				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
+				og.CTID = output.CTID;
                 og.Type = output.Type;
                 og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
 
-				CER cer = new CER( "Assessment", output.Type, output.Ctid, helper.SerializedInput )
+				CER cer = new CER( "Assessment", output.Type, output.CTID, helper.SerializedInput )
 				{
 					PublisherAuthorizationToken = helper.ApiKey,
 					IsPublisherRequest = helper.IsPublisherRequest,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					PublishingForOrgCtid = helper.OwnerCtid
 				};
 
@@ -81,7 +81,7 @@ namespace RA.Services
 
 						isValid = false;
 						helper.SetMessages( messages );
-						LoggingHelper.DoTrace( 4, string.Format( "Assessment.Publish. Validate ApiKey failed. Org Ctid: {0}, Document Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.Ctid, cer.PublisherAuthorizationToken ) );
+						LoggingHelper.DoTrace( 4, string.Format( "Assessment.Publish. Validate ApiKey failed. Org Ctid: {0}, Document Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.CTID, cer.PublisherAuthorizationToken ) );
 						return; //===================
 					}
 				}
@@ -93,7 +93,7 @@ namespace RA.Services
 				 * 
 				 * 
 				 */
-				if ( !SupportServices.ValidateAgainstPastRequest( "Assessment", output.Ctid, ref cer, ref messages ) )
+				if ( !SupportServices.ValidateAgainstPastRequest( "Assessment", output.CTID, ref cer, ref messages ) )
 				{
 					isValid = false;
 					//helper.SetWarningMessages( warningMessages );
@@ -104,12 +104,12 @@ namespace RA.Services
 				{
 					string identifier = "Assessment_" + request.Assessment.Ctid;
 
-					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
-
-						string msg = string.Format( "<p>Published Assessment: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
+						CheckIfChanged( helper, cer.WasChanged );
+						string msg = string.Format( "<p>Published Assessment: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.CTID, crEnvelopeId );
 						NotifyOnPublish( "Assessment", msg );
 					}
 					else
@@ -135,8 +135,8 @@ namespace RA.Services
                     }
                 }
                 //this must be: /graph/
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
-                og.CTID = output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
+                og.CTID = output.CTID;
                 og.Type = output.Type;
                 og.Context = ctdlContext;
 
@@ -165,8 +165,8 @@ namespace RA.Services
                     }
                 }
 
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
-                og.CTID = output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
+                og.CTID = output.CTID;
                 og.Type = output.Type;
                 og.Context = ctdlContext;
 
@@ -185,8 +185,8 @@ namespace RA.Services
                     }
                 }
 
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
-                og.CTID = output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
+                og.CTID = output.CTID;
                 og.Type = output.Type;
                 og.Context = ctdlContext;
 
@@ -212,7 +212,9 @@ namespace RA.Services
         {
 			CurrentEntityType = "Assessment";
 			bool isValid = true;
-            RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
+			Community = request.Community ?? "";
+
+			RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
             InputEntity input = request.Assessment;
             //if request.DefaultLanguage exists use it. 
             //otherwise will come from inLanguage which is required.
@@ -314,11 +316,12 @@ namespace RA.Services
             bool isValid = true;
 			///string property = "";
 
-			CurrentCtid = output.Ctid = FormatCtid(input.Ctid, "Assessment Profile", ref messages);
-            output.CtdlId = credRegistryResourceUrl + output.Ctid;
+			CurrentCtid = output.CTID = FormatCtid(input.Ctid, "Assessment Profile", ref messages);
+            //output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
+			output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 
-            //required
-            if ( string.IsNullOrWhiteSpace( input.Name ) )
+			//required
+			if ( string.IsNullOrWhiteSpace( input.Name ) )
             {
                 if ( input.Name_Map == null || input.Name_Map.Count == 0 )
                 {
@@ -409,7 +412,7 @@ namespace RA.Services
             output.ScoringMethodExampleDescription = AssignLanguageMap( ConvertSpecialCharacters( input.ScoringMethodExampleDescription ), input.ScoringMethodExampleDescription_Map, "ScoringMethodExampleDescription", DefaultLanguageForMaps, ref messages );
 
 			//
-			output.CreditUnitType = null;
+			//output.CreditUnitType = null;
 			output.CreditValue = AssignQuantitiveValue( input.CreditValue, "CreditValue", "Assessment", ref messages );
 			//at this point could have had no data, or bad data
 			if ( output.CreditValue == null )

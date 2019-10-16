@@ -22,8 +22,7 @@ namespace RA.Services
 	public class ConditionManifestServicesV2 : ServiceHelperV2
 	{
 		static string status = "";
-		static bool isUrlPresent = true;
-                /// <summary>
+        /// <summary>
         /// Publish a Condition Manifest to the Credential Registry
         /// </summary>
         /// <param name="request"></param>
@@ -49,7 +48,7 @@ namespace RA.Services
                         og.Graph.Add( item );
                     }
                 }
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -61,6 +60,7 @@ namespace RA.Services
                     PublisherAuthorizationToken = helper.ApiKey,
 					IsPublisherRequest = helper.IsPublisherRequest,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					PublishingForOrgCtid = helper.OwnerCtid
                 };
 
@@ -96,7 +96,7 @@ namespace RA.Services
 				{
 
 					string identifier = "ConditionManifest_" + request.ConditionManifest.Ctid;
-					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
@@ -124,7 +124,7 @@ namespace RA.Services
                         og.Graph.Add( item );
                     }
                 }
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -158,7 +158,7 @@ namespace RA.Services
                     }
                 }
 
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -178,7 +178,7 @@ namespace RA.Services
                         og.Graph.Add( item );
                     }
                 }
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -194,6 +194,8 @@ namespace RA.Services
 			CurrentEntityType = "ConditionManifest";
             InputEntity input = request.ConditionManifest;
             bool isValid = true;
+			Community = request.Community ?? "";
+
 			List<string> messages = new List<string>();
             //too late to fully implement the possibility of returning just warnings
             if ( !string.IsNullOrWhiteSpace( request.DefaultLanguage ) )
@@ -249,7 +251,7 @@ namespace RA.Services
 			///string property = "";
 
 			CurrentCtid = output.Ctid = FormatCtid(input.Ctid, "Condition Manifest", ref messages);
-            output.CtdlId = credRegistryResourceUrl + output.Ctid;
+            output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
 
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )

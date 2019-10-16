@@ -124,7 +124,9 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// The type of the described agent.
-		/// Must provide valid organization types
+		/// Must provide valid organization types.
+		/// May provide with or without the orgType namespace
+		/// orgType:CertificationBody
 		/// </summary>
 		public List<string> AgentType { get; set; }
 
@@ -176,7 +178,16 @@ namespace RA.Models.Input
         public string IpedsId { get; set; }
         public string OpeId { get; set; }
         public string LEICode { get; set; }
-        public List<IdentifierValue> AlternativeIdentifier { get; set; }
+		/// <summary>
+		/// ISIC Revision 4 Code
+		/// The International Standard of Industrial Classification of All Economic Activities (ISIC), Revision 4 code for a particular organization, business person, or place.
+		/// </summary>
+		public string ISICV4 { get; set; }
+		/// <summary>
+		/// Identifier comprised of a 12 digit code issued by the National Center for Education Statistics (NCES) for educational institutions where the first 7 digits are the NCES District ID.
+		/// </summary>
+		public string NcesID { get; set; }
+		public List<IdentifierValue> AlternativeIdentifier { get; set; }
 		public string MissionAndGoalsStatement { get; set; }
         public string MissionAndGoalsStatementDescription { get; set; }
 		/// <summary>
@@ -192,8 +203,8 @@ namespace RA.Models.Input
         public List<string> Email { get; set; }
 
 		//NOTE: ContactPoint can only be entered with Address
-		[Obsolete]
-		public List<ContactPoint> ContactPoint { get; set; } = new List<ContactPoint>();
+		//[Obsolete]
+		//public List<ContactPoint> ContactPoint { get; set; } = new List<ContactPoint>();
 		/// <summary>
 		/// A resource that unambiguously indicates the identity of the resource being described.
 		/// Resources that may indicate identity include, but are not limited to, descriptions of entities in open databases such as DBpedia and Wikidata or social media accounts such as FaceBook and LinkedIn.
@@ -219,16 +230,6 @@ namespace RA.Models.Input
 		public List<EntityReference> Offers { get; set; }
 		public List<EntityReference> Renews { get; set; }
 		public List<EntityReference> Revokes { get; set; }
-
-		/// <summary>
-		/// OR Prototype separate properties
-		/// NOT USED
-		/// </summary>
-		//public List<EntityReference> OwnsCredentials { get; set; }
-		//public List<EntityReference> OwnsAssessments { get; set; }
-
-		//public List<EntityReference> OwnsLearningOpportunities { get; set; }
-
 
 		/// <summary>
 		/// Reference to condition manifests

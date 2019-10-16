@@ -28,7 +28,7 @@ namespace RA.Models.JsonV2
             Corequisite = new List<ConditionProfile>();
             Recommends = new List<ConditionProfile>();
             EntryCondition = new List<ConditionProfile>();
-			CreditUnitType = new CredentialAlignmentObject();
+			//CreditUnitType = new CredentialAlignmentObject();
 			Assesses = new List<CredentialAlignmentObject>();
 			OwnedBy = null;
 			AccreditedBy = null;
@@ -107,7 +107,7 @@ namespace RA.Models.JsonV2
 
 
         [JsonProperty( PropertyName = "ceterms:ctid" )]
-        public string Ctid { get; set; }
+        public string CTID { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:assessmentExample" )] //URL
         public string AssessmentExample { get; set; } //URL
@@ -207,11 +207,11 @@ namespace RA.Models.JsonV2
   //      [JsonProperty( PropertyName = "ceterms:creditHourValue" )]
   //      public decimal CreditHourValue { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:creditUnitType" )]
-        public CredentialAlignmentObject CreditUnitType { get; set; }
+        //[JsonProperty( PropertyName = "ceterms:creditUnitType" )]
+        //public CredentialAlignmentObject CreditUnitType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:creditUnitValue" )]
-        public decimal CreditUnitValue { get; set; }
+        //[JsonProperty( PropertyName = "ceterms:creditUnitValue" )]
+        //public decimal CreditUnitValue { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:creditUnitTypeDescription" )]
         public LanguageMap CreditUnitTypeDescription { get; set; }
@@ -309,7 +309,7 @@ namespace RA.Models.JsonV2
         
 		//[JsonIgnore]
 		//[JsonProperty( PropertyName = "ceterms:financialAssistanceOLD" )]
-		////public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
+		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:financialAssistance" )]
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; }

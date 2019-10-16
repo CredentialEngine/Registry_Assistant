@@ -62,8 +62,14 @@ namespace RA.Models.JsonV2
         public LanguageMapList Condition { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:submissionOf" )]
-        public LanguageMapList SubmissionOf { get; set; }
+        //public List<string> SubmissionOf { get; set; }
+		public object SubmissionOf { get; set; }
 
+		[JsonIgnore]
+		public LanguageMapList SubmissionOfOld { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:submissionOfDescription" )]
+		public LanguageMap SubmissionOfDescription { get; set; }
 		/// <summary>
 		/// Organization that asserts this condition
 		/// NOTE: It must be serialized to a List

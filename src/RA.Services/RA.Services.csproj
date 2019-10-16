@@ -105,7 +105,6 @@
     <Compile Include="ConditionManifestServicesV2.cs" />
     <Compile Include="CostManifestServicesV2.cs" />
     <Compile Include="CredentialServicesV2.cs" />
-    <Compile Include="GremlinServices.cs" />
     <Compile Include="HistoryServices.cs" />
     <Compile Include="LearningOpportunityServicesV2.cs" />
     <Compile Include="OrganizationServicesV2.cs" />

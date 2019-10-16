@@ -225,9 +225,9 @@ namespace RA.Models.Input
 		/// </summary>
 		public string tableOfContents { get; set; }
 		public LanguageMap tableOfContents_map { get; set; } = new LanguageMap();
-		public List<FrameworkItem> OccupationType { get; set; }
-	
-		public List<FrameworkItem> IndustryType { get; set; }
+		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+
+		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
 
 
 	}
@@ -398,14 +398,6 @@ namespace RA.Models.Input
 		public List<string> identifier { get; set; } = new List<string>();
 
 		/// <summary>
-		/// In Language
-		/// Definition:	en-US: The primary language used in or by this competency framework or competency.The primary language used in or by this competency framework or competency.
-		/// This is the language the text is primarily written in, even if it makes use of other languages. For example, a competency for teaching spanish to english-speaking students would primarily be in english, because that is the language used to convey the material.
-		///// </summary>
-		//[Obsolete]
-		//public List<string> inLanguage { get; set; } = new List<string>();
-
-		/// <summary>
 		/// Is Child Of
 		/// Definition:	en-US: The referenced competency is higher in some arbitrary hierarchy than this competency.
 		/// List of URIs to competencies.
@@ -436,8 +428,10 @@ namespace RA.Models.Input
 
         public List<string> skillEmbodied { get; set; } = new List<string>();
 
-
-        public string weight { get; set; }
+		public List<string> knowledgeEmbodied { get; set; } = new List<string>();
+		public List<string> taskEmbodied { get; set; } = new List<string>();
+		public List<string> hasSourceIdentifier { get; set; }
+		public string weight { get; set; }
 
     }
 

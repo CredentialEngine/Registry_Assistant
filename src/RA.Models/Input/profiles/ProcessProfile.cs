@@ -23,7 +23,11 @@ namespace RA.Models.Input
 			TargetCompetencyFramework = new List<EntityReference>();
 			//Region = new List<GeoCoordinates>();
 		}
-        public string Description { get; set; }
+		/// <summary>
+		/// Process Profile Description
+		/// REQUIRED
+		/// </summary>
+		public string Description { get; set; }
         /// <summary>
         /// Alternately can provide a language map
         /// </summary>

@@ -38,8 +38,8 @@ namespace RA.Services
             List<string> messages = new List<string>();
             var output = new OutputEntity();
             OutputGraph og = new OutputGraph();
-			if ( environment != "production" )
-				output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
+			//if ( environment != "production" )
+				//output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
             if ( ToMap(request, output, ref messages) )
             {
 
@@ -52,7 +52,7 @@ namespace RA.Services
                         og.Graph.Add( item );
                     }
                 }
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.CredentialType;
                 og.Context = output.Context;
@@ -63,6 +63,7 @@ namespace RA.Services
                     PublisherAuthorizationToken = helper.ApiKey,
 					IsPublisherRequest = helper.IsPublisherRequest,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					PublishingForOrgCtid = helper.OwnerCtid
                 };
 				//
@@ -105,10 +106,12 @@ namespace RA.Services
 
 
 					string identifier = "Credential_" + request.Credential.Ctid;
-					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
+					
+						CheckIfChanged( helper, cer.WasChanged );
 						string msg = string.Format( "<p>Published credential: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
 						NotifyOnPublish( "Credential", msg );
 					}
@@ -136,7 +139,7 @@ namespace RA.Services
                         og.Graph.Add( item );
                     }
                 }
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.CredentialType;
                 og.Context = output.Context;
@@ -169,7 +172,7 @@ namespace RA.Services
                 }
                 
 
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.CredentialType;
                 og.Context = output.Context;
@@ -190,7 +193,7 @@ namespace RA.Services
                     }
                 }
 
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.CredentialType;
                 og.Context = output.Context;
@@ -218,7 +221,9 @@ namespace RA.Services
         {
 			CurrentEntityType = "Credential";
 			bool isValid = true;
-            string property = "";
+			Community = request.Community ?? "";
+
+			string property = "";
             RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
             InputEntity input = request.Credential;
             bool hasDefaultLanguage = false;
@@ -239,7 +244,7 @@ namespace RA.Services
 			{
 				//HandleRequiredFields
 				CurrentCtid = output.Ctid = FormatCtid( input.Ctid, "Credential", ref messages );
-                output.CtdlId = credRegistryResourceUrl + output.Ctid;
+                output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
                 //establish language. make a common method
                 output.InLanguage = PopulateInLanguage( input.InLanguage, "Credential", input.Name, hasDefaultLanguage, ref messages );
 
@@ -287,9 +292,27 @@ namespace RA.Services
                         messages.Add( FormatMessage( "Error - The credential type: ({0}) is invalid for Credential '{1}'.", input.CredentialType, input.Name ) );
                     }
                 }
-
-                //now literal
-                output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
+				//
+				
+				if ( !string.IsNullOrWhiteSpace( input.CredentialStatusType ) )
+				{
+					output.CredentialStatusType = FormatCredentialAlignment( "credentialStatusType", input.CredentialStatusType, ref messages );
+					if ( input.CredentialStatusType.ToLower().IndexOf( "deprecated" ) > -1 
+						|| input.CredentialStatusType.ToLower().IndexOf( "eliminated" ) > -1
+						|| input.CredentialStatusType.ToLower().IndexOf( "suspended" ) > -1 )
+					{
+						//only warn on invalid urls, don't reject
+						WarnOnInvalidUrls = true;
+					}
+					
+				}
+				else
+				{
+					messages.Add( "Error - The credential status type is required for Credentials" );
+				}
+				//
+				//must be valid, unless a deprecicated or other status?
+				output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
 
                 //need either ownedBy OR offeredBy
                 output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "Owning Organization", false, ref messages );
@@ -297,8 +320,9 @@ namespace RA.Services
 
                 if ( output.OwnedBy == null && output.OfferedBy == null )
                     messages.Add( string.Format( "At least one of an 'Offered By' organization, or an 'Owned By' organization must be provided for Credential: '{0}'", input.Name ) );
-                //
-                HandleLiteralFields( input, output, ref messages );
+				//
+
+				HandleLiteralFields( input, output, ref messages );
 
 				HandleUrlFields( input, output, ref messages );
 				//org
@@ -332,6 +356,7 @@ namespace RA.Services
 				output.ProcessStandards = AssignValidUrlAsString( input.ProcessStandards, "ProcessStandards", ref messages, false );
                 output.ProcessStandardsDescription = AssignLanguageMap( ConvertSpecialCharacters( input.ProcessStandardsDescription ), input.ProcessStandardsDescription_Map,"ProcessStandardsDescription",  DefaultLanguageForMaps, ref messages );
 
+				//allows just ctid or full URI
                 output.CommonConditions = AssignRegistryResourceURIsListAsStringList( input.CommonConditions, "CommonConditions", ref messages, false );
 				output.CommonCosts = AssignRegistryResourceURIsListAsStringList( input.CommonCosts, "CommonCosts", ref messages, false );
 
@@ -428,7 +453,7 @@ namespace RA.Services
    //         string property = "";
 
    //         output.Ctid = FormatCtid(input.Ctid, ref messages);
-   //         output.CtdlId = credRegistryResourceUrl + output.Ctid;
+   //         output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
 
    //         //todo determine if will generate where not found
    //         //         if ( string.IsNullOrWhiteSpace( input.Ctid ) && GeneratingCtidIfNotFound() )
@@ -439,7 +464,7 @@ namespace RA.Services
    //         //             //can't do this yet, as the registry may treat an existing records as new!!!
    //         //             //input.Ctid = input.Ctid.ToLower();
    //         //             output.Ctid = input.Ctid;
-   //         //             output.CtdlId = credRegistryResourceUrl + output.Ctid;
+   //         //             output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
    //         //	CurrentCtid = input.Ctid;
    //         //}
 
@@ -528,7 +553,8 @@ namespace RA.Services
 
             output.CredentialId = ( input.CredentialId ?? "" ).Length > 0 ? input.CredentialId : null;
             output.DateEffective = MapDate( input.DateEffective, "DateEffective", ref messages );
-
+			//should have validation
+			output.ISICV4 = MapIsicV4(input.ISICV4);
 
 			//placeholder: VersionIdentifier (already a list, the input needs output change
 			output.VersionIdentifier = AssignIdentifierListToList( input.VersionIdentifier, ref messages );
@@ -542,11 +568,16 @@ namespace RA.Services
             to.AvailabilityListing = AssignValidUrlAsStringList( from.AvailabilityListing, "AvailabilityListing", ref messages, false );
 
             to.Image = AssignValidUrlAsString( from.Image, "Image", ref messages, false );
-            to.PreviousVersion = AssignRegistryResourceURIAsString( from.PreviousVersion, "PreviousVersion", ref messages, false );
+
+			to.PreviousVersion = AssignRegistryResourceURIAsString( from.PreviousVersion, "PreviousVersion", ref messages, false );
             to.LatestVersion = AssignRegistryResourceURIAsString( from.LatestVersion, "LatestVersion", ref messages, false );
 
+			to.NextVersion = AssignRegistryResourceURIAsString( from.NextVersion, "NextVersion", ref messages, false );
+			to.SupersededBy = AssignRegistryResourceURIAsString( from.SupersededBy, "SupersededBy", ref messages, false );
+			to.Supersedes = AssignRegistryResourceURIAsString( from.Supersedes, "Supersedes", ref messages, false );
+			
 
-        }
+		}
 
 		public void HandleAssertedINsProperties( InputEntity input, OutputEntity output, RJ.EntityReferenceHelper helper, ref List<string> messages )
 		{
@@ -598,13 +629,6 @@ namespace RA.Services
 		public void HandleCredentialAlignmentFields( InputEntity input, OutputEntity output, ref List<string> messages )
         {
             output.Subject = FormatCredentialAlignmentListFromStrings( input.Subject );
-
-			if ( !string.IsNullOrWhiteSpace( input.CredentialStatusType ) )
-            {
-                output.CredentialStatusType = FormatCredentialAlignment( "credentialStatusType", input.CredentialStatusType, ref messages ) ;
-            }
-            else
-                output.CredentialStatusType = null;
 
 			//frameworks
 			//can't depend on the codes being SOC

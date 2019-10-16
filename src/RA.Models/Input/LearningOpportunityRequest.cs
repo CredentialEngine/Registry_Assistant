@@ -27,7 +27,6 @@ namespace RA.Models.Input
 			//Region = new List<GeoCoordinates>();
 
 			AudienceType = new List<string>();
-			AudienceLevelType = new List<string>();
 			AvailabilityListing = new List<string>();
 			AvailableOnlineAt = new List<string>();
 			//CodedNotation = new List<string>();
@@ -58,7 +57,6 @@ namespace RA.Models.Input
 			AvailableAt = new List<Place>();
 			CommonConditions = new List<string>();
 			CommonCosts = new List<string>();
-			//FinancialAssistanceOLD = new List<Input.FinancialAlignmentObject>();
 
 			HasPart = new List<EntityReference>();
 			IsPartOfLearningOpportunity = new List<EntityReference>();
@@ -130,7 +128,7 @@ namespace RA.Models.Input
 		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
 		public string CreditHourType { get; set; }
-		public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
+		//public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
 		public string CreditUnitType { get; set; }
 		public decimal CreditHourValue { get; set; }
 		public decimal CreditUnitValue { get; set; }
@@ -147,8 +145,8 @@ namespace RA.Models.Input
         public List<string> AudienceLevelType { get; set; }= new List<string>();
 		public string CodedNotation { get; set; }
 
-		public string VerificationMethodDescription { get; set; }
-		public LanguageMap VerificationMethodDescription_Map { get; set; } = new LanguageMap();
+		//public string VerificationMethodDescription { get; set; }
+		//public LanguageMap VerificationMethodDescription_Map { get; set; } = new LanguageMap();
 
 		//
 		public List<FrameworkItem> OccupationType { get; set; }
@@ -221,7 +219,8 @@ namespace RA.Models.Input
 
 		public List<string> CommonCosts { get; set; }
 		public List<string> CommonConditions { get; set; }
-		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
+		//[obsolete]
+		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; } = new List<FinancialAlignmentObject>();
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 	}

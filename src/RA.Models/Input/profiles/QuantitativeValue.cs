@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace RA.Models.Input
 {
@@ -17,7 +18,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. For example:
 		/// creditUnit:ContinuingEducationUnit or ContinuingEducationUnit
-		/// <see cref="https://credreg.net/ctdl/terms/creditUnitType"/> 
+		/// <see cref="Http://credreg.net/ctdl/terms/creditUnitType"/> 
 		/// </summary>
 		public string UnitText { get; set; }
 		//public LanguageMap UnitText_Map { get; set; } = new LanguageMap();

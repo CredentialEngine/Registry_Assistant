@@ -283,9 +283,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceasn:identifier" )]
 		public List<string> identifier { get; set; } = new List<string>();
 
-		//[JsonProperty( PropertyName = "ceasn:inLanguage" )]
-		//public List<string> inLanguage { get; set; } = new List<string>();
-
 		[JsonProperty( PropertyName = "ceasn:isChildOf" )]
 		public List<string> isChildOf { get; set; } = new List<string>();
 
@@ -363,11 +360,32 @@ namespace RA.Models.JsonV2
 		public List<string> skillEmbodied { get; set; } = new List<string>();
 
 		/// <summary>
+		/// Body of information embodied either directly or indirectly in this competency.
+		/// URI
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:knowledgeEmbodied" )]
+		public List<string> knowledgeEmbodied { get; set; } = new List<string>();
+		
+		/// <summary>
+		/// Specifically defined piece of work embodied either directly or indirectly in this competency.
+		/// URI
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:taskEmbodied" )]
+		public List<string> taskEmbodied { get; set; } = new List<string>();
+		
+		/// <summary>
 		/// An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
 		/// Float
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:weight" )]
 		public string weight { get; set; }
+
+		/// <summary>
+		/// Has Source Identifier
+		///  A collection of identifiers related to this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "navy:hasSourceIdentifier" )]
+		public List<string> hasSourceIdentifier { get; set; } 
 
 	}
 

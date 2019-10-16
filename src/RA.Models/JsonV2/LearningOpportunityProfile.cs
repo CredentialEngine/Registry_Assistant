@@ -26,7 +26,7 @@ namespace RA.Models.JsonV2
 			DeliveryType = new List<CredentialAlignmentObject>();
             EstimatedDuration = new List<DurationProfile>();
             EstimatedCost = new List<CostProfile>();
-            CreditUnitType = new CredentialAlignmentObject();
+            //CreditUnitType = new CredentialAlignmentObject();
             
             Requires = new List<ConditionProfile>();
             Corequisite = new List<ConditionProfile>();
@@ -106,8 +106,8 @@ namespace RA.Models.JsonV2
         [JsonProperty( "@id" )]
         public string CtdlId { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:verificationMethodDescription" )] 
-        public LanguageMap VerificationMethodDescription { get; set; }
+        //[JsonProperty( PropertyName = "ceterms:verificationMethodDescription" )] 
+        //public LanguageMap VerificationMethodDescription { get; set; }
         
         [JsonProperty( PropertyName = "ceterms:availabilityListing" )]
         public List<string> AvailabilityListing { get; set; } //URL
@@ -139,17 +139,17 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
 		public List<QuantitativeValue> CreditValue { get; set; } = null;
 		//
-		[JsonProperty( PropertyName = "ceterms:creditHourType" )]
-        public LanguageMap CreditHourType { get; set; }
+		//[JsonProperty( PropertyName = "ceterms:creditHourType" )]
+  //      public LanguageMap CreditHourType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:creditUnitType" )]
-        public CredentialAlignmentObject CreditUnitType { get; set; }
+        //[JsonProperty( PropertyName = "ceterms:creditUnitType" )]
+        //public CredentialAlignmentObject CreditUnitType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:creditHourValue" )]
-        public decimal CreditHourValue { get; set; }
+        //[JsonProperty( PropertyName = "ceterms:creditHourValue" )]
+        //public decimal CreditHourValue { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:creditUnitValue" )]
-        public decimal CreditUnitValue { get; set; }
+        //[JsonProperty( PropertyName = "ceterms:creditUnitValue" )]
+        //public decimal CreditUnitValue { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:creditUnitTypeDescription" )]
         public LanguageMap CreditUnitTypeDescription { get; set; }
@@ -274,7 +274,7 @@ namespace RA.Models.JsonV2
 
 		//[JsonIgnore]
 		//[JsonProperty( PropertyName = "ceterms:financialAssistanceOLD" )]
-  //      //public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
+  //      public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:financialAssistance" )]
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; }

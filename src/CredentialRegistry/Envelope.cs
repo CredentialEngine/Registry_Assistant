@@ -44,8 +44,18 @@ namespace CredentialRegistry
 		[JsonProperty( PropertyName = "resource_public_key" )]
 		public string ResourcePublicKey { get; set; }
 
+		/// <summary>
+		/// We don't have access to this here, only via the accounts site???
+		/// </summary>
+		[JsonProperty( PropertyName = "publisher_id" )]
+		public string publisher_id { get; set; }
+
 		[JsonProperty( PropertyName = "node_headers" )]
 		public NodeHeader NodeHeader { get; set; }
+
+		[JsonProperty( PropertyName = "changed" )]
+		public bool Changed { get; set; }
+
 	}
 	public class UpdateEnvelope : Envelope
 	{

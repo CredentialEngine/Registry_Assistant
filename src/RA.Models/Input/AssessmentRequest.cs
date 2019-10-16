@@ -66,7 +66,6 @@ namespace RA.Models.Input
 			InLanguage = new List<string>();
 			CommonConditions = new List<string>();
 			CommonCosts = new List<string>();
-			//FinancialAssistanceOLD = new List<Input.FinancialAlignmentObject>();
 			VersionIdentifier = new List<IdentifierValue>();
 
 		}
@@ -241,7 +240,8 @@ namespace RA.Models.Input
 
 		public List<string> CommonCosts { get; set; }
 		public List<string> CommonConditions { get; set; }
-		////public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; }
+		//[obsolete]
+		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; } = new List<FinancialAlignmentObject>();
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 
 		public List<IdentifierValue> VersionIdentifier { get; set; }

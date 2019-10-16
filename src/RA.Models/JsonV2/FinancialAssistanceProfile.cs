@@ -25,6 +25,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
 		public string SubjectWebpage { get; set; } //URL
 
-
+		[JsonProperty(PropertyName = "ceterms:financialAssistanceType ")]
+      public List<CredentialAlignmentObject> FinancialAssistanceType { get; set; }
+	
 	}
 }

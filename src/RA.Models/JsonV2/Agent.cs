@@ -164,7 +164,13 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:leiCode" )]
         public string LEICode { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:email" )]
+		[JsonProperty( PropertyName = "ceterms:isicv4" )]
+		public string ISICV4 { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:ncesID" )]
+		public string NcesID { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:email" )]
 		public List<string> Email { get; set; }
 
 

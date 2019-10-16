@@ -13,11 +13,17 @@
         /// </summary>
         public string PublishForOrganizationIdentifier { get; set; }
 
+		/// <summary>
 		/// Envelope Identifier
 		/// Optional property, used where the publishing entity wishes to store the identifier.
 		/// Contains registry envelope identifier for a document in the registy. 
 		/// </summary>
 		public string RegistryEnvelopeId { get; set; }
+
+		/// <summary>
+		/// Leave blank for default
+		/// </summary>
+		public string Community { get; set; }
 	}
 
     public class EnvelopeDelete
@@ -39,6 +45,9 @@
         /// 2017-12-13 - this will be the CTID for the owning org.
         /// </summary>
         public string PublishForOrganizationIdentifier { get; set; }
-
-    }
+		/// <summary>
+		/// Leave blank for default
+		/// </summary>
+		public string Community { get; set; }
+	}
 }

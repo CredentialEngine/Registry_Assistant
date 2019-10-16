@@ -55,23 +55,27 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-		//these should be one property. Will having two make use easier or less so?
+		/// <summary>
+		/// The webpage that describes this entity.
+		/// URL
+		/// </summary>
+		public string SubjectWebpage { get; set; }
+
 		/// <summary>
 		/// This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
 		/// Provide the CTID or the full URI for the target environment. 
-		/// Reference to another Pathway would have to be an a URI.
+		/// It would be a burden to have a user provide a blank node Id.
+		/// However, we could recommend that a CTID is provided, and just convert.
 		/// </summary>
 		public List<string> HasChild { get; set; } = new List<string>();
-		//public List<string> HasChildPathway { get; set; } = new List<string>();
-		//public List<string> HasChildPathwayComponent { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Goal or destination node of the pathway. 
 		/// Provide the CTID or the full URI for the target environment. 
 		/// URI for a ceterms:PathwayComponent
-		/// Multipicity: Single
+		/// Multipicity: Many
 		/// </summary>
-		public string HasDestinationComponent { get; set; }
+		public List<string> HasDestinationComponent { get; set; } = new List<string>();
 
 		#region at least one of
 
@@ -238,7 +242,7 @@ namespace RA.Models.Input
 
 	public class ComponentCondition
 	{
-		public string CTID { get; set; }
+		//public string CTID { get; set; }
 
 		/// <summary>
 		/// ComponentCondition Description 

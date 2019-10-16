@@ -4,30 +4,6 @@ using Newtonsoft.Json;
 namespace RA.Models.Input
 {
 
-	public class GraphConceptSchemeRequest : BaseRequest
-	{
-		public GraphConceptSchemeRequest()
-		{
-			ConceptSchemeGraph = new ConceptSchemeGraph();
-		}
-		public string CTID { get; set; }
-
-		public ConceptSchemeGraph ConceptSchemeGraph { get; set; }
-
-	}
-
-
-	public class ConceptSchemeGraph
-	{
-		/// <summary>
-		/// Main graph object
-		/// </summary>
-		[JsonProperty( "@graph" )]
-		public object Graph { get; set; }
-
-		[JsonProperty( "@context" )]
-		public string Context { get; set; }
-	}
 
 	public class ConceptSchemeRequest : BaseRequest
 	{
@@ -36,6 +12,14 @@ namespace RA.Models.Input
 			ConceptScheme = new ConceptScheme();
 		}
 		//public string CTID { get; set; }
+
+		/// <summary>
+		/// Generate HasTop/IsTopChild
+		/// if true, the HasTopChild property is not included in the input document. The HasTopChild property in the JSON document will be generated from the Concept list.
+		/// Should only be used where the structure is flat. That is there are no concepts have child concepts.
+		/// </summary>
+		public bool GenerateHasTopChild { get; set; } = false;
+		public bool GenerateIsTopChild { get; set; } = false;
 
 		public ConceptScheme ConceptScheme { get; set; } = new ConceptScheme();
 
@@ -51,7 +35,7 @@ namespace RA.Models.Input
 		/// CTID - identifier for Concept Scheme. 
 		/// This will have to be extracted from the id
 		/// </summary>
-		public string CTID { get; set; }
+		public string Ctid { get; set; }
 
 		public List<string> altIdentifier { get; set; } = new List<string>();
 
@@ -72,7 +56,6 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Concept Scheme description - required
 		/// </summary>
-		/// <summary>
 		public string Description { get; set; }
 
 		/// <summary>
@@ -84,7 +67,6 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Concept Scheme description 
 		/// </summary>
-		/// <summary>
 		public string HistoryNote { get; set; }
 
 		/// <summary>
@@ -194,19 +176,17 @@ namespace RA.Models.Input
 		public LanguageMap PrefLabel_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
+		/// Indicates the entity that supersedes this entity.
+		/// </summary>
+		public string SupersededBy { get; set; }
+
+		/// <summary>
 		/// URI to the concept scheme
 		/// </summary>
 		public string TopConceptOf { get; set; }
 
 		public string Language { get; set; }
 
-		/*missing:
-		 * all connections
-		 * 
-		 * 
-		 * 
-		 * 
-		 */
 		public string Broader { get; set; }
 		public List<string> BroadMatch { get; set; } = new List<string>();
 		public List<string> CloseMatch { get; set; } = new List<string>();
@@ -217,7 +197,7 @@ namespace RA.Models.Input
 
 		public List<string> NarrowMatch { get; set; } = new List<string>();
 		public List<string> Related{ get; set; } = new List<string>();
-		public List<string> RelatedMatch { get; set; } = new List<string>();
+		//public List<string> RelatedMatch { get; set; } = new List<string>();
 
 		public List<string> Comment { get; set; } = new List<string>();
 		public LanguageMapList Comment_Map { get; set; } = new LanguageMapList();

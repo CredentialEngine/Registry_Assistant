@@ -66,7 +66,7 @@ namespace RA.Services
 					}
 				}
 				//this must be: /graph/
-				og.CtdlId = credRegistryGraphUrl + output.CTID;
+				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 				og.CTID = output.CTID;
 				og.Type = output.Type;
 				og.Context = ctdlContext;
@@ -78,6 +78,7 @@ namespace RA.Services
 					PublisherAuthorizationToken = helper.ApiKey,
 					IsPublisherRequest = helper.IsPublisherRequest,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					PublishingForOrgCtid = helper.OwnerCtid
 				};
 
@@ -116,7 +117,7 @@ namespace RA.Services
 				{
 					string identifier = "Pathway_" + request.Pathway.Ctid;
 
-					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
@@ -146,7 +147,7 @@ namespace RA.Services
 					}
 				}
 				//this must be: /graph/
-				og.CtdlId = credRegistryGraphUrl + output.CTID;
+				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 				og.CTID = output.CTID;
 				og.Type = output.Type;
 
@@ -189,7 +190,7 @@ namespace RA.Services
 					}
 				}
 
-				og.CtdlId = credRegistryGraphUrl + output.CTID;
+				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 				og.CTID = output.CTID;
 				og.Type = output.Type;
 				og.Context = ctdlContext;
@@ -209,7 +210,7 @@ namespace RA.Services
 					}
 				}
 
-				og.CtdlId = credRegistryGraphUrl + output.CTID;
+				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 				og.CTID = output.CTID;
 				og.Type = output.Type;
 				og.Context = ctdlContext;
@@ -236,6 +237,8 @@ namespace RA.Services
 		{
 			CurrentEntityType = "Pathway";
 			bool isValid = true;
+			Community = request.Community ?? "";
+
 			RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
 			InputEntity input = request.Pathway;
 			//if request.DefaultLanguage exists use it. 
@@ -257,7 +260,7 @@ namespace RA.Services
 				//required
 
 				CurrentCtid = output.CTID = FormatCtid( input.Ctid, "Pathway Profile", ref messages );
-				output.CtdlId = credRegistryResourceUrl + output.CTID;
+				output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 
 				//required
 				if ( string.IsNullOrWhiteSpace( input.Name ) )
@@ -279,6 +282,8 @@ namespace RA.Services
 				}
 				output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Pathway Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
 
+				output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, false );
+
 				output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "Owning Organization", false, ref messages );
 				//output.OwnedBy = FormatOrganizationReferenceToList( input.OwnedBy, "Owning Organization", false, ref messages );
 				output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages );
@@ -295,9 +300,10 @@ namespace RA.Services
 				}
 				else
 				{
-					output.HasChild = AssignRegistryResourceURIsListAsStringList( input.HasChild, "Pathway HasChild", ref messages, false, true );
+					//it would be a burden to have a user provide a blank node Id.
+					output.HasChildUri = AssignRegistryResourceURIsListAsStringList( input.HasChild, "Pathway HasChild", ref messages, false, true );
 				}
-				output.HasDestinationComponent = AssignRegistryResourceURIAsString( input.HasDestinationComponent, "Pathway HasDestinationComponent", ref messages, false, true );
+				output.HasDestinationComponent = AssignRegistryResourceURIsListAsStringList( input.HasDestinationComponent, "Pathway HasDestinationComponent", ref messages, false, true );
 				//
 				#region  Populate the components
 				if ( request.PathwayComponents == null || request.PathwayComponents.Count == 0 )
@@ -380,7 +386,7 @@ namespace RA.Services
 			bool isValid = true;
 			//
 			output.CTID = FormatCtid( input.CTID, string.Format( "PathwayComponent (#{0})", compCntr ), ref messages );
-			output.CtdlId = credRegistryResourceUrl + output.CTID;
+			output.CtdlId = GenerateBNodeId();// SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 
 			string outputType = "";
 			//validate component type:
@@ -417,8 +423,10 @@ namespace RA.Services
 		public bool ToMapCondition( RA.Models.Input.ComponentCondition input, OutputCondition output, OutputEntity outputEntity, bool hasDefaultLanguage, int compCntr, ref List<string> messages )
 		{
 			bool isValid = true;
-			output.CTID = FormatCtid( input.CTID, string.Format( "ComponentCondition (#{0})", compCntr ), ref messages );
-			output.CtdlId = credRegistryResourceUrl + output.CTID;
+			//output.CTID = FormatCtid( input.CTID, string.Format( "ComponentCondition (#{0})", compCntr ), ref messages );
+			//change to use a blank node
+			//NOTE: must match the id that the parent references
+			output.CtdlId = GenerateBNodeId();// SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 
 			//output.inLanguage = PopulateInLanguage( input.inLanguage, "Competency", string.Format( "#", compCntr ), hasDefaultLanguage, ref messages );
 
@@ -426,7 +434,7 @@ namespace RA.Services
 			{
 				if ( input.Name_Map == null || input.Name_Map.Count == 0 )
 				{
-					messages.Add( FormatMessage( "Error - A name or Name_Map must be entered for Pathway Component with CTID: '{0}'.", input.CTID ) );
+					messages.Add( FormatMessage( "Error - A name or Name_Map must be entered for Component Condition '{0}'.", compCntr.ToString() ) );
 				}
 				else
 				{

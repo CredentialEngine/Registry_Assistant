@@ -20,17 +20,6 @@ namespace RA.Models.Input
 	public class BasicComponent : PathwayComponent
 	{
 
-		/// <summary>
-		/// Component Category
-		/// Identifies the type of PathwayComponent subclass not explicitly covered in the current array of PathwayComponent subclasses.
-		/// Used by: 
-		/// ceterms:BasicComponent,	ceterms:CocurricularComponent, ceterms:ExtracurricularComponent 
-		/// </summary>
-		//public string ComponentCategory { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		//public LanguageMap ComponentCategory_Map { get; set; } = new LanguageMap();
 	}
 	/// <summary>
 	/// Resource that identifies an activity, program, or informal learning experience such as a civic or service activity that supplements and complements the curriculum.
@@ -50,27 +39,14 @@ namespace RA.Models.Input
 	/// </summary>
 	public class CourseComponent : PathwayComponent
 	{
-		/// <summary>
-		/// ProgramTerm
-		/// Categorization of a term sequence based on the normative time between entry into a program of study and its completion such as "1st quarter", "2nd quarter"..."5th quarter".
-		/// </summary>
-		//public string ProgramTerm { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		//public LanguageMap ProgramTerm_Map { get; set; } = new LanguageMap();
+		
+
 
 
 	}
 	public class CredentialComponent : PathwayComponent
 	{
-		/// <summary>
-		/// Type of credential such as badge, certification, bachelor degree.
-		/// The credential type as defined in CTDL. Use EntityReference to provide one of: CTID, Registry URI, or 'blank node'
-		/// Used by: 
-		/// ceterms:CredentialComponent 
-		/// </summary>
-		//public EntityReference CredentialType { get; set; } = new EntityReference();
+
 
 	}
 }

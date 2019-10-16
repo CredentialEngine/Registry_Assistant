@@ -27,8 +27,7 @@ namespace CredentialRegistry
 		 * 
 		 * 
 		 *************************************************************/
-
-
+		 
 		/// <summary>
 		/// Creates a Registry envelope from an RSA key pair.
 		/// </summary>
@@ -37,7 +36,7 @@ namespace CredentialRegistry
 		/// <param name="contents">Envelope payload.</param>
 		/// <param name="envelope">A envelope object that will be populated</param>
 		/// <returns>An Envelope that can be serialized and POST'ed to a credentialRegistry server.</returns>
-		public static bool CreateEnvelope( string publicKeyPath, string secretKeyPath, string contents, Envelope envelope )
+		public static bool CreateEnvelope( string publicKeyPath, string secretKeyPath, string contents, Envelope envelope, string community )
 		{
 			bool isValid = true;
 			RsaPrivateCrtKeyParameters privateKey;
@@ -55,16 +54,6 @@ namespace CredentialRegistry
 
 			LoggingHelper.DoTrace( 7, "==== do the JWT encoding (note to RS256) using privateKey, using BouncyCastle for the ToRSA ====" );
 
-			//try
-			//{
-			//	if ( privateKey != null )
-			//	{
-			//		LoggingHelper.DoTrace( 7, "==== privateKey: " + privateKey.ToString() );
-			//	}
-			//} catch (Exception ex)
-			//{
-			//	LoggingHelper.DoTrace( 4, "==== Exception on private key tracing. " + ex.Message );
-			//}
 			//do the JWT encoding (note to RS256) using privateKey, using BouncyCastle for the ToRSA
 			//NOTE: Must update related IIS application pool, or following will result in a file not found.
 			string encoded = JWT.Encode( contents, DotNetUtilities.ToRSA( privateKey ), JwsAlgorithm.RS256 );
@@ -72,7 +61,7 @@ namespace CredentialRegistry
 			LoggingHelper.DoTrace( 7, "==== populating envelope ====" );
 			envelope.EnvelopeType = "resource_data";
 			envelope.EnvelopeVersion = "1.0.0";
-			envelope.EnvelopeCommunity = UtilityManager.GetAppKeyValue( "envelopeCommunity", "ce_registry");
+			envelope.EnvelopeCommunity = community;
 			envelope.Resource = encoded;
 			envelope.ResourceFormat = "json";
 			envelope.ResourceEncoding = "jwt";

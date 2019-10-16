@@ -44,7 +44,7 @@ namespace RA.Services
                         og.Graph.Add( item );
                     }
                 }
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -56,6 +56,7 @@ namespace RA.Services
                     PublisherAuthorizationToken = helper.ApiKey,
 					IsPublisherRequest = helper.IsPublisherRequest,
 					EntityName = CurrentEntityName,
+					Community = request.Community ?? "",
 					PublishingForOrgCtid = helper.OwnerCtid
                 };
 
@@ -92,7 +93,7 @@ namespace RA.Services
 				{
 
 					string identifier = "CostManifest_" + request.CostManifest.Ctid;
-					if ( cer.Publish( helper.Payload, submitter, identifier, ref status, ref crEnvelopeId ) )
+					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
@@ -120,7 +121,7 @@ namespace RA.Services
                         og.Graph.Add( item );
                     }
                 }
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -154,7 +155,7 @@ namespace RA.Services
                     }
                 }
 
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -174,7 +175,7 @@ namespace RA.Services
                         og.Graph.Add( item );
                     }
                 }
-                og.CtdlId = credRegistryGraphUrl + output.Ctid;
+                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
                 og.Context = output.Context;
@@ -201,7 +202,9 @@ namespace RA.Services
             CurrentEntityType = "CostManifest";
             InputEntity input = request.CostManifest;
             bool isValid = true;
-            List<string> messages = new List<string>();
+			Community = request.Community ?? "";
+
+			List<string> messages = new List<string>();
             if ( !string.IsNullOrWhiteSpace( request.DefaultLanguage ) )
             {
                 //validate
@@ -248,7 +251,7 @@ namespace RA.Services
             bool isValid = true;
             string statusMessage = "";
 			CurrentCtid = output.Ctid = FormatCtid( input.Ctid, "Cost Manifest", ref messages );
-            output.CtdlId = credRegistryResourceUrl + output.Ctid;
+            output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
 
             //required
             if ( string.IsNullOrWhiteSpace( input.Name ) )

@@ -66,15 +66,19 @@ namespace RA.Models.Input
 		public List<string> Condition { get; set; }
         public LanguageMapList Condition_Map { get; set; } = new LanguageMapList();
 
+		/// <summary>
+		/// Aug. 2019 - changed to be list of URIs. Use SubmissionOfDescription for text values.
+		/// </summary>
+		public List<string> SubmissionOf { get; set; }
 
-        public List<string> SubmissionOf { get; set; }
-        public LanguageMapList SubmissionOf_Map { get; set; } = new LanguageMapList();
+		public string SubmissionOfDescription { get; set; }
+		public LanguageMap SubmissionOfDescription_Map { get; set; } = new LanguageMap();
 
-        /// <summary>
-        /// Organization that asserts this condition
-        /// This should be single, but as CTDL defines as multi-value, need to handle a List
-        /// </summary>
-        public object AssertedBy { get; set; } = new object();
+		/// <summary>
+		/// Organization that asserts this condition
+		/// This should be single, but as CTDL defines as multi-value, need to handle a List
+		/// </summary>
+		public object AssertedBy { get; set; } = new object();
         //public List<OrganizationReference> AssertedBys { get; set; } = new List<OrganizationReference>();
 
         public string Experience { get; set; }

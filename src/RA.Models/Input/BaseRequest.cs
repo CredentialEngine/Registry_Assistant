@@ -19,14 +19,10 @@
 		/// </summary>
 		public string RegistryEnvelopeId { get; set; }
 
-        /// <summary>
-        /// Sept. 30, 2018
-        /// The full registry document is now accessed via the /graph/ path. All @id (or equivalent) references should be using /graph/. If this value is false, the API will look for and convert all /resource/ urls to /graph/ urls
-        /// NOTE: using default of true as norm in case property not populated.
-        /// </summary>
-        //public bool NotConvertingFromResourceLinkToGraphLink { get; set; }
-
-		public string BetaTestingAuthorizationKey { get; set; }
+		/// <summary>
+		/// Leave blank for default
+		/// </summary>
+		public string Community { get; set; }
 	}
 
 }

@@ -105,12 +105,6 @@ namespace RA.Models.JsonV2
         public List<string> educationLevelType { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Uris to external frameworks
-		/// </summary>
-		//[JsonProperty( PropertyName = "ceasn:exactAlignment" )]
-		//public List<string> exactAlignment { get; set; } = new List<string>();
-
-		/// <summary>
 		/// Top-level child competency of a competency framework.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:hasTopChild" )]
