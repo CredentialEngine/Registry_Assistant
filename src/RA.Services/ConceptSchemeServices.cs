@@ -732,7 +732,7 @@ namespace RA.Services
 						output.DateModified = MapDate( input.DateModified, "DateModified", ref messages );
 
 						//allow CTID or full URI
-						if ( !request.GenerateHasTopIsTopChild )
+						if( !request.GenerateHasTopChild && !request.GenerateHasTopChildFromIsTopChild )
 						{
 							output.HasTopConcept = AssignRegistryResourceURIsListAsStringList( input.HasTopConcept, "Concept scheme HasTopConcept", ref messages, false, true );
 						}
@@ -780,16 +780,30 @@ namespace RA.Services
 
 						if ( ToMapConcept( conceptPlain, concept, hasDefaultLanguage, conceptsCount, ref messages ) )
 						{
-							if ( request.GenerateHasTopIsTopChild )
+							if( request.GenerateHasTopChild )
 							{
-								if ( output.HasTopConcept == null )
+								if( output.HasTopConcept == null )
 									output.HasTopConcept = new List<string>();
 
 								output.HasTopConcept.Add( concept.CtdlId );
-								//or set to InScheme
-								concept.TopConceptOf = output.CtdlId;
 								//if ( compCntr > 900 )
 								//	break;
+							}
+							else if( request.GenerateHasTopChildFromIsTopChild
+							  && !string.IsNullOrWhiteSpace( concept.TopConceptOf ) )
+							{
+								if( output.HasTopConcept == null )
+									output.HasTopConcept = new List<string>();
+
+								output.HasTopConcept.Add( concept.CtdlId );
+							}
+							//only do this all concepts are top
+							if( request.GenerateIsTopChild )
+							{
+								concept.TopConceptOf = output.CtdlId;
+								//will inScheme have to be set as well?
+								if( string.IsNullOrWhiteSpace( concept.InScheme ) )
+									concept.InScheme = output.CtdlId;
 							}
 
 							//if ( string.IsNullOrWhiteSpace( concept.PrefLabel ) )
