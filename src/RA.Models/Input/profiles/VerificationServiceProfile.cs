@@ -34,9 +34,13 @@ namespace RA.Models.Input
         public List<string> VerifiedClaimType { get; set; }
         public List<OrganizationReference> OfferedBy { get; set; }
         public List<Jurisdiction> Jurisdiction { get; set; }
-       // public List<GeoCoordinates> Region { get; set; }
+		/// <summary>
+		/// List of Organizations that offer this entity in a specific Jurisdiction. 
+		/// </summary>
+		public List<JurisdictionAssertion> OfferedIn { get; set; } = new List<JurisdictionAssertion>();
 
-    }
+
+	}
 }
 
 

@@ -14,11 +14,21 @@ namespace RA.Models.Input
 		//public string CTID { get; set; }
 
 		/// <summary>
-		/// Generate HasTop/IsTopChild
+		/// Generate HasTopChild
 		/// if true, the HasTopChild property is not included in the input document. The HasTopChild property in the JSON document will be generated from the Concept list.
-		/// Should only be used where the structure is flat. That is there are no concepts have child concepts.
+		/// Should only be used where the structure is flat. That is there are no concepts have child concepts. SO that is: all concepts are top childs.
+		/// Note: in some cases IsTopChild was provided and not HasTopChild. In this case: GenerateHasTopChild=true, and GenerateIsTopChild=false
 		/// </summary>
 		public bool GenerateHasTopChild { get; set; } = false;
+		/// <summary>
+		/// Generate HasTopChild where the concept has property of: TopConceptOf
+		/// </summary>
+		public bool GenerateHasTopChildFromIsTopChild { get; set; } = false;
+		/// <summary>
+		/// Generate IsTopChild
+		/// if true, the IsTopChild property must not be included in the input document and the IsTopChild property in the JSON document will be generated for each concept in the list.
+		/// Must only be used where the structure is flat. That is there are no concepts have child concepts.
+		/// </summary>
 		public bool GenerateIsTopChild { get; set; } = false;
 
 		public ConceptScheme ConceptScheme { get; set; } = new ConceptScheme();

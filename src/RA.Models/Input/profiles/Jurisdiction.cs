@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using RAPlace = RA.Models.Input.Place;
-//using RAPlace = RA.Models.Input.GeoCoordinates;
 namespace RA.Models.Input
 {
 	public class Jurisdiction
@@ -22,10 +21,21 @@ namespace RA.Models.Input
 		/// Will be useful where the request can be populated programatically.
 		/// </summary>
 		public RAPlace MainJurisdiction { get; set; } = new RAPlace();
-        //public List<RAPlace> MainJurisdictions { get; set; } = new List<RAPlace>();
 
 
         public List<RAPlace> JurisdictionException { get; set; }
+	}
+
+	/// <summary>
+	/// One or more Organizations that make a specific Quality Assurance assertion for a specific jurisdiction. 
+	/// </summary>
+	public class JurisdictionAssertion : Jurisdiction
+	{
+		/// <summary>
+		/// List of Organizations that asserts this condition
+		/// Required
+		/// </summary>
+		public List<OrganizationReference> AssertedBy { get; set; } = new List<OrganizationReference>();
 	}
 
 	/// <summary>
@@ -33,7 +43,7 @@ namespace RA.Models.Input
 	/// </summary>
 	public class JurisdictionAssertedInProfile 
 	{
-		public JurisdictionAssertedInProfile ()
+		public JurisdictionAssertedInProfile()
 		{
 			AssertedBy = new OrganizationReference();
 			Jurisdiction = new Jurisdiction();

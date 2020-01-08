@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 namespace RA.Models.Input
 {
 	/// <summary>
@@ -14,9 +15,13 @@ namespace RA.Models.Input
 		/// Credential Input Class
 		/// </summary>
 		public Credential Credential { get; set; }
-		
-		//OR if doing bulk upload
-		public List<Credential> Credentials { get; set; }
+
+		/// <summary>
+		/// PROTOTYPE - NOT ALLOWED IN PRODUCTION
+		/// Allow publishing up to 10 credentials at a time. 
+		/// Only used by the endpoint: bulkPublish
+		/// </summary>
+		public List<Credential> Credentials { get; set; } = new List<Credential>();
 	}
 
 	public class Credential
@@ -173,10 +178,9 @@ namespace RA.Models.Input
 		public string DateEffective { get; set; }
 
 
-		#region -- QA BY --
+		#region -- Quality Assurance BY --
 		/// <summary>
-		/// could use general input or specific
-		/// general has more opportunity for errors
+		/// List of Organizations that accredit this credential
 		/// </summary>
 		public List<OrganizationReference> AccreditedBy { get; set; }
 
@@ -204,7 +208,66 @@ namespace RA.Models.Input
 		/// List of Organizations that can revoke this credential
 		/// </summary>
 		public List<OrganizationReference> RevokedBy { get; set; }
-		#endregion 
+		#endregion
+
+
+		#region Quality Assurance IN - Jurisdiction based Quality Assurance  (INs)
+		//There are currently two separate approaches to publishing properties like assertedIn
+		//- Publish all 'IN' properties using JurisdictionAssertions
+		//- Publish using ehe separate specific properties like AccreditedIn, ApprovedIn, etc
+		// 2010-01-06 The property JurisdictionAssertions may become obsolete soon. We recomend to NOT use this property.
+
+		/// <summary>
+		/// Handling assertions in jurisdictions
+		/// The property JurisdictionAssertions is a simple approach, using one record per asserting organization - where that organization will have multiple assertion types. 
+		/// The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected.
+		/// This approach simplifies the input where the same organization asserts more than action. 
+		/// 2010-01-06 TBD - this property will LIKELY be made obsolete once any partner who has been using it has been informed.
+		/// </summary>
+		[Obsolete]
+		public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; } = new List<JurisdictionAssertedInProfile>();
+
+		//JurisdictionAssertion
+		//Each 'IN' property must include one or more organizations and a Main jurisdiction. Only one main jusrisdiction (and multiple exceptions) can be entered with each property.
+		//Only use this property where the organization only makes the assertion for a specific jurisdiction. 
+		//Use the 'BY' equivalent (ex. accreditedBy) where the organization makes a general assertion
+
+		/// <summary>
+		/// List of Organizations that accredit this credential in a specific Jurisdiction. 
+		/// </summary>
+		public List<JurisdictionAssertion> AccreditedIn { get; set; } = new List<JurisdictionAssertion>();
+
+		/// <summary>
+		/// List of Organizations that approve this credential in a specific Jurisdiction. 
+		/// </summary>
+		public List<JurisdictionAssertion> ApprovedIn { get; set; } = new List<JurisdictionAssertion>();
+
+		/// <summary>
+		/// List of Organizations that offer this credential in a specific Jurisdiction. 
+		/// </summary>
+		public List<JurisdictionAssertion> OfferedIn { get; set; } = new List<JurisdictionAssertion>();
+
+		/// <summary>
+		/// List of Organizations that recognize this credential in a specific Jurisdiction. 
+		/// </summary>
+		public List<JurisdictionAssertion> RecognizedIn { get; set; } = new List<JurisdictionAssertion>();
+
+		/// <summary>
+		/// List of Organizations that regulate this credential in a specific Jurisdiction. 
+		/// </summary>
+		public List<JurisdictionAssertion> RegulatedIn { get; set; } = new List<JurisdictionAssertion>();
+
+		/// <summary>
+		/// List of Organizations that renew this credential in a specific Jurisdiction. 
+		/// </summary>
+		public List<JurisdictionAssertion> RenewedIn { get; set; } = new List<JurisdictionAssertion>();
+
+		/// <summary>
+		/// List of Organizations that revoke this credential in a specific Jurisdiction. 
+		/// </summary>
+		public List<JurisdictionAssertion> RevokedIn { get; set; } = new List<JurisdictionAssertion>();
+	
+		#endregion
 
 		/// <summary>
 		/// List of credentials that are part of this credential
@@ -215,17 +278,6 @@ namespace RA.Models.Input
 		/// List of credentials where this credential is a part of.
 		/// </summary>
 		public List<EntityReference> IsPartOf { get; set; }
-
-
-        #region INs
-        /// <summary>
-        /// Handling assertions in jurisdictions
-        /// The current approach is to use a one record per asserting organization. The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected
-        /// </summary>
-        public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; }
-
-	
-		#endregion
 
 		public string ProcessStandards { get; set; }
 		public string ProcessStandardsDescription { get; set; }
@@ -275,6 +327,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
 
+		//
+		//Navy
+		/// <summary>
+		/// HasRating
+		/// Rating related to this resource.
+		/// URI to a Rating
+		/// </summary>
+		public List<string> HasRating { get; set; } = new List<string>();
+		//prototyping
+		public List<FrameworkItem> NavyRating { get; set; } = new List<FrameworkItem>();
+
 		#region Properties allowed only for degree types
 
 		public List<string> DegreeConcentration { get; set; }
@@ -295,6 +358,10 @@ namespace RA.Models.Input
 		//[obsolete]
 		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; } = new List<FinancialAlignmentObject>();
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
+
+		/// <summary>
+		/// Geographic or political region in which the credential is formally applicable or an organization has authority to act.
+		/// </summary>
 		public List<Jurisdiction> Jurisdiction { get; set; }
 		public DurationItem RenewalFrequency { get; set; }
 		public List<RevocationProfile> Revocation { get; set; }
@@ -330,6 +397,7 @@ namespace RA.Models.Input
 		#endregion
 
 
+
 	}
 
 	/// <summary>
@@ -350,6 +418,7 @@ namespace RA.Models.Input
 		public List<Jurisdiction> Jurisdiction { get; set; }
 		public string RevocationCriteria { get; set; }
 		public string RevocationCriteriaDescription { get; set; }
+		public LanguageMap RevocationCriteriaDescription_Map { get; set; } = new LanguageMap();
 
 	}
 }

@@ -12,19 +12,15 @@ namespace RA.Models.Input
     public class CompetencyFrameworkGraph
     {
 
+        [JsonProperty( "@context" )]
+        public string Context { get; set; }
+
         /// <summary>
         /// Main graph object
         /// </summary>
         [JsonProperty( "@graph" )]
         //public List<object> Graph { get; set; } = new List<object>();
         public object Graph { get; set;  }
-
-        //[JsonProperty( "ceterms:ctid" )]
-        //public string CTID { get; set; }
-
-        [JsonProperty( "@context" )]
-        public string Context { get; set; }
-
 
     }
 }
