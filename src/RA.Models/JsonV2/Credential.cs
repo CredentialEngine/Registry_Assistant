@@ -190,7 +190,7 @@ namespace RA.Models.JsonV2
 		public LanguageMapList AlternativeInstructionalProgramType { get; set; } = new LanguageMapList();
 		//
 		[JsonProperty( PropertyName = "ceterms:keyword" )]
-        public LanguageMapList Keyword { get; set; } = new LanguageMapList();
+        public LanguageMapList Keyword { get; set; } 
 
 
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
@@ -234,6 +234,16 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:renewalFrequency" )]
 		public string RenewalFrequency { get; set; } //duration item
 
+		/// <summary>
+		/// HasRating
+		/// Rating related to this resource.
+		/// URI to a Rating
+		/// </summary>
+		[JsonProperty( PropertyName = "navy:hasRating" )]
+		public List<string> HasRating { get; set; }
+
+		//[JsonProperty( PropertyName = "ceterms:hasRatingType" )]
+		//public List<CredentialAlignmentObject> HasRatingType { get; set; } = new List<CredentialAlignmentObject>();
 
 		#region Condition Profiles
 		[JsonProperty( PropertyName = "ceterms:requires" )]
@@ -398,5 +408,6 @@ namespace RA.Models.JsonV2
 
         [JsonProperty( PropertyName = "ceterms:revocationCriteriaDescription" )]
         public LanguageMap RevocationCriteriaDescription { get; set; }
-    }
+
+	}
 }

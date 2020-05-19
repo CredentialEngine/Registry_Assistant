@@ -14,7 +14,7 @@ namespace RA.Models.JsonV2
         public LanguageMap() { }
         public LanguageMap( string text )
         {
-            this.Add( "en", text );
+            this.Add( "en-US", text );
         }
         public LanguageMap( string languageCode, string text )
         {
@@ -70,7 +70,7 @@ namespace RA.Models.JsonV2
         public LanguageMapList() { }
         public LanguageMapList( List<string> items )
         {
-            this.Add( "en", items );
+            this.Add( "en-US", items );
         }
         public LanguageMapList( string languageCode, List<string> items )
         {
