@@ -85,6 +85,7 @@
     <Compile Include="Input\profiles\CostProfile.cs" />
     <Compile Include="Input\profiles\CredentialAlignmentObject.cs" />
     <Compile Include="Input\profiles\DurationProfile.cs" />
+    <Compile Include="Input\profiles\EntityReference.cs" />
     <Compile Include="Input\profiles\FinancialAssistanceProfile.cs" />
     <Compile Include="Input\profiles\FrameworkItem.cs" />
     <Compile Include="Input\profiles\HelperClasses.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Input\profiles\QuantitativeValue.cs" />
     <Compile Include="Input\profiles\VerificationServiceProfile.cs" />
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />
+    <Compile Include="Input\TransferValueProfileRequest.cs" />
     <Compile Include="JsonV2\Agent.cs" />
     <Compile Include="JsonV2\AssessmentProfile.cs" />
     <Compile Include="JsonV2\Competency.cs" />
