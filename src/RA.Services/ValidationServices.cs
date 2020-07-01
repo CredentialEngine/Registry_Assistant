@@ -7,7 +7,8 @@ using Newtonsoft.Json;
 using Utilities;
 using RA.Models.Input;
 //may want an alternative to this
-using CtdlHelper = Factories;
+//not available here
+//using CtdlHelper = Factories;
 
 
 namespace RA.Services
@@ -76,49 +77,50 @@ namespace RA.Services
 		/// <returns></returns>
 		public static bool IsCredentialTypeValid( string vocabulary, ref string property )
 		{
-			var credentialTypes = SchemaServices.GetConceptSchemeFromPropertyRange( "http://credreg.net/ctdl/schema/encoding/json", "ceterms:credentialType" );
+			return true;
+			//var credentialTypes = SchemaServices.GetConceptSchemeFromPropertyRange( "http://credreg.net/ctdl/schema/encoding/json", "ceterms:credentialType" );
 
-			//if ( CtdlHelper.CodesManager.IsPropertySchemaValid( categoryCode, ref property ) == false )
-			//    return false;
+			////if ( CtdlHelper.CodesManager.IsPropertySchemaValid( categoryCode, ref property ) == false )
+			////    return false;
 
-			//CodeItem ci = GetVocabularyTermJson(vocabulary, property, ref isValid );
-			try
-			{
-				var targetVocab = vocabulary.Contains( ':' ) ? vocabulary.Split( ':' )[ 1 ] : vocabulary;
-				targetVocab = GetVocabularyConceptScheme( vocabulary );
-				if ( string.IsNullOrWhiteSpace( targetVocab ) )
-				{
-					//what to do ??
-					return false;
-				}
+			////CodeItem ci = GetVocabularyTermJson(vocabulary, property, ref isValid );
+			//try
+			//{
+			//	var targetVocab = vocabulary.Contains( ':' ) ? vocabulary.Split( ':' )[ 1 ] : vocabulary;
+			//	targetVocab = GetVocabularyConceptScheme( vocabulary );
+			//	if ( string.IsNullOrWhiteSpace( targetVocab ) )
+			//	{
+			//		//what to do ??
+			//		return false;
+			//	}
 
-				var vocabsUrl = Utilities.UtilityManager.GetAppKeyValue( "credRegVocabsApi", "http://credreg.net/ctdl/vocabs/" );
-				var targetTerm = property.Contains( ':' ) ? property.Split( ':' )[ 1 ] : property;
-				var rawJson = new HttpClient().GetAsync( vocabsUrl + targetVocab + "/" + targetTerm + "/json" ).Result.Content.ReadAsStringAsync().Result;
-				var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiTermResult>( rawJson );
-				var data = deserialized.graph.First();
-				//could have a check that returned Id matches the request, as if not found, returns the first item
-				if ( data != null && data.id.ToLower().IndexOf( property.ToLower() ) == -1 )
-				{
-					//what to do ??
-					return false;
-				}
-				string parentSchema = GetVocabularyConceptScheme( vocabulary );
-				var result = new CodeItem()
-				{
-					SchemaName = data.id,
-					Name = GetLabelWithoutLanguage(data),
-					ParentSchemaName = parentSchema
+			//	var vocabsUrl = Utilities.UtilityManager.GetAppKeyValue( "credRegVocabsApi", "http://credreg.net/ctdl/vocabs/" );
+			//	var targetTerm = property.Contains( ':' ) ? property.Split( ':' )[ 1 ] : property;
+			//	var rawJson = new HttpClient().GetAsync( vocabsUrl + targetVocab + "/" + targetTerm + "/json" ).Result.Content.ReadAsStringAsync().Result;
+			//	var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiTermResult>( rawJson );
+			//	var data = deserialized.graph.First();
+			//	//could have a check that returned Id matches the request, as if not found, returns the first item
+			//	if ( data != null && data.id.ToLower().IndexOf( property.ToLower() ) == -1 )
+			//	{
+			//		//what to do ??
+			//		return false;
+			//	}
+			//	string parentSchema = GetVocabularyConceptScheme( vocabulary );
+			//	var result = new CodeItem()
+			//	{
+			//		SchemaName = data.id,
+			//		Name = GetLabelWithoutLanguage(data),
+			//		ParentSchemaName = parentSchema
 
-				};
+			//	};
 	
 
-				return true;
-			}
-			catch ( Exception ex )
-			{
-				return false;
-			}
+			//	return true;
+			//}
+			//catch ( Exception ex )
+			//{
+			//	return false;
+			//}
 
 		}
 
@@ -569,42 +571,45 @@ namespace RA.Services
 		/// <returns></returns>
 		public static List<FrameworkItem> ResolveOnetCodes(List<string> codes, ref List<string> messages, ref List<string> warnings )
 		{
-			if (codes == null || codes.Count() == 0)
-				return null;
-			string frameworkName = "Standard Occupational Classification";
-			string framework = "https://www.bls.gov/soc/";
-			string template = "http://www.onetonline.org/link/summary/";
-			bool doingBulk = true;
-			var output = new List<FrameworkItem>();
-			//might be better to do one at a time to be able to mark any not found!
-			//intial
-			try
-			{
-				string result = CtdlHelper.CodesManager.SOC_SearchAsObject( codes, ref warnings );
-				var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
-				var fi = new FrameworkItem();
+			//related code is not available
+			return null;
 
-				foreach ( var item in list )
-				{
-					//not sure
-					fi = new FrameworkItem()
-					{
-						Framework = framework,
-						FrameworkName = frameworkName,
-						Name = item.Name,
-						Description = item.Description,
-						CodedNotation = item.Code,
-						TargetNode = item.URL
-					};
-					output.Add( fi );
-				}
-			} catch (Exception ex)
-			{
-				//if exception is encountered, add warning and allow publish to continue
-				warnings.Add( "Exception occured resolving O*Net codes. Ignored during beta period. All O*Net codes may not have been published." );
-				LoggingHelper.LogError( ex, "ValidationServices.ResolveOnetCodes", true );
-			}
-			return output;
+			//if (codes == null || codes.Count() == 0)
+			//	return null;
+			//string frameworkName = "Standard Occupational Classification";
+			//string framework = "https://www.bls.gov/soc/";
+			//string template = "http://www.onetonline.org/link/summary/";
+			//bool doingBulk = true;
+			//var output = new List<FrameworkItem>();
+			////might be better to do one at a time to be able to mark any not found!
+			////intial
+			//try
+			//{
+			//	string result = CtdlHelper.CodesManager.SOC_SearchAsObject( codes, ref warnings );
+			//	var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
+			//	var fi = new FrameworkItem();
+
+			//	foreach ( var item in list )
+			//	{
+			//		//not sure
+			//		fi = new FrameworkItem()
+			//		{
+			//			Framework = framework,
+			//			FrameworkName = frameworkName,
+			//			Name = item.Name,
+			//			Description = item.Description,
+			//			CodedNotation = item.Code,
+			//			TargetNode = item.URL
+			//		};
+			//		output.Add( fi );
+			//	}
+			//} catch (Exception ex)
+			//{
+			//	//if exception is encountered, add warning and allow publish to continue
+			//	warnings.Add( "Exception occured resolving O*Net codes. Ignored during beta period. All O*Net codes may not have been published." );
+			//	LoggingHelper.LogError( ex, "ValidationServices.ResolveOnetCodes", true );
+			//}
+			//return output;
 		}
 
 		/// <summary>
@@ -616,43 +621,46 @@ namespace RA.Services
 		/// <returns></returns>
 		public static List<FrameworkItem> ResolveNAICSCodes(List<string> codes, ref List<string> messages, ref List<string> warnings)
 		{
-			if ( codes == null || codes.Count() == 0 )
-				return null;
-			string frameworkName = "North American Industry Classification System";
-			string framework = "https://www.census.gov/eos/www/naics/index.html";
-			string template = "https://www.census.gov/cgi-bin/sssd/naics/naicsrch?code={0}&search=2017";
-			//for now not doing bulk search as allows for returning messages where not found
-			bool doingBulkSearch = false;
-			var output = new List<FrameworkItem>();
+			//related code is not available
+			return null;
 
-			try
-			{
-				string result = CtdlHelper.CodesManager.NAICS_SearchAsObject( codes, ref warnings, doingBulkSearch );
-				var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
-				var fi = new FrameworkItem();
+			//if ( codes == null || codes.Count() == 0 )
+			//	return null;
+			//string frameworkName = "North American Industry Classification System";
+			//string framework = "https://www.census.gov/eos/www/naics/index.html";
+			//string template = "https://www.census.gov/cgi-bin/sssd/naics/naicsrch?code={0}&search=2017";
+			////for now not doing bulk search as allows for returning messages where not found
+			//bool doingBulkSearch = false;
+			//var output = new List<FrameworkItem>();
 
-				foreach ( var item in list )
-				{
-					//not sure
-					fi = new FrameworkItem()
-					{
-						Framework = framework,
-						FrameworkName = frameworkName,
-						Name = item.Name,
-						Description = item.Description,
-						CodedNotation = item.Code,
-						TargetNode = item.URL
-					};
-					output.Add( fi );
-				}
-			}
-			catch ( Exception ex )
-			{
-				//if exception is encountered, add warning and allow publish to continue
-				warnings.Add( "Exception occured resolving NAICS codes. Ignored during beta period. All NAICS codes may not have been published." );
-				LoggingHelper.LogError( ex, "ValidationServices.ResolveNAICSCodes", true );
-			}
-			return output;
+			//try
+			//{
+			//	string result = CtdlHelper.CodesManager.NAICS_SearchAsObject( codes, ref warnings, doingBulkSearch );
+			//	var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
+			//	var fi = new FrameworkItem();
+
+			//	foreach ( var item in list )
+			//	{
+			//		//not sure
+			//		fi = new FrameworkItem()
+			//		{
+			//			Framework = framework,
+			//			FrameworkName = frameworkName,
+			//			Name = item.Name,
+			//			Description = item.Description,
+			//			CodedNotation = item.Code,
+			//			TargetNode = item.URL
+			//		};
+			//		output.Add( fi );
+			//	}
+			//}
+			//catch ( Exception ex )
+			//{
+			//	//if exception is encountered, add warning and allow publish to continue
+			//	warnings.Add( "Exception occured resolving NAICS codes. Ignored during beta period. All NAICS codes may not have been published." );
+			//	LoggingHelper.LogError( ex, "ValidationServices.ResolveNAICSCodes", true );
+			//}
+			//return output;
 		}
 
 
@@ -666,40 +674,43 @@ namespace RA.Services
 		/// <returns></returns>
 		public static List<FrameworkItem> ResolveCipCodes(List<string> codes, ref List<string> messages, ref List<string> warnings)
 		{
-			if ( codes == null || codes.Count() == 0 )
-				return null;
-			string frameworkName = "Classification of Instructional Programs";
-			string framework = "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55";
-			var output = new List<FrameworkItem>();
-			//any codes not found will be marked as warnings
-			try
-			{
-				string result = CtdlHelper.CodesManager.CIP_SearchAsObject( codes, ref warnings );
-				var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
-				var fi = new FrameworkItem();
+			//related code is not available
+			return null;
 
-				foreach ( var item in list )
-				{
-					//not sure
-					fi = new FrameworkItem()
-					{
-						Framework = framework,
-						FrameworkName = frameworkName,
-						Name = item.Name,
-						Description = item.Description,
-						CodedNotation = item.Code,
-						TargetNode = item.URL
-					};
-					output.Add( fi );
-				}
-			}
-			catch ( Exception ex )
-			{
-				//if exception is encountered, add warning and allow publish to continue
-				warnings.Add( "Exception occured resolving CIP codes. Ignored during beta period. All CIP codes may not have been published." );
-				LoggingHelper.LogError( ex, "ValidationServices.ResolveCipCodes", true );
-			}
-			return output;
+			//if ( codes == null || codes.Count() == 0 )
+			//	return null;
+			//string frameworkName = "Classification of Instructional Programs";
+			//string framework = "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55";
+			//var output = new List<FrameworkItem>();
+			////any codes not found will be marked as warnings
+			//try
+			//{
+			//	string result = CtdlHelper.CodesManager.CIP_SearchAsObject( codes, ref warnings );
+			//	var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
+			//	var fi = new FrameworkItem();
+
+			//	foreach ( var item in list )
+			//	{
+			//		//not sure
+			//		fi = new FrameworkItem()
+			//		{
+			//			Framework = framework,
+			//			FrameworkName = frameworkName,
+			//			Name = item.Name,
+			//			Description = item.Description,
+			//			CodedNotation = item.Code,
+			//			TargetNode = item.URL
+			//		};
+			//		output.Add( fi );
+			//	}
+			//}
+			//catch ( Exception ex )
+			//{
+			//	//if exception is encountered, add warning and allow publish to continue
+			//	warnings.Add( "Exception occured resolving CIP codes. Ignored during beta period. All CIP codes may not have been published." );
+			//	LoggingHelper.LogError( ex, "ValidationServices.ResolveCipCodes", true );
+			//}
+			//return output;
 		}
 	}
 
