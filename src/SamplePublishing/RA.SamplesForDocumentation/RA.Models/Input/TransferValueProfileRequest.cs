@@ -25,9 +25,9 @@ namespace RA.Models.Input
 	/// <summary>
 	/// List of TransferValueProfileRequest requests
 	/// </summary>
-	public class BulkTransferValueProfileRequest : BaseRequest
+	public class TransferValueProfileBulkRequest : BaseRequest
 	{
-		public BulkTransferValueProfileRequest()
+		public TransferValueProfileBulkRequest()
 		{
 		}
 
@@ -98,13 +98,6 @@ namespace RA.Models.Input
 		public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
 
 		#endregion
-
-		/// <summary>
-		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
-		/// Provide
-		/// <see cref="https://credreg.net/registry/assistant#EntityReference"/>
-		/// </summary>
-		public List<EntityReference> DerivedFrom { get; set; } = new List<EntityReference>();
 
 		/// <summary>
 		/// May be replace by Identifier
