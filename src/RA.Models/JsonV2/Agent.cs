@@ -91,8 +91,8 @@ namespace RA.Models.JsonV2
 		/// The default is Active. 
 		/// ConceptScheme: ceterms:StatusCategory
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:statusType" )]
-		public CredentialAlignmentObject StatusType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:lifecycleStatusType" )]
+		public CredentialAlignmentObject LifecycleStatusType { get; set; }
 		
 		//INs
 		[JsonProperty( PropertyName = "ceterms:accreditedIn" )]

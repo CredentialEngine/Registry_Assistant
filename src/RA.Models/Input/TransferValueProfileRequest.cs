@@ -25,16 +25,16 @@ namespace RA.Models.Input
 	/// <summary>
 	/// List of TransferValueProfileRequest requests
 	/// </summary>
-	public class BulkTransferValueProfileRequest : BaseRequest
+	public class TransferValueProfileBulkRequest : BaseRequest
 	{
-		public BulkTransferValueProfileRequest()
+		public TransferValueProfileBulkRequest()
 		{
 		}
 
 		/// <summary>
 		/// List of TransferValueProfiles to publish
 		/// </summary>
-		public List<TransferValueProfile> TransferValueProfile { get; set; } = new List<TransferValueProfile>();
+		public List<TransferValueProfile> TransferValueProfiles { get; set; } = new List<TransferValueProfile>();
 	}
 
 	/// <summary>
@@ -100,11 +100,9 @@ namespace RA.Models.Input
 		#endregion
 
 		/// <summary>
-		/// A third party version of the entity being reference that has been modified in meaning through editing, extension or refinement.
-		/// Provide
-		/// <see cref="https://credreg.net/registry/assistant#EntityReference"/>
+		/// May be replace by Identifier
 		/// </summary>
-		public List<EntityReference> DerivedFrom { get; set; } = new List<EntityReference>();
+		public string CodedNotation { get; set; }
 
 		/// <summary>
 		/// Identifier
@@ -126,10 +124,10 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Type of official status of the TransferProfile; select from an enumeration of such types.
-		/// Provide the string value. API will format correctly. The name space of statusCategory doesn't have to be included
-		/// statusCategory:Developing, statusCategory:Active", statusCategory:Suspended, statusCategory:Ceased
+		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		/// </summary>
-		public string StatusType { get; set; }
+		public string LifecycleStatusType { get; set; }
 
 
 		/// <summary>

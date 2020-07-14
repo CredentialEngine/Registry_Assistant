@@ -79,6 +79,7 @@
     <Compile Include="Input\LearningOpportunityRequest.cs" />
     <Compile Include="Input\OrganizationRequest.cs" />
     <Compile Include="Input\PathwayRequest.cs" />
+    <Compile Include="Input\PathwaySetRequest.cs" />
     <Compile Include="Input\PlainGraphRequest.cs" />
     <Compile Include="Input\profiles\CompetencyFrameworksGraph.cs" />
     <Compile Include="Input\profiles\ConditionProfile.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="JsonV2\Credential.cs" />
     <Compile Include="JsonV2\CredentialAlignmentObject.cs" />
     <Compile Include="JsonV2\DurationProfile.cs" />
+    <Compile Include="JsonV2\EntityBase.cs" />
     <Compile Include="JsonV2\FinancialAssistanceProfile.cs" />
     <Compile Include="JsonV2\HelpersClass.cs" />
     <Compile Include="JsonV2\JsonLDDocument.cs" />
@@ -120,9 +122,12 @@
     <Compile Include="JsonV2\LearningOpportunityProfile.cs" />
     <Compile Include="JsonV2\OrganizationBase.cs" />
     <Compile Include="JsonV2\Pathway.cs" />
+    <Compile Include="JsonV2\PathwayComponent.cs" />
+    <Compile Include="JsonV2\PathwaySet.cs" />
     <Compile Include="JsonV2\Place.cs" />
     <Compile Include="JsonV2\ProcessProfile.cs" />
     <Compile Include="JsonV2\QuantitativeValue.cs" />
+    <Compile Include="JsonV2\TransferValueProfile.cs" />
     <Compile Include="JsonV2\VerificationServiceProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryAssistantResponse.cs" />

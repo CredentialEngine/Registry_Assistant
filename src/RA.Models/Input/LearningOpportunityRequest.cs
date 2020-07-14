@@ -39,7 +39,7 @@ namespace RA.Models.Input
 			RecognizedBy = new List<Input.OrganizationReference>();
 			RegulatedBy = new List<Input.OrganizationReference>();
 
-			JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
+			//JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
 
 			Corequisite = new List<ConditionProfile>();
 			Recommends = new List<ConditionProfile>();
@@ -112,6 +112,30 @@ namespace RA.Models.Input
 		public List<CredentialAlignmentObject> Teaches { get; set; }
 
 		public List<string> LearningMethodType { get; set; }
+
+		/// <summary>
+		/// Assessment Method Description 
+		/// Description of the assessment methods for a resource.
+		/// </summary>
+		public string AssessmentMethodDescription { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap AssessmentMethodDescription_Map { get; set; } = new LanguageMap();
+
+
+		/// <summary>
+		/// Learning Method Description 
+		///  Description of the learning methods for a resource.
+		/// 
+		/// </summary>
+		public string LearningMethodDescription { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap LearningMethodDescription_Map { get; set; } = new LanguageMap();
+
+
 		public List<string> DeliveryType { get; set; }
 		public string DeliveryTypeDescription { get; set; }
 		public LanguageMap DeliveryTypeDescription_Map { get; set; } = new LanguageMap();
@@ -128,11 +152,11 @@ namespace RA.Models.Input
 		//
 		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
-		public string CreditHourType { get; set; }
-		//public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
-		public string CreditUnitType { get; set; }
-		public decimal CreditHourValue { get; set; }
-		public decimal CreditUnitValue { get; set; }
+		//public string CreditHourType { get; set; }
+		////public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
+		//public string CreditUnitType { get; set; }
+		//public decimal CreditHourValue { get; set; }
+		//public decimal CreditUnitValue { get; set; }
 		public string CreditUnitTypeDescription { get; set; }
 		public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
 
@@ -142,8 +166,15 @@ namespace RA.Models.Input
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 		#endregion
 
+		/// <summary>
+		/// Type of official status of the TransferProfile; select from an enumeration of such types.
+		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// </summary>
+		public string LifecycleStatusType { get; set; }
+		
 		public List<string> AudienceType { get; set; }
-        public List<string> AudienceLevelType { get; set; }= new List<string>();
+		public List<string> AudienceLevelType { get; set; } = new List<string>();
 		public string CodedNotation { get; set; }
 
 		//public string VerificationMethodDescription { get; set; }
@@ -163,10 +194,11 @@ namespace RA.Models.Input
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
 		//public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
-		/// List of valid NAICS codes. See:
+		/// List of valid NAICS codes. These will be mapped to industry type
+		/// See:
 		/// https://www.naics.com/search/
 		/// </summary>
-		//public List<string> Naics { get; set; }
+		public List<string> NaicsList { get; set; } = new List<string>();
 
 		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
@@ -203,8 +235,8 @@ namespace RA.Models.Input
 		/// This approach simplifies the input where the same organization asserts more than action.
 		/// 2010-01-06 TBD - this property will LIKELY be made obsolete once any partner who has been using it has been informed.
 		/// </summary>
-		[Obsolete]
-		public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; } = new List<JurisdictionAssertedInProfile>();
+		//[Obsolete]
+		//public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; } = new List<JurisdictionAssertedInProfile>();
 
 		//JurisdictionAssertion
 		//Each 'IN' property must include one or more organizations and a Main jurisdiction. Only one main jusrisdiction (and multiple exceptions) can be entered with each property.
@@ -274,6 +306,7 @@ namespace RA.Models.Input
 		//[obsolete]
 		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; } = new List<FinancialAlignmentObject>();
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
+		public List<string> TargetLearningResource { get; set; } = new List<string>();
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 	}
 }

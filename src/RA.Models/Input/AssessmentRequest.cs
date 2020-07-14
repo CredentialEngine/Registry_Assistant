@@ -28,7 +28,7 @@ namespace RA.Models.Input
 			AvailabilityListing = new List<string>();
 			AvailableOnlineAt = new List<string>();
 			Jurisdiction = new List<Input.Jurisdiction>();
-			JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
+			//JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
 			DeliveryType = new List<string>();
 
 			EstimatedCost = new List<CostProfile>();
@@ -123,6 +123,29 @@ namespace RA.Models.Input
 		#endregion
 
 		#region *** Recommended Properties ***
+
+		/// <summary>
+		/// Assessment Method Description 
+		/// Description of the assessment methods for a resource.
+		/// </summary>
+		public string AssessmentMethodDescription { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap AssessmentMethodDescription_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Learning Method Description 
+		///  Description of the learning methods for a resource.
+		/// 
+		/// </summary>
+		public string LearningMethodDescription { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap LearningMethodDescription_Map { get; set; } = new LanguageMap();
+
+
 		public string DateEffective { get; set; }
 
 		//List of language codes. ex: en, es
@@ -136,16 +159,16 @@ namespace RA.Models.Input
 		//system will check for this first, and then the old properties
 		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
-		public string CreditHourType { get; set; }
-		public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
+		//public string CreditHourType { get; set; }
+		//public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// Provide a valid concept from the CreditUnitType concept scheme
-		/// https://credreg.net/ctdl/terms/creditUnitType
-		/// </summary>
-		public string CreditUnitType { get; set; }
-		public decimal CreditHourValue { get; set; }
-		public decimal CreditUnitValue { get; set; }
+		///// <summary>
+		///// Provide a valid concept from the CreditUnitType concept scheme
+		///// https://credreg.net/ctdl/terms/creditUnitType
+		///// </summary>
+		//public string CreditUnitType { get; set; }
+		//public decimal CreditHourValue { get; set; }
+		//public decimal CreditUnitValue { get; set; }
 		//public decimal CreditUnitMaxValue { get; set; }
 		public string CreditUnitTypeDescription { get; set; }
 		public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
@@ -160,6 +183,12 @@ namespace RA.Models.Input
 		public List<string> AssessmentUseType { get; set; }
 		#endregion
 
+		/// <summary>
+		/// Type of official status of the TransferProfile; select from an enumeration of such types.
+		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// </summary>
+		public string LifecycleStatusType { get; set; }
 
 		public string CodedNotation { get; set; }
 
@@ -180,14 +209,32 @@ namespace RA.Models.Input
 		public List<FrameworkItem> OccupationType { get; set; }
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
 		//public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// List of valid O*Net codes. See:
+		/// https://www.onetonline.org/find/
+		/// The API will validate and format the ONet codes as Occupations
+		/// </summary>
+		public List<string> ONET_Codes { get; set; } = new List<string>();
 
 		public List<FrameworkItem> IndustryType { get; set; }
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
 		//public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// List of valid NAICS codes. These will be mapped to industry type
+		/// See:
+		/// https://www.naics.com/search/
+		/// </summary>
+		public List<string> NaicsList { get; set; } = new List<string>();
 
 		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
 		//public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// List of valid Classification of Instructional Program codes. See:
+		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
+		/// </summary>
+		public List<string> CIP_Codes { get; set; } = new List<string>();
+
 		//
 		public bool? IsProctored { get; set; }
 		public bool? HasGroupEvaluation { get; set; }
@@ -223,25 +270,7 @@ namespace RA.Models.Input
 		#endregion
 
 		#region Quality Assurance IN - Jurisdiction based Quality Assurance  (INs)
-		//There are currently two separate approaches to publishing properties like assertedIn
-		//- Publish all 'IN' properties using JurisdictionAssertions
-		//- Publish using ehe separate specific properties like AccreditedIn, ApprovedIn, etc
-		// 2010-01-06 The property JurisdictionAssertions may become obsolete soon. We recomend to NOT use this property.
 
-		/// <summary>
-		/// Handling assertions in jurisdictions
-		/// The property JurisdictionAssertions is a simple approach, using one record per asserting organization - where that organization will have multiple assertion types. 
-		/// The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected.
-		/// This approach simplifies the input where the same organization asserts more than action. 
-		/// 2010-01-06 TBD - this property will LIKELY be made obsolete once any partner who has been using it has been informed.
-		/// </summary>
-		[Obsolete]	
-		public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; } = new List<JurisdictionAssertedInProfile>();
-
-		//JurisdictionAssertion
-		//Each 'IN' property must include one or more organizations and a Main jurisdiction. Only one main jusrisdiction (and multiple exceptions) can be entered with each property.
-		//Only use this property where the organization only makes the assertion for a specific jurisdiction. 
-		//Use the 'BY' equivalent (ex. accreditedBy) where the organization makes a general assertion
 
 		/// <summary>
 		/// List of Organizations that accredit this assessment in a specific Jurisdiction. 
@@ -292,6 +321,7 @@ namespace RA.Models.Input
 		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; } = new List<FinancialAlignmentObject>();
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 
+		public List<string> TargetLearningResource { get; set; } = new List<string>();
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 	}
 }

@@ -73,9 +73,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "dcterms:title" )]
 		public LanguageMap Title { get; set; }
 
-
-
-
 	}
 
 	public class RubricCriterion
@@ -232,6 +229,7 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Reference to a progression model used.
+		/// **** should this be single???????????
 		/// </summary>
 		[JsonProperty( "asn:hasProgressionLevel" )]
 		public List<string> HasProgressionLevel { get; set; }

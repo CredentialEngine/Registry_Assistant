@@ -21,8 +21,10 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( "schema:value" )]
 		public decimal Value { get; set; }
+
 		[JsonProperty( "schema:minValue" )]
 		public decimal MinValue { get; set; }
+
 		[JsonProperty( "schema:maxValue" )]
 		public decimal MaxValue { get; set; }
 

@@ -8,8 +8,9 @@ namespace RA.Models.Input
 {
 
 	/// <summary>
-	/// Class for handling references to an entity such as an Assessment, Organization, Learning opportunity, or credential
-	/// Either the Id as an resolvable URL, or provide all of the properities
+	/// Class for handling references to an entity such as an Assessment, Organization, Learning opportunity, or credential that may or may not be in the Credential Registry.
+	/// Either the Id as an resolvable URL, a CTID where the document exists in the Credential Registry, or provide specific properities for the entity.
+	/// If neither a CTID or Id is provided, a blank node will be added the @graph.
 	/// </summary>
 	public class EntityReference
 	{
@@ -63,6 +64,7 @@ namespace RA.Models.Input
 
 
 		#region Assessment/Lopp related properties
+		//2020-05-18 Additional properties have been added to the EntityReference. 
 		public List<CredentialAlignmentObject> Assesses { get; set; } = new List<CredentialAlignmentObject>();
 
 		/// <summary>
@@ -79,14 +81,13 @@ namespace RA.Models.Input
 		//
 		public string CodedNotation { get; set; }
 		//
-		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
+		public QuantitativeValue CreditValue { get; set; } 
 		//
 		public List<DurationProfile> EstimatedDuration { get; set; } = new List<DurationProfile>();
 
 		/// <summary>
 		/// Learning Method Description 
-		///  Description of the learning methods for a resource.
-		/// 
+		///  Description of the learning methods for a resource.		/// 
 		/// </summary>
 		public string LearningMethodDescription { get; set; }
 		/// <summary>
@@ -96,14 +97,19 @@ namespace RA.Models.Input
 		//
 		/// <summary>
 		/// Organization(s) that offer this resource
+		/// /// Can't initialize this or will be loop
 		/// </summary>
-		public List<OrganizationReference> OfferedBy { get; set; } = new List<OrganizationReference>();
+		public List<OrganizationReference> OfferedBy { get; set; }// = new List<OrganizationReference>();
 		//
 		/// <summary>
 		/// Organization(s) that owns this resource
+		/// Can't initialize this or will be loop
 		/// </summary>
-		public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
+		public List<OrganizationReference> OwnedBy { get; set; }// = new List<OrganizationReference>();
 		//
+		/// <summary>
+		/// For Learning Opportunities only, list of competencies being taught
+		/// </summary>
 		public List<CredentialAlignmentObject> Teaches { get; set; } = new List<CredentialAlignmentObject>();
 		#endregion
 

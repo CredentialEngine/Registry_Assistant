@@ -245,22 +245,22 @@ namespace RA.Models.JsonV2
 
 	}
 	
-	/// <summary>
-	/// The class of structured profiles describing discrete levels of expertise and performance mastery.
-	/// </summary>
-	//	public class ProficiencyScale
-	//	{
-	//      "ceasn:ProficiencyScale": {
-	//      "type": "object",
-	//      "properties": { "@type": { "enum": [ "ceasn:ProficiencyScale" ]
-	//	}
-	//},
-	//      "required": [ "@type" ],
-	//      "additionalProperties": false
-	//    },
-	//        [JsonProperty( "@id" )]
-	//        public string CtdlId { get; set; }
-	//    }
+	///// <summary>
+	///// The class of structured profiles describing discrete levels of expertise and performance mastery.
+	///// </summary>
+	////	public class ProficiencyScale
+	////	{
+	////      "ceasn:ProficiencyScale": {
+	////      "type": "object",
+	////      "properties": { "@type": { "enum": [ "ceasn:ProficiencyScale" ]
+	////	}
+	////},
+	////      "required": [ "@type" ],
+	////      "additionalProperties": false
+	////    },
+	////        [JsonProperty( "@id" )]
+	////        public string CtdlId { get; set; }
+	////    }
 
 
 }

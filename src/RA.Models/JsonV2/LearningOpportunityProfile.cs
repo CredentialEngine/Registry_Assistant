@@ -91,8 +91,8 @@ namespace RA.Models.JsonV2
 		/// The default is Active. 
 		/// ConceptScheme: ceterms:StatusCategory
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:statusType" )]
-		public CredentialAlignmentObject StatusType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:lifecycleStatusType" )]
+		public CredentialAlignmentObject LifecycleStatusType { get; set; }
 		
 		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
         public string CodedNotation { get; set; }
@@ -132,6 +132,12 @@ namespace RA.Models.JsonV2
 		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
 
 
+		/// <summary>
+		/// Assessment Method Description 
+		/// Description of the assessment methods for a resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )]
+		public LanguageMap AssessmentMethodDescription { get; set; }
 		/// <summary>
 		/// Learning Method Description 
 		///  Description of the learning methods for a resource.		/// 
@@ -293,6 +299,10 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:financialAssistance" )]
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; }
+
+		//
+		[JsonProperty( PropertyName = "ceterms:targetLearningResource" )]
+		public List<string> TargetLearningResource { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
 		public List<IdentifierValue> VersionIdentifier { get; set; }

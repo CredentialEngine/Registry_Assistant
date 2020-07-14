@@ -44,14 +44,17 @@ namespace RA.Models.JsonV2
 
 		#endregion
 
-
-		[JsonProperty( PropertyName = "ceterms:derivedFrom" )]
-		public List<string> DerivedFrom { get; set; }
 		/// <summary>
 		/// Date this assertion ends.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:endDate" )]
 		public string EndDate { get; set; }
+
+		/// <summary>
+		/// May be replace by Identifier
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
+		public string CodedNotation { get; set; }
 
 		/// <summary>
 		/// Identifier
@@ -72,8 +75,8 @@ namespace RA.Models.JsonV2
 		/// Type of official status of the TransferProfile; select from an enumeration of such types.
 		/// TBD: string or URI to a concept
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:statusType" )]
-		public CredentialAlignmentObject StatusType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:lifecycleStatusType" )]
+		public CredentialAlignmentObject LifecycleStatusType { get; set; }
 
 
 		[JsonProperty( PropertyName = "ceterms:transferValue" )]

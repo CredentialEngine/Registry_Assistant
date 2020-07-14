@@ -18,18 +18,13 @@ namespace RA.Models.JsonV2
 		public string Context { get; set; } = "https://credreg.net/ctdlasn/schema/context/json";
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; } //		/graph
+		public string CtdlId { get; set; } //		/graph/
 
 		/// <summary>
 		/// Main graph object
 		/// </summary>
 		[JsonProperty( "@graph" )]
 		public object Graph { get; set; }
-		//public object Graph { get; set;  }
-
-		//[JsonIgnore]
-		//[JsonProperty( "ceterms:ctid" )]
-		//public string CTID { get; set; }
 
 	}
 	public class CompetencyFramework //: JsonLDDocument
@@ -103,7 +98,6 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty("ceasn:educationLevelType" )]
 		public List<string> educationLevelType { get; set; } 
-
 
 		/// <summary>
 		/// Top-level child competency of a competency framework.

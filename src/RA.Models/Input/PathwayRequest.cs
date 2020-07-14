@@ -10,18 +10,23 @@ namespace RA.Models.Input
 	{
 		public PathwayRequest()
 		{
-			Pathway = new Pathway();
 		}
 
-		public Pathway Pathway { get; set; }
+		public Pathway Pathway { get; set; } = new Pathway();
+
+		/// <summary>
+		/// GenerateIsHasParts
+		/// If true, generate the hasPart and/or isPartOf property where not provided for pathways
+		/// </summary>
+		public bool GenerateIsHasParts { get; set; } = true;
 
 		/// <summary>
 		/// Pathway Components
 		/// </summary>
 		public List<PathwayComponent> PathwayComponents { get; set; } = new List<PathwayComponent>();
 
-		public List<ComponentCondition> ComponentConditions { get; set; } = new List<ComponentCondition>();
-	}
+	}//
+
 	/// <summary>
 	/// Resource composed of a structured set of PathwayComponents defining points along a route to fulfillment of a goal or objective.
 	/// </summary>
@@ -31,11 +36,6 @@ namespace RA.Models.Input
 
 		#region *** Required Properties ***
 		public string Ctid { get; set; }
-
-
-		//List of language codes. ex: en, es
-		//TBD
-		public List<string> InLanguage { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Pathway Name
@@ -77,6 +77,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> HasDestinationComponent { get; set; } = new List<string>();
 
+		/// <summary>
+		/// This property identifies all the PathwayComponents in a Pathway
+		/// Provide the CTID or the full URI for the target environment. 
+		/// However, we could recommend that a CTID be provided, and just convert.
+		/// As a helper, this could be generated from all of the provided components
+		/// </summary>
+		public List<string> HasPart { get; set; } = new List<string>();
+
+		/// <summary>
+		/// URL to a concept scheme
+		/// </summary>
+		public string HasProgressionModel { get; set; }
+
 		#region at least one of
 
 		/// <summary>
@@ -92,7 +105,31 @@ namespace RA.Models.Input
 
 
 		#endregion
+		public List<string> Keyword { get; set; } = new List<string>();
+		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
+		public List<string> Subject { get; set; } = new List<string>();
+		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
+
+		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// List of valid O*Net codes. See:
+		/// https://www.onetonline.org/find/
+		/// The API will validate and format the O*Net codes as Occupations
+		/// </summary>
+		public List<string> ONET_Codes { get; set; } = new List<string>();
+
+		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// List of valid NAICS codes. These will be mapped to industry type
+		/// See:
+		/// https://www.naics.com/search/
+		/// </summary>
+		public List<string> NaicsList { get; set; } = new List<string>();
 	}
 	public class PathwayComponent
 	{
@@ -107,14 +144,25 @@ namespace RA.Models.Input
 		/// ceterms:CredentialComponent 	
 		/// ceterms:ExtracurricularComponent 	
 		/// ceterms:JobComponent 	
+		/// ceterms:selectioncomponent
 		/// ceterms:WorkExperienceComponent
 		/// </summary>
 		public string PathwayComponentType { get; set; }
 
 		#region Common Properties
-		public string CTID { get; set; }
+		public string Ctid { get; set; }
 
+		/// <summary>
+		/// may replace with IdentifierValue
+		/// </summary>
 		public string CodedNotation { get; set; }
+
+		/// <summary>
+		/// Label identifying the category to further distinguish one component from another as designated by the promulgating body.
+		/// Examples may include "Required", "Core", "General Education", "Elective", etc.
+		/// </summary>
+		public List<string> ComponentDesignation { get; set; } = new List<string>();
+
 
 		/// <summary>
 		/// PathwayComponent Description 
@@ -131,7 +179,7 @@ namespace RA.Models.Input
 		/// Provide the CTID or the full URI for the target environment. 
 		/// ceterms:ComponentCondition
 		/// </summary>
-		public List<string> HasCondition { get; set; } = new List<string>();
+		public List<ComponentCondition> HasCondition { get; set; } = new List<ComponentCondition>();
 
 		/// <summary>
 		/// This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
@@ -139,6 +187,16 @@ namespace RA.Models.Input
 		/// ceterms:PathwayComponent
 		/// </summary>
 		public List<string> HasChild { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Concept in a ProgressionModel concept scheme
+		/// URI
+		/// </summary>
+		public string HasProgressionLevel { get; set; }
+
+
+		//public List<IdentifierValue> IdentifierValue { get; set; } = new List<IdentifierValue>();
+
 
 		/// <summary>
 		/// The referenced resource is higher in some arbitrary hierarchy than this resource.
@@ -157,6 +215,16 @@ namespace RA.Models.Input
 		public List<string> IsDestinationComponentOf { get; set; } = new List<string>();
 
 		/// <summary>
+		/// This property identifies the Pathways of which it is a part. 
+		/// 
+		/// Provide the CTID or the full URI for the target environment. 
+		/// Note if this is left empty (recommended) the API will assign the current Pathway
+		/// </summary>
+		public List<string> IsPartOf { get; set; } = new List<string>();
+
+
+
+		/// <summary>
 		/// PathwayComponent Name
 		/// </summary>
 		public string Name { get; set; }
@@ -168,7 +236,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Points associated with this resource, or points possible.
 		/// </summary>
-		public decimal Points { get; set; }
+		public QuantitativeValue PointValue { get; set; } = new QuantitativeValue();
+
 
 		/// <summary>
 		/// Resource that logically comes after this resource.
@@ -179,7 +248,7 @@ namespace RA.Models.Input
 		public List<string> Preceeds { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Resource(s) that is required as a prior condition to this resource.
+		/// Resource(s) required as a prior condition to this resource.
 		/// Provide the CTID or the full URI for the target environment. 
 		/// ceterms:ComponentCondition
 		/// </summary>
@@ -189,6 +258,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// URL to structured data representing the resource.
 		/// The preferred data serialization is JSON-LD or some other serialization of RDF.
+		/// Must this be a registry URI. The user can just provide a CTID.
 		/// URL
 		/// </summary>
 		public string SourceData { get; set; }
@@ -217,8 +287,18 @@ namespace RA.Models.Input
 
 		#region CourseComponent
 		/// <summary>
+		/// CreditValue
+		/// A credit-related value.
+		/// Used by: 
+		/// ceterms:CourseComponent only 
+		/// </summary>
+		public List<QuantitativeValue> CreditValue { get; set; } = new List<QuantitativeValue>();
+
+		/// <summary>
 		/// ProgramTerm
 		/// Categorization of a term sequence based on the normative time between entry into a program of study and its completion such as "1st quarter", "2nd quarter"..."5th quarter".
+		/// Used by: 
+		/// ceterms:CourseComponent only 
 		/// </summary>
 		public string ProgramTerm { get; set; }
 		/// <summary>
@@ -231,18 +311,17 @@ namespace RA.Models.Input
 		#region CredentialComponent
 		/// <summary>
 		/// Type of credential such as badge, certification, bachelor degree.
-		/// The credential type as defined in CTDL. Use EntityReference to provide one of: CTID, Registry URI, or 'blank node'
+		/// The credential type as defined in CTDL. 
 		/// Used by: 
-		/// ceterms:CredentialComponent 
+		/// ceterms:CredentialComponent only
 		/// </summary>
-		public EntityReference CredentialType { get; set; } = new EntityReference();
+		public string CredentialType { get; set; } 
 
 		#endregion
 	}
 
 	public class ComponentCondition
 	{
-		//public string CTID { get; set; }
 
 		/// <summary>
 		/// ComponentCondition Description 
@@ -273,7 +352,9 @@ namespace RA.Models.Input
 		/// Candidate PathwayComponent for the ComponentCondition as determined by applying the RuleSet.
 		/// Provide the CTID or the full URI for the target environment. 
 		/// ceterms:PathwayComponent
+		/// LIst of CTIDs (recommended) or fully qualified registry URL
 		/// </summary>
 		public List<string> TargetComponent { get; set; } = new List<string>();
 	}
+
 }

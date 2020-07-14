@@ -105,6 +105,14 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )]
 		public LanguageMap AssessmentMethodDescription { get; set; }
 
+		/// <summary>
+		/// Learning Method Description 
+		///  Description of the learning methods for a resource.		/// 
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:learningMethodDescription" )]
+		public LanguageMap LearningMethodDescription { get; set; }
+
+
 		[JsonProperty( PropertyName = "ceterms:assessmentMethodType" )]
         public List<CredentialAlignmentObject> AssessmentMethodType { get; set; }
 
@@ -313,8 +321,8 @@ namespace RA.Models.JsonV2
 		/// Type of official status of the Assessment; select from an enumeration of such types.
 		/// URI to a concept
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:statusType" )]
-		public CredentialAlignmentObject StatusType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:lifecycleStatusType" )]
+		public CredentialAlignmentObject LifecycleStatusType { get; set; }
 
 		//frameworks
 		[JsonProperty( PropertyName = "ceterms:occupationType" )]
@@ -338,7 +346,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:alternativeInstructionalProgramType" )]
 		public LanguageMapList AlternativeInstructionalProgramType { get; set; } = new LanguageMapList();
 
-				[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
+		//
+		[JsonProperty( PropertyName = "ceterms:targetLearningResource" )]
+		public List<string> TargetLearningResource { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 	}
 }
