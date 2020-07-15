@@ -148,7 +148,8 @@ namespace RA.SamplesForDocumentation
 		public bool PostRequest( AssistantRequestHelper request )
 		{
 			RAResponse response = new RAResponse();
-
+			//for a bulk request, a list of Responses will be returned. 
+			var listResponse = new List<RAResponse>();
 			LoggingHelper.DoTrace( 5, string.Format( thisClassName + ".PostRequest, RequestType: {0}, CTID: {1}, payloadLen: {2}, starts: '{3}' ....", request.RequestType, request.CTID, ( request.InputPayload ?? "" ).Length, request.InputPayload.Substring( 0, request.InputPayload.Length > 200 ? 200 : request.InputPayload.Length ) ) );
 			string responseContents = "";
 			DateTime started = DateTime.Now;
@@ -203,26 +204,65 @@ namespace RA.SamplesForDocumentation
 					}
 					else
 					{
-						response = JsonConvert.DeserializeObject<RAResponse>( responseContents );
-						//
-						if ( response.Successful )
+						//NEW: for 'bulk' requests, will need to handle a list of responses.
+						//FOr example: From PathwaySet/publish or transfervalue/bulkpublish
+						//a simple check
+						if ( responseContents.IndexOf( "[" ) > 5 )
 						{
-							LoggingHelper.DoTrace( 7, thisClassName + " PostRequest. envelopeId: " + response.RegistryEnvelopeIdentifier );
-							LoggingHelper.WriteLogFile( 5, request.Identifier + "_payload_Successful.json", response.Payload, "", false );
+							//single response
+							response = JsonConvert.DeserializeObject<RAResponse>( responseContents );
+							//
+							if ( response.Successful )
+							{
+								LoggingHelper.WriteLogFile( 5, request.Identifier + "_payload_Successful.json", response.Payload, "", false );
 
-							request.FormattedPayload = response.Payload;
-							request.EnvelopeIdentifier = response.RegistryEnvelopeIdentifier;
-							//may have some warnings to display
-							request.Messages.AddRange( response.Messages );
+								request.FormattedPayload = response.Payload;
+								request.EnvelopeIdentifier = response.RegistryEnvelopeIdentifier;
+								//may have some warnings to display
+								request.Messages.AddRange( response.Messages );
+							}
+							else
+							{
+								string status = string.Join( ",", response.Messages.ToArray() );
+								LoggingHelper.DoTrace( 5, thisClassName + " PostRequest FAILED. result: " + status );
+								request.Messages.AddRange( response.Messages );
+								request.FormattedPayload = response.Payload;
+								return false;
+							}
 						}
 						else
 						{
-							string status = string.Join( ",", response.Messages.ToArray() );
-							LoggingHelper.DoTrace( 5, thisClassName + " PostRequest FAILED. result: " + status );
-							request.Messages.AddRange( response.Messages );
-							request.FormattedPayload = response.Payload;
-							//LoggingHelper.WriteLogFile( 5, request.Identifier + "_payload_FAILED.json", response.Payload, "", false );
-							return false;
+							//list response
+							listResponse = JsonConvert.DeserializeObject<List<RAResponse>>( responseContents );
+							int cntr = 0;
+							foreach ( var lresponse in listResponse )
+							{
+								cntr++;
+								if ( lresponse.Successful )
+								{
+									LoggingHelper.WriteLogFile( 5, request.Identifier + string.Format( "_{0}_payload_Successful.json", cntr ), lresponse.Payload, "", false );
+
+									//will assume we only want to return the last payload, the pathwaySet for example. 
+									if ( cntr == listResponse.Count() )
+									{
+										request.FormattedPayload = lresponse.Payload;
+										request.EnvelopeIdentifier = lresponse.RegistryEnvelopeIdentifier;
+									}
+									//may have some warnings to display
+									request.Messages.AddRange( lresponse.Messages );
+								}
+								else
+								{
+									string status = string.Join( ",", lresponse.Messages.ToArray() );
+									LoggingHelper.DoTrace( 5, thisClassName + string.Format( " PostRequest #{0} FAILED. result: {1}", cntr, status ) );
+									request.Messages.AddRange( lresponse.Messages );
+									if ( cntr == listResponse.Count() )
+									{
+										request.FormattedPayload = lresponse.Payload;
+									}
+									return false;
+								}
+							}
 						}
 
 					}

@@ -27,10 +27,10 @@ namespace RA.SamplePublishingProject
 		/// Coming soon batch publishing
 		/// </summary>
 		[TestMethod]
-		public void TestBatchPublishTransferValue2()
+		public void TestBatchPublishTransferValueBulkPublish()
 		{
 			//using better post with details
-			//new PublishTransferValueProfile().BatchPublish( false );
+			new PublishTransferValueProfile().PublishList( false );
 		}
 	}
 }
