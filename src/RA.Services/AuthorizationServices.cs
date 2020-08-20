@@ -37,7 +37,7 @@ namespace RA.Services
 		/// <param name="helper"></param>
 		/// <param name="statusMessage"></param>
 		/// <returns></returns>
-		public static bool ValidateRequest( RequestHelper helper, ref string statusMessage, bool isDeleteRequest = false )
+		public bool ValidateRequest( RequestHelper helper, ref string statusMessage, bool isDeleteRequest = false )
 		{
 			bool isValid = true;
 			string clientIdentifier = "";
@@ -86,6 +86,13 @@ namespace RA.Services
 				}
 			}
 			return isValid;
+		}
+
+		public static bool IsAuthTokenValid(bool isTokenRequired, ref string apiToken, ref string message)
+		{
+			string apiPublisherIdentifier = "";
+			string clientIdentifier = "";
+			return IsAuthTokenValid( isTokenRequired, apiPublisherIdentifier, ref apiToken, ref clientIdentifier, ref message );
 		}
 
 		public static bool IsAuthTokenValid( bool isTokenRequired, string apiPublisherIdentifier, ref string token, ref string clientIdentifier, ref string message )

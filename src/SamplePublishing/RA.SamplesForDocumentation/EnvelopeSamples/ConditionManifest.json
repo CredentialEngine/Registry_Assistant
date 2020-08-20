@@ -1,0 +1,456 @@
+﻿{
+	"envelope_community": "ce_registry",
+	"envelope_id": "8d7de07d-a242-424d-a0ce-2193bc2eeb6c",
+	"envelope_ceterms_ctid": "ce-82a854b6-1e17-4cd4-845d-0b9b6df2fb5c",
+	"envelope_ctdl_type": "ceterms:ConditionManifest",
+	"envelope_type": "resource_data",
+	"envelope_version": "1.0.0",
+	"resource": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.ew0KICAiQGNvbnRleHQiOiAiaHR0cDovL2NyZWRyZWcubmV0L2N0ZGwvc2NoZW1hL2NvbnRleHQvanNvbiIsDQogICJAaWQiOiAiaHR0cHM6Ly9jcmVkZW50aWFsZW5naW5lcmVnaXN0cnkub3JnL2dyYXBoL2NlLTgyYTg1NGI2LTFlMTctNGNkNC04NDVkLTBiOWI2ZGYyZmI1YyIsDQogICJAZ3JhcGgiOiBbDQogICAgew0KICAgICAgIkB0eXBlIjogImNldGVybXM6Q29uZGl0aW9uTWFuaWZlc3QiLA0KICAgICAgIkBpZCI6ICJodHRwczovL2NyZWRlbnRpYWxlbmdpbmVyZWdpc3RyeS5vcmcvcmVzb3VyY2VzL2NlLTgyYTg1NGI2LTFlMTctNGNkNC04NDVkLTBiOWI2ZGYyZmI1YyIsDQogICAgICAiY2V0ZXJtczpjdGlkIjogImNlLTgyYTg1NGI2LTFlMTctNGNkNC04NDVkLTBiOWI2ZGYyZmI1YyIsDQogICAgICAiY2V0ZXJtczpuYW1lIjogew0KICAgICAgICAiZW4iOiAiQ29sbGVnZSBDcmVkaXQgUmVjb21tZW5kYXRpb24iDQogICAgICB9LA0KICAgICAgImNldGVybXM6ZGVzY3JpcHRpb24iOiB7DQogICAgICAgICJlbiI6ICJOT0NUSSBjb2xsYWJvcmF0ZXMgd2l0aCB0aGUgTmF0aW9uYWwgQ29sbGVnZSBDcmVkaXQgUmVjb21tZW5kYXRpb24gU2VydmljZSAoTkNDUlMpIHRvIGV2YWx1YXRlIGFsbCBvZiBpdHMgY3JlZGVudGlhbHMuIEV4cGVyaWVuY2VkIGluZHVzdHJ5IGV4cGVydHMgYW5kIHByb2Zlc3NvcnMgZXZhbHVhdGVkIHRoZSByaWdvciBvZiB0aGUgTk9DVEkgYXNzZXNzbWVudHMgdG8gdHJhbnNsYXRlIHRoZSBjb250ZW50IGludG8gY29sbGVnZSBjcmVkaXQgZXF1aXZhbGVuY2llcy4gQ2FuZGlkYXRlcyBtdXN0IG1lZXQgYSA3MCUgYmVuY2htYXJrIG9uIGFuIGFwcHJvdmVkIE5PQ1RJIG11bHRpcGxlLWNob2ljZSBjcmVkZW50aWFsIHRvIGJlIGVsaWdpYmxlLiINCiAgICAgIH0sDQogICAgICAiY2V0ZXJtczpzdWJqZWN0V2VicGFnZSI6ICJodHRwczovL3d3dy5ub2N0aS5vcmcvbmNjcnMuY2ZtIiwNCiAgICAgICJjZXRlcm1zOmNvbmRpdGlvbk1hbmlmZXN0T2YiOiBbDQogICAgICAgICJodHRwczovL2NyZWRlbnRpYWxlbmdpbmVyZWdpc3RyeS5vcmcvZ3JhcGgvY2UtNkE2MkIyNTAtQTFBMi00RDMxLUE3MDItQ0RDMjQzN0VGRDMxIg0KICAgICAgXSwNCiAgICAgICJjZXRlcm1zOnJlcXVpcmVzIjogWw0KICAgICAgICB7DQogICAgICAgICAgIkB0eXBlIjogImNldGVybXM6Q29uZGl0aW9uUHJvZmlsZSIsDQogICAgICAgICAgImNldGVybXM6bmFtZSI6IHsNCiAgICAgICAgICAgICJlbiI6ICJDb2xsZWdlIENyZWRpdCBSZWNvbW1lbmRhdGlvbiINCiAgICAgICAgICB9LA0KICAgICAgICAgICJjZXRlcm1zOmRlc2NyaXB0aW9uIjogew0KICAgICAgICAgICAgImVuIjogIk5PQ1RJIGNvbGxhYm9yYXRlcyB3aXRoIHRoZSBOYXRpb25hbCBDb2xsZWdlIENyZWRpdCBSZWNvbW1lbmRhdGlvbiBTZXJ2aWNlIChOQ0NSUykgdG8gZXZhbHVhdGUgYWxsIG9mIGl0cyBjcmVkZW50aWFscy4gRXhwZXJpZW5jZWQgaW5kdXN0cnkgZXhwZXJ0cyBhbmQgcHJvZmVzc29ycyBldmFsdWF0ZWQgdGhlIHJpZ29yIG9mIHRoZSBOT0NUSSBhc3Nlc3NtZW50cyB0byB0cmFuc2xhdGUgdGhlIGNvbnRlbnQgaW50byBjb2xsZWdlIGNyZWRpdCBlcXVpdmFsZW5jaWVzLiBDYW5kaWRhdGVzIG11c3QgbWVldCBhIDcwJSBiZW5jaG1hcmsgb24gYW4gYXBwcm92ZWQgTk9DVEkgbXVsdGlwbGUtY2hvaWNlIGNyZWRlbnRpYWwgdG8gYmUgZWxpZ2libGUuIg0KICAgICAgICAgIH0sDQogICAgICAgICAgImNldGVybXM6c3ViamVjdFdlYnBhZ2UiOiAiaHR0cHM6Ly93d3cubm9jdGkub3JnL25jY3JzLmNmbSIsDQogICAgICAgICAgImNldGVybXM6YXVkaWVuY2VMZXZlbFR5cGUiOiBbDQogICAgICAgICAgICB7DQogICAgICAgICAgICAgICJAdHlwZSI6ICJjZXRlcm1zOkNyZWRlbnRpYWxBbGlnbm1lbnRPYmplY3QiLA0KICAgICAgICAgICAgICAiY2V0ZXJtczp0YXJnZXROb2RlIjogImF1ZExldmVsOkJlZ2lubmVyTGV2ZWwiLA0KICAgICAgICAgICAgICAiY2V0ZXJtczpmcmFtZXdvcmsiOiAiaHR0cDovL2NyZWRyZWcubmV0L2N0ZGwvdGVybXMvQXVkaWVuY2VMZXZlbCIsDQogICAgICAgICAgICAgICJjZXRlcm1zOmZyYW1ld29ya05hbWUiOiB7DQogICAgICAgICAgICAgICAgImVuIjogIkF1ZGllbmNlTGV2ZWwiDQogICAgICAgICAgICAgIH0sDQogICAgICAgICAgICAgICJjZXRlcm1zOnRhcmdldE5vZGVOYW1lIjogew0KICAgICAgICAgICAgICAgICJlbiI6ICJCZWdpbm5lciBMZXZlbCINCiAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgfSwNCiAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgIkB0eXBlIjogImNldGVybXM6Q3JlZGVudGlhbEFsaWdubWVudE9iamVjdCIsDQogICAgICAgICAgICAgICJjZXRlcm1zOnRhcmdldE5vZGUiOiAiYXVkTGV2ZWw6U2Vjb25kYXJ5TGV2ZWwiLA0KICAgICAgICAgICAgICAiY2V0ZXJtczpmcmFtZXdvcmsiOiAiaHR0cDovL2NyZWRyZWcubmV0L2N0ZGwvdGVybXMvQXVkaWVuY2VMZXZlbCIsDQogICAgICAgICAgICAgICJjZXRlcm1zOmZyYW1ld29ya05hbWUiOiB7DQogICAgICAgICAgICAgICAgImVuIjogIkF1ZGllbmNlTGV2ZWwiDQogICAgICAgICAgICAgIH0sDQogICAgICAgICAgICAgICJjZXRlcm1zOnRhcmdldE5vZGVOYW1lIjogew0KICAgICAgICAgICAgICAgICJlbiI6ICJTZWNvbmRhcnkgU2Nob29sIG9yIEVxdWl2YWxlbnQiDQogICAgICAgICAgICAgIH0NCiAgICAgICAgICAgIH0sDQogICAgICAgICAgICB7DQogICAgICAgICAgICAgICJAdHlwZSI6ICJjZXRlcm1zOkNyZWRlbnRpYWxBbGlnbm1lbnRPYmplY3QiLA0KICAgICAgICAgICAgICAiY2V0ZXJtczp0YXJnZXROb2RlIjogImF1ZExldmVsOlBvc3RTZWNvbmRhcnlMZXZlbCIsDQogICAgICAgICAgICAgICJjZXRlcm1zOmZyYW1ld29yayI6ICJodHRwOi8vY3JlZHJlZy5uZXQvY3RkbC90ZXJtcy9BdWRpZW5jZUxldmVsIiwNCiAgICAgICAgICAgICAgImNldGVybXM6ZnJhbWV3b3JrTmFtZSI6IHsNCiAgICAgICAgICAgICAgICAiZW4iOiAiQXVkaWVuY2VMZXZlbCINCiAgICAgICAgICAgICAgfSwNCiAgICAgICAgICAgICAgImNldGVybXM6dGFyZ2V0Tm9kZU5hbWUiOiB7DQogICAgICAgICAgICAgICAgImVuIjogIlBvc3QtU2Vjb25kYXJ5IExldmVsIg0KICAgICAgICAgICAgICB9DQogICAgICAgICAgICB9DQogICAgICAgICAgXSwNCiAgICAgICAgICAiY2V0ZXJtczphc3NlcnRlZEJ5IjogWw0KICAgICAgICAgICAgImh0dHBzOi8vY3JlZGVudGlhbGVuZ2luZXJlZ2lzdHJ5Lm9yZy9ncmFwaC9jZS02QTYyQjI1MC1BMUEyLTREMzEtQTcwMi1DREMyNDM3RUZEMzEiDQogICAgICAgICAgXSwNCiAgICAgICAgICAiY2V0ZXJtczpjcmVkaXRIb3VyVHlwZSI6IHsNCiAgICAgICAgICAgICJlbiI6ICJTZW1lc3RlciBob3VycyINCiAgICAgICAgICB9DQogICAgICAgIH0sDQogICAgICAgIHsNCiAgICAgICAgICAiQHR5cGUiOiAiY2V0ZXJtczpDb25kaXRpb25Qcm9maWxlIiwNCiAgICAgICAgICAiY2V0ZXJtczpuYW1lIjogew0KICAgICAgICAgICAgImVuIjogIkNvbGxlZ2UgQ3JlZGl0IFJlY29tbWVuZGF0aW9uIg0KICAgICAgICAgIH0sDQogICAgICAgICAgImNldGVybXM6ZGVzY3JpcHRpb24iOiB7DQogICAgICAgICAgICAiZW4iOiAiTk9DVEkgY29sbGFib3JhdGVzIHdpdGggdGhlIE5hdGlvbmFsIENvbGxlZ2UgQ3JlZGl0IFJlY29tbWVuZGF0aW9uIFNlcnZpY2UgKE5DQ1JTKSB0byBldmFsdWF0ZSBhbGwgb2YgaXRzIGNyZWRlbnRpYWxzLiBFeHBlcmllbmNlZCBpbmR1c3RyeSBleHBlcnRzIGFuZCBwcm9mZXNzb3JzIGV2YWx1YXRlZCB0aGUgcmlnb3Igb2YgdGhlIE5PQ1RJIGFzc2Vzc21lbnRzIHRvIHRyYW5zbGF0ZSB0aGUgY29udGVudCBpbnRvIGNvbGxlZ2UgY3JlZGl0IGVxdWl2YWxlbmNpZXMuIENhbmRpZGF0ZXMgbXVzdCBtZWV0IGEgNzAlIGJlbmNobWFyayBvbiBhbiBhcHByb3ZlZCBOT0NUSSBtdWx0aXBsZS1jaG9pY2UgY3JlZGVudGlhbCB0byBiZSBlbGlnaWJsZS4iDQogICAgICAgICAgfSwNCiAgICAgICAgICAiY2V0ZXJtczpzdWJqZWN0V2VicGFnZSI6ICJodHRwczovL3d3dy5ub2N0aS5vcmcvbmNjcnMuY2ZtIiwNCiAgICAgICAgICAiY2V0ZXJtczphdWRpZW5jZUxldmVsVHlwZSI6IFsNCiAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgIkB0eXBlIjogImNldGVybXM6Q3JlZGVudGlhbEFsaWdubWVudE9iamVjdCIsDQogICAgICAgICAgICAgICJjZXRlcm1zOnRhcmdldE5vZGUiOiAiYXVkTGV2ZWw6QmVnaW5uZXJMZXZlbCIsDQogICAgICAgICAgICAgICJjZXRlcm1zOmZyYW1ld29yayI6ICJodHRwOi8vY3JlZHJlZy5uZXQvY3RkbC90ZXJtcy9BdWRpZW5jZUxldmVsIiwNCiAgICAgICAgICAgICAgImNldGVybXM6ZnJhbWV3b3JrTmFtZSI6IHsNCiAgICAgICAgICAgICAgICAiZW4iOiAiQXVkaWVuY2VMZXZlbCINCiAgICAgICAgICAgICAgfSwNCiAgICAgICAgICAgICAgImNldGVybXM6dGFyZ2V0Tm9kZU5hbWUiOiB7DQogICAgICAgICAgICAgICAgImVuIjogIkJlZ2lubmVyIExldmVsIg0KICAgICAgICAgICAgICB9DQogICAgICAgICAgICB9LA0KICAgICAgICAgICAgew0KICAgICAgICAgICAgICAiQHR5cGUiOiAiY2V0ZXJtczpDcmVkZW50aWFsQWxpZ25tZW50T2JqZWN0IiwNCiAgICAgICAgICAgICAgImNldGVybXM6dGFyZ2V0Tm9kZSI6ICJhdWRMZXZlbDpTZWNvbmRhcnlMZXZlbCIsDQogICAgICAgICAgICAgICJjZXRlcm1zOmZyYW1ld29yayI6ICJodHRwOi8vY3JlZHJlZy5uZXQvY3RkbC90ZXJtcy9BdWRpZW5jZUxldmVsIiwNCiAgICAgICAgICAgICAgImNldGVybXM6ZnJhbWV3b3JrTmFtZSI6IHsNCiAgICAgICAgICAgICAgICAiZW4iOiAiQXVkaWVuY2VMZXZlbCINCiAgICAgICAgICAgICAgfSwNCiAgICAgICAgICAgICAgImNldGVybXM6dGFyZ2V0Tm9kZU5hbWUiOiB7DQogICAgICAgICAgICAgICAgImVuIjogIlNlY29uZGFyeSBTY2hvb2wgb3IgRXF1aXZhbGVudCINCiAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAgfSwNCiAgICAgICAgICAgIHsNCiAgICAgICAgICAgICAgIkB0eXBlIjogImNldGVybXM6Q3JlZGVudGlhbEFsaWdubWVudE9iamVjdCIsDQogICAgICAgICAgICAgICJjZXRlcm1zOnRhcmdldE5vZGUiOiAiYXVkTGV2ZWw6UG9zdFNlY29uZGFyeUxldmVsIiwNCiAgICAgICAgICAgICAgImNldGVybXM6ZnJhbWV3b3JrIjogImh0dHA6Ly9jcmVkcmVnLm5ldC9jdGRsL3Rlcm1zL0F1ZGllbmNlTGV2ZWwiLA0KICAgICAgICAgICAgICAiY2V0ZXJtczpmcmFtZXdvcmtOYW1lIjogew0KICAgICAgICAgICAgICAgICJlbiI6ICJBdWRpZW5jZUxldmVsIg0KICAgICAgICAgICAgICB9LA0KICAgICAgICAgICAgICAiY2V0ZXJtczp0YXJnZXROb2RlTmFtZSI6IHsNCiAgICAgICAgICAgICAgICAiZW4iOiAiUG9zdC1TZWNvbmRhcnkgTGV2ZWwiDQogICAgICAgICAgICAgIH0NCiAgICAgICAgICAgIH0NCiAgICAgICAgICBdLA0KICAgICAgICAgICJjZXRlcm1zOmFzc2VydGVkQnkiOiBbDQogICAgICAgICAgICAiaHR0cHM6Ly9jcmVkZW50aWFsZW5naW5lcmVnaXN0cnkub3JnL2dyYXBoL2NlLTZBNjJCMjUwLUExQTItNEQzMS1BNzAyLUNEQzI0MzdFRkQzMSINCiAgICAgICAgICBdLA0KICAgICAgICAgICJjZXRlcm1zOmNyZWRpdEhvdXJUeXBlIjogew0KICAgICAgICAgICAgImVuIjogIlNlbWVzdGVyIGhvdXJzIg0KICAgICAgICAgIH0NCiAgICAgICAgfQ0KICAgICAgXQ0KICAgIH0NCiAgXQ0KfQ.YVvfc8sdzAofb1XUDQFlavJccolgg_nWBiZk30YvmhIwJa6_I4RcKRsWGbJf6G1HmQ8YUF3SnYwQWJ7X5GVSv172IBuP7c943GVufhPi55BveLAXfYKk1aJlDQPk8VyG1mzlMH-w0xudhXQFphdWMzpP725jmc6JlJAxNuahq7IF1us6VZ_gIwMaUul9o99CgAWZMbVKD29xz20o059544bMogeT2vvYz0EjLHVKOZPQcd80A2sJ1PmZEWiQ2AMuXRN9CPq1PiG1-GKdge6kmirmcq3n_ixK_916uwE-01nwh1R1ep4vN4sZ8LMUb2cMocxpASa7XufFo8ulbYrk6STFDqUSH4AfsWxWYnh_AFI7wb2muuOkDzlzbXTspAMrl9CsCQmIj4xR0vCKLUco76OWY_vznL2N2OdOmyH26iD0KMkRDZXdFBkdNEnkADsOyjnsghqdsdKJRyf6g0TnukeMg_PuTQIWu1FVqyAy7GAlA9qomFkqsnLX6XhAbLXNMPgqSS24KmNzkZiiNcSFVe1M_4mCx1mkrHV6-Ryd_P5KNUTjImtmARjdxZhPCnyW56fe2yFh4EWG2lR6IDZ-G1FgJy2le-X9q0y8_5UAW_lDMKXh6GcEM0eJEF5_TfMM21YE8bpzrCSEp8P5b9Ts-BneUGd8I8ETVAhsCaExUk4",
+	"decoded_resource": {
+		"@context": "https://credreg.net/ctdl/schema/context/json",
+		"@id": "https://credentialengineregistry.org/graph/ce-82a854b6-1e17-4cd4-845d-0b9b6df2fb5c",
+		"@graph": [
+			{
+				"@id": "https://credentialengineregistry.org/resources/ce-82a854b6-1e17-4cd4-845d-0b9b6df2fb5c",
+				"@type": "ceterms:ConditionManifest",
+				"ceterms": "ctid"
+				null,
+				: "ce-82a854b6-1e17-4cd4-845d-0b9b6df2fb5c",
+				"ceterms": "name"
+				null,
+				: {
+					"en": "College Credit Recommendation"
+				},
+				"ceterms": "requires"
+				null,
+				: [
+					{
+						"@type": "ceterms:ConditionProfile",
+						"ceterms": "name"
+						null,
+						: {
+							"en": "College Credit Recommendation"
+						},
+						"ceterms": "assertedBy"
+						null,
+						: [
+							"https://credentialengineregistry.org/graph/ce-6A62B250-A1A2-4D31-A702-CDC2437EFD31"
+						],
+						"ceterms": "description"
+						null,
+						: {
+							"en": "NOCTI collaborates with the National College Credit Recommendation Service (NCCRS) to evaluate all of its credentials. Experienced industry experts and professors evaluated the rigor of the NOCTI assessments to translate the content into college credit equivalencies. Candidates must meet a 70% benchmark on an approved NOCTI multiple-choice credential to be eligible."
+						},
+						"ceterms": "creditHourType"
+						null,
+						: {
+							"en": "Semester hours"
+						},
+						"ceterms": "subjectWebpage"
+						null,
+						: "https://www.nocti.org/nccrs.cfm",
+						"ceterms": "audienceLevelType"
+						null,
+						: [
+							{
+								"@type": "ceterms:CredentialAlignmentObject",
+								"ceterms": "framework"
+								null,
+								: "http://credreg.net/ctdl/terms/AudienceLevel",
+								"ceterms": "targetNode"
+								null,
+								: "audLevel:BeginnerLevel",
+								"ceterms": "frameworkName"
+								null,
+								: {
+									"en": "AudienceLevel"
+								},
+								"ceterms": "targetNodeName"
+								null,
+								: {
+									"en": "Beginner Level"
+								}
+							},
+							{
+								"@type": "ceterms:CredentialAlignmentObject",
+								"ceterms": "framework"
+								null,
+								: "http://credreg.net/ctdl/terms/AudienceLevel",
+								"ceterms": "targetNode"
+								null,
+								: "audLevel:SecondaryLevel",
+								"ceterms": "frameworkName"
+								null,
+								: {
+									"en": "AudienceLevel"
+								},
+								"ceterms": "targetNodeName"
+								null,
+								: {
+									"en": "Secondary School or Equivalent"
+								}
+							},
+							{
+								"@type": "ceterms:CredentialAlignmentObject",
+								"ceterms": "framework"
+								null,
+								: "http://credreg.net/ctdl/terms/AudienceLevel",
+								"ceterms": "targetNode"
+								null,
+								: "audLevel:PostSecondaryLevel",
+								"ceterms": "frameworkName"
+								null,
+								: {
+									"en": "AudienceLevel"
+								},
+								"ceterms": "targetNodeName"
+								null,
+								: {
+									"en": "Post-Secondary Level"
+								}
+							}
+						]
+					},
+					{
+						"@type": "ceterms:ConditionProfile",
+						"ceterms": "name"
+						null,
+						: {
+							"en": "College Credit Recommendation"
+						},
+						"ceterms": "assertedBy"
+						null,
+						: [
+							"https://credentialengineregistry.org/graph/ce-6A62B250-A1A2-4D31-A702-CDC2437EFD31"
+						],
+						"ceterms": "description"
+						null,
+						: {
+							"en": "NOCTI collaborates with the National College Credit Recommendation Service (NCCRS) to evaluate all of its credentials. Experienced industry experts and professors evaluated the rigor of the NOCTI assessments to translate the content into college credit equivalencies. Candidates must meet a 70% benchmark on an approved NOCTI multiple-choice credential to be eligible."
+						},
+						"ceterms": "creditHourType"
+						null,
+						: {
+							"en": "Semester hours"
+						},
+						"ceterms": "subjectWebpage"
+						null,
+						: "https://www.nocti.org/nccrs.cfm",
+						"ceterms": "audienceLevelType"
+						null,
+						: [
+							{
+								"@type": "ceterms:CredentialAlignmentObject",
+								"ceterms": "framework"
+								null,
+								: "http://credreg.net/ctdl/terms/AudienceLevel",
+								"ceterms": "targetNode"
+								null,
+								: "audLevel:BeginnerLevel",
+								"ceterms": "frameworkName"
+								null,
+								: {
+									"en": "AudienceLevel"
+								},
+								"ceterms": "targetNodeName"
+								null,
+								: {
+									"en": "Beginner Level"
+								}
+							},
+							{
+								"@type": "ceterms:CredentialAlignmentObject",
+								"ceterms": "framework"
+								null,
+								: "http://credreg.net/ctdl/terms/AudienceLevel",
+								"ceterms": "targetNode"
+								null,
+								: "audLevel:SecondaryLevel",
+								"ceterms": "frameworkName"
+								null,
+								: {
+									"en": "AudienceLevel"
+								},
+								"ceterms": "targetNodeName"
+								null,
+								: {
+									"en": "Secondary School or Equivalent"
+								}
+							},
+							{
+								"@type": "ceterms:CredentialAlignmentObject",
+								"ceterms": "framework"
+								null,
+								: "http://credreg.net/ctdl/terms/AudienceLevel",
+								"ceterms": "targetNode"
+								null,
+								: "audLevel:PostSecondaryLevel",
+								"ceterms": "frameworkName"
+								null,
+								: {
+									"en": "AudienceLevel"
+								},
+								"ceterms": "targetNodeName"
+								null,
+								: {
+									"en": "Post-Secondary Level"
+								}
+							}
+						]
+					}
+				],
+				"ceterms": "description"
+				null,
+				: {
+					"en": "NOCTI collaborates with the National College Credit Recommendation Service (NCCRS) to evaluate all of its credentials. Experienced industry experts and professors evaluated the rigor of the NOCTI assessments to translate the content into college credit equivalencies. Candidates must meet a 70% benchmark on an approved NOCTI multiple-choice credential to be eligible."
+				},
+				"ceterms": "subjectWebpage"
+				null,
+				: "https://www.nocti.org/nccrs.cfm",
+				"ceterms": "conditionManifestOf"
+				null,
+				: [
+					"https://credentialengineregistry.org/graph/ce-6A62B250-A1A2-4D31-A702-CDC2437EFD31"
+				]
+			}
+		]
+	},
+	"resource_format": "json",
+	"resource_encoding": "jwt",
+	"resource_public_key": "\"-----BEGIN RSA PUBLIC KEY-----",
+	"MIICCgKCAgEAuvC6aDDGq4eKc0zgagoqXCzWwSHtczP4FAHGyQIGArZJdrwFfUg5" "KIaL0uQjjkbA5SanoP/w5xJhA8ilA2TjIPTc1Kpkjq2RBrALOPtsRVc9pbWjg1jb",
+	"Kgg4KBi0MM965K3njeKiVy1REQ9i2z1xik40c2TXBoppXHoRfpznHV+BrIVO/85z" "HPov8GBLlmfZmrz2CqiI32aGHMqFEEfGcuRvq01KEbZUz5iTtx/TRLPpM6Akefa6",
+	"DYlBlxcd9vEzJE8yQVg6RAPJiRcQG1xUDYqkF1Ys1XCFfZGT97bNHYLrtW+OW2EP" "LvMtPlEUtoVVy54z+WnFFi6LHOugHSAJkWnPM5LqfmAahkD1kJ6Pcib3vqzsdw1/",
+	"hJxB++AlBS8MTVdbYme7XT/BgzTLg1Vyy9szsqSix2faZPWQxMN2px7YkRQx9MUs" "GO6BGJ8Pg3DHUspLYubEBZSSggw7l0Yb96s3SNacbSlF8bvHfeSbw/UenNEAeOcG",
+	"8gi7H50rYpJrTnaCF9mtfRnnjSC8eH21DteJKyyXarWaXIWaAwQ7QpIpFGOdjKrf" "EGuMcmLCpAd8Ci2f6RKqQVpFw1irzietPHcp02d36P7Vx/zNYwjqZMhyO2JnILr+",
+	"pHpoPD3Ju2pCBFszEcXAzHnTUwJpATl6rjOxm4qNKAAkF3Zua4zHNsECAwEAAQ==" "-----END",
+	"RSA" "PUBLIC",
+	"KEY-----" "\",",
+	"publisher_id": null,
+	"secondary_publisher_id": null,
+	"node_headers": {
+		"resource_digest": "xyxgVHB7HpmzLH1yL9YgcWPeunF4/YgUVXezqB6UqdI=",
+		"revision_history": [
+			{
+				"head": false,
+				"event": "create",
+				"created_at": "2019-02-13 14:55:17 UTC",
+				"actor": null,
+				"url": "/ce-registry/envelopes/8d7de07d-a242-424d-a0ce-2193bc2eeb6c/revisions/29220"
+			},
+			{
+				"head": true,
+				"event": "update",
+				"created_at": "2019-02-20 16:35:54 UTC",
+				"actor": null,
+				"url": "/ce-registry/envelopes/8d7de07d-a242-424d-a0ce-2193bc2eeb6c"
+			}
+		],
+		"created_at": "2019-02-13 14:55:17 UTC",
+		"updated_at": "2019-02-20 16:35:54 UTC",
+		"deleted_at": null
+	},
+	"inner_resource": {
+		"@id": "https://credentialengineregistry.org/resources/ce-82a854b6-1e17-4cd4-845d-0b9b6df2fb5c",
+		"@type": "ceterms:ConditionManifest",
+		"ceterms": "ctid"
+		null,
+		: "ce-82a854b6-1e17-4cd4-845d-0b9b6df2fb5c",
+		"ceterms": "name"
+		null,
+		: {
+			"en": "College Credit Recommendation"
+		},
+		"ceterms": "requires"
+		null,
+		: [
+			{
+				"@type": "ceterms:ConditionProfile",
+				"ceterms": "name"
+				null,
+				: {
+					"en": "College Credit Recommendation"
+				},
+				"ceterms": "assertedBy"
+				null,
+				: [
+					"https://credentialengineregistry.org/graph/ce-6A62B250-A1A2-4D31-A702-CDC2437EFD31"
+				],
+				"ceterms": "description"
+				null,
+				: {
+					"en": "NOCTI collaborates with the National College Credit Recommendation Service (NCCRS) to evaluate all of its credentials. Experienced industry experts and professors evaluated the rigor of the NOCTI assessments to translate the content into college credit equivalencies. Candidates must meet a 70% benchmark on an approved NOCTI multiple-choice credential to be eligible."
+				},
+				"ceterms": "creditHourType"
+				null,
+				: {
+					"en": "Semester hours"
+				},
+				"ceterms": "subjectWebpage"
+				null,
+				: "https://www.nocti.org/nccrs.cfm",
+				"ceterms": "audienceLevelType"
+				null,
+				: [
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms": "framework"
+						null,
+						: "http://credreg.net/ctdl/terms/AudienceLevel",
+						"ceterms": "targetNode"
+						null,
+						: "audLevel:BeginnerLevel",
+						"ceterms": "frameworkName"
+						null,
+						: {
+							"en": "AudienceLevel"
+						},
+						"ceterms": "targetNodeName"
+						null,
+						: {
+							"en": "Beginner Level"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms": "framework"
+						null,
+						: "http://credreg.net/ctdl/terms/AudienceLevel",
+						"ceterms": "targetNode"
+						null,
+						: "audLevel:SecondaryLevel",
+						"ceterms": "frameworkName"
+						null,
+						: {
+							"en": "AudienceLevel"
+						},
+						"ceterms": "targetNodeName"
+						null,
+						: {
+							"en": "Secondary School or Equivalent"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms": "framework"
+						null,
+						: "http://credreg.net/ctdl/terms/AudienceLevel",
+						"ceterms": "targetNode"
+						null,
+						: "audLevel:PostSecondaryLevel",
+						"ceterms": "frameworkName"
+						null,
+						: {
+							"en": "AudienceLevel"
+						},
+						"ceterms": "targetNodeName"
+						null,
+						: {
+							"en": "Post-Secondary Level"
+						}
+					}
+				]
+			},
+			{
+				"@type": "ceterms:ConditionProfile",
+				"ceterms": "name"
+				null,
+				: {
+					"en": "College Credit Recommendation"
+				},
+				"ceterms": "assertedBy"
+				null,
+				: [
+					"https://credentialengineregistry.org/graph/ce-6A62B250-A1A2-4D31-A702-CDC2437EFD31"
+				],
+				"ceterms": "description"
+				null,
+				: {
+					"en": "NOCTI collaborates with the National College Credit Recommendation Service (NCCRS) to evaluate all of its credentials. Experienced industry experts and professors evaluated the rigor of the NOCTI assessments to translate the content into college credit equivalencies. Candidates must meet a 70% benchmark on an approved NOCTI multiple-choice credential to be eligible."
+				},
+				"ceterms": "creditHourType"
+				null,
+				: {
+					"en": "Semester hours"
+				},
+				"ceterms": "subjectWebpage"
+				null,
+				: "https://www.nocti.org/nccrs.cfm",
+				"ceterms": "audienceLevelType"
+				null,
+				: [
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms": "framework"
+						null,
+						: "http://credreg.net/ctdl/terms/AudienceLevel",
+						"ceterms": "targetNode"
+						null,
+						: "audLevel:BeginnerLevel",
+						"ceterms": "frameworkName"
+						null,
+						: {
+							"en": "AudienceLevel"
+						},
+						"ceterms": "targetNodeName"
+						null,
+						: {
+							"en": "Beginner Level"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms": "framework"
+						null,
+						: "http://credreg.net/ctdl/terms/AudienceLevel",
+						"ceterms": "targetNode"
+						null,
+						: "audLevel:SecondaryLevel",
+						"ceterms": "frameworkName"
+						null,
+						: {
+							"en": "AudienceLevel"
+						},
+						"ceterms": "targetNodeName"
+						null,
+						: {
+							"en": "Secondary School or Equivalent"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms": "framework"
+						null,
+						: "http://credreg.net/ctdl/terms/AudienceLevel",
+						"ceterms": "targetNode"
+						null,
+						: "audLevel:PostSecondaryLevel",
+						"ceterms": "frameworkName"
+						null,
+						: {
+							"en": "AudienceLevel"
+						},
+						"ceterms": "targetNodeName"
+						null,
+						: {
+							"en": "Post-Secondary Level"
+						}
+					}
+				]
+			}
+		],
+		"ceterms": "description"
+		null,
+		: {
+			"en": "NOCTI collaborates with the National College Credit Recommendation Service (NCCRS) to evaluate all of its credentials. Experienced industry experts and professors evaluated the rigor of the NOCTI assessments to translate the content into college credit equivalencies. Candidates must meet a 70% benchmark on an approved NOCTI multiple-choice credential to be eligible."
+		},
+		"ceterms": "subjectWebpage"
+		null,
+		: "https://www.nocti.org/nccrs.cfm",
+		"ceterms": "conditionManifestOf"
+		null,
+		: [
+			"https://credentialengineregistry.org/graph/ce-6A62B250-A1A2-4D31-A702-CDC2437EFD31"
+		]
+	}
+}

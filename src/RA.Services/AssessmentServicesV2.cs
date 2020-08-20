@@ -17,7 +17,7 @@ namespace RA.Services
 {
 	public class AssessmentServicesV2 : ServiceHelperV2
     {
-        
+		string className = "AssessmentServicesV2";
         /// <summary>
         /// Publish an Assessment to the Credential Registry
         /// </summary>
@@ -26,6 +26,8 @@ namespace RA.Services
         /// <param name="messages"></param>
         public void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
         {
+			LoggingHelper.DoTrace( 6, string.Format("AssessmentServicesV2.Publish Request for: {0} Started.", request.Assessment.Name ));
+			DateTime started = DateTime.Now;
 			isValid = true;
             string crEnvelopeId = request.RegistryEnvelopeId;
 			string status = "";
@@ -50,7 +52,6 @@ namespace RA.Services
                     }
                 }
                 //this must be: /graph/
-                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.CTID, Community);
 				og.CTID = output.CTID;
                 og.Type = output.Type;
@@ -210,6 +211,7 @@ namespace RA.Services
         /// <returns></returns>        
         public bool ToMap( EntityRequest request, OutputEntity output, ref List<string> messages )
         {
+			DateTime mappingStarted = DateTime.Now;
 			CurrentEntityType = "Assessment";
 			bool isValid = true;
 			Community = request.Community ?? "";
@@ -234,6 +236,9 @@ namespace RA.Services
 
                 HandleRequiredFields( input, output, ref messages );
 
+				//
+				output.StatusType = AssignStatusType( "Assessment StatusType", input.StatusType, ref messages );
+				//
 				HandleLiteralFields( input, output, ref messages );
 
 				HandleUrlFields( input, output, ref messages );
@@ -295,7 +300,11 @@ namespace RA.Services
 			if ( messages.Count > 0 )
 				isValid = false;
 
-            return isValid;
+			TimeSpan duration = DateTime.Now.Subtract( mappingStarted );
+			if ( duration.TotalSeconds > 2 )
+				LoggingHelper.DoTrace( 1, string.Format( "{0}.ToMap *******Mapping took a little longer: elapsed: {1:N2} seconds. Competencies: {2}", className, duration.TotalSeconds, ( input.Assesses != null && input.Assesses.Count() > 0) ? input.Assesses.Count() : 0 ) ); ;
+
+			return isValid;
         }
         public void HandleOrgProperties( InputEntity input, OutputEntity output, ref List<string> messages )
         {
@@ -321,24 +330,9 @@ namespace RA.Services
 			output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 
 			//required
-			if ( string.IsNullOrWhiteSpace( input.Name ) )
-            {
-                if ( input.Name_Map == null || input.Name_Map.Count == 0 )
-                {
-                    messages.Add( FormatMessage( "Error - A name or Name_Map must be entered for Assessment with CTID: '{0}'.", input.Ctid ) );
-                }
-                else
-                {
-                    output.Name = AssignLanguageMap( input.Name_Map, "Assessment Name", ref messages );
-                    CurrentEntityName = GetFirstItemValue( output.Name );
-                }
-            }
-            else
-            {
-                output.Name = Assign( input.Name, DefaultLanguageForMaps );
-                CurrentEntityName = input.Name;
-            }
-            output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+			output.Name = AssignLanguageMap( input.Name, input.Name_Map, "Assessment.Name", DefaultLanguageForMaps, ref messages, true, 3 );
+			CurrentEntityName = GetFirstItemValue( output.Name );
+            output.Description = AssignLanguageMap( input.Description, input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
 
             //now literal
             output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
@@ -351,23 +345,7 @@ namespace RA.Services
 			{
 				messages.Add( string.Format("Error - At least one of an 'Offered By' organization, or an 'Owned By' organization must be provided for Assessment: '{0}'", input.Name ));
 			}
-            //if ( input.InLanguage != null && input.InLanguage.Count > 0 )
-            //{
-            //    output.InLanguage = input.InLanguage;
-            //    if ( input.InLanguage.Count == 1 )
-            //    {
-            //        //need to check if already set from the request.DefaultLanguage
-            //        DefaultLanguageForMaps = input.InLanguage[ 0 ];
-            //    }
-            //    else
-            //    {
-            //        //if (input.lan)
-            //    }
-            //}
-            //else
-            //{
-            //    messages.Add( string.Format( "At least one language (InLanguage) must be provided for Assessment: '{0}'", input.Name ) );
-            //}
+
             if ( (input.AvailableOnlineAt == null		|| input.AvailableOnlineAt.Count ==0 ) &&
 				 ( input.AvailabilityListing == null	|| input.AvailabilityListing.Count == 0 ) &&
 				 ( input.AvailableAt == null			|| input.AvailableAt.Count == 0 )	 )
@@ -413,17 +391,17 @@ namespace RA.Services
 
 			//
 			//output.CreditUnitType = null;
-			output.CreditValue = AssignQuantitiveValue( input.CreditValue, "CreditValue", "Assessment", ref messages );
+			output.CreditValue = AssignQuantitiveValueToList( input.CreditValue, "CreditValue", "Assessment", ref messages );
 			//at this point could have had no data, or bad data
 			if ( output.CreditValue == null )
 			{
 				//check legacy
-				output.CreditValue = AssignQuantitiveValue( "Assessment", input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref messages );
+				//output.CreditValue = AssignQuantitiveValue( "Assessment", input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref messages );
 
-				//apparantly will still allow just a description. TBD: is it allowed if creditValue is provided?
-				output.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription", DefaultLanguageForMaps, ref messages );
+				
 			}
-			
+			//apparantly will still allow just a description. TBD: is it allowed if creditValue is provided?
+			output.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription", DefaultLanguageForMaps, ref messages );
 			#region old credit code
 			//
 			//bool hasData = false;
@@ -471,46 +449,62 @@ namespace RA.Services
 		public void HandleAssertedINsProperties( InputEntity input, OutputEntity output, RJ.EntityReferenceHelper helper, ref List<string> messages )
 		{
 			RJ.JurisdictionProfile jp = new RJ.JurisdictionProfile();
-			if ( input.JurisdictionAssertions != null && input.JurisdictionAssertions.Count > 0 )
+			//need to check with partners, and set date for sunsetting this approach
+			if( input.JurisdictionAssertions != null && input.JurisdictionAssertions.Count > 0 )
 			{
-				foreach ( var item in input.JurisdictionAssertions )
+				if( !UtilityManager.GetAppKeyValue( "allowingJurisdictionAssertions", false ) )
 				{
-					if ( item.AssertsAccreditedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.AccreditedIn = JurisdictionProfileAdd( jp, output.AccreditedIn );
-					}
-					if ( item.AssertsApprovedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.ApprovedIn = JurisdictionProfileAdd( jp, output.ApprovedIn );
-					}
-					if ( item.AssertsOfferedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.OfferedIn = JurisdictionProfileAdd( jp, output.OfferedIn );
-					}
-					if ( item.AssertsRecognizedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.RecognizedIn = JurisdictionProfileAdd( jp, output.RecognizedIn );
-					}
-					if ( item.AssertsRegulatedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.RegulatedIn = JurisdictionProfileAdd( jp, output.RegulatedIn );
-					}
+					messages.Add( "Error: As of 2020, the property JurisdictionAssertions is now obsolete. Instead the individual properties like AssertedIn, ApprovedIn should be used." );
+					//return;
 				}
+				else
+				{
+					foreach( var item in input.JurisdictionAssertions )
+					{
+						if( item.AssertsAccreditedIn )
+						{
+							jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+							output.AccreditedIn = JurisdictionProfileAdd( jp, output.AccreditedIn );
+						}
+						if( item.AssertsApprovedIn )
+						{
+							jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+							output.ApprovedIn = JurisdictionProfileAdd( jp, output.ApprovedIn );
+						}
+						if( item.AssertsRecognizedIn )
+						{
+							jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+							output.RecognizedIn = JurisdictionProfileAdd( jp, output.RecognizedIn );
+						}
+						if( item.AssertsRegulatedIn )
+						{
+							jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+							output.RegulatedIn = JurisdictionProfileAdd( jp, output.RegulatedIn );
+						}
+					}
+
+					warningMessages.Add( "Warning: the property JurisdictionAssertions will be removed by March 2020. The individual properties like AssertedIn should be used instead." );
+				}
+			}
+			//else check regardless
+			{
+				output.AccreditedIn = MapJurisdictionAssertionsList( input.AccreditedIn, ref helper, ref messages );
+				output.ApprovedIn = MapJurisdictionAssertionsList( input.ApprovedIn, ref helper, ref messages );
+				output.OfferedIn = MapJurisdictionAssertionsList( input.OfferedIn, ref helper, ref messages );
+				output.RecognizedIn = MapJurisdictionAssertionsList( input.RecognizedIn, ref helper, ref messages );
+				output.RegulatedIn = MapJurisdictionAssertionsList( input.RegulatedIn, ref helper, ref messages );
 			}
 
 		} //
 		#region === CredentialAlignmentObject ===
 		public void HandleCredentialAlignmentFields( InputEntity input, OutputEntity output, ref List<string> messages )
         {
-			output.Subject = FormatCredentialAlignmentListFromStrings( input.Subject );
+			output.Subject = FormatCredentialAlignmentListFromStrings( input.Subject, input.Subject_Map );
 
 			output.DeliveryType = FormatCredentialAlignmentVocabs( "deliveryType", input.DeliveryType, ref messages );
 			output.AssessmentMethodType = FormatCredentialAlignmentVocabs( "assessmentMethodType", input.AssessmentMethodType, ref messages );
+			output.AssessmentMethodDescription = AssignLanguageMap( input.AssessmentMethodDescription, input.AssessmentMethodDescription_Map, "AssessmentMethodDescription", DefaultLanguageForMaps, ref messages, false, MinimumDescriptionLength );
+
 			output.AssessmentUseType = FormatCredentialAlignmentVocabs( "assessmentUseType", input.AssessmentUseType, ref messages );
 			output.ScoringMethodType = FormatCredentialAlignmentVocabs( "scoringMethodType", input.ScoringMethodType, ref messages );
 
@@ -518,24 +512,38 @@ namespace RA.Services
 			output.AudienceLevelType = FormatCredentialAlignmentVocabs( "audienceLevelType", input.AudienceLevelType, ref messages );
 
 			//frameworks
+			//=== occupations ===============================================================
 			//can't depend on the codes being SOC
 			output.OccupationType = FormatCredentialAlignmentListFromFrameworkItemList( input.OccupationType, true, ref messages );
+			//no longer using as concrete property, just used for simple list of strings
 			//append to OccupationType
 			output.OccupationType = AppendCredentialAlignmentListFromList( input.AlternativeOccupationType, null, "", "", "AlternativeOccupationType", output.OccupationType, ref messages );
-			//output.AlternativeOccupationType = AssignLanguageMapList( input.AlternativeOccupationType, input.AlternativeOccupationType_Map, "Credential AlternativeOccupationType", ref messages );
 
+			//NEW - allow a list of Onet codes, and resolve
+			output.OccupationType = HandleListOfONET_Codes( input.ONET_Codes, output.OccupationType, ref messages );
+
+			//output.AlternativeOccupationType = AssignLanguageMapList( input.AlternativeOccupationType, input.AlternativeOccupationType_Map, "Credential AlternativeOccupationType", ref output.OccupationType, ref messages );
+
+			//=== industries ===============================================================
 			//can't depend on the codes being NAICS??
 			output.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( input.IndustryType, true, ref messages );
+			//if ( input.Naics != null && input.Naics.Count > 0 )
+			//	output.Naics = input.Naics;
+			//else
+			//	output.Naics = null;
 			//append to IndustryType
 			output.IndustryType = AppendCredentialAlignmentListFromList( input.AlternativeIndustryType, null, "", "", "AlternativeIndustryType", output.IndustryType, ref messages );
 			//output.AlternativeIndustryType = AssignLanguageMapList( input.AlternativeIndustryType, input.AlternativeIndustryType_Map, "Credential AlternativeIndustryType", ref messages );
 			//
+			//=== instructional programs ===============================================================
 			output.InstructionalProgramType = FormatCredentialAlignmentListFromFrameworkItemList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
 			//append to InstructionalProgramType
 			output.InstructionalProgramType = AppendCredentialAlignmentListFromList( input.AlternativeInstructionalProgramType, null, "", "", "AlternativeInstructionalProgramType", output.InstructionalProgramType, ref messages );
+
+			//NEW - allow a list of CIP codes, and resolve
+			output.InstructionalProgramType = HandleListOfCip_Codes( input.CIP_Codes, output.InstructionalProgramType, ref messages );
 			//
 			//output.AlternativeInstructionalProgramType = AssignLanguageMapList( input.AlternativeInstructionalProgramType, input.AlternativeInstructionalProgramType_Map, "Credential AlternativeInstructionalProgramType", ref messages );
-			//
 		}
 
 		//see common methods in ServiceHelper

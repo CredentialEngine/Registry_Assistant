@@ -5,10 +5,11 @@ using System.Net.Http;
 using System.Web;
 using Newtonsoft.Json;
 using Utilities;
+using RA.Models.Input;
 //may want an alternative to this
+//not available here
 //using CtdlHelper = Factories;
 
-//using Models;
 
 namespace RA.Services
 {
@@ -24,6 +25,7 @@ namespace RA.Services
 			"ceterms:Badge",
 			"ceterms:Certificate",
 			"ceterms:Certification",
+			"ceterms:CompletionCertificate",
 			"ceterms:DigitalBadge",
 			"ceterms:DoctoralDegree",
 			"ceterms:GeneralEducationDevelopment",
@@ -58,7 +60,13 @@ namespace RA.Services
 			"ceterms:CostManifest"
 		};
 		#endregion
-
+		static List<string> statusTypes = new List<string>()
+		{
+			"statusCategory:Developing",
+			"statusCategory:Active",
+			"statusCategory:Suspended",
+			"statusCategory:Ceased",
+		};
 		#region validation with code tables
 		/// <summary>
 		/// Check if the property exists
@@ -69,48 +77,50 @@ namespace RA.Services
 		/// <returns></returns>
 		public static bool IsCredentialTypeValid( string vocabulary, ref string property )
 		{
+			return true;
+			//var credentialTypes = SchemaServices.GetConceptSchemeFromPropertyRange( "http://credreg.net/ctdl/schema/encoding/json", "ceterms:credentialType" );
 
-            //if ( CtdlHelper.CodesManager.IsPropertySchemaValid( categoryCode, ref property ) == false )
-            //    return false;
+			////if ( CtdlHelper.CodesManager.IsPropertySchemaValid( categoryCode, ref property ) == false )
+			////    return false;
 
-            //CodeItem ci = GetVocabularyTermJson(vocabulary, property, ref isValid );
-            try
-			{
-				var targetVocab = vocabulary.Contains( ':' ) ? vocabulary.Split( ':' )[ 1 ] : vocabulary;
-				targetVocab = GetVocabularyConceptScheme( vocabulary );
-				if ( string.IsNullOrWhiteSpace( targetVocab ) )
-				{
-					//what to do ??
-					return false;
-				}
+			////CodeItem ci = GetVocabularyTermJson(vocabulary, property, ref isValid );
+			//try
+			//{
+			//	var targetVocab = vocabulary.Contains( ':' ) ? vocabulary.Split( ':' )[ 1 ] : vocabulary;
+			//	targetVocab = GetVocabularyConceptScheme( vocabulary );
+			//	if ( string.IsNullOrWhiteSpace( targetVocab ) )
+			//	{
+			//		//what to do ??
+			//		return false;
+			//	}
 
-				var vocabsUrl = Utilities.UtilityManager.GetAppKeyValue( "credRegVocabsApi", "http://credreg.net/ctdl/vocabs/" );
-				var targetTerm = property.Contains( ':' ) ? property.Split( ':' )[ 1 ] : property;
-				var rawJson = new HttpClient().GetAsync( vocabsUrl + targetVocab + "/" + targetTerm + "/json" ).Result.Content.ReadAsStringAsync().Result;
-				var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiTermResult>( rawJson );
-				var data = deserialized.graph.First();
-				//could have a check that returned Id matches the request, as if not found, returns the first item
-				if ( data != null && data.id.ToLower().IndexOf( property.ToLower() ) == -1 )
-				{
-					//what to do ??
-					return false;
-				}
-				string parentSchema = GetVocabularyConceptScheme( vocabulary );
-				var result = new CodeItem()
-				{
-					SchemaName = data.id,
-					Name = GetLabelWithoutLanguage(data),
-					ParentSchemaName = parentSchema
+			//	var vocabsUrl = Utilities.UtilityManager.GetAppKeyValue( "credRegVocabsApi", "http://credreg.net/ctdl/vocabs/" );
+			//	var targetTerm = property.Contains( ':' ) ? property.Split( ':' )[ 1 ] : property;
+			//	var rawJson = new HttpClient().GetAsync( vocabsUrl + targetVocab + "/" + targetTerm + "/json" ).Result.Content.ReadAsStringAsync().Result;
+			//	var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiTermResult>( rawJson );
+			//	var data = deserialized.graph.First();
+			//	//could have a check that returned Id matches the request, as if not found, returns the first item
+			//	if ( data != null && data.id.ToLower().IndexOf( property.ToLower() ) == -1 )
+			//	{
+			//		//what to do ??
+			//		return false;
+			//	}
+			//	string parentSchema = GetVocabularyConceptScheme( vocabulary );
+			//	var result = new CodeItem()
+			//	{
+			//		SchemaName = data.id,
+			//		Name = GetLabelWithoutLanguage(data),
+			//		ParentSchemaName = parentSchema
 
-				};
+			//	};
 	
 
-				return true;
-			}
-			catch ( Exception ex )
-			{
-				return false;
-			}
+			//	return true;
+			//}
+			//catch ( Exception ex )
+			//{
+			//	return false;
+			//}
 
 		}
 
@@ -145,6 +155,34 @@ namespace RA.Services
 			return isValid;
 		}
 
+		/// <summary>
+		/// Probably temporary
+		/// </summary>
+		/// <param name="statusType"></param>
+		/// <param name="validSchema"></param>
+		/// <returns></returns>
+		public static bool IsValidStatusType(string statusType, ref string validSchema)
+		{
+			bool isValid = false;
+			//prefix if necessary
+			if ( statusType.IndexOf( "statusCategory" ) == -1 )
+				statusType = "statusCategory:" + statusType;
+			validSchema = "";
+			string exists = statusTypes.FirstOrDefault( s => s.ToLower() == statusType.ToLower() );
+			//or maybe loop thru and check case independent
+			foreach ( string s in statusTypes )
+			{
+				if ( s == statusType ||
+					s.ToLower() == statusType.ToLower() )
+				{
+					validSchema = s;
+					isValid = true;
+					break;
+				}
+			}
+
+			return isValid;
+		}
 		/// <summary>
 		/// Validate property
 		/// </summary>
@@ -315,7 +353,11 @@ namespace RA.Services
 				string conceptSchemePlain = targetVocab.Contains( ':' ) ? targetVocab.Split( ':' )[ 1 ] : targetVocab;
 
 				var targetTerm = term.Contains( ':' ) ? term.Split( ':' )[ 1 ] : term;
-				var rawJson = new HttpClient().GetAsync( ctdlUrl + conceptSchemePlain + "/" + targetTerm + "/json" ).Result.Content.ReadAsStringAsync().Result;
+				//???
+				var nextTarget = conceptSchemePlain;
+				if( conceptSchemePlain == "FinancialAssistance" )
+					nextTarget = "financialAid";
+				var rawJson = new HttpClient().GetAsync( ctdlUrl + nextTarget + "/" + targetTerm + "/json" ).Result.Content.ReadAsStringAsync().Result;
 				//just getting minimum properties
 				var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiTermResult>( rawJson );
 				var data = deserialized.graph.First();
@@ -422,6 +464,7 @@ namespace RA.Services
 				var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiTermResult>( rawJson );
 				var data = deserialized.graph.First();
 				//seems like another change
+				//20-02-05 - targetScheme is not returned for FinancialAis, or Audience
 				if ( data.targetScheme != null &&  data.targetScheme.Count > 0 ) 
 				{
 					isValid = true;
@@ -518,6 +561,157 @@ namespace RA.Services
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Resolve a list of Onet codes as FrameworkItems
+		/// </summary>
+		/// <param name="codes"></param>
+		/// <param name="messages"></param>
+		/// <param name="warnings">For now, only warn where O*Net code not found</param>
+		/// <returns></returns>
+		public static List<FrameworkItem> ResolveOnetCodes(List<string> codes, ref List<string> messages, ref List<string> warnings )
+		{
+			//related code is not available
+			return null;
+
+			//if (codes == null || codes.Count() == 0)
+			//	return null;
+			//string frameworkName = "Standard Occupational Classification";
+			//string framework = "https://www.bls.gov/soc/";
+			//string template = "http://www.onetonline.org/link/summary/";
+			//bool doingBulk = true;
+			//var output = new List<FrameworkItem>();
+			////might be better to do one at a time to be able to mark any not found!
+			////intial
+			//try
+			//{
+			//	string result = CtdlHelper.CodesManager.SOC_SearchAsObject( codes, ref warnings );
+			//	var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
+			//	var fi = new FrameworkItem();
+
+			//	foreach ( var item in list )
+			//	{
+			//		//not sure
+			//		fi = new FrameworkItem()
+			//		{
+			//			Framework = framework,
+			//			FrameworkName = frameworkName,
+			//			Name = item.Name,
+			//			Description = item.Description,
+			//			CodedNotation = item.Code,
+			//			TargetNode = item.URL
+			//		};
+			//		output.Add( fi );
+			//	}
+			//} catch (Exception ex)
+			//{
+			//	//if exception is encountered, add warning and allow publish to continue
+			//	warnings.Add( "Exception occured resolving O*Net codes. Ignored during beta period. All O*Net codes may not have been published." );
+			//	LoggingHelper.LogError( ex, "ValidationServices.ResolveOnetCodes", true );
+			//}
+			//return output;
+		}
+
+		/// <summary>
+		/// Resolve a list of NAICS codes as FrameworkItems
+		/// </summary>
+		/// <param name="codes"></param>
+		/// <param name="messages"></param>
+		/// <param name="warnings">For now, only warn where NAICS code not found</param>
+		/// <returns></returns>
+		public static List<FrameworkItem> ResolveNAICSCodes(List<string> codes, ref List<string> messages, ref List<string> warnings)
+		{
+			//related code is not available
+			return null;
+
+			//if ( codes == null || codes.Count() == 0 )
+			//	return null;
+			//string frameworkName = "North American Industry Classification System";
+			//string framework = "https://www.census.gov/eos/www/naics/index.html";
+			//string template = "https://www.census.gov/cgi-bin/sssd/naics/naicsrch?code={0}&search=2017";
+			////for now not doing bulk search as allows for returning messages where not found
+			//bool doingBulkSearch = false;
+			//var output = new List<FrameworkItem>();
+
+			//try
+			//{
+			//	string result = CtdlHelper.CodesManager.NAICS_SearchAsObject( codes, ref warnings, doingBulkSearch );
+			//	var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
+			//	var fi = new FrameworkItem();
+
+			//	foreach ( var item in list )
+			//	{
+			//		//not sure
+			//		fi = new FrameworkItem()
+			//		{
+			//			Framework = framework,
+			//			FrameworkName = frameworkName,
+			//			Name = item.Name,
+			//			Description = item.Description,
+			//			CodedNotation = item.Code,
+			//			TargetNode = item.URL
+			//		};
+			//		output.Add( fi );
+			//	}
+			//}
+			//catch ( Exception ex )
+			//{
+			//	//if exception is encountered, add warning and allow publish to continue
+			//	warnings.Add( "Exception occured resolving NAICS codes. Ignored during beta period. All NAICS codes may not have been published." );
+			//	LoggingHelper.LogError( ex, "ValidationServices.ResolveNAICSCodes", true );
+			//}
+			//return output;
+		}
+
+
+
+		/// <summary>
+		/// Resolve a list of CIP codes as FrameworkItems
+		/// </summary>
+		/// <param name="codes"></param>
+		/// <param name="messages"></param>
+		/// <param name="warnings">For now, only warn where O*Net code not found</param>
+		/// <returns></returns>
+		public static List<FrameworkItem> ResolveCipCodes(List<string> codes, ref List<string> messages, ref List<string> warnings)
+		{
+			//related code is not available
+			return null;
+
+			//if ( codes == null || codes.Count() == 0 )
+			//	return null;
+			//string frameworkName = "Classification of Instructional Programs";
+			//string framework = "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55";
+			//var output = new List<FrameworkItem>();
+			////any codes not found will be marked as warnings
+			//try
+			//{
+			//	string result = CtdlHelper.CodesManager.CIP_SearchAsObject( codes, ref warnings );
+			//	var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
+			//	var fi = new FrameworkItem();
+
+			//	foreach ( var item in list )
+			//	{
+			//		//not sure
+			//		fi = new FrameworkItem()
+			//		{
+			//			Framework = framework,
+			//			FrameworkName = frameworkName,
+			//			Name = item.Name,
+			//			Description = item.Description,
+			//			CodedNotation = item.Code,
+			//			TargetNode = item.URL
+			//		};
+			//		output.Add( fi );
+			//	}
+			//}
+			//catch ( Exception ex )
+			//{
+			//	//if exception is encountered, add warning and allow publish to continue
+			//	warnings.Add( "Exception occured resolving CIP codes. Ignored during beta period. All CIP codes may not have been published." );
+			//	LoggingHelper.LogError( ex, "ValidationServices.ResolveCipCodes", true );
+			//}
+			//return output;
+		}
 	}
 
 	public class CodeItem
@@ -536,6 +730,7 @@ namespace RA.Services
 		public string Name { get; set; }
 
 		public string Description { get; set; }
+		public string URL { get; set; }
 		public string SchemaName { get; set; }
 		public string ParentSchemaName { get; set; }
         /// <summary>

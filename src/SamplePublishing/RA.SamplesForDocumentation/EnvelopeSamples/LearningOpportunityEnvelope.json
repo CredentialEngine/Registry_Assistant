@@ -1,0 +1,333 @@
+﻿{
+	"envelope_community": "ce_registry",
+	"envelope_id": "4914bd83-3493-45be-b7ca-3e58a96ac3a0",
+	"envelope_ceterms_ctid": "ce-0b6f0c2f-01b9-4776-b861-894b78f81eda",
+	"envelope_ctdl_type": "ceterms:LearningOpportunityProfile",
+	"envelope_type": "resource_data",
+	"envelope_version": "1.0.0",
+	"resource": "encoded version of document",
+	"decoded_resource": {
+		"@context": "https://credreg.net/ctdl/schema/context/json",
+		"@id": "https://credentialengineregistry.org/graph/ce-0b6f0c2f-01b9-4776-b861-894b78f81eda",
+		"@graph": [
+			{
+				"@id": "https://credentialengineregistry.org/resources/ce-0b6f0c2f-01b9-4776-b861-894b78f81eda",
+				"@type": "ceterms:LearningOpportunityProfile",
+				"ceterms:ctid": "ce-0b6f0c2f-01b9-4776-b861-894b78f81eda",
+				"ceterms:name": {
+					"en": "Insurance Studies Certificate"
+				},
+				"ceterms:ownedBy": [
+					"https://credentialengineregistry.org/graph/ce-2198982C-EDC9-4E80-8938-D6C73B258858"
+				],
+				"ceterms:subject": [
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:targetNodeName": {
+							"en": "Business"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:targetNodeName": {
+							"en": "Business Organization and Management"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:targetNodeName": {
+							"en": "Commercial Insurance"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:targetNodeName": {
+							"en": "Financial Planning"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:targetNodeName": {
+							"en": "Insurance Industry Profession"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:targetNodeName": {
+							"en": "Interpersonal Communication"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:targetNodeName": {
+							"en": "Legal, Ethical, and Regulatory Issues in Business"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:targetNodeName": {
+							"en": "Liability Insurance"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:targetNodeName": {
+							"en": "Personal Insurance"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:targetNodeName": {
+							"en": "Principles of Marketing"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:targetNodeName": {
+							"en": "Principles of Property"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:targetNodeName": {
+							"en": "Quality Customer Service"
+						}
+					}
+				],
+				"ceterms:offeredBy": [
+					"https://credentialengineregistry.org/graph/ce-2198982C-EDC9-4E80-8938-D6C73B258858"
+				],
+				"ceterms:inLanguage": [
+					"en"
+				],
+				"ceterms:description": {
+					"en": "The Certificate of Completion (CCL) in Insurance Studies program is designed to provide knowledge and skills training for various entry-level positions in the insurance industry. The courses include an introduction to the insurance industry, in addition to principles of property, liability, personal, and commercial insurance."
+				},
+				"ceterms:deliveryType": [
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:framework": "http://credreg.net/ctdl/terms/Delivery",
+						"ceterms:targetNode": "deliveryType:InPerson",
+						"ceterms:frameworkName": {
+							"en": "Delivery"
+						},
+						"ceterms:targetNodeName": {
+							"en": "In-Person Only"
+						}
+					},
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:framework": "http://credreg.net/ctdl/terms/Delivery",
+						"ceterms:targetNode": "deliveryType:OnlineOnly",
+						"ceterms:frameworkName": {
+							"en": "Delivery"
+						},
+						"ceterms:targetNodeName": {
+							"en": "Online Only"
+						}
+					}
+				],
+				"ceterms:codedNotation": "Academic Plan Code: 5842",
+				"ceterms:estimatedCost": [
+					{
+						"@type": "ceterms:CostProfile",
+						"ceterms:name": {
+							"en": "In-State Tuition and Fees"
+						},
+						"ceterms:price": 1535,
+						"ceterms:currency": "US Dollar",
+						"ceterms:costDetails": "http://www.riosalado.edu/web/gainful-employment/Insurance-Studies/Gedt.html",
+						"ceterms:description": {
+							"en": "Students pay tuition according to their residency status. Questions regarding residency can be answered in the Admissions and Records office at 480-517-8540."
+						},
+						"ceterms:residencyType": [
+							{
+								"@type": "ceterms:CredentialAlignmentObject",
+								"ceterms:framework": "http://credreg.net/ctdl/terms/Residency",
+								"ceterms:targetNode": "residency:InState",
+								"ceterms:frameworkName": {
+									"en": "Residency"
+								},
+								"ceterms:targetNodeName": {
+									"en": "In-State"
+								}
+							}
+						],
+						"ceterms:directCostType": {
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "http://credreg.net/ctdl/terms/CostType",
+							"ceterms:targetNode": "costType:Tuition",
+							"ceterms:frameworkName": {
+								"en": "CostType"
+							},
+							"ceterms:targetNodeName": {
+								"en": "Tuition"
+							}
+						}
+					},
+					{
+						"@type": "ceterms:CostProfile",
+						"ceterms:name": {
+							"en": "In-State Tuition and Fees"
+						},
+						"ceterms:price": 986,
+						"ceterms:currency": "US Dollar",
+						"ceterms:costDetails": "http://www.riosalado.edu/web/gainful-employment/Insurance-Studies/Gedt.html",
+						"ceterms:description": {
+							"en": "Students pay tuition according to their residency status. Questions regarding residency can be answered in the Admissions and Records office at 480-517-8540."
+						},
+						"ceterms:residencyType": [
+							{
+								"@type": "ceterms:CredentialAlignmentObject",
+								"ceterms:framework": "http://credreg.net/ctdl/terms/Residency",
+								"ceterms:targetNode": "residency:InState",
+								"ceterms:frameworkName": {
+									"en": "Residency"
+								},
+								"ceterms:targetNodeName": {
+									"en": "In-State"
+								}
+							}
+						],
+						"ceterms:directCostType": {
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "http://credreg.net/ctdl/terms/CostType",
+							"ceterms:targetNode": "costType:LearningResource",
+							"ceterms:frameworkName": {
+								"en": "CostType"
+							},
+							"ceterms:targetNodeName": {
+								"en": "Learning Resource"
+							}
+						}
+					},
+					{
+						"@type": "ceterms:CostProfile",
+						"ceterms:name": {
+							"en": "Out-of-State Tuition and Fees"
+						},
+						"ceterms:price": 5886,
+						"ceterms:currency": "US Dollar",
+						"ceterms:costDetails": "http://www.riosalado.edu/cashier/Pages/Tuition.aspx",
+						"ceterms:description": {
+							"en": "Tuition is charged per academic credit hour, according to a student's residency classification. Fees may vary, and will be assessed at the time of registration.\n\nStudents pay tuition according to their residency status. Questions regarding residency can be answered in the Admissions and Records office at 480-517-8540."
+						},
+						"ceterms:residencyType": [
+							{
+								"@type": "ceterms:CredentialAlignmentObject",
+								"ceterms:framework": "http://credreg.net/ctdl/terms/Residency",
+								"ceterms:targetNode": "residency:OutOfState",
+								"ceterms:frameworkName": {
+									"en": "Residency"
+								},
+								"ceterms:targetNodeName": {
+									"en": "Out-of-State"
+								}
+							}
+						],
+						"ceterms:directCostType": {
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "http://credreg.net/ctdl/terms/CostType",
+							"ceterms:targetNode": "costType:Tuition",
+							"ceterms:frameworkName": {
+								"en": "CostType"
+							},
+							"ceterms:targetNodeName": {
+								"en": "Tuition"
+							}
+						}
+					}
+				],
+				"ceterms:subjectWebpage": "http://www.riosalado.edu/programs/insurance-studies/Pages/insurance-studies.aspx",
+				"ceterms:learningMethodType": [
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:framework": "http://credreg.net/ctdl/terms/LearningMethod",
+						"ceterms:targetNode": "learnMethod:Lecture",
+						"ceterms:frameworkName": {
+							"en": "LearningMethod"
+						},
+						"ceterms:targetNodeName": {
+							"en": "Lecture"
+						}
+					}
+				],
+				"ceterms:availabilityListing": [
+					"http://www.riosalado.edu/programs/insurance-studies/Pages/default.aspx"
+				],
+				"ceterms:instructionalProgramType": [
+					{
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:framework": "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55",
+						"ceterms:targetNode": "https://nces.ed.gov/ipeds/cipcode/cipdetail.aspx?y=55&cip=52.1701",
+						"ceterms:codedNotation": "52.1701",
+						"ceterms:frameworkName": {
+							"en": "Classification of Instructional Programs"
+						},
+						"ceterms:targetNodeName": {
+							"en": "Insurance"
+						},
+						"ceterms:targetNodeDescription": {
+							"en": "A program that prepares individuals to manage risk in organizational settings and provide insurance and risk-aversion services to businesses, individuals, and other organizations. Includes instruction in  casualty insurance and general liability, property insurance, employee benefits, social and health insurance, loss adjustment, underwriting, risk theory, and pension planning."
+						}
+					}
+				]
+			}
+		]
+	},
+	"resource_format": "json",
+	"resource_encoding": "jwt",
+	"resource_public_key": "-----BEGIN RSA PUBLIC KEY-----\nMIICCgKCAgEAuvC6aDDGq4eKc0zgagoqXCzWwSHtczP4FAHGyQIGArZJdrwFfUg5\nKIaL0uQjjkbA5SanoP/w5xJhA8ilA2TjIPTc1Kpkjq2RBrALOPtsRVc9pbWjg1jb\nKgg4KBi0MM965K3njeKiVy1REQ9i2z1xik40c2TXBoppXHoRfpznHV+BrIVO/85z\nHPov8GBLlmfZmrz2CqiI32aGHMqFEEfGcuRvq01KEbZUz5iTtx/TRLPpM6Akefa6\nDYlBlxcd9vEzJE8yQVg6RAPJiRcQG1xUDYqkF1Ys1XCFfZGT97bNHYLrtW+OW2EP\nLvMtPlEUtoVVy54z+WnFFi6LHOugHSAJkWnPM5LqfmAahkD1kJ6Pcib3vqzsdw1/\nhJxB++AlBS8MTVdbYme7XT/BgzTLg1Vyy9szsqSix2faZPWQxMN2px7YkRQx9MUs\nGO6BGJ8Pg3DHUspLYubEBZSSggw7l0Yb96s3SNacbSlF8bvHfeSbw/UenNEAeOcG\n8gi7H50rYpJrTnaCF9mtfRnnjSC8eH21DteJKyyXarWaXIWaAwQ7QpIpFGOdjKrf\nEGuMcmLCpAd8Ci2f6RKqQVpFw1irzietPHcp02d36P7Vx/zNYwjqZMhyO2JnILr+\npHpoPD3Ju2pCBFszEcXAzHnTUwJpATl6rjOxm4qNKAAkF3Zua4zHNsECAwEAAQ==\n-----END RSA PUBLIC KEY-----\n",
+	"publisher_id": null,
+	"secondary_publisher_id": null,
+	"node_headers": {
+		"resource_digest": "Yx1qS1/E8Tv7I6259CMOgKcAjamIEbk4tJYRT1GDojs=",
+		"revision_history": [
+			{
+				"head": false,
+				"event": "create",
+				"created_at": "2017-11-22 02:55:50 UTC",
+				"actor": null,
+				"url": "/ce-registry/envelopes/4914bd83-3493-45be-b7ca-3e58a96ac3a0/revisions/102"
+			},
+			{
+				"head": false,
+				"event": "update",
+				"created_at": "2017-11-22 03:06:26 UTC",
+				"actor": null,
+				"url": "/ce-registry/envelopes/4914bd83-3493-45be-b7ca-3e58a96ac3a0/revisions/7495"
+			},
+			{
+				"head": false,
+				"event": "update",
+				"created_at": "2018-02-28 16:21:07 UTC",
+				"actor": null,
+				"url": "/ce-registry/envelopes/4914bd83-3493-45be-b7ca-3e58a96ac3a0/revisions/9959"
+			},
+			{
+				"head": false,
+				"event": "update",
+				"created_at": "2018-06-12 22:04:33 UTC",
+				"actor": null,
+				"url": "/ce-registry/envelopes/4914bd83-3493-45be-b7ca-3e58a96ac3a0/revisions/11216"
+			},
+			{
+				"head": false,
+				"event": "update",
+				"created_at": "2018-07-11 13:30:11 UTC",
+				"actor": null,
+				"url": "/ce-registry/envelopes/4914bd83-3493-45be-b7ca-3e58a96ac3a0/revisions/17315"
+			},
+			{
+				"head": true,
+				"event": "update",
+				"created_at": "2018-10-17 00:23:28 UTC",
+				"actor": null,
+				"url": "/ce-registry/envelopes/4914bd83-3493-45be-b7ca-3e58a96ac3a0"
+			}
+		],
+		"created_at": "2017-11-22 02:55:50 UTC",
+		"updated_at": "2018-10-17 00:23:28 UTC",
+		"deleted_at": null
+	}
+}
