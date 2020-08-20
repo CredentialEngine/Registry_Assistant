@@ -6,7 +6,6 @@ namespace RA.Models.Input
     {
         public CompetencyFrameworkRequest()
         {
-            CompetencyFramework = new CompetencyFramework();
         }
         public CompetencyFramework CompetencyFramework { get; set; } = new CompetencyFramework();
 
@@ -25,8 +24,7 @@ namespace RA.Models.Input
 
     }
     public class CompetencyFramework 
-    {
-        
+    {        
         public CompetencyFramework()
         {
         }
@@ -401,13 +399,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> identifier { get; set; } = new List<string>();
 
-		/// <summary>
-		/// In Language
-		/// Definition:	en-US: The primary language used in or by this competency framework or competency.The primary language used in or by this competency framework or competency.
-		/// This is the language the text is primarily written in, even if it makes use of other languages. For example, a competency for teaching spanish to english-speaking students would primarily be in english, because that is the language used to convey the material.
-		///// </summary>
-		//[Obsolete]
-		//public List<string> inLanguage { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Is Child Of

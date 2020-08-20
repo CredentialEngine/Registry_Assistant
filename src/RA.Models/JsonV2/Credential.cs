@@ -119,11 +119,19 @@ namespace RA.Models.JsonV2
 		public string CodedNotation { get; set; }
 		//public string CodedNotation { get; set; }
 
+		/// <summary>
+		/// HasETPLResource
+		/// Only valid for a QualityAssuranceCredential
+		/// List of entities that are members of (essentialing approved by the owner of the) the QACredential
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasETPLResource" )]
+		public List<string> HasETPLResource { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:hasPart" )]
 		public List<string> HasPart { get; set; }
 
-
-		[JsonProperty( PropertyName = "ceterms:isPartOf" )]
+		
+		[ JsonProperty( PropertyName = "ceterms:isPartOf" )]
 		public List<string> IsPartOf { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:availabilityListing" )]
@@ -190,7 +198,7 @@ namespace RA.Models.JsonV2
 		public LanguageMapList AlternativeInstructionalProgramType { get; set; } = new LanguageMapList();
 		//
 		[JsonProperty( PropertyName = "ceterms:keyword" )]
-        public LanguageMapList Keyword { get; set; } = new LanguageMapList();
+        public LanguageMapList Keyword { get; set; } 
 
 
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
@@ -228,12 +236,29 @@ namespace RA.Models.JsonV2
 		public List<string> CommonCosts { get; set; }
 
 		#endregion
+
+		/// <summary>
+		/// The salary value or range associated with this credential.
+		/// </summary>
+		[JsonProperty( PropertyName = "schema:baseSalary" )]
+		public MonetaryAmount BaseSalary { get; set; } 
+
 		[JsonProperty( PropertyName = "ceterms:estimatedDuration" )]
         public List<DurationProfile> EstimatedDuration { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:renewalFrequency" )]
 		public string RenewalFrequency { get; set; } //duration item
 
+		/// <summary>
+		/// HasRating
+		/// Rating related to this resource.
+		/// URI to a Rating
+		/// </summary>
+		[JsonProperty( PropertyName = "navy:hasRating" )]
+		public List<string> HasRating { get; set; }
+
+		//[JsonProperty( PropertyName = "ceterms:hasRatingType" )]
+		//public List<CredentialAlignmentObject> HasRatingType { get; set; } = new List<CredentialAlignmentObject>();
 
 		#region Condition Profiles
 		[JsonProperty( PropertyName = "ceterms:requires" )]
@@ -398,5 +423,6 @@ namespace RA.Models.JsonV2
 
         [JsonProperty( PropertyName = "ceterms:revocationCriteriaDescription" )]
         public LanguageMap RevocationCriteriaDescription { get; set; }
-    }
+
+	}
 }

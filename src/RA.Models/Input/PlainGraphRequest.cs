@@ -36,7 +36,16 @@ namespace RA.Models.Input
 		/// Must only be used where the structure is flat. That is there are no concepts have child concepts.
 		/// </summary>
 		public bool GenerateIsTopChild { get; set; } = false;
+		/// <summary>
+		/// GenerateInScheme
+		/// If true, generate the inScheme property where not provided for concepts
+		/// </summary>
+		public bool GenerateInScheme{ get; set; } = false;
 
+		/// <summary>
+		/// HasLanguageMaps
+		/// If false, will format input using the Plain classes
+		/// </summary>
 		public bool HasLanguageMaps { get; set; }
 
 		public GraphInput GraphInput { get; set; }
@@ -47,13 +56,17 @@ namespace RA.Models.Input
 	/// </summary>
 	public class GraphInput
 	{
+
+		[JsonProperty( "@context" )]
+		public string Context { get; set; }
+
+		[JsonProperty( "@id" )]
+		public string Id { get; set; }
+
 		/// <summary>
 		/// Main graph object
 		/// </summary>
 		[JsonProperty( "@graph" )]
 		public object Graph { get; set; }
-
-		[JsonProperty( "@context" )]
-		public string Context { get; set; }
 	}
 }

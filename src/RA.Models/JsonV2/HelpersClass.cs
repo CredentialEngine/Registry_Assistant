@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-
+//using System.Text.Json;
+//using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
     public class GraphContainer
     {
-		[JsonIgnore]
-		public static string ceasnContext = "https://credreg.net/ctdlasn/schema/context/json";
-
+		
 		public GraphContainer()
         {
             Context = "https://credreg.net/ctdlasn/schema/context/json";
@@ -25,16 +24,50 @@ namespace RA.Models.JsonV2
         [JsonProperty( "@graph" )]
         public List<object> Graph { get; set; } = new List<object>();
 
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         [JsonProperty( "@type" )]
         public string Type { get; set; }
 
-        [JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
         [JsonProperty( "ceterms:ctid" )]
         public string CTID { get; set; }
 
     }
-    public class IdProperty
+
+    /*
+	public class GraphContainer2
+	{
+		//[JsonIgnore]
+		//public static string ceasnContext = "https://credreg.net/ctdlasn/schema/context/json";
+
+		public GraphContainer2()
+		{
+			Context = "https://credreg.net/ctdlasn/schema/context/json";
+		}
+		[JsonPropertyName( "@context" )]
+		public string Context { get; set; }
+
+		[JsonPropertyName( "@id" )]
+		public string CtdlId { get; set; }
+
+		/// <summary>
+		/// Main graph object
+		/// </summary>
+		[JsonPropertyName( "@graph" )]
+		public List<object> Graph { get; set; } = new List<object>();
+
+		//[JsonIgnore]
+		//[JsonPropertyName( "@type" )]
+		//public string Type { get; set; }
+
+		//[JsonIgnore]
+		//[JsonPropertyName( "ceterms:ctid" )]
+		//public string CTID { get; set; }
+
+	}
+
+    */
+	public class IdProperty
 	{
 		[JsonProperty( "@id" )]
 		public string Id { get; set; }
@@ -82,8 +115,39 @@ namespace RA.Models.JsonV2
 
         [JsonProperty( PropertyName = "ceterms:socialMedia" )]
         public List<string> SocialMedia { get; set; } = null;
-    }
-    public class EntityReferenceHelper
+
+
+		[JsonProperty( PropertyName = "ceterms:assesses" )]
+		public List<CredentialAlignmentObject> Assesses { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )]
+		public LanguageMap AssessmentMethodDescription { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:availableAt" )]
+		public List<Place> AvailableAt { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
+		public string CodedNotation { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:creditValue" )]
+		public List<QuantitativeValue> CreditValue { get; set; } = null;
+		//
+		[JsonProperty( PropertyName = "ceterms:estimatedDuration" )]
+		public List<DurationProfile> EstimatedDuration { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:learningMethodDescription" )]
+		public LanguageMap LearningMethodDescription { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:offeredBy" )]
+		public List<string> OfferedBy { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
+		public List<string> OwnedBy { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:teaches" )]
+		public List<CredentialAlignmentObject> Teaches { get; set; }
+	}
+	public class EntityReferenceHelper
     {
         public EntityReferenceHelper()
         {

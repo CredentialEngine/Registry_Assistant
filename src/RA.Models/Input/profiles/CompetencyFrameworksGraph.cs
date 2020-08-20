@@ -15,6 +15,9 @@ namespace RA.Models.Input
         [JsonProperty( "@context" )]
         public string Context { get; set; }
 
+        [JsonProperty( "@id" )]
+        public string Id { get; set; }
+
         /// <summary>
         /// Main graph object
         /// </summary>

@@ -62,8 +62,8 @@ namespace RA.Models.JsonV2
         public LanguageMapList Condition { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:submissionOf" )]
-        //public List<string> SubmissionOf { get; set; }
-		public object SubmissionOf { get; set; }
+        public List<string> SubmissionOf { get; set; }
+		//public object SubmissionOf { get; set; }
 
 		[JsonIgnore]
 		public LanguageMapList SubmissionOfOld { get; set; }
@@ -92,11 +92,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
 		public List<QuantitativeValue> CreditValue { get; set; } = null;
 		//
-		[JsonProperty( PropertyName = "ceterms:creditHourType" )]
-        public LanguageMap CreditHourType { get; set; }
+		//[JsonProperty( PropertyName = "ceterms:creditHourType" )]
+  //      public LanguageMap CreditHourType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:creditHourValue" )]
-        public decimal CreditHourValue { get; set; }
+  //      [JsonProperty( PropertyName = "ceterms:creditHourValue" )]
+  //      public decimal CreditHourValue { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:creditUnitType" )]
         public CredentialAlignmentObject CreditUnitType { get; set; } //Used for publishing

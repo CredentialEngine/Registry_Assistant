@@ -19,11 +19,11 @@ namespace RA.Models.Input
             //Region = new List<GeoCoordinates>();
             OfferedBy = new List<Input.OrganizationReference>();
             TargetCredential = new List<EntityReference>();
-        }        
+        }
         public string Description { get; set; }
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
         public string SubjectWebpage { get; set; }
-		public string DateEffective { get; set; }
+        public string DateEffective { get; set; }
         public List<CostProfile> EstimatedCost { get; set; }
         public bool? HolderMustAuthorize { get; set; }
         public List<EntityReference> TargetCredential { get; set; }
@@ -34,13 +34,12 @@ namespace RA.Models.Input
         public List<string> VerifiedClaimType { get; set; }
         public List<OrganizationReference> OfferedBy { get; set; }
         public List<Jurisdiction> Jurisdiction { get; set; }
-		/// <summary>
-		/// List of Organizations that offer this entity in a specific Jurisdiction. 
-		/// </summary>
-		public List<JurisdictionAssertion> OfferedIn { get; set; } = new List<JurisdictionAssertion>();
+        /// <summary>
+        /// List of Organizations that offer this entity in a specific Jurisdiction. 
+        /// </summary>
+        public List<JurisdictionAssertion> OfferedIn { get; set; } = new List<JurisdictionAssertion>();
 
-
-	}
+    }
 }
 
 

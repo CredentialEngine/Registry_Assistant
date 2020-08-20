@@ -86,6 +86,14 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
         public string SubjectWebpage { get; set; } //URL
 
+		/// <summary>
+		/// The status type of this LearningOpportunityProfile. 
+		/// The default is Active. 
+		/// ConceptScheme: ceterms:StatusCategory
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:lifecycleStatusType" )]
+		public CredentialAlignmentObject LifecycleStatusType { get; set; }
+		
 		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
         public string CodedNotation { get; set; }
 
@@ -123,6 +131,19 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:learningMethodType" )]
 		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
 
+
+		/// <summary>
+		/// Assessment Method Description 
+		/// Description of the assessment methods for a resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )]
+		public LanguageMap AssessmentMethodDescription { get; set; }
+		/// <summary>
+		/// Learning Method Description 
+		///  Description of the learning methods for a resource.		/// 
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:learningMethodDescription" )]
+		public LanguageMap LearningMethodDescription { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:deliveryType" )]
         public List<CredentialAlignmentObject> DeliveryType { get; set; }
@@ -278,6 +299,10 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:financialAssistance" )]
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; }
+
+		//
+		[JsonProperty( PropertyName = "ceterms:targetLearningResource" )]
+		public List<string> TargetLearningResource { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
 		public List<IdentifierValue> VersionIdentifier { get; set; }

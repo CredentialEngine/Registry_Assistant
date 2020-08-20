@@ -88,19 +88,26 @@ namespace RA.Models.Input
 		//Credit Information
 		//
 		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
-		//
-		public string CreditHourType { get; set; }
-        public decimal CreditHourValue { get; set; }
-        //public int CreditUnitTypeId { get; set; }
-
-        /// <summary>
-		/// Only one credit unit type is allowed for input
-		/// </summary>
-        public string CreditUnitType { get; set; }
-        public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
+        //
         public string CreditUnitTypeDescription { get; set; }
         public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
-        public decimal CreditUnitValue { get; set; }
+
+
+        #region CreditHourType and CreditUnitType are obsolete
+        //[Obsolete]
+        //public string CreditHourType { get; set; }
+        //public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
+        //[Obsolete]
+        //public decimal CreditHourValue { get; set; }
+
+        ///// <summary>
+        ///// Only one credit unit type is allowed for input
+        ///// </summary>
+        //[Obsolete]
+        //public string CreditUnitType { get; set; }
+        //[Obsolete]
+        //public decimal CreditUnitValue { get; set; }
+        #endregion
 
         //external classes =====================================
         public List<CostProfile> EstimatedCost { get; set; }
@@ -117,6 +124,11 @@ namespace RA.Models.Input
  
     } 
 
+    /// <summary>
+    /// The Connection profile is a subset of a conditon profile. 
+    /// A separate profile is used by the API to clarify the subset of properties are applicable
+    /// TODO: rename to ConnectionProfile to make the purpose clearer?
+    /// </summary>
 	public class Connections
 	{
 		public Connections()
@@ -157,20 +169,26 @@ namespace RA.Models.Input
 
 		//Credit Information
 		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
-		//
-		public string CreditHourType { get; set; }
-        public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
-        public decimal CreditHourValue { get; set; }
-	
 
-		/// <summary>
-		/// Only one credit unit type is allowed for input
-		/// </summary>
-		public string CreditUnitType { get; set; }
-		public string CreditUnitTypeDescription { get; set; }
+        public string CreditUnitTypeDescription { get; set; }
         public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
-        public decimal CreditUnitValue { get; set; }
 
+        //
+        #region CreditHourType and CreditUnitType are obsolete
+        //[Obsolete]
+        //public string CreditHourType { get; set; }
+        ////public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
+        //[Obsolete]
+        //public decimal CreditHourValue { get; set; }
+
+        ///// <summary>
+        ///// Only one credit unit type is allowed for input
+        ///// </summary>
+        //[Obsolete]
+        //public string CreditUnitType { get; set; }
+        //[Obsolete] 
+        //public decimal CreditUnitValue { get; set; }
+		#endregion
 		//external classes =====================================
 
 		public List<EntityReference> TargetAssessment { get; set; }

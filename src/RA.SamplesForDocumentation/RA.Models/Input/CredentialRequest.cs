@@ -235,7 +235,7 @@ namespace RA.Models.Input
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
 		public List<string> LearningDeliveryType { get; set; } = new List<string>();
 
-		//
+		//=========================================================
 		public List<FrameworkItem> OccupationType { get; set; }
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
 		public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
@@ -244,7 +244,7 @@ namespace RA.Models.Input
 		/// https://www.onetonline.org/find/
 		/// </summary>
 		public List<string> ONET_Codes { get; set; } = new List<string>();
-
+		//=========================================================
 		public List<FrameworkItem> IndustryType { get; set; }
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
 		public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
@@ -253,7 +253,7 @@ namespace RA.Models.Input
 		/// https://www.naics.com/search/
 		/// </summary>
 		public List<string> Naics { get; set; }
-
+		//=========================================================
 		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
 		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
@@ -263,6 +263,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
 
+		//=========================================================
 		public List<string> Keyword { get; set; }
         public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
         public List<string> DegreeConcentration { get; set; }

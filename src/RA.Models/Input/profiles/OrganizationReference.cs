@@ -50,8 +50,9 @@ namespace RA.Models.Input
 	/// - Description
 	/// - Subject webpage
 	/// - Social media
+	/// 2020-07-01 With the addition of many additional properties to EntityReference, changed OrganizationReference to no lonber inherit from EntityReference.
 	/// </summary>
-	public class OrganizationReference : EntityReference
+	public class OrganizationReference 
 	{
 		public static string CredentialOrganization = "CredentialOrganization";
 		public static string QACredentialOrganization = "QACredentialOrganization";
@@ -61,81 +62,23 @@ namespace RA.Models.Input
 		/// - QACredentialOrganization
 		/// Required
 		/// </summary>
-		public override string Type { get; set; }
+		public string Type { get; set; }
 
 		/// <summary>
-		/// Social Media URL links
-		/// For example, Facebook, LinkedIn
+		/// Id is a resovable URI
+		/// If the entity exists in the registry, provide the URI. 
+		/// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
+		/// Alterate URIs are under consideration. For example
+		/// http://dbpedia.com/Stanford_University
 		/// </summary>
-		public List<string> SocialMedia { get; set; } //URL
-
-		public new bool HasNecessaryProperties()
-		{
-			//skip social media for now
-			//	|| ( SocialMedia == null || SocialMedia.Count == 0 )
-			//				|| string.IsNullOrWhiteSpace( Description )
-			if ( string.IsNullOrWhiteSpace( Type )
-				|| string.IsNullOrWhiteSpace( Name )
-				|| string.IsNullOrWhiteSpace( SubjectWebpage )
-				)
-				return false;
-			else
-				return true;
-		}
+		public string Id { get; set; }
 
 		/// <summary>
-		/// Purpose is to determine if class has data
-		/// </summary>
-		/// <returns></returns>
-		public override bool  IsEmpty()
-		{
-			if ( string.IsNullOrWhiteSpace( Id )
-				&& string.IsNullOrWhiteSpace( Name )
-                && string.IsNullOrWhiteSpace( CTID )
-                && string.IsNullOrWhiteSpace( Description )
-				&& string.IsNullOrWhiteSpace( SubjectWebpage )
-				&& ( SocialMedia == null || SocialMedia.Count == 0 )
-				)
-				return true;
-			else
-				return false;
-		}
-	}
-
-	/// <summary>
-	/// Class for handling references to an entity such as an Assessment, Organization, Learning opportunity, or credential
-	/// Either the Id as an resolvable URL, or provide all of the properities
-	/// </summary>
-	public class EntityReference
-	{
-        /// <summary>
-        /// Id is a resovable URI
-        /// If the entity exists in the registry, provide the URI. 
-        /// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
-        /// Alterate URIs are under consideration. For example
-        /// http://dbpedia.com/Stanford_University
-        /// </summary>
-        public string Id { get; set; }
-
-        /// <summary>
-        /// Optionally, a CTID can be entered instead of an Id. 
+		/// Optionally, a CTID can be entered instead of an Id. 
 		/// A CTID is recommended for flexibility.
-        /// Only enter Id or CTID, but not both.
-        /// </summary>
-        public string CTID { get; set; }
-
-        //if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would be required
-
-        /// <summary>
-        /// the type of the entity must be provided if the Id was not provided. examples
-        /// ceterms:AssessmentProfile
-        /// ceterms:LearningOpportunityProfile
-        /// ceterms:ConditionManifest
-        /// ceterms:CostManifest
-        /// or the many credential subclasses!!
-        /// </summary>
-        public virtual string Type { get; set; }
-
+		/// Only enter Id or CTID, but not both.
+		/// </summary>
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// Name of the entity (required)
@@ -155,34 +98,43 @@ namespace RA.Models.Input
 		/// For example, for an organization, the description should be about the organization specifically not, how the organization is related to, or interacts with the refering entity. 
 		/// </summary>
 		public string Description { get; set; }
-
 		/// <summary>
-		/// Check if all properties for a reference request are present
-		/// 17-08-27 We do need a type if only providing reference data
+		/// Social Media URL links
+		/// For example, Facebook, LinkedIn
 		/// </summary>
-		/// <returns></returns>
+		public List<string> SocialMedia { get; set; } //URL
+
 		public bool HasNecessaryProperties()
 		{
-			//	|| string.IsNullOrWhiteSpace( Description )
-			if ( string.IsNullOrWhiteSpace( Name )
-				|| string.IsNullOrWhiteSpace( Type ) 
+			//skip social media for now
+			//	|| ( SocialMedia == null || SocialMedia.Count == 0 )
+			//				|| string.IsNullOrWhiteSpace( Description )
+			if ( string.IsNullOrWhiteSpace( Type )
+				|| string.IsNullOrWhiteSpace( Name )
 				|| string.IsNullOrWhiteSpace( SubjectWebpage )
 				)
 				return false;
 			else
 				return true;
 		}
-		public virtual  bool IsEmpty()
+
+		/// <summary>
+		/// Purpose is to determine if class has data
+		/// </summary>
+		/// <returns></returns>
+		public bool  IsEmpty()
 		{
 			if ( string.IsNullOrWhiteSpace( Id )
-				&& string.IsNullOrWhiteSpace( CTID )
 				&& string.IsNullOrWhiteSpace( Name )
-				&& string.IsNullOrWhiteSpace( Description )
+                && string.IsNullOrWhiteSpace( CTID )
+                && string.IsNullOrWhiteSpace( Description )
 				&& string.IsNullOrWhiteSpace( SubjectWebpage )
+				&& ( SocialMedia == null || SocialMedia.Count == 0 )
 				)
 				return true;
 			else
-				return false; 
+				return false;
 		}
 	}
+
 }
