@@ -51,19 +51,29 @@ namespace RA.Models
 		}
 		
 		public bool WasChanged { get; set; }
-
+		public void ResetHelper()
+		{
+			Messages = new List<RequestMessage>();
+			HasErrors = false;
+			Payload = "";
+			RegistryEnvelopeId = "";
+			EnvelopeUrl = "";
+			GraphUrl = "";
+			WasChanged = false;
+		}
 		public List<string> GetAllMessages()
 		{
 			List<string> messages = new List<string>();
 			string prefix = "";
 			foreach(RequestMessage msg in Messages.OrderBy(m => m.IsWarning))
 			{
+				prefix = "";
 				if ( msg.IsWarning )
 				{
-					if ( msg.Message.ToLower().IndexOf( "warning" ) == -1 )
+					if ( msg.Message.ToLower().IndexOf( "warning" ) == -1 && msg.Message.ToLower().IndexOf( "note" ) == -1 )
 						prefix = "Warning - ";
 				}
-				else if ( msg.Message.ToLower().IndexOf( "error" ) == -1 )
+				else if ( msg.Message.ToLower().IndexOf( "error" ) == -1 && msg.Message.ToLower().IndexOf( "warning" ) == -1 && msg.Message.ToLower().IndexOf( "note" ) == -1 )
 					prefix = "Error - ";
 
 				messages.Add( prefix + msg.Message );
@@ -82,11 +92,12 @@ namespace RA.Models
 		}
 		public void SetMessages( List<string> messages )
 		{
-			//just treat all as errors for now
-			string prefix = "";
 			foreach ( string msg in messages )
 			{
-				AddError( msg );
+				if ( msg.ToLower().IndexOf( "warning" ) > -1 || msg.ToLower().IndexOf( "note" ) == 0 )
+					AddWarning( msg );
+				else
+					AddError( msg );
 			}
 
 		}

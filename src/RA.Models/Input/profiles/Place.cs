@@ -45,6 +45,9 @@ namespace RA.Models.Input
 
 		public double Longitude { get; set; }
 
+		/// <summary>
+		/// URI to geonames location
+		/// </summary>
 		public string GeoURI { get; set; }
 		public List<ContactPoint> ContactPoint { get; set; } = new List<Input.ContactPoint>();
 	}

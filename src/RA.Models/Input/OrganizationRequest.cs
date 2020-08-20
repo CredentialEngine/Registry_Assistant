@@ -197,25 +197,46 @@ namespace RA.Models.Input
 		#endregion
 		#region *** Recommended Properties ***
 
-		public List<string> SocialMedia { get; set; }
+
 		public List<string> Keyword { get; set; }
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// Url for Organization image
 		/// </summary>
 		public string Image { get; set; }
+
+		/// <summary>
+		/// Social media access point for an agent or an agent's contact point.
+		/// List of URLs
+		/// </summary>
+		public List<string> SocialMedia { get; set; }
+
+		/// <summary>
+		/// Type of service offered by the agent being described; select from an existing enumeration of such terms.
+		/// List of concepts from ConceptScheme: ceterms:AgentServiceType
+		/// serviceType:AccreditService serviceType:ApproveService serviceType:OfferService serviceType:RecognizeService serviceType:RegulateService serviceType:RenewService
+		/// </summary>
 		public List<string> ServiceType { get; set; }
 		#endregion
 
 		/// <summary>
-		/// Type of official status of the TransferProfile; select from an enumeration of such types.
-		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
-		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// Alternative Identifier
+		/// Alternative, publicly available and globally unique identifier for an organization issued by an authoritative entity.
 		/// </summary>
-		public string LifecycleStatusType { get; set; }
-		
+		public List<IdentifierValue> AlternativeIdentifier { get; set; }
+
+		/// <summary>
+		/// Alias for the organization including acronyms, alpha-numeric notations, and other forms of name abbreviations in common use
+		/// </summary>
 		public List<string> AlternateName { get; set; }
 		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
+		/// <summary>
+		/// Listing of online and/or physical locations
+		/// List of URLs
+		/// </summary>
+		public List<string> AvailabilityListing { get; set; }
+
 		/// <summary>
 		/// Founding Date - the year, year-month, or year-month-day the organization was founded. 
 		/// Maximum length of 20
@@ -227,8 +248,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public string FoundingDate { get; set; }
 
+		#region Concrete codes/identifiers
 		public string Duns { get; set; }
 		public string Fein { get; set; }
+
+
 		public string IpedsId { get; set; }
 		public string OpeId { get; set; }
 		public string LEICode { get; set; }
@@ -241,7 +265,20 @@ namespace RA.Models.Input
 		/// Identifier comprised of a 12 digit code issued by the National Center for Education Statistics (NCES) for educational institutions where the first 7 digits are the NCES District ID.
 		/// </summary>
 		public string NcesID { get; set; }
-		public List<IdentifierValue> AlternativeIdentifier { get; set; }
+
+		#endregion
+
+		/// <summary>
+		/// Type of official status of the TransferProfile; select from an enumeration of such types.
+		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// </summary>
+		public string LifecycleStatusType { get; set; }
+
+
+
+		public List<Jurisdiction> Jurisdiction { get; set; }
+
 		public string MissionAndGoalsStatement { get; set; }
 		public string MissionAndGoalsStatementDescription { get; set; }
 		/// <summary>
@@ -258,14 +295,13 @@ namespace RA.Models.Input
 		//NOTE: ContactPoint can only be entered with Address
 		//[Obsolete]
 		//public List<ContactPoint> ContactPoint { get; set; } = new List<ContactPoint>();
+
 		/// <summary>
 		/// A resource that unambiguously indicates the identity of the resource being described.
 		/// Resources that may indicate identity include, but are not limited to, descriptions of entities in open databases such as DBpedia and Wikidata or social media accounts such as FaceBook and LinkedIn.
 		/// </summary>
 		public List<string> SameAs { get; set; }
-		public List<string> AvailabilityListing { get; set; }
 
-		public List<Jurisdiction> Jurisdiction { get; set; }
 
 
 		#region Quality Assurance IN - Jurisdiction based Quality Assurance  (INs)
@@ -303,6 +339,7 @@ namespace RA.Models.Input
 		public List<EntityReference> Owns { get; set; }
 		public List<EntityReference> Offers { get; set; }
 
+		#region Quality Assurance Performed
 		/// <summary>
 		/// Organization performs QA on these entities
 		/// A QA organization must have QA on at least one document
@@ -315,6 +352,7 @@ namespace RA.Models.Input
 		public List<EntityReference> Renews { get; set; }
 		public List<EntityReference> Revokes { get; set; }
 
+		#endregion
 
 		/// <summary>
 		/// Reference to condition manifests
@@ -327,7 +365,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> HasCostManifest { get; set; }
 
-		public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; }
+
 		public List<ProcessProfile> AdministrationProcess { get; set; }
 		public List<ProcessProfile> DevelopmentProcess { get; set; }
 		public List<ProcessProfile> MaintenanceProcess { get; set; }
@@ -336,10 +374,13 @@ namespace RA.Models.Input
 		public List<ProcessProfile> ReviewProcess { get; set; }
 		public List<ProcessProfile> RevocationProcess { get; set; }
 
+		public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; }
+
 		public List<OrganizationReference> Department { get; set; }
 		public List<OrganizationReference> SubOrganization { get; set; }
 
-		//
+		//pending
+		public List<AccreditAction> AccreditAction { get; set; } = new List<AccreditAction>();
 
 	}
 }

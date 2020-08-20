@@ -48,12 +48,13 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
 
+		//20-08-05 not sure was ever valid?
+		//[JsonProperty( PropertyName = "ceasn:altIdentifier" )]
+		//public List<string> AltIdentifier { get; set; }
 
-		[JsonProperty( PropertyName = "ceasn:altIdentifier" )]
-		public List<string> altIdentifier { get; set; }
-
-		[JsonProperty( PropertyName = "skos:changeNote" )]
-		public LanguageMapList ChangeNote { get; set; }
+		//20-08-05 no longer on credReg.net
+		//[JsonProperty( PropertyName = "skos:changeNote" )]
+		//public LanguageMapList ChangeNote { get; set; }
 
 		[JsonProperty( PropertyName = "ceasn:conceptKeyword" )]
 		public LanguageMapList ConceptKeyword { get; set; }
@@ -79,8 +80,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "skos:hasTopConcept" )]
 		public List<string> HasTopConcept { get; set; } 
 
-		[JsonProperty( PropertyName = "skos:historyNote" )]
-		public LanguageMap HistoryNote { get; set; }
+		//[JsonProperty( PropertyName = "skos:historyNote" )]
+		//public LanguageMap HistoryNote { get; set; }
 
 		//[JsonProperty( PropertyName = "ceasn:inLanguage" )]
 		//public string InLanguage { get; set; } 
@@ -236,11 +237,11 @@ namespace RA.Models.JsonV2
 		public string CTID { get; set; }
 
 
-		[JsonProperty( PropertyName = "ceasn:altIdentifier" )]
-		public List<string> altIdentifier { get; set; }
+		//[JsonProperty( PropertyName = "ceasn:altIdentifier" )]
+		//public List<string> altIdentifier { get; set; }
 
-		[JsonProperty( PropertyName = "skos:changeNote" )]
-		public List<string> ChangeNote { get; set; }
+		//[JsonProperty( PropertyName = "skos:changeNote" )]
+		//public List<string> ChangeNote { get; set; }
 
 		[JsonProperty( PropertyName = "ceasn:conceptKeyword" )]
 		public List<string> ConceptKeyword { get; set; }
@@ -266,8 +267,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "skos:hasTopConcept" )]
 		public List<string> HasTopConcept { get; set; } = new List<string>();
 
-		[JsonProperty( PropertyName = "skos:historyNote" )]
-		public string HistoryNote { get; set; }
+		//[JsonProperty( PropertyName = "skos:historyNote" )]
+		//public string HistoryNote { get; set; }
 
 		[JsonProperty( PropertyName = "ceasn:inLanguage" )]
 		public List<string> InLanguage { get; set; } = new List<string>();

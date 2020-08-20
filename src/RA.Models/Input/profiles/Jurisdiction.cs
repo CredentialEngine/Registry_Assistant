@@ -9,10 +9,10 @@ namespace RA.Models.Input
 {
 	public class Jurisdiction
 	{
-        public Jurisdiction()
-        {
+		public Jurisdiction()
+		{
 			JurisdictionException = new List<RAPlace>();
-        }
+		}
 		public bool? GlobalJurisdiction { get; set; }
 		public string Description { get; set; }
 
@@ -23,7 +23,7 @@ namespace RA.Models.Input
 		public RAPlace MainJurisdiction { get; set; } = new RAPlace();
 
 
-        public List<RAPlace> JurisdictionException { get; set; }
+		public List<RAPlace> JurisdictionException { get; set; }
 	}
 
 	/// <summary>
@@ -41,7 +41,8 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Organization makes an assertion for specific jurisdiction(s). 
 	/// </summary>
-	public class JurisdictionAssertedInProfile 
+	[Obsolete]
+	public class JurisdictionAssertedInProfile
 	{
 		public JurisdictionAssertedInProfile()
 		{
@@ -66,7 +67,7 @@ namespace RA.Models.Input
 		public bool AssertsOfferedIn { get; set; }
 		public bool AssertsRecognizedIn { get; set; }
 		public bool AssertsRegulatedIn { get; set; }
-        public bool AssertsRenewedIn { get; set; }
+		public bool AssertsRenewedIn { get; set; }
 		public bool AssertsRevokedIn { get; set; }
 
 	}
@@ -79,8 +80,8 @@ namespace RA.Models.Input
 			//ToponymName = "";
 			Region = "";
 			Country = "";
-		//	Address = null;
-		//	Bounds = null;
+			//	Address = null;
+			//	Bounds = null;
 
 		}
 
@@ -100,14 +101,14 @@ namespace RA.Models.Input
 		/// ceterms:geoURI
 		/// Entity that describes the longitude, latitude and other location details of a place.
 		/// </summary>
-		public string GeoUri { get; set; } 
+		public string GeoUri { get; set; }
 
 		//public BoundingBox Bounds { get; set; }
 	}
 
 	public class BoundingBox
 	{
-		public bool? IsDefined { get { return !( North == 0 && South == 0 && East == 0 && West == 0 ); } }
+		public bool? IsDefined { get { return !(North == 0 && South == 0 && East == 0 && West == 0); } }
 		public decimal North { get; set; }
 		public decimal South { get; set; }
 		public decimal East { get; set; }

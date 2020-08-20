@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+
+
 namespace RA.Models.Input
 {
 	/// <summary>
@@ -84,7 +86,7 @@ namespace RA.Models.Input
 			AvailableAt = new List<Place>();
 			//CodedNotation = new List<string>();
 			Renewal = new List<ConditionProfile>();
-			
+
 			AdministrationProcess = new List<ProcessProfile>();
 			DevelopmentProcess = new List<ProcessProfile>();
 			MaintenanceProcess = new List<ProcessProfile>();
@@ -95,9 +97,7 @@ namespace RA.Models.Input
 
 		}
 
-
 		#region *** Required Properties ***
-
 
 		/// <summary>
 		/// Name of this credential
@@ -161,8 +161,6 @@ namespace RA.Models.Input
 		/// Image URL
 		/// </summary>
 		public string Image { get; set; }
-
-
 
 		/// <summary>
 		/// AvailableOnlineAt URL
@@ -232,27 +230,12 @@ namespace RA.Models.Input
 		public List<OrganizationReference> RevokedBy { get; set; }
 		#endregion
 
-
 		#region Quality Assurance IN - Jurisdiction based Quality Assurance  (INs)
 		//There are currently two separate approaches to publishing properties like assertedIn
 		//- Publish all 'IN' properties using JurisdictionAssertions
 		//- Publish using ehe separate specific properties like AccreditedIn, ApprovedIn, etc
 		// 2010-01-06 The property JurisdictionAssertions may become obsolete soon. We recomend to NOT use this property.
 
-		/// <summary>
-		/// Handling assertions in jurisdictions
-		/// The property JurisdictionAssertions is a simple approach, using one record per asserting organization - where that organization will have multiple assertion types. 
-		/// The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected.
-		/// This approach simplifies the input where the same organization asserts more than action. 
-		/// 2010-01-06 TBD - this property will LIKELY be made obsolete once any partner who has been using it has been informed.
-		/// </summary>
-		//[Obsolete]
-		//public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; } = new List<JurisdictionAssertedInProfile>();
-
-		//JurisdictionAssertion
-		//Each 'IN' property must include one or more organizations and a Main jurisdiction. Only one main jusrisdiction (and multiple exceptions) can be entered with each property.
-		//Only use this property where the organization only makes the assertion for a specific jurisdiction. 
-		//Use the 'BY' equivalent (ex. accreditedBy) where the organization makes a general assertion
 
 		/// <summary>
 		/// List of Organizations that accredit this credential in a specific Jurisdiction. 
@@ -321,6 +304,7 @@ namespace RA.Models.Input
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
 		public List<string> LearningDeliveryType { get; set; } = new List<string>();
 
+		//=============================================================================
 		//List of occupations from a published framework, that is with a web URL
 		/// <summary>
 		/// OccupationType
@@ -343,6 +327,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> ONET_Codes { get; set; } = new List<string>();
 
+		//=============================================================================
 		/// <summary>
 		/// IndustryType
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
@@ -363,6 +348,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> Naics { get; set; }
 
+		//=============================================================================
 		/// <summary>
 		/// InstructionalProgramType
 		/// Type of instructional program; select from an existing enumeration of such types.
@@ -395,6 +381,14 @@ namespace RA.Models.Input
 		public LanguageMapList DegreeMinor_Map { get; set; } = new LanguageMapList();
 		#endregion
 
+		#region Properties allowed only for a Quality Assurance Credential
+
+		/// <summary>
+		/// Only valid with a Quality Assurance credential.
+		/// List of CTIDs for credentials, or assessments, or learning opportunities that are 'members' of this quality assurance credential (essentially approved by the owner of the QA credential
+		/// </summary>
+		public List<string> HasETPLResource { get; set; } = new List<string>();
+		#endregion
 		//external classes
 		/// <summary>
 		/// List of CTIDs or full URLs for a CostManifest published by the owning organization
@@ -417,6 +411,7 @@ namespace RA.Models.Input
 		/// Entity that describes financial assistance that is offered or available.
 		/// </summary>
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
+
 
 		/// <summary>
 		/// Geographic or political region in which the credential is formally applicable or an organization has authority to act.
