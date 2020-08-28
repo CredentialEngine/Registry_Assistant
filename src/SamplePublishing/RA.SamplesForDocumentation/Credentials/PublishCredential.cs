@@ -75,10 +75,10 @@ namespace RA.SamplesForDocumentation
 			//Add organization that is not in the credential registry
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{
-				Type= "CredentialOrganization",
-				Name= "Council on Social Work Education (CSWE)",
-				SubjectWebpage= "https://www.cswe.org/", 
-				Description= "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
+				Type = "CredentialOrganization",
+				Name = "Council on Social Work Education (CSWE)",
+				SubjectWebpage = "https://www.cswe.org/",
+				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
 			} );
 
 			//add occupations
@@ -100,12 +100,12 @@ namespace RA.SamplesForDocumentation
 			//Serialize the credential request object
 			var payload = JsonConvert.SerializeObject( myRequest );
 			//call the Assistant API
-			result = new SampleServices().SimplePost( "credential","publish", payload, apiKey );
+			result = new SampleServices().SimplePost( "credential", "publish", payload, apiKey );
 
 			return result;
 		}
 
-		public string PublishSimpleRecord()
+		public string PublishSimpleRecord( string requestType = "publish" )
 		{
 			//Holds the result of the publish action
 			var result = "";
@@ -162,26 +162,14 @@ namespace RA.SamplesForDocumentation
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//Serialize the credential request object
-			var jsonPayload = JsonConvert.SerializeObject( myRequest );
-			//Use HttpClient to perform the publish
-			using ( var client = new HttpClient() )
-			{
-				//Accept JSON
-				client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
-				//add API Key (for a publish request)
-				client.DefaultRequestHeaders.Add( "Authorization", "ApiToken " + apiKey );
-				//Format the json as content
-				var content = new StringContent( jsonPayload, Encoding.UTF8, "application/json" );
-				//The endpoint to publish to
-				var publishEndpoint = "https://sandbox.credentialengine.org/assistant/credential/publish/";
-				//Perform the actual publish action and store the result
-				result = client.PostAsync( publishEndpoint, content ).Result.Content.ReadAsStringAsync().Result;
-			}
+			var payload = JsonConvert.SerializeObject( myRequest );
+			//call the Assistant API
+			result = new SampleServices().SimplePost( "credential", requestType, payload, apiKey );
 			//Return the result
 			return result;
 		}
 
-		public string PublishQACredentialWithETPL()
+		public string PublishQACredentialWithETPL( string requestType = "publish" )
 		{
 			//Holds the result of the publish action
 			var result = "";
@@ -219,21 +207,9 @@ namespace RA.SamplesForDocumentation
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//Serialize the credential request object
-			var jsonPayload = JsonConvert.SerializeObject( myRequest );
-			//Use HttpClient to perform the publish
-			using ( var client = new HttpClient() )
-			{
-				//Accept JSON
-				client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
-				//add API Key (for a publish request)
-				client.DefaultRequestHeaders.Add( "Authorization", "ApiToken " + apiKey );
-				//Format the json as content
-				var content = new StringContent( jsonPayload, Encoding.UTF8, "application/json" );
-				//The endpoint to publish to
-				var publishEndpoint = "https://sandbox.credentialengine.org/assistant/credential/publish/";
-				//Perform the actual publish action and store the result
-				result = client.PostAsync( publishEndpoint, content ).Result.Content.ReadAsStringAsync().Result;
-			}
+			var payload = JsonConvert.SerializeObject( myRequest );
+			//call the Assistant API
+			result = new SampleServices().SimplePost( "credential", requestType, payload, apiKey );
 			//Return the result
 			return result;
 		}
