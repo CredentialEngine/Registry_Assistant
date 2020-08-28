@@ -49,8 +49,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Ctid { get; set; }
 
-		//20-08-05 no longer on credReg.net
-		//public List<string> AltIdentifier { get; set; } = new List<string>();
+		public List<string> AltIdentifier { get; set; } = new List<string>();
 
 		//20-08-05 no longer on credReg.net
 		//public List<string> ChangeNote { get; set; } = new List<string>();

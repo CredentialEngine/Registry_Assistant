@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Odbc;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -38,15 +39,14 @@ namespace RA.Services
 		public static string environment = UtilityManager.GetAppKeyValue( "environment", "unknown" );
 		public static int GraphTypeUrl = 1;
 		public static int ResourceTypeUrl = 2;
-		//public string credRegistryResourceUrl = GetAppKeyValue( "credRegistryResourceUrl" );
-		//public string credRegistryGraphUrl = GetAppKeyValue( "credRegistryGraphUrl" );
+
 		public bool ConvertingFromResourceLinkToGraphLink = UtilityManager.GetAppKeyValue( "ConvertingFromResourceLinkToGraphLink", false );
 		public bool ConvertingFromGraphLinkToResourceLink = UtilityManager.GetAppKeyValue( "ConvertingFromGraphLinkToResourceLink", false );
 
 		public string credentialRegistryBaseUrl = GetAppKeyValue( "credentialRegistryBaseUrl" );
 		public string credentialFinderDetailUrl = GetAppKeyValue( "credentialFinderDetailUrl" );
 		public bool isFrameworkDateCreatedRequired = GetAppKeyValue( "frameworkDateCreatedIsRequired", true );
-		public bool isFrameworkCreatorRequired = GetAppKeyValue( "frameworkCreatorIsRequired", true );
+		public bool isFrameworkCreatorRequired = GetAppKeyValue( "frameworkCreatorIsRequired", false );
 		public bool isFrameworkPublisherRequired = GetAppKeyValue( "frameworkPublisherIsRequired", true );
 		//use of this is mostly for previously published frameworks when doing a mass republish 
 		//	- could add to the actual request and only allow for CE api?
@@ -59,13 +59,14 @@ namespace RA.Services
 		public static string LanguageCodes_3Characters = "eng deu spa fra ara ces dan ell fin heb ita jnp nld nor pol por swe ukr zho";
 		public bool IsAPublishRequest = true;
 
+		//20-08-23 mp - may want to change this to an interface to handle additions to org and entity blank nodes
 		public List<MJ.BlankNode> BlankNodes = new List<MJ.BlankNode>();
 		//set to true for scenarios like a deprecated credential, where need allow publishing even if urls are invalid!
 		public bool WarnOnInvalidUrls = false;
 		public string codeValidationType = UtilityManager.GetAppKeyValue( "conceptSchemesValidation", "warn" );
 		public bool usingSingleDirectCost = UtilityManager.GetAppKeyValue( "usingSingleDirectCost", false );
-		public static int MinimumDescriptionLength = UtilityManager.GetAppKeyValue( "minDescriptionTextLength", 25 );
-		public static int NavyMinimumDescriptionLength = UtilityManager.GetAppKeyValue( "navyMinDescriptionTextLength", 25 );
+		public static int MinimumDescriptionLength = UtilityManager.GetAppKeyValue( "minDescriptionTextLength", 15 );
+		public static int NavyMinimumDescriptionLength = UtilityManager.GetAppKeyValue( "navyMinDescriptionTextLength", 15 );
 
 		//consider using a global messages property to avoid passing around and having to retro add to old methods, etc
 		public List<string> Messages = new List<string>();
@@ -78,7 +79,9 @@ namespace RA.Services
 		public string Community = "";
 		public string CurrentCtid = "";
 		public string LastProfileType = "";
-
+		//temporary property controls
+		public bool allowingBaseSalary = UtilityManager.GetAppKeyValue( "allowingBaseSalary", false );
+		public bool allowingETPLData = UtilityManager.GetAppKeyValue( "allowingETPLData", false );
 		//
 		/// <summary>
 		/// Session variable for message to display in the system console
@@ -141,20 +144,28 @@ namespace RA.Services
 		}
 		#endregion
 
-		public void CheckIfChanged( RequestHelper helper, bool wasEnvelopeUpdated )
+		public void CheckIfChanged( RequestHelper rhelper, bool wasEnvelopeUpdated )
 		{
-			helper.WasChanged = wasEnvelopeUpdated;
-			if ( !helper.WasChanged )
-				helper.AddWarning( "NOTE: The credential registry envelope was NOT updated as the input data was the same as the data on the current envelope." );
+			rhelper.WasChanged = wasEnvelopeUpdated;
+			if ( !rhelper.WasChanged )
+				rhelper.AddWarning( "NOTE: The credential registry envelope was NOT updated as the input data was the same as the data on the current envelope." );
 		}
 
-		public string FormatCtid( string ctid, string property, ref List<string> messages )
+		/// <summary>
+		/// This method is intended for use for the top level CTID which is required. 
+		/// </summary>
+		/// <param name="ctid"></param>
+		/// <param name="property"></param>
+		/// <param name="messages"></param>
+		/// <param name="isRequired"></param>
+		/// <returns></returns>
+		public string FormatCtid( string ctid, string property, ref List<string> messages, bool isRequired = true )
 		{
 			//todo determine if will generate where not found
-			if ( string.IsNullOrWhiteSpace( ctid ) && GeneratingCtidIfNotFound() )
-				ctid = GenerateCtid();
+			//if ( string.IsNullOrWhiteSpace( ctid ) && GeneratingCtidIfNotFound() )
+			//	ctid = GenerateCtid();
 
-			if ( IsCtidValid( ctid, property, ref messages ) )
+			if ( IsCtidValid( ctid, property, ref messages, isRequired ) )
 			{
 				//can't do this yet, as the registry may treat an existing records as new!!!
 				//if ( UtilityManager.GetAppKeyValue( "forceCtidToLowerCase", false ) )
@@ -179,23 +190,24 @@ namespace RA.Services
 			return ctid;
 		}
 
-		public string AddBlankNode( string type, string name, string description, string subjectWebpage )
+		//public string AddBlankNode( string type, string name, string description, string subjectWebpage )
+		//{
+		//	string bnodeId = "";
+		//	if ( DoesBNodeExist( name, description, subjectWebpage, ref bnodeId ) )
+		//	{
+		//		return bnodeId;
+		//	}
+		//	MJ.BlankNode bn = new MJ.BlankNode() { BNodeId = GenerateBNodeId(), Type = type, SubjectWebpage = subjectWebpage ?? "" };
+		//	bn.Name = Assign( name, DefaultLanguageForMaps );
+		//	bn.Description = Assign( "BlankNode.Description", description, DefaultLanguageForMaps );
+		//	BlankNodes.Add( bn );
+		//	return bn.BNodeId;
+		//}
+		public string AddEntityReferenceBlankNode( EntityBase input )
 		{
 			string bnodeId = "";
-			if ( DoesBNodeExist( name, description, subjectWebpage, ref bnodeId ) )
-			{
-				return bnodeId;
-			}
-			MJ.BlankNode bn = new MJ.BlankNode() { BNodeId = GenerateBNodeId(), Type = type, SubjectWebpage = subjectWebpage ?? "" };
-			bn.Name = Assign( name, DefaultLanguageForMaps );
-			bn.Description = Assign( "BlankNode.Description", description, DefaultLanguageForMaps );
-			BlankNodes.Add( bn );
-			return bn.BNodeId;
-		}
-		public string AddBlankNode( EntityBase input )
-		{
-			string bnodeId = "";
-			if ( DoesBNodeExist( input.Name, input.Description, input.SubjectWebpage, ref bnodeId ) )
+			//20-08-23 mp - maybe should include type. Especially where subject webpage may not always be required
+			if ( DoesBNodeExist( input.Type, input.Name, input.SubjectWebpage, ref bnodeId ) )
 			{
 				return bnodeId;
 			}
@@ -203,6 +215,7 @@ namespace RA.Services
 			MJ.BlankNode bn = new MJ.BlankNode() { BNodeId = GenerateBNodeId(), Type = input.Type, SubjectWebpage = input.SubjectWebpage ?? "" };
 			bn.Name = Assign( input.Name, DefaultLanguageForMaps );
 			bn.Description = Assign( "BlankNode.Description", input.Description, DefaultLanguageForMaps );
+
 			//flat assignments? Assumes proper checks and assignments have already occurred.
 			if ( input.Assesses != null && input.Assesses.Count() > 0)
 				bn.Assesses = input.Assesses;
@@ -215,10 +228,13 @@ namespace RA.Services
 			if ( input.EstimatedDuration != null && input.EstimatedDuration.Count() > 0 )
 				bn.EstimatedDuration = input.EstimatedDuration;
 			bn.LearningMethodDescription = input.LearningMethodDescription;
+			//
 			if ( input.OfferedBy != null && input.OfferedBy.Count() > 0 )
 				bn.OfferedBy = input.OfferedBy;
 			if ( input.OwnedBy != null && input.OwnedBy.Count() > 0 )
 				bn.OwnedBy = input.OwnedBy;
+			if ( input.Subject != null && input.Subject.Count() > 0 )
+				bn.Subject = input.Subject;
 			if ( input.Teaches != null && input.Teaches.Count() > 0 )
 				bn.Teaches = input.Teaches;
 
@@ -227,16 +243,27 @@ namespace RA.Services
 			return bn.BNodeId;
 		}
 
-		public string AddBlankNode( OrganizationBase entityBase )
+		public string AddOrganizationBlankNode( OrganizationBase input )
 		{
 			string bnodeId = "";
-			if ( DoesBNodeExist( entityBase.Name, entityBase.Description, entityBase.SubjectWebpage, ref bnodeId ) )
+			//20-08-23 mp - maybe should include type. Especially where subject webpage may not always be required
+			if ( DoesBNodeExist( input.Type, input.Name, input.SubjectWebpage, ref bnodeId ) )
 			{
 				return bnodeId;
 			}
-			MJ.BlankNode bn = new MJ.BlankNode() { BNodeId = GenerateBNodeId(), Type = entityBase.Type, SubjectWebpage = entityBase.SubjectWebpage ?? "" };
-			bn.Name = Assign( entityBase.Name, DefaultLanguageForMaps );
-			bn.Description = Assign( "BlankNode.Description", entityBase.Description, DefaultLanguageForMaps );
+			MJ.BlankNode bn = new MJ.BlankNode() { BNodeId = GenerateBNodeId(), Type = input.Type, SubjectWebpage = input.SubjectWebpage ?? "" };
+			bn.Name = Assign( input.Name, DefaultLanguageForMaps );
+			bn.Description = Assign( "BlankNode.Description", input.Description, DefaultLanguageForMaps );
+			//
+			if ( input.Address != null && input.Address.Count() > 0 )
+				bn.Address = input.Address;
+			if ( input.AvailabilityListing != null && input.AvailabilityListing.Count() > 0 )
+				bn.AvailabilityListing = input.AvailabilityListing;
+			if ( input.Email != null && input.Email.Count() > 0 )
+				bn.Email = input.Email;
+			if ( input.SocialMedia != null && input.SocialMedia.Count() > 0 )
+				bn.SocialMedia = input.SocialMedia;
+
 			BlankNodes.Add( bn );
 			return bn.BNodeId;
 		}
@@ -246,12 +273,11 @@ namespace RA.Services
 
 			return bid;
 		}
-		public bool DoesBNodeExist( string name, string description, string subjectWebpage, ref string bnodeId )
+		public bool DoesBNodeExist( string type, string name, string subjectWebpage, ref string bnodeId )
 		{
-			bool found = false;
-			description = description ?? "";
 			subjectWebpage = subjectWebpage ?? "";
-			var exists = BlankNodes.FirstOrDefault( a => a.Name.ToString( DefaultLanguageForMaps ).ToLower() == name.ToLower()
+			var exists = BlankNodes.FirstOrDefault( a => a.Type == type 
+					&& a.Name.ToString( DefaultLanguageForMaps ).ToLower() == name.ToLower()
 					&& a.SubjectWebpage.ToLower() == subjectWebpage.ToLower()
 					);
 			if ( exists != null && ( exists.Name.ToString( DefaultLanguageForMaps ) ?? "" ).Length > 0 )
@@ -259,7 +285,7 @@ namespace RA.Services
 				bnodeId = exists.BNodeId;
 				return true;
 			}
-			return found;
+			return false;
 		}
 
 
@@ -297,6 +323,39 @@ namespace RA.Services
 			else
 				return output;
 		}
+
+		/// <summary>
+		/// An entity reference for a TVP requires owned by or offered by
+		/// </summary>
+		/// <param name="input"></param>
+		/// <param name="entityProperty"></param>
+		/// <param name="dataIsRequired"></param>
+		/// <param name="messages"></param>
+		/// <returns></returns>
+		public List<string> FormatTVPEntityReferencesList( List<EntityReference> input, string entityProperty, bool dataIsRequired, //may not be necessary 	   
+			ref List<string> messages )
+		{
+			if ( input == null || input.Count == 0 )
+				return null;
+
+			List<string> output = new List<string>();
+			string idUrl = "";
+			foreach ( var target in input )
+			{
+				//SWP will not be required for a TVP blank node
+				if ( FormatEntityReference( target, entityProperty, ref idUrl, dataIsRequired, ref messages, true, true ) )
+				{
+					if ( !string.IsNullOrWhiteSpace( idUrl ) )
+					{
+						output.Add( idUrl );
+					}
+				}
+			}
+			if ( output.Count == 0 )
+				return null;
+			else
+				return output;
+		}
 		/// <summary>
 		/// Format an entity reference
 		/// If classSchema is present, it will be assumed to be valid. Otherwise entity.Type will be validated
@@ -312,7 +371,9 @@ namespace RA.Services
 				string entityProperty,
 				ref string idUrl,
 				bool dataIsRequired,
-				ref List<string> messages )
+				ref List<string> messages,
+				bool requiresOwnedOffered = false,
+				bool canHavePartialAddress = false )
 		{
 			bool hasData = false;
 			bool isValid = true;
@@ -366,13 +427,13 @@ namespace RA.Services
 					return false;
 				output.NegateNonIdProperties();
 				//maybe this should be resource
-				//idUrl = credRegistryGraphUrl + input.CTID.ToLower();
 				idUrl = SupportServices.FormatRegistryUrl( ResourceTypeUrl, input.CTID.ToLower(), Community );
 				return true;
 			}
 
 			// ============================================================
 			//helper.ReturnedDataType = 2;
+			//SWP not required for TVP context
 			if ( dataIsRequired && input.HasNecessaryProperties() == false )
 			{
 				messages.Add( string.Format( "Invalid Entity reference for {0}. Either a resolvable URL must be provided in the Id property, or all of the following properties are expected: Type: {0}, Name: {1}, and Subject Webpage {2}.", !string.IsNullOrWhiteSpace( input.Type ) ? input.Type : entityProperty, input.Name, input.SubjectWebpage ) );
@@ -381,6 +442,7 @@ namespace RA.Services
 
 			//if classSchema empty, the input.Type must be a valid type
 			string validSchema = "";
+			bool entityTypeMissing = string.IsNullOrWhiteSpace( input.Type );
 			//start by validating input type
 			if ( ValidationServices.IsSchemaNameValid( input.Type, ref validSchema ) )
 				output.Type = validSchema;
@@ -390,7 +452,11 @@ namespace RA.Services
 			}
 			else
 			{
-				messages.Add( string.Format( "Invalid Entity Type of {0} for Name: {1}, SubjectWebpage: {2}. ", input.Type ?? "missing", input.Name, input.SubjectWebpage ) );
+				if ( entityTypeMissing )
+				{
+					messages.Add( string.Format( "Error: an  Entity Type is required and was not entered for property: {0},  Name: {1}, SubjectWebpage: {2}. Examples of valid Entity types include: AssessmentProfile, LearningOpportunityProfile, BachelorDegree.", entityProperty, input.Name, input.SubjectWebpage ) );
+				} else 
+					messages.Add( string.Format( "Invalid Entity Type of '{0}' for property: {1},  Name: {2}, SubjectWebpage: {3}. ", input.Type ?? "missing", entityProperty, input.Name, input.SubjectWebpage ) );
 				return false;
 			}
 
@@ -403,7 +469,7 @@ namespace RA.Services
 
 			if ( string.IsNullOrWhiteSpace( input.Name ) )
 			{
-				messages.Add( string.Format( "A Name must be entered with a reference for {0}.", output.Type ) );
+				messages.Add( string.Format( "A Name must be entered for property: {0} with a reference for {1}.", entityProperty, output.Type ) );
 			}
 			else
 			{
@@ -417,13 +483,17 @@ namespace RA.Services
 
 			if ( string.IsNullOrWhiteSpace( input.SubjectWebpage ) )
 			{
-				messages.Add( string.Format( "A Subject Webpage must be entered with input reference for {0}.", output.Type ) );
+				if (entityProperty.IndexOf("TransferValue") > -1 && UtilityManager.GetAppKeyValue( "tvp.isSWPRequiredForReferences", false ) == false )
+				{  //allow
+				}
+				else 
+					messages.Add( string.Format( "A Subject Webpage must be entered for property: {0} with a reference for {1}.", entityProperty, output.Type ) );
 			}
 			else
 			if ( !IsUrlValid( input.SubjectWebpage, ref statusMessage, ref isUrlPresent ) )
 			{
 				//NOTE: for an input reference require valid even if credential is deprecated
-				messages.Add( string.Format( "The Subject Webpage '{0}' for '{1}' is invalid: {2}", input.SubjectWebpage, output.Name, statusMessage ) );
+				messages.Add( string.Format( "The Subject Webpage '{0}' for '{1}-{2}' is invalid: {3}", input.SubjectWebpage, entityProperty, output.Name, statusMessage ) );
 			}
 			else
 			{
@@ -445,22 +515,37 @@ namespace RA.Services
 			//
 			output.AssessmentMethodDescription = AssignLanguageMap( input.AssessmentMethodDescription, input.AssessmentMethodDescription_Map, "AssessmentMethodDescription", DefaultLanguageForMaps, ref messages, false, MinimumDescriptionLength );
 			//
-			output.AvailableAt = FormatAvailableAtList( input.AvailableAt, ref messages );
+			output.AvailableAt = FormatAvailableAtList( input.AvailableAt, ref messages, canHavePartialAddress );
 			//
 			output.CodedNotation = input.CodedNotation;
 			//
 			output.CreditValue = AssignQuantitiveValueToList( input.CreditValue, "CreditValue", validSchema + "-" + entityProperty, ref messages );
 			//
-			output.EstimatedDuration = FormatDuration( input.EstimatedDuration, ref messages );
+			output.EstimatedDuration = FormatDuration( input.EstimatedDuration, entityProperty, ref messages );
 			//
 			output.LearningMethodDescription = AssignLanguageMap( input.LearningMethodDescription, input.LearningMethodDescription_Map, "LearningMethodDescription", DefaultLanguageForMaps, ref messages, false, MinimumDescriptionLength );
+			if ( input.LearningMethodType.Any() )
+				foreach ( string item in input.LearningMethodType )
+					output.LearningMethodType.Add( FormatCredentialAlignment( "learningMethodType", item, ref messages ) );
+			else
+				output.LearningMethodType = null;
 			//
-			output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, validSchema + "-" + entityProperty + "Offered By", false, ref messages );
+			output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, validSchema + "-" + entityProperty + "Offered By", false, ref messages, false, true );
 			//
-			output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, validSchema + "-" + entityProperty + "Owned By", false, ref messages );
+			output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, validSchema + "-" + entityProperty + "Owned By", false, ref messages, false, true );
+			//
+			output.Subject = FormatCredentialAlignmentListFromStrings( input.Subject, input.Subject_Map );
+			//
 
-			//
-
+			if ( requiresOwnedOffered )
+			{
+				if (	(output.OwnedBy == null		|| !output.OwnedBy.Any()) 
+				&&		(output.OfferedBy == null	|| !output.OfferedBy.Any()) )
+				{
+					isValid = false;
+					messages.Add( string.Format("Invalid Entity reference for a '{0}'. Either OwnedBy or OfferedBy must be must provided in the '{1}' property.", output.Type, entityProperty ) );
+				}
+			}
 			//ensure have minimum data
 			if ( !hasData )
 			{
@@ -472,8 +557,7 @@ namespace RA.Services
 			}
 			else
 			{
-				idUrl = AddBlankNode( output );
-				//helper.EntityBaseList.Add( entityBase );
+				idUrl = AddEntityReferenceBlankNode( output );
 			}
 
 			if ( messages.Count > msgcount )
@@ -525,7 +609,8 @@ namespace RA.Services
 					string propertyName,
 					bool dataIsRequired,
 					ref List<string> messages,
-					bool isQAOrgReference = false )
+					bool isQAOrgReference = false,
+					bool mustExistInRegistry = false )
 		{
 			if ( orgReference == null )
 				return null;
@@ -539,7 +624,7 @@ namespace RA.Services
 			else if ( orgReference.GetType() == typeof( OrganizationReference ) )
 			{
 				input = orgReference as OrganizationReference;
-				return FormatOrganizationReferenceToList( input, propertyName, dataIsRequired, ref messages, isQAOrgReference );
+				return FormatOrganizationReferenceToList( input, propertyName, dataIsRequired, ref messages, isQAOrgReference, true );
 			}
 			else if ( orgReference.GetType() == typeof( Newtonsoft.Json.Linq.JObject ) )
 			{
@@ -572,7 +657,7 @@ namespace RA.Services
 				//{
 				//    input = new OrganizationReference() { Id = item.First.ToString() };
 				//}
-				return FormatOrganizationReferences( items, propertyName, dataIsRequired, ref messages, isQAOrgReference );
+				return FormatOrganizationReferences( items, propertyName, dataIsRequired, ref messages, isQAOrgReference, mustExistInRegistry );
 			}
 			else if ( orgReference.GetType() == typeof( string ) )
 			{
@@ -581,7 +666,7 @@ namespace RA.Services
 				var orgList = new List<string>();
 				var result = AssignRegistryResourceURIAsString( item, propertyName, ref messages, false, false );
 
-				return FormatOrganizationReferenceToList( input, propertyName, dataIsRequired, ref messages, isQAOrgReference );
+				return FormatOrganizationReferenceToList( input, propertyName, dataIsRequired, ref messages, isQAOrgReference, mustExistInRegistry );
 			}
 			else
 			{
@@ -604,17 +689,24 @@ namespace RA.Services
 			   string propertyName,
 			   bool dataIsRequired,
 			   ref List<string> messages,
-				bool isQAOrgReference = false )
+				bool isQAOrgReference = false,
+				bool mustExistInRegistry = false)
 		{
 			if ( input == null || input.Count == 0 )
+			{
+				if ( dataIsRequired )
+				{
+					messages.Add( string.Format("Error: {0} is a required property and was not provided. " ,propertyName ));
+				}
 				return null;
+			}
 
 			List<string> output = new List<string>();
 			string idUrl = "";
-			EntityReferenceHelper helper = new EntityReferenceHelper();
+			//EntityReferenceHelper helper = new EntityReferenceHelper();
 			foreach ( var target in input )
 			{
-				if ( FormatOrganizationReference( target, propertyName, ref idUrl, dataIsRequired, ref messages, isQAOrgReference ) )
+				if ( FormatOrganizationReference( target, propertyName, ref idUrl, dataIsRequired, ref messages, isQAOrgReference, mustExistInRegistry ) )
 				{
 					if ( !string.IsNullOrWhiteSpace( idUrl ) )
 					{
@@ -642,12 +734,13 @@ namespace RA.Services
 			   string propertyName,
 			   bool dataIsRequired,
 			   ref List<string> messages,
-				bool isQAOrgReference = false )
+				bool isQAOrgReference = false,
+				bool mustExistInRegistry = false )
 		{
 			List<string> output = new List<string>();
-			EntityReferenceHelper helper = new EntityReferenceHelper();
+			//EntityReferenceHelper helper = new EntityReferenceHelper();
 			string idUrl = "";
-			if ( FormatOrganizationReference( input, propertyName, ref idUrl, dataIsRequired, ref messages, isQAOrgReference ) )
+			if ( FormatOrganizationReference( input, propertyName, ref idUrl, dataIsRequired, ref messages, isQAOrgReference, mustExistInRegistry ) )
 			{
 				if ( !string.IsNullOrWhiteSpace( idUrl ) )
 				{
@@ -669,19 +762,21 @@ namespace RA.Services
 		/// - subject webpage
 		/// - description
 		/// </summary>
-		/// <param name="entity">OrganizationReference</param>
+		/// <param name="input">OrganizationReference</param>
 		/// <param name="propertyName">CTDL Property</param>
-		/// <param name="helper"></param>
+		/// <param name="helper">CURRENTL NOT USED</param>
 		/// <param name="dataIsRequired"></param>
 		/// <param name="messages"></param>
 		/// <param name="isQAOrgReference"></param>
+		/// <param name="mustExistInRegistry">If True, and a CTID was provided, will do a lookup to ensure already exists.</param>
 		/// <returns></returns>
-		public bool FormatOrganizationReference( OrganizationReference entity,
+		public bool FormatOrganizationReference( OrganizationReference input,
 				string propertyName,
 				ref string idUrl,
 				bool dataIsRequired,
 				ref List<string> messages,
-				bool isQAOrgReference = false )
+				bool isQAOrgReference = false,
+				bool mustExistInRegistry = false)
 		{
 			bool hasData = false;
 			bool isValid = true;
@@ -690,12 +785,17 @@ namespace RA.Services
 			bool isUrlPresent = true;
 			EntityReferenceHelper helper = new EntityReferenceHelper();
 			OrganizationBase org = new OrganizationBase();
+
+			//this could just be done in FormatOrganizationReference
+			var referencesToOrgCtidMustExistInRegistry = UtilityManager.GetAppKeyValue( "referencesToOrgCtidMustExistInRegistry", false );
+			if ( referencesToOrgCtidMustExistInRegistry )
+				mustExistInRegistry = true;
+
 			//org.Context = null;
 			//just in case
 			//helper.OrgBaseList = new List<OrganizationBase>();
 
-
-			if ( entity == null || entity.IsEmpty() )
+			if ( input == null || input.IsEmpty() )
 			{
 				if ( dataIsRequired )
 					messages.Add( string.Format( "Error - a valid organization reference is required for {0}", propertyName ) );
@@ -705,28 +805,31 @@ namespace RA.Services
 
 			string statusMessage = "";
 
-			if ( !string.IsNullOrWhiteSpace( entity.Id ) )
+			if ( !string.IsNullOrWhiteSpace( input.Id ) )
 			{
 				//if valid url, then format as an id property and return
 				//Note: should this be resolvable, or just a valid uri?
 				//17-10-10 - no may not be resolvable if not yet published. Added false parm for IsUrlValid, so no url check will be done
-				if ( IsUrlValid( entity.Id, ref statusMessage, ref isUrlPresent, false ) )
+				//20-07-22 mp - made the check configurable. It is reasonable that for the properties of ownedBy and offeredBy, the records should have been published
+				//				??should there be exceptions for the sandbox?
+				//				NO - just use a reference if org not published
+				if ( IsUrlValid( input.Id, ref statusMessage, ref isUrlPresent, mustExistInRegistry ) )
 				{
 					//TODO - should convert from /resource/ to /graph/ as needed
 					//need to consider where caller had legitimate reason to use /graph
 					if ( ConvertingFromResourceLinkToGraphLink )
 					{
-						entity.Id = entity.Id.Replace( "/resources/ce-", "/graph/ce-" );
+						input.Id = input.Id.Replace( "/resources/ce-", "/graph/ce-" );
 					}
 					else if ( ConvertingFromGraphLinkToResourceLink )
 					{
 						//go the other way
-						entity.Id = entity.Id.Replace( "/graph/ce-", "/resources/ce-" );
+						input.Id = input.Id.Replace( "/graph/ce-", "/resources/ce-" );
 					} else
 					{
 						//laissez-faire
 					}
-					idUrl = entity.Id.ToLower();
+					idUrl = input.Id.ToLower();
 
 					org.NegateNonIdProperties();
 
@@ -744,25 +847,42 @@ namespace RA.Services
 					return false;
 				}
 			}
-			else if ( !string.IsNullOrWhiteSpace( entity.CTID ) )
+			else if ( !string.IsNullOrWhiteSpace( input.CTID ) )
 			{
-				if ( !IsCtidValid( entity.CTID, propertyName, ref messages ) )
+				if ( !IsCtidValid( input.CTID, propertyName, ref messages ) )
 					return false;
 				org.NegateNonIdProperties();
-				//???????????????????
-				//idUrl = credRegistryGraphUrl + entity.CTID.ToLower();
 				//maybe this should be resource
-				//idUrl = credRegistryGraphUrl + entity.CTID.ToLower();
-				idUrl = SupportServices.FormatRegistryUrl( ResourceTypeUrl, entity.CTID.ToLower(), Community );
+				//if ( entity.CTID.ToLower() == "ce-6a62b250-a1a2-4d31-a702-cdc2437efd31" && DateTime.Now.ToString( "yyyy-MM-dd" ) == "2020-05-22" )
+				//{
+				//	//temp workaround for nocti issue
+				//	idUrl = SupportServices.FormatRegistryUrl( GraphTypeUrl, entity.CTID.ToLower(), Community );
+				//} else 
+					idUrl = SupportServices.FormatRegistryUrl( ResourceTypeUrl, input.CTID.ToLower(), Community );
+				if ( mustExistInRegistry)
+				{
+					if (!IsUrlValid( idUrl, ref statusMessage, ref isUrlPresent, true ))
+					{
+						if ( environment == "development" || environment == "sandbox" )
+						{
+							warningMessages.Add( string.Format( "WARNING: When a CTID ({0}) is provided for the property: '{1}', the related document must exist in the registry. NOTE: outside the sandbox, this would be an error! {2}", input.CTID, propertyName, statusMessage ) );
+						}
+						else
+						{
+							messages.Add( string.Format( "Error: When a CTID ({0}) is provided for the property: '{1}', the related document must exist in the registry. {2}", input.CTID, propertyName, statusMessage ) );
+							return false;
+						}
+					}
+				}
+
 				return true;
 			}
 
 			// ============================================================
 
-			//helper.ReturnedDataType = 2;
-			if ( dataIsRequired && entity.HasNecessaryProperties() == false )
+			if ( dataIsRequired && input.HasNecessaryProperties() == false )
 			{
-				messages.Add( string.Format( "Invalid Organization reference for {0}. Either a resolvable URL must be provided in the Id property, or all of the following properties are expected: Type: {0}, Name: {1}, and Subject Webpage {2}, and optionally Social Media.", propertyName, entity.Name, entity.SubjectWebpage ) );
+				messages.Add( string.Format( "Invalid Organization reference for {0}. Either a resolvable URL must be provided in the Id property, or all of the following properties are expected: Type: {0}, Name: {1}, and Subject Webpage {2}, and optionally Social Media.", propertyName, input.Name, input.SubjectWebpage ) );
 				return false;
 			}
 
@@ -771,13 +891,13 @@ namespace RA.Services
 			//at this point, all data should be present
 			//there is no reason to provide an org ref id not
 			int msgcount = messages.Count();
-			if ( string.IsNullOrWhiteSpace( entity.Name ) )
+			if ( string.IsNullOrWhiteSpace( input.Name ) )
 			{
 				messages.Add( string.Format( "A Name must be entered with a reference for {0}.", org.Type ) );
 			}
 			else
 			{
-				org.Name = entity.Name;
+				org.Name = input.Name;
 				hasData = true;
 			}
 			//a type must be provided
@@ -787,7 +907,7 @@ namespace RA.Services
 			string orgType = "";
 			bool isQAOrgReferenceType = false;
 
-			if ( ValidateOrgType( entity.Type, ref orgType, ref isQAOrgReferenceType, ref messages ) )
+			if ( ValidateOrgType( input.Type, ref orgType, ref isQAOrgReferenceType, ref messages ) )
 			{
 				org.Type = orgType;
 				//may need check for being QA if for a QA connection
@@ -806,33 +926,33 @@ namespace RA.Services
 			}
 
 
-			if ( !string.IsNullOrWhiteSpace( entity.Description ) )
+			if ( !string.IsNullOrWhiteSpace( input.Description ) )
 			{
-				org.Description = entity.Description;
+				org.Description = input.Description;
 				//hasData = true;
 			}
 
-			if ( string.IsNullOrWhiteSpace( entity.SubjectWebpage ) )
+			if ( string.IsNullOrWhiteSpace( input.SubjectWebpage ) )
 			{
 				messages.Add( string.Format( "A Subject Webpage must be entered with organization reference for {0}.", propertyName ) );
 			}
 			else
-		   if ( !IsUrlValid( entity.SubjectWebpage, ref statusMessage, ref isUrlPresent ) )
+		   if ( !IsUrlValid( input.SubjectWebpage, ref statusMessage, ref isUrlPresent ) )
 			{
 				//NOTE: for an org reference require valid even if credential is deprecated
-				messages.Add( string.Format( "The Subject Webpage of: '{0}', for property: '{1}' Organization: '{2}' is invalid: {3}", entity.SubjectWebpage, propertyName, org.Name, statusMessage ) );
+				messages.Add( string.Format( "The Subject Webpage of: '{0}', for property: '{1}' Organization: '{2}' is invalid: {3}", input.SubjectWebpage, propertyName, org.Name, statusMessage ) );
 			}
 			else
 			{
 				if ( isUrlPresent )
 				{
-					org.SubjectWebpage = AssignValidUrlAsString( entity.SubjectWebpage, "Organization reference Subject Webpage", ref messages, true );
+					org.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Organization reference Subject Webpage", ref messages, true );
 				}
 			}
 
-			if ( entity.SocialMedia != null && entity.SocialMedia.Count() > 0 )
+			if ( input.SocialMedia != null && input.SocialMedia.Count() > 0 )
 			{
-				foreach ( var url in entity.SocialMedia )
+				foreach ( var url in input.SocialMedia )
 				{
 					statusMessage = "";
 					if ( !IsUrlValid( url, ref statusMessage, ref isUrlPresent ) )
@@ -845,9 +965,16 @@ namespace RA.Services
 						}
 					}
 				}
-
+			}
+			//
+			if ( input.Email != null && input.Email.Count() > 0 )
+			{
+				org.Email = input.Email;
 			}
 
+			org.Address = FormatPlacesList( input.Address, ref messages, false, true );
+			org.AvailabilityListing = AssignValidUrlListAsStringList( input.AvailabilityListing, "Availability Listing", ref messages );
+			//
 			if ( !hasData )
 			{
 				if ( dataIsRequired )
@@ -858,8 +985,7 @@ namespace RA.Services
 			}
 			else
 			{
-				idUrl = AddBlankNode( org );
-				//helper.OrgBaseList.Add( org );
+				idUrl = AddOrganizationBlankNode( org );
 			}
 
 			if ( messages.Count > msgcount )
@@ -966,22 +1092,15 @@ namespace RA.Services
 						cp.Condition = hold.Condition;
 						cp.Jurisdiction = hold.Jurisdiction;
 
-						// if (usingSingleDirectCost)
-						// {
 						if ( !string.IsNullOrWhiteSpace( cpi.DirectCostType ) )
 							cp.DirectCostType = FormatCredentialAlignment( "directCostType", cpi.DirectCostType, ref messages );
-						//cp.DirectCostTypes = null;
-						//cp.DirectCostTypes = FormatCredentialAlignmentVocabToList( "directCostType", cpi.DirectCostType, ref messages );
-						// }
-						// else
-						//{
-						//cp.DirectCostTypes = FormatCredentialAlignmentVocabToList( "directCostType", cpi.DirectCostType, ref messages );
-						//cp.DirectCostType = null;
-						//}
 
 						cp.ResidencyType = FormatCredentialAlignmentVocabs( "residencyType", cpi.ResidencyType, ref messages );
 						cp.AudienceType = FormatCredentialAlignmentVocabs( "audienceType", cpi.AudienceType, ref messages );
-
+						if ( cpi.Price < 0)
+						{
+							messages.Add( string.Format( "Error: the price for a cost item: {0} cannot be a negative number: {1}", cpi.DirectCostType, cpi.Price ));
+						}
 						cp.Price = cpi.Price;
 						cp.PaymentPattern = AssignLanguageMap( ConvertSpecialCharacters( cpi.PaymentPattern ), cpi.PaymentPattern_Map, "PaymentPattern", DefaultLanguageForMaps, ref messages );
 
@@ -1084,7 +1203,7 @@ namespace RA.Services
 				output.SubmissionOfDescription = AssignLanguageMap( ConvertSpecialCharacters( input.SubmissionOfDescription ), input.SubmissionOfDescription_Map, "SubmissionOf Description", DefaultLanguageForMaps, ref messages, false );
 
 				//special case where the AssertedBy property could be a list or a single class
-				output.AssertedBy = FormatOrganizationReferences( input.AssertedBy, "Asserted By", false, ref messages, false );
+				output.AssertedBy = FormatOrganizationReferences( input.AssertedBy, "Asserted By", false, ref messages, false, true );
 
 				output.Experience = input.Experience;
 				output.MinimumAge = input.MinimumAge;
@@ -1179,13 +1298,13 @@ namespace RA.Services
 				return null;
 
 			var list = new List<MJ.ConditionProfile>();
-			EntityReferenceHelper helper = new EntityReferenceHelper();
+			//EntityReferenceHelper helper = new EntityReferenceHelper();
 			foreach ( var input in inputList )
 			{
 				var output = new MJ.ConditionProfile();
 				string idUrl = "";
 				//output.AssertedBy = FormatOrganizationReferenceToList( item.AssertedBy, "Asserted By", true, ref messages );
-				if ( FormatOrganizationReference( input.AssertedBy, "Asserted By", ref idUrl, false, ref messages ) )
+				if ( FormatOrganizationReference( input.AssertedBy, "Asserted By", ref idUrl, false, ref messages, false, true ) )
 				{
 					if ( !string.IsNullOrWhiteSpace( idUrl ) )
 					{
@@ -1257,7 +1376,7 @@ namespace RA.Services
 		{
 			if ( profiles == null || profiles.Count == 0 )
 				return null;
-			EntityReferenceHelper helper = new EntityReferenceHelper();
+			//EntityReferenceHelper helper = new EntityReferenceHelper();
 			var output = new List<MJ.ProcessProfile>();
 			foreach ( var input in profiles )
 			{
@@ -1306,7 +1425,7 @@ namespace RA.Services
 		#endregion
 
 		#region estimatedDuration
-		public List<MJ.DurationProfile> FormatDuration( List<MI.DurationProfile> input, ref List<string> messages )
+		public List<MJ.DurationProfile> FormatDuration( List<MI.DurationProfile> input, string propertyName, ref List<string> messages )
 		{
 			if ( input == null || input.Count == 0 )
 				return null;
@@ -1327,7 +1446,7 @@ namespace RA.Services
 				}
 				if ( DurationHasValue( item.ExactDuration ) )
 				{
-					cp.ExactDuration = AsSchemaDuration( item.ExactDuration );
+					cp.ExactDuration = AsSchemaDuration( item.ExactDuration, propertyName, ref messages );
 					if ( DurationHasValue( item.MinimumDuration ) || DurationHasValue( item.MaximumDuration ) )
 					{
 						messages.Add( string.Format( "Duration Profile error - For entry #{0} provide either an exact duration or a range ( a minimum and maximum range), but not both.", cntr ) );
@@ -1335,8 +1454,8 @@ namespace RA.Services
 					}
 				} else if ( DurationHasValue( item.MinimumDuration ) && DurationHasValue( item.MaximumDuration ) )
 				{
-					cp.MinimumDuration = AsSchemaDuration( item.MinimumDuration );
-					cp.MaximumDuration = AsSchemaDuration( item.MaximumDuration );
+					cp.MinimumDuration = AsSchemaDuration( item.MinimumDuration, propertyName, ref messages );
+					cp.MaximumDuration = AsSchemaDuration( item.MaximumDuration, propertyName, ref messages );
 				} else
 				{
 					//we can just have a description, but must have both sides of a range
@@ -1365,7 +1484,7 @@ namespace RA.Services
 			string duration = "";
 			if ( DurationHasValue( input ) )
 			{
-				duration = AsSchemaDuration( input );
+				duration = AsSchemaDuration( input, propertyName, ref messages );
 			}
 			else
 			{
@@ -1377,7 +1496,7 @@ namespace RA.Services
 
 			return duration;
 		}
-		public string AsSchemaDuration( MI.DurationItem entity )
+		public string AsSchemaDuration( MI.DurationItem entity, string propertyName, ref List<string> messages )
 		{
 			string duration = "";
 			//first check if a valid ISO8601 value has been provided.
@@ -1385,9 +1504,16 @@ namespace RA.Services
 			{
 				//find a regex validator
 
-				//if valid,return string
-				return entity.Duration_ISO8601;
-
+				var match = new System.Text.RegularExpressions.Regex( @"^P(?!$)(\d+Y)?(\d+M)?(\d+W)?(\d+D)?(T(?=\d)(\d+H)?(\d+M)?(\d+S)?)?$" ).Match( duration );
+				if ( !match.Success )
+				{
+					messages.Add( string.Format("Error: The ISO8601 duration format of: '{0}' for: {1} is invalid.", entity.Duration_ISO8601, propertyName ));
+				}
+				else
+				{
+					//if valid,return string
+					return entity.Duration_ISO8601;
+				}
 			}
 
 			if ( entity.Years > 0 )
@@ -1445,7 +1571,7 @@ namespace RA.Services
 		//}
 		#endregion
 
-		public List<MJ.FinancialAssistanceProfile> MapFinancialAssistance( List<Models.Input.FinancialAssistanceProfile> list, ref List<string> messages )
+		public List<MJ.FinancialAssistanceProfile> MapFinancialAssistance( List<Models.Input.FinancialAssistanceProfile> list, ref List<string> messages, string parentEntityType )
 		{
 			List<MJ.FinancialAssistanceProfile> output = new List<MJ.FinancialAssistanceProfile>();
 			if ( list == null || list.Count == 0 )
@@ -1462,6 +1588,8 @@ namespace RA.Services
 					SubjectWebpage = AssignValidUrlAsString( item.SubjectWebpage, "Subject Webpage", ref messages, false ), //??
 				};
 				fa.FinancialAssistanceType = FormatCredentialAlignmentVocabs( "financialAssistanceType", item.FinancialAssistanceType, ref messages );
+
+				fa.FinancialAssistanceValue = AssignQuantitiveValueToList( item.FinancialAssistanceValue, "FinancialAssistanceValue", parentEntityType, ref messages, "" );
 
 				output.Add( fa );
 			}
@@ -1492,37 +1620,37 @@ namespace RA.Services
 		/// <param name="helper"></param>
 		/// <param name="messages"></param>
 		/// <returns></returns>
-		public JurisdictionProfile MapJurisdictionAssertions( MI.JurisdictionAssertedInProfile profile,
-			ref EntityReferenceHelper helper,
-			ref List<string> messages )
-		{
+		//public JurisdictionProfile MapJurisdictionAssertions( MI.JurisdictionAssertedInProfile profile,
+		//	ref EntityReferenceHelper helper,
+		//	ref List<string> messages )
+		//{
 
-			JurisdictionProfile jp = new JurisdictionProfile();
+		//	JurisdictionProfile jp = new JurisdictionProfile();
 
-			jp = MapToJurisdiction( profile.Jurisdiction, ref messages );
-			if ( jp == null )
-				return null;
-			//additional check for asserted by org, and list of assertion types
-			//jp.AssertedBy = FormatOrganizationReferenceToList( profile.AssertedBy, "Asserted By", true, ref messages );
-			string idUrl = "";
-			if ( FormatOrganizationReference( profile.AssertedBy, "Asserted By", ref idUrl, false, ref messages ) )
-			{
-				if ( !string.IsNullOrWhiteSpace( idUrl ) )
-				{
-					//currently defined as object. Ultimately will be a list, but should be single
-					List<string> bys = new List<string>();
-					bys.Add( idUrl );
-					jp.AssertedBy = bys;
-				}
-			}
-			return jp;
-		}
+		//	jp = MapToJurisdiction( profile.Jurisdiction, ref messages );
+		//	if ( jp == null )
+		//		return null;
+		//	//additional check for asserted by org, and list of assertion types
+		//	//jp.AssertedBy = FormatOrganizationReferenceToList( profile.AssertedBy, "Asserted By", true, ref messages );
+		//	string idUrl = "";
+		//	if ( FormatOrganizationReference( profile.AssertedBy, "Asserted By", ref idUrl, false, ref messages, false, true ) )
+		//	{
+		//		if ( !string.IsNullOrWhiteSpace( idUrl ) )
+		//		{
+		//			//currently defined as object. Ultimately will be a list, but should be single
+		//			List<string> bys = new List<string>();
+		//			bys.Add( idUrl );
+		//			jp.AssertedBy = bys;
+		//		}
+		//	}
+		//	return jp;
+		//}
 
 		/// <summary>
 		/// Map list of JurisdictionAssertions to a list of JurisdictionProfiles
 		/// </summary>
 		/// <param name="profiles"></param>
-		/// <param name="helper"></param>
+		/// <param name="helper">CURRENTLY NOT USED</param>
 		/// <param name="messages"></param>
 		/// <returns></returns>
 		public List<JurisdictionProfile> MapJurisdictionAssertionsList( List<MI.JurisdictionAssertion> profiles, ref EntityReferenceHelper helper, ref List<string> messages )
@@ -1698,14 +1826,14 @@ namespace RA.Services
 		/// <param name="input"></param>
 		/// <param name="messages"></param>
 		/// <returns></returns>
-		public List<MOPlace> FormatAvailableAtList( List<MIPlace> input, ref List<string> messages )
+		public List<MOPlace> FormatAvailableAtList( List<MIPlace> input, ref List<string> messages, bool canHavePartialAddress = false )
 		{
 			//Available At should require an address, not just contact points
-			return FormatPlacesList( input, ref messages, true );
+			return FormatPlacesList( input, ref messages, true, canHavePartialAddress );
 
 		}
 
-		public List<MOPlace> FormatPlacesList( List<MIPlace> input, ref List<string> messages, bool addressExpected = false )
+		public List<MOPlace> FormatPlacesList( List<MIPlace> input, ref List<string> messages, bool addressExpected = false, bool canHavePartialAddress = false )
 		{
 
 			List<MOPlace> list = new List<MOPlace>();
@@ -1716,7 +1844,7 @@ namespace RA.Services
 			foreach ( var item in input )
 			{
 				output = new MOPlace();
-				if ( FormatPlace( item, addressExpected, ref output, ref messages ) )
+				if ( FormatPlace( item, addressExpected, ref output, ref messages, canHavePartialAddress ) )
 					list.Add( output );
 
 			}
@@ -1724,7 +1852,7 @@ namespace RA.Services
 			return list;
 		}
 
-		public bool FormatPlace( MIPlace input, bool isAddressExpected, ref MOPlace output, ref List<string> messages )
+		public bool FormatPlace( MIPlace input, bool isAddressExpected, ref MOPlace output, ref List<string> messages, bool canHavePartialAddress = false )
 		{
 			bool isValid = true;
 			if ( input == null )
@@ -1737,7 +1865,6 @@ namespace RA.Services
 			//      - would at least a name be required?
 			if ( !string.IsNullOrWhiteSpace( input.Name ) )
 			{
-				//output.Name = Assign(input.Name, DefaultLanguageForMaps );
 				output.Name = AssignLanguageMap( input.Name, input.Name_Map, "Place Name", DefaultLanguageForMaps, ref messages );
 			}
 			output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Place Description", DefaultLanguageForMaps, ref messages, false, MinimumDescriptionLength );
@@ -1810,22 +1937,23 @@ namespace RA.Services
 
 			bool hasAddress = false;
 			//do we have any valid address fields?
-			if ( ( !string.IsNullOrWhiteSpace( input.Address1 )
-					|| !string.IsNullOrWhiteSpace( input.PostOfficeBoxNumber )
-					) &&
+			//20-08-19 - allow partial
+			if ( !canHavePartialAddress && 
+				( !string.IsNullOrWhiteSpace( input.Address1 )
+					|| !string.IsNullOrWhiteSpace( input.PostOfficeBoxNumber )) &&
 					( string.IsNullOrWhiteSpace( input.City )
 					|| string.IsNullOrWhiteSpace( input.AddressRegion )
 					|| string.IsNullOrWhiteSpace( input.PostalCode ) )
-					)
+				)
 			{
-				//missing somthing
+				//missing something
 
 				messages.Add( string.Format( "A valid address is expected. Please provide a proper address. Address1: {0}, Address2: {1}, POBox: {5} City:{2}, Region: {3}, PostalCode: {4}", input.Address1 ?? "", input.Address2 ?? "", input.City ?? "*missing*", input.AddressRegion ?? "*missing*", input.PostalCode ?? "*missing*", input.PostOfficeBoxNumber ?? "" ) );
 				return false;
-
 			}
-
-			if ( ( string.IsNullOrWhiteSpace( input.Address1 )
+			//20-08-19 - allow partial
+			if ( !canHavePartialAddress && 
+				( string.IsNullOrWhiteSpace( input.Address1 )
 					&& string.IsNullOrWhiteSpace( input.PostOfficeBoxNumber )
 					)
 					|| string.IsNullOrWhiteSpace( input.City )
@@ -1834,7 +1962,7 @@ namespace RA.Services
 			{
 				if ( isAddressExpected )
 				{
-					messages.Add( "Error - A valid address expected. Please provide a proper address, along with any contact points." );
+					messages.Add( "Error - A valid address expected. Please provide a proper address, along with any optional  contact points." );
 					return false;
 				}
 			} else
@@ -1854,7 +1982,15 @@ namespace RA.Services
 		#endregion
 
 		#region Handle Credit Units
-
+		/// <summary>
+		/// If the concept scheme is provided, such as creditUnitType, it must be a known valid CTDL concept scheme and the concepts will be validated accordingly. 
+		/// </summary>
+		/// <param name="input"></param>
+		/// <param name="propertyName"></param>
+		/// <param name="parentEntityType"></param>
+		/// <param name="messages"></param>
+		/// <param name="conceptScheme"></param>
+		/// <returns></returns>
 		public List<MJ.QuantitativeValue> AssignQuantitiveValueToList( List<MI.QuantitativeValue> input, string propertyName, string parentEntityType, ref List<string> messages, string conceptScheme = "creditUnitType" )
 		{
 			if ( input == null || input.Count() == 0)
@@ -1866,7 +2002,7 @@ namespace RA.Services
 			foreach (var item in input)
 			{
 				output = new MJ.QuantitativeValue();
-				output = AssignQuantitiveValue( item, propertyName, parentEntityType, ref messages );
+				output = AssignQuantitiveValue( item, propertyName, parentEntityType, ref messages, conceptScheme );
 				if ( output != null )
 					list.Add( output );
 
@@ -1881,98 +2017,11 @@ namespace RA.Services
 				return null;
 			}
 			var list = new List<MJ.QuantitativeValue>();
-			var output = AssignQuantitiveValue( input, propertyName, parentEntityType, ref messages );
+			var output = AssignQuantitiveValue( input, propertyName, parentEntityType, ref messages, conceptScheme );
 			if ( output != null )
 				list.Add( output );
 			return list;
-			//int currentCount = messages.Count();
-			////check if empty
-			//if ( input.Value == 0 && input.MinValue == 0 && input.MaxValue == 0 
-			//	&& string.IsNullOrWhiteSpace( input.Description )
-			//	&& (input.Description_Map == null || input.Description_Map.Count() == 0)
-			//	&& string.IsNullOrWhiteSpace( input.UnitText )
-			//	)
-			//{ 
-			//	return null;
-			//}
-
-			////if no values, can have description alone, but not unit text
-			//if ( input.Value == 0 && input.MinValue == 0 && input.MaxValue == 0 )
-			//{
-			//	if ( string.IsNullOrWhiteSpace( input.Description )
-			//		&& (input.Description_Map == null || input.Description_Map.Count() == 0 )
-			//		&& !string.IsNullOrWhiteSpace( input.UnitText )
-			//		)
-			//	{
-			//		messages.Add( string.Format( "Where no values are entered for a QuantitativeValue, a description is required, the UnitText is not enough for: '{0}' {1}.", parentEntityType, propertyName ) );
-			//		return null;
-			//	}
-			//	//here we have at least a desc
-			//	output = new MJ.QuantitativeValue
-			//	{
-			//		Description = AssignLanguageMap( input.Description, input.Description_Map, propertyName + " Description", DefaultLanguageForMaps, ref messages, false )
-			//	};
-			//	//not sure it makes sense to allow units without values?
-			//	if ( !string.IsNullOrWhiteSpace( input.UnitText ) )
-			//		output.UnitText = FormatCredentialAlignment( "creditUnitType", input.UnitText, ref messages );
-
-			//	list.Add( output );
-			//	return list;
-			//}
-
-			////have at least one value
-
-			//if ( input.Value < 0 )
-			//	messages.Add( string.Format( "The unit value for: '{0}' {1} must be greater than zero.", parentEntityType, propertyName ) );
-
-			//if ( input.MinValue < 0 )
-			//	messages.Add( string.Format( "The minimum unit value for: '{0}' {1} must be greater than zero.", parentEntityType, propertyName ) );
-
-			//if ( input.MaxValue < 0 || input.MinValue > input.MaxValue)
-			//	messages.Add( string.Format( "When a MaxValue is provided for: '{0}' {1}, it must be greater than zero (and greater than the MinValue.", parentEntityType, propertyName ) );
-
-			//if ( input.Value > 0 )
-			//{
-			//	if ( input.MinValue != 0 || input.MaxValue != 0 )
-			//	{
-			//		messages.Add( string.Format( "When a Value is provided, NEITHER Min Value or Max Values may be provided for: '{0}' {1}", parentEntityType, propertyName ) );
-			//	}
-			//}
-			//else if ( input.MinValue <= 0 || input.MaxValue <= 0 ) 
-			//{
-			//	messages.Add( string.Format( "When specifying a range for credit value, both Min Value and Max Values must be provided for:'{0}' {1}", parentEntityType, propertyName ) );
-			//}
-
-			//if ( currentCount < messages.Count() )
-			//	return null;
-			////
-			//output = new MJ.QuantitativeValue
-			//{
-			//	Description = AssignLanguageMap( input.Description, input.Description_Map, propertyName + " Description", DefaultLanguageForMaps, ref messages, false ),
-			//	Value = input.Value,
-			//	MinValue = input.MinValue,
-			//	MaxValue = input.MaxValue
-			//};
-			////not required. but at this point there are values
-			//if ( string.IsNullOrWhiteSpace( input.UnitText ) )
-			//{
-			//	//must have desc and/or unitText
-			//	if ( output.Description == null || output.Description.Count == 0 )
-			//	{
-			//		messages.Add( string.Format( "Either UnitText or Credit Unit Description are required when values are present in the QuantitativeValue of: '{0}' for '{1}'", propertyName, parentEntityType ) );
-			//		return null;
-			//	}
-			//}
-			//else
-			//{
-			//	//credential alignment object
-			//	//may only allow english
-			//	//var text = AssignLanguageMap( input.UnitText, input.UnitText_Map, parentEntityType + " Credit Value", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
-			//	//NOTE: need to consider concept schemes other than creditUnitType
-			//	output.UnitText = FormatCredentialAlignment( "creditUnitType", input.UnitText, ref messages );
-			//}
-			//list.Add( output );
-			//return list;
+			
 		}
 		public MJ.QuantitativeValue AssignQuantitiveValue( MI.QuantitativeValue input, string propertyName, string parentEntityType, ref List<string> messages, string conceptScheme = "creditUnitType" )
 		{
@@ -2010,8 +2059,8 @@ namespace RA.Services
 					Description = AssignLanguageMap( input.Description, input.Description_Map, propertyName + " Description", DefaultLanguageForMaps, ref messages, false )
 				};
 				//not sure it makes sense to allow units without values?
-				if ( !string.IsNullOrWhiteSpace( input.UnitText ) )
-					output.UnitText = FormatCredentialAlignment( "creditUnitType", input.UnitText, ref messages );
+				//if ( !string.IsNullOrWhiteSpace( input.UnitText ) )
+				//	output.UnitText = FormatCredentialAlignment( "creditUnitType", input.UnitText, ref messages );
 				return output;
 			}
 
@@ -2024,7 +2073,7 @@ namespace RA.Services
 				messages.Add( string.Format( "The minimum unit value for: '{0}' {1} must be greater than zero.", parentEntityType, propertyName ) );
 
 			if ( input.MaxValue < 0 || input.MinValue > input.MaxValue )
-				messages.Add( string.Format( "When a MaxValue is provided for: '{0}' {1}, it must be greater than zero (and greater than the MinValue.", parentEntityType, propertyName ) );
+				messages.Add( string.Format( "When a MaxValue is provided for: '{0}' {1}, it must be greater than zero (and greater than the MinValue).", parentEntityType, propertyName ) );
 
 			if ( input.Value > 0 )
 			{
@@ -2055,7 +2104,7 @@ namespace RA.Services
 				//must have desc and/or unitText
 				if ( output.Description == null || output.Description.Count == 0 )
 				{
-					messages.Add( string.Format( "Either UnitText or Credit Unit Description are required when values are present in the QuantitativeValue of: '{0}' for '{1}'", propertyName, parentEntityType ) );
+					messages.Add( string.Format( "Either UnitText or Description are required when values are present in the QuantitativeValue of: '{0}' for '{1}'", propertyName, parentEntityType ) );
 					return null;
 				}
 			}
@@ -2065,41 +2114,45 @@ namespace RA.Services
 				//may only allow english
 				//var text = AssignLanguageMap( input.UnitText, input.UnitText_Map, parentEntityType + " Credit Value", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
 				//NOTE: need to consider concept schemes other than creditUnitType
-				output.UnitText = FormatCredentialAlignment( "creditUnitType", input.UnitText, ref messages );
+				//20-07-22 - for example with financial assistance, the unit may be USD.
+				//if (!string.IsNullOrWhiteSpace( conceptScheme ) )
+					output.UnitText = FormatCredentialAlignment( conceptScheme, input.UnitText, ref messages );
+				//else
+				//	output.UnitText = input.UnitText;
 			}
 
 			return output;
 		}
-		public List<MJ.QuantitativeValue> AssignQuantitiveValue( string entity, decimal creditHourValue, string creditHourType, string creditUnitType, decimal creditUnitValue, string creditUnitTypeDescription, ref List<string> messages )
-		{
-			bool hasData = false;
-			if ( ValidateCreditUnitOrHoursProperties( creditHourValue, creditHourType, creditUnitType, creditUnitValue, creditUnitTypeDescription, ref hasData, ref messages ) )
-			{
-				if ( hasData )
-				{
-					//return warning
-					warningMessages.Add( "WARNING: The Credit Unit/Hour properties are obsolete. Use CreditValue instead." );
-					//will not have a range
-					MI.QuantitativeValue iqv = new MI.QuantitativeValue
-					{
-						Value = creditUnitValue > 0 ? creditUnitValue : creditHourValue > 0 ? creditHourValue : 0,
-						UnitText = creditUnitType ?? "",
-						Description = creditUnitTypeDescription ?? "",
-						//Description_Map = input.Description_Map
-					};
-					if ( ( creditHourType ?? "" ).Length > 0 )
-					{
-						//19-05-01 hour vocabs not set, so set to description
-						iqv.Description = creditHourType;
-					}
+		//public List<MJ.QuantitativeValue> AssignQuantitiveValue( string entity, decimal creditHourValue, string creditHourType, string creditUnitType, decimal creditUnitValue, string creditUnitTypeDescription, ref List<string> messages )
+		//{
+		//	bool hasData = false;
+		//	if ( ValidateCreditUnitOrHoursProperties( creditHourValue, creditHourType, creditUnitType, creditUnitValue, creditUnitTypeDescription, ref hasData, ref messages ) )
+		//	{
+		//		if ( hasData )
+		//		{
+		//			//return warning
+		//			warningMessages.Add( "WARNING: The Credit Unit/Hour properties are obsolete. Use CreditValue instead." );
+		//			//will not have a range
+		//			MI.QuantitativeValue iqv = new MI.QuantitativeValue
+		//			{
+		//				Value = creditUnitValue > 0 ? creditUnitValue : creditHourValue > 0 ? creditHourValue : 0,
+		//				UnitText = creditUnitType ?? "",
+		//				Description = creditUnitTypeDescription ?? "",
+		//				//Description_Map = input.Description_Map
+		//			};
+		//			if ( ( creditHourType ?? "" ).Length > 0 )
+		//			{
+		//				//19-05-01 hour vocabs not set, so set to description
+		//				iqv.Description = creditHourType;
+		//			}
 
-					return AssignQuantitiveValueToList( iqv, "CreditValue", entity, ref messages );
+		//			return AssignQuantitiveValueToList( iqv, "CreditValue", entity, ref messages );
 
-				}
-			}
+		//		}
+		//	}
 
-			return null;
-		}
+		//	return null;
+		//}
 		public bool ValidateCreditUnitOrHoursProperties( decimal creditHourValue, string creditHourType, string creditUnitType, decimal creditUnitValue, string creditUnitTypeDescription, ref bool hasData, ref List<string> messages )
 		{
 			//can only have credit hours properties, or credit unit properties, not both
@@ -2124,6 +2177,7 @@ namespace RA.Services
 		}
 		#endregion
 
+
 		#region === CredentialAlignmentObject ===
 		/// <summary>
 		/// Only for simple properties like subjects, with no concept scheme
@@ -2143,7 +2197,7 @@ namespace RA.Services
 
 			return list;
 		}
-        public List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromStrings( List<string> terms, MI.LanguageMapList map )
+        public List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromStrings( List<string> terms, MI.LanguageMapList map, string property = "" )
         {
             List<MJ.CredentialAlignmentObject> list = new List<MJ.CredentialAlignmentObject>();
             if ( (terms == null || terms.Count == 0 ) && (map == null || map.Count == 0))
@@ -2208,8 +2262,12 @@ namespace RA.Services
 				return null;
 			foreach ( string item in terms )
 			{
-                if (!string.IsNullOrWhiteSpace( item ))
-                    list.Add( FormatCredentialAlignment( ctdlProperty, item, ref messages, alias ) );
+				if ( !string.IsNullOrWhiteSpace( item ) )
+				{
+					var cao = FormatCredentialAlignment( ctdlProperty, item, ref messages, alias );
+					if (cao != null)
+						list.Add( cao );
+				}
 			}
 
 			return list;
@@ -2239,6 +2297,14 @@ namespace RA.Services
 			{
 				return null;
 			}
+			if ( string.IsNullOrWhiteSpace( ctdlProperty ) )
+			{
+				//output a minimal CAO
+				output.TargetNodeName = Assign( term, SystemDefaultLanguageForMaps );
+				return output;
+			}
+			//allow label - still must be properly cased
+			term = term.Replace(" ", "");
 			//json
 			var ctdlUrl = Utilities.UtilityManager.GetAppKeyValue( "credRegTermsJson", "http://credreg.net/ctdl/terms/{0}/json" );
 			//
@@ -2270,7 +2336,7 @@ namespace RA.Services
 				string label = "";
 				term = term.Contains( ':' ) ? term.Split( ':' )[ 1 ] : term;
 				var schema = term.Replace( " ", "" );
-				code.SchemaName = "statusCategory:" + schema;
+				code.SchemaName = "lifecycle:" + schema;
 				code.ConceptSchemaPlain = schema;
 				code.Name = term;
 
@@ -2285,7 +2351,7 @@ namespace RA.Services
 					output.FrameworkName = Assign( code.ParentSchemaName.Replace( "ceterms:", "" ), DefaultLanguageForMaps );
 				return output;
 			}
-			else if ( checkProperty == "creditUnitType" ) //
+			else if ( checkProperty == "creditUnitTypeXX" ) //
 			{
 				//check for values not on credreg yet
 				if ( ValidatePendingCreditUnitValues( term, ref code ) )
@@ -2396,8 +2462,11 @@ namespace RA.Services
 		private bool ValidatePendingCreditUnitValues( string term, ref CodeItem code )
 		{
 			bool isValid = true;
-			string validTerms = "Quarter Hours QuarterHours Semester Hours SemesterHours Clock Hours ClockHours";
-			string pendingTerms = "Contact Hours ContactHours CreditHour Credit Hour DegreeCredit";
+			string validTerms = "CertificateCredit ContinuingEducationUnit DegreeCredit SecondaryDiplomaCredit Quarter Hours QuarterHours Semester Hours SemesterHours Clock Hours ClockHours";
+			string pendingTerms = "Contact Hours ContactHours CreditHour Credit Hour";
+			/*
+			 * 
+			 */
 			//orginal method will set to null
 			code = new CodeItem();
 
@@ -2426,6 +2495,24 @@ namespace RA.Services
 				code.SchemaName = "credUnit:DegreeCredit";
 				code.ConceptSchemaPlain = "DegreeCredit";
 				code.Name = "Degree Credit";
+			}
+			else if ( "certificatecredit".IndexOf( term.ToLower() ) > -1 )
+			{
+				code.SchemaName = "credUnit:CertificateCredit";
+				code.ConceptSchemaPlain = "CertificateCredit";
+				code.Name = "CertificateC redit";
+			}
+			else if ( "continuingeducationunit continuingeducation".IndexOf( term.ToLower() ) > -1 )
+			{
+				code.SchemaName = "credUnit:ContinuingEducationUnit";
+				code.ConceptSchemaPlain = "ContinuingEducationUnit";
+				code.Name = "Continuing Education Unit";
+			}
+			else if ( "secondarydiplomacredit".IndexOf( term.ToLower() ) > -1 )
+			{
+				code.SchemaName = "credUnit:SecondaryDiplomaCredit";
+				code.ConceptSchemaPlain = "SecondaryDiplomaCredit";
+				code.Name = "Secondary Diploma Credit";
 			}
 			else
 				return false;
@@ -2510,6 +2597,25 @@ namespace RA.Services
 		/// <param name="framework"></param>
 		/// <returns></returns>
 		public List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromFrameworkItemList( List<FrameworkItem> list, bool includingCodedNotation, ref List<string> messages, string frameworkName = "", string framework = "" )
+		{
+			if ( list == null || list.Count == 0 )
+				return null;
+
+			//List<MJ.CredentialAlignmentObject> output = new List<MJ.CredentialAlignmentObject>();
+			//MJ.CredentialAlignmentObject entity = new MJ.CredentialAlignmentObject();
+
+			////need to add a framework
+			//foreach ( FrameworkItem item in list )
+			//{
+			//	entity = new MJ.CredentialAlignmentObject();
+			//	entity = FormatCredentialAlignmentFrameworkItem( item, true, ref messages, frameworkName, framework );
+			//	if ( entity != null )
+			//		output.Add( entity );
+			//}
+
+			return FormatCredentialAlignmentListFromFrameworkItemList( list, includingCodedNotation, "", ref messages, frameworkName, framework );
+		}   //
+		public List<MJ.CredentialAlignmentObject> FormatCredentialAlignmentListFromFrameworkItemList( List<FrameworkItem> list, bool includingCodedNotation, string property, ref List<string> messages, string frameworkName = "", string framework = "" )
 		{
 			if ( list == null || list.Count == 0 )
 				return null;
@@ -2710,13 +2816,16 @@ namespace RA.Services
 			foreach ( var item in entities )
 			{
 				var framework = "";
-				if ( prevFramework != ( item.Framework ?? "" ) )
+				if ( prevFramework != ( item.Framework ?? "" ).ToLower() )
 				{
 					//check framework here. If not found and is a registry URI, no point in checking the competencies
 					if ( !string.IsNullOrWhiteSpace( item.Framework ) )
 					{
 						//actually if a registry URI, just get it
-						//will have to watch for large frameworks. M
+						//will have to watch for large frameworks. 
+						//also check if just a CTID. The method: AssignValidUrlAsString, is for non-registry urls
+						//if ( !IsCtidValid( input.CTID, entityProperty ?? "entityReference", ref messages ) )
+						//return false;
 						framework = AssignValidUrlAsString( item.Framework, "Competency Framework", ref messages, false );
 						if ( string.IsNullOrWhiteSpace( framework ) )
 						{
@@ -2739,7 +2848,7 @@ namespace RA.Services
 				if ( cao != null )
 					list.Add( cao );
 
-				prevFramework = framework;
+				prevFramework = (framework ?? "").ToLower();
 			}
 
 			return list;
@@ -2752,6 +2861,7 @@ namespace RA.Services
 			var competencies = new List<MJ.Competency>();
 			string statusMessage = "";
 			string ctdlType = "";
+			//NOTE: this assumes a URI, where could be a CTID
 			string payload = RegistryServices.GetResourceByUrl( entity.Framework, ref ctdlType, ref statusMessage );
 			if ( string.IsNullOrWhiteSpace( payload ) )
 			{
@@ -3058,6 +3168,8 @@ namespace RA.Services
 				//NO: don't use this method with CTIDs
 				//url = credRegistryGraphUrl + url.ToLower().Trim();
 				//return url;
+				//20-07-30 there could be some properties where a registry or non-registry url could be allowed?
+				//			- could be handled here or we modify methods called for these properties?
 				messages.Add( string.Format( "A CTID is not valid to be provided for the '{0}' property.", propertyName ) );
 				return null;
 			}
@@ -3088,10 +3200,11 @@ namespace RA.Services
 		/// <param name="messages"></param>
 		/// <param name="formatAsGraph"></param>
 		/// <param name="isRequired"></param>
+		/// <param name="checkForExistance">Normally false. There are some cases where the registry document must already exist</param>
 		/// <returns></returns>
-		public List<string> AssignRegistryResourceURIsListAsStringList( List<string> list, string propertyName, ref List<string> messages, bool formatAsGraph = false, bool isRequired = false )
+		public List<string> AssignRegistryResourceURIsListAsStringList( List<string> list, string propertyName, ref List<string> messages, bool formatAsGraph = false, bool isRequired = false, bool checkingForExistance = false )
 		{
-			//string status = "";
+			//, bool checkForExistance = false
 			//bool isUrlPresent = true;
 			List<string> urlList = new List<string>();
 			List<string> temp = new List<string>();
@@ -3107,13 +3220,14 @@ namespace RA.Services
 			foreach ( string item in list )
 			{
 				cntr++;
+				//Exceptions for items that will be stored as literals rather than the registry URI
 				if ( item.IndexOf( "systemCategory" ) == 0 )
 				{
 					urlList.Add( item );
 				}
 				else
 				{
-					string output = AssignRegistryResourceURIAsString( item, propertyName, ref messages, formatAsGraph );
+					string output = AssignRegistryResourceURIAsString( item, propertyName, ref messages, formatAsGraph, checkingForExistance );
 					if ( !string.IsNullOrWhiteSpace( output ) )
 					{
 						urlList.Add( output );
@@ -3127,8 +3241,21 @@ namespace RA.Services
 				return urlList;
 		}
 
-		public string AssignRegistryResourceURIAsString( string url, string propertyName, ref List<string> messages, bool formatAsGraph = false, bool isRequired = false )
+		/// <summary>
+		/// This method is for a string that contains a registry URI or a ctid. 
+		/// These are properly formed URIs but may not yet exist in the registry, so no existance check will be done. 
+		/// If a valid CTID is provided, it will be formatted as a /resource/ URL
+		/// </summary>
+		/// <param name="url"></param>
+		/// <param name="propertyName"></param>
+		/// <param name="messages"></param>
+		/// <param name="formatAsGraph"></param>
+		/// <param name="isRequired"></param>
+		/// <param name="checkForExistance">Normally false. There are some cases where the registry document must already exist</param>
+		/// <returns></returns>
+		public string AssignRegistryResourceURIAsString( string url, string propertyName, ref List<string> messages, bool formatAsGraph = false, bool isRequired = false, bool checkingForExistance = false )
 		{
+			//, bool checkForExistance = false
 			string statusMessage = "";
 			bool isUrlPresent = true;
 			if ( string.IsNullOrWhiteSpace( url ) )
@@ -3149,11 +3276,15 @@ namespace RA.Services
 				{
 					url = SupportServices.FormatRegistryUrl(ResourceTypeUrl, url, Community);
 				}
+				//may be some cases where reasonable to require that the target does exist in the registry. HasETPLmember may be a good example
+				if ( checkingForExistance )
+				{
 
+				}
 				return url;
 			}
-			//will only do format checking, not existance (as may refer to a resource yet to be published. 
-			if ( !IsUrlValid( url, ref statusMessage, ref isUrlPresent, false ) )
+			//will only do format checking, not existance (as may refer to a resource yet to be published). 
+			if ( !IsUrlValid( url, ref statusMessage, ref isUrlPresent, checkingForExistance ) )
 			{
 				if ( isUrlPresent )
 				{
@@ -3311,9 +3442,9 @@ namespace RA.Services
 			if ( !string.IsNullOrWhiteSpace( statusType ) )
 			{
 				var validSchema = "";
-				if ( ValidationServices.IsValidStatusType( statusType, ref validSchema ) )
+				if ( ValidationServices.IsValidLifecycleType( statusType, ref validSchema ) )
 				{
-					output = FormatCredentialAlignment( "statusType", validSchema, ref messages );
+					output = FormatCredentialAlignment( "lifecycleStatusType", validSchema, ref messages );
 				}
 				else
 				{
@@ -3323,7 +3454,7 @@ namespace RA.Services
 			else
 			{
 				//or just default to active
-				output = FormatCredentialAlignment( "statusType", "statusCategory:Active", ref messages );
+				output = FormatCredentialAlignment( "statusType", "lifecycle:Active", ref messages );
 			}
 			return output;
 		}

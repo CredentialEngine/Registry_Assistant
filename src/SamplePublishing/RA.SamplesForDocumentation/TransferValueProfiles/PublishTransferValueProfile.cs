@@ -40,7 +40,7 @@ namespace RA.SamplesForDocumentation
 			//NOTE: afer being generated, this value be saved and used for successive tests or duplicates will occur.
 			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 			//from previous test
-			myCTID= "ce-fd515001-6a9c-4f43-b401-3e65127fc807";
+			myCTID = "ce-fd515001-6a9c-4f43-b401-3e65127fc807";
 
 			// A simple transfer value profile object - required properties
 			var myData = new TransferValueProfile()
@@ -66,7 +66,8 @@ namespace RA.SamplesForDocumentation
 			} );
 			//If not provided as much information as is available
 			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
-			myData.TransferValueFrom.Add( new EntityReference()
+			//NOTE: you must provide owned by or offered by with TransferValueFrom or TransferValueFor
+			var transferValueFrom = new EntityReference()
 			{
 				Type = "LearningOpportunityProfile",
 				Name = "name of the learning opportunity",
@@ -74,8 +75,16 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "https://example.com/anotherlOPP",
 				LearningMethodDescription = "A useful description of the learning method",
 				AssessmentMethodDescription = "How the learning opportunity is assessed."
-
-			} );
+			};
+			var ownedBy = new OrganizationReference()
+			{
+				Type = "CredentialOrganization",
+				Name = "Organization that owns this LearningOpportunity",
+				SubjectWebpage = "https://myOrganization.com",
+				Description = "While optional, a description is helpful."
+			};
+			transferValueFrom.OwnedBy.Add( ownedBy );
+			myData.TransferValueFrom.Add( transferValueFrom );
 
 			//==============	transfer value For
 			//Resource that accepts the transfer value described by this resource, according to the entity providing this resource.
@@ -95,8 +104,8 @@ namespace RA.SamplesForDocumentation
 			//===================================================================================
 			//				additions in pending ( in near future)
 			myData.LifecycleStatusType = "Active";  //this will be the default once activated
-			//identifier will likely replace codedNotation for more flexibility. Although the name may change
-			// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
+													//identifier will likely replace codedNotation for more flexibility. Although the name may change
+													// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
 			myData.Identifier.Add( new IdentifierValue()
 			{
 				Name = "ACE Course Code",
@@ -134,19 +143,19 @@ namespace RA.SamplesForDocumentation
 				EndpointType = "transfervalue",
 				RequestType = "publish",
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.TransferValueProfile.Ctid.ToLower(),	//added here for logging
-				Identifier = "testing",		//useful for logging, might use the ctid
+				CTID = myRequest.TransferValueProfile.Ctid.ToLower(),   //added here for logging
+				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};
-			
+
 			bool isValid = new SampleServices().PublishRequest( req );
 
 			return req.FormattedPayload;
 		}
 
 
-			
-			
+
+
 		public string PublishList( bool usingSimplePost = true )
 		{
 			// Holds the result of the publish action
@@ -167,10 +176,10 @@ namespace RA.SamplesForDocumentation
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//add some transfer value profiles
-			myRequest.TransferValueProfile.Add( GetTVPOne( organizationIdentifierFromAccountsSite ) );
-			myRequest.TransferValueProfile.Add( GetTVPTwo( organizationIdentifierFromAccountsSite ) );
+			myRequest.TransferValueProfiles.Add( GetTVPOne( organizationIdentifierFromAccountsSite ) );
+			myRequest.TransferValueProfiles.Add( GetTVPTwo( organizationIdentifierFromAccountsSite ) );
 			// Serialize the request object
-			var payload = JsonConvert.SerializeObject( myRequest ); 
+			var payload = JsonConvert.SerializeObject( myRequest );
 
 
 			//assign publish endpoint
@@ -191,7 +200,7 @@ namespace RA.SamplesForDocumentation
 				EndpointType = "transfervalue",
 				RequestType = "bulkpublish",
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.TransferValueProfile[0].Ctid.ToLower(),   //added here for logging
+				CTID = myRequest.TransferValueProfiles[ 0 ].Ctid.ToLower(),   //added here for logging
 				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};
@@ -203,7 +212,7 @@ namespace RA.SamplesForDocumentation
 
 
 
-		public TransferValueProfile GetTVPOne( string owningOrganizationCtid)
+		public TransferValueProfile GetTVPOne( string owningOrganizationCtid )
 		{
 			// Assign a CTID for the entity being published and keep track of it
 			//NOTE: afer being generated, this value be saved and used for successive tests or duplicates will occur.
@@ -254,8 +263,8 @@ namespace RA.SamplesForDocumentation
 
 
 			//						optional
-			//coded Notation will likely be replaced by Identifier in the near future
-			myData.CodedNotation = "So-me-coded:notation";
+			//coded Notation could be replaced by Identifier in the near future
+			myData.CodedNotation = "X200";
 			myData.StartDate = "2020-01-01";
 			myData.EndDate = "2021-12-21";
 
@@ -313,7 +322,7 @@ namespace RA.SamplesForDocumentation
 
 			//						optional
 			//coded Notation will likely be replaced by Identifier in the near future
-			myData.CodedNotation = "So-me-coded:notation";
+			myData.CodedNotation = "Y300";
 			myData.StartDate = "2020-01-01";
 			myData.EndDate = "2021-12-21";
 
@@ -331,5 +340,36 @@ namespace RA.SamplesForDocumentation
 			return myData;
 		}
 
+
+		private EntityReference AddTransferFromLearningOpportunity()
+		{
+			EntityReference er = new EntityReference()
+			{
+				Type = "LearningOpportunityProfile",
+				Name = "Packet Switched Networks",
+				Description = "Understanding of terminology and issues and their application in functioning packet switched networks.",
+				LearningMethodDescription = "Methods of instruction include lecture, discussion, laboratory exercises, videotapes, and a final examination."
+			};
+			er.Teaches = new List<CredentialAlignmentObject>() { new CredentialAlignmentObject()
+			{
+				TargetNodeDescription="Upon successful completion of this course, the student will be able to describe packet technology; and discuss the history of public packet networks--their practical implementation and management issues related to implementation."
+			} };
+
+			er.OwnedBy = new List<OrganizationReference>() {  new OrganizationReference()
+			{
+				Type="CredentialOrganization",
+				Name="Ameritech",
+				SubjectWebpage="https://www.ameritech.edu/",
+				Address = new List<Place>{ new Place()
+				{
+					City= "Waukesha",
+					AddressRegion= "WI",
+					Country="United States"
+				} }
+
+			} };
+
+			return er;
+		}
 	}
 }

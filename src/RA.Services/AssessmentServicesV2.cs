@@ -237,7 +237,7 @@ namespace RA.Services
                 HandleRequiredFields( input, output, ref messages );
 
 				//
-				output.StatusType = AssignStatusType( "Assessment StatusType", input.StatusType, ref messages );
+				output.LifecycleStatusType = AssignStatusType( "Assessment LifecycleStatusType", input.LifecycleStatusType, ref messages );
 				//
 				HandleLiteralFields( input, output, ref messages );
 
@@ -253,7 +253,7 @@ namespace RA.Services
 
 				output.EstimatedCost = FormatCosts( input.EstimatedCost, ref messages );
 
-				output.EstimatedDuration = FormatDuration( input.EstimatedDuration, ref messages );
+				output.EstimatedDuration = FormatDuration( input.EstimatedDuration, "Assessment.EstimatedDuration", ref messages );
 
 				output.Requires = FormatConditionProfile( input.Requires, ref messages );
 				output.Recommends = FormatConditionProfile( input.Recommends, ref messages );
@@ -285,7 +285,7 @@ namespace RA.Services
 				output.CommonCosts = AssignRegistryResourceURIsListAsStringList( input.CommonCosts, "CommonCosts", ref messages, false );
 
 				//output.FinancialAssistanceOLD = MapFinancialAssistance( input.FinancialAssistanceOLD, ref messages );
-				output.FinancialAssistance = MapFinancialAssistance( input.FinancialAssistance, ref messages );
+				output.FinancialAssistance = MapFinancialAssistance( input.FinancialAssistance, ref messages, "Assessment" );
 
 				output.VersionIdentifier = AssignIdentifierListToList( input.VersionIdentifier, ref messages );
                 HandleOrgProperties( input, output, ref messages );
@@ -337,9 +337,9 @@ namespace RA.Services
             //now literal
             output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
 
-            output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "Owning Organization", false, ref messages );
+            output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "Owning Organization", false, ref messages, false, true );
             //output.OwnedBy = FormatOrganizationReferenceToList( input.OwnedBy, "Owning Organization", false, ref messages );
-			output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages );
+			output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages, false, true );
 
 			if (output.OwnedBy == null && output.OfferedBy == null )
 			{
@@ -444,56 +444,57 @@ namespace RA.Services
 			output.ProcessStandards = AssignValidUrlAsString( input.ProcessStandards, "Process Standards", ref messages, false );
 			output.ScoringMethodExample = AssignValidUrlAsString( input.ScoringMethodExample, "Scoring Method Example", ref messages, false );
 
+			output.TargetLearningResource = AssignValidUrlListAsStringList( input.TargetLearningResource, "TargetLearningResource", ref messages );
 		}
 
 		public void HandleAssertedINsProperties( InputEntity input, OutputEntity output, RJ.EntityReferenceHelper helper, ref List<string> messages )
 		{
 			RJ.JurisdictionProfile jp = new RJ.JurisdictionProfile();
 			//need to check with partners, and set date for sunsetting this approach
-			if( input.JurisdictionAssertions != null && input.JurisdictionAssertions.Count > 0 )
-			{
-				if( !UtilityManager.GetAppKeyValue( "allowingJurisdictionAssertions", false ) )
-				{
-					messages.Add( "Error: As of 2020, the property JurisdictionAssertions is now obsolete. Instead the individual properties like AssertedIn, ApprovedIn should be used." );
-					//return;
-				}
-				else
-				{
-					foreach( var item in input.JurisdictionAssertions )
-					{
-						if( item.AssertsAccreditedIn )
-						{
-							jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-							output.AccreditedIn = JurisdictionProfileAdd( jp, output.AccreditedIn );
-						}
-						if( item.AssertsApprovedIn )
-						{
-							jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-							output.ApprovedIn = JurisdictionProfileAdd( jp, output.ApprovedIn );
-						}
-						if( item.AssertsRecognizedIn )
-						{
-							jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-							output.RecognizedIn = JurisdictionProfileAdd( jp, output.RecognizedIn );
-						}
-						if( item.AssertsRegulatedIn )
-						{
-							jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-							output.RegulatedIn = JurisdictionProfileAdd( jp, output.RegulatedIn );
-						}
-					}
+			//if( input.JurisdictionAssertions != null && input.JurisdictionAssertions.Count > 0 )
+			//{
+			//	if( !UtilityManager.GetAppKeyValue( "allowingJurisdictionAssertions", false ) )
+			//	{
+			//		messages.Add( "Error: As of 2020, the property JurisdictionAssertions is now obsolete. Instead the individual properties like AssertedIn, ApprovedIn should be used." );
+			//		//return;
+			//	}
+			//	else
+			//	{
+			//		foreach( var item in input.JurisdictionAssertions )
+			//		{
+			//			if( item.AssertsAccreditedIn )
+			//			{
+			//				jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+			//				output.AccreditedIn = JurisdictionProfileAdd( jp, output.AccreditedIn );
+			//			}
+			//			if( item.AssertsApprovedIn )
+			//			{
+			//				jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+			//				output.ApprovedIn = JurisdictionProfileAdd( jp, output.ApprovedIn );
+			//			}
+			//			if( item.AssertsRecognizedIn )
+			//			{
+			//				jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+			//				output.RecognizedIn = JurisdictionProfileAdd( jp, output.RecognizedIn );
+			//			}
+			//			if( item.AssertsRegulatedIn )
+			//			{
+			//				jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+			//				output.RegulatedIn = JurisdictionProfileAdd( jp, output.RegulatedIn );
+			//			}
+			//		}
 
-					warningMessages.Add( "Warning: the property JurisdictionAssertions will be removed by March 2020. The individual properties like AssertedIn should be used instead." );
-				}
-			}
+			//		warningMessages.Add( "Warning: the property JurisdictionAssertions will be removed by March 2020. The individual properties like AssertedIn should be used instead." );
+			//	}
+			//}
 			//else check regardless
-			{
+			//{
 				output.AccreditedIn = MapJurisdictionAssertionsList( input.AccreditedIn, ref helper, ref messages );
 				output.ApprovedIn = MapJurisdictionAssertionsList( input.ApprovedIn, ref helper, ref messages );
 				output.OfferedIn = MapJurisdictionAssertionsList( input.OfferedIn, ref helper, ref messages );
 				output.RecognizedIn = MapJurisdictionAssertionsList( input.RecognizedIn, ref helper, ref messages );
 				output.RegulatedIn = MapJurisdictionAssertionsList( input.RegulatedIn, ref helper, ref messages );
-			}
+			//}
 
 		} //
 		#region === CredentialAlignmentObject ===
@@ -503,8 +504,11 @@ namespace RA.Services
 
 			output.DeliveryType = FormatCredentialAlignmentVocabs( "deliveryType", input.DeliveryType, ref messages );
 			output.AssessmentMethodType = FormatCredentialAlignmentVocabs( "assessmentMethodType", input.AssessmentMethodType, ref messages );
+			//
 			output.AssessmentMethodDescription = AssignLanguageMap( input.AssessmentMethodDescription, input.AssessmentMethodDescription_Map, "AssessmentMethodDescription", DefaultLanguageForMaps, ref messages, false, MinimumDescriptionLength );
-
+			//
+			output.LearningMethodDescription = AssignLanguageMap( input.LearningMethodDescription, input.LearningMethodDescription_Map, "LearningMethodDescription", DefaultLanguageForMaps, ref messages, false, MinimumDescriptionLength );
+			//
 			output.AssessmentUseType = FormatCredentialAlignmentVocabs( "assessmentUseType", input.AssessmentUseType, ref messages );
 			output.ScoringMethodType = FormatCredentialAlignmentVocabs( "scoringMethodType", input.ScoringMethodType, ref messages );
 
@@ -527,10 +531,9 @@ namespace RA.Services
 			//=== industries ===============================================================
 			//can't depend on the codes being NAICS??
 			output.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( input.IndustryType, true, ref messages );
-			//if ( input.Naics != null && input.Naics.Count > 0 )
-			//	output.Naics = input.Naics;
-			//else
-			//	output.Naics = null;
+			//NEW - allow a list of Naics, and resolve
+			output.IndustryType = HandleListOfNAICS_Codes( input.NaicsList, output.IndustryType, ref messages );
+
 			//append to IndustryType
 			output.IndustryType = AppendCredentialAlignmentListFromList( input.AlternativeIndustryType, null, "", "", "AlternativeIndustryType", output.IndustryType, ref messages );
 			//output.AlternativeIndustryType = AssignLanguageMapList( input.AlternativeIndustryType, input.AlternativeIndustryType_Map, "Credential AlternativeIndustryType", ref messages );

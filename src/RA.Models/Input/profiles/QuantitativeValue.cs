@@ -7,25 +7,35 @@ using System.Threading.Tasks;
 namespace RA.Models.Input
 {
 	/// <summary>
-	/// Class for providing data about a propery like LearningOpportunity.CreditValue.
-	/// Required?: Provide a single value or a Min and Max value.
-	///			   May not actually be required, if description used. If UnitText is provided, then a value is required.	
-	/// Required: Provide a valid concept in UnitText or description
+	/// Class for providing values for a property like FinancialAssistance.FinancialAssistanceValue or  LearningOpportunity.CreditValue.
+	/// Recommended: Provide a single value OR a Min and Max value.
+	/// Recommended: Provide a valid concept in UnitText or description
+	/// If UnitText is provided, then a value is required.	
+	/// Alternatively just a description can be provided if value is more complicated than can be expressed using either the Value or MinValue/MaxValue
 	/// </summary>
 	public class QuantitativeValue
 	{
 		/// <summary>
 		/// Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. For example:
-		/// creditUnit:ContinuingEducationUnit or ContinuingEducationUnit
+		/// creditUnit:DegreeCredit or ContinuingEducationUnit
 		/// <see cref="https://credreg.net/ctdl/terms/creditUnitType"/> 
 		/// </summary>
 		public string UnitText { get; set; }
-		//public LanguageMap UnitText_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		/// A single value for this purpose. 
+		/// Do not use if providing a minimum and maximum value.
+		/// </summary>
 		public decimal Value { get; set; }
+		/// <summary>
+		/// Minimum value for this purpose. If provided, a maximum value must also be provided
+		/// </summary>
 		public decimal MinValue { get; set; }
+		/// <summary>
+		/// Minimum value for this purpose.
+		/// </summary>
 		public decimal MaxValue { get; set; }
 		/// <summary>
-		/// Optional description of the credit, using either a string value or as a language map
+		/// Optional description of the value, using either a string value or as a language map
 		/// </summary>
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();

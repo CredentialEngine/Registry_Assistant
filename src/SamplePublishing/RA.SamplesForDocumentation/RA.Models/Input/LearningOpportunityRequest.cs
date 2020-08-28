@@ -306,6 +306,7 @@ namespace RA.Models.Input
 		//[obsolete]
 		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; } = new List<FinancialAlignmentObject>();
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
+		public List<string> TargetLearningResource { get; set; } = new List<string>();
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 	}
 }

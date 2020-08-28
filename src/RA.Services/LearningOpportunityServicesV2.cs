@@ -73,7 +73,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
 
@@ -122,7 +122,7 @@ namespace RA.Services
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
-
+						CheckIfChanged( helper, cer.WasChanged );
 						string msg = string.Format( "<p>Published LearningOpportunity: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
 						NotifyOnPublish( "LearningOpportunity", msg );
 					}
@@ -150,7 +150,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
@@ -180,7 +180,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
@@ -200,7 +200,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
@@ -242,9 +242,10 @@ namespace RA.Services
             try
 			{
 
-                output.InLanguage = PopulateInLanguage( input.InLanguage, "Assessment", input.Name, hasDefaultLanguage, ref messages );
+                output.InLanguage = PopulateInLanguage( input.InLanguage, "Learning Opportunity", input.Name, hasDefaultLanguage, ref messages );
                 HandleRequiredFields( input, output, ref messages );
-
+				//
+				output.LifecycleStatusType = AssignStatusType( "Learning Opportunity LifecycleStatusType", input.LifecycleStatusType, ref messages );
 				HandleLiteralFields( input, output, ref messages );
 
 				HandleUrlFields( input, output, ref messages );
@@ -257,8 +258,13 @@ namespace RA.Services
 
 				HandleCredentialAlignmentFields( input, output, ref messages );
 
+				//
+				output.LearningMethodDescription = AssignLanguageMap( input.LearningMethodDescription, input.LearningMethodDescription_Map, "LearningMethodDescription", DefaultLanguageForMaps, ref messages, false, MinimumDescriptionLength );
+				//
+				output.AssessmentMethodDescription = AssignLanguageMap( input.AssessmentMethodDescription, input.AssessmentMethodDescription_Map, "AssessmentMethodDescription", DefaultLanguageForMaps, ref messages, false, MinimumDescriptionLength );
+				//
 				output.EstimatedCost = FormatCosts( input.EstimatedCost, ref messages );
-				output.EstimatedDuration = FormatDuration( input.EstimatedDuration, ref messages );
+				output.EstimatedDuration = FormatDuration( input.EstimatedDuration, "LearningOpportunity.EstimatedDuration", ref messages );
 
 				output.Recommends = FormatConditionProfile( input.Recommends, ref messages );
 				output.Requires = FormatConditionProfile( input.Requires, ref messages );
@@ -287,7 +293,7 @@ namespace RA.Services
 				output.CommonCosts = AssignRegistryResourceURIsListAsStringList( input.CommonCosts, "CommonCosts", ref messages, false );
 
 				//output.FinancialAssistanceOLD = MapFinancialAssistance( input.FinancialAssistanceOLD, ref messages );
-				output.FinancialAssistance = MapFinancialAssistance( input.FinancialAssistance, ref messages );
+				output.FinancialAssistance = MapFinancialAssistance( input.FinancialAssistance, ref messages, "LearningOpportunity" );
 
 				output.VersionIdentifier = AssignIdentifierListToList( input.VersionIdentifier, ref messages );
 
@@ -329,32 +335,18 @@ namespace RA.Services
 			CurrentCtid = output.Ctid = FormatCtid(input.Ctid, "LearningOpportunity", ref messages);
             output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
 
-            //required
-            if ( string.IsNullOrWhiteSpace( input.Name ) )
-            {
-                if ( input.Name_Map == null || input.Name_Map.Count == 0 )
-                {
-                    messages.Add( FormatMessage( "Error - A Name or Name_Map must be entered for Learning Opportunity with CTID: '{0}'.", input.Ctid ) );
-                }
-                else
-                {
-                    output.Name = AssignLanguageMap( input.Name_Map, "Learning Opportunity Name", ref messages );
-                    CurrentEntityName = GetFirstItemValue( output.Name );
-                }
-            }
-            else
-            {
-                output.Name = Assign( input.Name, DefaultLanguageForMaps );
-                CurrentEntityName = input.Name;
-            }
-            output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+			//required
+			output.Name = AssignLanguageMap( input.Name, input.Name_Map, "LearningOpportunity.Name", DefaultLanguageForMaps, ref messages, true, 3 );
+			CurrentEntityName = GetFirstItemValue( output.Name );
 
-            //now literal
+            output.Description = AssignLanguageMap( input.Description, input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+
+            //
             output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
 
 
-            output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "Owning Organization", false, ref messages );
-            output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages );
+            output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "Owning Organization", false, ref messages, false, true );
+            output.OfferedBy = FormatOrganizationReferences( input.OfferedBy, "Offered By", false, ref messages, false, true );
 
 			if ( output.OwnedBy == null && output.OfferedBy == null )
 			{
@@ -370,7 +362,7 @@ namespace RA.Services
             if ( ( input.AvailableOnlineAt == null || input.AvailableOnlineAt.Count == 0 ) &&
 				 ( input.AvailabilityListing == null || input.AvailabilityListing.Count == 0 ) &&
 				 ( input.AvailableAt == null || input.AvailableAt.Count == 0 ) )
-				messages.Add( string.Format( "Error - At least one of: 'Available Online At', 'Availability Listing', or 'Available At' (address) must be provided for Assessment: '{0}'", input.Name ) );
+				messages.Add( string.Format( "Error - At least one of: 'Available Online At', 'Availability Listing', or 'Available At' (address) must be provided for Learning Opportunity: '{0}'", input.Name ) );
 
 			return isValid;
         }
@@ -388,17 +380,15 @@ namespace RA.Services
 
 			//
 			//output.CreditUnitType = null;
-			output.CreditValue = AssignQuantitiveValue( input.CreditValue, "CreditValue", "LearningOpportunity", ref messages );
+			output.CreditValue = AssignQuantitiveValueToList( input.CreditValue, "CreditValue", "LearningOpportunity", ref messages );
 			//at this point could have had no data, or bad data
 			if ( output.CreditValue == null )
 			{
 				//check legacy
-				output.CreditValue = AssignQuantitiveValue( "LearningOpportunity", input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref messages );
-
-				//apparantly will still allow just a description. TBD: is it allowed if creditValue is provided?
-				output.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription", DefaultLanguageForMaps, ref messages );
+				//output.CreditValue = AssignQuantitiveValue( "LearningOpportunity", input.CreditHourValue, input.CreditHourType, input.CreditUnitType, input.CreditUnitValue, input.CreditUnitTypeDescription, ref messages );				
 			}
-
+			//apparantly will still allow just a description. TBD: is it allowed if creditValue is provided?
+			output.CreditUnitTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.CreditUnitTypeDescription ), input.CreditUnitTypeDescription_Map, "CreditUnitTypeDescription", DefaultLanguageForMaps, ref messages );
 			#region old credit code
 			//
 			//bool hasData = false;
@@ -432,50 +422,59 @@ namespace RA.Services
 			to.AvailableOnlineAt = AssignValidUrlListAsStringList( from.AvailableOnlineAt, "Available Online At", ref messages );
 			to.AvailabilityListing = AssignValidUrlListAsStringList( from.AvailabilityListing, "Availability Listing", ref messages );
 
-
-        }
+			to.TargetLearningResource = AssignValidUrlListAsStringList( from.TargetLearningResource, "TargetLearningResource", ref messages );
+		}
 
 
 		public void HandleAssertedINsProperties( InputEntity input, OutputEntity output, RJ.EntityReferenceHelper helper, ref List<string> messages )
 		{
 			RJ.JurisdictionProfile jp = new RJ.JurisdictionProfile();
-			if ( input.JurisdictionAssertions != null && input.JurisdictionAssertions.Count > 0 )
-			{
-				foreach ( var item in input.JurisdictionAssertions )
-				{
-					if ( item.AssertsAccreditedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.AccreditedIn = JurisdictionProfileAdd( jp, output.AccreditedIn );
-					}
-					if ( item.AssertsApprovedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.ApprovedIn = JurisdictionProfileAdd( jp, output.ApprovedIn );
-					}
-					if ( item.AssertsOfferedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.OfferedIn = JurisdictionProfileAdd( jp, output.OfferedIn );
-					}
-					if ( item.AssertsRecognizedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.RecognizedIn = JurisdictionProfileAdd( jp, output.RecognizedIn );
-					}
-					if ( item.AssertsRegulatedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.RegulatedIn = JurisdictionProfileAdd( jp, output.RegulatedIn );
-					}
+			//need to check with partners, and set date for sunsetting this approach
+			//if( input.JurisdictionAssertions != null && input.JurisdictionAssertions.Count > 0 )
+			//{
+			//	if( !UtilityManager.GetAppKeyValue( "allowingJurisdictionAssertions", false ) )
+			//	{
+			//		messages.Add( "Error: As of 2020, the property JurisdictionAssertions is now obsolete. Instead the individual properties like AssertedIn, ApprovedIn should be used." );
+			//		//return;
+			//	}
+			//	else
+			//	{
+			//		foreach( var item in input.JurisdictionAssertions )
+			//		{
+			//			if( item.AssertsAccreditedIn )
+			//			{
+			//				jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+			//				output.AccreditedIn = JurisdictionProfileAdd( jp, output.AccreditedIn );
+			//			}
+			//			if( item.AssertsApprovedIn )
+			//			{
+			//				jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+			//				output.ApprovedIn = JurisdictionProfileAdd( jp, output.ApprovedIn );
+			//			}
+			//			if( item.AssertsRecognizedIn )
+			//			{
+			//				jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+			//				output.RecognizedIn = JurisdictionProfileAdd( jp, output.RecognizedIn );
+			//			}
+			//			if( item.AssertsRegulatedIn )
+			//			{
+			//				jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+			//				output.RegulatedIn = JurisdictionProfileAdd( jp, output.RegulatedIn );
+			//			}
+			//		}
 
-					if ( item.AssertsRevokedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.RevokedIn = JurisdictionProfileAdd( jp, output.RevokedIn );
-					}
-				}
-			}
+			//		warningMessages.Add( "Warning: the property JurisdictionAssertions will be removed by March 2020. The individual properties like AssertedIn should be used instead." );
+			//	}
+			//}
+			//else check regardless
+			//{
+				output.AccreditedIn = MapJurisdictionAssertionsList( input.AccreditedIn, ref helper, ref messages );
+				output.ApprovedIn = MapJurisdictionAssertionsList( input.ApprovedIn, ref helper, ref messages );
+				output.OfferedIn = MapJurisdictionAssertionsList( input.OfferedIn, ref helper, ref messages );
+				output.RecognizedIn = MapJurisdictionAssertionsList( input.RecognizedIn, ref helper, ref messages );
+				output.RegulatedIn = MapJurisdictionAssertionsList( input.RegulatedIn, ref helper, ref messages );
+				output.RevokedIn = MapJurisdictionAssertionsList( input.RevokedIn, ref helper, ref messages );
+			//}
 
 		} //
 
@@ -483,7 +482,7 @@ namespace RA.Services
 		public void HandleCredentialAlignmentFields( InputEntity input, OutputEntity output, ref List<string> messages )
         {
 
-			output.Subject = FormatCredentialAlignmentListFromStrings( input.Subject );
+			output.Subject = FormatCredentialAlignmentListFromStrings( input.Subject, input.Subject_Map );
 
 			if ( input.LearningMethodType.Any() )
 				foreach ( string item in input.LearningMethodType )
@@ -501,28 +500,36 @@ namespace RA.Services
 			output.AudienceType = FormatCredentialAlignmentVocabs( "audienceType", input.AudienceType, ref messages );
 
 			//frameworks
+			//=== occupations ===============================================================
 			//can't depend on the codes being SOC
 			output.OccupationType = FormatCredentialAlignmentListFromFrameworkItemList( input.OccupationType, true, ref messages );
+			//no longer using as concrete property, just used for simple list of strings
 			//append to OccupationType
 			output.OccupationType = AppendCredentialAlignmentListFromList( input.AlternativeOccupationType, null, "", "", "AlternativeOccupationType", output.OccupationType, ref messages );
-			//output.AlternativeOccupationType = AssignLanguageMapList( input.AlternativeOccupationType, input.AlternativeOccupationType_Map, "Credential AlternativeOccupationType", ref messages );
 
+			//NEW - allow a list of Onet codes, and resolve
+			output.OccupationType = HandleListOfONET_Codes( input.ONET_Codes, output.OccupationType, ref messages );
+
+			//output.AlternativeOccupationType = AssignLanguageMapList( input.AlternativeOccupationType, input.AlternativeOccupationType_Map, "Credential AlternativeOccupationType", ref output.OccupationType, ref messages );
+
+			//=== industries ===============================================================
 			//can't depend on the codes being NAICS??
 			output.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( input.IndustryType, true, ref messages );
+			//NEW - allow a list of Naics, and resolve
+			output.IndustryType = HandleListOfNAICS_Codes( input.NaicsList, output.IndustryType, ref messages );
 			//append to IndustryType
 			output.IndustryType = AppendCredentialAlignmentListFromList( input.AlternativeIndustryType, null, "", "", "AlternativeIndustryType", output.IndustryType, ref messages );
-			//if ( input.Naics != null && input.Naics.Count > 0 )
-			//	output.Naics = input.Naics;
-			//else
-			//	output.Naics = null;
 			//output.AlternativeIndustryType = AssignLanguageMapList( input.AlternativeIndustryType, input.AlternativeIndustryType_Map, "Credential AlternativeIndustryType", ref messages );
 			//
+			//=== instructional programs ===============================================================
 			output.InstructionalProgramType = FormatCredentialAlignmentListFromFrameworkItemList( input.InstructionalProgramType, true, ref messages, "Classification of Instructional Programs", "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55" );
 			//append to InstructionalProgramType
 			output.InstructionalProgramType = AppendCredentialAlignmentListFromList( input.AlternativeInstructionalProgramType, null, "", "", "AlternativeInstructionalProgramType", output.InstructionalProgramType, ref messages );
+
+			//NEW - allow a list of CIP codes, and resolve
+			output.InstructionalProgramType = HandleListOfCip_Codes( input.CIP_Codes, output.InstructionalProgramType, ref messages );
 			//
 			//output.AlternativeInstructionalProgramType = AssignLanguageMapList( input.AlternativeInstructionalProgramType, input.AlternativeInstructionalProgramType_Map, "Credential AlternativeInstructionalProgramType", ref messages );
-			//
 
 
 		}

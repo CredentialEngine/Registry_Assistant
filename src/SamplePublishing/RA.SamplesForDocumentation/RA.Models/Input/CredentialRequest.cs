@@ -6,6 +6,7 @@ namespace RA.Models.Input
 {
 	/// <summary>
 	/// Class used with a Credential format or publish request
+	/// June 24, 2020 - added BaseSalary (Monetary Amount)
 	/// </summary>
 	public class CredentialRequest : BaseRequest
 	{
@@ -86,7 +87,7 @@ namespace RA.Models.Input
 			AvailableAt = new List<Place>();
 			//CodedNotation = new List<string>();
 			Renewal = new List<ConditionProfile>();
-
+			
 			AdministrationProcess = new List<ProcessProfile>();
 			DevelopmentProcess = new List<ProcessProfile>();
 			MaintenanceProcess = new List<ProcessProfile>();
@@ -97,7 +98,9 @@ namespace RA.Models.Input
 
 		}
 
+
 		#region *** Required Properties ***
+
 
 		/// <summary>
 		/// Name of this credential
@@ -161,6 +164,8 @@ namespace RA.Models.Input
 		/// Image URL
 		/// </summary>
 		public string Image { get; set; }
+
+
 
 		/// <summary>
 		/// AvailableOnlineAt URL
@@ -230,6 +235,7 @@ namespace RA.Models.Input
 		public List<OrganizationReference> RevokedBy { get; set; }
 		#endregion
 
+
 		#region Quality Assurance IN - Jurisdiction based Quality Assurance  (INs)
 		//There are currently two separate approaches to publishing properties like assertedIn
 		//- Publish all 'IN' properties using JurisdictionAssertions
@@ -273,6 +279,9 @@ namespace RA.Models.Input
 		public List<JurisdictionAssertion> RevokedIn { get; set; } = new List<JurisdictionAssertion>();
 
 		#endregion
+
+
+
 
 		/// <summary>
 		/// List of credentials that are part of this credential

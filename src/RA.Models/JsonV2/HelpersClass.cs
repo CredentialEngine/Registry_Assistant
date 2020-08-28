@@ -72,6 +72,9 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "@id" )]
 		public string Id { get; set; }
 	}
+	/// <summary>
+	/// TBD - perhaps we need an IBlankNode Interface. Then have Org and entity base implement the latter, rather than jamming all the properties in one class!
+	/// </summary>
     public class BlankNode
     {
 
@@ -98,6 +101,7 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:name" )]
         public LanguageMap Name { get; set; } = new LanguageMap();
 
+		//Purpose? upcoming addition?
 		[JsonProperty( PropertyName = "rdfs:label" )]
 		public LanguageMap Label { get; set; } = new LanguageMap();
 
@@ -113,10 +117,25 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
         public string SubjectWebpage { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:socialMedia" )]
+
+		#region Properties for an Organization related blank node
+		//
+		[JsonProperty( PropertyName = "ceterms:address" )]
+		public List<Place> Address { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:availabilityListing" )]
+		public List<string> AvailabilityListing { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:email" )]
+		public List<string> Email { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:socialMedia" )]
         public List<string> SocialMedia { get; set; } = null;
 
 
+		#endregion
+
+		#region Properties for an Entity related blank node
 		[JsonProperty( PropertyName = "ceterms:assesses" )]
 		public List<CredentialAlignmentObject> Assesses { get; set; }
 
@@ -144,9 +163,19 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
 		public List<string> OwnedBy { get; set; }
 		//
+		[JsonProperty( PropertyName = "ceterms:subject" )]
+		public List<CredentialAlignmentObject> Subject { get; set; }
+		//
 		[JsonProperty( PropertyName = "ceterms:teaches" )]
 		public List<CredentialAlignmentObject> Teaches { get; set; }
+
+		#endregion
 	}
+
+	/// <summary>
+	/// 20-08-23
+	/// TBD - this may be obsolete now
+	/// </summary>
 	public class EntityReferenceHelper
     {
         public EntityReferenceHelper()

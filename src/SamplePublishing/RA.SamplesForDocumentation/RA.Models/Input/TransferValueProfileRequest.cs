@@ -34,7 +34,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// List of TransferValueProfiles to publish
 		/// </summary>
-		public List<TransferValueProfile> TransferValueProfile { get; set; } = new List<TransferValueProfile>();
+		public List<TransferValueProfile> TransferValueProfiles { get; set; } = new List<TransferValueProfile>();
 	}
 
 	/// <summary>
@@ -132,6 +132,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// A suggested or articulated credit- or point-related transfer value.
+		/// Required
 		/// </summary>
 		public List<QuantitativeValue> TransferValue { get; set; } = new List<QuantitativeValue>();
 
@@ -146,6 +147,18 @@ namespace RA.Models.Input
 		/// <see cref="https://credreg.net/registry/assistant#EntityReference"/>
 		/// </summary>
 		public List<EntityReference> TransferValueFor { get; set; } = new List<EntityReference>();
+
+
+		/// <summary>
+		/// pending - not in production!!
+		/// 
+		/// Value Endorsement
+		/// The referenced resource establishes or recommends an equivalent transfer value.
+		/// EntityReference for a TransferValueProfile	???
+		/// Would this just be an entity reference to an existing TVP? I would think so!
+		/// </summary>
+		public EntityReference ValueEndorsement { get; set; } = new EntityReference();
+		//public TransferValueProfile ValueEndorsement { get; set; } = new TransferValueProfile();
 
 	}
 

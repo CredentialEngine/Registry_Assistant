@@ -51,9 +51,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConditionManifests\PublishConditionManifest.cs" />
+    <Compile Include="CostManifests\PublishCostManifest.cs" />
+    <Compile Include="Credentials\PublishCredential.cs" />
+    <Compile Include="LearningOpportunities\PublishLearningOpportunity.cs" />
     <Compile Include="LoggingHelper.cs" />
-    <Compile Include="PublishPathway.cs" />
-    <Compile Include="PublishTransferValueProfile.cs" />
+    <Compile Include="Organizations\PublishOrganization.cs" />
+    <Compile Include="Pathways\PublishPathway.cs" />
+    <Compile Include="Pathways\PublishPathwaySets.cs" />
     <Compile Include="RA.Models\Input\PathwayRequest.cs" />
     <Compile Include="RA.Models\Input\profiles\EntityReference.cs" />
     <Compile Include="RA.Models\Input\profiles\FinancialAssistanceProfile.cs" />
@@ -64,12 +69,6 @@
     <Compile Include="SampleModels\Credential.cs" />
     <Compile Include="InputSamples\Frameworks.cs" />
     <Compile Include="InputSamples\OrganizationReferences.cs" />
-    <Compile Include="PublishAssessment.cs" />
-    <Compile Include="PublishConditionManifest.cs" />
-    <Compile Include="PublishCostManifest.cs" />
-    <Compile Include="PublishCredential.cs" />
-    <Compile Include="PublishLearningOpportunity.cs" />
-    <Compile Include="PublishOrganization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RA.Models\Input\AssessmentRequest.cs" />
     <Compile Include="RA.Models\Input\BaseRequest.cs" />
@@ -81,13 +80,11 @@
     <Compile Include="RA.Models\Input\DeleteRequest.cs" />
     <Compile Include="RA.Models\Input\LearningOpportunityRequest.cs" />
     <Compile Include="RA.Models\Input\OrganizationRequest.cs" />
-    <Compile Include="RA.Models\Input\profiles\Address.cs" />
     <Compile Include="RA.Models\Input\profiles\CompetencyFrameworksGraph.cs" />
     <Compile Include="RA.Models\Input\profiles\ConditionProfile.cs" />
     <Compile Include="RA.Models\Input\profiles\CostProfile.cs" />
     <Compile Include="RA.Models\Input\profiles\CredentialAlignmentObject.cs" />
     <Compile Include="RA.Models\Input\profiles\DurationProfile.cs" />
-    <Compile Include="RA.Models\Input\profiles\FinancialAlignmentObject.cs" />
     <Compile Include="RA.Models\Input\profiles\FrameworkItem.cs" />
     <Compile Include="RA.Models\Input\profiles\HelperClasses.cs" />
     <Compile Include="RA.Models\Input\profiles\Jurisdiction.cs" />
@@ -99,6 +96,11 @@
     <Compile Include="RA.Models\RegistryAssistantResponse.cs" />
     <Compile Include="SampleModels\Organization.cs" />
     <Compile Include="SampleServices.cs" />
+    <Compile Include="SupportingData\FinancialAssistanceProfile.cs" />
+    <Compile Include="SupportingData\Industries.cs" />
+    <Compile Include="SupportingData\InstructionalProgram_CIP.cs" />
+    <Compile Include="SupportingData\Occupations.cs" />
+    <Compile Include="TransferValueProfiles\PublishTransferValueProfile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

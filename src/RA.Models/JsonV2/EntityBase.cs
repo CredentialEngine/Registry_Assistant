@@ -62,12 +62,18 @@ namespace RA.Models.JsonV2
 		//
 		[JsonProperty( PropertyName = "ceterms:learningMethodDescription" )]
 		public LanguageMap LearningMethodDescription { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:learningMethodType" )]
+		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
 		//
 		[JsonProperty( PropertyName = "ceterms:offeredBy" )]
 		public List<string> OfferedBy { get; set; }
 		//
 		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
 		public List<string> OwnedBy { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:subject" )]
+		public List<CredentialAlignmentObject> Subject { get; set; }
 		//
 		[JsonProperty( PropertyName = "ceterms:teaches" )]
 		public List<CredentialAlignmentObject> Teaches { get; set; }

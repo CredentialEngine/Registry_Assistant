@@ -80,7 +80,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// This property identifies all the PathwayComponents in a Pathway
 		/// Provide the CTID or the full URI for the target environment. 
-		/// However, we could recommend that a CTID be provided, and just convert.
+		/// However, we recommend that a CTID be provided, and the API will format accordingly.
 		/// As a helper, this could be generated from all of the provided components
 		/// </summary>
 		public List<string> HasPart { get; set; } = new List<string>();
@@ -144,6 +144,7 @@ namespace RA.Models.Input
 		/// ceterms:CredentialComponent 	
 		/// ceterms:ExtracurricularComponent 	
 		/// ceterms:JobComponent 	
+		/// ceterms:selectioncomponent
 		/// ceterms:WorkExperienceComponent
 		/// </summary>
 		public string PathwayComponentType { get; set; }
@@ -194,7 +195,7 @@ namespace RA.Models.Input
 		public string HasProgressionLevel { get; set; }
 
 
-		public List<IdentifierValue> IdentifierValue { get; set; } = new List<IdentifierValue>();
+		//public List<IdentifierValue> IdentifierValue { get; set; } = new List<IdentifierValue>();
 
 
 		/// <summary>
@@ -291,7 +292,7 @@ namespace RA.Models.Input
 		/// Used by: 
 		/// ceterms:CourseComponent only 
 		/// </summary>
-		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
+		public List<QuantitativeValue> CreditValue { get; set; } = new List<QuantitativeValue>();
 
 		/// <summary>
 		/// ProgramTerm

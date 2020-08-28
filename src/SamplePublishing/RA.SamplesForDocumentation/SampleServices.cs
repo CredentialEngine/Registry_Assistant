@@ -16,6 +16,15 @@ namespace RA.SamplesForDocumentation
 	{
 		public static string thisClassName = "SampleServices";
 		public string environment = GetAppKeyValue( "envType" );
+		//helpers. Could hard code or retrieve from the config file. 
+		public static string GetMyApiKey()
+		{
+			return GetAppKeyValue( "myOrgApiKey" );
+		} //
+		public static string GetMyOrganizationCTID()
+		{
+			return GetAppKeyValue( "myOrgCTID" );
+		} //
 
 		#region === Application Keys Methods ===
 
@@ -109,6 +118,20 @@ namespace RA.SamplesForDocumentation
 		#endregion
 
 		#region publishing 
+		/// <summary>
+		/// Method to post to a Registry Assistant publish or format endpoint
+		/// </summary>
+		/// <param name="entityType">Credential, Organization, etc. </param>
+		/// <param name="requestType">format or publish</param>
+		/// <param name="payload">Serialized input request</param>
+		/// <param name="apiKey">The organization Api Key from the accounts site. </param>
+		/// <returns></returns>
+		public string SimplePost( string entityType, string requestType, string payload, string apiKey )
+		{
+			string serviceUri = GetAppKeyValue( "registryAssistantApi" );
+			string assistantUrl = serviceUri + string.Format( "{0}/{1}", entityType, requestType );
+			return SimplePost( assistantUrl, payload, apiKey ); ;
+		}
 		public string SimplePost( string assistantUrl, string payload, string apiKey )
 		{
 			var result = "";
@@ -137,10 +160,6 @@ namespace RA.SamplesForDocumentation
 		public bool PublishRequest( AssistantRequestHelper request )
 		{
 			string serviceUri = GetAppKeyValue( "registryAssistantApi" );
-			if ( DateTime.Now.Day == 15 && GetAppKeyValue( "envType" ) == "development" )
-			{
-				//serviceUri = "https://localhost:44304/";
-			}
 			request.EndpointUrl = serviceUri + string.Format( "{0}/{1}", request.EndpointType, request.RequestType );
 
 			return PostRequest( request );
