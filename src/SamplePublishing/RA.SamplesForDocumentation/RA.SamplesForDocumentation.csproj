@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assessments\PublishAssessment.cs" />
     <Compile Include="ConditionManifests\PublishConditionManifest.cs" />
     <Compile Include="CostManifests\PublishCostManifest.cs" />
     <Compile Include="Credentials\PublishCredential.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Organizations\PublishOrganization.cs" />
     <Compile Include="Pathways\PublishPathway.cs" />
     <Compile Include="Pathways\PublishPathwaySets.cs" />
+    <Compile Include="RA.Models\Input\BaseRequestClass.cs" />
     <Compile Include="RA.Models\Input\PathwayRequest.cs" />
     <Compile Include="RA.Models\Input\profiles\EntityReference.cs" />
     <Compile Include="RA.Models\Input\profiles\FinancialAssistanceProfile.cs" />

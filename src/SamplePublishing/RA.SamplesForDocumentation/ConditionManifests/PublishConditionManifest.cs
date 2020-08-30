@@ -21,7 +21,7 @@ namespace RA.SamplesForDocumentation
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 			//DataService.SaveCostManifestCTID( myCTID );
 
 			//A simple ConditionManifest object - see below for sample class definition
@@ -34,9 +34,7 @@ namespace RA.SamplesForDocumentation
 				//if this ID/CTID is not known, use a third party reference
 				ConditionManifestOf = new OrganizationReference()
 				{
-					Type = "CredentialOrganization",
-					Name = "Owning Organization of this CostManifest",
-					SubjectWebpage = "http://example.com?t=subjectWebpage"
+					CTID = organizationIdentifierFromAccountsSite
 				}
 			};
 

@@ -25,7 +25,7 @@ namespace RA.SamplesForDocumentation
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 			//Assign a CTID for the entity being published and keep track of it
 			//this must be permantently stored in partner system and used with all future updates. 
-			var myOrgCTID = "ce-" + Guid.NewGuid().ToString();
+			var myOrgCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 			DataService.SaveOrganizationCTID( myOrgCTID );
 
 			//A simple organization object - see below for sample class definition
@@ -165,7 +165,7 @@ namespace RA.SamplesForDocumentation
 			var organizationIdentifierFromAccountsSite = "ce-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myOrgCTID = "ce-" + Guid.NewGuid().ToString();
+			var myOrgCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 			DataService.SaveOrganizationCTID( myOrgCTID );
 			//A simple organization object - see below for sample class definition
 			var myData = new Organization()

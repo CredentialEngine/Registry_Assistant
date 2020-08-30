@@ -21,10 +21,8 @@ namespace RA.SamplesForDocumentation
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString();
-			//DataService.SaveCostManifestCTID( myCTID );
-			//provide the ctid of the organization that 'owns' this cost manifest.
-			var myOrgCTID = "ce-" + Guid.NewGuid().ToString();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+
 			//A simple CostManifest object - see below for sample class definition
 			var myData = new CostManifest()
 			{
@@ -34,7 +32,7 @@ namespace RA.SamplesForDocumentation
 				CostDetails = "http://www.credreg.net/assessment/1234",
 				CostManifestOf = new OrganizationReference()
 				{
-					CTID = myOrgCTID
+					CTID = organizationIdentifierFromAccountsSite
 				}
 			};
 

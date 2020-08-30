@@ -80,7 +80,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// This property identifies all the PathwayComponents in a Pathway
 		/// Provide the CTID or the full URI for the target environment. 
-		/// However, we recommend that a CTID be provided, and the API will format accordingly.
+		/// However, we could recommend that a CTID be provided, and just convert.
 		/// As a helper, this could be generated from all of the provided components
 		/// </summary>
 		public List<string> HasPart { get; set; } = new List<string>();
@@ -131,7 +131,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
 	}
-	public class PathwayComponent
+	public class PathwayComponent : BaseRequestClass
 	{
 		/// <summary>
 		/// Type of PathwayComponent. 
@@ -150,7 +150,11 @@ namespace RA.Models.Input
 		public string PathwayComponentType { get; set; }
 
 		#region Common Properties
-		public string Ctid { get; set; }
+		public string CTID 
+		{ 
+			get { return this.Ctid; }
+			set { this.Ctid = value; } 
+		}
 
 		/// <summary>
 		/// may replace with IdentifierValue

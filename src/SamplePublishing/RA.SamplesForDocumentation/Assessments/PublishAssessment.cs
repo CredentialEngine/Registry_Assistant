@@ -9,7 +9,7 @@ using RA.Models.Input;
 
 namespace RA.SamplesForDocumentation
 {
-	public class PublishLearningOpportunity
+	public class PublishAssessment
 	{
 		public string PublishSimpleRecord()
 		{
@@ -21,19 +21,18 @@ namespace RA.SamplesForDocumentation
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myLoppCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
-			//typically would have been stored prior to retrieving for publishing
-			//DataService.SaveLearningOpportunityCTID( myLoppCTID );
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			//DataService.SaveAssessmentCTID( myCTID );
 
-			//Populate the learning opportunity object
-			var myData = new LearningOpportunity()
+			//A simple assessment object - see below for sample class definition
+			var myData = new Assessment()
 			{
-				Name = "My Learning Opportunity Name",
-				Description = "This is some text that describes my learning opportunity.",
-				Ctid = myLoppCTID,
-				SubjectWebpage = "http://www.credreg.net/learningopportunity/1234",
+				Name = "My Assessment Name",
+				Description = "This is some text that describes my assessment.",
+				Ctid = myCTID,
+				SubjectWebpage = "http://www.credreg.net/assessment/1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
-				LearningMethodType = new List<string>() { "learnMethod:Lecture", "learnMethod:Laboratory" },
+				AssessmentMethodType = new List<string>() { "assessMethod:Exam", "assessMethod:Performance" },
 				Requires = new List<ConditionProfile>()
 				{
 					new ConditionProfile()
@@ -42,9 +41,8 @@ namespace RA.SamplesForDocumentation
 						Condition = new List<string>() { "Condition One", "Condition Two", "Condition Three" }
 					}
 				}
-			};
-
-
+			};          
+			
 			//Add organization that is not in the credential registry
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{
@@ -54,10 +52,10 @@ namespace RA.SamplesForDocumentation
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
 			} );
 
-			//This holds the learning opportunity and the identifier (CTID) for the owning organization
-			var myRequest = new LearningOpportunityRequest()
+			//This holds the assessment and the identifier (CTID) for the owning organization
+			var myRequest = new AssessmentRequest()
 			{
-				LearningOpportunity = myData,
+				Assessment = myData,
 				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
@@ -66,11 +64,11 @@ namespace RA.SamplesForDocumentation
 			var payload = JsonConvert.SerializeObject( myRequest );
 
 			//call the Assistant API
-			result = new SampleServices().SimplePost( "learningopportunity", "publish", payload, apiKey );
-
+			result = new SampleServices().SimplePost( "assessment", "publish", payload, apiKey );
 			//Return the result
 			return result;
 		}
-	};
 
+
+	}
 }

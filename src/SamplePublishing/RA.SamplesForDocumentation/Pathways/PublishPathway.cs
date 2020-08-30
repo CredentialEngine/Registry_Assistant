@@ -10,14 +10,14 @@ namespace RA.SamplesForDocumentation
 {
 	public class PublishPathway
 	{
-		public string PublishSimpleRecord()
+		public string PublishSimpleRecord( string requestType = "publish" )
 		{
 			// Holds the result of the publish action
 			var result = "";
 			// Assign the api key - acquired from organization account of the organization doing the publishing
-			var apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
-			// This is the Ctid of the organization that owns the data being published
-			var organizationIdentifierFromAccountsSite = "ce-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+			var apiKey = SampleServices.GetMyApiKey();
+			// This is the CTID of the organization that owns the data being published
+			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 			// Assign a Ctid for the entity being published and keep track of it
 			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 
@@ -46,24 +46,26 @@ namespace RA.SamplesForDocumentation
 			var destinationComponent = new PathwayComponent()
 			{
 				PathwayComponentType = "CredentialComponent",
-				Ctid= "ce-5e7fcaaf-74e2-47be-a4a9-2bed98f282d7",
+				CTID = "ce-5e7fcaaf-74e2-47be-a4a9-2bed98f282d7",
 				Name = "Associate Degree: Biotechnology",
 				Description = "This badge is earned in Canvas for completing BIO 193 and BIO 202.",
-				CredentialType= "DigitalBadge"
+				CredentialType = "DigitalBadge"
 			};
-			
+
 			//add to input component list
 			pathwayComponents.Add( destinationComponent );
 			//add some more components
 			pathwayComponents.Add( new PathwayComponent()
 			{
-				PathwayComponentType= "CourseComponent",
-				Ctid= "ce-1f8d3d06-3953-4bd8-8750-7dc5e9a062eb",
-				Name = "Programming Concepts and Methology I", 
-				Description="Description of the course",
-				ProgramTerm= "1st Term", 
-				CodedNotation= "COMP B11"
+				PathwayComponentType = "CourseComponent",
+				CTID = "ce-1f8d3d06-3953-4bd8-8750-7dc5e9a062eb",
+				Name = "Programming Concepts and Methology I",
+				Description = "Description of the course",
+				ProgramTerm = "1st Term",
+				CodedNotation = "COMP B11"
 			} );
+			//add a selection component
+			pathwayComponents.Add( AddSelectionComponent() );
 
 			// The input request class holds the pathway and the identifier (Ctid) for the owning organization
 			var myRequest = new PathwayRequest()
@@ -74,25 +76,36 @@ namespace RA.SamplesForDocumentation
 			//add pathway components to the request
 			myRequest.PathwayComponents.AddRange( pathwayComponents );
 
+
 			// Serialize the request object
-			var json = JsonConvert.SerializeObject( myRequest );
-			// Use HttpClient to perform the publish
-			using ( var client = new HttpClient() )
-			{
-				// Accept JSON
-				client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
-				// Add API Key (for a publish request)
-				client.DefaultRequestHeaders.Add( "Authorization", "ApiToken " + apiKey );
-				// Format the json as content
-				var content = new StringContent( json, Encoding.UTF8, "application/json" );
-				// The endpoint to publish to
-				var publishEndpoint = "https://sandbox.credentialengine.org/assistant/pathway/publish/";
-				// Perform the actual publish action and store the result
-				result = client.PostAsync( publishEndpoint, content ).Result.Content.ReadAsStringAsync().Result;
-			}
+			var payload = JsonConvert.SerializeObject( myRequest );
+			//call the Assistant API
+			result = new SampleServices().SimplePost( "pathway", requestType, payload, apiKey );
 			// Return the result
 			return result;
 		}
+		public PathwayComponent AddSelectionComponent()
+		{
+			var output = new PathwayComponent()
+			{
+				Name = "Selection Component",
+				CTID = "ce-44cfeece-214a-47f0-94ce-f49b972bbecd",
+				Description = "Description of this component",
+				SubjectWebpage = "https://example.com?t=selectionComponent",
+				ComponentCategory = "Selection",
+				HasChild = new List<string>() { "ce-e1d14d25-f9cf-45e9-b625-ef79ed003f6b", "ce-39da55fa-140b-4c0a-92e2-c8e38e5f07f0", "ce-88d5a63d-4ca5-4689-bec1-55c88b6a5529" }
+			};
 
+			var conditions = new ComponentCondition()
+			{
+				Name = "Conditions for this SelectionComponent",
+				Description = "Require two of the target components.",
+				RequiredNumber = 3,
+				TargetComponent = new List<string>() { "ce-e1d14d25-f9cf-45e9-b625-ef79ed003f6b", "ce-39da55fa-140b-4c0a-92e2-c8e38e5f07f0", "ce-88d5a63d-4ca5-4689-bec1-55c88b6a5529" }
+			};
+			output.HasCondition.Add( conditions );
+
+			return output;
+		}
 	}
 }
