@@ -77,7 +77,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap AssessmentMethodDescription_Map { get; set; } = new LanguageMap();
 		//
-		public List<Place> AvailableAt { get; set; }
+		public List<Place> AvailableAt { get; set; } = new List<Place>();
 		//
 		public string CodedNotation { get; set; }
 		//
@@ -94,16 +94,22 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap LearningMethodDescription_Map { get; set; } = new LanguageMap();
+		public List<string> LearningMethodType { get; set; } = new List<string>();
 		//
 		/// <summary>
 		/// Organization(s) that offer this resource
+		/// /// Can't initialize this or will be loop
 		/// </summary>
-		public List<OrganizationReference> OfferedBy { get; set; } = new List<OrganizationReference>();
+		public List<OrganizationReference> OfferedBy { get; set; }// = new List<OrganizationReference>();
 		//
 		/// <summary>
 		/// Organization(s) that owns this resource
+		/// Can't initialize this or will be loop
 		/// </summary>
-		public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
+		public List<OrganizationReference> OwnedBy { get; set; }// = new List<OrganizationReference>();
+																//
+		public List<string> Subject { get; set; } = new List<string>();
+		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 		//
 		/// <summary>
 		/// For Learning Opportunities only, list of competencies being taught

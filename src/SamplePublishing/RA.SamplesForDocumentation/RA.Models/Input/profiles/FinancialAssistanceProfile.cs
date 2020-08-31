@@ -16,6 +16,6 @@ namespace RA.Models.Input
 		public string SubjectWebpage { get; set; }
 		public List<string> FinancialAssistanceType { get; set; } = new List<string>();
 		//
-		public QuantitativeValue FinancialAssistanceValue { get; set; } = new QuantitativeValue();
+		public List<QuantitativeValue> FinancialAssistanceValue { get; set; } = new List<QuantitativeValue>();
 	}
 }

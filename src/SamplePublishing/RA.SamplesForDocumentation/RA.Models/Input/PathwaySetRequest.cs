@@ -19,6 +19,9 @@ namespace RA.Models.Input
 		public PathwaySet PathwaySet { get; set; } = new PathwaySet();
 
 		public List<PathwayRequest> Pathways { get; set; } = new List<PathwayRequest>();
+		//TBD - consider option to just provide a list of ctids/uris
+		//one or the other but not both??
+		public List<string> PathwayReferences { get; set; } = new List<string>();
 
 	}//
 
@@ -55,7 +58,8 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// List of Pathways - CTIDs
-		/// this probably would not be used, it would be generated from the list pathways requests
+		/// This could refer to pathways in the request or previously published pathways.
+		/// Could be used as an option to just provide ctids/uris
 		/// </summary>
 		public List<string> HasPathway { get; set; } = new List<string>();
 
@@ -67,7 +71,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Organization(s) that offer this resource
 		/// </summary>
-		public List<OrganizationReference> OfferedBy { get; set; }
+		public List<OrganizationReference> OfferedBy { get; set; } = new List<OrganizationReference>();
 	} //
 
 

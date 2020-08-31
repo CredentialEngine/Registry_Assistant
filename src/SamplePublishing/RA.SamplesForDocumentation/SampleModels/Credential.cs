@@ -8,6 +8,7 @@ namespace RA.SamplesForDocumentation.SampleModels
 {
 	public class Credential : BaseModel
 	{
+		public string CredentialType { get; set; }
 		public string AvailabilityListing { get; set; }
 		public string AvailableOnlineAt { get; set; }
 		public string CodedNotation { get; set; }

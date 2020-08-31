@@ -4,8 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 using RJ = RA.Models.JsonV2;
 using RA.Models.Input;
+using CER = RA.Services.RegistryServices;
 using SkosEntityRequest = RA.Models.Input.SkosConceptSchemeRequest;
 using EntityRequest = RA.Models.Input.ConceptSchemeRequest;
 using InputEntity = RA.Models.Input.ConceptScheme;
@@ -16,9 +20,8 @@ using OutputConcept = RA.Models.JsonV2.Concept;
 using OutputGraph = RA.Models.JsonV2.ConceptSchemeGraph;
 using OutputGraphEntity = RA.Models.JsonV2.ConceptScheme;
 using GraphContainer = RA.Models.JsonV2.GraphContainer;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using CER = RA.Services.RegistryServices;
+
+
 using Utilities;
 
 namespace RA.Services
@@ -115,6 +118,8 @@ namespace RA.Services
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
+						//if (!string.IsNullOrWhiteSpace(status))
+						//	messages.Add( status );
 						CheckIfChanged( helper, cer.WasChanged );
 						string msg = string.Format( "<p>Published Concept Scheme</p><p>CTID: {0}</p> <p>EnvelopeId: {1}</p> ", output.CTID, crEnvelopeId );
 						NotifyOnPublish( "ConceptScheme", msg );
@@ -162,7 +167,8 @@ namespace RA.Services
 				} else
 				{
 					output = GetConceptSchemeFromPlainGraph( request, hasDefaultLanguage, ref conceptsCount, ref messages );
-				}
+				}//
+
 				if ( output == null || string.IsNullOrWhiteSpace( output.CTID ) )
 				{
 					messages.Add( "A skos:ConceptScheme document was not found." );
@@ -175,7 +181,7 @@ namespace RA.Services
 						messages.Add( "A name must be provided for the concept scheme." );
 					else
 					{
-						CurrentEntityName = output.Name.ToString();
+						CurrentEntityName = GetFirstItemValue( output.Name );
 					}
 					if ( !HasData( output.Description ) )
 						messages.Add( "A description must be provided for the concept scheme." );
@@ -196,12 +202,20 @@ namespace RA.Services
 							messages.Add( "A dateCreated must be provided for the concept scheme." );
 						//else
 						//	output.DateCreated = DateTime.Now.ToString("yyyy-MM-dd");
+					} else
+					{
+						//ensure dateCreated is just a date, no time
+						if ( !string.IsNullOrWhiteSpace( output.DateCreated ) && output.DateCreated.Length > 10 )
+							output.DateCreated = MapDate( output.DateCreated, "", ref messages, true );
 					}
 					if ( output.InLanguage == null || output.InLanguage.Count() == 0 )
 						messages.Add( "A ConceptScheme.InLanguage must be provided for the concept scheme." );
 
-					if ( string.IsNullOrWhiteSpace( output.Source ) )
+					if ( output.Source == null || output.Source.ToString() == "") 
 						messages.Add( "A Source must be provided for the concept scheme." );
+
+					output.Creator = SetUrlsToLowerCase( output.Creator );
+					output.Publisher = SetUrlsToLowerCase( output.Publisher );
 
 					if ( string.IsNullOrWhiteSpace( output.PublicationStatusType ) )
 						messages.Add( "A PublicationStatusType must be provided for the concept scheme." );
@@ -386,7 +400,7 @@ namespace RA.Services
 			}
 			//
 			output.InLanguage = PopulateInLanguage( input.InLanguage, "concept scheme", "concept scheme", hasDefaultLanguage, ref messages );
-
+			var idUrl = "";
 			try
 			{
 				#region  Populate the concept scheme 
@@ -397,12 +411,13 @@ namespace RA.Services
 				//output.CTID = ExtractCtid( input.Id, "Skos Concept Scheme", ref messages ).ToLower();
 				output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 
-				output.altIdentifier = AssignListToList( input.altIdentifier );
-				output.ChangeNote = AssignLanguageMapList( input.ChangeNote, input.ChangeNote_Map, "ChangeNote", DefaultLanguageForMaps, ref messages );
+				//output.AltIdentifier = AssignListToList( input.AltIdentifier );
+				//output.ChangeNote = AssignLanguageMapList( input.ChangeNote, input.ChangeNote_Map, "ChangeNote", DefaultLanguageForMaps, ref messages );
 				output.ConceptKeyword = AssignLanguageMapList( input.ConceptKeyword, input.ConceptKeyword_Map, "ConceptKeywork", DefaultLanguageForMaps, ref messages );
 				output.ConceptTerm = AssignRegistryResourceURIsListAsStringList( input.ConceptTerm, "ConceptTerm", ref messages );
-
-				output.Creator = AssignValidUrlAsStringList( input.Creator, "Concept scheme creator", ref messages, false, false );
+				//should we used org reference here as well?
+				//output.Creator = AssignValidUrlAsStringList( input.Creator, "Concept scheme creator", ref messages, false, false );
+				output.Creator = FormatOrganizationReferences( input.Creator, "Concept scheme creator", false, ref messages, false, true );
 
 				//this actually is a year, not datetime!
 				output.DateCopyrighted = MapYear( input.DateCopyrighted, "DateCopyrighted", ref messages );
@@ -410,28 +425,28 @@ namespace RA.Services
 				if ( string.IsNullOrWhiteSpace( output.DateCreated ) )
 				{
 					//always require this for direct calls
-					//if ( isConceptschemeDateCreatedRequired )
+					if ( isConceptschemeDateCreatedRequired )
 						messages.Add( "A DateCreated must be provided for the concept scheme." );
 				}
-				output.DateModified = MapDate( input.DateModified, "DateModified", ref messages );
+				output.DateModified = MapDateTime( input.DateModified, "DateModified", ref messages );
 
 				//allow CTID or full URI
 				//temp hack for navy
 				// output.CTID != "ce-8387d1d5-1992-4c3f-a76d-6b09fd928dd9" && output.CTID != "ce-8387d1d5-2019-4c3f-a76d-6b09fd928dd9"
-				if ( !request.GenerateHasTopChild )
+				if ( !request.GenerateHasTopChild && !request.GenerateHasTopChildFromIsTopChild )
 				{
 					output.HasTopConcept = AssignRegistryResourceURIsListAsStringList( input.HasTopConcept, "Concept scheme HasTopConcept", ref messages, false, true );
 				}
 				//history note is not compatible from skos format
-				//output.HistoryNote = AssignRegistryURIsListAsStringList( input.HistoryNote, "Concept scheme HistoryNote", ref messages );
-				output.HistoryNote = AssignLanguageMap( input.HistoryNote, input.HistoryNote_Map, "HistoryNote", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
+				//20-08-05 no longer on credreg.neet
+				//output.HistoryNote = AssignLanguageMap( input.HistoryNote, input.HistoryNote_Map, "HistoryNote", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
 
 				output.License = AssignValidUrlAsString( input.License, "License", ref messages, false, false );
 
 				output.Name = AssignLanguageMap( input.Name, input.Name_Map, "Concept Scheme Title", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
-				
-				CurrentEntityName = output.Name.ToString();
-				
+
+				CurrentEntityName = !string.IsNullOrWhiteSpace( input.Name ) ? input.Name : GetFirstItemValue( output.Name );
+
 				output.Description = AssignLanguageMap( input.Description, input.Description_Map, "Concept Scheme Description", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
 
 				//this url will likely be a purl to the particular status
@@ -443,11 +458,30 @@ namespace RA.Services
 				output.PublicationStatusType = ( output.PublicationStatusType ?? "" ).Replace( "/vocab/publicationStatus", "/vocabs/publicationStatus" );
 				// =========================
 				
-				output.Publisher = AssignRegistryResourceURIAsString( input.Publisher, "Publisher", ref messages, false, false );
+				//output.Publisher = AssignRegistryResourceURIAsString( input.Publisher, "Publisher", ref messages, false, false );
+				if ( FormatOrganizationReference( input.Publisher, "ConceptScheme.Publisher", ref idUrl, false, ref messages, false, true ) )
+				{
+					if ( !string.IsNullOrWhiteSpace( idUrl ) )
+					{
+						output.Publisher = idUrl;
+					}
+				}
+
 				output.PublisherName = AssignLanguageMap( input.PublisherName, input.PublisherName_Map, "PublisherName", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
 				output.Rights = AssignLanguageMap( input.Rights, input.Rights_Map, "Rights", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
-				output.RightsHolder = AssignValidUrlAsString( input.RightsHolder, "RightsHolder", ref messages, false, false );
-				output.Source = AssignValidUrlAsString( input.Source, "ConceptScheme.Source", ref messages, true, false );
+				//from CaSS we have url, but for here, allow flexibility using org reference.
+				//output.RightsHolder = AssignValidUrlAsString( input.RightsHolder, "RightsHolder", ref messages, false, false );
+				
+				if ( FormatOrganizationReference( input.RightsHolder, "ConceptScheme.RightsHolder", ref idUrl, false, ref messages, false, true ) )
+				{
+					if ( !string.IsNullOrWhiteSpace( idUrl ) )
+					{
+						output.RightsHolder = idUrl;
+					}
+				}
+
+				//
+				output.Source = AssignValidUrlAsString( input.Source, "ConceptScheme.Source", ref messages, false, true );
 				#endregion
 
 
@@ -476,14 +510,23 @@ namespace RA.Services
 									output.HasTopConcept = new List<string>();
 
 								output.HasTopConcept.Add( concept.CtdlId );
-								
-								//if ( compCntr > 900 )
-								//	break;
+							}
+							else if ( request.GenerateHasTopChildFromIsTopChild
+							  && !string.IsNullOrWhiteSpace( concept.TopConceptOf ) )
+							{
+								if ( output.HasTopConcept == null )
+									output.HasTopConcept = new List<string>();
+								output.HasTopConcept.Add( concept.CtdlId );
 							}
 							//or set to InScheme
 							//only do this all concepts are top
 							if ( request.GenerateIsTopChild )
+							{
 								concept.TopConceptOf = output.CtdlId;
+								//will inScheme have to be set as well? Or should this be an arbitrary check?
+								if ( concept.InScheme == null )
+									concept.InScheme = output.CtdlId;
+							}
 
 							outputConcepts.Add( concept );
 						}
@@ -505,7 +548,7 @@ namespace RA.Services
 		public bool ToMapConcept( RA.Models.Input.Concept input, OutputConcept output, bool hasDefaultLanguage, int compCntr, ref List<string> messages )
 		{
 			bool isValid = true;
-			output.CTID = FormatCtid( input.CTID, string.Format( "Concept (#{0})", compCntr), ref messages );
+			output.CTID = FormatCtid( input.Ctid, string.Format( "Concept (#{0})", compCntr), ref messages );
 
 			output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.CTID, Community);
 			output.AltLabel = AssignLanguageMapList( input.AltLabel, input.AltLabel_Map, "AltLabel", DefaultLanguageForMaps, ref messages );
@@ -557,7 +600,9 @@ namespace RA.Services
 				output.CTID = FormatCtid( input.CTID, string.Format( "Concept (#{0})", compCntr ), ref messages );
 
 				output.CtdlId = SupportServices.FormatRegistryUrl( ResourceTypeUrl, output.CTID, Community );
+				//handle inconsistant input of a string or a list
 				output.AltLabel = AssignLanguageMapList( AssignObjectToList(input.AltLabel, "AltLabel", ref messages), null, "AltLabel", DefaultLanguageForMaps, ref messages );
+				//
 				output.Broader = AssignRegistryResourceURIAsString( input.Broader, string.Format( "Broader - Concept (#{0})", compCntr ), ref messages, false, false );
 				output.BroadMatch = AssignRegistryResourceURIsListAsStringList( input.BroadMatch, "BroadMatch", ref messages );
 
@@ -583,34 +628,66 @@ namespace RA.Services
 				output.Note = AssignLanguageMapList( input.Note, null, "Note", DefaultLanguageForMaps, ref messages );
 
 				//TODO - handle where could be list or string
-
-				//TODO - handle where the ConceptScheme is supplied and need to convert to URI
-				//output.InScheme = AssignRegistryResourceURIAsString( input.InScheme, "InScheme", ref messages, false, false );
-				if ( input.InScheme != null && input.InScheme.Count() > 0 )
+				var inScheme = "";
+				//stop using InSchemeList
+				//input.InSchemeList = null;
+				if ( input.InScheme != null )
 				{
-					output.InScheme = AssignRegistryResourceURIAsString( input.InScheme[ 0 ], "InScheme", ref messages, false, false );
+					if ( input.InScheme.GetType() == typeof( Newtonsoft.Json.Linq.JArray ) )
+					{
+						Newtonsoft.Json.Linq.JArray stringArray = ( Newtonsoft.Json.Linq.JArray )input.InScheme;
+						//input.InScheme = stringArray[ 0 ].ToString();
+						inScheme = stringArray[ 0 ].ToString();
+					}
+					else
+						inScheme = input.InScheme.ToString();
 				}
-				//Newtonsoft.Json.Linq.JArray
-				//var tt = input.TopConceptOfTest == null ? "null" :  input.TopConceptOfTest.GetType().ToString();
-				//System.String
-				//var tt2 = input.TopConceptOfTest2 == null ? "null" : input.TopConceptOfTest2.GetType().ToString();
-				string ttt1 = AssignObjectToString( input.TopConceptOfTest );
-				string ttt2 = AssignObjectToString( input.TopConceptOfTest2 );
-				//if ( input.TopConceptOfTest.GetType() == typeof( Newtonsoft.Json.Linq.JArray ) )
-				//{
+				
 
-				//}
-				//else if ( input.TopConceptOfTest.GetType() == typeof( System.String ) )
+				//if ( input.InScheme == null || input.InScheme.ToString() == "" )
 				//{
+				//	if ( input.InSchemeList != null && input.InSchemeList.Count() > 0 )
+				//	{
+				//		//temp workaround - a
+				//		//input.InScheme = input.InSchemeList[ 0 ];
+				//		inScheme = input.InSchemeList[ 0 ];
+				//		input.InSchemeList = null;
+				//	}
+				//}
+				//else
+				//{
+				//	input.InSchemeList = null;
+				//	if ( input.InScheme.GetType() == typeof( Newtonsoft.Json.Linq.JArray ) )
+				//	{
+				//		Newtonsoft.Json.Linq.JArray stringArray = ( Newtonsoft.Json.Linq.JArray )input.InScheme;
+				//		//input.InScheme = stringArray[ 0 ].ToString();
+				//		inScheme = stringArray[ 0 ].ToString();
+				//	}
+				//}
 
-				//}
-				//if ( input.TopConceptOf != null )
-				//{
-				//	output.TopConceptOf = AssignRegistryResourceURIAsString( input.TopConceptOf, "TopConceptOf", ref messages, false, false );
-				//}
-				if ( input.TopConceptOf != null && input.TopConceptOf.Count() > 0 )
+				//TODO - handle where the InScheme is supplied and need to convert to URI
+				if ( !string.IsNullOrWhiteSpace( inScheme ))
 				{
-					output.TopConceptOf = AssignRegistryResourceURIAsString( input.TopConceptOf[ 0 ], "TopConceptOf", ref messages, false, false );
+					output.InScheme = AssignRegistryResourceURIAsString( inScheme, "InScheme", ref messages, false, false );
+				}
+				//==== handle multiple formats for topConceptOf
+				var topConceptOf = "";
+				if ( input.TopConceptOf != null )
+				{
+					if ( input.TopConceptOf.GetType() == typeof( Newtonsoft.Json.Linq.JArray ) )
+					{
+						Newtonsoft.Json.Linq.JArray stringArray = ( Newtonsoft.Json.Linq.JArray )input.TopConceptOf;
+						//input.InScheme = stringArray[ 0 ].ToString();
+						topConceptOf = stringArray[ 0 ].ToString();
+					}
+					else
+						topConceptOf = input.TopConceptOf.ToString();
+				}
+					
+
+				if ( !string.IsNullOrWhiteSpace( topConceptOf ) )
+				{
+					output.TopConceptOf = AssignRegistryResourceURIAsString( topConceptOf, "TopConceptOf", ref messages, false, false );
 				}
 			}
 			catch(Exception ex)
@@ -643,32 +720,58 @@ namespace RA.Services
 				{
 					if ( token.ToString().IndexOf( "skos:ConceptScheme" ) > -1 || token.ToString().IndexOf( "ConceptScheme" ) > -1 )
 					{
-						entity = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<RJ.ConceptScheme>();
-						if ( conceptsCount == 0 && jarray.Count > 1 )
+						//entity = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<RJ.ConceptScheme>( GetJsonSerializerSettings() );
+						entity = Newtonsoft.Json.JsonConvert.DeserializeObject<OutputEntity>( token.ToString() );
+
+						if ( entity.Source.GetType() == typeof( Newtonsoft.Json.Linq.JArray ) )
 						{
-							//18-09-25 the conceptScheme is now first in the export document
-							//conceptsCount = jarray.Count - 1;
+							//we could just force the object back to a string?
+							Newtonsoft.Json.Linq.JArray stringArray = ( Newtonsoft.Json.Linq.JArray )entity.Source;
+							entity.Source = stringArray[ 0 ];
+							
 						}
-						//return entity;
 					}
 					else if ( token.ToString().IndexOf( "skos:Concept" ) > -1 || token.ToString().IndexOf( "Concept" ) > -1 )
 					{
 						conceptsCount++;
-						var concept = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<RJ.Concept>();
+						//var concept2 = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<RJ.Concept>();
+						var concept = Newtonsoft.Json.JsonConvert.DeserializeObject<OutputConcept>( token.ToString() );
+
 						if ( !HasData( concept.PrefLabel ) )
 							messages.Add( string.Format( "A pref label must be provided for the concept (#{0}).", conceptsCount ) );
-						if ( string.IsNullOrWhiteSpace( concept.InScheme ) )
+						//
+						
+						if ( concept.InScheme.GetType() == typeof( Newtonsoft.Json.Linq.JArray ) )
+						{
+							Newtonsoft.Json.Linq.JArray stringArray = ( Newtonsoft.Json.Linq.JArray )concept.InScheme;
+							concept.InScheme = stringArray[ 0 ].ToString();
+						}
+						//stop using InSchemeList
+						//concept.InSchemeList = null;
+						//if ( concept.InScheme == null || concept.InScheme.ToString() == "" )
+						//{
+						//	if( concept.InSchemeList != null && concept.InSchemeList.Count() > 0 )
+						//	{
+						//		//temp workaround - a
+						//		concept.InScheme = concept.InSchemeList[ 0 ];
+						//		concept.InSchemeList = null;
+						//	}
+						//}
+						//else
+						//	concept.InSchemeList = null;
+						//
+						if ( concept.InScheme == null || concept.InScheme.ToString() == "")
 							messages.Add( string.Format( "The InScheme property must be provided for the concept (#{0}).", conceptsCount ) );
+
 						if ( string.IsNullOrWhiteSpace( concept.TopConceptOf ) )
 						{
-							//if no top scheme, then must have
+							//if no top scheme, then must have. 20-01-22 not sure if this is accurate, even though a warning!
 							if ( string.IsNullOrWhiteSpace( concept.Broader ) )
 								warningMessages.Add( string.Format( "Either the TopConceptOf or the Broader property must be provided for the concept '{0}'(#{1}).", concept.PrefLabel, conceptsCount ) );
 						}
+						
+
 						outputConcepts.Add( concept );
-						//ignore
-						//var c1 = token.ToString().Replace( "exactMatch", "exactAlignment" );
-						//var c2 = ( ( Newtonsoft.Json.Linq.JObject ) c1 ).ToObject<RJ.CompetencyInput>();
 
 					}
 				}
@@ -706,20 +809,21 @@ namespace RA.Services
 				{
 					if ( token.ToString().IndexOf( "skos:ConceptScheme" ) > -1 || token.ToString().IndexOf( "ConceptScheme" ) > -1 )
 					{
-						var input = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<RJ.ConceptSchemePlain>();
+						//var input2 = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<RJ.ConceptSchemePlain>();
+						var input = Newtonsoft.Json.JsonConvert.DeserializeObject<RJ.ConceptSchemePlain>( token.ToString() );
 						#region  Populate the concept scheme 
 
 						CurrentCtid = output.CTID = FormatCtid( input.CTID, "ConceptScheme", ref messages );
 						output.CtdlId = SupportServices.FormatRegistryUrl( ResourceTypeUrl, output.CTID, Community );
 						output.InLanguage = PopulateInLanguage( input.InLanguage, "concept scheme", "concept scheme", hasDefaultLanguage, ref messages );
 
-						output.altIdentifier = AssignListToList( input.altIdentifier );
-						output.ChangeNote = AssignLanguageMapList( input.ChangeNote, null, "ChangeNote", DefaultLanguageForMaps, ref messages );
+						//output.altIdentifier = AssignListToList( input.altIdentifier );
+						//output.ChangeNote = AssignLanguageMapList( input.ChangeNote, null, "ChangeNote", DefaultLanguageForMaps, ref messages );
 						output.ConceptKeyword = AssignLanguageMapList( input.ConceptKeyword, null, "ConceptKeywork", DefaultLanguageForMaps, ref messages );
 						output.ConceptTerm = AssignRegistryResourceURIsListAsStringList( input.ConceptTerm, "ConceptTerm", ref messages );
 
 						output.Creator = AssignValidUrlListAsStringList( input.Creator, "Concept scheme creator", ref messages, false );
-
+						output.Creator = SetUrlsToLowerCase( output.Creator );
 						//this actually is a year, not datetime!
 						output.DateCopyrighted = MapYear( input.DateCopyrighted, "DateCopyrighted", ref messages );
 						output.DateCreated = MapDate( input.DateCreated, "DateCreated", ref messages );
@@ -729,22 +833,22 @@ namespace RA.Services
 							//if ( isConceptschemeDateCreatedRequired )
 							//messages.Add( "A DateCreated must be provided for the concept scheme." );
 						}
-						output.DateModified = MapDate( input.DateModified, "DateModified", ref messages );
+						output.DateModified = MapDateTime( input.DateModified, "DateModified", ref messages );
 
 						//allow CTID or full URI
-						if( !request.GenerateHasTopChild && !request.GenerateHasTopChildFromIsTopChild )
+						if ( !request.GenerateHasTopChild && !request.GenerateHasTopChildFromIsTopChild )
 						{
 							output.HasTopConcept = AssignRegistryResourceURIsListAsStringList( input.HasTopConcept, "Concept scheme HasTopConcept", ref messages, false, true );
 						}
 						//history note is not compatible from skos format
 						//output.HistoryNote = AssignRegistryURIsListAsStringList( input.HistoryNote, "Concept scheme HistoryNote", ref messages );
-						output.HistoryNote = AssignLanguageMap( input.HistoryNote, null, "HistoryNote", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
+						//output.HistoryNote = AssignLanguageMap( input.HistoryNote, null, "HistoryNote", DefaultLanguageForMaps, CurrentCtid, false, ref messages );
 
 						output.License = AssignValidUrlAsString( input.License, "License", ref messages, false, false );
 
 						output.Name = AssignLanguageMap( input.Name, null, "Concept Scheme Title", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
 
-						CurrentEntityName = output.Name.ToString();
+						CurrentEntityName = GetFirstItemValue( output.Name );
 
 						output.Description = AssignLanguageMap( input.Description, null, "Concept Scheme Description", DefaultLanguageForMaps, CurrentCtid, true, ref messages );
 
@@ -775,41 +879,49 @@ namespace RA.Services
 					else if ( token.ToString().IndexOf( "skos:Concept" ) > -1 || token.ToString().IndexOf( "Concept" ) > -1 )
 					{
 						conceptsCount++;
-						var conceptPlain = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<RJ.ConceptPlain>();
+						//var conceptPlain2 = ( ( Newtonsoft.Json.Linq.JObject )token ).ToObject<RJ.ConceptPlain>();
+						var conceptPlain = Newtonsoft.Json.JsonConvert.DeserializeObject<RJ.ConceptPlain>( token.ToString() );
 						concept = new OutputConcept();
 
 						if ( ToMapConcept( conceptPlain, concept, hasDefaultLanguage, conceptsCount, ref messages ) )
 						{
-							if( request.GenerateHasTopChild )
+							if ( request.GenerateHasTopChild )
 							{
-								if( output.HasTopConcept == null )
+								if ( output.HasTopConcept == null )
 									output.HasTopConcept = new List<string>();
 
 								output.HasTopConcept.Add( concept.CtdlId );
 								//if ( compCntr > 900 )
 								//	break;
-							}
-							else if( request.GenerateHasTopChildFromIsTopChild
-							  && !string.IsNullOrWhiteSpace( concept.TopConceptOf ) )
+							} else if ( request.GenerateHasTopChildFromIsTopChild 
+								&& !string.IsNullOrWhiteSpace( concept.TopConceptOf ) )
 							{
-								if( output.HasTopConcept == null )
+								if ( output.HasTopConcept == null )
 									output.HasTopConcept = new List<string>();
 
 								output.HasTopConcept.Add( concept.CtdlId );
 							}
+
 							//only do this all concepts are top
-							if( request.GenerateIsTopChild )
+							if ( request.GenerateIsTopChild )
 							{
 								concept.TopConceptOf = output.CtdlId;
 								//will inScheme have to be set as well?
-								if( string.IsNullOrWhiteSpace( concept.InScheme ) )
+								if ( concept.InScheme == null || concept.InScheme.ToString() == "" )
 									concept.InScheme = output.CtdlId;
 							}
 
 							//if ( string.IsNullOrWhiteSpace( concept.PrefLabel ) )
 							//	messages.Add( string.Format( "A pref label must be provided for the concept (#{0}).", conceptsCount ) );
-							if ( string.IsNullOrWhiteSpace( concept.InScheme ) )
-								messages.Add( string.Format( "The InScheme property must be provided for the concept (#{0}).", conceptsCount ) );
+							if ( concept.InScheme == null || concept.InScheme.ToString() == "" )
+							{
+								if (request.GenerateInScheme)
+								{
+									concept.InScheme = output.CtdlId;
+								} else 
+									messages.Add( string.Format( "The InScheme property must be provided for the concept (#{0}).", conceptsCount ) );
+							}
+
 							if ( string.IsNullOrWhiteSpace( concept.TopConceptOf ) )
 							{
 								//if no top scheme, then must have
@@ -818,11 +930,8 @@ namespace RA.Services
 							}
 							outputConcepts.Add( concept );
 						}
-
-
 					}
 				}
-
 				else
 				{
 					//error
@@ -835,6 +944,7 @@ namespace RA.Services
 
 
 		#region from a skos input request
+		/*
 		public void PublishFromSkosGraph( SkosGraphConceptSchemeRequest request, ref bool isValid, RA.Models.RequestHelper helper )
 		{
 			isValid = true;
@@ -1022,7 +1132,8 @@ namespace RA.Services
 							entity.Name = AssignLanguageMap(sentity.Label, "skos Label", ref messages);
 							entity.Description = AssignLanguageMap(sentity.Description, "skos Description", ref messages);
 							entity.Source = sentity.Source;
-							entity.DateCreated = MapDate( sentity.DateCreated, "", ref messages );
+							entity.DateCreated = MapDateTime( sentity.DateCreated, "", ref messages );
+							entity.DateModified = MapDateTime( sentity.DateModified, "DateModified", ref messages );
 							entity.PublicationStatusType = sentity.PublicationStatusType;
 
 							foreach( var item in sentity.HasTopConcept)
@@ -1248,8 +1359,8 @@ namespace RA.Services
 
 				//this actually date, not datetime!
 				output.DateCopyrighted = MapDate( input.DateCopyrighted, "DateCopyrighted", ref messages );
-				output.DateCreated = MapDate( input.DateCreated, "DateCreated", ref messages );
-				output.DateModified = MapDate( input.DateModified, "DateModified", ref messages );
+				output.DateCreated = MapDateTime( input.DateCreated, "DateCreated", ref messages );
+				output.DateModified = MapDateTime( input.DateModified, "DateModified", ref messages );
 
 				output.HasTopConcept = AssignRegistryResourceURIsListAsStringList( input.HasTopConcept, "Concept scheme HasTopConcept", ref messages, false, true );
 				//history note is not compatible from skos format
@@ -1342,7 +1453,7 @@ namespace RA.Services
 			return isValid;
 		}
 
-
+		*/
 		#endregion
 	}
 }

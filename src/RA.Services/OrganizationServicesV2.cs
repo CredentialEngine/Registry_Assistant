@@ -74,7 +74,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
 				bool isTrustedPartner = false;
@@ -94,7 +94,7 @@ namespace RA.Services
 					//get publisher org
 					string publisherCTID = "";
 					
-					if ( SupportServices.GetPublishingOrgByApiKey( cer.PublisherAuthorizationToken, ref publisherCTID, ref messages, ref isTrustedPartner ) )
+					if ( SupportServices.GetPublishingOrgByApiKey( cer.PublisherAuthorizationToken, ref publisherCTID, ref messages, ref isTrustedPartner, false ) )
 					{
 						cer.PublishingByOrgCtid = publisherCTID;
 					}
@@ -123,7 +123,15 @@ namespace RA.Services
 					if ( !recordWasFound && isTrustedPartner )
 					{
 						//check if org exists in accounts, and create if not
-						HandleFirstPublishForTrustedPartner( request, ref messages );
+						if (!HandleFirstPublishForTrustedPartner( request, cer.PublisherAuthorizationToken, ref messages ))
+						{
+							//probably should return 
+							helper.AddError( "This organization doesn't exist in the CE account system, and cannot be added due to the following error(s)." );
+							helper.SetWarningMessages( warningMessages );
+							helper.SetMessages( messages );
+							isValid = false;
+							return;
+						}
 					}
 					string identifier = "Organization_" + request.Organization.Ctid;
 
@@ -156,7 +164,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
@@ -166,18 +174,29 @@ namespace RA.Services
 		}
 		//
 
-		public bool HandleFirstPublishForTrustedPartner(EntityRequest request, ref List<string> messages)
+		/// <summary>
+		/// Prototyping Just-In-Time registration of an organization in the account system
+		/// </summary>
+		/// <param name="request"></param>
+		/// <param name="apiKey"></param>
+		/// <param name="messages"></param>
+		/// <returns></returns>
+		public bool HandleFirstPublishForTrustedPartner(EntityRequest request, string apiKey, ref List<string> messages)
 		{
 			bool isValid = true;
 			bool recordExists = false;
+			int msgCnt = messages.Count();
 			//check if exists
-			if ( !SupportServices.FindOwningOrgByCTID( request.PublishForOrganizationIdentifier, ref recordExists, ref messages ) )
+			if ( SupportServices.FindOwningOrgByCTID( request.PublishForOrganizationIdentifier, ref recordExists, ref messages ) )
 			{
-				//hmm, if actual error occurs, do we stop or fall thru? If not in accounts, will get error
+				//hmm, if actual error occurs, do we stop or fall thru? If not in accounts, will get error later
+				if ( messages.Count() > msgCnt)
+					return false;
 			}
 			if (!recordExists)
 			{
 				//add to accounts
+				isValid = SupportServices.AddOrganizationToAccounts( request.Organization, apiKey, ref messages );
 			}
 			return isValid;
 		}
@@ -192,7 +211,7 @@ namespace RA.Services
             isValid = true;
 			helper.IsPublishRequestType = false;
 
-            if ( ToMap( request, output, helper, ref messages ) )
+            if ( ToMap( request, output, helper, ref messages, false ) )
             {
                 og.Graph.Add( output );
                 if ( BlankNodes != null && BlankNodes.Count > 0 )
@@ -206,7 +225,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
@@ -227,7 +246,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
@@ -248,11 +267,12 @@ namespace RA.Services
 		/// <param name="to"></param>
 		/// <param name="messages"></param>
 		/// <returns></returns>
-		public bool ToMap( EntityRequest request, OutputEntity output, RA.Models.RequestHelper helper, ref List<string> messages )
+		public bool ToMap( EntityRequest request, OutputEntity output, RA.Models.RequestHelper helper, ref List<string> messages, bool isAPublishRequest = true )
 		{
 			CurrentEntityType = "Organization";
 			bool isValid = true;
 			Community = request.Community ?? "";
+			RJ.EntityReferenceHelper refHelper = new RJ.EntityReferenceHelper();
 
 			InputEntity input = request.Organization;
             if ( !string.IsNullOrWhiteSpace( request.DefaultLanguage ) )
@@ -272,11 +292,11 @@ namespace RA.Services
 				output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
 
 				HandleRequiredFields( input, output, ref messages );
-
-				output.ParentOrganization = FormatOrganizationReferences( input.ParentOrganization, "ParentOrganization", false, ref messages );
+				output.LifecycleStatusType = AssignStatusType( "Organization LifecycleStatusType", input.LifecycleStatusType, ref messages );
+				output.ParentOrganization = FormatOrganizationReferences( input.ParentOrganization, "ParentOrganization", false, ref messages, false, true );
 				//TODO - we need to have an edit that a top level org cannot be created unless matches the CTID of the publishing org
 				//otherwise must indicate a parent org
-				if ( !string.IsNullOrWhiteSpace(output.Ctid) && output.Ctid.ToLower() != helper.OwnerCtid.ToLower() )
+				if ( isAPublishRequest && !string.IsNullOrWhiteSpace(output.Ctid) && output.Ctid.ToLower() != helper.OwnerCtid.ToLower() )
 				{
 					//must be a child org, so  
 					if ( input.ParentOrganization == null || input.ParentOrganization.Count == 0 )
@@ -284,12 +304,33 @@ namespace RA.Services
 					else
 					{
 						//e
-						var exists = input.ParentOrganization.FirstOrDefault( a => a.CTID.ToLower() == helper.OwnerCtid.ToLower() );
+						var exists = input.ParentOrganization.FirstOrDefault( a => a.CTID == helper.OwnerCtid );
 						if (exists == null || string.IsNullOrWhiteSpace(exists.CTID))
 							messages.Add( "Error: Organization is not a registered organization. The organization has a different CTID than the owing organization and a parent organization was not found that matches the CTID of the owning organization." );
 					}
 				}
+				//Following can be a variety of entities, so valid type must be provided
+				output.Accredits = FormatEntityReferencesList( input.Accredits, "AgentAccredits", false, ref messages );
+				output.Approves = FormatEntityReferencesList( input.Approves, "AgentApproves", false, ref messages );
+				output.Owns = FormatEntityReferencesList( input.Owns, "AgentOwns", false, ref messages ); //Owns artifacts
+				output.Offers = FormatEntityReferencesList( input.Offers, "AgentOffers", false, ref messages );//Offers artifacts
 
+				output.Renews = FormatEntityReferencesList( input.Renews, "AgentRenews", false, ref messages );//Renews artifacts
+				output.Revokes = FormatEntityReferencesList( input.Revokes, "AgentRevokes", false, ref messages ); //Revokes artifacts
+				output.Recognizes = FormatEntityReferencesList( input.Recognizes, "AgentRecognizes", false, ref messages ); //Recognizes artifacts
+				output.Regulates = FormatEntityReferencesList( input.Regulates, "AgentRegulates", false, ref messages ); //regulates artifacts
+
+				if ( input.IsQAOrganization )
+				{
+					//note some orgs can be both
+				} else
+				{
+					//definitely need owns/offers
+
+					//or could do a quick lookup
+				}
+
+				//
 				HandleLiteralFields( input, output, ref messages );
 
 				HandleUrlFields( input, output, ref messages );
@@ -316,22 +357,13 @@ namespace RA.Services
 				output.ReviewProcess = FormatProcessProfile( input.ReviewProcess, ref messages );
 				output.RevocationProcess = FormatProcessProfile( input.RevocationProcess, ref messages );
 
-                //Following can be a variety of entities, so valid type must be provided
-                output.Accredits = FormatEntityReferencesList( input.Accredits, "AgentAccredits", false, ref messages );
-                output.Approves = FormatEntityReferencesList( input.Approves, "AgentApproves", false, ref messages );
-				output.Owns = FormatEntityReferencesList( input.Owns, "AgentOwns", false, ref messages ); //Owns artifacts
-				output.Offers = FormatEntityReferencesList( input.Offers, "AgentOffers", false, ref messages );//Offers artifacts
 
-                output.Renews = FormatEntityReferencesList( input.Renews, "AgentRenews", false, ref messages );//Renews artifacts
-                output.Revokes = FormatEntityReferencesList( input.Revokes, "AgentRevokes", false, ref messages ); //Revokes artifacts
-                output.Recognizes = FormatEntityReferencesList( input.Recognizes, "AgentRecognizes", false, ref messages ); //Recognizes artifacts
-                output.Regulates = FormatEntityReferencesList( input.Regulates, "AgentRegulates", false, ref messages ); //regulates artifacts
 
                 output.HasConditionManifest = AssignRegistryResourceURIsListAsStringList( input.HasConditionManifest, "HasConditionManifest", ref messages,false );
 				output.HasCostManifest = AssignRegistryResourceURIsListAsStringList( input.HasCostManifest, "HasCostManifest", ref messages, false );
 
 				HandleVerificationProfiles( input, output, ref messages );
-				HandleJurisdictionAssertions( input, output, ref messages );
+				HandleJurisdictionAssertions( input, output, refHelper, ref messages );
 
 				output.AccreditedBy = FormatOrganizationReferences( input.AccreditedBy, "Accredited By", false, ref messages, true );
 				output.ApprovedBy = FormatOrganizationReferences( input.ApprovedBy, "Approved By", false, ref messages );
@@ -365,27 +397,10 @@ namespace RA.Services
 		{
 			bool isValid = true;
 
-
-
-            //required
-            if ( string.IsNullOrWhiteSpace( input.Name ) )
-            {
-                if ( input.Name_Map == null || input.Name_Map.Count == 0 )
-                {
-                    messages.Add( FormatMessage( "Error - A Name or Name_Map must be entered for Organization with CTID: '{0}'.", input.Ctid ) );
-                }
-                else
-                {
-                    output.Name = AssignLanguageMap( input.Name_Map, "Organization Name", ref messages );
-                    CurrentEntityName = GetFirstItemValue( output.Name );
-                }
-            }
-            else
-            {
-                output.Name = Assign( input.Name, DefaultLanguageForMaps );
-                CurrentEntityName = input.Name;
-            }
-            output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Organization Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+			//required
+			output.Name = AssignLanguageMap( input.Name, input.Name_Map, "Organization.Name", DefaultLanguageForMaps, ref messages, true, 3 );
+			CurrentEntityName = GetFirstItemValue( output.Name );
+            output.Description = AssignLanguageMap( input.Description, input.Description_Map, "Organization Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
 
 
             //TODO - need output handle credentialOrgnization vs QAcredentialOrgnization
@@ -404,16 +419,17 @@ namespace RA.Services
 			}
 			else
 			{
-				messages.Add( "Error - An organization type must be entered: one of  CredentialOrganization or QACredentialOrganization." );
+				messages.Add( "Error - An valid organization type must be entered: one of  CredentialOrganization or QACredentialOrganization." );
 			}
 
 			output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
 
 			//additional required properties include:
 			/*
-			 *	● Organization Type – enumerations of organization types. Examples include, but are not limited output, terms representing educational institutions, governmental bodies, credentialing and assurance bodies, and labor unions.
+			 * Owns or offers something - unless QA, in which case must QA something
+			 *	Organization Type – enumerations of organization types. Examples include, but are not limited output, terms representing educational institutions, governmental bodies, credentialing and assurance bodies, and labor unions.
 			 *	SEE: HandleCredentialAlignmentFields
-			 *	● Organization Sector Type – sectors include public, private for profit, public for profit, and business industry association.
+			 *	Organization Sector Type – sectors include public, private for profit, public for profit, and business industry association.
 			 *	SEE: HandleCredentialAlignmentFields
 				● Contact Information – a means of contacting a resource or its representative(s). May include physical address, email address, and phone number.
 			 */
@@ -424,6 +440,7 @@ namespace RA.Services
 				{
 					//output.AgentType.Add( FormatCredentialAlignment( item ) );
 					//should be concept scheme of organizationType
+					var types = SchemaServices.GetConceptScheme( "http://credreg.net/ctdl/terms/OrganizationType/json" );
 					output.AgentType.Add( FormatCredentialAlignment( "agentType", item, ref messages ) );
 				}
 			}
@@ -477,18 +494,24 @@ namespace RA.Services
 
 			if ( !string.IsNullOrWhiteSpace( ( input.NcesID ?? "" ) ))
 			{
-				if ( ( input.NcesID ?? "").Length != 12)
+				if ( ( input.NcesID.Trim()).Length != 11)
 				{
-					messages.Add( "Error: The organization NcesID must be a 12 digit code." );
+					//not sure on this 1-222-333-4444. Could be 11 without dashes
+					messages.Add( "Error: The organization NcesID must be a 11 digit code." );
 				} else
 					output.NcesID = string.IsNullOrWhiteSpace( ( input.NcesID ?? "" ).Trim() ) ? "" : ( input.NcesID ?? "" ).Trim();
 			}
 			
 			//
 			//founded date will require special handling
+			//19-12-03 - add edit on maximum length
 			if ( !string.IsNullOrWhiteSpace( input.FoundingDate ) )
 			{
-				if ( input.FoundingDate.Length == 4 && IsInteger( input.FoundingDate ) )
+				if ( input.FoundingDate.Length > 20 )
+				{
+					messages.Add( "The Founding Date is invalid, must be less than 20 characters.  Sample formats include: Just a 4 digit year (ex: 1999); or format like yyyy-mm (ex: 2001-03) or January 1999, or format like yyyy-mm-dd (ex: 1997-12-23)" );
+				}
+				else if ( input.FoundingDate.Length == 4 && IsInteger( input.FoundingDate ) )
 					output.FoundingDate = input.FoundingDate;
 				else if ( input.FoundingDate.IndexOf( "-" ) > 1 )
 					output.FoundingDate = input.FoundingDate;
@@ -550,6 +573,10 @@ namespace RA.Services
                     VerificationMethodDescription = AssignLanguageMap( ConvertSpecialCharacters( vsp.VerificationMethodDescription ), vsp.VerificationMethodDescription_Map, "VerificationMethodDescription", DefaultLanguageForMaps, ref messages, false )
 
                 };
+				vs.Jurisdiction = MapJurisdictions( vsp.Jurisdiction, ref messages );
+				vs.OfferedBy = FormatOrganizationReferences( vsp.OfferedBy, "Offered By", true, ref messages );
+				vs.OfferedIn = MapJurisdictionAssertionsList( vsp.OfferedIn, ref helper, ref messages );
+				//vs.Region = MapRegions( vsp.Region, ref messages );
 
 				vs.VerifiedClaimType = FormatCredentialAlignmentVocabs( "verifiedClaimType", vsp.VerifiedClaimType, ref messages );
 
@@ -570,11 +597,6 @@ namespace RA.Services
 					if ( isUrlPresent )
 						vs.VerificationService.Add( vsp.VerificationService );
 				}
-
-
-				vs.Jurisdiction = MapJurisdictions( vsp.Jurisdiction, ref messages );
-				//vs.Region = MapRegions( vsp.Region, ref messages );
-				vs.OfferedBy = FormatOrganizationReferences( vsp.OfferedBy, "Offered By", true, ref messages );
 
 				vs.TargetCredential = FormatEntityReferencesList( vsp.TargetCredential, RJ.Credential.classType, false, ref messages );
 
@@ -622,38 +644,53 @@ namespace RA.Services
 		}
 
 
-		public void HandleJurisdictionAssertions( InputEntity input, OutputEntity output, ref List<string> messages )
+		public void HandleJurisdictionAssertions( InputEntity input, OutputEntity output, RJ.EntityReferenceHelper helper, ref List<string> messages )
 		{
-			RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
 			RJ.JurisdictionProfile jp = new RJ.JurisdictionProfile();
-			if ( input.JurisdictionAssertions != null && input.JurisdictionAssertions.Count > 0 )
-			{
-				foreach ( var item in input.JurisdictionAssertions )
-				{
-					if ( item.AssertsAccreditedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.AccreditedIn = JurisdictionProfileAdd( jp, output.AccreditedIn );
-						//if ( jp != null )
-						//	output.AccreditedIn.Add( jp );
-					}
-					if ( item.AssertsApprovedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.ApprovedIn = JurisdictionProfileAdd( jp, output.ApprovedIn );
-					}
-					if ( item.AssertsRecognizedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.RecognizedIn = JurisdictionProfileAdd( jp, output.RecognizedIn );
-					}
-					if ( item.AssertsRegulatedIn )
-					{
-						jp = MapJurisdictionAssertions( item, ref helper, ref messages );
-						output.RegulatedIn = JurisdictionProfileAdd( jp, output.RegulatedIn );
-					}
-				}
-			}
+			//need to check with partners, and set date for sunsetting this approach
+			//if ( input.JurisdictionAssertions != null && input.JurisdictionAssertions.Count > 0 )
+			//{
+			//	if( !UtilityManager.GetAppKeyValue( "allowingJurisdictionAssertions", false ) )
+			//	{
+			//		messages.Add( "Error: As of 2020, the property JurisdictionAssertions is now obsolete. Instead the individual properties like AssertedIn, ApprovedIn should be used." );
+			//		//return;
+			//	}
+			//	else
+			//	{
+			//		foreach( var item in input.JurisdictionAssertions )
+			//		{
+			//			if( item.AssertsAccreditedIn )
+			//			{
+			//				jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+			//				output.AccreditedIn = JurisdictionProfileAdd( jp, output.AccreditedIn );
+			//			}
+			//			if( item.AssertsApprovedIn )
+			//			{
+			//				jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+			//				output.ApprovedIn = JurisdictionProfileAdd( jp, output.ApprovedIn );
+			//			}
+			//			if( item.AssertsRecognizedIn )
+			//			{
+			//				jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+			//				output.RecognizedIn = JurisdictionProfileAdd( jp, output.RecognizedIn );
+			//			}
+			//			if( item.AssertsRegulatedIn )
+			//			{
+			//				jp = MapJurisdictionAssertions( item, ref helper, ref messages );
+			//				output.RegulatedIn = JurisdictionProfileAdd( jp, output.RegulatedIn );
+			//			}
+			//		}
+
+			//		warningMessages.Add( "Warning: the property JurisdictionAssertions will be removed by March 2020. The individual properties like AssertedIn should be used instead." );
+			//	}
+			//} 
+			//else check regardless
+			
+			output.AccreditedIn = MapJurisdictionAssertionsList( input.AccreditedIn, ref helper, ref messages );
+			output.ApprovedIn = MapJurisdictionAssertionsList( input.ApprovedIn, ref helper, ref messages );
+			output.RecognizedIn = MapJurisdictionAssertionsList( input.RecognizedIn, ref helper, ref messages );
+			output.RegulatedIn = MapJurisdictionAssertionsList( input.RegulatedIn, ref helper, ref messages );
+			
 		}
 
 		#endregion
@@ -675,7 +712,7 @@ namespace RA.Services
 			try
 			{
 				//TODO - doesn't handle a community!!
-				string payload = RegistryServices.GetResourceByCtid( request.Organization.Ctid, ref ctdlType, ref statusMessage );
+				string payload = RegistryServices.GetResourceGraph( request.Organization.Ctid, ref ctdlType, ref statusMessage, request.Community );
 
 				if ( string.IsNullOrWhiteSpace( payload ) )
 				{
@@ -736,7 +773,7 @@ namespace RA.Services
 					og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
 					og.CTID = output.Ctid;
 					og.Type = output.Type;
-					og.Context = output.Context;
+					og.Context = ctdlContext;
 					CurrentEntityName = output.Name.ToString();
 					helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
 

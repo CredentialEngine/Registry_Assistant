@@ -270,25 +270,7 @@ namespace RA.Models.Input
 		#endregion
 
 		#region Quality Assurance IN - Jurisdiction based Quality Assurance  (INs)
-		//There are currently two separate approaches to publishing properties like assertedIn
-		//- Publish all 'IN' properties using JurisdictionAssertions
-		//- Publish using ehe separate specific properties like AccreditedIn, ApprovedIn, etc
-		// 2010-01-06 The property JurisdictionAssertions may become obsolete soon. We recomend to NOT use this property.
 
-		/// <summary>
-		/// Handling assertions in jurisdictions
-		/// The property JurisdictionAssertions is a simple approach, using one record per asserting organization - where that organization will have multiple assertion types. 
-		/// The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected.
-		/// This approach simplifies the input where the same organization asserts more than action. 
-		/// 2020-01-06 TBD - this property will LIKELY be made obsolete once any partner who has been using it has been informed.
-		/// </summary>
-		//[Obsolete]
-		//public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; } = new List<JurisdictionAssertedInProfile>();
-
-		//JurisdictionAssertion
-		//Each 'IN' property must include one or more organizations and a Main jurisdiction. Only one main jusrisdiction (and multiple exceptions) can be entered with each property.
-		//Only use this property where the organization only makes the assertion for a specific jurisdiction. 
-		//Use the 'BY' equivalent (ex. accreditedBy) where the organization makes a general assertion
 
 		/// <summary>
 		/// List of Organizations that accredit this assessment in a specific Jurisdiction. 
@@ -339,6 +321,7 @@ namespace RA.Models.Input
 		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; } = new List<FinancialAlignmentObject>();
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 
+		public List<string> TargetLearningResource { get; set; } = new List<string>();
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 	}
 }

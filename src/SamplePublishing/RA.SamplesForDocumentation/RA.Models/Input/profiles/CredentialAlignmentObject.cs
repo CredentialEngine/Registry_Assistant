@@ -15,6 +15,7 @@ namespace RA.Models.Input
 		public string CodedNotation { get; set; }
 		/// <summary>
 		/// URL
+		/// Could be a registry URL or external, typically expect a framework URL.
 		/// </summary>
 		public string Framework { get; set; }
 		public string FrameworkName { get; set; }

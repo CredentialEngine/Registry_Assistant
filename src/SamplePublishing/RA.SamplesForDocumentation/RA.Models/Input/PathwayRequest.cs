@@ -131,7 +131,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
 	}
-	public class PathwayComponent
+	public class PathwayComponent : BaseRequestClass
 	{
 		/// <summary>
 		/// Type of PathwayComponent. 
@@ -144,12 +144,17 @@ namespace RA.Models.Input
 		/// ceterms:CredentialComponent 	
 		/// ceterms:ExtracurricularComponent 	
 		/// ceterms:JobComponent 	
+		/// ceterms:selectioncomponent
 		/// ceterms:WorkExperienceComponent
 		/// </summary>
 		public string PathwayComponentType { get; set; }
 
 		#region Common Properties
-		public string Ctid { get; set; }
+		public string CTID 
+		{ 
+			get { return this.Ctid; }
+			set { this.Ctid = value; } 
+		}
 
 		/// <summary>
 		/// may replace with IdentifierValue
@@ -194,7 +199,7 @@ namespace RA.Models.Input
 		public string HasProgressionLevel { get; set; }
 
 
-		public List<IdentifierValue> IdentifierValue { get; set; } = new List<IdentifierValue>();
+		//public List<IdentifierValue> IdentifierValue { get; set; } = new List<IdentifierValue>();
 
 
 		/// <summary>
@@ -291,7 +296,7 @@ namespace RA.Models.Input
 		/// Used by: 
 		/// ceterms:CourseComponent only 
 		/// </summary>
-		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
+		public List<QuantitativeValue> CreditValue { get; set; } = new List<QuantitativeValue>();
 
 		/// <summary>
 		/// ProgramTerm

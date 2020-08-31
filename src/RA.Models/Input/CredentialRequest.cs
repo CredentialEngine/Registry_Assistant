@@ -313,6 +313,7 @@ namespace RA.Models.Input
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
 		public List<string> LearningDeliveryType { get; set; } = new List<string>();
 
+		//=============================================================================
 		//List of occupations from a published framework, that is with a web URL
 		/// <summary>
 		/// OccupationType
@@ -335,6 +336,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> ONET_Codes { get; set; } = new List<string>();
 
+		//=============================================================================
 		/// <summary>
 		/// IndustryType
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
@@ -355,6 +357,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> Naics { get; set; }
 
+		//=============================================================================
 		/// <summary>
 		/// InstructionalProgramType
 		/// Type of instructional program; select from an existing enumeration of such types.
@@ -418,10 +421,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 
-		/// <summary>
-		/// The salary value or range associated with this credential.
-		/// </summary>
-		public MonetaryAmount BaseSalary { get; set; } = new MonetaryAmount();
 
 		/// <summary>
 		/// Geographic or political region in which the credential is formally applicable or an organization has authority to act.

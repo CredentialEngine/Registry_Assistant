@@ -6,41 +6,41 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
-	public class BlankNode
-	{
+	//public class BlankNode
+	//{
 
-		/// <summary>
-		/// An identifier for use with blank nodes, to minimize duplicates
-		/// </summary>
-		public string Id { get; set; }
+	//	/// <summary>
+	//	/// An identifier for use with blank nodes, to minimize duplicates
+	//	/// </summary>
+	//	public string Id { get; set; }
 
-		/// <summary>
-		/// the type of the entity must be provided. examples
-		/// ceterms:AssessmentProfile
-		/// ceterms:LearningOpportunityProfile
-		/// ceterms:ConditionManifest
-		/// ceterms:CostManifest
-		/// or the many credential subclasses!!
-		/// </summary>
-		public string Type { get; set; }
+	//	/// <summary>
+	//	/// the type of the entity must be provided. examples
+	//	/// ceterms:AssessmentProfile
+	//	/// ceterms:LearningOpportunityProfile
+	//	/// ceterms:ConditionManifest
+	//	/// ceterms:CostManifest
+	//	/// or the many credential subclasses!!
+	//	/// </summary>
+	//	public string Type { get; set; }
 
-		/// <summary>
-		/// Name of the entity (required)
-		/// </summary>
-		public LanguageMap Name { get; set; } = new LanguageMap();
+	//	/// <summary>
+	//	/// Name of the entity (required)
+	//	/// </summary>
+	//	public LanguageMap Name { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// Description of the entity (optional)
-		/// </summary>
-		public LanguageMap Description { get; set; } = new LanguageMap();
+	//	/// <summary>
+	//	/// Description of the entity (optional)
+	//	/// </summary>
+	//	public LanguageMap Description { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// Subject webpage of the entity
-		/// </summary> (required)
-		public string SubjectWebpage { get; set; }
+	//	/// <summary>
+	//	/// Subject webpage of the entity
+	//	/// </summary> (required)
+	//	public string SubjectWebpage { get; set; }
 
-		public List<string> SocialMedia { get; set; } = null;
-	}
+	//	public List<string> SocialMedia { get; set; } = null;
+	//}
 
 	/// <summary>
 	/// Class for handling references to an organization
@@ -50,8 +50,9 @@ namespace RA.Models.Input
 	/// - Description
 	/// - Subject webpage
 	/// - Social media
+	/// 2020-07-01 With the addition of many additional properties to EntityReference, changed OrganizationReference to no lonber inherit from EntityReference.
 	/// </summary>
-	public class OrganizationReference : EntityReference
+	public class OrganizationReference 
 	{
 		public static string CredentialOrganization = "CredentialOrganization";
 		public static string QACredentialOrganization = "QACredentialOrganization";
@@ -61,15 +62,68 @@ namespace RA.Models.Input
 		/// - QACredentialOrganization
 		/// Required
 		/// </summary>
-		public override string Type { get; set; }
+		public string Type { get; set; }
 
+		/// <summary>
+		/// Id is a resovable URI
+		/// If the entity exists in the registry, provide the URI. 
+		/// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
+		/// Alterate URIs are under consideration. For example
+		/// http://dbpedia.com/Stanford_University
+		/// </summary>
+		public string Id { get; set; }
+
+		/// <summary>
+		/// Optionally, a CTID can be entered instead of an Id. 
+		/// A CTID is recommended for flexibility.
+		/// Only enter Id or CTID, but not both.
+		/// </summary>
+		public string CTID { get; set; }
+
+		/// <summary>
+		/// Name of the entity (required)
+		/// </summary>
+		public string Name { get; set; }
+
+		/// <summary>
+		/// Subject webpage of the entity (required)
+		/// This should be for the referenced entity. 
+		/// For example, if the reference is for an organization, the subject webpage should be on the organization site.
+		/// </summary>
+		public string SubjectWebpage { get; set; }
+
+		/// <summary>
+		/// Description of the entity (optional)
+		/// This should be the general description of the entity. 
+		/// For example, for an organization, the description should be about the organization specifically not, how the organization is related to, or interacts with the refering entity. 
+		/// </summary>
+		public string Description { get; set; }
 		/// <summary>
 		/// Social Media URL links
 		/// For example, Facebook, LinkedIn
 		/// </summary>
 		public List<string> SocialMedia { get; set; } //URL
 
-		public new bool HasNecessaryProperties()
+
+		//additional optional information - why not everything!
+		/// <summary>
+		/// List of Places
+		/// In this context - an organization reference, partial addresses are allowed. 
+		/// This means a street address and/or a postal would not be required, just say city, region, and country
+		/// </summary>
+		public List<Place> Address { get; set; } = new List<Place>();
+		/// <summary>
+		/// Listing of online and/or physical locations
+		/// List of URLs
+		/// </summary>
+		public List<string> AvailabilityListing { get; set; } = new List<string>();
+		/// <summary>
+		/// List of email addresses
+		/// </summary>
+		public List<string> Email { get; set; } = new List<string>();
+
+
+		public bool HasNecessaryProperties()
 		{
 			//skip social media for now
 			//	|| ( SocialMedia == null || SocialMedia.Count == 0 )
@@ -87,7 +141,7 @@ namespace RA.Models.Input
 		/// Purpose is to determine if class has data
 		/// </summary>
 		/// <returns></returns>
-		public override bool  IsEmpty()
+		public bool  IsEmpty()
 		{
 			if ( string.IsNullOrWhiteSpace( Id )
 				&& string.IsNullOrWhiteSpace( Name )

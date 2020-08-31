@@ -80,7 +80,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// This property identifies all the PathwayComponents in a Pathway
 		/// Provide the CTID or the full URI for the target environment. 
-		/// However, we could recommend that a CTID be provided, and just convert.
+		/// However, we recommend that a CTID be provided, and the API will format accordingly.
 		/// As a helper, this could be generated from all of the provided components
 		/// </summary>
 		public List<string> HasPart { get; set; } = new List<string>();

@@ -237,11 +237,7 @@ namespace RA.Models.JsonV2
 
 		#endregion
 
-		/// <summary>
-		/// The salary value or range associated with this credential.
-		/// </summary>
-		[JsonProperty( PropertyName = "schema:baseSalary" )]
-		public MonetaryAmount BaseSalary { get; set; } 
+
 
 		[JsonProperty( PropertyName = "ceterms:estimatedDuration" )]
         public List<DurationProfile> EstimatedDuration { get; set; }

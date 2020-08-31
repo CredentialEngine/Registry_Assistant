@@ -16,17 +16,17 @@ namespace RA.SamplesForDocumentation
 			//Holds the result of the publish action
 			var result = "";
 			//assign the api key - acquired from organization account of the organization doing the publishing
-			var apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
-			//this is the CTID of the organization that owns the data being published
-			var organizationIdentifierFromAccountsSite = "ce-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+			var apiKey = SampleServices.GetMyApiKey();
+			// This is the CTID of the organization that owns the data being published
+			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myLoppCTID = "ce-" + Guid.NewGuid().ToString();
+			var myLoppCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 			//typically would have been stored prior to retrieving for publishing
 			//DataService.SaveLearningOpportunityCTID( myLoppCTID );
 
-			//A simple learning opportunity object - see below for sample class definition
-			var myLopp = new LearningOpportunity()
+			//Populate the learning opportunity object
+			var myData = new LearningOpportunity()
 			{
 				Name = "My Learning Opportunity Name",
 				Description = "This is some text that describes my learning opportunity.",
@@ -44,34 +44,29 @@ namespace RA.SamplesForDocumentation
 				}
 			};
 
-			//This holds the learning opportunity and the identifier (CTID) for the owning organization
-			var myData = new LearningOpportunityRequest()
+
+			//Add organization that is not in the credential registry
+			myData.AccreditedBy.Add( new OrganizationReference()
 			{
-				LearningOpportunity = myLopp,
+				Type = "CredentialOrganization",
+				Name = "Council on Social Work Education (CSWE)",
+				SubjectWebpage = "https://www.cswe.org/",
+				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
+			} );
+
+			//This holds the learning opportunity and the identifier (CTID) for the owning organization
+			var myRequest = new LearningOpportunityRequest()
+			{
+				LearningOpportunity = myData,
 				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 
 			//Serialize the credential request object
-			var json = JsonConvert.SerializeObject( myData );
+			var payload = JsonConvert.SerializeObject( myRequest );
 
-			//Use HttpClient to perform the publish
-			using ( var client = new HttpClient() )
-			{
-				//Accept JSON
-				client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
-				//add API Key (for a publish request)
-				client.DefaultRequestHeaders.Add( "Authorization", "ApiToken " + apiKey );
-
-				//Format the json as content
-				var content = new StringContent( json, Encoding.UTF8, "application/json" );
-
-				//The endpoint to publish to
-				var publishEndpoint = "https://credentialengine.org/sandbox/learningopportunity/publish/";
-
-				//Perform the actual publish action and store the result
-				result = client.PostAsync( publishEndpoint, content ).Result.Content.ReadAsStringAsync().Result;
-			}
+			//call the Assistant API
+			result = new SampleServices().SimplePost( "learningopportunity", "publish", payload, apiKey );
 
 			//Return the result
 			return result;
