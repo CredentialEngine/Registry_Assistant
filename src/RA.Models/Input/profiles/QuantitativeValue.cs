@@ -8,8 +8,7 @@ namespace RA.Models.Input
 {
 	/// <summary>
 	/// Class for providing values for a property like FinancialAssistance.FinancialAssistanceValue or  LearningOpportunity.CreditValue.
-	/// Recommended: Provide a single value OR a Min and Max value.
-	/// Recommended: Provide a valid concept in UnitText or description
+	/// Recommended: Provide a single value OR a Min and Max value and provide a valid concept in UnitText
 	/// If UnitText is provided, then a value is required.	
 	/// Alternatively just a description can be provided if value is more complicated than can be expressed using either the Value or MinValue/MaxValue
 	/// </summary>
@@ -19,6 +18,7 @@ namespace RA.Models.Input
 		/// Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. For example:
 		/// creditUnit:DegreeCredit or ContinuingEducationUnit
 		/// <see cref="https://credreg.net/ctdl/terms/creditUnitType"/> 
+		/// If this object is a monetary purpose, the UnitText would typically be the related currency for the value (example: "USD")
 		/// </summary>
 		public string UnitText { get; set; }
 		/// <summary>
