@@ -5,42 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RA.Models.Input
-{
-	//public class BlankNode
-	//{
-
-	//	/// <summary>
-	//	/// An identifier for use with blank nodes, to minimize duplicates
-	//	/// </summary>
-	//	public string Id { get; set; }
-
-	//	/// <summary>
-	//	/// the type of the entity must be provided. examples
-	//	/// ceterms:AssessmentProfile
-	//	/// ceterms:LearningOpportunityProfile
-	//	/// ceterms:ConditionManifest
-	//	/// ceterms:CostManifest
-	//	/// or the many credential subclasses!!
-	//	/// </summary>
-	//	public string Type { get; set; }
-
-	//	/// <summary>
-	//	/// Name of the entity (required)
-	//	/// </summary>
-	//	public LanguageMap Name { get; set; } = new LanguageMap();
-
-	//	/// <summary>
-	//	/// Description of the entity (optional)
-	//	/// </summary>
-	//	public LanguageMap Description { get; set; } = new LanguageMap();
-
-	//	/// <summary>
-	//	/// Subject webpage of the entity
-	//	/// </summary> (required)
-	//	public string SubjectWebpage { get; set; }
-
-	//	public List<string> SocialMedia { get; set; } = null;
-	//}
+{	
 
 	/// <summary>
 	/// Class for handling references to an organization
