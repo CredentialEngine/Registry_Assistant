@@ -789,7 +789,7 @@ namespace RA.Services
 			LoggingHelper.DoTrace( 7, "CredentialServicesV2.HandleCredentialAlignmentFields - deliveryTypes" );
 			//Delivery
 			//
-			var types = SchemaServices.GetConceptScheme( "http://credreg.net/ctdl/terms/Delivery/json" );
+			//var types = SchemaServices.GetConceptScheme( "http://credreg.net/ctdl/terms/Delivery/json" );
 
 			if ( input.AssessmentDeliveryType != null && input.AssessmentDeliveryType.Count() > 0)
 			{

@@ -30,7 +30,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CTID { get; set; }
 
-		//if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would be required
+		//if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would typically be required
+
 
 		/// <summary>
 		/// the type of the entity must be provided if the Id was not provided. examples
@@ -41,7 +42,6 @@ namespace RA.Models.Input
 		/// or the many credential subclasses!!
 		/// </summary>
 		public virtual string Type { get; set; }
-
 
 		/// <summary>
 		/// Name of the entity (required)
@@ -65,6 +65,46 @@ namespace RA.Models.Input
 
 		#region Assessment/Lopp related properties
 		//2020-05-18 Additional properties have been added to the EntityReference. 
+		/*Allowed properties for Assessment
+		 * Assesses
+		 * AssessmentMethodDescription
+		 * AvailableAt
+		 * CodedNotation
+		 * Description
+		 * EstimatedDuration
+		 * Keyword
+		 * IndustryType
+		 * LearningMethodDescription
+		 * LearningMethodType
+		 * Name
+		 * OccupationType
+		 * OfferedBy
+		 * OwnedBy
+		 * Subject
+		 * SubjectWebpage
+		 * Version
+		 */
+
+		/*Allowed properties for LearningOpportunity
+		* AssessmentMethodDescription
+		* AvailableAt
+		* Name
+		* CodedNotation
+		* CreditValue
+		* Description
+		* EstimatedDuration
+		* Keyword
+		* IndustryType
+		* LearningMethodDescription
+		* Name
+		* OccupationType
+		* OfferedBy
+		* OwnedBy
+		* Subject
+		* SubjectWebpage
+		* Teaches
+		* Version
+		*/
 		public List<CredentialAlignmentObject> Assesses { get; set; } = new List<CredentialAlignmentObject>();
 
 		/// <summary>
@@ -80,10 +120,13 @@ namespace RA.Models.Input
 		public List<Place> AvailableAt { get; set; } = new List<Place>();
 		//
 		public string CodedNotation { get; set; }
-		//
+		//LearningOpportunity only
 		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
 		public List<DurationProfile> EstimatedDuration { get; set; } = new List<DurationProfile>();
+
+		public List<string> Keyword { get; set; } = new List<string>();
+		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Learning Method Description 
@@ -117,6 +160,30 @@ namespace RA.Models.Input
 		public List<CredentialAlignmentObject> Teaches { get; set; } = new List<CredentialAlignmentObject>();
 		#endregion
 
+		#region properties for Occupation
+		/*
+		 * Name
+		 * CodedNotation
+		 * Description
+		 * Keyword
+		 * OccupationType
+		 * IndustryType
+		 * SubjectWebpage
+		 * Version
+		 */
+
+		/// <summary>
+		/// Update handle of FrameworkItem to be like EntityReference - all in one, rather than separate property for Alternate and codes
+		/// </summary>
+		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+
+		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+
+		/// <summary>
+		/// ??????????????????????????
+		/// </summary>
+		public string Version { get; set; } //URL
+		#endregion
 
 		/// <summary>
 		/// Check if all properties for a reference request are present

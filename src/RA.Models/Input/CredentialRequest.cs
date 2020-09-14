@@ -85,7 +85,6 @@ namespace RA.Models.Input
 			IsRequiredFor = new List<Connections>();
 			InLanguage = new List<string>();
 			AvailableAt = new List<Place>();
-			//CodedNotation = new List<string>();
 			Renewal = new List<ConditionProfile>();
 			
 			AdministrationProcess = new List<ProcessProfile>();

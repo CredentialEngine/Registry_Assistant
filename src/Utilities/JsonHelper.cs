@@ -5,6 +5,9 @@ using System.Web;
 
 using System.Web.Mvc;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 namespace Utilities
 {
 	public static class JsonHelper
@@ -19,7 +22,7 @@ namespace Utilities
 			var result = new JsonResult();
 			result.Data = input;
 			result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
-			result.MaxJsonLength = Int32.MaxValue;
+			//result.MaxJsonLength = Int32.MaxValue;
 			return result;
 		}
 

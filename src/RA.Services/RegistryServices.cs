@@ -21,10 +21,18 @@ namespace RA.Services
 	public class RegistryServices
 	{
 		public const string RA_PUBLISH_METHOD = "publishMethod:RegistryAssistant";
-		public const string CE_MANAGED_PUBLISH_METHOD = "publishMethod:ManualEntry";
+		public const string CE_PUBLISH_METHOD_MANUAL_ENTRY = "publishMethod:ManualEntry";
 		public const string CE_BULK_UPLOAD_METHOD = "publishMethod:BulkUpload";
-		public const string CE_DIRECT_PUBLISH_METHOD = "ManualPublish";
+		public const string CE_PUBLISH_METHOD_USING_CEKEYS = "ManualPublish";
 		public const string CE_TRUSTED_PARTNER_ROLE = "publishRole:TrustedPartner";
+
+		public static string REGISTRY_ACTION_DELETE = "Registry Delete";
+		public static string REGISTRY_ACTION_PURGE = "Registry Purge";
+		public static string REGISTRY_ACTION_TRANSFER = "Transfer of Owner";
+		public static string REGISTRY_ACTION_REMOVE_ORG = "RemoveOrganization";
+
+		public string thisClassName = "RegistryServices";
+		public string currentEnvironment = UtilityManager.GetAppKeyValue( "environment" );
 
 		public RegistryServices(string entityType, string ctdlType, string ctid)
 		{
@@ -72,6 +80,7 @@ namespace RA.Services
 		/// true if originates from publisher
 		/// </summary>
 		public bool IsPublisherRequest { get; set; }
+		public bool HasBeenPreviouslyPublished { get; set; }
 
 		public bool OverrodeOriginalRequest { get; set; }
 		public bool SkippingValidation { get; set; }
@@ -333,7 +342,7 @@ namespace RA.Services
 								//initialize with entity name - why here?
 								//should this be allowed if envelope was not updated?
                                 SupportServices mgr = new SupportServices( EntityName, Community );
-                                mgr.AddHistory( string.IsNullOrWhiteSpace(dataOwnerCTID) ? "missing" : dataOwnerCTID, payload, CE_DIRECT_PUBLISH_METHOD, PublishingEntityType, CtdlType, EntityCtid, SerializedInput, crEnvelopeId, ref status, PublishingByOrgCtid, ue.Changed );
+                                mgr.AddHistory( string.IsNullOrWhiteSpace(dataOwnerCTID) ? "missing" : dataOwnerCTID, payload, CE_PUBLISH_METHOD_USING_CEKEYS, PublishingEntityType, CtdlType, EntityCtid, SerializedInput, crEnvelopeId, ref status, PublishingByOrgCtid, ue.Changed );
                             }
                         }
 
@@ -403,7 +412,7 @@ namespace RA.Services
 			if (OverrodeOriginalRequest)
 			{
 				//meand the request came from the manual publisher and there was either a previous request via the api or moving forward all new publishing is to be managed. 
-				apr.publishMethodURI = CE_MANAGED_PUBLISH_METHOD;
+				apr.publishMethodURI = CE_PUBLISH_METHOD_MANUAL_ENTRY;
 			}
 			//
 			LoggingHelper.DoTrace( 6, "RegistryServices.ManagedPublishThroughAcccounts - dataOwnerCTID: \r\n" + dataOwnerCTID );
@@ -748,7 +757,7 @@ namespace RA.Services
 				}
 
 				helper.OwnerCtid = request.PublishForOrganizationIdentifier;
-				if ( !AuthorizationServices.ValidateRequest( helper, ref statusMessage, true ) )
+				if ( !new AuthorizationServices().ValidateRequest( helper, ref statusMessage, true ) )
 				{
 					messages.Add( statusMessage );
 					return false;
@@ -760,7 +769,7 @@ namespace RA.Services
 					bool usedCEKeys = false;
 					string message = "";
 					//May need to include community in look up!
-					var result = SupportServices.GetMostRecentHistory( requestType, request.CTID, ref recordWasFound, ref usedCEKeys, ref message, request.Community ?? "" );
+					var result = SupportServices.GetMostRecentHistory( request.CTID, ref recordWasFound, ref usedCEKeys, ref message, request.Community ?? "" );
 					if ( recordWasFound )
 					{
 						//found previous (if not found, can't delete?)
@@ -847,7 +856,7 @@ namespace RA.Services
 				}
 				//ACTUALLY not used directly here, will need mechanism to ensure a valid request. 
 				helper.OwnerCtid = request.PublishForOrganizationIdentifier;
-				if ( !AuthorizationServices.ValidateRequest( helper, ref statusMessage, true ) )
+				if ( !new AuthorizationServices().ValidateRequest( helper, ref statusMessage, true ) )
 				{
 					messages.Add( statusMessage );
 				}

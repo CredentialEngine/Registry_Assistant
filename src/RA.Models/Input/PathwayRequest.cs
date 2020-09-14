@@ -131,7 +131,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
 	}
-	public class PathwayComponent
+	public class PathwayComponent : BaseRequestClass
 	{
 		/// <summary>
 		/// Type of PathwayComponent. 
@@ -150,7 +150,11 @@ namespace RA.Models.Input
 		public string PathwayComponentType { get; set; }
 
 		#region Common Properties
-		public string Ctid { get; set; }
+		public string CTID
+		{
+			get { return this.Ctid; }
+			set { this.Ctid = value; }
+		}
 
 		/// <summary>
 		/// may replace with IdentifierValue

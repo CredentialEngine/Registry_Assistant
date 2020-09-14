@@ -40,6 +40,26 @@ namespace RA.SamplesForDocumentation
 				AgentSectorType = "PrivateNonProfit",
 				Email = new List<string>() { "info@credreg.net" }
 			};
+			//add addresses and contact points
+			var mainAddress = new Place()
+			{
+				Address1 = "123 Main Street",
+				Address2 = "Suite 2", //Address1 and Address2 are concatenated in the registry
+				City = "Springfield",
+				AddressRegion = "Illinois",
+				PostalCode = "62704",
+				Country = "United States"
+			};
+			mainAddress.ContactPoint = new List<ContactPoint>()
+			{ 
+				new ContactPoint()
+				{	ContactType="Information", 
+					Name="Toll-Free", 
+					PhoneNumbers = new List<string>() {"800-555-1212" }
+				}
+			};
+			myData.Address.Add( mainAddress );
+
 			//use organization reference to add a department for the organization
 			myData.Department.Add( new OrganizationReference()
 			{

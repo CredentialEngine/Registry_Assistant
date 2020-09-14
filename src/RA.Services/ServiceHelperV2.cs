@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Reflection;
-using System.Text.Json;
+//using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -1576,7 +1576,7 @@ namespace RA.Services
 			List<MJ.FinancialAssistanceProfile> output = new List<MJ.FinancialAssistanceProfile>();
 			if ( list == null || list.Count == 0 )
 				return null;
-			var types = SchemaServices.GetConceptScheme( "http://credreg.net/ctdl/terms/FinancialAssistance/json" );
+			//var types = SchemaServices.GetConceptScheme( "http://credreg.net/ctdl/terms/FinancialAssistance/json" );
 
 			MJ.FinancialAssistanceProfile jp = new MJ.FinancialAssistanceProfile();
 			foreach ( var item in list )
@@ -4806,25 +4806,25 @@ namespace RA.Services
 		#endregion
 
 		#region System.Text.Json.Serialization helpers
-		public static JsonSerializerOptions JsonSerializerOptions()
-		{
-			var settings = new JsonSerializerOptions()
-			{
-				WriteIndented = true,
-				IgnoreNullValues = true
-			};
+		//public static JsonSerializerOptions JsonSerializerOptions()
+		//{
+		//	var settings = new JsonSerializerOptions()
+		//	{
+		//		WriteIndented = true,
+		//		IgnoreNullValues = true
+		//	};
 
-			return settings;
-		}
-		public static JsonDocumentOptions JsonDocumentOptions()
-		{
-			var settings = new JsonDocumentOptions()
-			{
-				CommentHandling = JsonCommentHandling.Skip
-			};
+		//	return settings;
+		//}
+		//public static JsonDocumentOptions JsonDocumentOptions()
+		//{
+		//	var settings = new JsonDocumentOptions()
+		//	{
+		//		CommentHandling = JsonCommentHandling.Skip
+		//	};
 
-			return settings;
-		}
+		//	return settings;
+		//}
 		#endregion
 
 		#endregion
