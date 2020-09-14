@@ -16,6 +16,10 @@ using InputEntity = RA.Models.Input.TransferValueProfile;
 
 namespace RA.SamplesForDocumentation
 {
+	/// <summary>
+	/// Sep. 14, 2020
+	/// - Added use of dateEffective and expirtationDate for learningopportunity in an EntityReference
+	/// </summary>
 	public class PublishTransferValueProfile
 	{
 		/* Usage

@@ -155,7 +155,8 @@ namespace RA.Models.Input
 		/// Can't initialize this or will be loop
 		/// </summary>
 		public List<OrganizationReference> OwnedBy { get; set; }// = new List<OrganizationReference>();
-																//
+																
+		//
 		public List<string> Subject { get; set; } = new List<string>();
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 
@@ -164,6 +165,7 @@ namespace RA.Models.Input
 		/// Start Date of the Learning opportunity
 		/// </summary>
 		public string DateEffective { get; set; }
+
 		/// <summary>
 		/// For Learning Opportunities only
 		/// Expiration date of the learning opportunity if applicable
