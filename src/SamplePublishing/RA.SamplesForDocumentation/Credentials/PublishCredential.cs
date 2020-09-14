@@ -6,8 +6,10 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 
 using RA.Models.Input;
-using InputEntity = RA.SamplesForDocumentation.SampleModels.Credential;
-using OutputEntity = RA.Models.Input.Credential;
+using YourCredential = RA.SamplesForDocumentation.SampleModels.Credential;
+using APIRequestCredential = RA.Models.Input.Credential;
+using APIRequest = RA.Models.Input.CredentialRequest;
+
 namespace RA.SamplesForDocumentation
 {
 	public class PublishCredential
@@ -16,7 +18,7 @@ namespace RA.SamplesForDocumentation
 		/// Publish a credential using an input class
 		/// An organization will have its data stored somewhere. The first step would be to have a process retrieve the information and send that data to a method to do the publishing. 		
 		/// In this example: 
-		/// -	InputEntity would be defined by the organization
+		/// -	YourCredential would be defined by the organization
 		///-	A process would be developed to read data from the organization data source( s) and populate the class
 		///		o   Important: a CTID must be created in the data source and populated
 		///-	The Publish method would be called with the credential data.
@@ -37,7 +39,7 @@ namespace RA.SamplesForDocumentation
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
-		public string PublishFromInput( InputEntity input )
+		public string PublishFromInput( YourCredential input )
 		{
 			//Holds the result of the publish action
 			var result = "";
@@ -46,7 +48,7 @@ namespace RA.SamplesForDocumentation
 			// This is the CTID of the organization that owns the data being published
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
-			var myData = new OutputEntity
+			var myData = new APIRequestCredential
 			{
 				Name = input.Name,
 				Description = input.Description,
@@ -91,14 +93,16 @@ namespace RA.SamplesForDocumentation
 			FinancialAssistanceProfiles.PopulateSimpleFinancialAssistanceProfile( myData );
 
 			//This holds the credential and the identifier (CTID) for the owning organization
-			var myRequest = new CredentialRequest()
+			var myRequest = new APIRequest()
 			{
 				Credential = myData,
 				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//Serialize the credential request object
-			var payload = JsonConvert.SerializeObject( myRequest );
+			//var payload = JsonConvert.SerializeObject( myRequest );
+			//Preferably, use method that will exclude null/empty properties
+			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 			//call the Assistant API
 			result = new SampleServices().SimplePost( "credential", "publish", payload, apiKey );
 
@@ -155,14 +159,16 @@ namespace RA.SamplesForDocumentation
 			PopulatePrograms( myData );
 
 			//This holds the credential and the identifier (CTID) for the owning organization
-			var myRequest = new CredentialRequest()
+			var myRequest = new APIRequest()
 			{
 				Credential = myData,
 				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//Serialize the credential request object
-			var payload = JsonConvert.SerializeObject( myRequest );
+			//var payload = JsonConvert.SerializeObject( myRequest );
+			//Preferably, use method that will exclude null/empty properties
+			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 			//call the Assistant API
 			result = new SampleServices().SimplePost( "credential", requestType, payload, apiKey );
 			//Return the result
@@ -200,14 +206,16 @@ namespace RA.SamplesForDocumentation
 
 
 			//This holds the credential and the identifier (CTID) for the owning organization
-			var myRequest = new CredentialRequest()
+			var myRequest = new APIRequest()
 			{
 				Credential = myData,
 				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//Serialize the credential request object
-			var payload = JsonConvert.SerializeObject( myRequest );
+			//var payload = JsonConvert.SerializeObject( myRequest );
+			//Preferably, use method that will exclude null/empty properties
+			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 			//call the Assistant API
 			result = new SampleServices().SimplePost( "credential", requestType, payload, apiKey );
 			//Return the result

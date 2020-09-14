@@ -32,6 +32,11 @@ namespace RA.Models.Input
 
 		//if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would typically be required
 
+		/// <summary>
+		/// If the entity described below does exist in the registry, use this SameAs property to relate the two. 
+		/// Provide a CTID(recommended) or a URI to the thing in the credential registry.
+		/// </summary>
+		public string SameAs { get; set; }
 
 		/// <summary>
 		/// the type of the entity must be provided if the Id was not provided. examples
@@ -153,9 +158,21 @@ namespace RA.Models.Input
 																//
 		public List<string> Subject { get; set; } = new List<string>();
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
+
+		/// <summary>
+		/// For Learning Opportunities only
+		/// Start Date of the Learning opportunity
+		/// </summary>
+		public string DateEffective { get; set; }
+		/// <summary>
+		/// For Learning Opportunities only
+		/// Expiration date of the learning opportunity if applicable
+		/// </summary>
+		public string ExpirationDate { get; set; }
 		//
 		/// <summary>
-		/// For Learning Opportunities only, list of competencies being taught
+		/// For Learning Opportunities only
+		/// List of competencies being taught
 		/// </summary>
 		public List<CredentialAlignmentObject> Teaches { get; set; } = new List<CredentialAlignmentObject>();
 		#endregion

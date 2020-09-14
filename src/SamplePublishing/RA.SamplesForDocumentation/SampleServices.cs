@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 using RAResponse = RA.Models.RegistryAssistantResponse;
 
@@ -324,6 +327,66 @@ namespace RA.SamplesForDocumentation
 
 		#endregion
 
+
+		#region JSON helpers
+		public static JsonSerializerSettings GetJsonSettings()
+		{
+			var settings = new JsonSerializerSettings()
+			{
+				NullValueHandling = NullValueHandling.Ignore,
+				DefaultValueHandling = DefaultValueHandling.Ignore,
+				ContractResolver = new AlphaNumericContractResolver(),
+				Formatting = Formatting.Indented,
+				ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+			};
+
+			return settings;
+		}
+
+		//Force properties to be serialized in alphanumeric order
+		public class AlphaNumericContractResolver : DefaultContractResolver
+		{
+			protected override System.Collections.Generic.IList<JsonProperty> CreateProperties( System.Type type, MemberSerialization memberSerialization )
+			{
+				return base.CreateProperties( type, memberSerialization ).OrderBy( m => m.PropertyName ).ToList();
+			}
+		}
+		/// <summary>
+		/// NOTE: previously inherited from AlphaNumericContractResolver. the latter would sort by property name, which we don't want - must be @context, @id, and @graph
+		/// </summary>
+		public class EmptyNullResolver : DefaultContractResolver
+		{
+			protected override JsonProperty CreateProperty( MemberInfo member, MemberSerialization memberSerialization )
+			{
+				var property = base.CreateProperty( member, memberSerialization );
+				var isDefaultValueIgnored = ( ( property.DefaultValueHandling ?? DefaultValueHandling.Ignore ) & DefaultValueHandling.Ignore ) != 0;
+
+				if ( isDefaultValueIgnored )
+					if ( !typeof( string ).IsAssignableFrom( property.PropertyType ) && typeof( IEnumerable ).IsAssignableFrom( property.PropertyType ) )
+					{
+						Predicate<object> newShouldSerialize = obj =>
+						{
+							var collection = property.ValueProvider.GetValue( obj ) as ICollection;
+							return collection == null || collection.Count != 0;
+						};
+						Predicate<object> oldShouldSerialize = property.ShouldSerialize;
+						property.ShouldSerialize = oldShouldSerialize != null ? o => oldShouldSerialize( oldShouldSerialize ) && newShouldSerialize( oldShouldSerialize ) : newShouldSerialize;
+					}
+					else if ( typeof( string ).IsAssignableFrom( property.PropertyType ) )
+					{
+						Predicate<object> newShouldSerialize = obj =>
+						{
+							var value = property.ValueProvider.GetValue( obj ) as string;
+							return !string.IsNullOrEmpty( value );
+						};
+
+						Predicate<object> oldShouldSerialize = property.ShouldSerialize;
+						property.ShouldSerialize = oldShouldSerialize != null ? o => oldShouldSerialize( oldShouldSerialize ) && newShouldSerialize( oldShouldSerialize ) : newShouldSerialize;
+					}
+				return property;
+			}
+		}
+		#endregion
 		public class AssistantRequestHelper
 		{
 			public AssistantRequestHelper()

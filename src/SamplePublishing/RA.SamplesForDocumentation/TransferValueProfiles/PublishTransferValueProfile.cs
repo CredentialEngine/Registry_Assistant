@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -84,6 +85,9 @@ namespace RA.SamplesForDocumentation
 				Description = "While optional, a description is helpful."
 			};
 			transferValueFrom.OwnedBy.Add( ownedBy );
+			myData.TransferValue = new List<QuantitativeValue>() {
+					new QuantitativeValue() { UnitText="DegreeCredit", Value=3}
+			};
 			myData.TransferValueFrom.Add( transferValueFrom );
 
 			//==============	transfer value For
@@ -97,15 +101,17 @@ namespace RA.SamplesForDocumentation
 
 			//						optional
 			//coded Notation will likely be replaced by Identifier in the near future
-			myData.CodedNotation = "So-me-coded:notation";
+			myData.CodedNotation = "ACC900";
 			myData.StartDate = "2020-01-01";
 			myData.EndDate = "2021-12-21";
 
 			//===================================================================================
 			//				additions in pending ( in near future)
-			myData.LifecycleStatusType = "Active";  //this will be the default once activated
-													//identifier will likely replace codedNotation for more flexibility. Although the name may change
-													// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
+			myData.LifecycleStatusType = "Active";  
+
+			//this will be the default once activated
+			//identifier will likely replace codedNotation for more flexibility. Although the name may change
+			// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
 			myData.Identifier.Add( new IdentifierValue()
 			{
 				Name = "ACE Course Code",
@@ -124,8 +130,9 @@ namespace RA.SamplesForDocumentation
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			// Serialize the request object
-			var payload = JsonConvert.SerializeObject( myRequest );
-
+			//var payload = JsonConvert.SerializeObject( myRequest );
+			//Preferably, use method that will exclude null/empty properties
+			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 
 			//assign publish endpoint
 			var assistantUrl = SampleServices.GetAppKeyValue( "registryAssistantApi" ) + "transfervalue/publish/";
@@ -178,8 +185,11 @@ namespace RA.SamplesForDocumentation
 			//add some transfer value profiles
 			myRequest.TransferValueProfiles.Add( GetTVPOne( organizationIdentifierFromAccountsSite ) );
 			myRequest.TransferValueProfiles.Add( GetTVPTwo( organizationIdentifierFromAccountsSite ) );
+			myRequest.TransferValueProfiles.Add( GetTVPEnvironmentalChallenges( organizationIdentifierFromAccountsSite ) );
 			// Serialize the request object
-			var payload = JsonConvert.SerializeObject( myRequest );
+			//var payload = JsonConvert.SerializeObject( myRequest );
+			//Preferably, use method that will exclude null/empty properties
+			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 
 
 			//assign publish endpoint
@@ -232,7 +242,9 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = owningOrganizationCtid
 			} );
-
+			myData.TransferValue = new List<QuantitativeValue>() {
+					new QuantitativeValue() { UnitText="DegreeCredit", Value=3}
+			};
 			//==============	transfer value from
 			//Resource that provides the transfer value described by this resource, according to the entity providing this resource.
 			//A list of entity references. If the CTID is known, then just provide it.
@@ -265,7 +277,7 @@ namespace RA.SamplesForDocumentation
 			//						optional
 			//coded Notation could be replaced by Identifier in the near future
 			myData.CodedNotation = "X200";
-			myData.StartDate = "2020-01-01";
+			myData.StartDate = "2015-01-01";
 			myData.EndDate = "2021-12-21";
 
 			return myData;
@@ -291,6 +303,9 @@ namespace RA.SamplesForDocumentation
 				CTID = owningOrganizationCtid
 			} );
 
+			myData.TransferValue = new List<QuantitativeValue>() {
+					new QuantitativeValue() { UnitText="DegreeCredit", Value=3}
+			};
 			//==============	transfer value from
 			//Resource that provides the transfer value described by this resource, according to the entity providing this resource.
 			//A list of entity references. If the CTID is known, then just provide it.
@@ -340,6 +355,80 @@ namespace RA.SamplesForDocumentation
 			return myData;
 		}
 
+		/// <summary>
+		/// Environmental Challenges And Solutions
+		/// </summary>
+		/// <param name="owningOrganizationCtid"></param>
+		/// <returns></returns>
+		public TransferValueProfile GetTVPEnvironmentalChallenges( string owningOrganizationCtid )
+		{
+
+			//from previous test
+			//
+			var myData = new TransferValueProfile()
+			{
+				Name = "Environmental Challenges And Solutions",
+				Description = "To provide knowledge of the scope and severity of environmental illnesses.",
+				Ctid = "ce-489406de-1c64-40bd-af31-f7a502b8b850",
+				SubjectWebpage = "https://stagingweb.acenet.edu/national-guide/Pages/Course.aspx?org=Huntington%20College%20of%20Health%20Sciences&cid=ffb1a50b-82c4-ea11-a812-000d3a33232a"
+			};
+			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.
+			// The ownedBY CTID is typically the same as the CTID for the data owner.
+			myData.OwnedBy.Add( new OrganizationReference()
+			{
+				CTID= owningOrganizationCtid
+			} );
+			myData.CodedNotation = "AANU-0010";
+			myData.StartDate = "1994-09-01";
+			myData.EndDate = "2001-06-30";
+
+			//=================================================================================
+			myData.TransferValue = new List<QuantitativeValue>() {
+					new QuantitativeValue() { UnitText="DegreeCredit", Value=3}
+			};
+
+			//==============	transfer value from ===========================================
+			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
+
+			var learningOpportunity = new EntityReference()
+			{
+				Type = "LearningOpportunityProfile",
+				Name = "Environmental Challenges And Solutions",
+				Description = "To provide knowledge of the scope and severity of environmental illnesses.",
+				SubjectWebpage = "https://stagingweb.acenet.edu/national-guide/Pages/Course.aspx?org=Huntington%20College%20of%20Health%20Sciences&cid=ffb1a50b-82c4-ea11-a812-000d3a33232a",
+				DateEffective ="1994-09-01",
+				ExpirationDate = "2001-06-30",
+				EstimatedDuration = new List<DurationProfile>() 
+				{ 
+					new DurationProfile() { Description= "135 hours (self-paced)" } 
+				}
+			};
+			learningOpportunity.OwnedBy = new List<OrganizationReference>() {  new OrganizationReference()
+			{
+				Type = "CredentialOrganization",
+				Name = "Huntington College of Health Sciences",
+				Description = "To provide knowledge of the scope and severity of environmental illnesses.",
+				SubjectWebpage = "https://stagingweb.acenet.edu/national-guide/Pages/Course.aspx?org=Huntington%20College%20of%20Health%20Sciences&cid=ffb1a50b-82c4-ea11-a812-000d3a33232a"
+			} };
+			learningOpportunity.Teaches = new List<CredentialAlignmentObject>()
+			{
+				new CredentialAlignmentObject()
+				{
+					TargetNodeName="Upon successful completion of this course, the student will be able to recognize causes and effects of chemically induced illness"
+				},
+				new CredentialAlignmentObject()
+				{
+					TargetNodeName="And understand the role proper nutrition plays in avoiding and/or mitigating the damage these chemicals cause"
+				},
+				new CredentialAlignmentObject()
+				{
+					TargetNodeName="Know how to find alternative solutions to chemicals"
+				}
+			};
+			myData.TransferValueFrom.Add( learningOpportunity );
+
+			return myData;
+		}
 
 		private EntityReference AddTransferFromLearningOpportunity()
 		{

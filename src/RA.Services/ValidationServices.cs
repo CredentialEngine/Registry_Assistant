@@ -80,7 +80,7 @@ namespace RA.Services
 		/// <returns></returns>
 		public static bool IsCredentialTypeValid( string vocabulary, ref string property )
 		{
-			var credentialTypes = SchemaServices.GetConceptSchemeFromPropertyRange( "http://credreg.net/ctdl/schema/encoding/json", "ceterms:credentialType" );
+			//var credentialTypes = SchemaServices.GetConceptSchemeFromPropertyRange( "http://credreg.net/ctdl/schema/encoding/json", "ceterms:credentialType" );
 
 			//if ( CtdlHelper.CodesManager.IsPropertySchemaValid( categoryCode, ref property ) == false )
 			//    return false;
@@ -600,24 +600,24 @@ namespace RA.Services
 			//intial
 			try
 			{
-				string result = CtdlHelper.CodesManager.SOC_SearchAsObject( codes, ref warnings );
-				var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
-				var fi = new FrameworkItem();
+				//string result = CtdlHelper.CodesManager.SOC_SearchAsObject( codes, ref warnings );
+				//var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
+				//var fi = new FrameworkItem();
 
-				foreach ( var item in list )
-				{
-					//not sure
-					fi = new FrameworkItem()
-					{
-						Framework = framework,
-						FrameworkName = frameworkName,
-						Name = item.Name,
-						Description = item.Description,
-						CodedNotation = item.Code,
-						TargetNode = item.URL
-					};
-					output.Add( fi );
-				}
+				//foreach ( var item in list )
+				//{
+				//	//not sure
+				//	fi = new FrameworkItem()
+				//	{
+				//		Framework = framework,
+				//		FrameworkName = frameworkName,
+				//		Name = item.Name,
+				//		Description = item.Description,
+				//		CodedNotation = item.Code,
+				//		TargetNode = item.URL
+				//	};
+				//	output.Add( fi );
+				//}
 			} catch (Exception ex)
 			{
 				//if exception is encountered, add warning and allow publish to continue
@@ -647,24 +647,24 @@ namespace RA.Services
 
 			try
 			{
-				string result = CtdlHelper.CodesManager.NAICS_SearchAsObject( codes, ref warnings, doingBulkSearch );
-				var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
-				var fi = new FrameworkItem();
+				//string result = CtdlHelper.CodesManager.NAICS_SearchAsObject( codes, ref warnings, doingBulkSearch );
+				//var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
+				//var fi = new FrameworkItem();
 
-				foreach ( var item in list )
-				{
-					//not sure
-					fi = new FrameworkItem()
-					{
-						Framework = framework,
-						FrameworkName = frameworkName,
-						Name = item.Name,
-						Description = item.Description,
-						CodedNotation = item.Code,
-						TargetNode = item.URL
-					};
-					output.Add( fi );
-				}
+				//foreach ( var item in list )
+				//{
+				//	//not sure
+				//	fi = new FrameworkItem()
+				//	{
+				//		Framework = framework,
+				//		FrameworkName = frameworkName,
+				//		Name = item.Name,
+				//		Description = item.Description,
+				//		CodedNotation = item.Code,
+				//		TargetNode = item.URL
+				//	};
+				//	output.Add( fi );
+				//}
 			}
 			catch ( Exception ex )
 			{
@@ -694,24 +694,24 @@ namespace RA.Services
 			//any codes not found will be marked as warnings
 			try
 			{
-				string result = CtdlHelper.CodesManager.CIP_SearchAsObject( codes, ref warnings );
-				var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
-				var fi = new FrameworkItem();
+				//string result = CtdlHelper.CodesManager.CIP_SearchAsObject( codes, ref warnings );
+				//var list = JsonConvert.DeserializeObject<List<CodeItem>>( result );
+				//var fi = new FrameworkItem();
 
-				foreach ( var item in list )
-				{
-					//not sure
-					fi = new FrameworkItem()
-					{
-						Framework = framework,
-						FrameworkName = frameworkName,
-						Name = item.Name,
-						Description = item.Description,
-						CodedNotation = item.Code,
-						TargetNode = item.URL
-					};
-					output.Add( fi );
-				}
+				//foreach ( var item in list )
+				//{
+				//	//not sure
+				//	fi = new FrameworkItem()
+				//	{
+				//		Framework = framework,
+				//		FrameworkName = frameworkName,
+				//		Name = item.Name,
+				//		Description = item.Description,
+				//		CodedNotation = item.Code,
+				//		TargetNode = item.URL
+				//	};
+				//	output.Add( fi );
+				//}
 			}
 			catch ( Exception ex )
 			{

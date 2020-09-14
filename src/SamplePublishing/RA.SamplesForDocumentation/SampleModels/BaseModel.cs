@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using RA.Models.Input;
+
 namespace RA.SamplesForDocumentation.SampleModels
 {
 	public class BaseModel
@@ -13,6 +15,8 @@ namespace RA.SamplesForDocumentation.SampleModels
 		public string SubjectWebpage { get; set; }
 		public string Ctid { get; set; }
 		public string DateEffective { get; set; }
+
+		public Place Address { get; set; } = new Place();
 	}
 	
 }

@@ -142,7 +142,16 @@ namespace RA.Models.Input
 		#endregion
 
 		#region *** Recommended Properties ***
+		/// <summary>
+		/// Start Date of the Learning opportunity
+		/// </summary>
 		public string DateEffective { get; set; }
+
+		/// <summary>
+		/// End date of the learning opportunity if applicable
+		/// </summary>
+		public string ExpirationDate { get; set; }
+
 		//List of language codes. ex: en, es
 		public List<string> InLanguage { get; set; }
 		public List<DurationProfile> EstimatedDuration { get; set; }
@@ -165,6 +174,7 @@ namespace RA.Models.Input
 		public List<string> Subject { get; set; }
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 		#endregion
+		
 
 		/// <summary>
 		/// Type of official status of the TransferProfile; select from an enumeration of such types.
