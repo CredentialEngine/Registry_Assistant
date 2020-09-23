@@ -24,7 +24,6 @@ namespace RA.Models.Input
 			DeliveryType = new List<string>();
 			LearningMethodType = new List<string>();
 			EstimatedCost = new List<CostProfile>();
-			Jurisdiction = new List<Jurisdiction>();
 			//Region = new List<GeoCoordinates>();
 
 			AudienceType = new List<string>();
@@ -223,7 +222,12 @@ namespace RA.Models.Input
 		//external classes
 		public List<CostProfile> EstimatedCost { get; set; }
 
-		public List<Jurisdiction> Jurisdiction { get; set; }
+		/// <summary>
+		/// Jurisdiction Profile
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+		/// </summary>
+		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 		#region -- Quality Assurance BY --
 		public List<OrganizationReference> AccreditedBy { get; set; }
 		public List<OrganizationReference> ApprovedBy { get; set; }

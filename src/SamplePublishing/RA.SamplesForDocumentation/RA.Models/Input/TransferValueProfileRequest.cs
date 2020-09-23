@@ -100,7 +100,7 @@ namespace RA.Models.Input
 		#endregion
 
 		/// <summary>
-		/// May be replace by Identifier
+		/// May be replaced by Identifier
 		/// </summary>
 		public string CodedNotation { get; set; }
 

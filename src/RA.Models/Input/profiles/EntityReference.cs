@@ -125,6 +125,11 @@ namespace RA.Models.Input
 		public List<Place> AvailableAt { get; set; } = new List<Place>();
 		//
 		public string CodedNotation { get; set; }
+		//condition profiles
+		public List<ConditionProfile> Requires { get; set; } = new List<ConditionProfile>();
+		public List<ConditionProfile> Corequisite { get; set; } = new List<ConditionProfile>();
+		public List<ConditionProfile> Recommends { get; set; } = new List<ConditionProfile>();
+		public List<ConditionProfile> EntryCondition { get; set; } = new List<ConditionProfile>();
 		//LearningOpportunity only
 		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
@@ -155,8 +160,7 @@ namespace RA.Models.Input
 		/// Can't initialize this or will be loop
 		/// </summary>
 		public List<OrganizationReference> OwnedBy { get; set; }// = new List<OrganizationReference>();
-																
-		//
+																//
 		public List<string> Subject { get; set; } = new List<string>();
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 
@@ -165,7 +169,6 @@ namespace RA.Models.Input
 		/// Start Date of the Learning opportunity
 		/// </summary>
 		public string DateEffective { get; set; }
-
 		/// <summary>
 		/// For Learning Opportunities only
 		/// Expiration date of the learning opportunity if applicable

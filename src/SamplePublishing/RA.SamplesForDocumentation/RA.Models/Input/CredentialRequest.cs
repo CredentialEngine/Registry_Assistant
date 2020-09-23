@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using RA.Models.Input.profiles.QData;
 
 namespace RA.Models.Input
 {
@@ -85,7 +86,6 @@ namespace RA.Models.Input
 			IsRequiredFor = new List<Connections>();
 			InLanguage = new List<string>();
 			AvailableAt = new List<Place>();
-			//CodedNotation = new List<string>();
 			Renewal = new List<ConditionProfile>();
 			
 			AdministrationProcess = new List<ProcessProfile>();
@@ -421,9 +421,20 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 
+		/// <summary>
+		/// Entity describing aggregate credential holder earnings data.
+		/// </summary>
+		public List<EarningsProfile> EarningsProfile { get; set; } = new List<EarningsProfile>();
 
 		/// <summary>
-		/// Geographic or political region in which the credential is formally applicable or an organization has authority to act.
+		/// The salary value or range associated with this credential.
+		/// </summary>
+		public MonetaryAmount BaseSalary { get; set; } = new MonetaryAmount();
+
+		/// <summary>
+		/// Jurisdiction Profile
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
 		/// </summary>
 		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 
@@ -487,14 +498,17 @@ namespace RA.Models.Input
 	{
 		public RevocationProfile()
 		{
-			Jurisdiction = new List<Input.Jurisdiction>();
-			//RevocationCriteria = new List<string>();
 		}
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 		//public List<string> CredentialProfiled { get; set; }
 		public string DateEffective { get; set; }
-		public List<Jurisdiction> Jurisdiction { get; set; }
+		/// <summary>
+		/// Jurisdiction Profile
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+		/// </summary>
+		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 		public string RevocationCriteria { get; set; }
 		public string RevocationCriteriaDescription { get; set; }
 		public LanguageMap RevocationCriteriaDescription_Map { get; set; } = new LanguageMap();
