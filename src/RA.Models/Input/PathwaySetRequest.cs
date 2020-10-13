@@ -18,10 +18,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public PathwaySet PathwaySet { get; set; } = new PathwaySet();
 
+		/// <summary>
+		/// List of pathways that are part of the pathway set.
+		/// The PathwaySet.HasPathway is a list of CTIDs that will reference pathways in this list.
+		/// </summary>
 		public List<PathwayRequest> Pathways { get; set; } = new List<PathwayRequest>();
-		//TBD - consider option to just provide a list of ctids/uris
-		//one or the other but not both??
-		public List<string> PathwayReferences { get; set; } = new List<string>();
 
 	}//
 
