@@ -8,7 +8,7 @@ namespace RA.Models.Input
 {
 
 	/// <summary>
-	/// Single of TransferValueProfileRequest requests
+	/// Single TransferValueProfileRequest requests
 	/// </summary>
 	public class TransferValueProfileRequest : BaseRequest
 	{
@@ -20,6 +20,8 @@ namespace RA.Models.Input
 		/// List of TransferValueProfiles to publish
 		/// </summary>
 		public TransferValueProfile TransferValueProfile { get; set; } = new TransferValueProfile();
+
+		public List<LearningOpportunity> TargetLearningOpportunities { get; set; } = new List<LearningOpportunity>();
 	}
 
 	/// <summary>
@@ -89,6 +91,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
+		/// <summary>
+		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
+		/// ceasn:derivedFrom
+		/// </summary>
+		public List<string> DerivedFrom { get; set; } = new List<string>();
 
 		public string SubjectWebpage { get; set; } //URL
 
@@ -102,7 +109,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// May be replaced by Identifier
 		/// </summary>
-		public string CodedNotation { get; set; }
+		//public string CodedNotation { get; set; }
 
 		/// <summary>
 		/// Identifier
@@ -134,7 +141,7 @@ namespace RA.Models.Input
 		/// A suggested or articulated credit- or point-related transfer value.
 		/// Required
 		/// </summary>
-		public List<QuantitativeValue> TransferValue { get; set; } = new List<QuantitativeValue>();
+		public List<ValueProfile> TransferValue { get; set; } = new List<ValueProfile>();
 
 		/// <summary>
 		///  Resource that provides the transfer value described by this resource, according to the entity providing this resource.

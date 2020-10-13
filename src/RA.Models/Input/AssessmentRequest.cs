@@ -113,16 +113,19 @@ namespace RA.Models.Input
 
 		#endregion
 
-		#region *** Required if available Properties ***
+		#region *** Recommended Benchmark ***
 		public List<CredentialAlignmentObject> Assesses { get; set; }
 
+		/// <summary>
+		/// Type of method used to conduct an assessment; select from an existing enumeration of such types.
+		/// </summary>
 		public List<string> AssessmentMethodType { get; set; }
 		public List<string> DeliveryType { get; set; }
 		public string DeliveryTypeDescription { get; set; }
 		public LanguageMap DeliveryTypeDescription_Map { get; set; } = new LanguageMap();
 		#endregion
 
-		#region *** Recommended Properties ***
+		//=========== optional ================================
 
 		/// <summary>
 		/// Assessment Method Description 
@@ -147,6 +150,10 @@ namespace RA.Models.Input
 
 
 		public string DateEffective { get; set; }
+		/// <summary>
+		/// Expiration date of the assessment if applicable
+		/// </summary>
+		public string ExpirationDate { get; set; }
 
 		//List of language codes. ex: en, es
 		public List<string> InLanguage { get; set; }
@@ -159,17 +166,10 @@ namespace RA.Models.Input
 		//system will check for this first, and then the old properties
 		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
-		//public string CreditHourType { get; set; }
-		//public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
-
-		///// <summary>
-		///// Provide a valid concept from the CreditUnitType concept scheme
-		///// https://credreg.net/ctdl/terms/creditUnitType
-		///// </summary>
-		//public string CreditUnitType { get; set; }
-		//public decimal CreditHourValue { get; set; }
-		//public decimal CreditUnitValue { get; set; }
-		//public decimal CreditUnitMaxValue { get; set; }
+		/// <summary>
+		/// Detailed description of credit unit. 
+		/// Recommendation is to use CreditValue rather than this property.
+		/// </summary>
 		public string CreditUnitTypeDescription { get; set; }
 		public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
 
@@ -181,7 +181,7 @@ namespace RA.Models.Input
 
 		public string AssessmentExample { get; set; }
 		public List<string> AssessmentUseType { get; set; }
-		#endregion
+	
 
 		/// <summary>
 		/// Type of official status of the TransferProfile; select from an enumeration of such types.

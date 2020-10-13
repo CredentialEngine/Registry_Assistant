@@ -85,6 +85,7 @@ namespace RA.Models.Input
 		 * OccupationType
 		 * OfferedBy
 		 * OwnedBy
+		 * Requires, Recommends, Corequisite
 		 * Subject
 		 * SubjectWebpage
 		 * Version
@@ -105,6 +106,7 @@ namespace RA.Models.Input
 		* OccupationType
 		* OfferedBy
 		* OwnedBy
+		* Requires, Recommends, Corequisite, EntryCondition
 		* Subject
 		* SubjectWebpage
 		* Teaches

@@ -8,6 +8,7 @@ namespace RA.Models.Input.profiles
 {
 	public class Occupation
 	{
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// Name of this Occupation
@@ -43,8 +44,18 @@ namespace RA.Models.Input.profiles
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
+		/// <summary>
+		/// More specialized profession, trade, or career field that is encompassed by the one being described.
+		/// <see cref="https://credreg.net/ctdl/terms/hasSpecialization"/>
+		/// </summary>
+		public List<string> HasSpecialization { get; set; } = new List<string>();
+
+		public List<string> IspecializationOf { get; set; } = new List<string>();
+
 		public List<string> Keyword { get; set; } = new List<string>();
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+
+		public List<string> SameAs { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Subject Webpage

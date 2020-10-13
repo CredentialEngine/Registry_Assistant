@@ -106,21 +106,21 @@ namespace RA.Models.Input
 
 		#endregion
 
-		#region *** Required if available Properties ***
+		#region *** Recommended Benchmark ***
+		/// <summary>
+		/// A credit-related value.
+		/// </summary>
+		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 
+		/// <summary>
+		/// Competency that the learning opportunity is intended to teach.
+		/// </summary>
 		public List<CredentialAlignmentObject> Teaches { get; set; }
 
+		/// <summary>
+		/// Types of methods used to conduct the learning opportunity; select from an existing enumeration of such types.
+		/// </summary>
 		public List<string> LearningMethodType { get; set; }
-
-		/// <summary>
-		/// Assessment Method Description 
-		/// Description of the assessment methods for a resource.
-		/// </summary>
-		public string AssessmentMethodDescription { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap AssessmentMethodDescription_Map { get; set; } = new LanguageMap();
 
 
 		/// <summary>
@@ -134,60 +134,103 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap LearningMethodDescription_Map { get; set; } = new LanguageMap();
 
-
+		/// <summary>
+		/// Type of means by which a learning opportunity or assessment is delivered to credential seekers and by which they interact; select from an existing enumeration of such types.
+		/// </summary>
 		public List<string> DeliveryType { get; set; }
+
+		/// <summary>
+		/// Detailed description of the delivery type of an assessment or learning opportunity.
+		/// </summary>
 		public string DeliveryTypeDescription { get; set; }
 		public LanguageMap DeliveryTypeDescription_Map { get; set; } = new LanguageMap();
 		#endregion
 
-		#region *** Recommended Properties ***
+		//=========== optional ================================
+
+		/// <summary>
+		/// Assessment Method Description 
+		/// Description of the assessment methods for a resource.
+		/// </summary>
+		public string AssessmentMethodDescription { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap AssessmentMethodDescription_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Type of method used to conduct an assessment; select from an existing enumeration of such types.
+		/// </summary>
+		public List<string> AssessmentMethodType { get; set; } = new List<string>();
+
+		public List<string> AudienceType { get; set; }
+		public List<string> AudienceLevelType { get; set; } = new List<string>();
+
+
+		public string CodedNotation { get; set; }
+
+		public List<string> CommonCosts { get; set; }
+		public List<string> CommonConditions { get; set; }
+
+		/// <summary>
+		/// Detailed description of credit unit. 
+		/// Recommendation is to use CreditValue rather than this property.
+		/// </summary>
+		public string CreditUnitTypeDescription { get; set; }
+		public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
+
 		/// <summary>
 		/// Start Date of the Learning opportunity
 		/// </summary>
 		public string DateEffective { get; set; }
+
+		public List<CostProfile> EstimatedCost { get; set; }
+
+		/// <summary>
+		/// Estimated time it will take to complete a credential, learning opportunity or assessment.
+		/// </summary>
+		public List<DurationProfile> EstimatedDuration { get; set; }
 
 		/// <summary>
 		/// End date of the learning opportunity if applicable
 		/// </summary>
 		public string ExpirationDate { get; set; }
 
+		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
+
+		/// <summary>
+		/// List of 'child' learning opps
+		/// </summary>
+		public List<EntityReference> HasPart { get; set; }
+
 		//List of language codes. ex: en, es
 		public List<string> InLanguage { get; set; }
-		public List<DurationProfile> EstimatedDuration { get; set; }
-		public List<ConditionProfile> Requires { get; set; }
 
-		//Credit Information
-		//
-		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
-		//
-		//public string CreditHourType { get; set; }
-		////public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
-		//public string CreditUnitType { get; set; }
-		//public decimal CreditHourValue { get; set; }
-		//public decimal CreditUnitValue { get; set; }
-		public string CreditUnitTypeDescription { get; set; }
-		public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		/// Not sure of best use. Should be initially limited to lopps?
+		/// </summary>
+		public List<EntityReference> IsPartOfLearningOpportunity { get; set; }
+
+		/// <summary>
+		/// Jurisdiction Profile
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+		/// </summary>
+		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 
 		public List<string> Keyword { get; set; }
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+
+
 		public List<string> Subject { get; set; }
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
-		#endregion
-		
 
-		/// <summary>
-		/// Type of official status of the TransferProfile; select from an enumeration of such types.
-		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
-		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
-		/// </summary>
-		public string LifecycleStatusType { get; set; }
-		
-		public List<string> AudienceType { get; set; }
-		public List<string> AudienceLevelType { get; set; } = new List<string>();
-		public string CodedNotation { get; set; }
+		public List<string> TargetLearningResource { get; set; } = new List<string>();
 
-		//public string VerificationMethodDescription { get; set; }
-		//public LanguageMap VerificationMethodDescription_Map { get; set; } = new LanguageMap();
+		public List<IdentifierValue> VersionIdentifier { get; set; }
+
+
+		#region Occupations, Industries and programs
 
 		//
 		public List<FrameworkItem> OccupationType { get; set; }
@@ -217,17 +260,27 @@ namespace RA.Models.Input
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
+		#endregion
+
 		//
 
-		//external classes
-		public List<CostProfile> EstimatedCost { get; set; }
 
-		/// <summary>
-		/// Jurisdiction Profile
-		/// Geo-political information about applicable geographic areas and their exceptions.
-		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
-		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
+		#region  Conditions and connections
+		public List<ConditionProfile> Corequisite { get; set; }
+		public List<ConditionProfile> Recommends { get; set; }
+		public List<ConditionProfile> Requires { get; set; }
+		public List<ConditionProfile> EntryCondition { get; set; }
+
+		public List<Connections> AdvancedStandingFrom { get; set; }
+		public List<Connections> IsAdvancedStandingFor { get; set; }
+		public List<Connections> PreparationFrom { get; set; }
+		public List<Connections> IsPreparationFor { get; set; }
+		public List<Connections> IsRecommendedFor { get; set; }
+		public List<Connections> IsRequiredFor { get; set; }
+		#endregion
+
+
+
 		#region -- Quality Assurance BY --
 		public List<OrganizationReference> AccreditedBy { get; set; }
 		public List<OrganizationReference> ApprovedBy { get; set; }
@@ -289,38 +342,18 @@ namespace RA.Models.Input
 
 		#endregion
 
-		//conditions
-		public List<ConditionProfile> Corequisite { get; set; }
-		public List<ConditionProfile> Recommends { get; set; }
-		public List<ConditionProfile> EntryCondition { get; set; }
 
-
-		//required competencies are input with condition profiles
-		//public List<CredentialAlignmentObject> RequiresCompetency { get; set; }
-
-		public List<Connections> AdvancedStandingFrom { get; set; }
-		public List<Connections> IsAdvancedStandingFor { get; set; }
-		public List<Connections> PreparationFrom { get; set; }
-		public List<Connections> IsPreparationFor { get; set; }
-		public List<Connections> IsRecommendedFor { get; set; }
-		public List<Connections> IsRequiredFor { get; set; }
 
 		/// <summary>
-		/// List of 'child' learning opps
+		/// PLANNED NOT IMPLEMENTED
+		/// Type of official status of the TransferProfile; select from an enumeration of such types.
+		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		/// </summary>
-		public List<EntityReference> HasPart { get; set; }
+		public string LifecycleStatusType { get; set; }
 
-		/// <summary>
-		/// Not sure of best use. Should be initially limited to lopps?
-		/// </summary>
-		public List<EntityReference> IsPartOfLearningOpportunity { get; set; }
 
-		public List<string> CommonCosts { get; set; }
-		public List<string> CommonConditions { get; set; }
-		//[obsolete]
-		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; } = new List<FinancialAlignmentObject>();
-		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
-		public List<string> TargetLearningResource { get; set; } = new List<string>();
-		public List<IdentifierValue> VersionIdentifier { get; set; }
+
+
 	}
 }

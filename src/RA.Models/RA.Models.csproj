@@ -85,13 +85,16 @@
     <Compile Include="Input\profiles\CredentialAlignmentObject.cs" />
     <Compile Include="Input\profiles\DurationProfile.cs" />
     <Compile Include="Input\profiles\EarningsProfile.cs" />
+    <Compile Include="Input\profiles\EmploymentOutcomeProfile.cs" />
     <Compile Include="Input\profiles\EntityReference.cs" />
     <Compile Include="Input\profiles\FinancialAssistanceProfile.cs" />
     <Compile Include="Input\profiles\FrameworkItem.cs" />
     <Compile Include="Input\profiles\HelperClasses.cs" />
+    <Compile Include="Input\profiles\HoldersProfile.cs" />
     <Compile Include="Input\profiles\Jurisdiction.cs" />
     <Compile Include="Input\profiles\LanguageMap.cs" />
     <Compile Include="Input\profiles\MonetaryAmount.cs" />
+    <Compile Include="Input\profiles\Occupation.cs" />
     <Compile Include="Input\profiles\OrganizationReference.cs" />
     <Compile Include="Input\profiles\PathwayComponents.cs" />
     <Compile Include="Input\profiles\Place.cs" />
@@ -101,6 +104,7 @@
     <Compile Include="Input\profiles\QData\DataSetTimeFrame.cs" />
     <Compile Include="Input\profiles\QData\SubjectProfile.cs" />
     <Compile Include="Input\profiles\QuantitativeValue.cs" />
+    <Compile Include="Input\profiles\ValueProfile.cs" />
     <Compile Include="Input\profiles\VerificationServiceProfile.cs" />
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />
     <Compile Include="Input\TransferValueProfileRequest.cs" />

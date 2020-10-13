@@ -9,54 +9,44 @@ using RA.Models.Input.profiles.QData;
 namespace RA.Models.Input
 {
 	/// <summary>
-	/// Earnings Profile
-	/// Entity that describes earning and related statistical information for a given credential.
-	/// Required:
-	/// - CTID
+	/// Employment Outcome Profile
+	/// Entity that describes employment outcomes and related statistical information for a given credential.
+	/// ceterms:EmploymentOutcomeProfile
+	/// <see cref="https://purl.org/ctdl/terms/EmploymentOutcomeProfile"/>
 	/// </summary>
-	public class EarningsProfile
+	public class EmploymentOutcomeProfile
 	{
 		public string Ctid { get; set; }
 
 		/// <summary>
 		/// Effective date of this profile
+		/// ceterms:dateEffective
 		/// </summary>
 		public string DateEffective { get; set; }
 
+		/// <summary>
+		/// Description of this profile
+		/// ceterms:description
+		/// </summary>
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
-		///  Upper interquartile earnings.
+		///  Number of jobs obtained in the region during a given timeframe.
+		///  ceterms:jobsObtained
 		/// </summary>
-		public int HighEarnings { get; set; }
+		public int JobsObtained { get; set; }
 
 		/// <summary>
 		/// Jurisdiction Profile
 		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// ceterms:jurisdiction
 		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
 		/// </summary>
 		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 
-		/// <summary>
-		///  Lower interquartile earnings.
-		/// </summary>
-		public int LowEarnings { get; set; }
-
-		/// <summary>
-		///  Median earnings.
-		/// </summary>
-		public int MedianEarnings { get; set; }
-
 		public string Name { get; set; }
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
-
-		/// <summary>
-		/// Number of months after earning a credential when employment and earnings data is collected.
-		/// Number of months usually range between 3 months (one quarter) to ten years.
-		/// </summary>
-		public int PostReceiptMonths { get; set; }
-		//public decimal Region { get; set; }
 
 		/// <summary>
 		/// Authoritative source of an entity's information.
@@ -71,6 +61,5 @@ namespace RA.Models.Input
 		/// qdata:relevantDataSet
 		/// </summary>
 		public List<DataSetProfile> RelevantDataSet { get; set; } = new List<DataSetProfile>();
-
 	}
 }
