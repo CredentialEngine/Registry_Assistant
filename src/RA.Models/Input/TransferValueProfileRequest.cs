@@ -93,6 +93,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
+		/// List of CTIDs for competencies or frameworks
 		/// ceasn:derivedFrom
 		/// </summary>
 		public List<string> DerivedFrom { get; set; } = new List<string>();
@@ -155,17 +156,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<EntityReference> TransferValueFor { get; set; } = new List<EntityReference>();
 
-
-		/// <summary>
-		/// pending - not in production!!
-		/// 
-		/// Value Endorsement
-		/// The referenced resource establishes or recommends an equivalent transfer value.
-		/// EntityReference for a TransferValueProfile	???
-		/// Would this just be an entity reference to an existing TVP? I would think so!
-		/// </summary>
-		public EntityReference ValueEndorsement { get; set; } = new EntityReference();
-		//public TransferValueProfile ValueEndorsement { get; set; } = new TransferValueProfile();
 
 	}
 

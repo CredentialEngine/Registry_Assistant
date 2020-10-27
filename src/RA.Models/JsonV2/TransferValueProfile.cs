@@ -31,6 +31,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
 
+		/// <summary>
+		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:derivedFrom" )]
+		public List<string> DerivedFrom { get; set; } 
 
 		/// <summary>
 		/// The webpage that describes this TransferValueProfile.
@@ -53,8 +58,8 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// May be replace by Identifier
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
-		public string CodedNotation { get; set; }
+		//[JsonProperty( PropertyName = "ceterms:codedNotation" )]
+		//public string CodedNotation { get; set; }
 
 		/// <summary>
 		/// Identifier
@@ -80,7 +85,9 @@ namespace RA.Models.JsonV2
 
 
 		[JsonProperty( PropertyName = "ceterms:transferValue" )]
-		public List<QuantitativeValue> TransferValue { get; set; } = null;
+		public List<ValueProfile> TransferValue { get; set; } = null;
+		//public List<QuantitativeValue> TransferValue { get; set; } = null;
+
 
 		[JsonProperty( PropertyName = "ceterms:transferValueFor" )]
 		public List<string> TransferValueFor { get; set; }

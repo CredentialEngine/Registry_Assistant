@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RA.Models.Input.profiles.QData
+using Newtonsoft.Json;
+using RA.Models.JsonV2;
+namespace RA.Models.JsonV2.QData
 {
 	/// <summary>
 	/// DataSet Time Frame
@@ -14,10 +16,24 @@ namespace RA.Models.Input.profiles.QData
 	public class DataSetTimeFrame
 	{
 		/// <summary>
+		/// The type of the entity
+		/// </summary>
+		[JsonProperty( "@type" )]
+		public string Type { get; set; } = "qdata:DataSetTimeFrame";
+
+		/// <summary>
+		/// Id for this blank node
+		/// </summary>
+		[JsonProperty( "@id" )]
+		public string CtdlId { get; set; }
+
+		/// <summary>
 		/// Attributes of the data set.
+		/// TODO - change to blank node
 		/// qdata:DataProfile
 		/// </summary>
-		public List<DataProfile> DataAttributes { get; set; } = new List<DataProfile>();
+		[JsonProperty( PropertyName = "qdata:dataAttributes" )]
+		public List<string> DataAttributes { get; set; }
 
 		/// <summary>
 		/// Data Source Coverage Type
@@ -31,15 +47,21 @@ namespace RA.Models.Input.profiles.QData
 		///	sourceCoverage:StateOrProvince
 		///	sourceCoverage:UrbanArea
 		/// </summary>
-		public List<string> DataSourceCoverageType { get; set; } = new List<string>();
+		[JsonProperty( PropertyName = "qdata:dataSourceCoverageType" )]
+		public List<CredentialAlignmentObject> DataSourceCoverageType { get; set; }
+		//public string DataSourceCoverageType { get; set; }
 
-		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-		public string Name { get; set; }
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap Name { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:startDate" )]
 		public string StartDate { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:endDate" )]
 		public string EndDate { get; set; }
 	}
 }

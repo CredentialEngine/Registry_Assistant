@@ -57,6 +57,9 @@ namespace RA.Models.Input
 		public List<Credential> Credentials { get; set; } = new List<Credential>();
 	}
 
+	/// <summary>
+	/// Credential input class
+	/// </summary>
 	public class Credential
 	{
 		public Credential()
@@ -326,6 +329,14 @@ namespace RA.Models.Input
 		/// List of credentials that are part of this credential
 		/// </summary>
 		public List<EntityReference> HasPart { get; set; }
+
+		/// <summary>
+		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// ceterms:identifier
+		/// </summary>
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
 		/// <summary>
 		/// Image URL
 		/// </summary>
@@ -404,6 +415,12 @@ namespace RA.Models.Input
 		/// Type of instructional program; select from an existing enumeration of such types.
 		/// </summary>
 		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
+
+		/// <summary>
+		/// AlternativeInstructionalProgramType
+		/// Programs that are not found in a formal framework can be still added using AlternativeInstructionalProgramType. 
+		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
+		/// </summary>
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
 
 		/// <summary>
@@ -510,6 +527,16 @@ namespace RA.Models.Input
 		public List<ProcessProfile> ComplaintProcess { get; set; }
 		public List<ProcessProfile> ReviewProcess { get; set; }
 		public List<ProcessProfile> RevocationProcess { get; set; }
+		#endregion
+
+
+		#region Alignments
+		/// <summary>
+		/// Item that covers all of the relevant concepts in the item being described as well as additional relevant concepts.
+		/// ceterms:broadAlignment
+		/// List of CTIDs. The referenced object must exist in the registry
+		/// </summary>
+		public List<string> BroadAlignment { get; set; } = new List<string>();
 		#endregion
 
 	}

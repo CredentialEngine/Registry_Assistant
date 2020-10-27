@@ -198,8 +198,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public string HasProgressionLevel { get; set; }
 
-
-		//public List<IdentifierValue> IdentifierValue { get; set; } = new List<IdentifierValue>();
+		/// <summary>
+		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// ceterms:identifier
+		/// </summary>
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
 
 		/// <summary>

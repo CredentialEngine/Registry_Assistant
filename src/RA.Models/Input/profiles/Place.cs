@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RA.Models.Input
 {
     /// <summary>
-    /// Content for a Place or Address)
+    /// Content for a Place (or Address)
     /// NOTE: Use either the string or LanguageMap equivalent property, but not both
     /// </summary>
 	public class Place
@@ -15,19 +15,30 @@ namespace RA.Models.Input
 		public Place()
 		{
 		}
-
+		/// <summary>
+		/// Optional Name for the address
+		/// </summary>
 		public string Name { get; set; }
         public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
-        public string Description { get; set; }
-        
-        public LanguageMap Description_Map { get; set; } = new LanguageMap();
-
-        public string Address1 { get; set; }
+		/// <summary>
+		/// Street Address1
+		/// </summary>
+		public string Address1 { get; set; }
+		/// <summary>
+		/// Street Address2 - this will be appended to Address1 on publish to the registry
+		/// </summary>
 		public string Address2 { get; set; }
 
+		/// <summary>
+		/// Post office box number for post office addresses.
+		/// </summary>
 		public string PostOfficeBoxNumber { get; set; }
 
+		/// <summary>
+		/// Town, city, or village in which a particular location is situtated.
+		/// Published to ceterms:addressLocality
+		/// </summary>
 		public string City { get; set; }
         public LanguageMap City_Map { get; set; } = new LanguageMap();
 
@@ -36,8 +47,14 @@ namespace RA.Models.Input
 		/// </summary>
         public string AddressRegion { get; set; }
         public LanguageMap AddressRegion_Map { get; set; } = new LanguageMap();
-        public string PostalCode { get; set; }
+		/// <summary>
+		/// Postal Code
+		/// </summary>
+		public string PostalCode { get; set; }
 
+		/// <summary>
+		/// Country
+		/// </summary>
 		public string Country { get; set; }
         public LanguageMap Country_Map { get; set; } = new LanguageMap();
 

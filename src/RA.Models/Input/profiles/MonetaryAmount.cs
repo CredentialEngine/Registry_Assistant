@@ -11,15 +11,28 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Currency abbreviation (e.g., USD).
 		/// </summary>
-		public string Currency { get; set; } 
-		public decimal Value { get; set; }
-		public decimal MinValue { get; set; }
-		public decimal MaxValue { get; set; }
+		public string Currency { get; set; }
 
 		/// <summary>
-		/// Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. For example:
-		/// creditUnit:ContinuingEducationUnit or ContinuingEducationUnit
-		/// <see cref="https://credreg.net/ctdl/terms/creditUnitType"/> 
+		/// Value of a monetary amount or a quantitative value.
+		/// </summary>
+		public decimal Value { get; set; }
+
+		/// <summary>
+		/// Lower value of some characteristic or property.
+		/// </summary>
+		public decimal MinValue { get; set; }
+
+		/// <summary>
+		/// Upper value of some characteristic or property.
+		/// </summary>
+		public decimal MaxValue { get; set; }
+
+		public string Description { get; set; }
+		public LanguageMap Description_Map { get; set; }
+
+		/// <summary>
+		/// Word or phrase indicating the unit of measure - mostly if the use of Currency is not sufficient
 		/// </summary>
 		public string UnitText { get; set; }
 	}

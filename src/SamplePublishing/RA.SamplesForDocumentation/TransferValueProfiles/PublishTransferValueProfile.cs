@@ -54,7 +54,6 @@ namespace RA.SamplesForDocumentation
 				Description = "This is some text that describes my transfer value profile.",
 				Ctid = myCTID,
 				SubjectWebpage = "http://example.com/transferValueProfile/1234",
-				CodedNotation = "ACC900",
 				StartDate = "2020-01-01",
 				EndDate = "2021-12-21"
 			};
@@ -64,10 +63,22 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
-			//============== TransferValue ============================================================
+			myData.Identifier.Add( new IdentifierValue()
+			{
+				Name = "ACE Course Code",
+				IdentifierType = "Internal Code",   //Formal name or acronym of the identifier type
+				IdentifierValueCode = "0276"        //Alphanumeric string identifier of the entity
+			} );
+			//============== TransferValue ================================
 			//Required. Provide a transfer value amount using Value and UnitText. ex. DegreeCredit This is a concept scheme and so has a strict vocabulary. 
-			myData.TransferValue = new List<QuantitativeValue>() {
-					new QuantitativeValue() { UnitText="DegreeCredit", Value=3}
+			myData.TransferValue = new List<ValueProfile>()
+			{
+				new ValueProfile()
+				{
+					Value=3,
+					CreditUnitType = new List<string>() {"DegreeCredit"},
+					CreditLevelType = new List<string>() {"LowerDivisionLevel"}
+				}
 			};
 
 			//==============	transfer value from ===================================================
@@ -126,10 +137,12 @@ namespace RA.SamplesForDocumentation
 
 			//assign publish endpoint
 			var assistantUrl = SampleServices.GetAppKeyValue( "registryAssistantApi" ) + "transfervalue/publish/";
+			string jsonldPayload = "";
+			List<string> messages = new List<string>();
 			if ( usingSimplePost )
 			{
 				//use a simple method that returns a string
-				result = new SampleServices().SimplePost( assistantUrl, payload, apiKey );
+				result = new SampleServices().SimplePost( assistantUrl, payload, apiKey, ref jsonldPayload, ref messages );
 
 				// Return the result
 				return result;
@@ -177,7 +190,6 @@ namespace RA.SamplesForDocumentation
 				Description = "This is some text that describes my transfer value profile.",
 				Ctid = myCTID,
 				SubjectWebpage = "http://example.com/transferValueProfile/1234",
-				CodedNotation = "ACC900",
 				StartDate = "2020-01-01",
 				EndDate = "2021-12-21"
 			};
@@ -189,8 +201,14 @@ namespace RA.SamplesForDocumentation
 			} );
 
 			//============== TransferValue ====================================================
-			myData.TransferValue = new List<QuantitativeValue>() {
-					new QuantitativeValue() { UnitText = "DegreeCredit", Value = 3}
+			myData.TransferValue = new List<ValueProfile>()
+			{
+				new ValueProfile()
+				{
+					Value=3,
+					CreditUnitType = new List<string>() {"DegreeCredit"},
+					CreditLevelType = new List<string>() {"LowerDivisionLevel"}
+				}
 			};
 			//==============	transfer value from ===========================================
 			//Resource that provides the transfer value described by this resource, according to the entity providing this resource.
@@ -235,10 +253,12 @@ namespace RA.SamplesForDocumentation
 
 			//assign publish endpoint
 			var assistantUrl = SampleServices.GetAppKeyValue( "registryAssistantApi" ) + "transfervalue/publish/";
+			string jsonldPayload = "";
+			List<string> messages = new List<string>();
 			if ( usingSimplePost )
 			{
 				//use a simple method that returns a string
-				result = new SampleServices().SimplePost( assistantUrl, payload, apiKey );
+				result = new SampleServices().SimplePost( assistantUrl, payload, apiKey, ref jsonldPayload, ref messages );
 
 				// Return the result
 				return result;
@@ -294,11 +314,12 @@ namespace RA.SamplesForDocumentation
 
 			//assign publish endpoint
 			var assistantUrl = SampleServices.GetAppKeyValue( "registryAssistantApi" ) + "transfervalue/bulkpublish/";
+			string jsonldPayload = "";
+			List<string> messages = new List<string>();
 			if ( usingSimplePost )
 			{
 				//use a simple method that returns a string
-				//note this method will return a list of responses, so likely the simple method should not be used. 
-				result = new SampleServices().SimplePost( assistantUrl, payload, apiKey );
+				result = new SampleServices().SimplePost( assistantUrl, payload, apiKey, ref jsonldPayload, ref messages );
 
 				// Return the result
 				return result;
@@ -347,8 +368,14 @@ namespace RA.SamplesForDocumentation
 				CTID = owningOrganizationCtid
 			} );
 			//============== TransferValue ====================================================
-			myData.TransferValue = new List<QuantitativeValue>() {
-					new QuantitativeValue() { UnitText = "DegreeCredit", Value = 3}
+			myData.TransferValue = new List<ValueProfile>()
+			{
+				new ValueProfile()
+				{
+					Value=3,
+					CreditUnitType = new List<string>() {"DegreeCredit"},
+					CreditLevelType = new List<string>() {"LowerDivisionLevel"}
+				}
 			};
 			//==============	transfer value from ===========================================
 			//Resource that provides the transfer value described by this resource, according to the entity providing this resource.
@@ -381,7 +408,6 @@ namespace RA.SamplesForDocumentation
 
 			//						optional
 			//coded Notation could be replaced by Identifier in the near future
-			myData.CodedNotation = "X200";
 			myData.StartDate = "2015-01-01";
 			myData.EndDate = "2021-12-21";
 
@@ -409,8 +435,14 @@ namespace RA.SamplesForDocumentation
 			} );
 
 			//============== TransferValue ====================================================
-			myData.TransferValue = new List<QuantitativeValue>() {
-					new QuantitativeValue() { UnitText = "DegreeCredit", Value = 3}
+			myData.TransferValue = new List<ValueProfile>()
+			{
+				new ValueProfile()
+				{
+					Value=3,
+					CreditUnitType = new List<string>() {"DegreeCredit"},
+					CreditLevelType = new List<string>() {"LowerDivisionLevel"}
+				}
 			};
 			//==============	transfer value from ===========================================
 			//Resource that provides the transfer value described by this resource, according to the entity providing this resource.
@@ -443,7 +475,6 @@ namespace RA.SamplesForDocumentation
 
 			//						optional
 			//coded Notation will likely be replaced by Identifier in the near future
-			myData.CodedNotation = "Y300";
 			myData.StartDate = "2020-01-01";
 			myData.EndDate = "2021-12-21";
 
@@ -484,13 +515,18 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID= owningOrganizationCtid
 			} );
-			myData.CodedNotation = "AANU-0010";
 			myData.StartDate = "1994-09-01";
 			myData.EndDate = "2001-06-30";
 
 			//============== TransferValue ====================================================
-			myData.TransferValue = new List<QuantitativeValue>() {
-					new QuantitativeValue() { UnitText = "DegreeCredit", Value = 3}
+			myData.TransferValue = new List<ValueProfile>()
+			{
+				new ValueProfile()
+				{
+					Value=3,
+					CreditUnitType = new List<string>() {"DegreeCredit"},
+					CreditLevelType = new List<string>() {"LowerDivisionLevel"}
+				}
 			};
 			//==============	transfer value from ===========================================
 			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs

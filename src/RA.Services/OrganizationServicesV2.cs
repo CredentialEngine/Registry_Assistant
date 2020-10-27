@@ -469,7 +469,7 @@ namespace RA.Services
 		public void HandleLiteralFields( InputEntity input, OutputEntity output, ref List<string> messages )
 		{
 			//output.AlternativeIdentifier = AssignIdentifierValueToList( input.AlternativeIdentifier );
-			output.AlternativeIdentifier = AssignIdentifierListToList( input.AlternativeIdentifier, ref messages );
+			output.Identifier = AssignIdentifierListToList( input.Identifier, ref messages );
 			//
 			output.MissionAndGoalsStatementDescription = AssignLanguageMap( ConvertSpecialCharacters( input.MissionAndGoalsStatementDescription ), input.MissionAndGoalsStatementDescription_Map, "MissionAndGoalsStatementDescription", DefaultLanguageForMaps, ref messages );
 			//

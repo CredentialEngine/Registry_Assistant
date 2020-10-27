@@ -23,7 +23,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. For example:
 		/// creditUnit:DegreeCredit or ContinuingEducationUnit
-		/// <see cref="https://credreg.net/ctdl/terms/creditUnitType"/> 
+		/// <see cref="https://credreg.net/ctdl/terms/CreditUnit"/> 
 		/// If this object is a monetary purpose, the UnitText would typically be the related currency for the value (example: "USD")
 		/// </summary>
 		public List<string> CreditUnitType { get; set; } = new List<string>();
@@ -41,6 +41,9 @@ namespace RA.Models.Input
 		/// qdata:percentage
 		/// </summary>
 		public decimal Percentage { get; set; }
+
+		public List<string> Subject { get; set; } = new List<string>();
+		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// A single value for this purpose. 

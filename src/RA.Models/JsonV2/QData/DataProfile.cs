@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RA.Models.Input.profiles.QData
+using Newtonsoft.Json;
+namespace RA.Models.JsonV2.QData
 {
 	/// <summary>
 	/// Data Profile
@@ -14,200 +15,217 @@ namespace RA.Models.Input.profiles.QData
 	public class DataProfile
 	{
 		/// <summary>
-		/// Describes whether and how the provided earnings have been adjusted for factors such as inflation, participant demographics and economic conditions.
-		/// qdata:adjustment
+		/// The type of the entity
 		/// </summary>
-		public string Adjustment { get; set; }
-		public LanguageMap Adjustment_Map { get; set; }
+		[JsonProperty( "@type" )]
+		public string Type { get; set; } = "qdata:DataProfile";
+
+		/// <summary>
+		/// Id for this blank node
+		/// </summary>
+		[JsonProperty( "@id" )]
+		public string CtdlId { get; set; }
+
+		/// <summary>
+		/// Describes whether and how the provided earnings have been adjusted for factors such as inflation, participant demographics and economic conditions.
+		/// </summary>
+		[JsonProperty( PropertyName = "qdata:adjustment" )]
+		public LanguageMap Adjustment { get; set; }
 
 		/// <summary>
 		/// Type of administrative record used; e.g. W2, 1099, and Unemployment Insurance Wage Record.
-		/// qdata:administrativeRecordType
 		/// skos:Concept
 		/// <see cref="https://credreg.net/qdata/terms/administrativeRecordType#AdministrativeRecordCategory"/>
 		/// adminRecord:Tax1099
 		/// adminRecord:TaxW2
 		/// adminRecord:UnemploymentInsurance
 		/// </summary>
-		public string AdministrativeRecordType { get; set; }
+		[JsonProperty( PropertyName = "qdata:administrativeRecordType" )]
+		public CredentialAlignmentObject AdministrativeRecordType { get; set; }
+
+		//public string AdministrativeRecordType { get; set; }
 
 		/// <summary>
 		/// Number of credential holders in the reporting group for which employment and earnings data is included in the data set.
 		/// qdata:dataAvailable
 		/// </summary>
-		public List<QuantitativeValue> DataAvailable { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:dataAvailable" )]
+		public List<QuantitativeValue> DataAvailable { get; set; } 
 
 		/// <summary>
 		/// Number of credential holders in the reporting group for which employment and earnings data has not been included in the data set.
-		/// qdata:dataNotAvailable
 		/// </summary>
-		public List<QuantitativeValue> DataNotAvailable { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:dataNotAvailable" )]
+		public List<QuantitativeValue> DataNotAvailable { get; set; }
 
 
 		/// <summary>
 		/// Earnings rate for a demographic category.
-		/// qdata:demographicEarningsRate
 		/// </summary>
-		public List<QuantitativeValue> DemographicEarningsRate { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:demographicEarningsRate" )]
+		public List<QuantitativeValue> DemographicEarningsRate { get; set; } 
 
 		/// <summary>
 		/// Employment rate for a demographic category.
-		/// qdata:demographicEmploymentRate
 		/// </summary>
-		public List<QuantitativeValue> DemographicEmploymentRate { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:demographicEmploymentRate" )]
+		public List<QuantitativeValue> DemographicEmploymentRate { get; set; } 
 
-		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
 
 		/// <summary>
 		/// Reference to an entity describing aggregate earnings.
-		/// qdata:earningsAmount
 		/// </summary>
-		public List<MonetaryAmount> EarningsAmount { get; set; } = new List<MonetaryAmount>();
+		[JsonProperty( PropertyName = "qdata:earningsAmount" )]
+		public List<MonetaryAmount> EarningsAmount { get; set; } 
 
 		/// <summary>
 		/// Definition of "earnings" used by the data source in the context of the reporting group.
-		/// qdata:earningsDefinition
 		/// </summary>
-		public string EarningsDefinition { get; set; }
-		public LanguageMap EarningsDefinition_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "qdata:earningsDefinition" )]
+		public LanguageMap EarningsDefinition { get; set; } 
 
 		/// <summary>
 		/// Reference to an entity describing median earnings as well as earnings at various percentiles.
-		/// qdata:earningsDistribution
-		/// schema:MonetaryAmountDistribution
 		/// </summary>
-		public List<MonetaryAmountDistribution> EarningsDistribution { get; set; } = new List<MonetaryAmountDistribution>();
+		[JsonProperty( PropertyName = "qdata:earningsDistribution" )]
+		public List<MonetaryAmountDistribution> EarningsDistribution { get; set; } 
 
 		/// <summary>
 		/// Statement of any work time or earnings threshold used in determining whether a sufficient level of workforce attachment has been achieved to qualify as employed during the time period of the data set.
-		/// qdata:earningsThreshold
 		/// </summary>
-		public string EarningsThreshold { get; set; }
-		public LanguageMap EarningsThreshold_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "qdata:earningsThreshold" )]
+		public LanguageMap EarningsThreshold { get; set; } 
 
 		/// <summary>
 		/// Statement of criteria used to determine whether sufficient levels of work time and/or earnings have been met to be considered employed during the earning time period.
-		/// qdata:employmentDefinition
 		/// </summary>
-		public string EmploymentDefinition { get; set; }
-		public LanguageMap EmploymentDefinition_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "qdata:employmentDefinition" )]
+		public LanguageMap EmploymentDefinition { get; set; } 
 
 		/// <summary>
 		/// Rate computed by dividing the number of holders or subjects meeting the data set's criteria of employment (meetEmploymentCriteria) by the number of holders or subjects for which data was available (dataAvailable).
-		/// qdata:employmentRate
 		/// </summary>
-		public List<QuantitativeValue> EmploymentRate { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:employmentRate" )]
+		public List<QuantitativeValue> EmploymentRate { get; set; } 
 
 		/// <summary>
 		///  Number of credential holders in the final data collection and reporting.
-		/// qdata:holdersInSet
 		/// </summary>
-		public List<QuantitativeValue> HoldersInSet { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:holdersInSet" )]
+		public List<QuantitativeValue> HoldersInSet { get; set; }
 
 		/// <summary>
 		/// Mechanism by which income is determined; i.e., actual or annualized earnings.
-		/// qdata:incomeDeterminationType
 		/// skos:Concept
 		/// <see cref="https://credreg.net/qdata/terms/IncomeDeterminationMethod#IncomeDeterminationMethod"/>
 		/// incomeDetermination:ActualEarnings 
 		/// incomeDetermination:AnnualizedEarnings
 		/// </summary>
-		public string IncomeDeterminationType { get; set; }
+		[JsonProperty( PropertyName = "qdata:incomeDeterminationType" )]
+		public CredentialAlignmentObject IncomeDeterminationType { get; set; }
 
 		/// <summary>
 		/// Employment rate for an industry category.
-		/// qdata:industryRate
 		/// </summary>
-		public List<QuantitativeValue> IndustryRate { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:industryRate" )]
+		public List<QuantitativeValue> IndustryRate { get; set; } 
 
 		/// <summary>
 		/// Number of holders that do not meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set (employmentDefinition).
-		/// qdata:insufficientEmploymentCriteria
 		/// </summary>
-		public List<QuantitativeValue> InsufficientEmploymentCriteria { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:insufficientEmploymentCriteria" )]
+		public List<QuantitativeValue> InsufficientEmploymentCriteria { get; set; }
 
 		/// <summary>
 		/// Number of holders that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set (employmentDefinition).
-		/// qdata:meetEmploymentCriteria
 		/// </summary>
-		public List<QuantitativeValue> MeetEmploymentCriteria { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:meetEmploymentCriteria" )]
+		public List<QuantitativeValue> MeetEmploymentCriteria { get; set; } 
 
 		/// <summary>
 		/// Non-holders who departed or are likely to depart higher education prematurely.
-		/// qdata:nonCompleters
 		/// </summary>
-		public List<QuantitativeValue> NonCompleters { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:nonCompleters" )]
+		public List<QuantitativeValue> NonCompleters { get; set; }
 
 		/// <summary>
 		/// Non-holder subject actively pursuing the credential through a program or assessment.
-		/// qdata:nonHoldersInSet
 		/// </summary>
-		public List<QuantitativeValue> NonHoldersInSet { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:nonHoldersInSet" )]
+		public List<QuantitativeValue> NonHoldersInSet { get; set; }
 
 		/// <summary>
 		/// Employment rate for an occupation category.
-		/// qdata:occupationRate
 		/// </summary>
-		public List<QuantitativeValue> OccupationRate { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:occupationRate" )]
+		public List<QuantitativeValue> OccupationRate { get; set; }
 
 		/// <summary>
 		///  Reference to an entity describing median earnings as well as earnings at various percentiles for holders or subjects in the region.
-		/// qdata:regionalEarningsDistribution
 		/// </summary>
-		public List<QuantitativeValue> RegionalEarningsDistribution { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:regionalEarningsDistribution" )]
+		public List<QuantitativeValue> RegionalEarningsDistribution { get; set; } 
 
 		/// <summary>
 		/// Rate computed by dividing the number of holders or subjects in the region meeting the data set's criteria of employment (meetEmploymentCriteria) by the number of holders or subjects in the region for which data was available (dataAvailable).
 		/// qdata:regionalEmploymentRate
 		/// </summary>
-		public List<QuantitativeValue> RegionalEmploymentRate { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:regionalEmploymentRate" )]
+		public List<QuantitativeValue> RegionalEmploymentRate { get; set; } 
 
 		/// <summary>
 		/// Number of people employed in the area of work (e.g., industry, occupation) in which the credential provided preparation.
-		/// qdata:relatedEmployment
 		/// </summary>
-		public List<QuantitativeValue> RelatedEmployment { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:relatedEmployment" )]
+		public List<QuantitativeValue> RelatedEmployment { get; set; } 
 
 		/// <summary>
 		/// Category of subject excluded from the data.
-		/// qdata:subjectExcluded
 		/// </summary>
-		public List<SubjectProfile> SubjectExcluded { get; set; } = new List<SubjectProfile>();
+		[JsonProperty( PropertyName = "qdata:subjectExcluded" )]
+		public List<SubjectProfile> SubjectExcluded { get; set; } 
 
 		/// <summary>
 		/// Category of subject included in the data.
-		/// qdata:subjectIncluded
 		/// </summary>
-		public List<SubjectProfile> SubjectIncluded { get; set; } = new List<SubjectProfile>();
+		[JsonProperty( PropertyName = "qdata:subjectIncluded" )]
+		public List<SubjectProfile> SubjectIncluded { get; set; } 
 
 		/// <summary>
 		/// Total credential holders and non-holders in the final data collection and reporting.
-		/// qdata:subjectsInSet
 		/// </summary>
-		public List<QuantitativeValue> SubjectsInSet { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:subjectsInSet" )]
+		public List<QuantitativeValue> SubjectsInSet { get; set; } 
 
 		/// <summary>
 		/// Number of holders that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set (employmentDefinition).
 		/// qdata:sufficientEmploymentCriteria
 		/// </summary>
-		public List<QuantitativeValue> SufficientEmploymentCriteria { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:sufficientEmploymentCriteria" )]
+		public List<QuantitativeValue> SufficientEmploymentCriteria { get; set; }
 
 		/// <summary>
 		/// Number of people employed outside the area of work (e.g., industry, occupation) in which the credential provided preparation.
-		/// qdata:unrelatedEmployment
 		/// </summary>
-		public List<QuantitativeValue> UnrelatedEmployment { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:unrelatedEmployment" )]
+		public List<QuantitativeValue> UnrelatedEmployment { get; set; } 
 
 		/// <summary>
 		/// Statement of earnings thresholds used in determining whether a sufficient level of workforce attachment has been achieved to qualify as employed during the chosen employment and earnings time period.
-		/// qdata:workTimeThreshold
 		/// </summary>
-		public string WorkTimeThreshold { get; set; }
-		public LanguageMap WorkTimeThreshold_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "qdata:workTimeThreshold" )]
+		public LanguageMap WorkTimeThreshold { get; set; }
 
-		public List<QuantitativeValue> TotalWIOACompleters { get; set; } = new List<QuantitativeValue>();
-		public List<QuantitativeValue> TotalWIOAParticipants { get; set; } = new List<QuantitativeValue>();
-		public List<QuantitativeValue> TotalWIOAExiters { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:totalWIOACompleters" )]
+
+		public List<QuantitativeValue> TotalWIOACompleters { get; set; }
+		[JsonProperty( PropertyName = "qdata:totalWIOAParticipants" )]
+
+		public List<QuantitativeValue> TotalWIOAParticipants { get; set; }
+		[JsonProperty( PropertyName = "qdata:totalWIOAExiters" )]
+
+		public List<QuantitativeValue> TotalWIOAExiters { get; set; } 
 	}
 }

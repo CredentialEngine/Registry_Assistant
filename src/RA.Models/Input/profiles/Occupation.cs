@@ -50,6 +50,13 @@ namespace RA.Models.Input.profiles
 		/// </summary>
 		public List<string> HasSpecialization { get; set; } = new List<string>();
 
+		/// <summary>
+		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// ceterms:identifier
+		/// </summary>
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
 		public List<string> IspecializationOf { get; set; } = new List<string>();
 
 		public List<string> Keyword { get; set; } = new List<string>();

@@ -11,6 +11,9 @@ using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
+using RA.Models;
+using RA.Models.Input;
+using RA.Models.Input.profiles.QData;
 using RAResponse = RA.Models.RegistryAssistantResponse;
 
 namespace RA.SamplesForDocumentation
@@ -28,6 +31,31 @@ namespace RA.SamplesForDocumentation
 		{
 			return GetAppKeyValue( "myOrgCTID" );
 		} //
+
+		#region Assignments
+		public static QuantitativeValue AddQuantitativeValue( int value, string description )
+		{
+			var output = new QuantitativeValue()
+			{
+				Value = value,
+				Description = !string.IsNullOrWhiteSpace( description ) ? description : string.Format( "Adding value of: {0}", value )
+			};
+
+			return output;
+		}
+		public static QuantitativeValue AddQuantitativeValue( int minValue, int maxValue, string description )
+		{
+			var output = new QuantitativeValue()
+			{
+				MinValue = minValue,
+				MaxValue = maxValue,
+				Description = description
+			};
+
+			return output;
+		}
+
+		#endregion
 
 		#region === Application Keys Methods ===
 
@@ -129,15 +157,31 @@ namespace RA.SamplesForDocumentation
 		/// <param name="payload">Serialized input request</param>
 		/// <param name="apiKey">The organization Api Key from the accounts site. </param>
 		/// <returns></returns>
-		public string SimplePost( string entityType, string requestType, string payload, string apiKey )
+		public string SimplePost( string entityType, string requestType, string payload, string apiKey)
+		{
+			//place holders ignored by this method
+			string jsonldPayload = "";
+			List<string> messages = new List<string>();
+			//
+			string serviceUri = GetAppKeyValue( "registryAssistantApi" );
+
+			//https://localhost:44312/
+			string assistantUrl = serviceUri + string.Format( "{0}/{1}", entityType, requestType );
+			return SimplePost( assistantUrl, payload, apiKey, ref jsonldPayload, ref messages ); ;
+		}
+		public string LessSimplePost( string entityType, string requestType, string payload, string apiKey, ref string jsonldPayload, ref List<string> messages )
 		{
 			string serviceUri = GetAppKeyValue( "registryAssistantApi" );
+
+			//https://localhost:44312/
 			string assistantUrl = serviceUri + string.Format( "{0}/{1}", entityType, requestType );
-			return SimplePost( assistantUrl, payload, apiKey ); ;
+			return SimplePost( assistantUrl, payload, apiKey, ref jsonldPayload, ref messages ); 
 		}
-		public string SimplePost( string assistantUrl, string payload, string apiKey )
+		public string SimplePost( string assistantUrl, string payload, string apiKey, ref string jsonldPayload, ref List<string> messages )
 		{
 			var result = "";
+			RAResponse response = new RAResponse();
+			string responseContents = "";
 			using ( var client = new HttpClient() )
 			{
 				// Accept JSON
@@ -149,7 +193,19 @@ namespace RA.SamplesForDocumentation
 				// The endpoint to publish to
 				var publishEndpoint = assistantUrl;
 				// Perform the actual publish action and store the result
-				result = client.PostAsync( publishEndpoint, content ).Result.Content.ReadAsStringAsync().Result;
+				var task = client.PostAsync( publishEndpoint, content );
+				task.Wait();
+				var taskResult = task.Result;
+				responseContents = task.Result.Content.ReadAsStringAsync().Result;
+
+				//result = client.PostAsync( publishEndpoint, content ).Result.Content.ReadAsStringAsync().Result;
+				if ( taskResult.IsSuccessStatusCode == false )
+				{
+					response = JsonConvert.DeserializeObject<RAResponse>( responseContents );
+					string status = string.Join( ",", response.Messages.ToArray() );
+					jsonldPayload = response.Payload ?? "";
+					messages.AddRange( response.Messages );
+				}
 			}
 			// Return the result
 			return result;
@@ -335,7 +391,8 @@ namespace RA.SamplesForDocumentation
 			{
 				NullValueHandling = NullValueHandling.Ignore,
 				DefaultValueHandling = DefaultValueHandling.Ignore,
-				ContractResolver = new AlphaNumericContractResolver(),
+				ContractResolver = new EmptyNullResolver(),
+					//OR new AlphaNumericContractResolver(),
 				Formatting = Formatting.Indented,
 				ReferenceLoopHandling = ReferenceLoopHandling.Ignore
 			};

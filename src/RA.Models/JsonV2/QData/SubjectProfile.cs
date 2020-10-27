@@ -4,20 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RA.Models.Input.profiles.QData
+using Newtonsoft.Json;
+using RA.Models.JsonV2;
+namespace RA.Models.JsonV2.QData
 {
 	/// <summary>
 	/// Categories of subject in the data set.
 	/// qdata:SubjectProfile
 	/// </summary>
 	public class SubjectProfile
-	{		
+	{
+		[JsonProperty( "@type" )]
+		public string Type { get; set; } = "qdata:SubjectProfile";
 
-		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
 
-		public string Name { get; set; }
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap Name { get; set; }
 
 		/// <summary>
 		/// Type of subject included or excluded from the data set.
@@ -36,12 +40,14 @@ namespace RA.Models.Input.profiles.QData
 		/// subjectCategory:PostCredentialEarnings
 		/// subjectCategory:PreCredentialEarnings
 		/// </summary>
-		public List<string> SubjectType { get; set; } = new List<string>();
+		[JsonProperty( PropertyName = "qdata:subjectType" )]
+		public List<CredentialAlignmentObject> SubjectType { get; set; }
 
 		/// <summary>
 		/// Quantitative values and percentages for a subject category in the data set.
 		/// qdata:subjectValue
 		/// </summary>
-		public List<QuantitativeValue> SubjectValue { get; set; } = new List<QuantitativeValue>();
+		[JsonProperty( PropertyName = "qdata:subjectValue" )]
+		public List<QuantitativeValue> SubjectValue { get; set; } 
 	}
 }

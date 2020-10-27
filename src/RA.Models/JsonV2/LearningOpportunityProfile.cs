@@ -100,12 +100,16 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
         public string DateEffective { get; set; }
 
-        /// <summary>
-        /// Need a custom mapping to @type based on input value
-        /// ceterms:CredentialOrganization, oR
-        /// ceterms:QACredentialOrganization
-        /// </summary>
-        [JsonProperty( "@type" )]
+		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
+		public string ExpirationDate { get; set; }
+		//
+
+		/// <summary>
+		/// Need a custom mapping to @type based on input value
+		/// ceterms:CredentialOrganization, oR
+		/// ceterms:QACredentialOrganization
+		/// </summary>
+		[JsonProperty( "@type" )]
         public string Type { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:ctid" )]
@@ -138,6 +142,10 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )]
 		public LanguageMap AssessmentMethodDescription { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:assessmentMethodType" )]
+		public List<CredentialAlignmentObject> AssessmentMethodType { get; set; }
+
 		/// <summary>
 		/// Learning Method Description 
 		///  Description of the learning methods for a resource.		/// 
@@ -194,8 +202,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
 		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; } = new List<CredentialAlignmentObject>();
 		//
-		[JsonProperty( PropertyName = "ceterms:alternativeInstructionalProgramType" )]
-		public LanguageMapList AlternativeInstructionalProgramType { get; set; } = new LanguageMapList();
+		//[JsonProperty( PropertyName = "ceterms:alternativeInstructionalProgramType" )]
+		//public LanguageMapList AlternativeInstructionalProgramType { get; set; } = new LanguageMapList();
 		//
 
 
@@ -204,6 +212,14 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:hasPart" )]
 		public List<string> HasPart { get; set; }
+
+		/// <summary>
+		/// Identifier
+		/// Definition:	Alphanumeric Identifier value.
+		/// List of URIs 
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:identifierValue" )]
+		public List<IdentifierValue> Identifier { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:isPartOf" )]
 		public List<string> IsPartOf { get; set; }

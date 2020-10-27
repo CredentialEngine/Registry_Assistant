@@ -10,7 +10,8 @@ namespace RA.Models.JsonV2
 		public static string classType = "ceterms:CredentialOrganization";
 
 		public Agent()
-        {
+        {			
+			Type = "ceterms:CredentialOrganization";
 			IndustryType = new List<CredentialAlignmentObject>();
 			Naics = new List<string>();
 			//Keyword = new List<string>();
@@ -22,10 +23,6 @@ namespace RA.Models.JsonV2
             //AgentPurpose = new List<string>();
             ServiceType = new List<CredentialAlignmentObject>();
             AvailabilityListing = new List<string>();
-			AlternativeIdentifier = new List<IdentifierValue>();
-			//AlternateName = new List<string>();
-			Type = "ceterms:CredentialOrganization";
-
 			SameAs = new List<string>();
 			SocialMedia = new List<string>();
             Address = new List<Place>();
@@ -117,6 +114,14 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:socialMedia" )]
 		public List<string> SocialMedia { get; set; }
 
+		/// <summary>
+		/// Identifier
+		/// Definition:	Alphanumeric Identifier value.
+		/// List of URIs 
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:identifierValue" )]
+		public List<IdentifierValue> Identifier { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:image" )]
 		public string Image { get; set; } //Image URL
 
@@ -143,8 +148,9 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:keyword" )]
         public LanguageMapList Keyword { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:alternativeIdentifier" )]
-		public List<IdentifierValue> AlternativeIdentifier { get; set; }
+		//20-10-31 - replace by Identifier
+		//[JsonProperty( PropertyName = "ceterms:alternativeIdentifier" )]
+		//public List<IdentifierValue> AlternativeIdentifier { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:missionAndGoalsStatement" )]
 		public string MissionAndGoalsStatement { get; set; } //URL

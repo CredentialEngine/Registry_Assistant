@@ -1867,7 +1867,6 @@ namespace RA.Services
 			{
 				output.Name = AssignLanguageMap( input.Name, input.Name_Map, "Place Name", DefaultLanguageForMaps, ref messages );
 			}
-			output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Place Description", DefaultLanguageForMaps, ref messages, false, MinimumDescriptionLength );
 
 			if ( !string.IsNullOrWhiteSpace( input.Address1 ) )
 			{

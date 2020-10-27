@@ -100,6 +100,7 @@ namespace RA.Models.Input
 		* Description
 		* EstimatedDuration
 		* Keyword
+		* Identifier
 		* IndustryType
 		* LearningMethodDescription
 		* Name
@@ -113,6 +114,8 @@ namespace RA.Models.Input
 		* Version
 		*/
 		public List<CredentialAlignmentObject> Assesses { get; set; } = new List<CredentialAlignmentObject>();
+
+		public List<string> AssessmentMethodType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Assessment Method Description 
@@ -136,6 +139,14 @@ namespace RA.Models.Input
 		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
 		public List<DurationProfile> EstimatedDuration { get; set; } = new List<DurationProfile>();
+
+		/// <summary>
+		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// ceterms:identifier
+		/// </summary>
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
 
 		public List<string> Keyword { get; set; } = new List<string>();
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
@@ -203,8 +214,9 @@ namespace RA.Models.Input
 
 		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
 
+
 		/// <summary>
-		/// ??????????????????????????
+		/// Future use? - don't use yet
 		/// </summary>
 		public string Version { get; set; } //URL
 		#endregion
