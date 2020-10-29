@@ -23,8 +23,12 @@ namespace RA.Models.Input
         public string Description { get; set; }
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
         public string SubjectWebpage { get; set; }
-        public string DateEffective { get; set; }
-        public List<CostProfile> EstimatedCost { get; set; }
+		/// <summary>
+		/// Effective date of the content of this profile
+		/// ceterms:dateEffective
+		/// </summary>
+		public string DateEffective { get; set; }
+		public List<CostProfile> EstimatedCost { get; set; }
         public bool? HolderMustAuthorize { get; set; }
         public List<EntityReference> TargetCredential { get; set; }
         public string VerificationDirectory { get; set; }

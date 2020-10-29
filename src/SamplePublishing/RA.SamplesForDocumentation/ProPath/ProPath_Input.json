@@ -1,36 +1,85 @@
 ﻿{
 	"Credential": {
-		"Name": "Test credential for ProPath with Holders Profile",
-		"Description": "Test credential for ProPath with Holders Profile",
+		"Name": "160 Driving Academy",
+		"Description": "Truck Driver Training School - CDL",
 		"OwnedBy": [
 			{
 				"Type": "CredentialOrganization",
-				"Name": "Illinois workNet",
-				"SubjectWebpage": "https://example.com?t=IllinoisworkNet"
+				"Name": "160 Driving Academy",
+				"SubjectWebpage": "https://160drivingacademy.com/"
 			}
 		],
-		"CredentialType": "BachelorDegree",
+		"CredentialType": "License",
 		"CredentialStatusType": "Active",
-		"Ctid": "ce-a86c6fb9-bf6b-436e-82bf-7850d1f13379",
-		"SubjectWebpage": "https://example.com?t=propathWithHoldersProfile",
+		"Ctid": "ce-8c0497aa-c1bf-42ba-ade6-ca0234d0b35f",
+		"SubjectWebpage": "https://160drivingacademy.com/",
 		"CopyrightHolder": {},
+		"ApprovedBy": [
+			{
+				"Type": "QACredentialOrganization",
+				"Name": "Illinois Community College Board",
+				"SubjectWebpage": "https://www.iccb.org/iccb/"
+			},
+			{
+				"Type": "QACredentialOrganization",
+				"Name": "Illinois Secretary of State",
+				"SubjectWebpage": "https://www.cyberdriveillinois.com/"
+			},
+			{
+				"Type": "QACredentialOrganization",
+				"Name": "Industry Standard: Illinois Secretary of State Licensed Facility",
+				"SubjectWebpage": "https://www.cyberdriveillinois.com/facilities/facilitylist.html"
+			}
+		],
+		"OfferedBy": [
+			{
+				"Type": "CredentialOrganization",
+				"Name": "160 Driving Academy",
+				"SubjectWebpage": "https://160drivingacademy.com/"
+			}
+		],
 		"BaseSalary": {},
-		"RenewalFrequency": {}
+		"OccupationType": [
+			{
+				"CodedNotation": "53-3032",
+				"Name": "Heavy and Tractor-Trailer Truck Drivers"
+			}
+		],
+		"InstructionalProgramType": [
+			{
+				"CodedNotation": "49-0205",
+				"Name": "Truck and Bus Driver/Commercial Vehicle Operator and Instructor"
+			}
+		],
+		"RenewalFrequency": {},
+		"Requires": [
+			{
+				"Description": "The 160 Driving Academy program is required for this credential",
+				"AssertedBy": {},
+				"CreditValue": {},
+				"TargetLearningOpportunity": [
+					{
+						"CTID": "ce-f8885b28-134d-4188-8c86-063aadff14ea",
+						"CreditValue": {}
+					}
+				]
+			}
+		]
 	},
 	"HoldersProfile": [
 		{
-			"Ctid": "ce-b81e50ff-0744-47d1-bbdb-38e3fa877f20",
+			"Ctid": "ce-80f07b38-0dc0-4886-8252-ed2cab8cedb6",
 			"DateEffective": "2018-01-15",
 			"Description": "ProPath HoldersProfile",
 			"RelevantDataSet": [
 				{
-					"CTID": "ce-7a16ae76-9f1c-49f6-8742-5ab757a77f85",
+					"CTID": "ce-d9f17339-7839-4b3c-8893-e624428d5dfb",
 					"Description": "ProPath DataSetProfile",
 					"Name": "Dataset profile for holdersprofile",
 					"DataProvider": {
 						"Type": "CredentialOrganization",
-						"Name": "Illinois workNet",
-						"SubjectWebpage": "https://example.com?t=IllinoisworkNet"
+						"Name": "160 Driving Academy",
+						"SubjectWebpage": "https://160drivingacademy.com/"
 					},
 					"DataSetTimePeriod": [
 						{
@@ -63,6 +112,7 @@
 									]
 								},
 								{
+									"Description": "Training unrelated employment",
 									"EarningsAmount": [
 										{
 											"Currency": "USD",
@@ -98,8 +148,8 @@
 								"Global"
 							],
 							"Description": "ProPath DataSetTimeFrame",
-							"StartDate": "2016",
-							"EndDate": "2019-12"
+							"StartDate": "2017-01-11",
+							"EndDate": "2019-03-20"
 						}
 					]
 				}
@@ -107,5 +157,5 @@
 		}
 	],
 	"DefaultLanguage": "en-us",
-	"PublishForOrganizationIdentifier": "ce-69655be7-0e2c-4256-af58-786d2a465ebd"
+	"PublishForOrganizationIdentifier": "ce-a4041983-b1ae-4ad4-a43d-284a5b4b2d73"
 }

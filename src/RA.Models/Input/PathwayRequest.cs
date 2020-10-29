@@ -196,7 +196,7 @@ namespace RA.Models.Input
 		/// Concept in a ProgressionModel concept scheme
 		/// URI
 		/// </summary>
-		public string HasProgressionLevel { get; set; }
+		public List<string> HasProgressionLevel { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.

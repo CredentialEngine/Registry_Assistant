@@ -30,7 +30,12 @@ namespace RA.SamplePublishingProject
 			//new ProPathExamples().CredentialWithHoldersProfile( "format" );
 			new ProPathExamples().CredentialWithHoldersProfile( "publish" );
 		}
-
+		[TestMethod]
+		public void PublishProPathLearningOpportunity()
+		{
+			//
+			new ProPathExamples().RelatedLearningOpportunity( "publish" );
+		}
 		[TestMethod]
 		public void DoAPublishRequestFromExternalData()
 		{

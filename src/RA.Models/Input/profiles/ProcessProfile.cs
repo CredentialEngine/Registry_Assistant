@@ -32,7 +32,12 @@ namespace RA.Models.Input
         /// </summary>
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
         public string SubjectWebpage { get; set; }
+		/// <summary>
+		/// Effective date of the content of this profile
+		/// ceterms:dateEffective
+		/// </summary>
 		public string DateEffective { get; set; }
+
 		//public List<CredentialAlignmentObject> ExternalInputType { get; set; }
 		public List<string> ExternalInputType { get; set; }
 		public string ProcessFrequency { get; set; }

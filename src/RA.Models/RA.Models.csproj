@@ -104,6 +104,7 @@
     <Compile Include="Input\profiles\QData\DataSetTimeFrame.cs" />
     <Compile Include="Input\profiles\QData\SubjectProfile.cs" />
     <Compile Include="Input\profiles\QuantitativeValue.cs" />
+    <Compile Include="Input\profiles\RevocationProfile.cs" />
     <Compile Include="Input\profiles\ValueProfile.cs" />
     <Compile Include="Input\profiles\VerificationServiceProfile.cs" />
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />

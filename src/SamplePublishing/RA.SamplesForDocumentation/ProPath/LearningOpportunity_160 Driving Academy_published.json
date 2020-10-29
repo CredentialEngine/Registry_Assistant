@@ -1,0 +1,272 @@
+﻿{
+	"@context": "https://credreg.net/ctdl/schema/context/json",
+	"@id": "https://sandbox.credentialengineregistry.org/graph/ce-f8885b28-134d-4188-8c86-063aadff14ea",
+	"@graph": [
+		{
+			"@id": "https://sandbox.credentialengineregistry.org/resources/ce-f8885b28-134d-4188-8c86-063aadff14ea",
+			"@type": "ceterms:LearningOpportunityProfile",
+			"ceterms:ctid": "ce-f8885b28-134d-4188-8c86-063aadff14ea",
+			"ceterms:name": {
+				"en-us": "160 Driving Academy"
+			},
+			"ceterms:ownedBy": [
+				"_:dababeda-2010-460b-b29b-c21e0f35314c"
+			],
+			"ceterms:offeredBy": [
+				"_:dababeda-2010-460b-b29b-c21e0f35314c"
+			],
+			"ceterms:approvedBy": [
+				"_:82ccd211-98f1-44fa-b0c5-ef115da75e29",
+				"_:cc398372-a0e1-4106-9855-c1aeb0cea4bc",
+				"_:196f2b25-7a3a-4815-8406-46356fe56492"
+			],
+			"ceterms:inLanguage": [
+				"en-us"
+			],
+			"ceterms:availableAt": [
+				{
+					"@type": "ceterms:Place",
+					"ceterms:postalCode": "62226",
+					"ceterms:addressRegion": {
+						"en-us": "Illinois"
+					},
+					"ceterms:streetAddress": {
+						"en-us": "5270 North Belt West"
+					},
+					"ceterms:addressCountry": {
+						"en-us": "USA"
+					},
+					"ceterms:addressLocality": {
+						"en-us": "Belleville"
+					},
+					"ceterms:targetContactPoint": [
+						{
+							"@type": "ceterms:ContactPoint",
+							"ceterms:telephone": [
+								"(309) 266-1601"
+							]
+						}
+					]
+				},
+				{
+					"@type": "ceterms:Place",
+					"ceterms:postalCode": "60085",
+					"ceterms:addressRegion": {
+						"en-us": "Illinois"
+					},
+					"ceterms:streetAddress": {
+						"en-us": "320 S Green Bay Rd"
+					},
+					"ceterms:addressCountry": {
+						"en-us": "USA"
+					},
+					"ceterms:addressLocality": {
+						"en-us": "Waukegan"
+					},
+					"ceterms:targetContactPoint": [
+						{
+							"@type": "ceterms:ContactPoint",
+							"ceterms:telephone": [
+								"(309) 266-1601"
+							]
+						}
+					]
+				},
+				{
+					"@type": "ceterms:Place",
+					"ceterms:postalCode": "62702",
+					"ceterms:addressRegion": {
+						"en-us": "Illinois"
+					},
+					"ceterms:streetAddress": {
+						"en-us": "2935 E Clear Lake Avenue, Suite 2B"
+					},
+					"ceterms:addressCountry": {
+						"en-us": "USA"
+					},
+					"ceterms:addressLocality": {
+						"en-us": "Springfield"
+					},
+					"ceterms:targetContactPoint": [
+						{
+							"@type": "ceterms:ContactPoint",
+							"ceterms:telephone": [
+								"(309) 266-1601"
+							]
+						}
+					]
+				}
+			],
+			"ceterms:description": {
+				"en-us": "Truck Driver Training School - CDL"
+			},
+			"ceterms:deliveryType": [
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:framework": "https://credreg.net/ctdl/terms/Delivery",
+					"ceterms:targetNode": "deliveryType:InPerson",
+					"ceterms:frameworkName": {
+						"en-us": "Delivery"
+					},
+					"ceterms:targetNodeName": {
+						"en-US": "In-Person Only"
+					}
+				},
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:framework": "https://credreg.net/ctdl/terms/Delivery",
+					"ceterms:targetNode": "deliveryType:OnlineOnly",
+					"ceterms:frameworkName": {
+						"en-us": "Delivery"
+					},
+					"ceterms:targetNodeName": {
+						"en-US": "Online Only"
+					}
+				}
+			],
+			"ceterms:estimatedCost": [
+				{
+					"@type": "ceterms:CostProfile",
+					"ceterms:price": 4695,
+					"ceterms:currency": "USD",
+					"ceterms:costDetails": "https://160drivingacademy.com",
+					"ceterms:description": {
+						"en-us": "Estimated cost for this program"
+					},
+					"ceterms:directCostType": {
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:framework": "https://credreg.net/ctdl/terms/CostType",
+						"ceterms:targetNode": "costType:Tuition",
+						"ceterms:frameworkName": {
+							"en-us": "CostType"
+						},
+						"ceterms:targetNodeName": {
+							"en-US": "Tuition"
+						}
+					}
+				}
+			],
+			"ceterms:entryCondition": [
+				{
+					"@type": "ceterms:ConditionProfile",
+					"ceterms:condition": {
+						"en-us": [
+							"Drug/Alchohol Screening",
+							"Other - DOT Physical Exam"
+						]
+					},
+					"ceterms:description": {
+						"en-us": "In-Person interview. Should bring drivers license and 3 year history"
+					}
+				}
+			],
+			"ceterms:occupationType": [
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:codedNotation": "53-3032",
+					"ceterms:targetNodeName": {
+						"en-us": "Heavy and Tractor-Trailer Truck Drivers"
+					}
+				}
+			],
+			"ceterms:subjectWebpage": "https://160drivingacademy.com",
+			"ceterms:estimatedDuration": [
+				{
+					"@type": "ceterms:DurationProfile",
+					"ceterms:exactDuration": "P4W"
+				},
+				{
+					"@type": "ceterms:DurationProfile",
+					"ceterms:exactDuration": "PT160H"
+				}
+			],
+			"ceterms:learningMethodType": [
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:framework": "https://credreg.net/ctdl/terms/LearningMethod",
+					"ceterms:targetNode": "learnMethod:Applied",
+					"ceterms:frameworkName": {
+						"en-us": "LearningMethod"
+					},
+					"ceterms:targetNodeName": {
+						"en-US": "Applied Instruction"
+					}
+				}
+			],
+			"ceterms:financialAssistance": [
+				{
+					"@type": "ceterms:FinancialAssistanceProfile",
+					"ceterms:financialAssistanceType ": [
+						{
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "https://credreg.net/ctdl/terms/FinancialAssistance",
+							"ceterms:targetNode": "financialAid:PrivateLoan",
+							"ceterms:frameworkName": {
+								"en-us": "FinancialAssistance"
+							},
+							"ceterms:targetNodeName": {
+								"en-US": "Private Loan"
+							}
+						},
+						{
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "https://credreg.net/ctdl/terms/FinancialAssistance",
+							"ceterms:targetNode": "financialAid:Grant",
+							"ceterms:frameworkName": {
+								"en-us": "FinancialAssistance"
+							},
+							"ceterms:targetNodeName": {
+								"en-US": "Grant"
+							}
+						}
+					]
+				}
+			],
+			"ceterms:instructionalProgramType": [
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:framework": "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55",
+					"ceterms:codedNotation": "49-0205",
+					"ceterms:frameworkName": {
+						"en-us": "Classification of Instructional Programs"
+					},
+					"ceterms:targetNodeName": {
+						"en-us": "Truck and Bus Driver/Commercial Vehicle Operator and Instructor"
+					}
+				}
+			]
+		},
+		{
+			"@id": "_:dababeda-2010-460b-b29b-c21e0f35314c",
+			"@type": "ceterms:CredentialOrganization",
+			"ceterms:name": {
+				"en-us": "160 Driving Academy"
+			},
+			"ceterms:subjectWebpage": "https://160drivingacademy.com"
+		},
+		{
+			"@id": "_:82ccd211-98f1-44fa-b0c5-ef115da75e29",
+			"@type": "ceterms:QACredentialOrganization",
+			"ceterms:name": {
+				"en-us": "Illinois Community College Board"
+			},
+			"ceterms:subjectWebpage": "https://www.iccb.org/iccb"
+		},
+		{
+			"@id": "_:cc398372-a0e1-4106-9855-c1aeb0cea4bc",
+			"@type": "ceterms:QACredentialOrganization",
+			"ceterms:name": {
+				"en-us": "Illinois Secretary of State"
+			},
+			"ceterms:subjectWebpage": "https://www.cyberdriveillinois.com"
+		},
+		{
+			"@id": "_:196f2b25-7a3a-4815-8406-46356fe56492",
+			"@type": "ceterms:QACredentialOrganization",
+			"ceterms:name": {
+				"en-us": "Industry Standard: Illinois Secretary of State Licensed Facility"
+			},
+			"ceterms:subjectWebpage": "https://www.cyberdriveillinois.com/facilities/facilitylist.html"
+		}
+	]
+}

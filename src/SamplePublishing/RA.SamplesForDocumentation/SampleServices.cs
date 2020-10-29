@@ -298,6 +298,8 @@ namespace RA.SamplesForDocumentation
 								request.EnvelopeIdentifier = response.RegistryEnvelopeIdentifier;
 								//may have some warnings to display
 								request.Messages.AddRange( response.Messages );
+
+								var publishedUrl = response.GraphUrl;
 							}
 							else
 							{

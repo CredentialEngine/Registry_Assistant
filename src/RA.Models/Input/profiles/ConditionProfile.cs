@@ -56,7 +56,12 @@ namespace RA.Models.Input
 
         public List<string> AudienceLevelType { get; set; }
         public List<string> AudienceType { get; set; }
-        public string DateEffective { get; set; }
+		/// <summary>
+		/// Effective date of the content of this profile
+		/// ceterms:dateEffective
+		/// </summary>
+		public string DateEffective { get; set; }
+
 		/// <summary>
 		/// List of condtions, containing:
 		/// A single condition or aspect of experience that refines the conditions under which the resource being described is applicable.

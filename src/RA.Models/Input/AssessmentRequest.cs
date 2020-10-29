@@ -149,7 +149,12 @@ namespace RA.Models.Input
 		public LanguageMap LearningMethodDescription_Map { get; set; } = new LanguageMap();
 
 
+		/// <summary>
+		/// Effective date of the content of this profile
+		/// ceterms:dateEffective
+		/// </summary>
 		public string DateEffective { get; set; }
+
 		/// <summary>
 		/// Expiration date of the assessment if applicable
 		/// </summary>

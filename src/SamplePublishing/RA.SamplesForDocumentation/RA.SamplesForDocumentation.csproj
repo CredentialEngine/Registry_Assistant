@@ -54,7 +54,7 @@
     <Compile Include="Assessments\PublishAssessment.cs" />
     <Compile Include="ConditionManifests\PublishConditionManifest.cs" />
     <Compile Include="CostManifests\PublishCostManifest.cs" />
-    <Compile Include="Credentials\ProPathExamples.cs" />
+    <Compile Include="ProPath\ProPathExamples.cs" />
     <Compile Include="Credentials\PublishCredential.cs" />
     <Compile Include="LearningOpportunities\PublishLearningOpportunity.cs" />
     <Compile Include="LoggingHelper.cs" />
@@ -75,8 +75,10 @@
     <Compile Include="TransferValueProfiles\PublishTransferValueProfile.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Credentials\ProPath_Input.json" />
-    <None Include="Credentials\ProPath_Published.json" />
+    <None Include="ProPath\LearningOpportunity_160 Driving Academy_input.json" />
+    <None Include="ProPath\LearningOpportunity_160 Driving Academy_published.json" />
+    <None Include="ProPath\ProPath_Input.json" />
+    <None Include="ProPath\ProPath_Published.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
