@@ -18,15 +18,13 @@ namespace RA.SamplesForDocumentation
 	{
 		/// <summary>
 		/// Publish a ProPath credential with a holders profile
-		/// Based on <see cref="https://apps.illinoisworknet.com/WIOAPolicy/Policy/Index/146 "/>
+		/// Based on 160 Driving Academy <see cref="https://apps.illinoisworknet.com/cis/wioatraining/program/1006549_1007283"/>
 		/// See published JSON-LD: <see cref="https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/SamplePublishing/RA.SamplesForDocumentation/Credentials/ProPath_Published.json"/>
 		/// </summary>
 		/// <param name="requestType"></param>
 		public void CredentialWithHoldersProfile( string requestType = "format" )
 		{
-			//Holds the result of the publish action
-			//
-			var result = "";
+
 			//
 			var apiKey = SampleServices.GetMyApiKey();
 			var organizationIdentifierFromAccountsSite = "ce-a4041983-b1ae-4ad4-a43d-284a5b4b2d73";// SampleServices.GetAppKeyValue( "myOrgCTID" );
@@ -36,11 +34,11 @@ namespace RA.SamplesForDocumentation
 			var hpctid = "ce-a86c6fb9-bf6b-436e-82bf-7850d1f13379";// "ce-" + Guid.NewGuid().ToString().ToLower();
 			var myData = new Credential()
 			{
-					Name = "Test credential for ProPath with Holders Profile",
+					Name = "160 Driving Academy",
 					Ctid = hpctid,
-					Description = "Test credential for ProPath with Holders Profile",
-					SubjectWebpage = "https://example.com?t=propathWithHoldersProfile",
-					CredentialType = "BachelorDegree",
+					Description = "Credential for ProPath with Holders Profile",
+					SubjectWebpage = "https://apps.illinoisworknet.com/cis/wioatraining/program/1006549_1007283",
+					CredentialType = "License",
 					CredentialStatusType = "Active"
 			};
 			myData.OwnedBy = new List<OrganizationReference>()
@@ -73,8 +71,8 @@ namespace RA.SamplesForDocumentation
 			{
 				Description = "ProPath DataSetTimeFrame",
 				DataSourceCoverageType = new List<string>() { "Global" },
-				StartDate = "2017-01-11",   //??
-				EndDate = "2019-03-20"      //??
+				StartDate = "2017-01-11",   
+				EndDate = "2019-03-20"      
 			};
 			//dataAttributes
 			var dataProfile = new DataProfile()
