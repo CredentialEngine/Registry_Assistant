@@ -18,7 +18,8 @@ namespace RA.SamplesForDocumentation
 	{
 		/// <summary>
 		/// Publish a ProPath credential with a holders profile
-		/// <see cref="https://sandbox.credentialengineregistry.org/graph/ce-a86c6fb9-bf6b-436e-82bf-7850d1f13379"/>
+		/// Based on <see cref="https://apps.illinoisworknet.com/WIOAPolicy/Policy/Index/146 "/>
+		/// See published JSON-LD: <see cref="https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/SamplePublishing/RA.SamplesForDocumentation/Credentials/ProPath_Published.json"/>
 		/// </summary>
 		/// <param name="requestType"></param>
 		public void CredentialWithHoldersProfile( string requestType = "format" )
