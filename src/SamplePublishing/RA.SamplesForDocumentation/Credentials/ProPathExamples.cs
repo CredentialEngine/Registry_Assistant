@@ -50,6 +50,29 @@ namespace RA.SamplesForDocumentation
 					SubjectWebpage="https://www2.illinois.gov/dceo/Pages/default.aspx"
 				}
 			};
+			/*
+			 * The HoldersProfile is an entity describing the count and related statistical information of holders of a given credential. 
+			 * The HoldersProfile requires a CTID at this time (may change)
+			 * The profile has high level statistical information plus a relevantDataset (a list for multiple) which is the DataSetProfile class 
+			 * 
+			 * DataSetProfile -  Particular characteristics or properties of a data set and its records.
+			 * Requires a CTID.
+			 * A key property is qdata:dataSetTimePeriod which a list of the class: qdata:DataSetTimeFrame
+			 * 
+			 * qdata:DataSetTimeFrame - Time frame including earnings and employment start and end dates of the data set.
+			 * This class describes the timeframe for a set of statistics. 
+			 * The property: qdata:dataAttributes is a list of the class: qdata:DataProfile. 
+			 * 
+			 * qdata:DataProfile - Entity describing the attributes of the data set, its subjects and their values.
+			 * This class has a large number of properties for describing statitics.
+			 * Three new properties are being added that are not yet shown on https://credreg.net/qdata/terms/DataProfile#DataProfile:
+			 * - TotalWIOACompleters
+			 * - TotalWIOAExiters
+			 * - TotalWIOAParticipants
+			 * 
+			 * Additional properties are also expected to be added. 
+			 */
+
 			HoldersProfile hp = new HoldersProfile()
 			{
 				Ctid = "ce-b81e50ff-0744-47d1-bbdb-38e3fa877f20",//"ce-" + Guid.NewGuid().ToString().ToLower(),
@@ -58,7 +81,7 @@ namespace RA.SamplesForDocumentation
 			};
 
 			//============= DataSetProfile ===================
-
+			//referenced from a HoldersProfile (RelevantDataSet)
 			var relevantDataSet = new DataSetProfile()
 			{
 				Name = "Dataset profile for holdersprofile",
@@ -67,6 +90,7 @@ namespace RA.SamplesForDocumentation
 				DataProvider = myData.OwnedBy[ 0 ],
 				//RelevantDataSetFor = hpctid //this will be derived by the API
 			};
+			//DataSetTimeFrame referenced from a DataSetProfile (DataAttributes)
 			DataSetTimeFrame dstp = new DataSetTimeFrame()
 			{
 				Description = "ProPath DataSetTimeFrame",
@@ -74,7 +98,7 @@ namespace RA.SamplesForDocumentation
 				StartDate = "2017-01-11",   
 				EndDate = "2019-03-20"      
 			};
-			//dataAttributes
+			////DataProfile referenced from a DataSetTimeFrame ()
 			var dataProfile = new DataProfile()
 			{
 				//AdministrativeRecordType = "adminRecord:Tax1099",	//??
