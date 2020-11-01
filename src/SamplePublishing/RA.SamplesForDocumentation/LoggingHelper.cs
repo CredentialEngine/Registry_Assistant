@@ -67,27 +67,28 @@ namespace RA.SamplesForDocumentation
 
 			try
 			{
-				sessionId = HttpContext.Current.Session.SessionID.ToString();
-				remoteIP = HttpContext.Current.Request.ServerVariables[ "REMOTE_HOST" ];
+				if ( HttpContext.Current != null && HttpContext.Current.Session != null)
+				{
+					sessionId = HttpContext.Current.Session.SessionID.ToString();
+					remoteIP = HttpContext.Current.Request.ServerVariables[ "REMOTE_HOST" ];
 
-				if ( HttpContext.Current.Request.UrlReferrer != null )
-				{
-					lRefererPage = HttpContext.Current.Request.UrlReferrer.ToString();
-				}
-				string serverName = UtilityManager.GetAppKeyValue( "serverName", HttpContext.Current.Request.ServerVariables[ "LOCAL_ADDR" ] );
-				path = serverName + HttpContext.Current.Request.Path;
+					if ( HttpContext.Current.Request.UrlReferrer != null )
+					{
+						lRefererPage = HttpContext.Current.Request.UrlReferrer.ToString();
+					}
+					string serverName = UtilityManager.GetAppKeyValue( "serverName", HttpContext.Current.Request.ServerVariables[ "LOCAL_ADDR" ] );
+					path = serverName + HttpContext.Current.Request.Path;
 
-				if ( IsValidRequestString() == true )
-				{
-					queryString = HttpContext.Current.Request.Url.AbsoluteUri.ToString();
-					url = HttpContext.Current.Server.UrlDecode( queryString );
-				}
-				else
-				{
-					url = "suspicious url encountered!!";
-				}
-				//????
-				//userId = WUM.GetCurrentUserid();
+					if ( IsValidRequestString() == true )
+					{
+						queryString = HttpContext.Current.Request.Url.AbsoluteUri.ToString();
+						url = HttpContext.Current.Server.UrlDecode( queryString );
+					}
+					else
+					{
+						url = "suspicious url encountered!!";
+					}
+				}		
 			}
 			catch
 			{

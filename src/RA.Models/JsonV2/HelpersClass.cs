@@ -139,6 +139,10 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:assesses" )]
 		public List<CredentialAlignmentObject> Assesses { get; set; }
 
+		//
+		[JsonProperty( PropertyName = "ceterms:assessmentMethodType" )]
+		public List<CredentialAlignmentObject> AssessmentMethodType { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )]
 		public LanguageMap AssessmentMethodDescription { get; set; }
 		//
@@ -154,14 +158,38 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:estimatedDuration" )]
 		public List<DurationProfile> EstimatedDuration { get; set; }
 		//
+		[JsonProperty( PropertyName = "ceterms:identifierValue" )]
+		public List<IdentifierValue> Identifier { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:industryType" )]
+		public List<CredentialAlignmentObject> IndustryType { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
+		public LanguageMapList Keyword { get; set; }
+		//
 		[JsonProperty( PropertyName = "ceterms:learningMethodDescription" )]
 		public LanguageMap LearningMethodDescription { get; set; }
+		[JsonProperty( PropertyName = "ceterms:learningMethodType" )]
+		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:occupationType" )]
+		public List<CredentialAlignmentObject> OccupationType { get; set; }
+
 		//
 		[JsonProperty( PropertyName = "ceterms:offeredBy" )]
 		public List<string> OfferedBy { get; set; }
 		//
 		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
 		public List<string> OwnedBy { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:sameAs" )]
+		public List<string> SameAs { get; set; } = new List<string>();
+
+		//for learning opportunity only
+		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
+		public string DateEffective { get; set; }
+		//for learning opportunity only
+		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
+		public string ExpirationDate { get; set; }
 		//
 		[JsonProperty( PropertyName = "ceterms:subject" )]
 		public List<CredentialAlignmentObject> Subject { get; set; }

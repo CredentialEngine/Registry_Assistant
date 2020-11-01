@@ -1,0 +1,153 @@
+﻿{
+	"LearningOpportunity": {
+		"Name": "160 Driving Academy",
+		"Description": "Truck Driver Training School - CDL",
+		"SubjectWebpage": "https://160drivingacademy.com/",
+		"Ctid": "ce-f8885b28-134d-4188-8c86-063aadff14ea",
+		"OwnedBy": [
+			{
+				"Type": "CredentialOrganization",
+				"Name": "160 Driving Academy",
+				"SubjectWebpage": "https://160drivingacademy.com/"
+			}
+		],
+		"OfferedBy": [
+			{
+				"Type": "CredentialOrganization",
+				"Name": "160 Driving Academy",
+				"SubjectWebpage": "https://160drivingacademy.com/"
+			}
+		],
+		"AvailableAt": [
+			{
+				"Address1": "5270 North Belt West",
+				"City": "Belleville",
+				"AddressRegion": "Illinois",
+				"PostalCode": "62226",
+				"Country": "USA",
+				"ContactPoint": [
+					{
+						"PhoneNumbers": [
+							"(309) 266-1601"
+						]
+					}
+				]
+			},
+			{
+				"Address1": "320 S Green Bay Rd",
+				"City": "Waukegan",
+				"AddressRegion": "Illinois",
+				"PostalCode": "60085",
+				"Country": "USA",
+				"ContactPoint": [
+					{
+						"PhoneNumbers": [
+							"(309) 266-1601"
+						]
+					}
+				]
+			},
+			{
+				"Address1": "2935 E Clear Lake Avenue, Suite 2B",
+				"City": "Springfield",
+				"AddressRegion": "Illinois",
+				"PostalCode": "62702",
+				"Country": "USA",
+				"ContactPoint": [
+					{
+						"PhoneNumbers": [
+							"(309) 266-1601"
+						]
+					}
+				]
+			}
+		],
+		"CreditValue": {},
+		"LearningMethodType": [
+			"learnMethod:Applied"
+		],
+		"DeliveryType": [
+			"InPerson",
+			"OnlineOnly"
+		],
+		"EstimatedCost": [
+			{
+				"CostDetails": "https://160drivingacademy.com/",
+				"Description": "Estimated cost for this program",
+				"Currency": "USD",
+				"CostItems": [
+					{
+						"DirectCostType": "Tuition",
+						"Price": 4695.00
+					}
+				]
+			}
+		],
+		"EstimatedDuration": [
+			{
+				"MinimumDuration": {},
+				"MaximumDuration": {},
+				"ExactDuration": {
+					"Weeks": 4
+				}
+			},
+			{
+				"MinimumDuration": {},
+				"MaximumDuration": {},
+				"ExactDuration": {
+					"Hours": 160
+				}
+			}
+		],
+		"FinancialAssistance": [
+			{
+				"FinancialAssistanceType": [
+					"financialAid:PrivateLoan",
+					"financialAid:Grant"
+				]
+			}
+		],
+		"OccupationType": [
+			{
+				"CodedNotation": "53-3032",
+				"Name": "Heavy and Tractor-Trailer Truck Drivers"
+			}
+		],
+		"InstructionalProgramType": [
+			{
+				"CodedNotation": "49-0205",
+				"Name": "Truck and Bus Driver/Commercial Vehicle Operator and Instructor"
+			}
+		],
+		"EntryCondition": [
+			{
+				"Description": "In-Person interview. Should bring drivers license and 3 year history",
+				"Condition": [
+					"Drug/Alchohol Screening",
+					"Other - DOT Physical Exam"
+				],
+				"AssertedBy": {},
+				"CreditValue": {}
+			}
+		],
+		"ApprovedBy": [
+			{
+				"Type": "QACredentialOrganization",
+				"Name": "Illinois Community College Board",
+				"SubjectWebpage": "https://www.iccb.org/iccb/"
+			},
+			{
+				"Type": "QACredentialOrganization",
+				"Name": "Illinois Secretary of State",
+				"SubjectWebpage": "https://www.cyberdriveillinois.com/"
+			},
+			{
+				"Type": "QACredentialOrganization",
+				"Name": "Industry Standard: Illinois Secretary of State Licensed Facility",
+				"SubjectWebpage": "https://www.cyberdriveillinois.com/facilities/facilitylist.html"
+			}
+		]
+	},
+	"DefaultLanguage": "en-us",
+	"PublishForOrganizationIdentifier": "ce-a4041983-b1ae-4ad4-a43d-284a5b4b2d73"
+}

@@ -148,7 +148,8 @@ namespace RA.Models.JsonV2
 		/// Competency uris
 		/// </summary>
 		[JsonProperty( "ceasn:exactAlignment" )]
-		public List<string> exactAlignment { get; set; } 
+		//public List<string> exactAlignment { get; set; } 
+		public object exactAlignment { get; set; }
 
 		/// <summary>
 		/// Competency uris

@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
+using RA.Models;
+using RA.Models.Input;
+using RA.Models.Input.profiles.QData;
 using RAResponse = RA.Models.RegistryAssistantResponse;
 
 namespace RA.SamplesForDocumentation
@@ -25,6 +31,31 @@ namespace RA.SamplesForDocumentation
 		{
 			return GetAppKeyValue( "myOrgCTID" );
 		} //
+
+		#region Assignments
+		public static QuantitativeValue AddQuantitativeValue( int value, string description )
+		{
+			var output = new QuantitativeValue()
+			{
+				Value = value,
+				Description = !string.IsNullOrWhiteSpace( description ) ? description : string.Format( "Adding value of: {0}", value )
+			};
+
+			return output;
+		}
+		public static QuantitativeValue AddQuantitativeValue( int minValue, int maxValue, string description )
+		{
+			var output = new QuantitativeValue()
+			{
+				MinValue = minValue,
+				MaxValue = maxValue,
+				Description = description
+			};
+
+			return output;
+		}
+
+		#endregion
 
 		#region === Application Keys Methods ===
 
@@ -126,15 +157,31 @@ namespace RA.SamplesForDocumentation
 		/// <param name="payload">Serialized input request</param>
 		/// <param name="apiKey">The organization Api Key from the accounts site. </param>
 		/// <returns></returns>
-		public string SimplePost( string entityType, string requestType, string payload, string apiKey )
+		public string SimplePost( string entityType, string requestType, string payload, string apiKey)
+		{
+			//place holders ignored by this method
+			string jsonldPayload = "";
+			List<string> messages = new List<string>();
+			//
+			string serviceUri = GetAppKeyValue( "registryAssistantApi" );
+
+			//https://localhost:44312/
+			string assistantUrl = serviceUri + string.Format( "{0}/{1}", entityType, requestType );
+			return SimplePost( assistantUrl, payload, apiKey, ref jsonldPayload, ref messages ); ;
+		}
+		public string LessSimplePost( string entityType, string requestType, string payload, string apiKey, ref string jsonldPayload, ref List<string> messages )
 		{
 			string serviceUri = GetAppKeyValue( "registryAssistantApi" );
+
+			//https://localhost:44312/
 			string assistantUrl = serviceUri + string.Format( "{0}/{1}", entityType, requestType );
-			return SimplePost( assistantUrl, payload, apiKey ); ;
+			return SimplePost( assistantUrl, payload, apiKey, ref jsonldPayload, ref messages ); 
 		}
-		public string SimplePost( string assistantUrl, string payload, string apiKey )
+		public string SimplePost( string assistantUrl, string payload, string apiKey, ref string jsonldPayload, ref List<string> messages )
 		{
 			var result = "";
+			RAResponse response = new RAResponse();
+			string responseContents = "";
 			using ( var client = new HttpClient() )
 			{
 				// Accept JSON
@@ -146,7 +193,19 @@ namespace RA.SamplesForDocumentation
 				// The endpoint to publish to
 				var publishEndpoint = assistantUrl;
 				// Perform the actual publish action and store the result
-				result = client.PostAsync( publishEndpoint, content ).Result.Content.ReadAsStringAsync().Result;
+				var task = client.PostAsync( publishEndpoint, content );
+				task.Wait();
+				var taskResult = task.Result;
+				responseContents = task.Result.Content.ReadAsStringAsync().Result;
+
+				//result = client.PostAsync( publishEndpoint, content ).Result.Content.ReadAsStringAsync().Result;
+				if ( taskResult.IsSuccessStatusCode == false )
+				{
+					response = JsonConvert.DeserializeObject<RAResponse>( responseContents );
+					string status = string.Join( ",", response.Messages.ToArray() );
+					jsonldPayload = response.Payload ?? "";
+					messages.AddRange( response.Messages );
+				}
 			}
 			// Return the result
 			return result;
@@ -239,6 +298,8 @@ namespace RA.SamplesForDocumentation
 								request.EnvelopeIdentifier = response.RegistryEnvelopeIdentifier;
 								//may have some warnings to display
 								request.Messages.AddRange( response.Messages );
+
+								var publishedUrl = response.GraphUrl;
 							}
 							else
 							{
@@ -324,6 +385,67 @@ namespace RA.SamplesForDocumentation
 
 		#endregion
 
+
+		#region JSON helpers
+		public static JsonSerializerSettings GetJsonSettings()
+		{
+			var settings = new JsonSerializerSettings()
+			{
+				NullValueHandling = NullValueHandling.Ignore,
+				DefaultValueHandling = DefaultValueHandling.Ignore,
+				ContractResolver = new EmptyNullResolver(),
+					//OR new AlphaNumericContractResolver(),
+				Formatting = Formatting.Indented,
+				ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+			};
+
+			return settings;
+		}
+
+		//Force properties to be serialized in alphanumeric order
+		public class AlphaNumericContractResolver : DefaultContractResolver
+		{
+			protected override System.Collections.Generic.IList<JsonProperty> CreateProperties( System.Type type, MemberSerialization memberSerialization )
+			{
+				return base.CreateProperties( type, memberSerialization ).OrderBy( m => m.PropertyName ).ToList();
+			}
+		}
+		/// <summary>
+		/// NOTE: previously inherited from AlphaNumericContractResolver. the latter would sort by property name, which we don't want - must be @context, @id, and @graph
+		/// </summary>
+		public class EmptyNullResolver : DefaultContractResolver
+		{
+			protected override JsonProperty CreateProperty( MemberInfo member, MemberSerialization memberSerialization )
+			{
+				var property = base.CreateProperty( member, memberSerialization );
+				var isDefaultValueIgnored = ( ( property.DefaultValueHandling ?? DefaultValueHandling.Ignore ) & DefaultValueHandling.Ignore ) != 0;
+
+				if ( isDefaultValueIgnored )
+					if ( !typeof( string ).IsAssignableFrom( property.PropertyType ) && typeof( IEnumerable ).IsAssignableFrom( property.PropertyType ) )
+					{
+						Predicate<object> newShouldSerialize = obj =>
+						{
+							var collection = property.ValueProvider.GetValue( obj ) as ICollection;
+							return collection == null || collection.Count != 0;
+						};
+						Predicate<object> oldShouldSerialize = property.ShouldSerialize;
+						property.ShouldSerialize = oldShouldSerialize != null ? o => oldShouldSerialize( oldShouldSerialize ) && newShouldSerialize( oldShouldSerialize ) : newShouldSerialize;
+					}
+					else if ( typeof( string ).IsAssignableFrom( property.PropertyType ) )
+					{
+						Predicate<object> newShouldSerialize = obj =>
+						{
+							var value = property.ValueProvider.GetValue( obj ) as string;
+							return !string.IsNullOrEmpty( value );
+						};
+
+						Predicate<object> oldShouldSerialize = property.ShouldSerialize;
+						property.ShouldSerialize = oldShouldSerialize != null ? o => oldShouldSerialize( oldShouldSerialize ) && newShouldSerialize( oldShouldSerialize ) : newShouldSerialize;
+					}
+				return property;
+			}
+		}
+		#endregion
 		public class AssistantRequestHelper
 		{
 			public AssistantRequestHelper()

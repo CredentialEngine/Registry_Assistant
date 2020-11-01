@@ -30,8 +30,6 @@ namespace RA.Models.Input
 			TargetLearningOpportunity = new List<EntityReference>();
 			TargetCompetency = new List<CredentialAlignmentObject>();
 
-
-			Jurisdiction = new List<Input.Jurisdiction>();
 			ResidentOf = new List<Input.Jurisdiction>();
 		}
 
@@ -58,7 +56,12 @@ namespace RA.Models.Input
 
         public List<string> AudienceLevelType { get; set; }
         public List<string> AudienceType { get; set; }
-        public string DateEffective { get; set; }
+		/// <summary>
+		/// Effective date of the content of this profile
+		/// ceterms:dateEffective
+		/// </summary>
+		public string DateEffective { get; set; }
+
 		/// <summary>
 		/// List of condtions, containing:
 		/// A single condition or aspect of experience that refines the conditions under which the resource being described is applicable.
@@ -111,8 +114,13 @@ namespace RA.Models.Input
 
         //external classes =====================================
         public List<CostProfile> EstimatedCost { get; set; }
-        public List<Jurisdiction> Jurisdiction { get; set; }
-        public List<Jurisdiction> ResidentOf { get; set; }
+		/// <summary>
+		/// Jurisdiction Profile
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+		/// </summary>
+		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
+		public List<Jurisdiction> ResidentOf { get; set; }
 
         public List<EntityReference> TargetAssessment { get; set; } 
         public List<EntityReference> TargetCredential { get; set; }

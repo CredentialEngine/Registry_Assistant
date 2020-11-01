@@ -30,7 +30,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CTID { get; set; }
 
-		//if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would be required
+		//if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would typically be required
+
+		/// <summary>
+		/// If the entity described below does exist in the registry, use this SameAs property to relate the two. 
+		/// Provide a CTID(recommended) or a URI to the thing in the credential registry.
+		/// </summary>
+		public string SameAs { get; set; }
 
 		/// <summary>
 		/// the type of the entity must be provided if the Id was not provided. examples
@@ -41,7 +47,6 @@ namespace RA.Models.Input
 		/// or the many credential subclasses!!
 		/// </summary>
 		public virtual string Type { get; set; }
-
 
 		/// <summary>
 		/// Name of the entity (required)
@@ -65,7 +70,52 @@ namespace RA.Models.Input
 
 		#region Assessment/Lopp related properties
 		//2020-05-18 Additional properties have been added to the EntityReference. 
+		/*Allowed properties for Assessment
+		 * Assesses
+		 * AssessmentMethodDescription
+		 * AvailableAt
+		 * CodedNotation
+		 * Description
+		 * EstimatedDuration
+		 * Keyword
+		 * IndustryType
+		 * LearningMethodDescription
+		 * LearningMethodType
+		 * Name
+		 * OccupationType
+		 * OfferedBy
+		 * OwnedBy
+		 * Requires, Recommends, Corequisite
+		 * Subject
+		 * SubjectWebpage
+		 * Version
+		 */
+
+		/*Allowed properties for LearningOpportunity
+		* AssessmentMethodDescription
+		* AvailableAt
+		* Name
+		* CodedNotation
+		* CreditValue
+		* Description
+		* EstimatedDuration
+		* Keyword
+		* Identifier
+		* IndustryType
+		* LearningMethodDescription
+		* Name
+		* OccupationType
+		* OfferedBy
+		* OwnedBy
+		* Requires, Recommends, Corequisite, EntryCondition
+		* Subject
+		* SubjectWebpage
+		* Teaches
+		* Version
+		*/
 		public List<CredentialAlignmentObject> Assesses { get; set; } = new List<CredentialAlignmentObject>();
+
+		public List<string> AssessmentMethodType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Assessment Method Description 
@@ -80,10 +130,26 @@ namespace RA.Models.Input
 		public List<Place> AvailableAt { get; set; } = new List<Place>();
 		//
 		public string CodedNotation { get; set; }
-		//
+		//condition profiles
+		public List<ConditionProfile> Requires { get; set; } = new List<ConditionProfile>();
+		public List<ConditionProfile> Corequisite { get; set; } = new List<ConditionProfile>();
+		public List<ConditionProfile> Recommends { get; set; } = new List<ConditionProfile>();
+		public List<ConditionProfile> EntryCondition { get; set; } = new List<ConditionProfile>();
+		//LearningOpportunity only
 		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
 		public List<DurationProfile> EstimatedDuration { get; set; } = new List<DurationProfile>();
+
+		/// <summary>
+		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// ceterms:identifier
+		/// </summary>
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
+
+		public List<string> Keyword { get; set; } = new List<string>();
+		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Learning Method Description 
@@ -110,13 +176,50 @@ namespace RA.Models.Input
 																//
 		public List<string> Subject { get; set; } = new List<string>();
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
+
+		/// <summary>
+		/// For Learning Opportunities only
+		/// Start Date of the Learning opportunity
+		/// </summary>
+		public string DateEffective { get; set; }
+		/// <summary>
+		/// For Learning Opportunities only
+		/// Expiration date of the learning opportunity if applicable
+		/// </summary>
+		public string ExpirationDate { get; set; }
 		//
 		/// <summary>
-		/// For Learning Opportunities only, list of competencies being taught
+		/// For Learning Opportunities only
+		/// List of competencies being taught
 		/// </summary>
 		public List<CredentialAlignmentObject> Teaches { get; set; } = new List<CredentialAlignmentObject>();
 		#endregion
 
+		#region properties for Occupation
+		/*
+		 * Name
+		 * CodedNotation
+		 * Description
+		 * Keyword
+		 * OccupationType
+		 * IndustryType
+		 * SubjectWebpage
+		 * Version
+		 */
+
+		/// <summary>
+		/// Update handle of FrameworkItem to be like EntityReference - all in one, rather than separate property for Alternate and codes
+		/// </summary>
+		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+
+		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+
+
+		/// <summary>
+		/// Future use? - don't use yet
+		/// </summary>
+		public string Version { get; set; } //URL
+		#endregion
 
 		/// <summary>
 		/// Check if all properties for a reference request are present

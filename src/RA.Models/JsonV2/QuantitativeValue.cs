@@ -28,6 +28,9 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "schema:maxValue" )]
 		public decimal MaxValue { get; set; }
 
+		[JsonProperty( "qdata:percentage" )]
+		public decimal Percentage { get; set; }
+
 		[JsonProperty( "schema:description" )]
 		public LanguageMap Description { get; set; }
 	}

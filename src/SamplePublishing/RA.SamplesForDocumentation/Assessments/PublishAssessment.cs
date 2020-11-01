@@ -61,7 +61,9 @@ namespace RA.SamplesForDocumentation
 			};
 
 			//Serialize the credential request object
-			var payload = JsonConvert.SerializeObject( myRequest );
+			//var payload = JsonConvert.SerializeObject( myRequest );
+			//Preferably, use method that will exclude null/empty properties
+			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 
 			//call the Assistant API
 			result = new SampleServices().SimplePost( "assessment", "publish", payload, apiKey );

@@ -60,7 +60,7 @@ namespace RA.Models.JsonV2
 
 
 		[JsonProperty( PropertyName = "ceterms:identifierValue" )]
-		public List<IdentifierValue> IdentifierValue { get; set; }
+		public List<IdentifierValue> Identifier { get; set; }
 
 		/// <summary>
 		/// The referenced resource is higher in some arbitrary hierarchy than this resource.

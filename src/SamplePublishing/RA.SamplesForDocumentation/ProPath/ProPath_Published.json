@@ -1,0 +1,261 @@
+{
+	"@context": "https://credreg.net/ctdl/schema/context/json",
+	"@id": "https://sandbox.credentialengineregistry.org/graph/ce-8c0497aa-c1bf-42ba-ade6-ca0234d0b35f",
+	"@graph": [
+		{
+			"@id": "https://sandbox.credentialengineregistry.org/resources/ce-8c0497aa-c1bf-42ba-ade6-ca0234d0b35f",
+			"@type": "ceterms:License",
+			"ceterms:name": {
+				"en-us": "160 Driving Academy"
+			},
+			"ceterms:description": {
+				"en-us": "Truck Driver Training School - CDL"
+			},
+			"ceterms:ctid": "ce-8c0497aa-c1bf-42ba-ade6-ca0234d0b35f",
+			"ceterms:subjectWebpage": "https://160drivingacademy.com",
+			"ceterms:holdersProfile": [
+				"https://sandbox.credentialengineregistry.org/resources/ce-80f07b38-0dc0-4886-8252-ed2cab8cedb6"
+			],
+			"ceterms:inLanguage": [
+				"en-us"
+			],
+			"ceterms:occupationType": [
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:codedNotation": "53-3032",
+					"ceterms:targetNodeName": {
+						"en-us": "Heavy and Tractor-Trailer Truck Drivers"
+					}
+				}
+			],
+			"ceterms:instructionalProgramType": [
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:codedNotation": "49-0205",
+					"ceterms:framework": "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55",
+					"ceterms:frameworkName": {
+						"en-us": "Classification of Instructional Programs"
+					},
+					"ceterms:targetNodeName": {
+						"en-us": "Truck and Bus Driver/Commercial Vehicle Operator and Instructor"
+					}
+				}
+			],
+			"ceterms:requires": [
+				{
+					"@type": "ceterms:ConditionProfile",
+					"ceterms:description": {
+						"en-us": "The 160 Driving Academy program is required for this credential"
+					},
+					"ceterms:targetLearningOpportunity": [
+						"https://sandbox.credentialengineregistry.org/resources/ce-f8885b28-134d-4188-8c86-063aadff14ea"
+					]
+				}
+			],
+			"ceterms:credentialStatusType": {
+				"@type": "ceterms:CredentialAlignmentObject",
+				"ceterms:framework": "https://credreg.net/ctdl/terms/CredentialStatus",
+				"ceterms:frameworkName": {
+					"en-us": "CredentialStatus"
+				},
+				"ceterms:targetNode": "credentialStat:Active",
+				"ceterms:targetNodeName": {
+					"en-US": "Active"
+				}
+			},
+			"ceterms:ownedBy": [
+				"_:2267eda4-50d6-46ab-b978-cf40cd9a18e4"
+			],
+			"ceterms:approvedBy": [
+				"_:ba9e5bbc-b0a9-414a-87c9-995102efbda5",
+				"_:78c74c43-a234-462c-8def-a1e3ca191c3f",
+				"_:417f5293-d581-431a-83ac-7c6c83c4b5f2"
+			],
+			"ceterms:offeredBy": [
+				"_:2267eda4-50d6-46ab-b978-cf40cd9a18e4"
+			]
+		},
+		{
+			"@type": "ceterms:HoldersProfile",
+			"@id": "https://sandbox.credentialengineregistry.org/resources/ce-80f07b38-0dc0-4886-8252-ed2cab8cedb6",
+			"ceterms:ctid": "ce-80f07b38-0dc0-4886-8252-ed2cab8cedb6",
+			"ceterms:dateEffective": "2018-01-15",
+			"ceterms:description": {
+				"en-us": "ProPath HoldersProfile"
+			},
+			"qdata:relevantDataSet": [
+				"https://sandbox.credentialengineregistry.org/resources/ce-d9f17339-7839-4b3c-8893-e624428d5dfb"
+			]
+		},
+		{
+			"@type": "qdata:DataSetProfile",
+			"@id": "https://sandbox.credentialengineregistry.org/resources/ce-d9f17339-7839-4b3c-8893-e624428d5dfb",
+			"ceterms:ctid": "ce-d9f17339-7839-4b3c-8893-e624428d5dfb",
+			"ceterms:description": {
+				"en-us": "ProPath DataSetProfile"
+			},
+			"ceterms:name": {
+				"en-us": "Dataset profile for holdersprofile"
+			},
+			"qdata:dataProvider": "_:2267eda4-50d6-46ab-b978-cf40cd9a18e4",
+			"qdata:dataSetTimePeriod": [
+				"_:f7d1499e-3a2d-46bb-848a-a78023c06618"
+			],
+			"qdata:relevantDataSetFor": "https://sandbox.credentialengineregistry.org/resources/ce-80f07b38-0dc0-4886-8252-ed2cab8cedb6"
+		},
+		{
+			"@type": "qdata:DataSetTimeFrame",
+			"@id": "_:f7d1499e-3a2d-46bb-848a-a78023c06618",
+			"qdata:dataAttributes": [
+				"_:a800742b-b624-427c-8e86-5c9100a13588",
+				"_:8751c3b2-ff46-4b28-8982-3b09ce02bfe7",
+				"_:8bd137d8-f8ed-478e-a591-8011305a9166"
+			],
+			"qdata:dataSourceCoverageType": [
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:framework": "https://credreg.net/qdata/terms/DataSourceCoverage",
+					"ceterms:frameworkName": {
+						"en-us": "DataSourceCoverage"
+					},
+					"ceterms:targetNode": "sourceCoverage:Global",
+					"ceterms:targetNodeName": {
+						"en-US": "Global"
+					}
+				}
+			],
+			"ceterms:description": {
+				"en-us": "ProPath DataSetTimeFrame"
+			},
+			"ceterms:startDate": "2017-01-11",
+			"ceterms:endDate": "2019-03-20"
+		},
+		{
+			"@type": "qdata:DataProfile",
+			"@id": "_:a800742b-b624-427c-8e86-5c9100a13588",
+			"ceterms:description": {
+				"en-us": "ProPath DataProfile"
+			},
+			"qdata:holdersInSet": [
+				{
+					"@type": "schema:QuantitativeValue",
+					"schema:value": 344.0,
+					"schema:description": {
+						"en-us": "Successful Completers"
+					}
+				}
+			],
+			"qdata:totalWIOACompleters": [
+				{
+					"@type": "schema:QuantitativeValue",
+					"schema:value": 415.0,
+					"schema:description": {
+						"en-us": "All Completers"
+					}
+				}
+			],
+			"qdata:totalWIOAParticipants": [
+				{
+					"@type": "schema:QuantitativeValue",
+					"schema:value": 416.0,
+					"schema:description": {
+						"en-us": "Total Enrollment (Including Currently Enrolled)"
+					}
+				}
+			],
+			"qdata:totalWIOAExiters": [
+				{
+					"@type": "schema:QuantitativeValue",
+					"schema:value": 329.0,
+					"schema:description": {
+						"en-us": "Completed Successfully and Exited WIOA"
+					}
+				}
+			]
+		},
+		{
+			"@type": "qdata:DataProfile",
+			"@id": "_:8751c3b2-ff46-4b28-8982-3b09ce02bfe7",
+			"ceterms:description": {
+				"en-us": "Training unrelated employment"
+			},
+			"qdata:earningsAmount": [
+				{
+					"@type": "schema:MonetaryAmount",
+					"schema:currency": "USD",
+					"schema:value": 15.91,
+					"schema:description": {
+						"en-us": "Average Wage"
+					}
+				}
+			],
+			"qdata:unrelatedEmployment": [
+				{
+					"@type": "schema:QuantitativeValue",
+					"schema:value": 22.0,
+					"schema:description": {
+						"en-us": "Hired for a Non-Training Related Job"
+					}
+				}
+			]
+		},
+		{
+			"@type": "qdata:DataProfile",
+			"@id": "_:8bd137d8-f8ed-478e-a591-8011305a9166",
+			"ceterms:description": {
+				"en-us": "Training related employment"
+			},
+			"qdata:earningsAmount": [
+				{
+					"@type": "schema:MonetaryAmount",
+					"schema:currency": "USD",
+					"schema:value": 19.35,
+					"schema:description": {
+						"en-us": "Average Wage"
+					}
+				}
+			],
+			"qdata:relatedEmployment": [
+				{
+					"@type": "schema:QuantitativeValue",
+					"schema:value": 195.0,
+					"schema:description": {
+						"en-us": "Hired for a Training-Related Job"
+					}
+				}
+			]
+		},
+		{
+			"@id": "_:2267eda4-50d6-46ab-b978-cf40cd9a18e4",
+			"@type": "ceterms:CredentialOrganization",
+			"ceterms:name": {
+				"en-us": "160 Driving Academy"
+			},
+			"ceterms:subjectWebpage": "https://160drivingacademy.com"
+		},
+		{
+			"@id": "_:ba9e5bbc-b0a9-414a-87c9-995102efbda5",
+			"@type": "ceterms:QACredentialOrganization",
+			"ceterms:name": {
+				"en-us": "Illinois Community College Board"
+			},
+			"ceterms:subjectWebpage": "https://www.iccb.org/iccb"
+		},
+		{
+			"@id": "_:78c74c43-a234-462c-8def-a1e3ca191c3f",
+			"@type": "ceterms:QACredentialOrganization",
+			"ceterms:name": {
+				"en-us": "Illinois Secretary of State"
+			},
+			"ceterms:subjectWebpage": "https://www.cyberdriveillinois.com"
+		},
+		{
+			"@id": "_:417f5293-d581-431a-83ac-7c6c83c4b5f2",
+			"@type": "ceterms:QACredentialOrganization",
+			"ceterms:name": {
+				"en-us": "Industry Standard: Illinois Secretary of State Licensed Facility"
+			},
+			"ceterms:subjectWebpage": "https://www.cyberdriveillinois.com/facilities/facilitylist.html"
+		}
+	]
+}

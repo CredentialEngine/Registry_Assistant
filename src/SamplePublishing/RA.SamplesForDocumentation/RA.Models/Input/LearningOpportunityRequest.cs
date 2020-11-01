@@ -24,7 +24,6 @@ namespace RA.Models.Input
 			DeliveryType = new List<string>();
 			LearningMethodType = new List<string>();
 			EstimatedCost = new List<CostProfile>();
-			Jurisdiction = new List<Jurisdiction>();
 			//Region = new List<GeoCoordinates>();
 
 			AudienceType = new List<string>();
@@ -142,7 +141,16 @@ namespace RA.Models.Input
 		#endregion
 
 		#region *** Recommended Properties ***
+		/// <summary>
+		/// Start Date of the Learning opportunity
+		/// </summary>
 		public string DateEffective { get; set; }
+
+		/// <summary>
+		/// End date of the learning opportunity if applicable
+		/// </summary>
+		public string ExpirationDate { get; set; }
+
 		//List of language codes. ex: en, es
 		public List<string> InLanguage { get; set; }
 		public List<DurationProfile> EstimatedDuration { get; set; }
@@ -165,6 +173,7 @@ namespace RA.Models.Input
 		public List<string> Subject { get; set; }
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 		#endregion
+		
 
 		/// <summary>
 		/// Type of official status of the TransferProfile; select from an enumeration of such types.
@@ -213,7 +222,12 @@ namespace RA.Models.Input
 		//external classes
 		public List<CostProfile> EstimatedCost { get; set; }
 
-		public List<Jurisdiction> Jurisdiction { get; set; }
+		/// <summary>
+		/// Jurisdiction Profile
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+		/// </summary>
+		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 		#region -- Quality Assurance BY --
 		public List<OrganizationReference> AccreditedBy { get; set; }
 		public List<OrganizationReference> ApprovedBy { get; set; }

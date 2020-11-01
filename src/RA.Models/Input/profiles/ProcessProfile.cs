@@ -15,7 +15,6 @@ namespace RA.Models.Input
         public ProcessProfile()
         {
             ExternalInputType = new List<string>();
-			Jurisdiction = new List<Jurisdiction>();
 			
 			TargetCredential = new List<EntityReference>();
 			TargetAssessment = new List<EntityReference>();
@@ -33,7 +32,12 @@ namespace RA.Models.Input
         /// </summary>
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
         public string SubjectWebpage { get; set; }
+		/// <summary>
+		/// Effective date of the content of this profile
+		/// ceterms:dateEffective
+		/// </summary>
 		public string DateEffective { get; set; }
+
 		//public List<CredentialAlignmentObject> ExternalInputType { get; set; }
 		public List<string> ExternalInputType { get; set; }
 		public string ProcessFrequency { get; set; }
@@ -57,10 +61,28 @@ namespace RA.Models.Input
         public List<EntityReference> TargetCompetencyFramework{ get; set; }
         public string VerificationMethodDescription { get; set; }
         public LanguageMap VerificationMethodDescription_Map { get; set; } = new LanguageMap();
-        public List<Jurisdiction> Jurisdiction { get; set; }
-        //public List<GeoCoordinates> Region { get; set; }
+		/// <summary>
+		/// Jurisdiction Profile
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+		/// </summary>
+		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
+		//public List<GeoCoordinates> Region { get; set; }
 
-    }
+		/// <summary>
+		/// Data Collection Method Type
+		/// Type of method by which the data was collected.
+		/// Concept
+		/// CER Target Scheme:	qdata:CollectionMethod
+		/// <see cref="https://credreg.net/qdata/terms/CollectionMethod#CollectionMethod"/>
+		/// collectionMethod:AdministrativeRecordMatching
+		/// collectionMethod:CredentialHolderReporting 
+		/// collectionMethod:CredentialHolderSurvey 
+		/// collectionMethod:SupplementalMethod 
+		/// collectionMethod:SupplementalSource
+		/// </summary>
+		public string DataCollectionMethodType { get; set; }
+	}
 }
 
 

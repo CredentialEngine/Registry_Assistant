@@ -21,6 +21,9 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "@id" )]
 		public string CtdlId { get; set; }
 
+		//List of URLs
+		[JsonProperty( PropertyName = "ceterms:sameAs" )]
+		public List<string> SameAs { get; set; } = new List<string>();
 
 		/// <summary>
 		/// The type of the referenced entity
@@ -45,6 +48,9 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:assesses" )]
 		public List<CredentialAlignmentObject> Assesses { get; set; }
 		//
+		[JsonProperty( PropertyName = "ceterms:assessmentMethodType" )]
+		public List<CredentialAlignmentObject> AssessmentMethodType { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )]
 		public LanguageMap AssessmentMethodDescription { get; set; }
 		//
@@ -59,12 +65,24 @@ namespace RA.Models.JsonV2
 		public List<QuantitativeValue> CreditValue { get; set; } = null;
 		[JsonProperty( PropertyName = "ceterms:estimatedDuration" )]
 		public List<DurationProfile> EstimatedDuration { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:identifierValue" )]
+		public List<IdentifierValue> Identifier { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:industryType" )]
+		public List<CredentialAlignmentObject> IndustryType { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
+		public LanguageMapList Keyword { get; set; }
 		//
 		[JsonProperty( PropertyName = "ceterms:learningMethodDescription" )]
 		public LanguageMap LearningMethodDescription { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:learningMethodType" )]
 		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
+		//frameworks
+		[JsonProperty( PropertyName = "ceterms:occupationType" )]
+		public List<CredentialAlignmentObject> OccupationType { get; set; } 
 		//
 		[JsonProperty( PropertyName = "ceterms:offeredBy" )]
 		public List<string> OfferedBy { get; set; }
@@ -72,9 +90,27 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
 		public List<string> OwnedBy { get; set; }
 		//
+		[JsonProperty( PropertyName = "ceterms:requires" )]
+		public List<ConditionProfile> Requires { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:corequisite" )]
+		public List<ConditionProfile> Corequisite { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:recommends" )]
+		public List<ConditionProfile> Recommends { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:entryCondition" )]
+		public List<ConditionProfile> EntryCondition { get; set; }
+		//
 		[JsonProperty( PropertyName = "ceterms:subject" )]
 		public List<CredentialAlignmentObject> Subject { get; set; }
-		//
+		//for learning opportunity only
+		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
+		public string DateEffective { get; set; }
+		//for learning opportunity only
+		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
+		public string ExpirationDate { get; set; }
+		//for learning opportunity only
 		[JsonProperty( PropertyName = "ceterms:teaches" )]
 		public List<CredentialAlignmentObject> Teaches { get; set; }
 

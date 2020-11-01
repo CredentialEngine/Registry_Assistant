@@ -24,8 +24,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap Description { get; set; }
+		//[JsonProperty( PropertyName = "ceterms:description" )]
+		//public LanguageMap Description { get; set; }
 
 		[JsonProperty( "ceterms:streetAddress" )]
 		public LanguageMap StreetAddress { get; set; }

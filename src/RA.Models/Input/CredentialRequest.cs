@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using RA.Models.Input.profiles.QData;
 
 namespace RA.Models.Input
 {
@@ -19,6 +20,24 @@ namespace RA.Models.Input
 		/// </summary>
 		public Credential Credential { get; set; }
 
+		/// <summary>
+		/// SANDBOX ONLY - NOT FOR VALID IN PRODUCTION
+		/// Entity describing aggregate credential holder earnings data.
+		/// </summary>
+		public List<EarningsProfile> Earnings { get; set; } = new List<EarningsProfile>();
+
+		/// <summary>
+		/// SANDBOX ONLY - NOT FOR VALID IN PRODUCTION
+		/// Entity that describes employment outcomes and related statistical information for a given credential.
+		/// </summary>
+		public List<EmploymentOutcomeProfile> EmploymentOutcome { get; set; } = new List<EmploymentOutcomeProfile>();
+
+
+		/// <summary>
+		/// SANDBOX ONLY - NOT FOR VALID IN PRODUCTION
+		/// Entity describing the count and related statistical information of holders of a given credential.
+		/// </summary>
+		public List<HoldersProfile> HoldersProfile { get; set; } = new List<HoldersProfile>();
 	}
 
 	/// <summary>
@@ -38,6 +57,9 @@ namespace RA.Models.Input
 		public List<Credential> Credentials { get; set; } = new List<Credential>();
 	}
 
+	/// <summary>
+	/// Credential input class
+	/// </summary>
 	public class Credential
 	{
 		public Credential()
@@ -85,9 +107,8 @@ namespace RA.Models.Input
 			IsRequiredFor = new List<Connections>();
 			InLanguage = new List<string>();
 			AvailableAt = new List<Place>();
-			//CodedNotation = new List<string>();
 			Renewal = new List<ConditionProfile>();
-			
+
 			AdministrationProcess = new List<ProcessProfile>();
 			DevelopmentProcess = new List<ProcessProfile>();
 			MaintenanceProcess = new List<ProcessProfile>();
@@ -160,13 +181,12 @@ namespace RA.Models.Input
 		public List<string> AlternateName { get; set; } = new List<string>();
 
 		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
-		/// <summary>
-		/// Image URL
-		/// </summary>
-		public string Image { get; set; }
 
 
 
+		public List<string> AudienceLevelType { get; set; }
+		public List<string> AudienceType { get; set; }
+		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
 		/// <summary>
 		/// AvailableOnlineAt URL
 		/// </summary>
@@ -200,6 +220,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CredentialId { get; set; }
 
+		/// <summary>
+		/// Effective date of the content of this profile
+		/// ceterms:dateEffective
+		/// </summary>
 		public string DateEffective { get; set; }
 
 
@@ -280,8 +304,30 @@ namespace RA.Models.Input
 
 		#endregion
 
+		#region Costs, duration, assistance
+		/// <summary>
+		/// List of CTIDs (recommended) or full URLs for a CostManifest published by the owning organization
+		/// </summary>
+		public List<string> CommonCosts { get; set; }
+		/// <summary>
+		/// The salary value or range associated with this credential.
+		/// </summary>
+		public MonetaryAmount BaseSalary { get; set; } = new MonetaryAmount();
 
+		/// <summary>
+		/// List of cost profiles for this credential
+		/// </summary>
+		public List<CostProfile> EstimatedCost { get; set; } = new List<CostProfile>();
 
+		/// <summary>
+		/// List of duration profiles expressing one or more duration profiles to attain this credential
+		/// </summary>
+		public List<DurationProfile> EstimatedDuration { get; set; } = new List<DurationProfile>();
+		/// <summary>
+		/// Entity that describes financial assistance that is offered or available.
+		/// </summary>
+		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
+		#endregion
 
 		/// <summary>
 		/// List of credentials that are part of this credential
@@ -289,17 +335,29 @@ namespace RA.Models.Input
 		public List<EntityReference> HasPart { get; set; }
 
 		/// <summary>
+		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// ceterms:identifier
+		/// </summary>
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
+		/// <summary>
+		/// Image URL
+		/// </summary>
+		public string Image { get; set; }
+		/// <summary>
 		/// List of credentials where this credential is a part of.
 		/// </summary>
 		public List<EntityReference> IsPartOf { get; set; }
 
+		public List<string> Keyword { get; set; }
+		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+		public List<string> LearningDeliveryType { get; set; } = new List<string>();
 		public string ProcessStandards { get; set; }
 		public string ProcessStandardsDescription { get; set; }
 		public LanguageMap ProcessStandardsDescription_Map { get; set; } = new LanguageMap();
 
-		public List<string> Keyword { get; set; }
-		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
-
+		//version related
 		public string LatestVersion { get; set; } //URL
 		public string PreviousVersion { get; set; } //URL
 		public string NextVersion { get; set; } //URL
@@ -308,12 +366,10 @@ namespace RA.Models.Input
 
 		public List<string> Subject { get; set; }
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
-		public List<string> AudienceLevelType { get; set; }
-		public List<string> AudienceType { get; set; }
-		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
-		public List<string> LearningDeliveryType { get; set; } = new List<string>();
 
-		//=============================================================================
+
+		#region Occupations, Industries, and instructional programs
+		//=====================================================================
 		//List of occupations from a published framework, that is with a web URL
 		/// <summary>
 		/// OccupationType
@@ -363,6 +419,12 @@ namespace RA.Models.Input
 		/// Type of instructional program; select from an existing enumeration of such types.
 		/// </summary>
 		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
+
+		/// <summary>
+		/// AlternativeInstructionalProgramType
+		/// Programs that are not found in a formal framework can be still added using AlternativeInstructionalProgramType. 
+		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
+		/// </summary>
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
 
 		/// <summary>
@@ -370,7 +432,7 @@ namespace RA.Models.Input
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
-
+		#endregion
 		//
 		//Navy
 		/// <summary>
@@ -399,31 +461,23 @@ namespace RA.Models.Input
 		public List<string> HasETPLResource { get; set; } = new List<string>();
 		#endregion
 		//external classes
-		/// <summary>
-		/// List of CTIDs or full URLs for a CostManifest published by the owning organization
-		/// </summary>
-		public List<string> CommonCosts { get; set; }
-		/// <summary>
-		/// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
-		/// </summary>
-		public List<string> CommonConditions { get; set; }
-		/// <summary>
-		/// List of cost profiles for this credential
-		/// </summary>
-		public List<CostProfile> EstimatedCost { get; set; } = new List<CostProfile>();
+	
 
 		/// <summary>
-		/// List of duration profiles expressing one or more duration profiles to attain this credential
+		/// Entity describing aggregate credential holder earnings data.
+		/// List of CTIDs for a earnings profile in Request.EarningsProfile
 		/// </summary>
-		public List<DurationProfile> EstimatedDuration { get; set; } = new List<DurationProfile>();
+		//public List<string> EarningsProfile { get; set; } = new List<string>();
 		/// <summary>
-		/// Entity that describes financial assistance that is offered or available.
+		/// Entity that describes employment outcomes and related statistical information for a given credential.
 		/// </summary>
-		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
-
+		//public List<string> EmploymentOutcomeList { get; set; } = new List<string>();
+		
 
 		/// <summary>
-		/// Geographic or political region in which the credential is formally applicable or an organization has authority to act.
+		/// Jurisdiction Profile
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
 		/// </summary>
 		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 
@@ -449,6 +503,10 @@ namespace RA.Models.Input
 
 
 		#region -- Condition Profiles --
+		/// <summary>
+		/// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
+		/// </summary>
+		public List<string> CommonConditions { get; set; }
 		public List<ConditionProfile> Requires { get; set; }
 		public List<ConditionProfile> Recommends { get; set; }
 		public List<ConditionProfile> Corequisite { get; set; }
@@ -476,28 +534,16 @@ namespace RA.Models.Input
 		#endregion
 
 
+		#region Alignments
+		/// <summary>
+		/// Item that covers all of the relevant concepts in the item being described as well as additional relevant concepts.
+		/// ceterms:broadAlignment
+		/// List of CTIDs. The referenced object must exist in the registry
+		/// </summary>
+		public List<string> BroadAlignment { get; set; } = new List<string>();
+		#endregion
 
 	}
 
-	/// <summary>
-	/// Revocation Profile
-	/// The conditions and methods by which a credential can be removed from a holder.
-	/// </summary>
-	public class RevocationProfile
-	{
-		public RevocationProfile()
-		{
-			Jurisdiction = new List<Input.Jurisdiction>();
-			//RevocationCriteria = new List<string>();
-		}
-		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
-		//public List<string> CredentialProfiled { get; set; }
-		public string DateEffective { get; set; }
-		public List<Jurisdiction> Jurisdiction { get; set; }
-		public string RevocationCriteria { get; set; }
-		public string RevocationCriteriaDescription { get; set; }
-		public LanguageMap RevocationCriteriaDescription_Map { get; set; } = new LanguageMap();
 
-	}
 }

@@ -73,7 +73,6 @@ namespace RA.Models.Input
 			//
 			Department = new List<OrganizationReference>();
 			SubOrganization = new List<OrganizationReference>();
-			AlternativeIdentifier = new List<IdentifierValue>();
 
 		}
 
@@ -197,13 +196,20 @@ namespace RA.Models.Input
 		#endregion
 		#region *** Recommended Properties ***
 
+		/// <summary>
+		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// ceterms:identifier
+		/// </summary>
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
-		public List<string> Keyword { get; set; }
-		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// Url for Organization image
 		/// </summary>
 		public string Image { get; set; }
+
+		public List<string> Keyword { get; set; }
+		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Social media access point for an agent or an agent's contact point.
@@ -219,11 +225,6 @@ namespace RA.Models.Input
 		public List<string> ServiceType { get; set; }
 		#endregion
 
-		/// <summary>
-		/// Alternative Identifier
-		/// Alternative, publicly available and globally unique identifier for an organization issued by an authoritative entity.
-		/// </summary>
-		public List<IdentifierValue> AlternativeIdentifier { get; set; }
 
 		/// <summary>
 		/// Alias for the organization including acronyms, alpha-numeric notations, and other forms of name abbreviations in common use

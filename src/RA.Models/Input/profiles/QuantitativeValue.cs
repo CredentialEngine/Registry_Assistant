@@ -34,6 +34,13 @@ namespace RA.Models.Input
 		/// Minimum value for this purpose.
 		/// </summary>
 		public decimal MaxValue { get; set; }
+
+		/// <summary>
+		/// A percentage for this purpose. 
+		/// Do not use if providing any of value, minimum and maximum value.
+		/// qdata:percentage
+		/// </summary>
+		public decimal Percentage { get; set; }
 		/// <summary>
 		/// Optional description of the value, using either a string value or as a language map
 		/// </summary>

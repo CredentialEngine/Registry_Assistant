@@ -24,6 +24,19 @@ namespace RA.SamplePublishingProject
 		}
 
 		[TestMethod]
+		public void PublishProPathCredential()
+		{
+			//
+			//new ProPathExamples().CredentialWithHoldersProfile( "format" );
+			new ProPathExamples().CredentialWithHoldersProfile( "publish" );
+		}
+		[TestMethod]
+		public void PublishProPathLearningOpportunity()
+		{
+			//
+			new ProPathExamples().RelatedLearningOpportunity( "publish" );
+		}
+		[TestMethod]
 		public void DoAPublishRequestFromExternalData()
 		{
 			var input = new SamplesForDocumentation.SampleModels.Credential() 

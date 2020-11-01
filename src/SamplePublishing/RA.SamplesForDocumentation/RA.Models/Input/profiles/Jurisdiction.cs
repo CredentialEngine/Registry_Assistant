@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 using RAPlace = RA.Models.Input.Place;
 namespace RA.Models.Input
 {
+	/// <summary>
+	/// Jurisdiction Profile
+	/// Geo-political information about applicable geographic areas and their exceptions.
+	/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+	/// </summary>
 	public class Jurisdiction
 	{
 		public Jurisdiction()
@@ -41,36 +46,36 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Organization makes an assertion for specific jurisdiction(s). 
 	/// </summary>
-	[Obsolete]
-	public class JurisdictionAssertedInProfile
-	{
-		public JurisdictionAssertedInProfile()
-		{
-			AssertedBy = new OrganizationReference();
-			Jurisdiction = new Jurisdiction();
-		}
-		public Jurisdiction Jurisdiction { get; set; }
-		/// <summary>
-		/// Organization that asserts this condition
-		/// Required
-		/// </summary>
-		public OrganizationReference AssertedBy { get; set; }
+	//[Obsolete]
+	//public class JurisdictionAssertedInProfile
+	//{
+	//	public JurisdictionAssertedInProfile()
+	//	{
+	//		AssertedBy = new OrganizationReference();
+	//		Jurisdiction = new Jurisdiction();
+	//	}
+	//	public Jurisdiction Jurisdiction { get; set; }
+	//	/// <summary>
+	//	/// Organization that asserts this condition
+	//	/// Required
+	//	/// </summary>
+	//	public OrganizationReference AssertedBy { get; set; }
 
-		//assertion types
-		//at least one assertion must be selected
+	//	//assertion types
+	//	//at least one assertion must be selected
 
-		/// <summary>
-		/// Organization asserts the related resource is accredited in the referenced jurisdiction
-		/// </summary>
-		public bool AssertsAccreditedIn { get; set; }
-		public bool AssertsApprovedIn { get; set; }
-		public bool AssertsOfferedIn { get; set; }
-		public bool AssertsRecognizedIn { get; set; }
-		public bool AssertsRegulatedIn { get; set; }
-		public bool AssertsRenewedIn { get; set; }
-		public bool AssertsRevokedIn { get; set; }
+	//	/// <summary>
+	//	/// Organization asserts the related resource is accredited in the referenced jurisdiction
+	//	/// </summary>
+	//	public bool AssertsAccreditedIn { get; set; }
+	//	public bool AssertsApprovedIn { get; set; }
+	//	public bool AssertsOfferedIn { get; set; }
+	//	public bool AssertsRecognizedIn { get; set; }
+	//	public bool AssertsRegulatedIn { get; set; }
+	//	public bool AssertsRenewedIn { get; set; }
+	//	public bool AssertsRevokedIn { get; set; }
 
-	}
+	//}
 
 	public class GeoCoordinates
 	{

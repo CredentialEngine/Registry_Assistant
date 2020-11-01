@@ -48,16 +48,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -66,9 +59,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusObj\ActivityLog.cs" />
+    <Compile Include="BusObj\ConceptScheme.cs" />
+    <Compile Include="BusObj\TransferOwner.cs" />
     <Compile Include="ConceptSchemes.cs" />
     <Compile Include="Input\AssessmentRequest.cs" />
     <Compile Include="Input\BaseRequest.cs" />
+    <Compile Include="Input\BaseRequestClass.cs" />
     <Compile Include="Input\CompetencyFrameworkRequest.cs" />
     <Compile Include="Input\ConceptSchemeRequest.cs" />
     <Compile Include="Input\ConditionManifestRequest.cs" />
@@ -87,17 +84,28 @@
     <Compile Include="Input\profiles\CostProfile.cs" />
     <Compile Include="Input\profiles\CredentialAlignmentObject.cs" />
     <Compile Include="Input\profiles\DurationProfile.cs" />
+    <Compile Include="Input\profiles\EarningsProfile.cs" />
+    <Compile Include="Input\profiles\EmploymentOutcomeProfile.cs" />
     <Compile Include="Input\profiles\EntityReference.cs" />
     <Compile Include="Input\profiles\FinancialAssistanceProfile.cs" />
     <Compile Include="Input\profiles\FrameworkItem.cs" />
     <Compile Include="Input\profiles\HelperClasses.cs" />
+    <Compile Include="Input\profiles\HoldersProfile.cs" />
     <Compile Include="Input\profiles\Jurisdiction.cs" />
     <Compile Include="Input\profiles\LanguageMap.cs" />
+    <Compile Include="Input\profiles\MonetaryAmount.cs" />
+    <Compile Include="Input\profiles\Occupation.cs" />
     <Compile Include="Input\profiles\OrganizationReference.cs" />
     <Compile Include="Input\profiles\PathwayComponents.cs" />
     <Compile Include="Input\profiles\Place.cs" />
     <Compile Include="Input\profiles\ProcessProfile.cs" />
+    <Compile Include="Input\profiles\QData\DataProfile.cs" />
+    <Compile Include="Input\profiles\QData\DataSetProfile.cs" />
+    <Compile Include="Input\profiles\QData\DataSetTimeFrame.cs" />
+    <Compile Include="Input\profiles\QData\SubjectProfile.cs" />
     <Compile Include="Input\profiles\QuantitativeValue.cs" />
+    <Compile Include="Input\profiles\RevocationProfile.cs" />
+    <Compile Include="Input\profiles\ValueProfile.cs" />
     <Compile Include="Input\profiles\VerificationServiceProfile.cs" />
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />
     <Compile Include="Input\TransferValueProfileRequest.cs" />
@@ -114,21 +122,30 @@
     <Compile Include="JsonV2\Credential.cs" />
     <Compile Include="JsonV2\CredentialAlignmentObject.cs" />
     <Compile Include="JsonV2\DurationProfile.cs" />
+    <Compile Include="JsonV2\EarningsProfile.cs" />
+    <Compile Include="JsonV2\EmploymentOutcomeProfile.cs" />
     <Compile Include="JsonV2\EntityBase.cs" />
     <Compile Include="JsonV2\FinancialAssistanceProfile.cs" />
     <Compile Include="JsonV2\HelpersClass.cs" />
+    <Compile Include="JsonV2\HoldersProfile.cs" />
     <Compile Include="JsonV2\JsonLDDocument.cs" />
     <Compile Include="JsonV2\JurisdictionProfile.cs" />
     <Compile Include="JsonV2\LanguageMap.cs" />
     <Compile Include="JsonV2\LearningOpportunityProfile.cs" />
+    <Compile Include="JsonV2\MonetaryAmount.cs" />
     <Compile Include="JsonV2\OrganizationBase.cs" />
     <Compile Include="JsonV2\Pathway.cs" />
     <Compile Include="JsonV2\PathwayComponent.cs" />
     <Compile Include="JsonV2\PathwaySet.cs" />
     <Compile Include="JsonV2\Place.cs" />
     <Compile Include="JsonV2\ProcessProfile.cs" />
+    <Compile Include="JsonV2\QData\DataProfile.cs" />
+    <Compile Include="JsonV2\QData\DataSetProfile.cs" />
+    <Compile Include="JsonV2\QData\DataSetTimeFrame.cs" />
+    <Compile Include="JsonV2\QData\SubjectProfile.cs" />
     <Compile Include="JsonV2\QuantitativeValue.cs" />
     <Compile Include="JsonV2\TransferValueProfile.cs" />
+    <Compile Include="JsonV2\ValueProfile.cs" />
     <Compile Include="JsonV2\VerificationServiceProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryAssistantResponse.cs" />
@@ -138,16 +155,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\XmlDocument.xml">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client">
+      <Version>5.2.3</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>9.0.1</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

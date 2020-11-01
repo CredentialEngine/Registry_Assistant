@@ -113,16 +113,19 @@ namespace RA.Models.Input
 
 		#endregion
 
-		#region *** Required if available Properties ***
+		#region *** Recommended Benchmark ***
 		public List<CredentialAlignmentObject> Assesses { get; set; }
 
+		/// <summary>
+		/// Type of method used to conduct an assessment; select from an existing enumeration of such types.
+		/// </summary>
 		public List<string> AssessmentMethodType { get; set; }
 		public List<string> DeliveryType { get; set; }
 		public string DeliveryTypeDescription { get; set; }
 		public LanguageMap DeliveryTypeDescription_Map { get; set; } = new LanguageMap();
 		#endregion
 
-		#region *** Recommended Properties ***
+		//=========== optional ================================
 
 		/// <summary>
 		/// Assessment Method Description 
@@ -146,7 +149,16 @@ namespace RA.Models.Input
 		public LanguageMap LearningMethodDescription_Map { get; set; } = new LanguageMap();
 
 
+		/// <summary>
+		/// Effective date of the content of this profile
+		/// ceterms:dateEffective
+		/// </summary>
 		public string DateEffective { get; set; }
+
+		/// <summary>
+		/// Expiration date of the assessment if applicable
+		/// </summary>
+		public string ExpirationDate { get; set; }
 
 		//List of language codes. ex: en, es
 		public List<string> InLanguage { get; set; }
@@ -159,17 +171,10 @@ namespace RA.Models.Input
 		//system will check for this first, and then the old properties
 		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
 		//
-		//public string CreditHourType { get; set; }
-		//public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
-
-		///// <summary>
-		///// Provide a valid concept from the CreditUnitType concept scheme
-		///// https://credreg.net/ctdl/terms/creditUnitType
-		///// </summary>
-		//public string CreditUnitType { get; set; }
-		//public decimal CreditHourValue { get; set; }
-		//public decimal CreditUnitValue { get; set; }
-		//public decimal CreditUnitMaxValue { get; set; }
+		/// <summary>
+		/// Detailed description of credit unit. 
+		/// Recommendation is to use CreditValue rather than this property.
+		/// </summary>
 		public string CreditUnitTypeDescription { get; set; }
 		public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
 
@@ -181,7 +186,7 @@ namespace RA.Models.Input
 
 		public string AssessmentExample { get; set; }
 		public List<string> AssessmentUseType { get; set; }
-		#endregion
+	
 
 		/// <summary>
 		/// Type of official status of the TransferProfile; select from an enumeration of such types.
@@ -205,8 +210,21 @@ namespace RA.Models.Input
 		public string ProcessStandardsDescription { get; set; }
 		public LanguageMap ProcessStandardsDescription_Map { get; set; } = new LanguageMap();
 
-		//
+		#region Occupations, Industries, and instructional programs
+		//=====================================================================
+		//List of occupations from a published framework, that is with a web URL
+		/// <summary>
+		/// OccupationType
+		/// Type of occupation; select from an existing enumeration of such types.
+		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
+		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
+		/// </summary>
 		public List<FrameworkItem> OccupationType { get; set; }
+		/// <summary>
+		/// AlternativeOccupationType
+		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
+		/// Any occupations added using this property will be added to or appended to the OccupationType output.
+		/// </summary>
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
 		//public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
@@ -216,7 +234,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> ONET_Codes { get; set; } = new List<string>();
 
+		//=============================================================================
+		/// <summary>
+		/// IndustryType
+		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
+		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
+		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
+		/// </summary>
 		public List<FrameworkItem> IndustryType { get; set; }
+		/// <summary>
+		/// AlternativeIndustryType
+		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
+		/// Any industries added using this property will be added to or appended to the IndustryType output.
+		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
 		//public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
@@ -226,21 +256,37 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
 
+		//=============================================================================
+		/// <summary>
+		/// InstructionalProgramType
+		/// Type of instructional program; select from an existing enumeration of such types.
+		/// </summary>
 		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
+
+		/// <summary>
+		/// AlternativeInstructionalProgramType
+		/// Programs that are not found in a formal framework can be still added using AlternativeInstructionalProgramType. 
+		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
+		/// </summary>
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
-		//public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
+
 		/// <summary>
 		/// List of valid Classification of Instructional Program codes. See:
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
-
+		#endregion
 		//
 		public bool? IsProctored { get; set; }
 		public bool? HasGroupEvaluation { get; set; }
 		public bool? HasGroupParticipation { get; set; }
 
-
+		/// <summary>
+		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// ceterms:identifier
+		/// </summary>
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 		//external classes
 		public List<CostProfile> EstimatedCost { get; set; }
 

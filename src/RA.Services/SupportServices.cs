@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
 using Newtonsoft.Json;
 using CER = RA.Services.RegistryServices;
-//using Factories;
+
 using RA.Models;
+using RA.Models.BusObj;
 using Utilities;
-using System.Net.Http;
 using System.Web;
 using System.IO;
 
@@ -21,7 +23,7 @@ namespace RA.Services
 		public static string thisClassName = "SupportServices";
 		public static bool forcingUseOfCEKeys = UtilityManager.GetAppKeyValue( "forcingUseOfCEKeys", false );
 
-		public static string credentialRegistryBaseUrl = GetAppKeyValue( "credentialRegistryBaseUrl" );
+		public static string credentialRegistryBaseUrl = UtilityManager.GetAppKeyValue( "credentialRegistryBaseUrl" );
 		//
 
 		public SupportServices(string entityName, string community)
@@ -36,59 +38,264 @@ namespace RA.Services
 		//****TODO ****
 		//change to an API call
 		//Main concern is losing the payload etc
-		public void CallAddHistory(string dataOwnerCTID, string payloadJSON, string publishMethodURI, string publishingEntityType, string ctdlType, string entityCtid, string payloadInput, string crEnvelopeId, ref string statusMessage, string publisherIdentifier)
+	
+		public void AddHistory(string dataOwnerCTID, string payloadJSON, string publishMethodURI, string publishingEntityType, string ctdlType, string entityCtid, string payloadInput, string crEnvelopeId, ref string statusMessage, string publisherIdentifier, bool wasChanged)
 		{
 			//
 			string environment = UtilityManager.GetAppKeyValue( "environment", "unknown" );
 			var envFilter = string.IsNullOrWhiteSpace( Community ) ? environment : environment + "." + Community;
-			var history = new RegistryPublishingHistory()
-			{
-				DataOwnerCTID = dataOwnerCTID,
-				PublishIdentifier = publisherIdentifier,
-				PublishMethodURI = publishMethodURI,
-				PublishingEntityType = publishingEntityType,
-				CtdlType = ctdlType,
-				EntityCtid = entityCtid,
-				EntityName = EntityName,
-				PublishInput = payloadInput,
-				PublishPayload = payloadJSON,
-				Environment = envFilter,
-				EnvelopeId = crEnvelopeId
-			};
-
-			var password = UtilityManager.GetAppKeyValue( "CEAccountSystemStaticPassword", "" );
-			var url = UtilityManager.GetAppKeyValue( "publisherAddHistoryUrl" );
 			try
 			{
-				var content = new StringContent( JsonConvert.SerializeObject( history ), System.Text.Encoding.UTF8, "application/json" );
-				var rawData = new HttpClient().PostAsync( url, content ).Result.Content.ReadAsStringAsync().Result;
+				//hidden
+			}
+			catch ( Exception ex )
+			{
+				//eat any errors
+				LoggingHelper.DoTrace( 2, "SupportServices.AddHistory() " + ex.Message );
+			}
+		} //
 
-				if ( rawData == null || rawData.IndexOf( "he resource cannot be found" ) > 0
-				|| rawData.IndexOf( "\"PublishingApiKey\"" ) == -1 )
+
+		/// <summary>
+		/// Validate a publishing related transaction
+		/// </summary>
+		/// <param name="publisherApikey"></param>
+		/// <param name="dataOwnerCTID"></param>
+		/// <param name="publishMethodURI"></param>
+		/// <param name="messages"></param>
+		/// <returns></returns>
+		public static PublishRequestValidationResponse ValidateRegistryRequest(string publisherApikey, string dataOwnerCTID, string publishMethodURI, ref List<string> messages)
+		{
+			//, bool allowCaching = true
+			PublishRequestValidationResponse response = new PublishRequestValidationResponse();
+			//not sure if can cache, give some thought though
+			string key = "validationKey_" + publisherApikey + "_" + dataOwnerCTID + "_" + publishMethodURI;
+			int cacheMinutes = 1440;
+			DateTime maxTime = DateTime.Now.AddMinutes( cacheMinutes * -1 );
+			string environment = UtilityManager.GetAppKeyValue( "environment" );
+
+			//no point in caching deletes/purges/transfers
+			if ( HttpRuntime.Cache[ key ] != null && cacheMinutes > 0  )
+			{
+				var cache = ( ValidateRequestCache ) HttpRuntime.Cache[ key ];
+				try
 				{
-					statusMessage = "Error: something failed";
+					if( cache.lastUpdated > maxTime )
+					{
+						response = cache.Response;
+						LoggingHelper.DoTrace( 6, string.Format( "===ValidatePublishingRequest === Using cached version for: {0}", key ) );
 
+						return response;
+					}
+				}
+				catch( Exception ex )
+				{
+					LoggingHelper.DoTrace( 6, thisClassName + ".ValidatePublishingRequest === exception " + ex.Message );
+				}
+			}
 
-					LoggingHelper.DoTrace( 4, string.Format( "SupportServices.CallAddHistory. Failed. Org Ctid: {0}, publishingEntityType: {1}, Document Ctid: {2}", dataOwnerCTID, publishingEntityType, entityCtid ) );
-					return;
+			//get Org
+			var password = UtilityManager.GetAppKeyValue( "CEAccountSystemStaticPassword", "" );
+			var url = UtilityManager.GetAppKeyValue( "ceAccountValidateRegistryRequest" );
+			//var accountsApiUrl = string.Format( UtilityManager.GetAppKeyValue( "ceAccountValidateRegistryRequest" ), dataOwnerCTID, publishMethodURI, password );
+			//	https://localhost:44384/registry/validateRequest?dataOwnerCTID={0}&amp;requestMethod={1}&amp;password={2}
+			if ( environment == "development" )
+			{
+				//https://localhost:44384/
+				//url = "https://localhost:44384/registry/validateRequest?dataOwnerCTID={0}&amp;requestMethod={1}&amp;password={2}";
+			}
+			var accountsApiUrl = string.Format(url, dataOwnerCTID, publishMethodURI, password );
+			try
+			{
+				using( var client = new HttpClient() )
+				{
+					client.DefaultRequestHeaders.
+						Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+					client.DefaultRequestHeaders.Add( "Authorization", "ApiToken " + publisherApikey );
+
+					if ( environment == "development" )
+					{
+						client.Timeout = new TimeSpan( 0, 30, 0 );
+					}
+
+					var rawData = client.PostAsync( accountsApiUrl, null ).Result.Content.ReadAsStringAsync().Result;
+					if( rawData == null || rawData.IndexOf( "The resource cannot be found" ) > 0 )
+					{
+						messages.Add( "Error: unexpected response in ValidatePublishingRequest. The endpoint returned null." );
+						return response;
+					}
+					response = new JavaScriptSerializer().Deserialize<PublishRequestValidationResponse>( rawData );
+
+					if( response != null && response.Successful )
+					{
+						//note this method doesn't determine validity, just returns the results. The caller will make that detemination
+						if( response.PublisherIsTrustedPartner )
+						{
+							LoggingHelper.DoTrace( 5, "SupportServices.ValidatePublishingRequest() Found a trusted partner: " + response.PublishingOrganization );
+						}
+						//add to cache
+						if( key.Length > 0 && cacheMinutes > 0 )
+						{
+							var newCache = new ValidateRequestCache()
+							{
+								Response = response,
+								lastUpdated = DateTime.Now
+							};
+							if( HttpContext.Current != null )
+							{
+								if( HttpContext.Current.Cache[ key ] != null )
+								{
+									HttpRuntime.Cache.Remove( key );
+									HttpRuntime.Cache.Insert( key, newCache, null, DateTime.Now.AddMinutes( cacheMinutes ), TimeSpan.Zero );
+
+									LoggingHelper.DoTrace( 5, string.Format( thisClassName + ".ValidatePublishingRequest $$$ Updating cached version of {0}", key ) );
+
+								}
+								else
+								{
+									LoggingHelper.DoTrace( 6, string.Format( thisClassName + ".ValidatePublishingRequest ****** Inserting new cached version of Organization CTID: {0}, keypart: {1}", key, publisherApikey.Length > 20 ? publisherApikey.Substring( 0, 9 ) : "no apikey found" ) );
+
+									System.Web.HttpRuntime.Cache.Insert( key, newCache, null, DateTime.Now.AddMinutes( cacheMinutes ), TimeSpan.Zero );
+								}
+							}
+						}
+						//
+					}
+					else
+					{
+						if (response.Messages != null && response.Messages.Count() > 0)
+						{
+							messages.AddRange( response.Messages );
+						} else
+						{
+							messages.Add( "Error: unable to validate the publishing transaction for the provided publisher and data owner." );
+							if ( !string.IsNullOrWhiteSpace( rawData ) )
+								messages.Add( rawData );
+						}
+						
+						LoggingHelper.DoTrace( 5, string.Format( thisClassName + ".ValidatePublishingRequest FAILED. request key: {0}", key ) );
+						return response;
+					}
+				}
+			}
+			catch( Exception ex )
+			{
+				LoggingHelper.LogError( ex, thisClassName + ".ValidatePublishingRequest: " + key );
+				string message = LoggingHelper.FormatExceptions( ex );
+				messages.Add( message );
+				return response;
+			}
+
+			return response;
+		}  //
+
+		public static PublishRequestValidationResponse ValidateDeleteRequest(string publisherApikey, string dataOwnerCTID, string publishMethodURI, ref List<string> messages)
+		{
+			//
+			PublishRequestValidationResponse response = new PublishRequestValidationResponse();
+			//not sure if can cache, give some thought though
+			string key = "validationKey_" + publisherApikey + "_" + dataOwnerCTID;
+			int cacheMinutes = 1440;
+			DateTime maxTime = DateTime.Now.AddMinutes( cacheMinutes * -1 );
+			if ( HttpRuntime.Cache[ key ] != null && cacheMinutes > 0 )
+			{
+				var cache = ( ValidateRequestCache )HttpRuntime.Cache[ key ];
+				try
+				{
+					if ( cache.lastUpdated > maxTime )
+					{
+						response = cache.Response;
+						LoggingHelper.DoTrace( 6, string.Format( "===ValidatePublishingRequest === Using cached version for: {0}", key ) );
+
+						return response;
+					}
+				}
+				catch ( Exception ex )
+				{
+					LoggingHelper.DoTrace( 6, thisClassName + ".ValidatePublishingRequest === exception " + ex.Message );
+				}
+			}
+
+			//get Org
+			var password = UtilityManager.GetAppKeyValue( "CEAccountSystemStaticPassword", "" );
+			var accountsApiUrl = UtilityManager.GetAppKeyValue( "ceAccountValidateRegistryRequest" ) + string.Format( "?dataOwnerCTID={0}&publishMethodURI={1}&password={2}", dataOwnerCTID, publishMethodURI, password );
+			try
+			{
+				using ( var client = new HttpClient() )
+				{
+					client.DefaultRequestHeaders.
+						Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+					client.DefaultRequestHeaders.Add( "Authorization", "ApiToken " + publisherApikey );
+
+					var rawData = client.PostAsync( accountsApiUrl, null ).Result.Content.ReadAsStringAsync().Result;
+					if ( rawData == null || rawData.IndexOf( "The resource cannot be found" ) > 0 )
+					{
+						messages.Add( "Error: unexpected response in ValidatePublishingRequest. The endpoint returned null." );
+						return response;
+					}
+					response = new JavaScriptSerializer().Deserialize<PublishRequestValidationResponse>( rawData );
+
+					if ( response != null && response.Successful )
+					{
+						//note this method doesn't determine validity, just returns the results. The caller will make that detemination
+						if ( response.PublisherIsTrustedPartner )
+						{
+							LoggingHelper.DoTrace( 5, "SupportServices.ValidatePublishingRequest() Found a trusted partner: " + response.PublishingOrganization );
+						}
+						//add to cache
+						if ( key.Length > 0 && cacheMinutes > 0 )
+						{
+							var newCache = new ValidateRequestCache()
+							{
+								Response = response,
+								lastUpdated = DateTime.Now
+							};
+							if ( HttpContext.Current != null )
+							{
+								if ( HttpContext.Current.Cache[ key ] != null )
+								{
+									HttpRuntime.Cache.Remove( key );
+									HttpRuntime.Cache.Insert( key, newCache, null, DateTime.Now.AddMinutes( cacheMinutes ), TimeSpan.Zero );
+
+									LoggingHelper.DoTrace( 5, string.Format( thisClassName + ".ValidatePublishingRequest $$$ Updating cached version of {0}", key ) );
+
+								}
+								else
+								{
+									LoggingHelper.DoTrace( 6, string.Format( thisClassName + ".ValidatePublishingRequest ****** Inserting new cached version of Organization CTID: {0}, keypart: {1}", key, publisherApikey.Length > 20 ? publisherApikey.Substring( 0, 9 ) : "no apikey found" ) );
+
+									System.Web.HttpRuntime.Cache.Insert( key, newCache, null, DateTime.Now.AddMinutes( cacheMinutes ), TimeSpan.Zero );
+								}
+							}
+						}
+						//
+					}
+					else
+					{
+						if ( response.Messages != null && response.Messages.Count() > 0 )
+						{
+							messages.AddRange( response.Messages );
+						}
+						else
+						{
+							messages.Add( "Error: unable to validate the publishing transaction for the provided publisher and data owner." );
+						}
+
+						LoggingHelper.DoTrace( 5, string.Format( thisClassName + ".ValidatePublishingRequest FAILED. request key: {0}", key ) );
+						return response;
+					}
 				}
 			}
 			catch ( Exception ex )
 			{
-				LoggingHelper.LogError( ex, string.Format( "SupportServices.CallAddHistory. Failed. Org Ctid: {0}, publishingEntityType: {1}, Document Ctid: {2}", dataOwnerCTID, publishingEntityType, entityCtid ) );
+				LoggingHelper.LogError( ex, thisClassName + ".ValidatePublishingRequest: " + key );
 				string message = LoggingHelper.FormatExceptions( ex );
-				LoggingHelper.DoTrace( 4, string.Format( "SupportServices.CallAddHistory. Failed. Org Ctid: {0}, publishingEntityType: {1}, Document Ctid: {2}", dataOwnerCTID, publishingEntityType, entityCtid ) );
-				statusMessage = message;
-				return;
+				messages.Add( message );
+				return response;
 			}
-		}   //
 
-		public void AddHistory(string dataOwnerCTID, string payloadJSON, string publishMethodURI, string publishingEntityType, string ctdlType, string entityCtid, string payloadInput, string crEnvelopeId, ref string statusMessage, string publisherIdentifier, bool wasChanged)
-		{
-			//
-	
-		} //
-
+			return response;
+		}  //
 		public static bool GetPublishingOrgByApiKey(string apiKey, ref string publisherCTID, ref List<string> messages)
 		{
 			bool isTrustedPartner = false;
@@ -96,10 +303,106 @@ namespace RA.Services
 			return GetPublishingOrgByApiKey( apiKey, ref publisherCTID, ref messages, ref isTrustedPartner ) ;
 		} //
 
-		public static bool GetPublishingOrgByApiKey(string apiKey, ref string ctid, ref List<string> messages, ref bool isTrustedPartner)
+		public static bool GetPublishingOrgByApiKey(string apiKey, ref string ctid, ref List<string> messages, ref bool isTrustedPartner, bool usingCache = true)
 		{
+			//
 			bool isValid = true;
-			
+			string key = "organizationApikey_" + apiKey;
+			int cacheMinutes = 1440;
+			DateTime maxTime = DateTime.Now.AddMinutes( cacheMinutes * -1 );
+			if ( HttpRuntime.Cache[ key ] != null && cacheMinutes > 0 && usingCache )
+			{
+				//may only need to cache ctid?
+				//===>> now need to also store if a trustedPartner! May want to skip when called from org methods
+				//may want the org - not to check for third party, or trusted partner
+				//var cache2 = ( OrgCache )HttpRuntime.Cache[ key ];
+				var cache = ( StringCache )HttpRuntime.Cache[ key ];
+				try
+				{
+					if ( cache.lastUpdated > maxTime )
+					{
+						//ctid = cache2.org.CTID;
+						ctid = cache.Item;
+						LoggingHelper.DoTrace( 6, string.Format( "===OrganizationServices.GetPublishingOrgByApiKey === Using cached version of Organization CTID: {0}", ctid ) );
+
+						return true;
+					}
+				}
+				catch ( Exception ex )
+				{
+					LoggingHelper.DoTrace( 6, thisClassName + ".GetPublishingOrgByApiKey === exception " + ex.Message );
+				}
+			}
+
+			//get Org
+			var password = UtilityManager.GetAppKeyValue( "CEAccountSystemStaticPassword", "" );
+			var getUrl = string.Format( UtilityManager.GetAppKeyValue( "ceAccountOrganizationByApiKey" ), apiKey, password );
+			try
+			{
+				var rawData = new HttpClient().PostAsync( getUrl, null ).Result.Content.ReadAsStringAsync().Result;
+
+				if ( rawData == null || rawData.IndexOf( "The resource cannot be found" ) > 0
+				|| rawData.IndexOf( "\"PublishingApiKey\"" ) == -1 )
+				{
+					messages.Add( "Error: invalid apiKey: " + apiKey );
+					LoggingHelper.DoTrace( 2, string.Format( "GetPublishingOrgByApiKey. Error attempting to call method to return an org for apiKey: {0}. \r\n{1}", apiKey, rawData.ToString() ) );
+					return false;
+				}
+
+				var results = new JavaScriptSerializer().Deserialize<GetOrgResult>( rawData );
+				if ( results != null && results.data != null && results.data.CTID != null )
+				{
+					ctid = results.data.CTID.ToLower();
+					if ( results.data.ApprovedPublishingRoles.Contains( RegistryServices.CE_TRUSTED_PARTNER_ROLE ) )
+					{
+						//should already be set
+						//results.data.IsTrustedPartner = true;
+						isTrustedPartner = true;
+						LoggingHelper.DoTrace( 5, "SupportServices.GetPublishingOrgByApiKey() Found a trusted partner: " + results.data.Name );
+					}
+					//add to cache
+					if ( key.Length > 0 && cacheMinutes > 0 )
+					{
+						var newCache = new StringCache()
+						{
+							Item = ctid,
+							lastUpdated = DateTime.Now
+						};
+						if ( HttpContext.Current != null )
+						{
+							if ( HttpContext.Current.Cache[ key ] != null )
+							{
+								HttpRuntime.Cache.Remove( key );
+								HttpRuntime.Cache.Insert( key, newCache, null, DateTime.Now.AddMinutes( cacheMinutes ), TimeSpan.Zero );
+
+								LoggingHelper.DoTrace( 5, string.Format( thisClassName + ".GetPublishingOrgByApiKey $$$ Updating cached version of Organization CTID: {0}", ctid ) );
+
+							}
+							else
+							{
+								LoggingHelper.DoTrace( 6, string.Format( thisClassName + ".GetPublishingOrgByApiKey ****** Inserting new cached version of Organization CTID: {0}, keypart: {1}", ctid, apiKey.Length > 20 ? apiKey.Substring( 0, 9 ) : "no apikey found" ) );
+
+								System.Web.HttpRuntime.Cache.Insert( key, newCache, null, DateTime.Now.AddMinutes( cacheMinutes ), TimeSpan.Zero );
+							}
+						}
+					}
+					//
+				}
+				else
+				{
+					messages.Add( "Error: was not able to find an organization for the provided apiKey: " + apiKey );
+					LoggingHelper.DoTrace( 5, string.Format( thisClassName + ".GetPublishingOrgByApiKey FAILED. NO ORG RETURNED! Organization apiKey: {0}", apiKey ) );
+					return false;
+				}
+			}
+			catch ( Exception ex )
+			{
+				LoggingHelper.LogError( ex, thisClassName + ".GetPublishingOrgByApiKey: " + apiKey );
+				string message = LoggingHelper.FormatExceptions( ex );
+				messages.Add( message );
+				return false;
+			}
+
 
 			return isValid;
 		}  //
@@ -110,16 +413,199 @@ namespace RA.Services
 		/// </summary>
 		/// <param name="ctid"></param>
 		/// <param name="messages"></param>
-		/// <returns></returns>
-		public static bool FindOwningOrgByCTID(string ctid, ref bool recordExists, ref List<string> messages)
+		/// <returns>Should only return false on an error</returns>
+		public static bool FindOwningOrgByCTID(string dataOwnerCtid, ref bool recordExists, ref List<string> messages)
 		{
 			bool isValid = true;
-			
+			var password = UtilityManager.GetAppKeyValue( "CEAccountSystemStaticPassword", "" );
+			//http://localhost:52345/Organization/GetByCTID?ctid={0}&amp;password={1}
+			var url = UtilityManager.GetAppKeyValue( "ceAccountOrganizationByCTID" );
+			var getUrl = string.Format( url, dataOwnerCtid, password );
+			try
+			{
+				var rawData = new HttpClient().PostAsync( getUrl, null ).Result.Content.ReadAsStringAsync().Result;
+
+				if ( rawData == null )
+				{
+					//messages.Add( "Error: invalid apiKey: " + ctid );
+					return false;
+				}
+
+				var results = new JavaScriptSerializer().Deserialize<GetOrgResult>( rawData );
+				if ( results != null && results.data != null && results.data.CTID != null )
+				{
+					//dataOwnerCtid = results.data.CTID.ToLower();
+					recordExists = true;
+					//
+				}
+				else
+				{
+					//may not be an error!
+					//messages.Add( "Error: was not able to find an organization for the provided CTID: " + ctid );
+					LoggingHelper.DoTrace( 5, string.Format( thisClassName + ".FindOwningOrgByCTID FAILED. NO ORG RETURNED! Organization ctid: {0}", dataOwnerCtid ) );
+					return false;
+				}
+			}
+			catch ( Exception ex )
+			{
+				LoggingHelper.LogError( ex, thisClassName + ".FindOwningOrgByCTID: " + dataOwnerCtid );
+				string message = LoggingHelper.FormatExceptions( ex );
+				messages.Add( message );
+				return false;
+			}
+
 
 			return isValid;
 		}
 
+		public static bool AddOrganizationToAccounts(RA.Models.Input.Organization r, string publisherApikey, ref List<string> messages)
+		{
+			bool isValid = true;
+			int cnt = messages.Count();
+			var password = UtilityManager.GetAppKeyValue( "CEAccountSystemStaticPassword", "" );
+			//http://localhost:52345/Organization/Add/
+			var accountsApiUrl = UtilityManager.GetAppKeyValue( "ceAccountAddOrganization" );
 
+			if (string.IsNullOrWhiteSpace(publisherApikey))
+			{
+				messages.Add("Error: The API Key for the trusted organization must be provided.");
+			}
+			OrganizationAddition org = new OrganizationAddition()
+			{
+				//PublisherApikey = publisherApikey,
+				Name = r.Name,
+				Url = r.SubjectWebpage,
+				//max length = 50, can't use;  r.Name.Replace( " ", "_" ).Replace("'","-"),
+				ProfileName = "profile_" + Guid.NewGuid().ToString().ToLower(), //
+				CTID = (r.Ctid ?? "").ToLower(),
+				FEIN = r.Fein,
+				DUNS = r.Duns,
+				OPEID = r.OpeId
+			};
+			org.OrganizationPublishingRoleUris.Add( "publishRole:CredentialOrganization" );
+			org.OrganizationPublishingMethodUris.Add( "publishMethod:RegistryAssistant" );
+			//may need to check for or add prefix agentSector
+			if ( r.AgentSectorType.ToLower().IndexOf("agentsector") == -1)
+			{
+				org.OrganizationSectorUri = "agentSector:" + r.AgentSectorType;
+			} else
+				org.OrganizationSectorUri = r.AgentSectorType;
+			//may need to check for orgType
+			foreach(var item in r.AgentType)
+			{
+				if ( item.ToLower().IndexOf( "orgtype" ) == -1 )
+				{
+					org.OrganizationTypeUris.Add( "orgType:" + item);
+				}
+				else
+					org.OrganizationTypeUris.Add(item);
+			}
+			
+			//
+			if ( r.Email != null && r.Email.Count() > 0 )
+			{
+				org.PrimaryEmail = r.Email[ 0 ];
+			} else
+			{
+				//temp - since some orgs don't have an email, use a default for now (or for staging)
+				if ( UtilityManager.GetAppKeyValue( "environment" ) != "production")
+				{
+					org.PrimaryEmail = UtilityManager.GetAppKeyValue( "systemAdminEmail" ); //
+				} else 
+					messages.Add( "Error: In order to add an organization to the CE Account site, an email must be provided." );
+			}
+
+			if ( r.Address != null && r.Address.Count() > 0 )
+			{
+				var address = r.Address[ 0 ];
+				org.StreetAddress = r.Address[ 0 ].Address1;
+				org.City = r.Address[ 0 ].City;
+				org.StateProvince = r.Address[ 0 ].AddressRegion;
+				org.PostalCode = r.Address[ 0 ].PostalCode;
+				org.Country = r.Address[ 0 ].Country;
+				//org.MainAddress.StreetAddress = r.Address[ 0 ].Address1;
+				//org.MainAddress.City = r.Address[ 0 ].City;
+				//org.MainAddress.StateProvince = r.Address[ 0 ].AddressRegion;
+				//org.MainAddress.PostalCode = r.Address[ 0 ].PostalCode;
+				//org.MainAddress.Country = r.Address[ 0 ].Country;
+
+				//check for a phone number
+				//==> contact point could be a separate 'address'
+				if (address.ContactPoint != null && address.ContactPoint.Count() > 0)
+				{
+					var cp = address.ContactPoint[ 0 ];
+					if ( cp.PhoneNumbers != null && cp.PhoneNumbers.Count() > 0 )
+						org.PrimaryPhoneNumber = cp.PhoneNumbers[ 0 ];
+					else
+					{
+						messages.Add( "Error: In order to add an organization to the CE Account site, a primary phone number must be included in the ContactPoint class within the Address property." );
+					}
+				} 
+				else if (r.Address.Count() > 1 
+					&& ( r.Address[ 1 ].ContactPoint != null && r.Address[ 1 ].ContactPoint.Count() > 0 ) )
+				{
+					var cp = r.Address[ 1 ].ContactPoint[ 0 ];
+					if ( cp.PhoneNumbers != null && cp.PhoneNumbers.Count() > 0 )
+						org.PrimaryPhoneNumber = cp.PhoneNumbers[ 0 ];
+					else
+					{
+						messages.Add( "Error: In order to add an organization to the CE Account site, a primary phone number must be included in the ContactPoint class within the Address property." );
+					}
+				}
+				else
+				{
+					messages.Add( "Error: In order to add an organization to the CE Account site, a primary phone number must be included in the ContactPoint class within the Address property." );
+				}
+			}
+			else
+			{
+				messages.Add( "Error: In order to add an organization to the CE Account site, an address must be provided." );
+			}
+			if ( messages.Count() > cnt )
+				return false;
+			//call accounts
+			string contents = "";
+			string postBody = JsonConvert.SerializeObject( org, ServiceHelperV2.GetJsonSettings() );
+			try
+			{
+				using ( var client = new HttpClient() )
+				{
+					client.DefaultRequestHeaders.
+						Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+					client.DefaultRequestHeaders.Add("Authorization", "ApiToken " + publisherApikey);
+
+					var task = client.PostAsync( accountsApiUrl,
+						new StringContent( postBody, Encoding.UTF8, "application/json" ) );
+					task.Wait();
+					var response = task.Result;
+					contents = task.Result.Content.ReadAsStringAsync().Result;
+
+					//may have to do additional checks
+					Dictionary<string, object> dictionary = RegistryServices.JsonToDictionary( contents );
+					if ( dictionary.ContainsKey( "valid" ) )
+					{
+						var valid = dictionary[ "valid" ].ToString();
+						if ( valid.ToLower() == "false" )
+						{
+							var status = dictionary[ "status" ].ToString();
+							messages.Add( status );
+							return false;
+						}
+					}
+				}
+			}
+			catch ( Exception ex )
+			{
+				LoggingHelper.LogError( ex, string.Format( thisClassName + ".AddOrganizationToAccounts FAILED. Publisher apiKey: {0}, target orgCtid", publisherApikey, r.Ctid ) );
+				string message = LoggingHelper.FormatExceptions( ex );
+				messages.Add( message );
+			}
+			//
+			if ( messages.Count() > cnt )
+				isValid = false; 
+
+			return isValid;
+		}
 		/// <summary>
 		/// Check if requested target has been previously published and by what method
 		/// </summary>
@@ -142,11 +628,113 @@ namespace RA.Services
 		/// <param name="ctid"></param>
 		/// <param name="cer"></param>
 		/// <param name="messages"></param>
-		/// <param name="recordWasFound">True if previously published, else false</param>
+		/// <param name="recordWasFound">True if previously published, else false. TODO replace with CER.HasBeenPreviouslyPublished</param>
 		/// <returns></returns>
 		public static bool ValidateAgainstPastRequest( string entityType, string ctid, ref CER cer, ref List<string> messages, ref bool recordWasFound)
 		{
-			
+			bool usedCEKeys = false;
+			string message = "";
+			var lastPublishEvent = GetMostRecentHistory(  ctid, ref recordWasFound, ref usedCEKeys, ref message, cer.Community ?? "" );
+			cer.HasBeenPreviouslyPublished = recordWasFound;
+
+			//if last action was a purge, treat as if record not found
+			if ( recordWasFound && lastPublishEvent.PublishMethodURI == RegistryServices.REGISTRY_ACTION_PURGE )
+			{
+				recordWasFound = false;
+				LoggingHelper.DoTrace( 5, string.Format( "ValidateAgainstPastRequest. {0} publish. Last action was a Registry Purge - treating as new. CTID: {1}, Used CEKeys: {2}, PublishMethodURI: {3} ", entityType, ctid, usedCEKeys, lastPublishEvent.PublishMethodURI ) );
+			}
+
+			if ( recordWasFound ) //found previous
+			{
+				//***** issue, if always send the org api key from the publisher. 
+				LoggingHelper.DoTrace( 5, string.Format( "ValidateAgainstPastRequest. {0} publish. Found a previous publish for CTID: {1}, Used CEKeys: {2}, PublishMethodURI: {3} ", entityType, ctid, usedCEKeys, lastPublishEvent.PublishMethodURI ) );
+				
+
+				if ( lastPublishEvent.DataOwnerCTID.ToLower() != cer.PublishingForOrgCtid.ToLower() )
+				{
+					//don't allow but may be moot if validating the apiKey owner ctid combination
+					//we should move the latter here then
+					messages.Add( string.Format( "Suspcious request. The provided data owner CTID is different from the data owner CTID used for previous requests. This condition is not allowed. Entity type: ({0}), CTID '{1}', DataOwnerCTID: '{2}', PublishingForOrgCtid: '{3}'.", entityType, ctid, lastPublishEvent.DataOwnerCTID, cer.PublishingForOrgCtid ) );
+
+					LoggingHelper.DoTrace( 5, messages[ messages.Count() - 1 ] );
+					//isValid = false;
+					return false;
+
+				}
+				else if ( usedCEKeys )
+				//want to always the original publishing keys - which will always be proper in the last event
+				{
+					if ( cer.IsManagedRequest )
+					{
+						LoggingHelper.DoTrace( 5, entityType + " publish. Received a managed request but OVERRIDING to CE Self-Publish." );
+						cer.IsManagedRequest = false;   //should record override
+						cer.OverrodeOriginalRequest = true;
+					}
+				}
+				else //if ( !usedCEKeys )
+				{
+					cer.IsManagedRequest = true;   //should record override
+
+					//19-03-25 - this is very likely for anything new after this date.
+					//			- and will likely be managed
+					if ( lastPublishEvent.PublishMethodURI == RegistryServices.CE_PUBLISH_METHOD_MANUAL_ENTRY )
+					{
+						cer.OverrodeOriginalRequest = true;
+					}else if ( lastPublishEvent.PublishMethodURI == RegistryServices.REGISTRY_ACTION_TRANSFER )
+					{
+						//may not be any action, not an override - 
+					}
+
+					LoggingHelper.DoTrace( 5, entityType + " publish. Received a CE Publish request but OVERRIDING to Managed request and cer.OverrodeOriginalRequest = " + cer.OverrodeOriginalRequest );
+					//this should not happen. Means used publisher 
+					//- actually now enabling:
+					//	- done via publisher, using 
+					//import to log this in publisher activity log
+
+				}
+			}
+			else//not previously published
+			{
+				//eventually will always do managed
+				if ( !cer.IsManagedRequest ) //Duh if PublisherAuthorizationToken present, will be managed!!
+				{
+					//but only if an api key was provide
+					if ( cer.HasValidPublisherToken() )
+					{
+						//|| ServiceHelperV2.environment != "staging"
+						if ( !forcingUseOfCEKeys )
+						{
+							LoggingHelper.DoTrace( 5, entityType + " publish. Received a CE Publish request but OVERRIDING to Managed request - first publish event for this entity." );
+							cer.OverrodeOriginalRequest = true;
+							cer.IsManagedRequest = true;
+						}
+					}
+				}
+				else //IsManagedRequest
+				{
+					//was there a case for doing something here?
+					/*need to set the publishing method, where
+					 * - inititated from publisher
+					 * - first time
+					 * - apikey is now provided by publisher, so need to handle
+					 */
+					if ( cer.IsPublisherRequest )
+					{
+						LoggingHelper.DoTrace( 5, entityType + " publish. Received a Managed request that originated from CE Publish. This is the first publish event for this entity. JUST IN CASE, OVERRIDING to force publish type of publishMethod:ManualEntry." );
+						cer.OverrodeOriginalRequest = true;
+					}
+					//TEMP
+					if ( forcingUseOfCEKeys && ServiceHelperV2.environment == "staging" )
+					{
+						//force to Manual - ensure publishing type is updated!!
+						//cer.OverrodeOriginalRequest = true;
+						//cer.IsManagedRequest = false;
+
+						//LoggingHelper.DoTrace( 5, entityType + " publish. HOLD ON - FOR NOW, ALL STAGING PUBLISHING WILL USE SELF VERSION." );
+					}
+				}
+
+			}
 
 			return true;//??
 		}
@@ -154,17 +742,61 @@ namespace RA.Services
 		/// <summary>
 		/// Get last publish event data
 		/// Use to vaidate integrity of request
+		/// 2020-03-03 NOTE: must handle transfer of ownership
 		/// </summary>
-		/// <param name="entityType"></param>
+		/// <param name="entityType">NOT USED</param>
 		/// <param name="ctid"></param>
 		/// <param name="recordWasFound">Return True if there was a previous event</param>
 		/// <param name="usedCEKeys">Return True if last publish used CE keys</param>
 		/// <param name="message"></param>
 		/// <returns></returns>
-		public static RegistryPublishingHistory GetMostRecentHistory( string entityType, string ctid, ref bool recordWasFound, ref bool usedCEKeys, ref string message, string community="" )
+		public static RegistryPublishingHistory GetMostRecentHistory( string ctid, ref bool recordWasFound, ref bool usedCEKeys, ref string message, string community="" )
 		{
 			var lastPublishEvent = new RegistryPublishingHistory();
-			
+			message = "";
+			recordWasFound = false;
+			//note may need to use sandbox if value is development
+			string environment = UtilityManager.GetAppKeyValue( "environment" );
+			//TODO - change to use API
+			//returns object serialized as a string
+			var result = "";// RegistryPublishManager.GetMostRecentHistory( ctid, environment, community );
+			if ( result == "" )
+			{
+				return lastPublishEvent;
+			}
+			try
+			{
+				lastPublishEvent = JsonConvert.DeserializeObject<RegistryPublishingHistory>( result );
+				if ( lastPublishEvent == null || string.IsNullOrWhiteSpace( lastPublishEvent.EntityCtid ) )
+				{
+					//actually may be OK if first publish effort
+					//messages.Add( string.Format( "A registry {0}", ctid ));
+					return lastPublishEvent;
+				}
+				//must match type. 19-04-01: 
+				recordWasFound = true;
+				//problem here with overriding
+				//WATCH FOR DELETES OR TRANSFERS!
+				//A transfer should always(?) mean to registry managed keys?
+				//
+				if ( lastPublishEvent.PublishMethodURI == RegistryServices.REGISTRY_ACTION_TRANSFER )
+				{
+					//this should be OK, once transfer should use the org keys, 
+					//however the publish method should start using: publishMethod:ManualEntry
+					usedCEKeys = false;
+				} 
+				else if ( lastPublishEvent.PublishMethodURI == RegistryServices.CE_PUBLISH_METHOD_USING_CEKEYS )
+					usedCEKeys = true;
+
+				//may want to get the ownedBy CTID and compare to input
+
+			}
+			catch ( Exception ex )
+			{
+				LoggingHelper.LogError( ex, "SupportServices.GetMostRecentHistory" );
+				//no message, just 
+				message = string.Format( "Error encounterd checking history for Type: {0}, CTID: {1}", ctid, ex.Message );
+			}
 
 			return lastPublishEvent;
 		}
@@ -173,6 +805,9 @@ namespace RA.Services
 		public static string FormatRegistryUrl( int urlType, string suffix, string community = "")
 		{
 			var url = "";
+			if ( string.IsNullOrWhiteSpace( suffix ) )
+				return url;
+
 			string cmnty = string.IsNullOrWhiteSpace(community) ? "" : community.ToLower() + "/";
 			switch (urlType)
 			{
@@ -340,88 +975,88 @@ namespace RA.Services
 		//}
 		#endregion
 
-		#region === Application Keys Methods ===
+		#region === Application Keys Methods WHY HERE???===
 
-		/// <summary>
-		/// Gets the value of an application key from web.config. Returns blanks if not found
-		/// </summary>
-		/// <remarks>This clientProperty is explicitly thread safe.</remarks>
-		public static string GetAppKeyValue(string keyName)
-		{
+		///// <summary>
+		///// Gets the value of an application key from web.config. Returns blanks if not found
+		///// </summary>
+		///// <remarks>This clientProperty is explicitly thread safe.</remarks>
+		//public static string GetAppKeyValue(string keyName)
+		//{
 
-			return GetAppKeyValue(keyName, "");
-		} //
+		//	return GetAppKeyValue(keyName, "");
+		//} //
 
-		/// <summary>
-		/// Gets the value of an application key from web.config. Returns the default value if not found
-		/// </summary>
-		/// <remarks>This clientProperty is explicitly thread safe.</remarks>
-		public static string GetAppKeyValue(string keyName, string defaultValue)
-		{
-			string appValue = "";
-			if (string.IsNullOrWhiteSpace(keyName))
-			{
-				LoggingHelper.LogError(string.Format("@@@@ Error: Empty string AppKey was encoutered, using default of: {0}", defaultValue));
-				return defaultValue;
-			}
-			try
-			{
-				appValue = System.Configuration.ConfigurationManager.AppSettings[keyName];
-				if (appValue == null)
-					appValue = defaultValue;
-			}
-			catch
-			{
-				appValue = defaultValue;
-				LoggingHelper.LogError(string.Format("@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue));
-			}
+		///// <summary>
+		///// Gets the value of an application key from web.config. Returns the default value if not found
+		///// </summary>
+		///// <remarks>This clientProperty is explicitly thread safe.</remarks>
+		//public static string GetAppKeyValue(string keyName, string defaultValue)
+		//{
+		//	string appValue = "";
+		//	if (string.IsNullOrWhiteSpace(keyName))
+		//	{
+		//		LoggingHelper.LogError(string.Format("@@@@ Error: Empty string AppKey was encoutered, using default of: {0}", defaultValue));
+		//		return defaultValue;
+		//	}
+		//	try
+		//	{
+		//		appValue = System.Configuration.ConfigurationManager.AppSettings[keyName];
+		//		if (appValue == null)
+		//			appValue = defaultValue;
+		//	}
+		//	catch
+		//	{
+		//		appValue = defaultValue;
+		//		LoggingHelper.LogError(string.Format("@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue));
+		//	}
 
-			return appValue;
-		} //
-		public static int GetAppKeyValue(string keyName, int defaultValue)
-		{
-			int appValue = -1;
-			if (string.IsNullOrWhiteSpace(keyName))
-			{
-				LoggingHelper.LogError(string.Format("@@@@ Error: Empty int AppKey was encoutered, using default of: {0}", defaultValue));
-				return defaultValue;
-			}
-			try
-			{
-				appValue = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings[keyName]);
+		//	return appValue;
+		//} //
+		//public static int GetAppKeyValue(string keyName, int defaultValue)
+		//{
+		//	int appValue = -1;
+		//	if (string.IsNullOrWhiteSpace(keyName))
+		//	{
+		//		LoggingHelper.LogError(string.Format("@@@@ Error: Empty int AppKey was encoutered, using default of: {0}", defaultValue));
+		//		return defaultValue;
+		//	}
+		//	try
+		//	{
+		//		appValue = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings[keyName]);
 
-				// If we get here, then number is an integer, otherwise we will use the default
-			}
-			catch
-			{
-				appValue = defaultValue;
-				LoggingHelper.LogError(string.Format("@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue));
-			}
+		//		// If we get here, then number is an integer, otherwise we will use the default
+		//	}
+		//	catch
+		//	{
+		//		appValue = defaultValue;
+		//		LoggingHelper.LogError(string.Format("@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue));
+		//	}
 
-			return appValue;
-		} //
-		public static bool GetAppKeyValue(string keyName, bool defaultValue)
-		{
-			bool appValue = false;
-			if (string.IsNullOrWhiteSpace(keyName))
-			{
-				LoggingHelper.LogError(string.Format("@@@@ Error: Empty bool AppKey was encoutered, using default of: {0}", defaultValue));
-				return defaultValue;
-			}
-			try
-			{
-				appValue = bool.Parse(System.Configuration.ConfigurationManager.AppSettings[keyName]);
+		//	return appValue;
+		//} //
+		//public static bool GetAppKeyValue(string keyName, bool defaultValue)
+		//{
+		//	bool appValue = false;
+		//	if (string.IsNullOrWhiteSpace(keyName))
+		//	{
+		//		LoggingHelper.LogError(string.Format("@@@@ Error: Empty bool AppKey was encoutered, using default of: {0}", defaultValue));
+		//		return defaultValue;
+		//	}
+		//	try
+		//	{
+		//		appValue = bool.Parse(System.Configuration.ConfigurationManager.AppSettings[keyName]);
 
-				// If we get here, then number is an integer, otherwise we will use the default
-			}
-			catch
-			{
-				appValue = defaultValue;
-				LoggingHelper.LogError(string.Format("@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue));
-			}
+		//		// If we get here, then number is an integer, otherwise we will use the default
+		//	}
+		//	catch
+		//	{
+		//		appValue = defaultValue;
+		//		LoggingHelper.LogError(string.Format("@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue));
+		//	}
 
-			return appValue;
-		} //
+		//	return appValue;
+		//} //
 		#endregion
 	}
 	[Serializable]
@@ -429,6 +1064,7 @@ namespace RA.Services
 	{
 		public AccountOrganization data { get; set; }
 	}
+	[Serializable]
 	public class AccountOrganization
 	{
 		public string CTID { get; set; }
@@ -444,9 +1080,10 @@ namespace RA.Services
 
 	}
 
-	[Serializable]
+	//[Serializable]
 	public class OrganizationAddition : AccountOrganization
 	{
+		public string PublisherApikey { get; set; }
 		public string ProfileName { get; set; }
 		public string FEIN { get; set; }
 		public string DUNS { get; set; }
@@ -461,22 +1098,29 @@ namespace RA.Services
 		public string OrganizationSectorUri { get; set; } //ceterms:OrganizationSector concept scheme
 
 		#region properties for adding
-		public Address MainAddress { get; set; } = new Address();
 		public string PrimaryPhoneNumber { get; set; }
 		public string PrimaryEmail { get; set; }
-		#endregion
-	}
-	[Serializable]
-	public class Address 
-	{
-		public string Name { get; set; }
+		//public Address MainAddress { get; set; } = new Address();
+		//
 		public string StreetAddress { get; set; }
 		public string City { get; set; }
 		public string StateProvince { get; set; }
 		public string Country { get; set; }
 		public string PostalCode { get; set; }
 
+		#endregion
 	}
+	//[Serializable]
+	//public class Address 
+	//{
+	//	public string Name { get; set; }
+	//	public string StreetAddress { get; set; }
+	//	public string City { get; set; }
+	//	public string StateProvince { get; set; }
+	//	public string Country { get; set; }
+	//	public string PostalCode { get; set; }
+	//}
+
 	[Serializable]
 	public class OrgCache
 	{
@@ -486,6 +1130,17 @@ namespace RA.Services
 		}
 		public DateTime lastUpdated { get; set; }
 		public AccountOrganization Organization { get; set; } = new AccountOrganization();
+
+	}
+	[Serializable]
+	public class ValidateRequestCache
+	{
+		public ValidateRequestCache()
+		{
+			lastUpdated = DateTime.Now;
+		}
+		public DateTime lastUpdated { get; set; }
+		public PublishRequestValidationResponse Response { get; set; } = new PublishRequestValidationResponse();
 
 	}
 	[Serializable]
@@ -520,6 +1175,42 @@ namespace RA.Services
 		public ConceptSchemes ConceptSchemes { get; set; }
 		public bool Successful { get; set; }
 
+		public List<string> Messages { get; set; }
+
+	}
+
+	public class AddOrganizationResponse
+	{
+		public AddOrganizationResponse()
+		{
+			Messages = new List<string>();
+		}
+		public bool Successful { get; set; } = true;
+		public List<string> Messages { get; set; }
+
+	}
+
+	public class PublishRequestValidationResponse
+	{
+		public PublishRequestValidationResponse()
+		{
+			Messages = new List<string>();
+		}
+
+		/// True if action was successfull, otherwise false
+		public bool Successful { get; set; }
+		public string RegistryAuthorizationToken { get; set; }
+		public string PublishingOrganization { get; set; }
+		public string PublishingOrganizationRegistryIdentifier { get; set; }
+		public string PublishingOrganizationCTID { get; set; }
+		public bool OwningOrganizationExists { get; set; }
+		public string OwningOrganization { get; set; }
+		public string OwningOrganizationRegistryIdentifier { get; set; }
+		public bool IsSuperPublisher { get; set; }
+		public bool PublisherIsTrustedPartner { get; set; }
+		/// <summary>
+		/// List of error or warning messages
+		/// </summary>
 		public List<string> Messages { get; set; }
 
 	}

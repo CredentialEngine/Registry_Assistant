@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RA.Models.Input
-{	
+{
 
 	/// <summary>
 	/// Class for handling references to an organization

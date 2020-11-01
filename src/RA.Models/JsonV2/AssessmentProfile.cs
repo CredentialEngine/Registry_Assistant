@@ -172,6 +172,10 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
 		public string DateEffective { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
+		public string ExpirationDate { get; set; }
+
+
 		[JsonProperty( PropertyName = "ceterms:deliveryType" )]
         public List<CredentialAlignmentObject> DeliveryType { get; set; }
 
@@ -201,6 +205,13 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:hasGroupParticipation", DefaultValueHandling = DefaultValueHandling.Include )]
         public bool? HasGroupParticipation { get; set; }
 
+		/// <summary>
+		/// Identifier
+		/// Definition:	Alphanumeric Identifier value.
+		/// List of URIs 
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:identifierValue" )]
+		public List<IdentifierValue> Identifier { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:isProctored", DefaultValueHandling = DefaultValueHandling.Include )]
 		public bool? IsProctored { get; set; }
