@@ -264,7 +264,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AvailabilityListing { get; set; }
 
-
 		/// <summary>
 		/// Founding Date - the year, year-month, or year-month-day the organization was founded. 
 		/// Maximum length of 20

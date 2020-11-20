@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
-		public class JsonLDDocument 
+	public class JsonLDDocument 
 	{   
 		public JsonLDDocument()
 		{
@@ -19,7 +19,7 @@ namespace RA.Models.JsonV2
 		public string Context { get; set; }
 		//public Dictionary<string, object> Context { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:dateModified" )]
-		public string LastUpdated { get; set; } = null;
+		//[JsonProperty( "ceterms:dateModified" )]
+		//public string LastUpdated { get; set; } = null;
 	}
 }

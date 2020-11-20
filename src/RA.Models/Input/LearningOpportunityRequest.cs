@@ -277,7 +277,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
 		/// <summary>
-		/// List of valid NAICS codes. See:
+		/// List of valid NAICS codes. These will be mapped to industry type
+		/// See:
 		/// https://www.naics.com/search/
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
