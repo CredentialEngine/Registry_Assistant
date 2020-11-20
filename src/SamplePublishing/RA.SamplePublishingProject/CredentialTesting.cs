@@ -22,13 +22,25 @@ namespace RA.SamplePublishingProject
 			//using simple post
 			new PublishCredential().PublishSimpleRecord( "publish" );
 		}
-
+		[TestMethod]
+		public void CredentialWithHoldersProfile()
+		{
+			//using simple post
+			new PublishCredentialWithOutcomes().CredentialWithHoldersProfile( "publish" );
+		}
+		[TestMethod]
+		public void PublishQACredential()
+		{
+			//using simple post
+			new PublishCredential().PublishQACredentialWithETPL( "publish" );
+		}
 		[TestMethod]
 		public void PublishProPathCredential()
 		{
 			//
 			//new ProPathExamples().CredentialWithHoldersProfile( "format" );
 			new ProPathExamples().CredentialWithHoldersProfile( "publish" );
+			//PublishProPathLearningOpportunity();
 		}
 		[TestMethod]
 		public void PublishProPathLearningOpportunity()

@@ -54,7 +54,26 @@ namespace RA.SamplesForDocumentation
 
 			return output;
 		}
+		public static QuantitativeValue AddQuantitativeValue( decimal value, string description )
+		{
+			var output = new QuantitativeValue()
+			{
+				Value = value,
+				Description = !string.IsNullOrWhiteSpace( description ) ? description : string.Format( "Adding value of: {0}", value )
+			};
 
+			return output;
+		}
+		public static QuantitativeValue AddQuantitativePercentage( decimal value, string description )
+		{
+			var output = new QuantitativeValue()
+			{
+				Percentage = value,
+				Description = !string.IsNullOrWhiteSpace( description ) ? description : string.Format( "Adding value of: {0}", value )
+			};
+
+			return output;
+		}
 		#endregion
 
 		#region === Application Keys Methods ===

@@ -21,15 +21,19 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceterms:ctid" )]
 		public string Ctid { get; set; }
 
+
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap Name { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
+
 		/// <summary>
 		/// Effective date of this profile
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
-
 		public string DateEffective { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap Description { get; set; }
 
 		/// <summary>
 		///  Upper interquartile earnings.
@@ -57,8 +61,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:medianEarnings" )]
 		public int MedianEarnings { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:name" )]
-		public LanguageMap Name { get; set; } 
 
 		/// <summary>
 		/// Number of months after earning a credential when employment and earnings data is collected.

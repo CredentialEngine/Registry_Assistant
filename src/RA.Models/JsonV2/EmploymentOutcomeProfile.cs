@@ -21,14 +21,19 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceterms:ctid" )]
 		public string Ctid { get; set; }
 
+
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap Name { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
+
 		/// <summary>
 		/// Effective date of this profile
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
 		public string DateEffective { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap Description { get; set; }
 
 		/// <summary>
 		///  Number of jobs obtained in the region during a given timeframe.
@@ -45,8 +50,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:name" )]
-		public LanguageMap Name { get; set; }
 
 		/// <summary>
 		/// Authoritative source of an entity's information.

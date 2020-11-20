@@ -82,7 +82,7 @@ namespace RA.Models.JsonV2
 		public List<string> IsPartOf { get; set; } = new List<string>();
 
 		[JsonProperty( PropertyName = "asn:hasProgressionLevel" )]
-		public string HasProgressionLevel { get; set; }
+		public List<string> HasProgressionLevel { get; set; }
 
 
 		[JsonProperty( PropertyName = "ceterms:name" )]

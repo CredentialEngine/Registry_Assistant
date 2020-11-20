@@ -429,9 +429,21 @@ namespace RA.Models.Input
 
         public List<string> prerequisiteAlignment { get; set; } = new List<string>();
 
-        public List<string> skillEmbodied { get; set; } = new List<string>();
 
+		/// <summary>
+		/// Body of information embodied either directly or indirectly in this resource.
+		/// List of CTIDs for a competency
+		/// ceasn:knowledgeEmbodied
+		/// </summary>
 		public List<string> knowledgeEmbodied { get; set; } = new List<string>();
+
+		/// <summary>
+		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
+		/// List of CTIDs for a competency
+		/// ceasn:skillEmbodied
+		/// </summary>
+		public List<string> skillEmbodied { get; set; } = new List<string>();
+
 		public List<string> taskEmbodied { get; set; } = new List<string>();
 		public List<string> hasSourceIdentifier { get; set; }
 		public string weight { get; set; }

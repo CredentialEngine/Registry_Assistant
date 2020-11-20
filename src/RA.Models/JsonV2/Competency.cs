@@ -146,6 +146,7 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Competency uris
+		/// This should be a list of URIs. The data type is object to handle receiving a string, which will be converted to a list of strings
 		/// </summary>
 		[JsonProperty( "ceasn:exactAlignment" )]
 		//public List<string> exactAlignment { get; set; } 

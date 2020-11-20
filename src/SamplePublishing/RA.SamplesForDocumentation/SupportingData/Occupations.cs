@@ -29,7 +29,7 @@ namespace RA.SamplesForDocumentation
 			request.OccupationType.Add( new FrameworkItem()
 			{
 				Framework = "https://www.onetonline.org/",
-				FrameworkName = "O*NET OnLine",
+				FrameworkName = "Standard Occupational Classification",
 				Name = "Information Security Analysts",
 				TargetNode = "https://www.onetonline.org/link/summary/15-1122.00",
 				CodedNotation = "15-1122.00",
@@ -38,7 +38,7 @@ namespace RA.SamplesForDocumentation
 			request.OccupationType.Add( new FrameworkItem()
 			{
 				Framework = "https://www.onetonline.org/",
-				FrameworkName = "O*NET OnLine",
+				FrameworkName = "Standard Occupational Classification",
 				Name = "Computer Network Support Specialists",
 				TargetNode = "https://www.onetonline.org/link/summary/15-1152.00",
 				CodedNotation = "15-1152.00",

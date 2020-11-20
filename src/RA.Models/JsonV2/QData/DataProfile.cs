@@ -102,7 +102,13 @@ namespace RA.Models.JsonV2.QData
 		/// Statement of criteria used to determine whether sufficient levels of work time and/or earnings have been met to be considered employed during the earning time period.
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:employmentDefinition" )]
-		public LanguageMap EmploymentDefinition { get; set; } 
+		public LanguageMap EmploymentDefinition { get; set; }
+
+		/// <summary>
+		/// Projected employment estimate.
+		/// </summary>
+		[JsonProperty( PropertyName = "qdata:employmentOutlook" )]
+		public List<QuantitativeValue> EmploymentOutlook { get; set; }
 
 		/// <summary>
 		/// Rate computed by dividing the number of holders or subjects meeting the data set's criteria of employment (meetEmploymentCriteria) by the number of holders or subjects for which data was available (dataAvailable).

@@ -76,9 +76,15 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "@id" )]
 		public string CtdlId { get; set; }
 
+		/// <summary>
+		/// Name
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:name" )]
         public LanguageMap Name { get; set; }
 
+		/// <summary>
+		/// Description
+		/// </summary>
         [JsonProperty( PropertyName = "ceterms:description" )]
         public LanguageMap Description { get; set; }
 

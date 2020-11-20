@@ -38,6 +38,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap DemographicInformation_Map { get; set; } = new LanguageMap();
 
+		public string Name { get; set; }
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 		/// <summary>
 		///  Number of credentials awarded.
 		///  ceterms:numberAwarded

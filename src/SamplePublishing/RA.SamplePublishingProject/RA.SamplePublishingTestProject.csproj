@@ -46,6 +46,7 @@
     <Compile Include="CredentialTesting.cs" />
     <Compile Include="TransferValueTesting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PathwaysTesting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

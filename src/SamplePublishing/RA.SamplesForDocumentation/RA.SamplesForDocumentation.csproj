@@ -54,6 +54,9 @@
     <Compile Include="Assessments\PublishAssessment.cs" />
     <Compile Include="ConditionManifests\PublishConditionManifest.cs" />
     <Compile Include="CostManifests\PublishCostManifest.cs" />
+    <Compile Include="Credentials\PublishCredentialWithOutcomes.cs" />
+    <Compile Include="Employment\Occupations.cs" />
+    <Compile Include="PerformanceExamples\CareerBridgeCredentials.cs" />
     <Compile Include="ProPath\ProPathExamples.cs" />
     <Compile Include="Credentials\PublishCredential.cs" />
     <Compile Include="LearningOpportunities\PublishLearningOpportunity.cs" />
@@ -71,6 +74,7 @@
     <Compile Include="SupportingData\FinancialAssistanceProfile.cs" />
     <Compile Include="SupportingData\Industries.cs" />
     <Compile Include="SupportingData\InstructionalProgram_CIP.cs" />
+    <Compile Include="SupportingData\Jurisdictions.cs" />
     <Compile Include="SupportingData\Occupations.cs" />
     <Compile Include="TransferValueProfiles\PublishTransferValueProfile.cs" />
   </ItemGroup>

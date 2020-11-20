@@ -135,23 +135,30 @@ namespace RA.Models.Input
 		/// The type of the described agent.
 		/// Must provide valid organization types.
 		/// May provide with or without the orgType namespace
-		/// orgType:CertificationBody
+		/// Example: orgType:CertificationBody
+		/// <see cref="https://credreg.net/ctdl/terms/agentType"/>
 		/// </summary>
 		public List<string> AgentType { get; set; }
 
 		/// <summary>
 		/// The types of sociological, economic, or political subdivision of society served by an agent. Enter one of:
 		/// <value>
-		/// agentSector:PrivateForProfit agentSector:PrivateNonProfit agentSector:Public
+		/// agentSector:PrivateForProfit 
+		/// agentSector:PrivateNonProfit 
+		/// agentSector:Public
 		/// </value>
 		/// </summary>
 		public string AgentSectorType { get; set; }
 
 
 		//also require contact information via at least one of 
-
+		/// <summary>
+		/// Email addresses for organization
+		/// </summary>
 		public List<string> Email { get; set; }
-
+		/// <summary>
+		/// Addresses for organization
+		/// </summary>
 		public List<Place> Address { get; set; }
 		#endregion
 
@@ -220,16 +227,35 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Type of service offered by the agent being described; select from an existing enumeration of such terms.
 		/// List of concepts from ConceptScheme: ceterms:AgentServiceType
-		/// serviceType:AccreditService serviceType:ApproveService serviceType:OfferService serviceType:RecognizeService serviceType:RegulateService serviceType:RenewService
+		/// Valid values:
+		/// serviceType:AccreditService 
+		/// serviceType:ApproveService 
+		/// serviceType:OfferService 
+		/// serviceType:RecognizeService 
+		/// serviceType:RegulateService 
+		/// serviceType:RenewService
 		/// </summary>
 		public List<string> ServiceType { get; set; }
 		#endregion
 
+		/// <summary>
+		/// Alternative Identifier
+		/// 20-10-22 mparsons: AlternativeIdentifier is now obsolete. Added Identifier to replace AlternativeIdentifier
+		///						The API will initially handle mapping any use of AlternativeIdentifier to Identifier and return a warning. 
+		///						This property will be removed permanently 20-11-15
+		/// 
+		/// Alternative, publicly available and globally unique identifier for an organization issued by an authoritative entity.
+		/// </summary>
+		//[Obsolete]
+		//public List<IdentifierValue> AlternativeIdentifier { get; set; } = new List<IdentifierValue>();
 
 		/// <summary>
 		/// Alias for the organization including acronyms, alpha-numeric notations, and other forms of name abbreviations in common use
 		/// </summary>
 		public List<string> AlternateName { get; set; }
+		/// <summary>
+		/// alternate name using a LanguageMapList
+		/// </summary>
 		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>

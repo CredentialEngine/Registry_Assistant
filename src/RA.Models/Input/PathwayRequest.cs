@@ -170,7 +170,6 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// PathwayComponent Description 
-		/// Required
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>

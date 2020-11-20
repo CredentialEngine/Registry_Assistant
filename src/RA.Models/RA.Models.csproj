@@ -74,6 +74,7 @@
     <Compile Include="Input\CtdlAttributes.cs" />
     <Compile Include="Input\DeleteRequest.cs" />
     <Compile Include="Input\LearningOpportunityRequest.cs" />
+    <Compile Include="Input\OccupationRequest.cs" />
     <Compile Include="Input\OrganizationRequest.cs" />
     <Compile Include="Input\PathwayRequest.cs" />
     <Compile Include="Input\PathwaySetRequest.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Input\profiles\FrameworkItem.cs" />
     <Compile Include="Input\profiles\HelperClasses.cs" />
     <Compile Include="Input\profiles\HoldersProfile.cs" />
+    <Compile Include="Input\profiles\Job.cs" />
     <Compile Include="Input\profiles\Jurisdiction.cs" />
     <Compile Include="Input\profiles\LanguageMap.cs" />
     <Compile Include="Input\profiles\MonetaryAmount.cs" />
@@ -105,8 +107,10 @@
     <Compile Include="Input\profiles\QData\SubjectProfile.cs" />
     <Compile Include="Input\profiles\QuantitativeValue.cs" />
     <Compile Include="Input\profiles\RevocationProfile.cs" />
+    <Compile Include="Input\profiles\Task.cs" />
     <Compile Include="Input\profiles\ValueProfile.cs" />
     <Compile Include="Input\profiles\VerificationServiceProfile.cs" />
+    <Compile Include="Input\profiles\WorkRole.cs" />
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />
     <Compile Include="Input\TransferValueProfileRequest.cs" />
     <Compile Include="JsonV2\Agent.cs" />
@@ -126,13 +130,16 @@
     <Compile Include="JsonV2\EmploymentOutcomeProfile.cs" />
     <Compile Include="JsonV2\EntityBase.cs" />
     <Compile Include="JsonV2\FinancialAssistanceProfile.cs" />
+    <Compile Include="JsonV2\GraphDocument.cs" />
     <Compile Include="JsonV2\HelpersClass.cs" />
     <Compile Include="JsonV2\HoldersProfile.cs" />
+    <Compile Include="JsonV2\Job.cs" />
     <Compile Include="JsonV2\JsonLDDocument.cs" />
     <Compile Include="JsonV2\JurisdictionProfile.cs" />
     <Compile Include="JsonV2\LanguageMap.cs" />
     <Compile Include="JsonV2\LearningOpportunityProfile.cs" />
     <Compile Include="JsonV2\MonetaryAmount.cs" />
+    <Compile Include="JsonV2\Occupation.cs" />
     <Compile Include="JsonV2\OrganizationBase.cs" />
     <Compile Include="JsonV2\Pathway.cs" />
     <Compile Include="JsonV2\PathwayComponent.cs" />
@@ -144,9 +151,11 @@
     <Compile Include="JsonV2\QData\DataSetTimeFrame.cs" />
     <Compile Include="JsonV2\QData\SubjectProfile.cs" />
     <Compile Include="JsonV2\QuantitativeValue.cs" />
+    <Compile Include="JsonV2\Task.cs" />
     <Compile Include="JsonV2\TransferValueProfile.cs" />
     <Compile Include="JsonV2\ValueProfile.cs" />
     <Compile Include="JsonV2\VerificationServiceProfile.cs" />
+    <Compile Include="JsonV2\WorkRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryAssistantResponse.cs" />
     <Compile Include="RegistryPublishingHistory.cs" />

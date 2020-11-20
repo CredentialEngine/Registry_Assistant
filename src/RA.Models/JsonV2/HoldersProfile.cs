@@ -14,7 +14,7 @@ namespace RA.Models.JsonV2
 	{
 
 		[JsonProperty( "@type" )]
-		public string Type { get; set; } = "ceterms:HolderProfile";
+		public string Type { get; set; } = "ceterms:HoldersProfile";
 
 		[JsonProperty( "@id" )]
 		public string CtdlId { get; set; }
@@ -26,16 +26,17 @@ namespace RA.Models.JsonV2
 		public string Ctid { get; set; }
 
 		/// <summary>
+		/// Description of the profile
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
+
+		/// <summary>
 		/// Effective date of this profile
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
 		public string DateEffective { get; set; }
 
-		/// <summary>
-		/// Description of the profile
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap Description { get; set; }
 
 		/// <summary>
 		/// DemographicInformation
@@ -70,7 +71,6 @@ namespace RA.Models.JsonV2
 		/// Relevant Data Set
 		/// Data Set on which earnings or employment data is based.
 		/// qdata:DataSetProfile
-		/// TODO - this may change to URIs
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:relevantDataSet" )]
 		public List<string> RelevantDataSet { get; set; }

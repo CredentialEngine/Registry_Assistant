@@ -121,13 +121,13 @@ namespace RA.Models.JsonV2
 
 		//TODO - this may change to URIs
 		//		- in this case, the earningProfile should have a credential reference like
-		[JsonProperty( PropertyName = "ceterms:earningsProfile" )]
+		[JsonProperty( PropertyName = "ceterms:earnings" )]
 		//public List<EarningsProfile> EarningsProfile { get; set; }
 		public List<string> EarningsProfile { get; set; }
 
 		//TODO - this may change to URIs
 		//		- in this case, the employmentOutcomeProfile should have a credential reference like employmentOutcomeProfileFor
-		[JsonProperty( PropertyName = "ceterms:employmentOutcomeProfile" )]
+		[JsonProperty( PropertyName = "ceterms:employmentOutcome" )]
 		//public List<EmploymentOutcomeProfile> EmploymentOutcomeProfile { get; set; }
 		public List<string> EmploymentOutcomeProfile { get; set; }
 
@@ -142,7 +142,7 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:hasPart" )]
 		public List<string> HasPart { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:holdersProfile" )]
+		[JsonProperty( PropertyName = "ceterms:holders" )]
 		public List<string> HoldersProfile { get; set; }
 
 		[ JsonProperty( PropertyName = "ceterms:isPartOf" )]

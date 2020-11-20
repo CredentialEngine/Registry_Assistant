@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net.Http;
-using System.Net.Http.Headers;
+﻿using System.Collections.Generic;
+
 using Newtonsoft.Json;
 
 using RA.Models;
 using RA.Models.Input;
 using RA.Models.Input.profiles.QData;
-using YourCredential = RA.SamplesForDocumentation.SampleModels.Credential;
-using APIRequestCredential = RA.Models.Input.Credential;
+
 using APIRequest = RA.Models.Input.CredentialRequest;
 
 namespace RA.SamplesForDocumentation
@@ -19,9 +15,9 @@ namespace RA.SamplesForDocumentation
 		/// <summary>
 		/// Publish a ProPath credential with a holders profile
 		/// Based on 160 Driving Academy <see cref="https://apps.illinoisworknet.com/cis/wioatraining/program/1006549_1007283"/>
-		/// See published JSON-LD: <see cref="https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/SamplePublishing/RA.SamplesForDocumentation/Credentials/ProPath_Published.json"/>
+		/// See published JSON-LD: <see cref="https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/SamplePublishing/RA.SamplesForDocumentation/ProPath/ProPath_Published.json"/>
 		/// </summary>
-		/// <param name="requestType"></param>
+		/// <param name="requestType">Format or Publish</param>
 		public void CredentialWithHoldersProfile( string requestType = "format" )
 		{
 
@@ -50,13 +46,13 @@ namespace RA.SamplesForDocumentation
 				CredentialType = "License",
 				CredentialStatusType = "Active"
 			};
+			//20-10-29 updated to use the CTID for the organization in the sandbox
 			myData.OwnedBy = new List<OrganizationReference>()
 			{
 				new OrganizationReference()
 				{
 					Type="CredentialOrganization",
-					Name="160 Driving Academy",
-					SubjectWebpage="https://160drivingacademy.com/"
+					CTID="ce-3593828b-a3ce-43e6-bedf-66e5865e524a"
 				}
 			};
 			//where owner also offers:
@@ -216,10 +212,16 @@ namespace RA.SamplesForDocumentation
 
 			bool isValid = new SampleServices().PublishRequest( req );
 
-			LoggingHelper.WriteLogFile( 2, string.Format( "cred_{0}_payload.json", "ProPath" ), req.FormattedPayload, "", false );
+			LoggingHelper.WriteLogFile( 2, string.Format( "ProPath_red_{0}_payload.json", myRequest.Credential.Ctid ), req.FormattedPayload, "", false );
 
 		}
 
+		/// <summary>
+		/// Publish a ProPath credential with a holders profile
+		/// Based on 160 Driving Academy <see cref="https://apps.illinoisworknet.com/cis/wioatraining/program/1006549_1007283"/>
+		/// See published JSON-LD: <see cref="https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/SamplePublishing/RA.SamplesForDocumentation/ProPath/LearningOpportunity_160%20Driving%20Academy_published.json"/>
+		/// </summary>
+		/// <param name="requestType">Format or Publish</param>
 		public void RelatedLearningOpportunity( string requestType = "format" )
 		{
 			//assign the api key - acquired from organization account of the organization doing the publishing
@@ -238,7 +240,6 @@ namespace RA.SamplesForDocumentation
 			 //Assign a CTID for the entity being published and keep track of it
 			var myLoppCTID = "ce-f8885b28-134d-4188-8c86-063aadff14ea";// "ce-" + Guid.NewGuid().ToString().ToLower();
 			//typically would have been stored prior to retrieving for publishing
-			//DataService.SaveLearningOpportunityCTID( myLoppCTID );
 
 			//Populate the learning opportunity object
 			var myData = new LearningOpportunity()
@@ -251,13 +252,13 @@ namespace RA.SamplesForDocumentation
 				DeliveryType = new List<string>() { "InPerson","OnlineOnly"}
 			};
 
+			//20-10-29 updated to use the CTID for the organization in the sandbox
 			myData.OwnedBy = new List<OrganizationReference>()
 			{
 				new OrganizationReference()
 				{
 					Type="CredentialOrganization",
-					Name="160 Driving Academy",
-					SubjectWebpage="https://160drivingacademy.com/"
+					CTID="ce-3593828b-a3ce-43e6-bedf-66e5865e524a"
 				}
 			};
 			//where owner also offers:
@@ -320,7 +321,7 @@ namespace RA.SamplesForDocumentation
 			{
 				new FinancialAssistanceProfile()
 				{
-					FinancialAssistanceType = new List<string>() { "financialAid:PrivateLoan", "financialAid:Grant" } //at this time financialAid:WIOA is not in production, so using grant
+					FinancialAssistanceType = new List<string>() { "financialAid:PrivateLoan", "financialAid:WIOA" } //at this time financialAid:WIOA is not in production, so using grant
 				}
 			};//
 			myData.EntryCondition = new List<ConditionProfile>()
@@ -394,7 +395,7 @@ namespace RA.SamplesForDocumentation
 			};
 
 			bool isValid = new SampleServices().PublishRequest( req );
-			LoggingHelper.WriteLogFile( 2, string.Format( "cred_{0}_payload.json", "ProPath" ), req.FormattedPayload, "", false );
+			LoggingHelper.WriteLogFile( 2, string.Format( "ProPath_lopp_{0}_payload.json", myRequest.LearningOpportunity.Ctid ), req.FormattedPayload, "", false );
 
 
 		}

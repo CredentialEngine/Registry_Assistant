@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace RA.Models.Input
 {
 	/// <summary>
-	/// Profession, trade, or career field that may involve training and/or a formal qualification.
+	/// Set of responsibilities based on work roles within an occupation as defined by an employer.
 	/// </summary>
-	public class Occupation
+	public class Job
 	{
 
 		/// <summary>
@@ -17,13 +17,12 @@ namespace RA.Models.Input
 		/// requires
 		/// - CTID
 		/// - NAME
-		/// - Description
 		/// <see cref="https://credreg.net/ctdl/terms/ctid"/>
 		/// </summary>
 		public string CTID { get; set; }
 
 		/// <summary>
-		/// Name of this Occupation
+		/// Name of this Job
 		/// Required
 		/// ceterms:name
 		/// </summary>
@@ -34,7 +33,7 @@ namespace RA.Models.Input
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
-		/// Occupation description 
+		/// Job description 
 		/// Required
 		/// </summary>
 		public string Description { get; set; }
@@ -70,19 +69,19 @@ namespace RA.Models.Input
 		public LanguageMapList Comment_map { get; set; } = new LanguageMapList();
 
 		/// <summary>
-		/// Job related to this resource.
-		/// CTID for an existing Job
-		/// ceterms:hasJob
+		/// Occupation related to this resource.
+		/// CTID for an existing Occupation
+		/// ceterms:hasOccupation
 		/// </summary>
-		public List<string> HasJob { get; set; } = new List<string>();
+		public List<string> HasOccupation { get; set; } = new List<string>();
 
 		/// <summary>
-		/// More specialized profession, trade, or career field that is encompassed by the one being described.
-		/// CTID for an existing Occupation
-		/// <see cref="https://credreg.net/ctdl/terms/hasSpecialization"/>
-		/// ceterms:hasSpecialization
+		/// Task related to this resource.
+		/// CTID for an existing Task
+		/// <see cref="https://credreg.net/ctdl/terms/hasTask"/>
+		/// ceterms:hasTask
 		/// </summary>
-		public List<string> HasSpecialization { get; set; } = new List<string>();
+		public List<string> HasTask { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Work Role related to this resource.
@@ -122,13 +121,6 @@ namespace RA.Models.Input
 		#endregion
 
 		/// <summary>
-		/// Less specialized profession, trade, or career field that encompasses the one being described.
-		/// CTID for an existing Occupation
-		/// ceterms:isSpecializationOf
-		/// </summary>
-		public List<string> IsSpecializationOf { get; set; } = new List<string>();
-
-		/// <summary>
 		/// Body of information embodied either directly or indirectly in this resource.
 		/// List of CTIDs for a competency
 		/// ceasn:knowledgeEmbodied
@@ -146,7 +138,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
-		#region Occupation type and related helpers
+		#region OccupationType and related helpers
 		/// <summary>
 		/// OccupationType
 		/// Type of occupation; select from an existing enumeration of such types.
@@ -168,6 +160,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> ONET_Codes { get; set; } = new List<string>();
 		#endregion
+
+		/// <summary>
+		/// Organization(s) that offer this resource
+		/// </summary>
+		public List<OrganizationReference> OfferedBy { get; set; }
 
 		/// <summary>
 		/// Another source of information about the entity being described.

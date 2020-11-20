@@ -11,6 +11,9 @@ namespace RA.Models.Input
 	/// </summary>
 	public class CredentialRequest : BaseRequest
 	{
+		/// <summary>
+		/// constructor
+		/// </summary>
 		public CredentialRequest()
 		{
 			Credential = new Credential();

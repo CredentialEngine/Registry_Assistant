@@ -39,8 +39,10 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:description" )]
         public LanguageMap Description { get; set; }
 
-
-        [JsonProperty( PropertyName = "ceterms:dateEffective" )]
+		/// <summary>
+		/// Effective date of the content of this profile
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
         public string DateEffective { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:externalInputType" )]

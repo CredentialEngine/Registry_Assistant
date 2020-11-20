@@ -70,11 +70,13 @@ namespace RA.Models.Input
 		#region Required 
 		/// <summary>
 		/// Globally unique Credential Transparency Identifier (CTID)
+		/// Required
 		/// </summary>
 		public string Ctid { get; set; }
 
 		/// <summary>
 		/// Name or title of the resource.
+		/// Required
 		/// </summary>
 		public string Name { get; set; }
 		/// <summary>
@@ -94,23 +96,32 @@ namespace RA.Models.Input
 		/// <summary>
 		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
 		/// List of CTIDs for competencies or frameworks
+		/// Required?
 		/// ceasn:derivedFrom
 		/// </summary>
 		public List<string> DerivedFrom { get; set; } = new List<string>();
 
-		public string SubjectWebpage { get; set; } //URL
 
 		/// <summary>
 		/// Organization(s) that owns this resource
+		/// Required
 		/// </summary>
 		public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
 
-		#endregion
+		/// <summary>
+		/// Webpage that describes this entity.
+		/// Required
+		/// </summary>
+		public string SubjectWebpage { get; set; } //URL
+
 
 		/// <summary>
-		/// May be replaced by Identifier
+		/// A suggested or articulated credit- or point-related transfer value.
+		/// Required
 		/// </summary>
-		//public string CodedNotation { get; set; }
+		public List<ValueProfile> TransferValue { get; set; } = new List<ValueProfile>();
+		#endregion
+
 
 		/// <summary>
 		/// Identifier
@@ -127,22 +138,18 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Date this assertion ends.
+		/// Required
 		/// </summary>
 		public string EndDate { get; set; }
 
 		/// <summary>
+		/// FUTURE
 		/// Type of official status of the TransferProfile; select from an enumeration of such types.
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		/// </summary>
-		public string LifecycleStatusType { get; set; }
+		//public string LifecycleStatusType { get; set; }
 
-
-		/// <summary>
-		/// A suggested or articulated credit- or point-related transfer value.
-		/// Required
-		/// </summary>
-		public List<ValueProfile> TransferValue { get; set; } = new List<ValueProfile>();
 
 		/// <summary>
 		///  Resource that provides the transfer value described by this resource, according to the entity providing this resource.

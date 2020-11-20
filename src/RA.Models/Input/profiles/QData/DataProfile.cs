@@ -92,6 +92,11 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public string EmploymentDefinition { get; set; }
 		public LanguageMap EmploymentDefinition_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		/// Projected employment estimate.
+		/// qdata:employmentOutlook
+		/// </summary>
+		public List<QuantitativeValue> EmploymentOutlook { get; set; } = new List<QuantitativeValue>();
 
 		/// <summary>
 		/// Rate computed by dividing the number of holders or subjects meeting the data set's criteria of employment (meetEmploymentCriteria) by the number of holders or subjects for which data was available (dataAvailable).
@@ -188,7 +193,7 @@ namespace RA.Models.Input.profiles.QData
 		public List<QuantitativeValue> SubjectsInSet { get; set; } = new List<QuantitativeValue>();
 
 		/// <summary>
-		/// Number of holders that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set (employmentDefinition).
+		/// Number of holders that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set.
 		/// qdata:sufficientEmploymentCriteria
 		/// </summary>
 		public List<QuantitativeValue> SufficientEmploymentCriteria { get; set; } = new List<QuantitativeValue>();

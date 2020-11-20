@@ -186,7 +186,6 @@ namespace RA.SamplesForDocumentation
 			//Assign a CTID for the entity being published and keep track of it
 			var myCTID = "ce-" + Guid.NewGuid().ToString();
 
-
 			//A simple credential object - see below for sample class definition
 			var myData = new Credential()
 			{
@@ -203,7 +202,12 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
-
+			//list of CTIDs for credentials that have been published to the registry
+			//API will validate that the target credential exists. If not found, the request will be rejected. 
+			myData.HasETPLResource = new List<string>()
+			{
+				"ce-8d68b772-fe52-4b7b-9f3e-cb4fe93bb0ab","ce-7d77fdf7-8591-4fe4-b3ed-5aa798879651","ce-8d0ead8a-bff9-4231-be30-6db0b262bc44"
+			};
 
 			//This holds the credential and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
@@ -238,7 +242,7 @@ namespace RA.SamplesForDocumentation
 			request.OccupationType.Add( new FrameworkItem()
 			{
 				Framework = "https://www.onetonline.org/",
-				FrameworkName = "O*NET OnLine",
+				FrameworkName = "Standard Occupational Classification",
 				Name = "Information Security Analysts",
 				TargetNode = "https://www.onetonline.org/link/summary/15-1122.00",
 				CodedNotation = "15-1122.00",
@@ -247,7 +251,7 @@ namespace RA.SamplesForDocumentation
 			request.OccupationType.Add( new FrameworkItem()
 			{
 				Framework = "https://www.onetonline.org/",
-				FrameworkName = "O*NET OnLine",
+				FrameworkName = "Standard Occupational Classification",
 				Name = "Computer Network Support Specialists",
 				TargetNode = "https://www.onetonline.org/link/summary/15-1152.00",
 				CodedNotation = "15-1152.00",

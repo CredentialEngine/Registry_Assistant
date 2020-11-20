@@ -173,16 +173,27 @@ namespace RA.Models.JsonV2
 		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
 		[JsonProperty( PropertyName = "ceterms:occupationType" )]
 		public List<CredentialAlignmentObject> OccupationType { get; set; }
+		//
+		[JsonProperty( PropertyName = "ceterms:requires" )]
+		public List<ConditionProfile> Requires { get; set; } = null;
 
+		[JsonProperty( PropertyName = "ceterms:corequisite" )]
+		public List<ConditionProfile> Corequisite { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceterms:recommends" )]
+		public List<ConditionProfile> Recommends { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceterms:entryCondition" )]
+		public List<ConditionProfile> EntryCondition { get; set; } = null;
 		//
 		[JsonProperty( PropertyName = "ceterms:offeredBy" )]
-		public List<string> OfferedBy { get; set; }
+		public List<string> OfferedBy { get; set; } = null;
 		//
 		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
-		public List<string> OwnedBy { get; set; }
+		public List<string> OwnedBy { get; set; } = null;
 		//
 		[JsonProperty( PropertyName = "ceterms:sameAs" )]
-		public List<string> SameAs { get; set; } = new List<string>();
+		public List<string> SameAs { get; set; } = null;
 
 		//for learning opportunity only
 		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
