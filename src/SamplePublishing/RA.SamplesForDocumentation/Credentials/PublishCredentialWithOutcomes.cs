@@ -16,7 +16,7 @@ namespace RA.SamplesForDocumentation
 {
 	public class PublishCredentialWithOutcomes
 	{
-		public string CredentialWithHoldersProfile( string requestType = "format" )
+		public bool CredentialWithHoldersProfile( string requestType = "format" )
 		{
 			//Holds the result of the publish action
 			var result = "";
@@ -77,7 +77,7 @@ namespace RA.SamplesForDocumentation
 				InputPayload = payload
 			};
 
-			return  new SampleServices().PublishRequest( req );
+			return new SampleServices().PublishRequest( req );
 
 		}
 

@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 
 using RA.Models.Input;
 using RJ = RA.Models.JsonV2;
-using EntityRequest = RA.Models.Input.TransferValueProfileRequest;
-using InputEntity = RA.Models.Input.TransferValueProfile;
-using OutputEntity = RA.Models.JsonV2.TransferValueProfile;
+using EntityRequest = RA.Models.Input.WorkRoleRequest;
+using InputEntity = RA.Models.Input.WorkRole;
+using OutputEntity = RA.Models.JsonV2.WorkRole;
 using OutputGraph = RA.Models.JsonV2.GraphContainer;
 
 using CER = RA.Services.RegistryServices;
@@ -15,18 +15,18 @@ using Utilities;
 
 namespace RA.Services
 {
-	public class TransferValueServices : ServiceHelperV2
+	public class WorkRoleServices : ServiceHelperV2
 	{
-		string className = "TransferValueServices";
+		string className = "WorkRoleServices";
 		/// <summary>
-		/// Publish an TransferValue to the Credential Registry
+		/// Publish an WorkRole to the Credential Registry
 		/// </summary>
 		/// <param name="request"></param>
 		/// <param name="isValid"></param>
 		/// <param name="messages"></param>
-		public void Publish(EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper)
+		public void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
 		{
-			LoggingHelper.DoTrace( 6, string.Format( "TransferValueServices.Publish Request for: {0} Started.", request.TransferValueProfile.Name ) );
+			LoggingHelper.DoTrace( 6, string.Format( "WorkRoleServices.Publish Request for: {0} Started.", request.WorkRole.Name ) );
 			DateTime started = DateTime.Now;
 			isValid = true;
 			string crEnvelopeId = request.RegistryEnvelopeId;
@@ -37,6 +37,8 @@ namespace RA.Services
 			List<string> messages = new List<string>();
 			var output = new OutputEntity();
 			OutputGraph og = new OutputGraph();
+			//if ( environment != "production" )
+			//output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
 
 			if ( ToMap( request, output, ref messages ) )
 			{
@@ -57,7 +59,7 @@ namespace RA.Services
 
 				helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
 
-				CER cer = new CER( "TransferValue", output.Type, output.CTID, helper.SerializedInput )
+				CER cer = new CER( "WorkRole", output.Type, output.CTID, helper.SerializedInput )
 				{
 					PublisherAuthorizationToken = helper.ApiKey,
 					IsPublisherRequest = helper.IsPublisherRequest,
@@ -78,9 +80,10 @@ namespace RA.Services
 					else
 					{
 						//should be an error message returned
+
 						isValid = false;
 						helper.SetMessages( messages );
-						LoggingHelper.DoTrace( 4, string.Format( "TransferValue.Publish. Validate ApiKey failed. Org Ctid: {0}, Document Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.CTID, cer.PublisherAuthorizationToken ) );
+						LoggingHelper.DoTrace( 4, string.Format( "WorkRole.Publish. Validate ApiKey failed. Org Ctid: {0}, Document Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.CTID, cer.PublisherAuthorizationToken ) );
 						return; //===================
 					}
 				}
@@ -88,24 +91,23 @@ namespace RA.Services
 					cer.PublishingByOrgCtid = cer.PublishingForOrgCtid;
 
 				/* check if previously published
-				 * - if found, use the same publishing method 
-				 * 
+				 * - if found, use the same publishing method
 				 */
-				if ( !SupportServices.ValidateAgainstPastRequest( "TransferValue", output.CTID, ref cer, ref messages ) )
+				if ( !SupportServices.ValidateAgainstPastRequest( "WorkRole", output.CTID, ref cer, ref messages ) )
 				{
 					isValid = false;
 				}
 				else
 				{
-					string identifier = "TransferValue_" + request.TransferValueProfile;
+					string identifier = "WorkRole_" + request.WorkRole.CTID;
 
 					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
 						CheckIfChanged( helper, cer.WasChanged );
-						string msg = string.Format( "<p>Published TransferValue: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", output.Name, output.SubjectWebpage, output.CTID, crEnvelopeId );
-						NotifyOnPublish( "TransferValue", msg );
+						string msg = string.Format( "<p>Published WorkRole: {0}</p><p>CTID: {1}</p> <p>EnvelopeId: {2}</p> ", output.Name, output.CTID, crEnvelopeId );
+						NotifyOnPublish( "WorkRole", msg );
 					}
 					else
 					{
@@ -119,7 +121,6 @@ namespace RA.Services
 				isValid = false;
 				if ( !string.IsNullOrWhiteSpace( status ) )
 					messages.Add( status );
-				//helper.Payload = JsonConvert.SerializeObject(output, GetJsonSettings());
 				og.Graph.Add( output );
 				//TODO - is there other info needed, like in context?
 				if ( BlankNodes != null && BlankNodes.Count > 0 )
@@ -141,7 +142,7 @@ namespace RA.Services
 			helper.SetMessages( messages );
 		}
 
-		public string FormatAsJson(EntityRequest request, ref bool isValid, ref List<string> messages)
+		public string FormatAsJson( EntityRequest request, ref bool isValid, ref List<string> messages )
 		{
 			OutputGraph og = new OutputGraph();
 			var output = new OutputEntity();
@@ -164,7 +165,6 @@ namespace RA.Services
 				og.CTID = output.CTID;
 				og.Type = output.Type;
 				og.Context = ctdlContext;
-
 				payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
 			}
 			else
@@ -203,14 +203,15 @@ namespace RA.Services
 		/// <param name="output"></param>
 		/// <param name="messages"></param>
 		/// <returns></returns>        
-		public bool ToMap(EntityRequest request, OutputEntity output, ref List<string> messages)
+		public bool ToMap( EntityRequest request, OutputEntity output, ref List<string> messages )
 		{
-			CurrentEntityType = "TransferValueProfile";
+			DateTime mappingStarted = DateTime.Now;
+			CurrentEntityType = "WorkRole";
 			bool isValid = true;
 			Community = request.Community ?? "";
 
 			RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
-			InputEntity input = request.TransferValueProfile;
+			InputEntity input = request.WorkRole;
 			//if request.DefaultLanguage exists use it. 
 			//otherwise will come from inLanguage which is required.
 			bool hasDefaultLanguage = false;
@@ -225,53 +226,42 @@ namespace RA.Services
 			}
 			try
 			{
-
-				CurrentCtid = output.CTID = FormatCtid( input.Ctid, "TransferValue Profile", ref messages );
+				CurrentCtid = output.CTID = FormatCtid( input.CTID, "WorkRole Profile", ref messages );
 				output.CtdlId = SupportServices.FormatRegistryUrl( ResourceTypeUrl, output.CTID, Community );
 
 				//required
-				output.Name = AssignLanguageMap( input.Name, input.Name_Map, "TransferValue.Name", DefaultLanguageForMaps, ref messages, true, 3 );
+				output.Name = AssignLanguageMap( input.Name, input.Name_Map, "WorkRole.Name", DefaultLanguageForMaps, ref messages, true, 3 );
 				CurrentEntityName = GetFirstItemValue( output.Name );
-				output.Description = AssignLanguageMap( input.Description, input.Description_Map, "TransferValue.Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
-				//required?
-				//TODO - why don't we have an existance check for owner?
-				output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "TransferValueProfile Owning Organization", true, ref messages, false, true );
-				output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, false );
+				output.Description = AssignLanguageMap( input.Description, input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+
+				//classification? Range of Concept, but no target concept scheme.
 				//
-				output.TransferValue = AssignValueProfileToList( input.TransferValue, "TransferValue", "TransferValueProfile", ref messages );
-				//output.TransferValue = AssignQuantitiveValueToList( input.TransferValue, "TransferValue", "TransferValueProfile", ref messages );
-				bool isTransferValueRequired = UtilityManager.GetAppKeyValue( "tvp.isTransferValueRequired", false );
-				if( isTransferValueRequired && (output.TransferValue == null || output.TransferValue.Count() == 0))
-				{
-					messages.Add( "Error: The property 'TransferValue' is required for a Transfer Value Profile." );
-				}
-				//the class type must be provided for a blank node
-				//require offered by or owned by
-				output.TransferValueFor = FormatTVPEntityReferencesList( input.TransferValueFor, "TransferValueFor", false, ref messages );
-				output.TransferValueFrom = FormatTVPEntityReferencesList( input.TransferValueFrom, "TransferValueFrom", false, ref messages );
-				//20-10-01 - replaces codedNotation
+				output.Comment = AssignLanguageMapList( input.Comment, input.Comment_map, "comment", DefaultLanguageForMaps, ref messages );
+				output.HasTask = AssignRegistryResourceURIsListAsStringList( input.HasTask, "HasTask", ref messages, false );
+
 				output.Identifier = AssignIdentifierListToList( input.Identifier, ref messages );
 
+				output.AbilityEmbodied = AssignRegistryResourceURIsListAsStringList( input.AbilityEmbodied, "AbilityEmbodied", ref messages, false );
+				output.KnowledgeEmbodied = AssignRegistryResourceURIsListAsStringList( input.KnowledgeEmbodied, "knowledgeEmbodied", ref messages, false );
+				output.SkillEmbodied = AssignRegistryResourceURIsListAsStringList( input.SkillEmbodied, "skillEmbodied", ref messages, false );
 
-				output.StartDate = MapDate( input.StartDate, "TransferValueProfile StartDate", ref messages );
-				output.EndDate = MapDate( input.EndDate, "TransferValueProfile EndDate", ref messages );
-
-				//TBD
-				//output.LifecycleStatusType = AssignStatusType( "TransferValue LifecycleStatusType", input.LifecycleStatusType, ref messages, true );
-				//
+				output.VersionIdentifier = AssignIdentifierListToList( input.VersionIdentifier, ref messages );
 
 			}
 			catch ( Exception ex )
 			{
-				LoggingHelper.LogError( ex, "TransferValueServices.ToMap" );
+				LoggingHelper.LogError( ex, className + ".ToMap" );
 				messages.Add( ex.Message );
 			}
 
 			if ( messages.Count > 0 )
 				isValid = false;
 
+			TimeSpan duration = DateTime.Now.Subtract( mappingStarted );
+			if ( duration.TotalSeconds > 2 )
+				LoggingHelper.DoTrace( 1, string.Format( "{0}.ToMap *******Mapping took a little longer: elapsed: {1:N2} seconds.", className, duration.TotalSeconds ) ); ;
+
 			return isValid;
 		}
-
 	}
 }

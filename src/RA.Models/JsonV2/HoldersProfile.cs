@@ -25,6 +25,9 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceterms:ctid" )]
 		public string Ctid { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap Name { get; set; }
+
 		/// <summary>
 		/// Description of the profile
 		/// </summary>

@@ -13,6 +13,7 @@ using CER = RA.Services.RegistryServices;
 using SkosEntityRequest = RA.Models.Input.SkosConceptSchemeRequest;
 using EntityRequest = RA.Models.Input.ConceptSchemeRequest;
 using InputEntity = RA.Models.Input.ConceptScheme;
+using GraphEntityRequest = RA.Models.Input.ConceptSchemeGraphRequest;
 using SkosInputEntity = RA.Models.Input.SkosConceptScheme;
 using OutputEntity = RA.Models.JsonV2.ConceptScheme;
 using OutputConcept = RA.Models.JsonV2.Concept;
@@ -34,7 +35,7 @@ namespace RA.Services
 		public bool isConceptschemeDateCreatedRequired = GetAppKeyValue( "conceptSchemeDateCreatedIsRequired", true );
 
 		#region publish from graph
-		public void PublishGraph( GraphRequest request, ref bool isValid, RA.Models.RequestHelper helper )
+		public void PublishGraph( GraphEntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
 		{
 			isValid = true;
 			string crEnvelopeId = request.RegistryEnvelopeId;
@@ -140,7 +141,7 @@ namespace RA.Services
 			helper.SetMessages( messages );
 			return;
 		}
-		public bool ToMapFromGraph(GraphRequest request, ref OutputEntity output, ref List<string> messages )
+		public bool ToMapFromGraph( GraphEntityRequest request, ref OutputEntity output, ref List<string> messages )
 		{
 			CurrentEntityType = "ConceptScheme";
 			bool isValid = true;
@@ -786,7 +787,7 @@ namespace RA.Services
 		}
 
 
-		private OutputEntity GetConceptSchemeFromPlainGraph(GraphRequest request, bool hasDefaultLanguage, ref int conceptsCount, ref List<string> messages)
+		private OutputEntity GetConceptSchemeFromPlainGraph( GraphEntityRequest request, bool hasDefaultLanguage, ref int conceptsCount, ref List<string> messages)
 		{
 			//string ctid = "";
 			conceptsCount = 0;
@@ -1447,7 +1448,6 @@ namespace RA.Services
 			//	output.Notation = input.Notation;
 
 			output.Note = AssignLanguageMapList( input.Note, "Note", DefaultLanguageForMaps, ref messages );
-			//TODO - need to add helpers to allow ctids and convert to registry url
 			output.TopConceptOf = AssignRegistryResourceURIAsString( input.TopConceptOf, "TopConceptOf", ref messages, false, false );
 
 			return isValid;

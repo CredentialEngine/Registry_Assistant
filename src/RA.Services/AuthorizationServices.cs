@@ -32,6 +32,7 @@ namespace RA.Services
 		#region === Security related Methods ===
 
 		/// <summary>
+		/// Verify a Header Token and apiKey are provided if required
 		/// The actual validation will be via a call to the accounts api
 		/// </summary>
 		/// <param name="helper"></param>
@@ -44,13 +45,17 @@ namespace RA.Services
 			List<string> messages = new List<string>();
 			bool isTokenRequired = UtilityManager.GetAppKeyValue( "requiringHeaderToken", true );
 			// -api key for manual publisher site-
-			var apiPublisherIdentifier = UtilityManager.GetAppKeyValue( "apiPublisherIdentifier" );
+			var ceApiKey = UtilityManager.GetAppKeyValue( "ceApiKey" );
+			if (string.IsNullOrWhiteSpace(ceApiKey))
+			{
+
+			}
 			if ( isDeleteRequest )
 				isTokenRequired = true;
 
 			//api key will be passed in the header
 			string apiToken = "";
-			if ( IsAuthTokenValid( isTokenRequired, apiPublisherIdentifier, ref apiToken, ref clientIdentifier, ref statusMessage ) == false )
+			if ( IsAuthTokenValid( isTokenRequired, ceApiKey, ref apiToken, ref clientIdentifier, ref statusMessage ) == false )
 			{
 				return false;
 			}
@@ -66,7 +71,7 @@ namespace RA.Services
 				return false;
 			}
 			//check if originates from publisher (hmmm except sandbox testing?)
-			if ( clientIdentifier == apiPublisherIdentifier )
+			if ( clientIdentifier == ceApiKey )
 			{
 				helper.IsPublisherRequest = true;
 			}
@@ -90,9 +95,9 @@ namespace RA.Services
 
 		public static bool IsAuthTokenValid(bool isTokenRequired, ref string apiToken, ref string message)
 		{
-			string apiPublisherIdentifier = "";
+			string ceApiKey = "";
 			string clientIdentifier = "";
-			return IsAuthTokenValid( isTokenRequired, apiPublisherIdentifier, ref apiToken, ref clientIdentifier, ref message );
+			return IsAuthTokenValid( isTokenRequired, ceApiKey, ref apiToken, ref clientIdentifier, ref message );
 		}
 
 		public static bool IsAuthTokenValid( bool isTokenRequired, string apiPublisherIdentifier, ref string token, ref string clientIdentifier, ref string message )

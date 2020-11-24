@@ -20,12 +20,15 @@ namespace RA.Services
 		#region Initialization
 		public SPARQLServices()
 		{
+			Log( "Service 0" );
 			//Use cache if available
 			SchemaContext = ( SchemaContextInfo ) MemoryCache.Default[ "SPARQL_SchemaContext" ];
 			if( SchemaContext == null )
 			{
+				Log( "Service 1" );
 				//Get and process contexts
 				SchemaContext = new SchemaContextInfo();
+				Log( "Service 1A" );
 				var contextData = GetAsyncData( new List<string>()
 				{
 					"https://credreg.net/ctdl/schema/context/json",
@@ -35,9 +38,12 @@ namespace RA.Services
 				} );
 				foreach( var item in contextData )
 				{
+					Log( "Service " + item + " start" );
 					ProcessContext( item.Key, item.Value );
+					Log( "Service " + item + " finish" );
 				}
 
+				Log( "Service 2" );
 				//Credential Types
 				var ctdl = JObject.Parse( new HttpClient().GetAsync( "https://credreg.net/ctdl/schema/encoding/json" ).Result.Content.ReadAsStringAsync().Result );
 				GetSubclassTree( (JArray) ctdl["@graph"], (JObject) ctdl[ "@graph" ].FirstOrDefault( m => m[ "@id" ] != null && m[ "@id" ].ToString() == "ceterms:Credential" ), SchemaContext.CredentialTypes );
@@ -45,10 +51,13 @@ namespace RA.Services
 				//Cache the data
 				MemoryCache.Default.Remove( "SPARQL_SchemaContext" );
 				MemoryCache.Default.Add( "SPARQL_SchemaContext", SchemaContext, new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddHours( 1 ) } );
+				Log( "Service 3" );
 			}
 		}
 		private void ProcessContext( string url, string rawContextData )
 		{
+			Log( "URL: " + url );
+			Log( "Raw Context: " + rawContextData );
 			//Raw Context
 			var context = JObject.Parse( rawContextData );
 			SchemaContext.Contexts.Add( url, context );
@@ -73,9 +82,9 @@ namespace RA.Services
 			ProcessContext( objectProperties, "@type", "xsd:date", SchemaContext.DateProperties );
 			ProcessContext( objectProperties, "@type", "xsd:dateTime", SchemaContext.DateTimeProperties );
 			ProcessContext( objectProperties, "@type", "xsd:boolean", SchemaContext.BooleanProperties );
-			ProcessContext( objectProperties, "@type", "xsd:integer", SchemaContext.NumberProperties );
-			ProcessContext( objectProperties, "@type", "xsd:float", SchemaContext.NumberProperties );
-			ProcessContext( objectProperties, "@type", "xsd:decimal", SchemaContext.NumberProperties );
+			ProcessContext( objectProperties, "@type", "xsd:integer", SchemaContext.IntegerProperties );
+			ProcessContext( objectProperties, "@type", "xsd:float", SchemaContext.FloatProperties );
+			ProcessContext( objectProperties, "@type", "xsd:decimal", SchemaContext.DecimalProperties );
 		}
 		private void ProcessContext( List<JProperty> objectProperties, string checkInternalProperty, string checkInternalValue, List<string> addToList )
 		{
@@ -104,7 +113,8 @@ namespace RA.Services
 				URIPrefixes = new Dictionary<string, string>()
 				{
 					{ "credreg", "https://credreg.net/" }, //Accommodate the credreg:__prefix references
-					{ "search", "https://credreg.net/search/" } //Accommodate the search: references
+					{ "search", "https://credreg.net/search/" }, //Accommodate the search: references
+					{ "neptune-fts", "http://aws.amazon.com/neptune/vocab/v01/services/fts#" }
 				};
 			}
 			public JObject Contexts { get; set; }
@@ -115,7 +125,10 @@ namespace RA.Services
 			public List<string> DateProperties { get; set; }
 			public List<string> DateTimeProperties { get; set; }
 			public List<string> BooleanProperties { get; set; }
-			public List<string> NumberProperties { get; set; }
+			public List<string> IntegerProperties { get; set; } //xsd:integer
+			public List<string> FloatProperties { get; set; } //xsd:float
+			public List<string> DecimalProperties { get; set; } //xsd:decimal
+
 			public List<string> CredentialTypes { get; set; }
 			public List<string> LanguageBCP47Properties { get; set; } //xsd:language
 		}
@@ -124,7 +137,7 @@ namespace RA.Services
 		public class QueryContextInfo
 		{
 			public QueryContextInfo() { }
-			public QueryContextInfo( JObject ctdlJSONQuery, int skip, int take, DescriptionSetType descriptionSetType, SortOrders sortOrder, bool orderByDescending, string apiKey, string referrer, int relatedItemsLimit, bool includeDebugInfo )
+			public QueryContextInfo( JObject ctdlJSONQuery, int skip, int take, DescriptionSetType descriptionSetType, SortOrders sortOrder, bool orderByDescending, string apiKey, string referrer, int relatedURIsLimit, int relatedItemsLimit, bool includeDebugInfo )
 			{
 				CTDLJSONQuery = ctdlJSONQuery;
 				Skip = skip;
@@ -135,6 +148,7 @@ namespace RA.Services
 				APIKey = apiKey;
 				Referrer = referrer;
 				RelatedItemsLimit = relatedItemsLimit;
+				RelatedURIsLimit = relatedURIsLimit;
 				IncludeDebugInfo = includeDebugInfo;
 			}
 			public JObject CTDLJSONQuery { get; set; }
@@ -146,6 +160,7 @@ namespace RA.Services
 			public string APIKey { get; set; }
 			public string Referrer { get; set; }
 			public int RelatedItemsLimit { get; set; }
+			public int RelatedURIsLimit { get; set; }
 			public bool IncludeDebugInfo { get; set; }
 		}
 		//
@@ -155,26 +170,41 @@ namespace RA.Services
 		//Global variables
 		public SchemaContextInfo SchemaContext { get; set; }
 		public QueryContextInfo QueryContext { get; set; }
-		public enum SortOrders { DEFAULT, CREATED, UPDATED, NAME }
-		public enum DescriptionSetType { Resource, Resource_Graph, Resource_RelatedURIs, Resource_RelatedURIs_Graph, Resource_RelatedURIs_Graph_RelatedData }
+		public enum SortOrders { DEFAULT, CREATED, UPDATED }
+		public enum DescriptionSetType { Resource, Resource_Graph, Resource_RelatedURIs, Resource_RelatedURIs_Graph, Resource_RelatedURIs_RelatedData, Resource_RelatedURIs_Graph_RelatedData }
+		//
+
+		private static void Log( string text )
+		{
+			try
+			{
+				//System.IO.File.AppendAllText( "C:/@logs/assistantsparql.txt", text + "\r\n" );
+			}
+			catch { }
+		}
 		//
 
 		//Processing
 		public static SPARQLResultSet DoSPARQLSearch( SPARQLRequest request, string apiKey, string referrer )
 		{
-			return DoSPARQLSearch( request.Query, request.Skip, request.Take, request.DescriptionSetType, request.OrderBy, request.OrderDescending, apiKey, referrer, request.RelatedItemsLimit, request.IncludeDebugInfo );
+			return DoSPARQLSearch( request.Query, request.Skip, request.Take, request.DescriptionSetType, request.OrderBy, request.OrderDescending, apiKey, referrer, request.DescriptionSetRelatedURIsLimit, request.DescriptionSetRelatedItemsLimit, request.IncludeDebugInfo );
 		}
-		public static SPARQLResultSet DoSPARQLSearch( JObject ctdlQuery, int skip, int take, DescriptionSetType descriptionSetType, SortOrders sortOrder, bool orderDescending, string apiKey, string referrer, int relatedItemsLimit, bool includeDebugInfo )
+		public static SPARQLResultSet DoSPARQLSearch( JObject ctdlQuery, int skip, int take, DescriptionSetType descriptionSetType, SortOrders sortOrder, bool orderDescending, string apiKey, string referrer, int relatedURIsLimit, int relatedItemsLimit, bool includeDebugInfo )
 		{
+			Log( "SPARQL 0" );
 			var resultSet = new SPARQLResultSet();
 			var SPARQLServices = new SPARQLServices();
 
+			Log( "SPARQL 1" );
 			//Add query context
-			SPARQLServices.QueryContext = new QueryContextInfo( ctdlQuery, skip, take, descriptionSetType, sortOrder, orderDescending, apiKey, referrer, relatedItemsLimit, includeDebugInfo );
+			SPARQLServices.QueryContext = new QueryContextInfo( ctdlQuery, skip, take, descriptionSetType, sortOrder, orderDescending, apiKey, referrer, relatedURIsLimit, relatedItemsLimit, includeDebugInfo );
 
+			Log( "SPARQL 2" );
 			//Get the total results and page of results
 			var resultsAndTotalQueryData = SPARQLServices.CTDLQueryToSPARQLQuery( ctdlQuery, skip, take, sortOrder, orderDescending );
+			Log( "SPARQL 3" );
 
+			/*
 			//Run both subqueries simultaneously to speed things up
 			ThreadPool.QueueUserWorkItem( delegate
 			{
@@ -190,11 +220,25 @@ namespace RA.Services
 			{
 				Thread.Sleep( 10 );
 			}
+			*/
 
 			resultSet.DebugInfo[ "TotalResultsQuery" ] = resultsAndTotalQueryData.TotalResultsQuery;
 			resultSet.DebugInfo[ "ResultPayloadQuery" ] = resultsAndTotalQueryData.ResultPayloadQuery;
-			resultSet.DebugInfo[ "TotalResultsData" ] = resultsAndTotalQueryData.TotalResultsData;
-			resultSet.DebugInfo[ "ResultPayloadData" ] = resultsAndTotalQueryData.ResultPayloadData;
+			//resultSet.DebugInfo[ "TotalResultsData" ] = resultsAndTotalQueryData.TotalResultsData;
+			//resultSet.DebugInfo[ "ResultPayloadData" ] = resultsAndTotalQueryData.ResultPayloadData;
+
+			//Run the fancy new merged query
+			try
+			{
+				resultsAndTotalQueryData.CombinedQueryData = SPARQLServices.RunSPARQLQuery( resultsAndTotalQueryData.CombinedQuery, apiKey, skip, take, referrer, false ); //Switch logRequest to true to enable logging
+				resultSet.DebugInfo[ "CombinedResultsQuery" ] = resultsAndTotalQueryData.CombinedQuery;
+				resultSet.DebugInfo[ "CombinedResultsData" ] = resultsAndTotalQueryData.CombinedQueryData;
+			}
+			catch( Exception ex )
+			{
+				resultSet.DebugInfo[ "CombinedResultsQuery" ] = resultsAndTotalQueryData.CombinedQuery;
+				resultSet.DebugInfo[ "CombinedQueryError" ] = ex.Message;
+			}
 
 			/*
 			var resultsAndTotal = SPARQLServices.RunSPARQLQuery( resultsAndTotalQuery, apiKey, skip, take, referrer );
@@ -208,8 +252,11 @@ namespace RA.Services
 			try
 			{
 				//Get the total results and result payloads
-				resultSet.TotalResults = int.Parse( resultsAndTotalQueryData.TotalResultsData[ "results" ][ "bindings" ].FirstOrDefault( m => m[ "totalResults" ] != null )[ "totalResults" ][ "value" ].ToString() );
-				resultSet.SearchResults = resultsAndTotalQueryData.ResultPayloadData[ "results" ][ "bindings" ].Where( m => m[ "searchResultPayload" ] != null ).Select( m => JObject.Parse( m[ "searchResultPayload" ][ "value" ].ToString() ) ).ToList();
+				//resultSet.TotalResults = int.Parse( resultsAndTotalQueryData.TotalResultsData[ "results" ][ "bindings" ].FirstOrDefault( m => m[ "totalResults" ] != null )[ "totalResults" ][ "value" ].ToString() );
+				//resultSet.SearchResults = resultsAndTotalQueryData.ResultPayloadData[ "results" ][ "bindings" ].Where( m => m[ "searchResultPayload" ] != null ).Select( m => JObject.Parse( m[ "searchResultPayload" ][ "value" ].ToString() ) ).ToList();
+
+				resultSet.TotalResults = int.Parse( resultsAndTotalQueryData.CombinedQueryData[ "results" ][ "bindings" ].FirstOrDefault( m => m[ "totalResults" ] != null )[ "totalResults" ][ "value" ].ToString() );
+				resultSet.SearchResults = resultsAndTotalQueryData.CombinedQueryData[ "results" ][ "bindings" ].Where( m => m[ "searchResultPayload" ] != null ).Select( m => JObject.Parse( m[ "searchResultPayload" ][ "value" ].ToString() ) ).ToList();
 
 				//For each result, get the related data (bnodes and (if applicable) description sets)
 				var uriAndTypeData = new Dictionary<string, string>();
@@ -217,8 +264,11 @@ namespace RA.Services
 				{
 					uriAndTypeData.Add( ( searchResult[ "@id" ] ?? "" ).ToString(), ( searchResult[ "@type" ] ?? "" ).ToString() );
 				}
-				resultSet.RelatedItemsData = SPARQLServices.GetRelatedItemsData( uriAndTypeData, descriptionSetType, apiKey, referrer, relatedItemsLimit, includeDebugInfo );
 
+				resultSet.RelatedItemsData = SPARQLServices.GetRelatedItemsData( uriAndTypeData, descriptionSetType, apiKey, referrer, relatedURIsLimit, relatedItemsLimit, includeDebugInfo );
+				resultSet.DebugInfo[ "RelatedItemsDebugInfo" ] = resultSet.RelatedItemsData.DebugInfo;
+
+				/*
 				//Try to find relevance scores and add them (if applicable - not all searches will have these, since they only apply to a SortOrder of Default (relevance) for queries that have one or more text queries)
 				try
 				{
@@ -239,6 +289,7 @@ namespace RA.Services
 				{
 					resultSet.DebugInfo[ "Error_" + Guid.NewGuid().ToString() ] = "Error calculating relevance score: " + ex.Message;
 				}
+				*/
 			}
 			catch ( Exception ex )
 			{
@@ -258,6 +309,9 @@ namespace RA.Services
 			public string ResultPayloadQuery { get; set; }
 			public JObject ResultPayloadData { get; set; }
 			public bool ResultPayloadReady { get; set; }
+			public string CombinedQuery { get; set; }
+			public JObject CombinedQueryData { get; set; }
+			public bool CombinedQueryReady { get; set; }
 		}
 		//
 
@@ -270,7 +324,8 @@ namespace RA.Services
 			TranslateJSON( "", ctdlQuery, sparql );
 
 			//Duplicate user query in order to get both a count and the desired page of search results
-			var userQuerySPARQL = sparql.ToString();
+			var userQueryMetadata = new SPARQLNode.Metadata();
+			var userQuerySPARQL = sparql.ToString( userQueryMetadata );
 			userQuerySPARQL = userQuerySPARQL.Substring( 1, userQuerySPARQL.Length - 2 ).Trim(); //Trim the outermost { and } since we need to inject the payload line later
 
 			//Get all of the properties, deduplicate them, remove search-specific ones, then use them as a pre-filter to screen out all results that can't ever possibly match the query
@@ -287,21 +342,44 @@ namespace RA.Services
 			//Detect whether the user included a sort order
 			var orderByVariable = "";
 			var orderByString = "";
+			var groupByString = "";
 			if( userQuerySPARQL.Contains( "?orderByMeAscending" ) )
 			{
-				orderByVariable = "?orderByMeAscending";
-				orderByString = "ORDER BY ASC(?orderByMeAscending)";
+				orderByVariable = "(?orderByMeAscending AS ?relevance_score)";
+				orderByString = "ORDER BY ASC(?relevance_score)";
 			}
 			else if( userQuerySPARQL.Contains( "?orderByMeDescending" ) )
 			{
-				orderByVariable = "?orderByMeDescending";
-				orderByString = "ORDER BY DESC(?orderByMeDescending)";
+				orderByVariable = "(?orderByMeDescending AS ?relevance_score)";
+				orderByString = "ORDER BY DESC(?relevance_score)";
 			}
-			else if ( userQuerySPARQL.Contains( "?relevance_score_" ) )
+			else if ( sortOrder == SortOrders.DEFAULT && userQuerySPARQL.Contains( "?relevance_points" ) )
 			{
-				var scoreFields = new List<string>() { "0" }.Concat( Regex.Matches( userQuerySPARQL, @"\?relevance_score_\S[a-zA-Z0-9]*_item" ).Cast<Match>().Select( m => m.Value ) ).ToList();
-				orderByVariable = "(" + string.Join( " + ", scoreFields.Select( m => "COALESCE(" + m + ", 0)" ).ToList() ) + " AS ?relevance_final_score)";
-				orderByString = "ORDER BY DESC(?relevance_final_score)";
+				//Do not use
+				//Somehow this locks up the Finder's IIS Worker Process
+				//It makes no sense
+				//var sumItems = Regex.Matches( userQuerySPARQL, @"relevance_points_[a-f0-9]{32}" ).Cast<Match>().Select( m => m.Value ).Distinct().ToList();
+				//var sumText = "SUM(" + string.Join( " + ", sumItems ) + ")";
+				//orderByVariable = "(" + sumText + " AS ?relevance_score)";
+				//
+
+				orderByVariable = "(SUM(" + string.Join( " + ", userQueryMetadata.RelevancePointsVariables.Distinct().Select( m => "COALESCE(" + m + ", 0)" ).ToList() ) + ") AS ?relevance_score)";
+				//orderByVariable = "(SUM(?relevance_points) AS ?relevance_score)";
+				groupByString = "GROUP BY ?id ?searchResultPayload ?relevance_score";
+				//orderByString = "ORDER BY " + ( orderDescending ? "DESC" : "ASC" ) + "(?relevance_score)";
+				orderByString = "ORDER BY DESC(?relevance_score)"; //Force the most relevant stuff to display if no explicit ordering is given, regardless of orderDescending
+			}
+			else if( sortOrder == SortOrders.CREATED )
+			{
+				orderByVariable = "?recordDate";
+				orderByString = "ORDER BY " + ( orderDescending ? "DESC" : "ASC" ) + "(?recordDate)";
+				finalUserQuery += " ?id ( credreg:__graph? / credreg:__createdAt ) ?recordDate . ";
+			}
+			else if( sortOrder == SortOrders.UPDATED )
+			{
+				orderByVariable = "?recordDate";
+				orderByString = "ORDER BY " + ( orderDescending ? "DESC" : "ASC" ) + "(?recordDate)";
+				finalUserQuery += " ?id ( credreg:__graph? / credreg:__updatedAt ) ?recordDate . ";
 			}
 			else
 			{
@@ -313,11 +391,17 @@ namespace RA.Services
 			//Figure out which prefixes apply
 			var prefixSPARQL = GetContextPrefixes( "credreg: " + finalUserQuery );
 
+			//Force the query to be evaluated in the specified order
+			var queryHint = "<http://aws.amazon.com/neptune/vocab/v01/QueryHints#Query> <http://aws.amazon.com/neptune/vocab/v01/QueryHints#joinOrder> 'Ordered' ."; 
+
 			//Build the Total Results query
-			result.TotalResultsQuery = prefixSPARQL + " SELECT (COUNT(DISTINCT ?id) AS ?totalResults) WHERE { " + finalUserQuery + " }";
+			result.TotalResultsQuery = prefixSPARQL + " SELECT (COUNT(DISTINCT ?id) AS ?totalResults) WHERE { " + queryHint + " " + finalUserQuery + " }";
 
 			//Build the Result Payload query
-			result.ResultPayloadQuery = prefixSPARQL + " SELECT DISTINCT ?searchResultPayload " + orderByVariable + " WHERE { " + finalUserQuery + " ?id credreg:__payload ?searchResultPayload . } " + orderByString + " OFFSET " + skip + " LIMIT " + take;
+			result.ResultPayloadQuery = prefixSPARQL + " SELECT DISTINCT ?searchResultPayload " + orderByVariable + " WHERE { " + queryHint + " " + finalUserQuery + " ?id credreg:__payload ?searchResultPayload . } " + groupByString + " " + orderByString + " OFFSET " + skip + " LIMIT " + take;
+
+			//Build the Combined Query
+			result.CombinedQuery = prefixSPARQL + " SELECT ?totalResults ?id ?searchResultPayload ?relevance_score WITH { SELECT DISTINCT ?id ?searchResultPayload " + orderByVariable + " WHERE { " + queryHint + " " + finalUserQuery + " ?id credreg:__payload ?searchResultPayload . }  " + groupByString + " } AS %mainQuery WHERE { { SELECT (COUNT(DISTINCT ?id) AS ?totalResults) WHERE { INCLUDE %mainQuery } } UNION { SELECT ?id ?searchResultPayload ?relevance_score ?recordDate WHERE { INCLUDE %mainQuery } " + orderByString + " OFFSET " + skip + " LIMIT " + take + " } } " + orderByString;
 
 			return result;
 
@@ -371,15 +455,41 @@ namespace RA.Services
 		public void TranslateJSON( string property, JToken token, SPARQLNode container )
 		{
 			var propertyLower = property.ToLower();
-			//Term Groups
-			if ( propertyLower == "search:termgroup" || propertyLower == "search:value" )
+			if ( false ) //propertyLower == "search:termgroup" || propertyLower == "search:value" )
 			{
-				var hasAndTerms = token.Parent != null && token.Parent.Parent != null && ( ( JObject ) token.Parent.Parent ).Properties().FirstOrDefault( m => m.Name.ToLower() == "search:operator" && m.Value.ToString().ToLower() == "search:andterms" ) != null;
+				//var hasAndTerms = token.Parent != null && token.Parent.Parent != null && ( ( JObject ) token.Parent.Parent ).Properties().FirstOrDefault( m => m.Name.ToLower() == "search:operator" && m.Value.ToString().ToLower() == "search:andterms" ) != null;
+				//var group = new SPARQLNode() { SPARQLNodeType = SPARQLNode.SPARQLNodeTypes.TermGroup, JoinChildrenWithUNION = !hasAndTerms }; //TODO: Fix this to be hasOrTerms and test for negative impact
+				var hasOrTerms = token.Parent != null && token.Parent.Parent != null && ( ( JObject ) token.Parent.Parent ).Properties().FirstOrDefault( m => m.Name.ToLower() == "search:operator" && m.Value.ToString().ToLower() == "search:orterms" ) != null;
+				var group = new SPARQLNode() { SPARQLNodeType = SPARQLNode.SPARQLNodeTypes.TermGroup, JoinChildrenWithUNION = hasOrTerms };
+				container.AddChild( group );
+				group.ObjectVariable = container.ObjectVariable; //Ensure this falls through to the child object(s)
+				TranslateJSON( "", token, group );
+			}
+
+			//Term Groups
+			if ( propertyLower == "search:termgroup" )
+			{
+				//var hasAndTerms = token.Parent != null && token.Parent.Parent != null && ( ( JObject ) token.Parent.Parent ).Properties().FirstOrDefault( m => m.Name.ToLower() == "search:operator" && m.Value.ToString().ToLower() == "search:andterms" ) != null;
+				//var group = new SPARQLNode() { SPARQLNodeType = SPARQLNode.SPARQLNodeTypes.TermGroup, JoinChildrenWithUNION = !hasAndTerms }; //TODO: Fix this to be hasOrTerms and test for negative impact
+				//var hasOrTerms = token.Parent != null && token.Parent.Parent != null && ( ( JObject ) token.Parent.Parent ).Properties().FirstOrDefault( m => m.Name.ToLower() == "search:operator" && m.Value.ToString().ToLower() == "search:orterms" ) != null;
+				var hasOrTerms = token.Type == JTokenType.Array || ( token.Type == JTokenType.Object && ( ( JObject ) token ).Properties().FirstOrDefault( m => m.Name.ToLower() == "search:operator" && m.Value.ToString().ToLower() == "search:orterms" ) != null );
+				var group = new SPARQLNode() { SPARQLNodeType = SPARQLNode.SPARQLNodeTypes.TermGroup, JoinChildrenWithUNION = hasOrTerms };
+				container.AddChild( group );
+				group.ObjectVariable = container.ObjectVariable; //Ensure this falls through to the child object(s)
+				TranslateJSON( "", token, group );
+			}
+
+			//Value Arrays
+			else if ( propertyLower == "search:value" )
+			{
+				//var hasAndTerms = token.Parent != null && token.Parent.Parent != null && ( ( JObject ) token.Parent.Parent ).Properties().FirstOrDefault( m => m.Name.ToLower() == "search:operator" && m.Value.ToString().ToLower() == "search:andterms" ) != null;
+				var hasAndTerms = token.Parent != null && token.Parent.Type == JTokenType.Object && ( ( JObject ) token.Parent ).Properties().FirstOrDefault( m => m.Name.ToLower() == "search:operator" && m.Value.ToString().ToLower() == "search:andterms" ) != null;
 				var group = new SPARQLNode() { SPARQLNodeType = SPARQLNode.SPARQLNodeTypes.TermGroup, JoinChildrenWithUNION = !hasAndTerms };
 				container.AddChild( group );
 				group.ObjectVariable = container.ObjectVariable; //Ensure this falls through to the child object(s)
 				TranslateJSON( "", token, group );
 			}
+
 
 			//AndValues/OrValues
 			else if ( propertyLower == "search:andvalues" || propertyLower == "search:orvalues" )
@@ -509,9 +619,20 @@ namespace RA.Services
 			{
 				result.SPARQLNodeType = SPARQLNode.SPARQLNodeTypes.SortOrderNode;
 			}
-			else if ( SchemaContext.BooleanProperties.Concat( SchemaContext.NumberProperties ).Contains( normalizedProperty ) )
+			else if ( SchemaContext.BooleanProperties.Concat( SchemaContext.IntegerProperties ).Contains( normalizedProperty ) )
 			{
 				result.ValueWrapperType = SPARQLNode.ValueWrapperTypes.None;
+				result.SPARQLNodeType = SPARQLNode.SPARQLNodeTypes.IntegerNode;
+			}
+			else if ( SchemaContext.BooleanProperties.Concat( SchemaContext.FloatProperties ).Contains( normalizedProperty ) )
+			{
+				result.ValueWrapperType = SPARQLNode.ValueWrapperTypes.None;
+				result.SPARQLNodeType = SPARQLNode.SPARQLNodeTypes.FloatNode;
+			}
+			else if ( SchemaContext.BooleanProperties.Concat( SchemaContext.DecimalProperties ).Contains( normalizedProperty ) )
+			{
+				result.ValueWrapperType = SPARQLNode.ValueWrapperTypes.None;
+				result.SPARQLNodeType = SPARQLNode.SPARQLNodeTypes.DecimalNode;
 			}
 			else if ( SchemaContext.StringProperties.Contains( normalizedProperty ) )
 			{
@@ -520,6 +641,7 @@ namespace RA.Services
 			}
 			else if ( SchemaContext.URIProperties.Contains( normalizedProperty ) )
 			{
+				result.ObjectValues = result.ObjectValues.Select( m => ExpandVocabularyURI( m ) ).ToList();
 				result.ValueWrapperType = SPARQLNode.ValueWrapperTypes.SurroundWithSingleQuotes;
 				result.SPARQLNodeType = QueryContext.SortOrder == SortOrders.DEFAULT ? SPARQLNode.SPARQLNodeTypes.URINode_WithRelevance : SPARQLNode.SPARQLNodeTypes.URINode;
 			}
@@ -552,6 +674,18 @@ namespace RA.Services
 
 			container.AddChild( result );
 
+		}
+		public string ExpandVocabularyURI( string shortURI )
+		{
+			//If the shortURI is a prefix, expand it
+			var prefix = SchemaContext.URIPrefixes.Where( m => shortURI.Trim().ToLower().IndexOf( m.Key.ToLower() + ":" ) == 0 ).ToList();
+			if ( prefix.Count() > 0 )
+			{
+				return prefix.FirstOrDefault().Value + ( shortURI.Split( new string[] { ":" }, StringSplitOptions.RemoveEmptyEntries ).LastOrDefault() ?? "" );
+			}
+
+			//Otherwise just return it
+			return shortURI;
 		}
 		//
 
@@ -752,11 +886,19 @@ namespace RA.Services
 			}
 		}
 
-		public RelatedItemsData GetRelatedItemsData( Dictionary<string, string> resultURIAndType, DescriptionSetType descriptionSetType, string apiKey, string referrer, int relatedItemsLimit, bool includeDebugInfo )
+		public RelatedItemsData GetRelatedItemsData( Dictionary<string, string> resultURIAndType, DescriptionSetType descriptionSetType, string apiKey, string referrer, int relatedURIsLimit, int relatedItemsLimit, bool includeDebugInfo )
 		{
+			//Ensure that if there is a related URIs limit, the related items limit is the same or lower
+			if( relatedURIsLimit >= 1 )
+			{
+				relatedItemsLimit = relatedItemsLimit > relatedURIsLimit ? relatedURIsLimit : relatedItemsLimit;
+			}
+
+			//Setup container
 			var relatedData = new RelatedItemsData() { 
 				IncludeDebugInfo = includeDebugInfo,
-				RelatedItemsLimit = relatedItemsLimit
+				RelatedItemsLimit = relatedItemsLimit,
+				RelatedURIsLimit = relatedURIsLimit
 			};
 			//Flat list of related nodes (actual data)
 			//Map of URIs to make it easier to connect stuff in the related items list to the actual search results
@@ -764,7 +906,6 @@ namespace RA.Services
 			foreach ( var item in resultURIAndType )
 			{
 				relatedData.ResultURIs.Add( item.Key );
-				relatedData.RelatedItemsMap.Add( item.Key, new JObject() { { "@type", item.Value }, { "search:graphURI", item.Key.Replace( "/resources/", "/graph/" ) } } );
 			}
 
 			//Use this to hold related URIs for description sets that are to be retrieved asynchronously
@@ -775,29 +916,199 @@ namespace RA.Services
 			{
 				//Do nothing
 			}
-			else if( descriptionSetType == DescriptionSetType.Resource_Graph ) //Backwards compatibility with old search default
+			else if( descriptionSetType == DescriptionSetType.Resource_Graph ) //Backwards compatibility with old search default, deprecated
 			{
 				GetRelatedGraph( relatedData, resultURIAndType );
 				AddRelatedGraphItemsWithLimit( relatedData );
 			}
 			else if( descriptionSetType == DescriptionSetType.Resource_RelatedURIs ) //Cool people use this new one
 			{
-				GetRelatedURIsInChunks( relatedData, resultURIAndType, dspURIs, apiKey, referrer );
+				GetRelatedURIsFromRegistry( relatedData, dspURIs, apiKey, referrer, false );
+				//GetRelatedURIsFromSPARQL( relatedData, dspURIs, apiKey, referrer );
 			}
-			else if( descriptionSetType == DescriptionSetType.Resource_RelatedURIs_Graph )
+			else if( descriptionSetType == DescriptionSetType.Resource_RelatedURIs_Graph ) //Not used
 			{
-				GetRelatedURIsInChunks( relatedData, resultURIAndType, dspURIs, apiKey, referrer );
+				GetRelatedURIsFromRegistry( relatedData, dspURIs, apiKey, referrer, false );
+				//GetRelatedURIsFromSPARQL( relatedData, dspURIs, apiKey, referrer );
 				GetRelatedGraph( relatedData, resultURIAndType );
 				AddRelatedGraphItemsWithLimit( relatedData );
 			}
-			else if( descriptionSetType == DescriptionSetType.Resource_RelatedURIs_Graph_RelatedData )
+			else if ( descriptionSetType == DescriptionSetType.Resource_RelatedURIs_RelatedData )
 			{
-				GetRelatedURIsInChunks( relatedData, resultURIAndType, dspURIs, apiKey, referrer );
+				GetRelatedURIsFromRegistry( relatedData, dspURIs, apiKey, referrer, true );
+			}
+			else if( descriptionSetType == DescriptionSetType.Resource_RelatedURIs_Graph_RelatedData ) //Not used
+			{
+				GetRelatedURIsFromRegistry( relatedData, dspURIs, apiKey, referrer, true );
+				//GetRelatedURIsFromSPARQL( relatedData, dspURIs, apiKey, referrer );
 				GetRelatedGraph( relatedData, resultURIAndType );
-				GetRelatedDescriptionSetData( relatedData, apiKey, referrer );
+				//GetRelatedDescriptionSetData( relatedData, apiKey, referrer );
 			}
 
 			return relatedData;
+		}
+		//
+
+		public void GetRelatedURIsFromRegistry( RelatedItemsData relatedData, ConcurrentBag<string> dspURIs, string apiKey, string referrer, bool includeData )
+		{
+			//Setup
+			var getDescriptionSetsURL = Utilities.UtilityManager.GetAppKeyValue( "accountsGetDescriptionSetsForCTIDsAPI" );
+			var client = new HttpClient();
+			var request = new AccountConsumeRequest()
+			{
+				ApiKey = apiKey,
+				DescriptionSetCTIDs = relatedData.ResultURIs.Select( m => "ce-" + m.Split( new string[] { "/ce-" }, StringSplitOptions.RemoveEmptyEntries ).Last() ).Distinct().ToList(),
+				DescriptionSetRelatedURIsLimit = relatedData.RelatedURIsLimit,
+				DescriptionSetRelatedItemsLimit = relatedData.RelatedItemsLimit,
+				ShouldLogRequest = true,
+				DescriptionSetIncludeData = includeData
+			};
+
+			//Add the referrer if present
+			try
+			{
+				client.DefaultRequestHeaders.Referrer = new Uri( referrer );
+			}
+			catch { }
+
+			//Prepare to do the request
+			var status = System.Net.HttpStatusCode.OK;
+			var result = new JObject();
+
+			//Check the query
+			relatedData.DebugInfo.Add( "Related URIs Limit", relatedData.RelatedURIsLimit );
+			relatedData.DebugInfo.Add( "Related Items Limit", relatedData.RelatedItemsLimit );
+
+			try
+			{
+				//Do the request
+				var httpResult = client.PostAsync( getDescriptionSetsURL, new StringContent( JsonConvert.SerializeObject( request ), Encoding.UTF8, "application/json" ) ).Result;
+				status = httpResult.StatusCode;
+				var httpResultBody = httpResult.Content.ReadAsStringAsync().Result;
+				relatedData.DebugInfo[ "Get Related URIs: Raw Status Code" ] = status.ToString();
+				relatedData.DebugInfo[ "Get Related URIs: Raw Content" ] = httpResultBody;
+				result = JObject.Parse( httpResultBody );
+
+				//Store debug info first
+				relatedData.DebugInfo[ "Get Related URIs: Raw Result" ] = result;
+
+				//Process data
+				relatedData.RelatedItems = ( ( JArray ) result[ "RelatedItems" ] ).Select( m => ( JObject ) m ).ToList();
+				relatedData.RelatedItemsMap = ( ( JArray ) result[ "RelatedItemsMap" ] ).Select( m => ( ( JObject ) m ).ToObject<RelatedItemsSet>() ).ToList();
+			}
+			catch( Exception ex )
+			{
+				relatedData.DebugInfo[ "Error loading related item URIs" ] = ex.Message;
+			}
+		}
+		//
+
+		public void GetRelatedURIsFromRegistryOLD( RelatedItemsData relatedData, ConcurrentBag<string> dspURIs, string apiKey, string referrer )
+		{
+			var DSPAPIURL = Utilities.UtilityManager.GetAppKeyValue( "GetDescriptionSetByCTIDEndpoint" ); //Not populated!
+			var registryAuthorizationToken = Utilities.UtilityManager.GetAppKeyValue( "CredentialRegistryAuthorizationToken" ); //Admin-level access to the registry for CE's account
+
+			var client = new HttpClient();
+			client.DefaultRequestHeaders.TryAddWithoutValidation( "Authorization", "Token " + registryAuthorizationToken );
+
+			var allURIsList = new List<string>();
+			foreach( var uri in relatedData.ResultURIs )
+			{
+				var requestURL = "";
+				try
+				{
+					var ctid = "ce-" + uri.Split( new string[] { "/ce-" }, StringSplitOptions.RemoveEmptyEntries ).Last();
+					requestURL = DSPAPIURL + ctid + ( relatedData.RelatedItemsLimit > 0 ? "?limit=" + relatedData.RelatedItemsLimit : "" );
+
+					var httpResult = client.GetAsync( requestURL ).Result;
+					var httpResultBody = httpResult.Content.ReadAsStringAsync().Result;
+					var resultData = JArray.Parse( httpResultBody );
+
+					var itemMap = new RelatedItemsSet();
+					itemMap.ResourceURI = uri.Replace( "/graph/", "/resources/" );
+
+					foreach ( JObject rawMap in resultData )
+					{
+						var uris = ( ( JArray ) rawMap[ "uris" ] ).Select( m => m.ToString() ).ToList();
+						itemMap.RelatedItems.Add( new RelatedItemsPath()
+						{
+							Path = rawMap[ "path" ].ToString(),
+							URIs = uris,
+							TotalURIs = ( int ) rawMap[ "total" ]
+						} );
+
+						allURIsList.AddRange( uris );
+					}
+
+					relatedData.RelatedItemsMap.Add( itemMap );
+				}
+				catch ( Exception ex )
+				{
+					relatedData.DebugInfo[ "Error getting related data for " + uri ] = new JObject()
+					{
+						{ "Error", ex.Message },
+						{ "Request URL", requestURL }
+					};
+				}
+			}
+
+			//Add URIs to the DSP list
+			var allReferencedURIs = allURIsList.Distinct().ToList();
+			foreach( var uri in allReferencedURIs )
+			{
+				dspURIs.Add( uri );
+			}
+		}
+		//
+
+		public void GetRelatedURIsFromSPARQL( RelatedItemsData relatedData, ConcurrentBag<string> dspURIs, string apiKey, string referrer )
+		{
+			try
+			{
+				//Get the result URIs and build the query
+				var uriValues = "VALUES ?id { " + string.Join( " ", relatedData.ResultURIs.Select( m => "<" + m + ">" ).ToList() ) + " }";
+				var sparql = "PREFIX credreg: <https://credreg.net/> SELECT DISTINCT ?id ?itemMapPath ?itemMapURI WHERE { " + uriValues + " ?id ( credreg:__descriptionSet / credreg:__relatedItemsMap ) ?relatedItemsMap . ?relatedItemsMap credreg:__dspPath ?itemMapPath . ?relatedItemsMap credreg:__dspURI ?itemMapURI . }";
+
+				relatedData.DebugInfo[ "RelatedItemsQuery" ] = sparql;
+				//Run the query
+				var rawResults = RunSPARQLQuery( sparql, apiKey, 0, -1, referrer, false );
+				relatedData.DebugInfo[ "rawResults" ] = rawResults ?? new JObject() { { "empty", "null" } };
+				var bindings = ( ( JArray ) rawResults[ "results" ][ "bindings" ] ).Select( m => ( JObject ) m ).ToList();
+
+				//For each result...
+				foreach ( var uri in relatedData.ResultURIs )
+				{
+					//Find the relevant bindings and create somewhere to put them
+					var bindingsForResult = bindings.Where( m => m[ "id" ][ "value" ].ToString() == uri ).ToList();
+					var itemMap = new RelatedItemsSet();
+
+					itemMap.ResourceURI = uri.Replace( "/graph/", "/resources/" );
+
+					//Add the individual path/URI list data
+					var paths = bindingsForResult.Select( m => m[ "itemMapPath" ][ "value" ].ToString() ).Distinct().ToList();
+					foreach ( var path in paths )
+					{
+						itemMap.RelatedItems.Add( new RelatedItemsPath()
+						{
+							Path = path,
+							URIs = bindingsForResult.Where( m => m[ "itemMapPath" ][ "value" ].ToString() == path ).Select( m => m[ "itemMapURI" ][ "value" ].ToString() ).ToList()
+						} );
+					}
+
+					relatedData.RelatedItemsMap.Add( itemMap );
+				}
+
+				//Add URIs to the DSP list
+				var allReferencedURIs = bindings.Select( m => m[ "itemMapURI" ][ "value" ].ToString() ).Distinct().Where( m => !dspURIs.Contains( m ) ).ToList();
+				foreach ( var uri in allReferencedURIs )
+				{
+					dspURIs.Add( uri );
+				}
+			}
+			catch ( Exception ex )
+			{
+				relatedData.DebugInfo[ "Error" ] = ex.Message;
+			}
 		}
 		//
 
@@ -812,152 +1123,6 @@ namespace RA.Services
 				var itemsToAdd = resultURIAndGraphItems.Value.Take( relatedData.RelatedItemsLimit <= 0 ? resultURIAndGraphItems.Value.Count() : relatedData.RelatedItemsLimit ).ToList();
 				relatedData.RelatedItems.AddRange( itemsToAdd.Where( m => relatedData.RelatedItems.Where( n => n[ "@id" ] == m[ "@id" ] ).Count() == 0 ).ToList() );
 			}
-		}
-		//
-
-		public void GetRelatedURIsInChunks( RelatedItemsData relatedData, Dictionary<string, string> resultURIAndType, ConcurrentBag<string> dspURIs, string apiKey, string referrer )
-		{
-			var descriptionSetMap = new Dictionary<List<string>, Func<string, string, string, DescriptionSetQueryResult>>()
-			{
-				{ SchemaContext.CredentialTypes, DescriptionSetQuery_Credential_InChunks },
-				{ new List<string>() { "ceterms:CredentialOrganization", "ceterms:QACredentialOrganization" }, DescriptionSetQuery_Organization_InChunks },
-				{ new List<string>() { "ceterms:AssessmentProfile" }, DescriptionSetQuery_AssessmentProfile_InChunks },
-				{ new List<string>() { "ceterms:LearningOpportunityProfile" }, DescriptionSetQuery_LearningOpportunityProfile_InChunks },
-				{ new List<string>() { "ceasn:CompetencyFramework" }, DescriptionSetQuery_CompetencyFramework_InChunks },
-				{ new List<string>() { "skos:ConceptScheme" }, DescriptionSetQuery_ConceptScheme_InChunks },
-				{ new List<string>() { "navy:Rating" }, DescriptionSet_Rating_InChunks },
-				{ new List<string>() { "navy:Job" }, DescriptionSet_Job_InChunks },
-				{ new List<string>() { "navy:EnlistedClassification" }, DescriptionSet_EnlistedClassification_InChunks },
-				{ new List<string>() { "navy:System" }, DescriptionSet_System_InChunks }
-			};
-
-			//For each result...
-			var progressMonitor = new Dictionary<string, bool>();
-			foreach ( var uriAndType in resultURIAndType )
-			{
-				progressMonitor.Add( uriAndType.Key, false );
-				ThreadPool.QueueUserWorkItem( delegate
-				{
-					try
-					{
-						//Figure out what kind of description set to get for it based on its @type
-						var method = descriptionSetMap.FirstOrDefault( m => m.Key.Contains( uriAndType.Value ) ).Value;
-						if ( method != null )
-						{
-							//Get the item map for this result
-							var itemMapForResult = ( JObject ) relatedData.RelatedItemsMap[ uriAndType.Key ];
-							if ( relatedData.IncludeDebugInfo )
-							{
-								itemMapForResult[ "DebugInfo" ] = new JObject();
-							}
-
-							try
-							{
-								//Use this to make deduplication more efficient at the end
-								var nodesToCleanUp = new List<string>();
-
-								//Try to get the DSP from the cache
-								var bindingItems = ( List<JObject> ) MemoryCache.Default.Get( "GetRelatedURIBindings_" + uriAndType.Key );
-								itemMapForResult[ "DebugInfo" ][ "DescriptionSetDebugInfo" ] = ( JObject ) MemoryCache.Default.Get( "GetRelatedURIBindingsDebugInfo_" + uriAndType.Key );
-								var loadedFromCache = true;
-								if ( bindingItems == null )
-								{
-									//Run the description set query and cache the result
-									loadedFromCache = false;
-									var dspData = method( uriAndType.Key, apiKey, referrer );
-									bindingItems = dspData.Bindings;
-									itemMapForResult[ "DebugInfo" ][ "DescriptionSetDebugInfo" ] = dspData.DebugInfo;
-									MemoryCache.Default.Remove( "GetRelatedURIBindings_" + uriAndType.Key );
-									MemoryCache.Default.Add( "GetRelatedURIBindings_" + uriAndType.Key, bindingItems, DateTime.Now.AddMinutes( 30 ) );
-									MemoryCache.Default.Remove( "GetRelatedURIBindingsDebugInfo_" + uriAndType.Key );
-									MemoryCache.Default.Add( "GetRelatedURIBindingsDebugInfo_" + uriAndType.Key, dspData.DebugInfo, DateTime.Now.AddMinutes( 30 ) );
-								}
-								else
-								{
-									try
-									{
-										foreach( JObject item in (JArray) itemMapForResult[ "DebugInfo" ][ "DescriptionSetDebugInfo" ][ "DescriptionSetQueryParts" ] )
-										{
-											if ( item[ "LoadedFromCache" ] != null )
-											{
-												item[ "LoadedFromCache" ] = true;
-											}
-										}
-									}
-									catch { }
-								}
-
-								//Use this to help with debugging
-								if ( relatedData.IncludeDebugInfo )
-								{
-									//( ( JObject ) itemMapForResult[ "DebugInfo" ] ).Add( "SPARQLQuery", queryForGettingData );
-									//( ( JObject ) itemMapForResult[ "DebugInfo" ] ).Add( "RawBindings", result );
-									( ( JObject ) itemMapForResult[ "DebugInfo" ] ).Add( "LoadedFromCache", loadedFromCache );
-								}
-
-								//Keep track of their properties
-								var propertyURIMap = new Dictionary<string, List<string>>();
-								var importantProperties = bindingItems.SelectMany( m => m.Properties() ).Where( m => !m.Name.Contains( "_ignore_" ) ).ToList(); //All properties from all relevant bindings
-								var importantPropertyNames = importantProperties.Select( m => m.Name ).Distinct().ToList(); //Unique names
-
-								nodesToCleanUp.AddRange( importantPropertyNames );
-								foreach ( var name in importantPropertyNames )
-								{
-									//Get the unique URIs for all binding items for a given property
-									var bindingValues = bindingItems
-										.Where( m => m[ name ] != null && m[ name ][ "value" ] != null )
-										.Select( m => m[ name ][ "value" ].ToString().Replace( "/graph/", "/resources/" ).Replace( "https://credreg.net/bnodes/", "_:" ) )
-										.Distinct().ToList();
-
-									//Track the URIs for later
-									foreach ( var value in bindingValues )
-									{
-										dspURIs.Add( value );
-									}
-
-									//Add the URIs to the map for this result
-									propertyURIMap[ name ] = bindingValues;
-									//itemMapForResult[ name ] = JArray.FromObject( bindingValues );
-								}
-
-								//Construct a path object
-								var pathSets = new List<JObject>();
-
-								//Clean up the item maps
-								foreach ( var nodeName in nodesToCleanUp.Distinct().ToList() )
-								{
-									//itemMapForResult[ nodeName ] = JArray.FromObject( ( ( JArray ) itemMapForResult[ nodeName ] ).Distinct() );
-
-									var path = nodeName.Replace( "_R_", " > " ).Replace( "_L_", " < " ).Replace( "_C_", ":" ).Trim();
-									pathSets.Add( new JObject()
-									{
-										{ "Path", path },
-										{ "URIs", JArray.FromObject( propertyURIMap[nodeName].Distinct().ToList() ) }
-									} );
-								}
-
-								itemMapForResult[ "RelatedData" ] = JArray.FromObject( pathSets );
-
-							}
-							catch ( Exception ex )
-							{
-								itemMapForResult.Add( "DescriptionSetProcessingError_" + Guid.NewGuid().ToString(), new JObject() { { "Error", ex.Message } } );
-							}
-						}
-					}
-					catch { }
-
-					//Guarantee the thread finishes
-					progressMonitor[ uriAndType.Key ] = true;
-				} );
-			}
-
-			//Wait for all the threads to finish
-			while ( !progressMonitor.All( m => m.Value == true ) )
-			{
-				Thread.Sleep( 25 );
-			}
-
 		}
 		//
 
@@ -1003,14 +1168,18 @@ namespace RA.Services
 					}
 
 					//Track any nodes that showed up in the graph but not in the DSP
-					var nodesForItem = ( ( JArray ) relatedData.RelatedItemsMap[ resourceURI ][ "RelatedData" ] ).SelectMany( m => m[ "URIs" ] ).Distinct().ToList();
-					var unaccountedFor = graphRelatedNodes.Where( m => !nodesForItem.Contains( m[ "@id" ] ) ).ToList();
+					//Note - this can happen when the related URIs limit is set and graph data is retrieved
+					//For example, a limit of 10 and a competency framework with 20 competencies will yield 10 related graph items (the first 10 are counted in the DSP and the second 10 are from the graph)
+					var relatedItemMapForResult = relatedData.RelatedItemsMap.FirstOrDefault( m => m.ResourceURI == resourceURI ) ?? new RelatedItemsSet();
+					var nodesForItem = relatedItemMapForResult.RelatedItems.SelectMany( m => m.URIs ).Distinct().ToList();
+					var unaccountedFor = graphRelatedNodes.Where( m => !nodesForItem.Contains( m[ "@id" ].ToString() ) ).ToList();
 					if( unaccountedFor.Count() > 0 )
 					{
-						( ( JArray ) relatedData.RelatedItemsMap[ resourceURI ][ "RelatedData" ] ).Add( new JObject()
+						relatedItemMapForResult.RelatedItems.Add( new RelatedItemsPath()
 						{
-							{ "Path", "> search:relatedGraphItem" },
-							{ "URIs", JArray.FromObject( unaccountedFor.Select( m => m["@id"] ).ToList() ) }
+							Path = "> search:relatedGraphItem > search:Object",
+							URIs = unaccountedFor.Select( m => m[ "@id" ].ToString() ).ToList(),
+							TotalURIs = unaccountedFor.Count()
 						} );
 					}
 
@@ -1019,11 +1188,11 @@ namespace RA.Services
 				}
 				catch ( Exception ex )
 				{
-					( ( JObject ) relatedData.RelatedItemsMap[ resourceURI ] ).Add( "GraphNodes_Error", ex.Message );
-					( ( JObject ) relatedData.RelatedItemsMap[ resourceURI ] ).Add( "GraphNodes_RawResponse", graph.Value );
+					var relatedMap = relatedData.RelatedItemsMap.FirstOrDefault( m => m.ResourceURI == resourceURI ) ?? new RelatedItemsSet();
+					relatedMap.DebugInfo.Add( "GraphNodes_Error", ex.Message );
+					relatedMap.DebugInfo.Add( "GraphNodes_RawResponse", graph.Value );
 				}
 			}
-
 		}
 		//
 
@@ -1066,14 +1235,13 @@ namespace RA.Services
 			var alreadyLoaded = relatedData.RelatedItems.Select( m => ( m[ "@id" ] ?? "" ).ToString() ).ToList();
 
 			//For each search result...
-			foreach( var searchResultRelatedItems in relatedData.RelatedItemsMap.Properties() )
+			foreach( var searchResultRelatedItems in relatedData.RelatedItemsMap )
 			{
 				//For each path/URI object for that search result...
-				foreach ( JObject pathAndURIs in ( JArray ) ( ( JObject ) searchResultRelatedItems.Value )[ "RelatedData" ] ) 
+				foreach ( var pathAndURIs in searchResultRelatedItems.RelatedItems ) 
 				{
 					//Take the first n URIs, or all of them if no limit
-					var allURIsForPath = ( ( JArray ) pathAndURIs[ "URIs" ] ).Select( m => m.ToString() ).ToList();
-					var toLoadForPath = allURIsForPath.Take( relatedData.RelatedItemsLimit <= 0 ? allURIsForPath.Count() : relatedData.RelatedItemsLimit ).ToList();
+					var toLoadForPath = pathAndURIs.URIs.Take( relatedData.RelatedItemsLimit <= 0 ? pathAndURIs.URIs.Count() : relatedData.RelatedItemsLimit ).ToList();
 					urisToLoad.AddRange( toLoadForPath );
 				}
 			}
@@ -1100,16 +1268,39 @@ namespace RA.Services
 			urisToGetFromRegistry = urisToGetFromRegistry.Distinct().ToList();
 			if( urisToGetFromRegistry.Count() > 0 )
 			{
-				var rawItemsFromSPARQL = RunSPARQLQuery( PayloadQuery( urisToGetFromRegistry ), apiKey, -1, -1, referrer );
-				foreach ( JObject item in ( ( JArray ) rawItemsFromSPARQL[ "results" ][ "bindings" ] ) )
+				//Get as many items as possible from the Registry directly
+				var ctids = urisToGetFromRegistry.Where( m => m.Contains( "/ce-" ) ).Select( m => "ce-" + ( m.Split( new string[] { "/ce-" }, StringSplitOptions.RemoveEmptyEntries ).LastOrDefault() ?? "" ) ).ToList();
+				//relatedData.DebugInfo[ "CTIDs to be retrieved via multi-get" ] = JArray.FromObject( ctids );
+				var ctidsLoaded = new List<string>();
+				var ctidBasedResults = GetItemsByCTID( ctids );
+				foreach( JObject item in ctidBasedResults )
 				{
-					try
+					var ctid = item[ "ceterms:ctid" ].ToString().ToLower();
+					var match = urisToGetFromRegistry.FirstOrDefault( m => m.ToLower().Contains( ctid ) );
+					if( match != null )
 					{
-						relatedData.RelatedItems.Add( JObject.Parse( item[ "payload" ][ "value" ].ToString().Replace( "https://credreg.net/bnodes/", "_:" ) ) );
+						urisToGetFromRegistry.Remove( match );
+						relatedData.RelatedItems.Add( item );
+						ctidsLoaded.Add( ctid );
 					}
-					catch ( Exception ex )
+				}
+				//relatedData.DebugInfo[ "CTIDs loaded via multi-get" ] = JArray.FromObject( ctidsLoaded );
+
+				//Collect any stragglers
+				if( urisToGetFromRegistry.Count() > 0 )
+				{
+					relatedData.DebugInfo[ "URIs missing from CTID multi-get" ] = JArray.FromObject( urisToGetFromRegistry );
+					var rawItemsFromSPARQL = RunSPARQLQuery( PayloadQuery( urisToGetFromRegistry ), apiKey, -1, -1, referrer );
+					foreach ( JObject item in ( ( JArray ) rawItemsFromSPARQL[ "results" ][ "bindings" ] ) )
 					{
-						relatedData.RelatedItems.Add( new JObject() { { "error", ex.Message }, { "rawData", item } } );
+						try
+						{
+							relatedData.RelatedItems.Add( JObject.Parse( item[ "payload" ][ "value" ].ToString().Replace( "https://credreg.net/bnodes/", "_:" ) ) );
+						}
+						catch ( Exception ex )
+						{
+							relatedData.RelatedItems.Add( new JObject() { { "error", ex.Message }, { "rawData", item } } );
+						}
 					}
 				}
 			}
@@ -1152,6 +1343,26 @@ namespace RA.Services
 
 			//Return the data
 			return results;
+		}
+		//
+
+		public static JArray GetItemsByCTID( List<string> ctids )
+		{
+			var apiURL = Utilities.UtilityManager.GetAppKeyValue( "GetByCTIDsEndpoint" );
+			var registryAuthorizationToken = Utilities.UtilityManager.GetAppKeyValue( "CredentialRegistryAuthorizationToken" ); //Admin-level access to the registry for CE's account
+
+			var client = new HttpClient();
+			client.DefaultRequestHeaders.TryAddWithoutValidation( "Authorization", "Token " + registryAuthorizationToken );
+			var jsonQuery = new JObject()
+			{
+				{ "ctids", JArray.FromObject( ctids ) }
+			};
+
+			var httpResult = client.PostAsync( apiURL, new StringContent( jsonQuery.ToString( Formatting.None ), Encoding.UTF8, "application/json" ) ).Result;
+			var httpResultBody = httpResult.Content.ReadAsStringAsync().Result;
+			var resultData = JArray.Parse( httpResultBody );
+
+			return resultData;
 		}
 		//
 
@@ -1339,7 +1550,148 @@ namespace RA.Services
 		}
 		//
 
+		public static List<TokenResult> Tokenize_LangString( List<string> text )
+		{
+			var resultSet = new List<TokenResult>();
+
+			foreach( var item in text )
+			{
+				var result = new TokenResult();
+				var normalized = Regex.Replace( item.Trim().ToLower(), "[^a-z0-9 ]", " " ); //Remove any unwanted characters
+				normalized = Regex.Replace( normalized, " +", " " ); //Remove any double spaces caused by the previous line
+
+				result.NormalizedFullText = normalized;
+				result.MainTokens = normalized.Split( new string[] { " " }, StringSplitOptions.RemoveEmptyEntries ).Distinct().ToList();
+				result.PhraseRegex = string.Join( " ", normalized.Split( new string[] { " " }, StringSplitOptions.RemoveEmptyEntries ).Select( m => HandlePhraseRegexWord( m ) ).ToList() ); //Join with a space
+				result.PhraseRegex = Regex.Replace( result.PhraseRegex, @"\.\{0,4\}$", "" ); //Strip off any trailing .{0,4} as it is not necessary for the last word
+				result.UniqueCharacters = normalized.Select( m => m ).Distinct().ToList();
+
+				var edgeRegex = "(y|ier|iest|s|er|ing|ed|able|ible)$";
+				foreach( var token in result.MainTokens )
+				{
+					result.StemmedTokens.Add( Regex.Replace( token, edgeRegex, "" ) );
+				}
+				result.StemmedTokens = result.StemmedTokens.Distinct().ToList();
+				result.PartialTokens = GetPartialTokens( result.MainTokens );
+
+				resultSet.Add( result );
+			}
+
+			return resultSet;
+		}
+		private static string HandlePhraseRegexWord( string word )
+		{
+			var edgeRegex = "(y|ier|iest|s|er|ing|ed|able|ible)$";
+			return Regex.Replace( word, edgeRegex, ".{0,4}" ); //If there was a word ending, the .{0,4} allows for stemming that word.
+		}
+		private static List<string> GetPartialTokens( List<string> source, int minLength = 5 )
+		{
+			var result = new List<string>();
+			minLength = minLength < 1 ? 1 : minLength;
+
+			foreach( var item in source )
+			{
+				if( item.Length >= minLength )
+				{
+					var removeCharacters = (item.Length - minLength) > 3 ? 3 : item.Length - minLength;
+					var truncated = item.Substring( 0, item.Length - removeCharacters );
+					if( truncated.Length >= 4 )
+					{
+						truncated = truncated.Substring( 1 );
+					}
+					result.Add( truncated );
+				}
+				else
+				{
+					result.Add( item );
+				}
+			}
+
+			return result.Distinct().ToList();
+		}
+		//
+
+		public static List<TokenResult> Tokenize_URIString( List<string> text )
+		{
+			var resultSet = new List<TokenResult>();
+
+			foreach ( var item in text )
+			{
+				var result = new TokenResult();
+				var normalized = item.Trim().ToLower();
+				normalized = Regex.Replace( normalized, @"^http:\/\/", "" );
+				normalized = Regex.Replace( normalized, @"^https:\/\/", "" );
+				normalized = Regex.Replace( normalized, @"[^a-z0-9_\.\/\?\=\-\:\%]", " " );
+				var escaped = normalized;
+				var specialURLCharacters = new List<string>() { ".", "/", "?", "=", ":", ":", "%" };
+				foreach(var character in specialURLCharacters )
+				{
+					escaped = escaped.Replace( character, @"\" + character );
+				}
+
+				result.NormalizedFullText = escaped.Replace( " ", "" );
+				result.MainTokens = escaped.Split( new string[] { " " }, StringSplitOptions.RemoveEmptyEntries ).Distinct().ToList();
+
+				var rawPartialTokens = GetPartialTokens( normalized.Split( new string[] { " " }, StringSplitOptions.RemoveEmptyEntries ).Distinct().ToList() );
+				var escapedPartialTokens = new List<string>();
+				foreach( var partialToken in rawPartialTokens )
+				{
+					var escapedPartialToken = partialToken;
+					foreach( var character in specialURLCharacters )
+					{
+						escapedPartialToken = escapedPartialToken.Replace( character, @"\" + character );
+					}
+					escapedPartialTokens.Add( escapedPartialToken );
+				}
+				result.PartialTokens = escapedPartialTokens;
+
+				result.PhraseRegex = "(" + string.Join( ")|(", result.PartialTokens ) + ")"; //Join with a |
+
+				resultSet.Add( result );
+			}
+
+			return resultSet;
+		}
+		//
+
+		public static List<TokenResult> Tokenize_PlainString( List<string> text )
+		{
+			var resultSet = new List<TokenResult>();
+
+			foreach ( var item in text )
+			{
+				var result = new TokenResult();
+				var normalized = Regex.Replace( item.Trim().ToLower(), "[^a-z0-9 ]", " " );
+
+				result.NormalizedFullText = normalized;
+				result.MainTokens = normalized.Split( new string[] { " " }, StringSplitOptions.RemoveEmptyEntries ).Distinct().ToList();
+				result.PartialTokens = GetPartialTokens( result.MainTokens );
+
+				resultSet.Add( result );
+			}
+
+			return resultSet;
+		}
+		//
+
 		#region Support Classes
+
+		public class TokenResult
+		{
+			public TokenResult()
+			{
+				MainTokens = new List<string>();
+				PartialTokens = new List<string>();
+				StemmedTokens = new List<string>();
+				UniqueCharacters = new List<char>();
+			}
+			public string NormalizedFullText { get; set; }
+			public string PhraseRegex { get; set; }
+			public List<string> MainTokens { get; set; }
+			public List<string> PartialTokens { get; set; }
+			public List<string> StemmedTokens { get; set; }
+			public List<char> UniqueCharacters { get; set; }
+		}
 
 		public class SPARQLNode
 		{
@@ -1382,7 +1734,7 @@ namespace RA.Services
 
 			public SPARQLNode Parent { get; set; }
 			public enum ValueWrapperTypes { None, SurroundWithSingleQuotes, SurroundWithAngleBrackets }
-			public enum SPARQLNodeTypes { HighestNode, Normal, JSONLD_ID, JSONLD_Type, LanguageMap_Node, LanguageMap_LanguageValuePair, LanguageMap_Value, LanguageMap_Language, ObjectWrapper, TermGroup, NotGroup, SearchAnyValue, URINode, ConceptURINode, StringNode, DateNode, DateTimeNode, LanguageBCP47Node, CTIDNode, SortOrderNode, LanguageMap_Node_WithRelevance, StringNode_WithRelevance, URINode_WithRelevance }
+			public enum SPARQLNodeTypes { HighestNode, Normal, JSONLD_ID, JSONLD_Type, LanguageMap_Node, LanguageMap_LanguageValuePair, LanguageMap_Value, LanguageMap_Language, ObjectWrapper, TermGroup, NotGroup, SearchAnyValue, URINode, ConceptURINode, StringNode, DateNode, DateTimeNode, LanguageBCP47Node, CTIDNode, SortOrderNode, LanguageMap_Node_WithRelevance, StringNode_WithRelevance, URINode_WithRelevance, IntegerNode, FloatNode, DecimalNode }
 			public enum PredicateDirections { Both, Outbound, Inbound }
 			public ValueWrapperTypes ValueWrapperType { get; set; }
 			public List<string> ObjectValues { get; set; }
@@ -1424,47 +1776,144 @@ namespace RA.Services
 
 			public override string ToString()
 			{
-				return ToString( TextMatchType.Contains, false, false );
+				return ToString( new Metadata(), TextMatchType.Contains, false, false );
 			}
-			public string ToString( TextMatchType textMatchType, bool isCaseSensitive, bool stringifyText )
+			public string ToString( Metadata metadata )
 			{
+				return ToString( metadata, TextMatchType.Contains, false, false );
+			}
+			public string ToString( Metadata metadata, TextMatchType textMatchType, bool isCaseSensitive, bool stringifyText )
+			{
+				var neptuneFullTextSearchEndpoint = Utilities.ConfigHelper.GetConfigValue( "NeptuneAWSSPARQLElasticSearchIntegrationEndpoint", "" );
 				PredicateProperty = PredicateProperty == null ? null : PredicateProperty.Replace( "<", "" ).Replace( ">", "" ); //Just in case
 				if( SPARQLNodeType == SPARQLNodeTypes.HighestNode )
 				{
-					return "{ " + string.Join( JoinChildrenWithUNION ? " UNION " : " ", Children.Select( m => m.ToString() ) ) + " }";
+					return "{ " + string.Join( JoinChildrenWithUNION ? " UNION " : " ", Children.Select( m => m.ToString( metadata ) ) ) + " }";
 				}
-				else if( SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Node || SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Node_WithRelevance )
+				//Elasticsearch integration
+				else if ( false && ( SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Node || SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Node_WithRelevance ) )
 				{
-					var usePlainText = !Children.Any( m => m.Children.Any( n => n.SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Language ) );
+					var resultItems = new List<string>();
 
-					var childrenValues = Children.Where( m => m.SPARQLNodeType == SPARQLNodeTypes.LanguageMap_LanguageValuePair ).SelectMany( m => m.Children ).Where( m => m.SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Value ).SelectMany( m => m.ObjectValues ).ToList();
-					var words = childrenValues.SelectMany( m => m.Split( ' ' ) ).Select( m => m.Replace( "\\", "" ).Replace( "'", "" ).Replace( "\"", "" ) ).Where( m => m.Length > 3 ).Distinct().ToList();
-					//return "{ VALUES ?debug { 'NodeType: " + SPARQLNodeType.ToString() + " Children count: " + Children.Count() + " LanguageMap_Value Children: " + Children.Where( m => m.SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Value ).Count() + " LanguageMap_LanguageValuePair Children: " + Children.Where( m => m.SPARQLNodeType == SPARQLNodeTypes.LanguageMap_LanguageValuePair ).Count() + " Words: " + string.Join( " ", words ) + " Other Words: " + string.Join( " ", childrenValues ) + " ChildrenValues: " + string.Join( ", ", childrenValues ) + "' } }";
-					if ( false && SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Node_WithRelevance && words.Count() > 0 )
+					foreach(var pair in Children.Where(m => m.SPARQLNodeType == SPARQLNodeTypes.LanguageMap_LanguageValuePair ).ToList() )
 					{
-						var strName = "?relevance_" + Guid.NewGuid().ToString().Replace( "-", "" );
-						var binds = words.Select( m => "BIND(IF(regex(" + strName + ", '" + m + "'), 1 * ((?strlen - STRLEN(REPLACE(" + strName + ", '" + m + "', ''))) / " + m.Length + "), 0) AS ?relevance_score_" + Guid.NewGuid().ToString().Replace( "-", "" ) + "_item)" ).ToList();
+						//Use a unique ?tokens variable to avoid scoping problems
+						var tokensVar = "?tokens_" + Guid.NewGuid().ToString().Replace( "-", "" );
+						//Get the list of language tags
+						var onlyForLanguages = pair.Children.Where( m => m.SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Language ).SelectMany( m => m.ObjectValues ).ToList();
+						//Get the list of text values
+						var childrenValues = pair.Children.Where( m => m.SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Value ).SelectMany( m => m.ObjectValues ).ToList();
 
-						return "{ " + Parent.ObjectVariable + " ( " + PredicateProperty + ( usePlainText ? "__plaintext" : "" ) + " ) " + ObjectVariable + " . " + "FILTER ( " + string.Join( JoinChildrenWithUNION ? " || " : " %26%26 ", Children.Select( m => m.ToString( textMatchType, isCaseSensitive, !usePlainText ) ) ) + " )" + " BIND(LCASE(STR( " + ObjectVariable + " )) AS " + strName + " ) BIND(STRLEN( " + strName + " ) AS ?strlen) " + string.Join( " ", binds ) + " ." + " }";
+						//If there are any language tags, insert them
+						var languagePart = "";
+						if ( onlyForLanguages.Count() > 0 )
+						{
+							languagePart = " VALUES ?language { " + string.Join( " ", onlyForLanguages.Select( m => "'" + m + "'" ).ToList() ) + " } " + tokensVar + " ( credreg:__tokenLanguage ) ?language . ";
+						}
+
+						//For each text value in the list of text values (will usually only be one item in this list)
+						var textPart = "";
+						if ( childrenValues.Count() > 0 )
+						{
+							//Get the tokens for this value
+							var tokens = Tokenize_LangString( childrenValues );
+							textPart = "";
+							var textPartItems = new List<string>();
+
+							//Generate the elasticsearch query
+							foreach ( var token in tokens )
+							{
+								textPartItems.Add(
+									"{ " +
+										"SERVICE neptune-fts:search { " +
+											"neptune-fts:config neptune-fts:endpoint '" + neptuneFullTextSearchEndpoint + "' . " +
+											"neptune-fts:config neptune-fts:queryType 'query_string' . " +
+											"neptune-fts:config neptune-fts:field " + PredicateProperty + " . " +
+											"neptune-fts:config neptune-fts:query '" + token.NormalizedFullText.Replace( " ", " OR " ) + "' . " +
+											"neptune-fts:config neptune-fts:return " + tokensVar + " . " +
+										" }" +
+									" }"
+								);
+							}
+							textPart += string.Join( " UNION ", textPartItems );
+						}
+
+						//Construct the outer part of this part of the query
+						resultItems.Add( "{ " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + tokensVar + " . { " + languagePart + " " + textPart + " } }" );
 					}
-					else
+
+					return "{ " + string.Join( JoinChildrenWithUNION ? " UNION " : " ", resultItems ) + " }";
+				}
+				//Free text search but with regex
+				else if ( SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Node || SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Node_WithRelevance )
+				{
+					var resultItems = new List<string>();
+
+					foreach( var pair in Children.Where( m => m.SPARQLNodeType == SPARQLNodeTypes.LanguageMap_LanguageValuePair ).ToList() )
 					{
-						return "{ " + Parent.ObjectVariable + " ( " + PredicateProperty + ( usePlainText ? "__plaintext" : "" ) + " ) " + ObjectVariable + " . " + "FILTER ( " + string.Join( JoinChildrenWithUNION ? " || " : " %26%26 ", Children.Select( m => m.ToString( textMatchType, isCaseSensitive, !usePlainText ) ) ) + " ) ." + " }";
+						//Use a unique ?tokens variable to avoid scoping problems
+						var tokensVar = "?tokens_" + Guid.NewGuid().ToString().Replace( "-", "" );
+						//Get the list of language tags
+						var onlyForLanguages = pair.Children.Where( m => m.SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Language ).SelectMany( m => m.ObjectValues ).ToList();
+						//Get the list of text values
+						var childrenValues = pair.Children.Where( m => m.SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Value ).SelectMany( m => m.ObjectValues ).ToList();
+
+						//If there are any language tags, insert them
+						var languagePart = "";
+						if ( onlyForLanguages.Count() > 0 ) {
+							languagePart = " VALUES ?language { " + string.Join( " ", onlyForLanguages.Select( m => "'" + m + "'" ).ToList() ) + " } " + tokensVar + " ( credreg:__tokenLanguage ) ?language . ";
+						}
+
+						//For each text value in the list of text values (will usually only be one item in this list)
+						var textPart = "";
+						if( childrenValues.Count() > 0 )
+						{
+							//Get the tokens for this value
+							var tokens = Tokenize_LangString( childrenValues );
+							textPart = "";
+							var textPartItems = new List<string>();
+							//For each token, add the relevance and matching
+							foreach ( var token in tokens )
+							{
+								var pointsVar = "?relevance_points_" + Guid.NewGuid().ToString().Replace( "-", "" );
+								var normalizedVar = "?normalized_" + Guid.NewGuid().ToString().Replace( "-", "" );
+								metadata.RelevancePointsVariables.Add( pointsVar );
+								textPartItems.Add(
+									"{ " +
+										tokensVar + " ( credreg:__tokenFullNormalized ) " + normalizedVar + " . " + //This has to be internal to the { } in order to scope the ?normalized variable correctly, otherwise the BINDs and such don't work
+										"BIND(" +
+											"IF(REGEX(" + normalizedVar + ", '" + string.Join( "|", token.PartialTokens ) + "')," +
+												"IF(" +
+													"REGEX(" + normalizedVar + ", '" + token.NormalizedFullText + "'), " + 
+													( 250 * token.NormalizedFullText.Length ) + ", " + //If there is a perfect match, add a huge bonus
+													"IF(" +
+														"REGEX(" + normalizedVar + ", '" + token.PhraseRegex + "'), " + 
+														( 25 * token.NormalizedFullText.Length ) + ", " + //If there is a rough phrase match, add a big bonus
+														string.Join( " + ", token.PartialTokens.Select( m => "IF(REGEX(" + normalizedVar + ", '" + m + "'), " + (m.Length * m.Length) + ", 0)" ).ToList() ) + //If there is only a token match, add a bonus based on each matching token's size
+													")" +
+												")" +
+											", 0)" +
+											" AS " + pointsVar +
+										")" +
+										" FILTER(" + pointsVar + " > 0)" +
+										//" BIND(" + pointsVar + " + ?relevance_points AS ?relevance_points)" +
+									" }"
+								);
+							}
+							textPart += string.Join( " UNION ", textPartItems );
+						}
+
+						//Construct the outer part of this part of the query
+						resultItems.Add( "{ " + Parent.ObjectVariable + " ( " + PredicateProperty + "__tokenData ) " + tokensVar + " . { " + languagePart + " " + textPart + " } }" );
 					}
+
+					return "{ " + string.Join( JoinChildrenWithUNION ? " UNION " : " ", resultItems ) + " }";
 				}
-				else if ( SPARQLNodeType == SPARQLNodeTypes.LanguageMap_LanguageValuePair )
+				else if ( SPARQLNodeType == SPARQLNodeTypes.LanguageMap_LanguageValuePair || SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Value || SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Language )
 				{
-					return "( " + string.Join( JoinChildrenWithUNION ? " || " : " %26%26 ", Children.Select( m => m.ToString( textMatchType, isCaseSensitive, stringifyText ) ) ) + " )";
+					return ""; //Should not happen
 				}
-				else if ( SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Value )
-				{
-					return "( " + string.Join( JoinChildrenWithUNION ? " || " : " %26%26 ", ObjectValues.Select( m => WrapTextInRegex( Parent.ObjectVariable, m, textMatchType, isCaseSensitive, true, stringifyText ) ).ToList() ) + " )";
-				}
-				else if( SPARQLNodeType == SPARQLNodeTypes.LanguageMap_Language )
-				{
-					return "( " + string.Join( JoinChildrenWithUNION ? " || " : " %26%26 ", ObjectValues.Select( m => "langMatches(lang(" + Parent.ObjectVariable + "), '" + m + "')" ).ToList() ) + " )";
-				}
-				else if( SPARQLNodeType == SPARQLNodeTypes.DateNode || SPARQLNodeType == SPARQLNodeTypes.DateTimeNode )
+				else if ( SPARQLNodeType == SPARQLNodeTypes.DateNode || SPARQLNodeType == SPARQLNodeTypes.DateTimeNode )
 				{
 					var minDate = ObjectValues.First();
 					var maxDate = ObjectValues.Last();
@@ -1476,7 +1925,18 @@ namespace RA.Services
 						var minText = hasMinDate ? ObjectVariable + " >= '" + minDate + "'" + dataTypeTag : "";
 						var maxText = hasMaxDate ? ObjectVariable + " <= '" + minDate + "'" + dataTypeTag : "";
 
-						return "{ " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . FILTER( " + minText + ( hasMinDate && hasMaxDate ? " %26%26 " : "" ) + maxText + " ) . }";
+						//Handle custom search properties for the record itself
+						if( PredicateProperty.ToLower() == "search:datecreated" )
+						{
+							PredicateProperty = "credreg:__graph? / credreg:__createdAt";
+						}
+						else if(PredicateProperty.ToLower() == "search:dateupdated" )
+						{
+							PredicateProperty = "credreg:__graph? / credreg:__updatedAt";
+						}
+
+						//return "{ " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . FILTER( " + minText + ( hasMinDate && hasMaxDate ? " %26%26 " : "" ) + maxText + " ) . }";
+						return "{ " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . FILTER( " + minText + ( hasMinDate && hasMaxDate ? " && " : "" ) + maxText + " ) . }";
 					}
 					else
 					{
@@ -1502,7 +1962,22 @@ namespace RA.Services
 				}
 				else if ( SPARQLNodeType == SPARQLNodeTypes.JSONLD_ID )
 				{
-					return "{ VALUES " + Parent.ObjectVariable + " { " + JoinValues( ObjectValues, ValueWrapperTypes.SurroundWithAngleBrackets, "credreg:__null" ) + " } " + Parent.ObjectVariable + " ?p ?o . }";
+					var exactURLs = ObjectValues.Where( m => m.IndexOf( "http" ) == 0 ).ToList();
+					var partialURLs = ObjectValues.Where( m => m.IndexOf( "http" ) != 0 ).ToList();
+					var tokens = Tokenize_URIString( partialURLs );
+
+					var exactMatchQuery = "{ VALUES " + Parent.ObjectVariable + " { " + JoinValues( ObjectValues, ValueWrapperTypes.SurroundWithAngleBrackets ) + " } " + Parent.ObjectVariable + " ?p ?o . }";
+					var partialMatchQuery = "{ " + Parent.ObjectVariable + " ?p ?o FILTER( " + string.Join( JoinChildrenWithUNION ? " || " : " && ", tokens.Select( m => "REGEX(LCASE(STR(" + Parent.ObjectVariable + ")), '" + m.NormalizedFullText + "')" ).ToList() ) + " ) . }";
+					return "{ " + ( exactURLs.Count() > 0 ? exactMatchQuery : "" ) + ( exactURLs.Count() > 0 && partialURLs.Count() > 0 ? " UNION " : "" ) + ( partialURLs.Count() > 0 ? partialMatchQuery : "" ) + " }";
+					/*
+					return 
+						"{" +
+							"{ VALUES " + Parent.ObjectVariable + " { " + JoinValues( ObjectValues, ValueWrapperTypes.SurroundWithAngleBrackets, "credreg:__null" ) + " } " + Parent.ObjectVariable + " ?p ?o . }" +
+							" UNION " +
+							"{ " + Parent.ObjectVariable + " ?p ?o FILTER( " + string.Join( JoinChildrenWithUNION ? " || " : " && ", tokens.Select( m => "REGEX(LCASE(STR(" + Parent.ObjectVariable + ")), '" + m.PhraseRegex + "')" ).ToList() ) + " ) . }" +
+						"}";
+					*/
+					//return "{ VALUES " + Parent.ObjectVariable + " { " + JoinValues( ObjectValues, ValueWrapperTypes.SurroundWithAngleBrackets, "credreg:__null" ) + " } " + Parent.ObjectVariable + " ?p ?o . }";
 				}
 				else if( SPARQLNodeType == SPARQLNodeTypes.JSONLD_Type )
 				{
@@ -1510,78 +1985,181 @@ namespace RA.Services
 				}
 				else if( SPARQLNodeType == SPARQLNodeTypes.TermGroup )
 				{
-					return "{ " + string.Join( JoinChildrenWithUNION ? " UNION " : " ", Children.Select( m => m.ToString() ).ToList() ) + " }";
+					return "{ " + string.Join( JoinChildrenWithUNION ? " UNION " : " ", Children.Select( m => m.ToString( metadata ) ).ToList() ) + " }";
 				}
 				else if( SPARQLNodeType == SPARQLNodeTypes.NotGroup )
 				{
-					return "FILTER NOT EXISTS { " + string.Join( JoinChildrenWithUNION ? " UNION " : " ", Children.Select( m => m.ToString() ).ToList() ) + " }";
+					return "FILTER NOT EXISTS { " + string.Join( JoinChildrenWithUNION ? " UNION " : " ", Children.Select( m => m.ToString( metadata ) ).ToList() ) + " }";
 				}
 				else if( SPARQLNodeType == SPARQLNodeTypes.SearchAnyValue )
 				{
 					return "{ " + Parent.ObjectVariable + " " + HandleDirectionalPredicate( PredicateProperty, PredicateDirection ) + " ?anyValue_" + Guid.NewGuid().ToString().Replace( "-", "" ) + " ." + " }";
 				}
-				else if( SPARQLNodeType == SPARQLNodeTypes.URINode || SPARQLNodeType == SPARQLNodeTypes.URINode_WithRelevance )
+				else if ( SPARQLNodeType == SPARQLNodeTypes.URINode || SPARQLNodeType == SPARQLNodeTypes.URINode_WithRelevance )
 				{
-					//Since the full URI value is what gets stored, we have to look for matches to it instead of the shorthand version
-					var expandedValues = new List<string>();
-					var service = new SPARQLServices();
-					foreach ( var value in ObjectValues )
-					{
-						var parts = value.Split( ':' );
-						if ( service.SchemaContext.URIPrefixes.ContainsKey( parts.First() ) )
-						{
-							expandedValues.Add( service.SchemaContext.URIPrefixes[ parts.First() ] + parts.Last() );
-						}
-						else
-						{
-							expandedValues.Add( value );
-						}
-					}
+					//Use a unique ?tokens variable to avoid scoping problems
+					var tokensVar = "?tokens_" + Guid.NewGuid().ToString().Replace( "-", "" );
 
-					if( false && SPARQLNodeType == SPARQLNodeTypes.URINode )
+					//Get the tokens for this value
+					var tokens = Tokenize_URIString( ObjectValues );
+					var textPart = "";
+					var textPartItems = new List<string>();
+
+					//For each token, add the relevance and matching
+					foreach ( var token in tokens )
 					{
-						return " { " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . " + "FILTER ( " + string.Join( JoinChildrenWithUNION ? " || " : " %26%26 ", expandedValues.Select( m => WrapTextInRegex( ObjectVariable, m, textMatchType, isCaseSensitive, true, true ) ).ToList() ) + " )" + " . }";
+						var pointsVar = "?relevance_points_" + Guid.NewGuid().ToString().Replace( "-", "" );
+						var normalizedVar = "?normalized_" + Guid.NewGuid().ToString().Replace( "-", "" );
+						metadata.RelevancePointsVariables.Add( pointsVar );
+						textPartItems.Add(
+							"{ " +
+								tokensVar + " ( credreg:__tokenFullNormalized ) " + normalizedVar + " . " + //This has to be internal to the { } in order to scope the ?normalized variable correctly, otherwise the BINDs and such don't work
+								"BIND(" +
+									"IF(REGEX(" + normalizedVar + ", '" + token.PhraseRegex + "', 'i')," +
+										"IF(" +
+											"REGEX(" + normalizedVar + ", '" + token.NormalizedFullText + "', 'i'), " +
+											( 250 * token.NormalizedFullText.Length ) + ", " + //If there is a perfect match, add a huge bonus
+											"IF(" +
+												"REGEX(" + normalizedVar + ", '" + token.PhraseRegex + "', 'i'), " +
+												( 25 * token.PhraseRegex.Length ) + ", " + //If there is a rough phrase match, add a big bonus
+												string.Join( " + ", token.PartialTokens.Select( m => "IF(REGEX(" + normalizedVar + ", '" + m + "', 'i'), " + ( m.Length * m.Length ) + ", 0)" ).ToList() ) + //If there is only a token match, add a bonus based on each matching token's size
+											")" +
+										")" +
+									", 0)" +
+									" AS " + pointsVar +
+								")" +
+								" FILTER(" + pointsVar + " > 0)" +
+								//" BIND(" + pointsVar + " + ?relevance_points AS ?relevance_points)" +
+							" }"
+						);
 					}
-					else
-					{
-						var strName = "?relevance_" + Guid.NewGuid().ToString().Replace( "-", "" );
-						var words = ObjectValues.SelectMany( m => m.Split( ' ' ) ).Select( m => m.Replace( "\\", "" ).Replace( "'", "" ).Replace( "\"", "" ) ).Where( m => m.Length > 3 ).Distinct().ToList();
-						var binds = words.Select( m => "BIND(IF(regex(" + strName + ", '" + m + "'), 1 * ((?strlen - STRLEN(REPLACE(" + strName + ", '" + m + "', ''))) / " + m.Length + "), 0) AS ?relevance_score_" + Guid.NewGuid().ToString().Replace( "-", "" ) + "_item)" ).ToList();
-						return " { " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . " + "FILTER ( " + string.Join( JoinChildrenWithUNION ? " || " : " %26%26 ", expandedValues.Select( m => WrapTextInRegex( ObjectVariable, m, textMatchType, isCaseSensitive, true, true ) ).ToList() ) + " )" + " BIND(LCASE(STR(" + ObjectVariable + ")) AS " + strName + ") BIND(STRLEN(" + strName + ") AS ?strlen) " + string.Join( " ", binds ) + ". }";
-					}
+					textPart += string.Join( " UNION ", textPartItems );
+
+					return "{ " + Parent.ObjectVariable + " ( " + PredicateProperty + "__tokenData" + " )" + " " + tokensVar + " . { " + textPart + " } }";
 				}
 				else if ( SPARQLNodeType == SPARQLNodeTypes.LanguageBCP47Node )
 				{
-					return " { " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . " + "FILTER ( " + string.Join( JoinChildrenWithUNION ? " || " : " %26%26 ", ObjectValues.Select( m => WrapTextInRegex( ObjectVariable, m, textMatchType, isCaseSensitive, true, true ) ).ToList() ) + " )" + " . }";
+					//return " { " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . " + "FILTER ( " + string.Join( JoinChildrenWithUNION ? " || " : " %26%26 ", ObjectValues.Select( m => WrapTextInRegex( ObjectVariable, m, textMatchType, isCaseSensitive, true, true ) ).ToList() ) + " )" + " . }";
+					return " { " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . " + "FILTER ( " + string.Join( JoinChildrenWithUNION ? " || " : " && ", ObjectValues.Select( m => WrapTextInRegex( ObjectVariable, m, textMatchType, isCaseSensitive, true, true ) ).ToList() ) + " )" + " . }";
 				}
 				else if( SPARQLNodeType == SPARQLNodeTypes.CTIDNode )
 				{
-					return " { " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . " + "FILTER ( " + string.Join( JoinChildrenWithUNION ? " || " : " %26%26 ", ObjectValues.Select( m => m.Length == 39 ? ObjectVariable + " = '" + m + "'" : WrapTextInRegex( ObjectVariable, m, textMatchType, isCaseSensitive, true, false ) ).ToList() ) + " )" + " . }";
+					var values = ObjectValues.Select( m => Regex.Replace( m.ToLower(), @"[^a-f0-9-]", "" ) ).ToList();
+					var validCTIDs = values.Where( m => m.IndexOf( "ce-" ) == 0 && m.Length == 39 ).ToList();
+					if( validCTIDs.Count() == values.Count() ) //Fast matching
+					{
+						return "{ VALUES " + ObjectVariable + " { " + string.Join( " ", validCTIDs.Select( m => "'" + m + "'" ).ToList() ) + " } " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . }";
+					}
+					else //REGEX matching
+					{
+						return " { " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . " + "FILTER ( " + string.Join( " || ", values.Select( m => "REGEX(" + ObjectVariable + ", '" + m + "')" ).ToList() ) + " )" + " . }";
+					}
 				}
-				else if ( SPARQLNodeType == SPARQLNodeTypes.StringNode || SPARQLNodeType == SPARQLNodeTypes.StringNode_WithRelevance ) //Don't forget to switch this if you get relevance working
+				else if ( SPARQLNodeType == SPARQLNodeTypes.StringNode || SPARQLNodeType == SPARQLNodeTypes.StringNode_WithRelevance )
 				{
-					return " { " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . " + "FILTER ( " + string.Join( JoinChildrenWithUNION ? " || " : " %26%26 ", ObjectValues.Select( m => WrapTextInRegex( ObjectVariable, m, textMatchType, isCaseSensitive, true, false ) ).ToList() ) + " )" + " . }";
+					//Use a unique ?tokens variable to avoid scoping problems
+					var tokensVar = "?tokens_" + Guid.NewGuid().ToString().Replace( "-", "" );
+					//Get the tokens for this value
+					var tokens = Tokenize_PlainString( ObjectValues );
+					var textPart = "";
+					var textPartItems = new List<string>();
+
+					//For each token, add the relevance and matching
+					foreach ( var token in tokens )
+					{
+						var pointsVar = "?relevance_points_" + Guid.NewGuid().ToString().Replace( "-", "" );
+						var normalizedVar = "?normalized_" + Guid.NewGuid().ToString().Replace( "-", "" );
+						metadata.RelevancePointsVariables.Add( pointsVar );
+						textPartItems.Add(
+							"{ " +
+								tokensVar + " ( credreg:__tokenFullNormalized ) " + normalizedVar + " . " + //This has to be internal to the { } in order to scope the ?normalized variable correctly, otherwise the BINDs and such don't work
+								"BIND(" +
+									"IF(REGEX(" + normalizedVar + ", '" + string.Join( "|", token.PartialTokens ) + "')," +
+										"IF(" +
+											"REGEX(" + normalizedVar + ", '" + token.NormalizedFullText + "'), " +
+											( 250 * token.NormalizedFullText.Length ) + ", " + //If there is a perfect match, add a huge bonus
+											"IF(" +
+												"REGEX(" + normalizedVar + ", '" + token.PhraseRegex + "'), " +
+												( 25 * token.NormalizedFullText.Length ) + ", " + //If there is a rough phrase match, add a big bonus
+												string.Join( " + ", token.PartialTokens.Select( m => "IF(REGEX(" + normalizedVar + ", '" + m + "'), " + ( m.Length * m.Length ) + ", 0)" ).ToList() ) + //If there is only a token match, add a bonus based on each matching token's size
+											")" +
+										")" +
+									", 0)" +
+									" AS " + pointsVar +
+								")" +
+								" FILTER(" + pointsVar + " > 0)" +
+								//" BIND(" + pointsVar + " + ?relevance_points AS ?relevance_points)" +
+							" }"
+						);
+					}
+					textPart += string.Join( " UNION ", textPartItems );
+
+					return "{ " + Parent.ObjectVariable + " ( " + PredicateProperty + "__tokenData" + " )" + " " + tokensVar + " . { " + textPart + " } }";
 				}
-				else if( false && SPARQLNodeType == SPARQLNodeTypes.StringNode_WithRelevance )
+				else if ( Children == null || Children.Count() == 0 )
 				{
-					var strName = "?relevance_" + Guid.NewGuid().ToString().Replace( "-", "" );
-					var words = ObjectValues.SelectMany( m => m.Split( ' ' ) ).Select( m => m.Replace( "\\", "" ).Replace( "'", "" ).Replace( "\"", "" ) ).Where( m => m.Length > 3 ).Distinct().ToList();
-					var binds = words.Select( m => "BIND(IF(regex(" + strName + ", '" + m + "'), 1 * ((?strlen - STRLEN(REPLACE(" + strName + ", '" + m + "', ''))) / " + m.Length + "), 0) AS ?relevance_score_" + Guid.NewGuid().ToString().Replace( "-", "" ) + "_item)" ).ToList();
-					return " { " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . " + "FILTER ( " + string.Join( JoinChildrenWithUNION ? " || " : " %26%26 ", ObjectValues.Select( m => WrapTextInRegex( ObjectVariable, m, textMatchType, isCaseSensitive, true, false ) ).ToList() ) + " )" + " BIND(LCASE(" + ObjectVariable + ") AS " + strName + ") BIND(STRLEN(" + strName + ") AS ?strlen) " + string.Join( " ", binds ) + " . }";
-				}
-				else if( Children == null || Children.Count() == 0 )
-				{
+					var dataTypeTag =
+						SPARQLNodeType == SPARQLNodeTypes.IntegerNode ? "^^xsd:integer" :
+						SPARQLNodeType == SPARQLNodeTypes.FloatNode ? "^^xsd:float" :
+						SPARQLNodeType == SPARQLNodeTypes.DecimalNode ? "^^xsd:decimal" :
+						"";
+
+					//Range values
+					if( ObjectValues.Count() > 1 )
+					{
+						var minValue = ObjectValues.First();
+						var maxValue = ObjectValues.Last();
+						var hasMinValue = !string.IsNullOrWhiteSpace( minValue );
+						var hasMaxValue = !string.IsNullOrWhiteSpace( maxValue );
+						if ( hasMinValue || hasMaxValue )
+						{
+
+							var minText = hasMinValue ? ObjectVariable + " >= '" + minValue + "'" + dataTypeTag : "";
+							var maxText = hasMaxValue ? ObjectVariable + " <= '" + maxValue + "'" + dataTypeTag : "";
+
+							return "{ " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . FILTER( " + minText + ( hasMinValue && hasMaxValue ? " && " : "" ) + maxText + " ) . }";
+						}
+					}
+
+					//Simple values
+					return "{ VALUES " + ObjectVariable + " { " + JoinValues( ObjectValues, ValueWrapperType, "credreg:__null" ) + " } " + Parent.ObjectVariable + " ( " + PredicateProperty + " ) " + ObjectVariable + " . }";
+
+					/*
+					//Special handling for these number data types
+					if ( SPARQLNodeType == SPARQLNodeTypes.IntegerNode )
+					{
+						ObjectValues = ObjectValues.Select( m => "'" + m + "'^^xsd:integer" ).ToList();
+					}
+					else if ( SPARQLNodeType == SPARQLNodeTypes.FloatNode )
+					{
+						ObjectValues = ObjectValues.Select( m => "'" + m + "'^^xsd:float" ).ToList();
+					}
+					else if ( SPARQLNodeType == SPARQLNodeTypes.DecimalNode )
+					{
+						ObjectValues = ObjectValues.Select( m => "'" + m + "'^^xsd:decimal" ).ToList();
+					}
+
 					return "{ VALUES " + ObjectVariable + " { " + JoinValues( ObjectValues, ValueWrapperType, "credreg:__null" ) + " } " + Parent.ObjectVariable + " ( " + PredicateProperty + " | ^" + PredicateProperty + " ) " + ObjectVariable + " . }";
+					*/
 				}
 				else if ( !string.IsNullOrWhiteSpace( Parent.ObjectVariable ) && !string.IsNullOrWhiteSpace( PredicateProperty ) && !string.IsNullOrWhiteSpace( ObjectVariable ) )
 				{
-					return "{ " + Parent.ObjectVariable + " " + HandleDirectionalPredicate( PredicateProperty, PredicateDirection ) + " " + ObjectVariable + " . " + string.Join( JoinChildrenWithUNION ? " UNION " : " ", Children.Select( m => m.ToString() ) ) + " }";
+					return "{ " + Parent.ObjectVariable + " " + HandleDirectionalPredicate( PredicateProperty, PredicateDirection ) + " " + ObjectVariable + " . " + string.Join( JoinChildrenWithUNION ? " UNION " : " ", Children.Select( m => m.ToString( metadata ) ) ) + " }";
 				}
 				else
 				{
-					return "{ " + string.Join( JoinChildrenWithUNION ? " UNION " : " ", Children.Select( m => m.ToString() ).ToList() ) + " }";
+					return "{ " + string.Join( JoinChildrenWithUNION ? " UNION " : " ", Children.Select( m => m.ToString( metadata ) ).ToList() ) + " }";
 				}
 
+			}
+
+			public class Metadata
+			{
+				public Metadata()
+				{
+					RelevancePointsVariables = new List<string>();
+				}
+				public List<string> RelevancePointsVariables { get; set; }
 			}
 		}
 		//Enable explicit directionality
@@ -1613,7 +2191,7 @@ namespace RA.Services
 			public SPARQLRequest()
 			{
 				OrderBy = SPARQLServices.SortOrders.DEFAULT;
-				DescriptionSetType = SPARQLServices.DescriptionSetType.Resource;
+				DescriptionSetType = SPARQLServices.DescriptionSetType.Resource_Graph;
 			}
 			public JObject Query { get; set; }
 			public int Skip { get; set; }
@@ -1623,7 +2201,8 @@ namespace RA.Services
 			public bool IncludeDebugInfo { get; set; }
 			[JsonConverter( typeof( Newtonsoft.Json.Converters.StringEnumConverter ) )]
 			public SPARQLServices.DescriptionSetType DescriptionSetType { get; set; } //Optional
-			public int RelatedItemsLimit { get; set; }
+			public int DescriptionSetRelatedItemsLimit { get; set; }
+			public int DescriptionSetRelatedURIsLimit { get; set; }
 		}
 		//
 
@@ -1648,16 +2227,44 @@ namespace RA.Services
 			public RelatedItemsData()
 			{
 				ResultURIs = new List<string>();
-				RelatedItemsMap = new JObject();
+				RelatedItemsMap = new List<RelatedItemsSet>();
 				RelatedItems = new List<JObject>();
 				TemporaryRelatedGraphItems = new Dictionary<string, List<JObject>>();
+				DebugInfo = new JObject();
 			}
 			public List<string> ResultURIs { get; set; }
-			public JObject RelatedItemsMap { get; set; }
+			public List<RelatedItemsSet> RelatedItemsMap { get; set; }
 			public List<JObject> RelatedItems { get; set; }
 			public Dictionary<string, List<JObject>> TemporaryRelatedGraphItems { get; set; }
 			public int RelatedItemsLimit { get; set; }
+			public int RelatedURIsLimit { get; set; }
+			public JObject DebugInfo { get; set; }
 			public bool IncludeDebugInfo { get; set; }
+		}
+		//
+
+		public class RelatedItemsSet
+		{
+			public RelatedItemsSet()
+			{
+				RelatedItems = new List<RelatedItemsPath>();
+				DebugInfo = new JObject();
+			}
+			public string ResourceURI { get; set; }
+			public List<RelatedItemsPath> RelatedItems { get; set; }
+			public JObject DebugInfo { get; set; }
+		}
+		//
+
+		public class RelatedItemsPath
+		{
+			public RelatedItemsPath()
+			{
+				URIs = new List<string>();
+			}
+			public string Path { get; set; }
+			public List<string> URIs { get; set; }
+			public int TotalURIs { get; set; }
 		}
 		//
 

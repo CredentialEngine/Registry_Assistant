@@ -82,6 +82,30 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "https://www.cswe.org/",
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
 			} );
+			//add costs
+			//Must be a valid CTDL cost type.
+			// Example: Tuition, Application, AggregateCost, RoomOrResidency
+			//see: https://credreg.net/ctdl/terms#CostType
+			myData.EstimatedCost.Add( new CostProfile()
+			{
+				Description = "A required description of the cost profile",
+				CostDetails = "https://example.com/t=loppCostProfile",
+				Currency = "USD",
+				CostItems = new List<CostProfileItem>()
+				 {
+					 new CostProfileItem()
+					 {
+						 DirectCostType="Application",
+						 Price=100,
+					 },
+					 new CostProfileItem()
+					 {
+						 DirectCostType="Tuition",
+						 Price=12999,
+						 PaymentPattern="Full amount due at time of registration"
+					 }
+				 }
+			} );
 
 			//add occupations
 			PopulateOccupations( myData );
@@ -143,14 +167,53 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
 			} );
+			//add a requires Condition profile with conditions and a required learning opportunity.
+			/*Scenario: 
+				- The learning opportunity will be published to the credential registry
+				- The credential must be published before the learning opportunity
+				- The learning opportunity is referenced using the Condition Profile property of TargetLearningOpportunity
+				- Only the CTID need be provided for a learning opportunity that will be published
+
+			*/
 			myData.Requires = new List<ConditionProfile>()
 			{
 				new ConditionProfile()
 				{
-					Name = "My Requirements",
-					Condition = new List<string>() { "Condition One", "Condition Two", "Condition Three" }
+					Description = "To earn this credential the following conditions must be met, and the program must be completed.",
+					Condition = new List<string>() { "Complete High School", "Have a drivers licence." }, 
+					TargetLearningOpportunity = new List<EntityReference>()
+					{
+						new EntityReference()
+						{
+							CTID="ce-ccd00a32-d5ad-41e7-b14c-5c096bc9eea0"
+						}
+					}
 				}
 			};
+			//add costs
+			//Must be a valid CTDL cost type.
+			// Example: Tuition, Application, AggregateCost, RoomOrResidency
+			//see: https://credreg.net/ctdl/terms#CostType
+			myData.EstimatedCost.Add( new CostProfile()
+			{
+				Description = "A required description of the cost profile",
+				CostDetails = "https://example.com/t=loppCostProfile",
+				Currency = "USD",
+				CostItems = new List<CostProfileItem>()
+				 {
+					 new CostProfileItem()
+					 {
+						 DirectCostType="Application",
+						 Price=100,
+					 },
+					 new CostProfileItem()
+					 {
+						 DirectCostType="Tuition",
+						 Price=12999,
+						 PaymentPattern="Full amount due at time of registration"
+					 }
+				 }
+			} );
 			//add occupations
 			PopulateOccupations( myData );
 			//industries

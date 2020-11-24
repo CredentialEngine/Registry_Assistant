@@ -22,11 +22,19 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "schema:value" )]
 		public decimal Value { get; set; }
 
+
+		/// <summary>
+		/// Minimum value for this purpose.
+		/// </summary>
 		[JsonProperty( "schema:minValue" )]
 		public decimal MinValue { get; set; }
 
+		/// <summary>
+		/// Maximum value for this purpose.
+		/// </summary>
 		[JsonProperty( "schema:maxValue" )]
 		public decimal MaxValue { get; set; }
+
 
 		[JsonProperty( "qdata:percentage" )]
 		public decimal Percentage { get; set; }

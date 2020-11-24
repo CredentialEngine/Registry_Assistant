@@ -27,7 +27,8 @@ namespace CredentialRegistry
 		 * 
 		 * 
 		 *************************************************************/
-		 
+
+
 		/// <summary>
 		/// Creates a Registry envelope from an RSA key pair.
 		/// </summary>
@@ -55,7 +56,9 @@ namespace CredentialRegistry
 			LoggingHelper.DoTrace( 7, "==== do the JWT encoding (note to RS256) using privateKey, using BouncyCastle for the ToRSA ====" );
 
 			//do the JWT encoding (note to RS256) using privateKey, using BouncyCastle for the ToRSA
-			//NOTE: Must update related IIS application pool, or following will result in a file not found.
+			//NOTE: Must update related IIS application pool, or following will result the error:
+			//*****			The system cannot find the file specified	**********
+
 			string encoded = JWT.Encode( contents, DotNetUtilities.ToRSA( privateKey ), JwsAlgorithm.RS256 );
 
 			LoggingHelper.DoTrace( 7, "==== populating envelope ====" );
@@ -85,7 +88,7 @@ namespace CredentialRegistry
 		/// <param name="envelopeIdentifier"></param>
 		/// <param name="contents"></param>
 		/// <returns></returns>
-		public static DeleteEnvelope CreateDeleteEnvelope( string publicKeyPath, string secretKeyPath, string ctid, string userName )
+		public static DeleteEnvelope CreateDeleteEnvelope( string publicKeyPath, string secretKeyPath, string ctid, string byApiKey )
 		{
 			RsaPrivateCrtKeyParameters privateKey;
 			//string envelopeIdentifier, 
@@ -95,7 +98,7 @@ namespace CredentialRegistry
 			}
 			DeleteObject del = new DeleteObject();
 			del.Ctid = ctid;
-			del.Actor = userName;
+			del.Actor = byApiKey;
 			string contents = JsonConvert.SerializeObject( del );
 
 			//string contents = string.Format("{\"delete\": true, \"ctld:ctid\":\"{0}\", \"deletedBy\":\"{1}\"}", ctid, userName) ;

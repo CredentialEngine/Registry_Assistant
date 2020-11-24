@@ -36,7 +36,6 @@ namespace RA.Services
             if ( ToMap( request, output, ref helper ) )
             {
                 og.Graph.Add( output );
-                //TODO - is there other info needed, like in context?
                 if ( BlankNodes != null && BlankNodes.Count > 0 )
                 {
                     foreach ( var item in BlankNodes )
@@ -47,7 +46,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
 
@@ -97,8 +96,8 @@ namespace RA.Services
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
-
-						string msg = string.Format( "<p>Published CostManifest: {0}</p><p>CostDetails  webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", request.CostManifest.Name, output.CostDetails, output.Ctid, crEnvelopeId );
+                        CheckIfChanged( helper, cer.WasChanged );
+                        string msg = string.Format( "<p>Published CostManifest: {0}</p><p>CostDetails  webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", request.CostManifest.Name, output.CostDetails, output.Ctid, crEnvelopeId );
 						NotifyOnPublish( "CostManifest", msg );
 					}
 					else
@@ -113,7 +112,6 @@ namespace RA.Services
                 helper.HasErrors = true;
                 isValid = false;
                 og.Graph.Add( output );
-                //TODO - is there other info needed, like in context?
                 if ( BlankNodes != null && BlankNodes.Count > 0 )
                 {
                     foreach ( var item in BlankNodes )
@@ -124,7 +122,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
@@ -158,7 +156,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
@@ -167,7 +165,6 @@ namespace RA.Services
                 isValid = false;
                 //do payload anyway
                 og.Graph.Add( output );
-                //TODO - is there other info needed, like in context?
                 if ( BlankNodes != null && BlankNodes.Count > 0 )
                 {
                     foreach ( var item in BlankNodes )
@@ -178,7 +175,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
@@ -253,25 +250,28 @@ namespace RA.Services
 			CurrentCtid = output.Ctid = FormatCtid( input.Ctid, "Cost Manifest", ref messages );
             output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
 
-            //required
-            if ( string.IsNullOrWhiteSpace( input.Name ) )
-            {
-                if ( input.Name_Map == null || input.Name_Map.Count == 0 )
-                {
-                    messages.Add( FormatMessage( "Error - A Name or Name_Map must be entered for Cost Manifest with CTID: '{0}'.", input.Ctid ) );
-                }
-                else
-                {
-                    output.Name = AssignLanguageMap( input.Name_Map, "Cost Manifest Name", ref messages );
-                    CurrentEntityName = GetFirstItemValue( output.Name );
-                }
-            }
-            else
-            {
-                output.Name = Assign( input.Name, DefaultLanguageForMaps );
-                CurrentEntityName = input.Name;
-            }
-            output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+			//required - actually NOT!
+			//output.Name = AssignLanguageMap( input.Name, input.Name_Map, "CostManifest.Name", DefaultLanguageForMaps, ref messages, true, 3 );
+			//CurrentEntityName = GetFirstItemValue( output.Name );
+			if ( string.IsNullOrWhiteSpace( input.Name ) )
+			{
+				if ( input.Name_Map == null || input.Name_Map.Count == 0 )
+				{
+					//messages.Add( FormatMessage( "Error - A Name or Name_Map must be entered for Cost Manifest with CTID: '{0}'.", input.Ctid ) );
+					CurrentEntityName = "CostManifest - Unnamed";
+				}
+				else
+				{
+					output.Name = AssignLanguageMap( input.Name_Map, "Cost Manifest Name", ref messages );
+					CurrentEntityName = GetFirstItemValue( output.Name );
+				}
+			}
+			else
+			{
+				output.Name = Assign( input.Name, DefaultLanguageForMaps );
+				CurrentEntityName = input.Name;
+			}
+			output.Description = AssignLanguageMap( input.Description, input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
 
             if ( !IsUrlValid( input.CostDetails, ref statusMessage, ref isUrlPresent ) )
                 messages.Add( "The CostDetails is invalid" );
@@ -279,7 +279,7 @@ namespace RA.Services
                 if ( isUrlPresent )
                 output.CostDetails = input.CostDetails;
 
-            output.CostManifestOf = FormatOrganizationReferenceToList( input.CostManifestOf, "Owning Organization", true, ref messages );
+            output.CostManifestOf = FormatOrganizationReferenceToList( input.CostManifestOf, "Owning Organization", true, ref messages, false, true );
 
 
             return isValid;

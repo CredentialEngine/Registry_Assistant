@@ -11,7 +11,60 @@ namespace RA.Models.JsonV2
 	/// <summary>
 	/// Specific activity, typically related to performing a function or achieving a goal.
 	/// </summary>
-	public class Task
+	public class Task : BaseTask
+	{
+		/// <summary>
+		/// Name
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap Name { get; set; }
+
+		/// <summary>
+		/// Description
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
+
+		/// <summary>
+		/// Comment
+		/// Definition:	en-US: Supplemental text provided by the promulgating body that clarifies the nature, scope or use of this competency.
+		/// ceasn:comment
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:comment" )]
+		public LanguageMapList Comment { get; set; } 
+
+
+	}
+	/// <summary>
+	/// Specific activity, typically related to performing a function or achieving a goal.
+	/// </summary>
+	public class TaskPlain : BaseTask
+	{
+
+		/// <summary>
+		/// Name
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public string Name { get; set; }
+
+		/// <summary>
+		/// Description
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public string Description { get; set; }
+
+
+		/// <summary>
+		/// Comment
+		/// Definition:	en-US: Supplemental text provided by the promulgating body that clarifies the nature, scope or use of this competency.
+		/// ceasn:comment
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:comment" )]
+		public List<string> Comment { get; set; }
+
+
+	}
+	public class BaseTask
 	{
 		/// <summary>
 		///  type
@@ -36,14 +89,14 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// Name
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:name" )]
-		public LanguageMap Name { get; set; }
+		//[JsonProperty( PropertyName = "ceterms:name" )]
+		//public LanguageMap Name { get; set; }
 
-		/// <summary>
-		/// Description
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap Description { get; set; }
+		///// <summary>
+		///// Description
+		///// </summary>
+		//[JsonProperty( PropertyName = "ceterms:description" )]
+		//public LanguageMap Description { get; set; }
 
 
 		/// <summary>
@@ -61,15 +114,16 @@ namespace RA.Models.JsonV2
 		/// ceterms:classification
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:classification" )]
-		public List<CredentialAlignmentObject> Classification { get; set; }
+		public List<string> Classification { get; set; }
+		//public List<CredentialAlignmentObject> Classification { get; set; }
 
 		/// <summary>
 		/// Comment
 		/// Definition:	en-US: Supplemental text provided by the promulgating body that clarifies the nature, scope or use of this competency.
 		/// ceasn:comment
 		/// </summary>
-		[JsonProperty( PropertyName = "ceasn:comment" )]
-		public LanguageMapList Comment { get; set; } 
+		//[JsonProperty( PropertyName = "ceasn:comment" )]
+		//public LanguageMapList Comment { get; set; }
 
 		/// <summary>
 		/// The referenced resource is lower in some arbitrary hierarchy than this resource.

@@ -54,8 +54,18 @@ namespace RA.Models.Input
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
         public string SubjectWebpage { get; set; } //URL
 
-        public List<string> AudienceLevelType { get; set; }
-        public List<string> AudienceType { get; set; }
+		/// <summary>
+		/// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
+		/// audience:Citizen audience:CurrentMilitary audience:CurrentMilitaryDependent audience:CurrentMilitarySpouse audience:CurrentStudent audience:FormerMilitary audience:FormerMilitaryDependent audience:FormerMilitarySpouse audience:FormerStudent audience:FullTime audience:Member audience:NonCitizen audience:NonMember audience:NonResident audience:PartTime audience:PrivateEmployee audience:PublicEmployee audience:Resident
+		/// <see cref="https://credreg.net/ctdl/terms/Audience"/>
+		/// </summary>
+		public List<string> AudienceType { get; set; }
+		/// <summary>
+		/// Type of level indicating a point in a progression through an educational or training context, for which the credential is intended; select from an existing enumeration of such types.
+		/// audLevel:AdvancedLevel audLevel:AssociatesDegreeLevel audLevel:BachelorsDegreeLevel audLevel:BeginnerLevel audLevel:DoctoralDegreeLevel audLevel:GraduateLevel audLevel:IntermediateLevel audLevel:LowerDivisionLevel audLevel:MastersDegreeLevel audLevel:PostSecondaryLevel audLevel:ProfessionalLevel audLevel:SecondaryLevel audLevel:UndergraduateLevel audLevel:UpperDivisionLevel
+		/// <see cref="https://credreg.net/ctdl/terms/AudienceLevel"/>
+		/// </summary>
+		public List<string> AudienceLevelType { get; set; } = new List<string>();
 		/// <summary>
 		/// Effective date of the content of this profile
 		/// ceterms:dateEffective
@@ -89,10 +99,10 @@ namespace RA.Models.Input
         public decimal YearsOfExperience { get; set; }
         public decimal Weight { get; set; }
 		//Credit Information
+		//20-09-30 being replaced by ValueProfile
+		public ValueProfile CreditValue { get; set; } = new ValueProfile();
 		//
-		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
-        //
-        public string CreditUnitTypeDescription { get; set; }
+		public string CreditUnitTypeDescription { get; set; }
         public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
 
 
@@ -176,9 +186,10 @@ namespace RA.Models.Input
 		public decimal Weight { get; set; }
 
 		//Credit Information
-		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
+		//20-09-30 being replaced by ValueProfile
+		public ValueProfile CreditValue { get; set; } = new ValueProfile();
 
-        public string CreditUnitTypeDescription { get; set; }
+		public string CreditUnitTypeDescription { get; set; }
         public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
 
         //

@@ -22,13 +22,14 @@ namespace RA.Services
 	public class ConditionManifestServicesV2 : ServiceHelperV2
 	{
 		static string status = "";
-        /// <summary>
-        /// Publish a Condition Manifest to the Credential Registry
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="isValid"></param>
-        /// <param name="helper"></param>
-        public void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
+
+		/// <summary>
+		/// Publish a Condition Manifest to the Credential Registry
+		/// </summary>
+		/// <param name="request"></param>
+		/// <param name="isValid"></param>
+		/// <param name="helper"></param>
+		public void Publish( EntityRequest request, ref bool isValid, RA.Models.RequestHelper helper )
 		{
 			isValid = true;
 			string crEnvelopeId = request.RegistryEnvelopeId;
@@ -40,7 +41,6 @@ namespace RA.Services
             if ( ToMap( request, output, ref helper ) )
 			{
                 og.Graph.Add( output );
-                //TODO - is there other info needed, like in context?
                 if ( BlankNodes != null && BlankNodes.Count > 0 )
                 {
                     foreach ( var item in BlankNodes )
@@ -51,7 +51,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
 
@@ -100,7 +100,7 @@ namespace RA.Services
 					{
 						//for now need to ensure envelopid is returned
 						helper.RegistryEnvelopeId = crEnvelopeId;
-
+						CheckIfChanged( helper, cer.WasChanged );
 						string msg = string.Format( "<p>Published ConditionManifest: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", request.ConditionManifest.Name, output.SubjectWebpage, output.Ctid, crEnvelopeId );
 						NotifyOnPublish( "ConditionManifest", msg );
 					}
@@ -116,7 +116,6 @@ namespace RA.Services
 				helper.HasErrors = true;
 				isValid = false;
                 og.Graph.Add( output );
-                //TODO - is there other info needed, like in context?
                 if ( BlankNodes != null && BlankNodes.Count > 0 )
                 {
                     foreach ( var item in BlankNodes )
@@ -127,7 +126,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
@@ -161,7 +160,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
@@ -170,7 +169,6 @@ namespace RA.Services
 				isValid = false;
                 //do payload anyway
                 og.Graph.Add( output );
-                //TODO - is there other info needed, like in context?
                 if ( BlankNodes != null && BlankNodes.Count > 0 )
                 {
                     foreach ( var item in BlankNodes )
@@ -181,7 +179,7 @@ namespace RA.Services
                 og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.Type;
-                og.Context = output.Context;
+                og.Context = ctdlContext;
 
                 helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
             }
@@ -213,11 +211,11 @@ namespace RA.Services
 			{
 				HandleRequiredFields( input, output, ref messages );
 
-				output.Recommends = FormatConditionProfile( input.RecommendedConditions, ref messages );
-                output.Renewal = FormatConditionProfile( input.RenewedConditions, ref messages );
-                output.Requires = FormatConditionProfile( input.Requires, ref messages );
-				output.EntryConditions = FormatConditionProfile( input.EntryConditions, ref messages );
-				output.Corequisite = FormatConditionProfile( input.CorequisiteConditions, ref messages );
+				output.Corequisite = FormatConditionProfile( input.CorequisiteConditions, ref messages, "CorequisiteCondition" );
+				output.EntryConditions = FormatConditionProfile( input.EntryConditions, ref messages, "EntryCondition" );
+				output.Recommends = FormatConditionProfile( input.RecommendedConditions, ref messages, "RecommendsCondition" );
+				output.Renewal = FormatConditionProfile( input.RenewedConditions, ref messages, "RenewalCondition" );
+				output.Requires = FormatConditionProfile( input.Requires, ref messages, "RequiresCondition" );
 
 				//probably should require at least one condition?
 				if ( ( output.Recommends == null || output.Recommends.Count == 0 ) &&
@@ -253,29 +251,33 @@ namespace RA.Services
 			CurrentCtid = output.Ctid = FormatCtid(input.Ctid, "Condition Manifest", ref messages);
             output.CtdlId = SupportServices.FormatRegistryUrl(ResourceTypeUrl, output.Ctid, Community);
 
-            //required
-            if ( string.IsNullOrWhiteSpace( input.Name ) )
-            {
-                if ( input.Name_Map == null || input.Name_Map.Count == 0 )
-                {
-                    messages.Add( FormatMessage( "Error - A Name or Name_Map must be entered for Condition Manifest with CTID: '{0}'.", input.Ctid ) );
-                }
-                else
-                {
-                    output.Name = AssignLanguageMap( input.Name_Map, "Condition Manifest Name", ref messages );
-                    CurrentEntityName = GetFirstItemValue( output.Name );
-                }
-            }
-            else
-            {
-                output.Name = Assign( input.Name, DefaultLanguageForMaps );
-                CurrentEntityName = input.Name;
-            }
-            output.Description = AssignLanguageMap( ConvertSpecialCharacters( input.Description ), input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+			//required - actually NOT!
+			//output.Name = AssignLanguageMap( input.Name, input.Name_Map, "ConditionManifest.Name", DefaultLanguageForMaps, ref messages, false, 3 );
+			//CurrentEntityName = GetFirstItemValue( output.Name );
+			if ( string.IsNullOrWhiteSpace( input.Name ) )
+			{
+				if ( input.Name_Map == null || input.Name_Map.Count == 0 )
+				{
+					//not required
+					//messages.Add( FormatMessage( "Error - A Name or Name_Map must be entered for Condition Manifest with CTID: '{0}'.", input.Ctid ) );
+					CurrentEntityName = "ConditionManifest - Unnamed";
+				}
+				else
+				{
+					output.Name = AssignLanguageMap( input.Name_Map, "Condition Manifest Name", ref messages );
+					CurrentEntityName = GetFirstItemValue( output.Name );
+				}
+			}
+			else
+			{
+				output.Name = Assign( input.Name, DefaultLanguageForMaps );
+				CurrentEntityName = input.Name;
+			}
+			output.Description = AssignLanguageMap( input.Description, input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
 
             output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
 
-			output.ConditionManifestOf = FormatOrganizationReferenceToList( input.ConditionManifestOf, "Owning Organization", true, ref messages );
+			output.ConditionManifestOf = FormatOrganizationReferenceToList( input.ConditionManifestOf, "Owning Organization", true, ref messages, false, true );
 
 			return isValid;
 		}

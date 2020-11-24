@@ -59,7 +59,7 @@ namespace RA.Models.Input
 		/// ceterms:classification
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
-
+		//public List<CredentialAlignmentObject> Classification { get; set; } = new List<CredentialAlignmentObject>();
 		/// <summary>
 		/// Comment
 		/// Definition:	en-US: Supplemental text provided by the promulgating body that clarifies the nature, scope or use of this competency.

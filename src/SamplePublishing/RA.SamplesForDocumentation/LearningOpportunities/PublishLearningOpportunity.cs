@@ -31,9 +31,10 @@ namespace RA.SamplesForDocumentation
 				Name = "My Learning Opportunity Name",
 				Description = "This is some text that describes my learning opportunity.",
 				Ctid = myLoppCTID,
-				SubjectWebpage = "http://www.credreg.net/learningopportunity/1234",
+				SubjectWebpage = "https://example.org/t=learningopportunity1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				LearningMethodType = new List<string>() { "learnMethod:Lecture", "learnMethod:Laboratory" },
+				DeliveryType = new List<string>() { "BlendedLearning" },
 				Requires = new List<ConditionProfile>()
 				{
 					new ConditionProfile()
@@ -43,7 +44,39 @@ namespace RA.SamplesForDocumentation
 					}
 				}
 			};
-
+			//add one of ownedBy or offeredBy, or both
+			myData.OwnedBy.Add( new OrganizationReference()
+			{
+				CTID = organizationIdentifierFromAccountsSite
+			} );
+			myData.OfferedBy.Add( new OrganizationReference()
+			{
+				CTID = organizationIdentifierFromAccountsSite
+			} );
+			//add costs
+			//Must be a valid CTDL cost type.
+			// Example: Tuition, Application, AggregateCost, RoomOrResidency
+			//see: https://credreg.net/ctdl/terms#CostType
+			myData.EstimatedCost.Add( new CostProfile()
+			{
+				Description = "A required description of the cost profile",
+				CostDetails = "https://example.com/t=loppCostProfile",
+				Currency="USD",
+				CostItems = new List<CostProfileItem>()
+				 {
+					 new CostProfileItem()
+					 {
+						 DirectCostType="Application",
+						 Price=100,
+					 },
+					 new CostProfileItem()
+					 {
+						 DirectCostType="Tuition",
+						 Price=12999,
+						 PaymentPattern="Full amount due at time of registration"
+					 }
+				 }
+			} );
 
 			//Add organization that is not in the credential registry
 			myData.AccreditedBy.Add( new OrganizationReference()

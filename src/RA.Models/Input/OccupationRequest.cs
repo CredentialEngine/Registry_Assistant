@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using MJ=RA.Models.JsonV2;
 namespace RA.Models.Input
 {
 	/// <summary>
@@ -41,8 +42,27 @@ namespace RA.Models.Input
 		/// </summary>
 		public Task Task { get; set; } = new Task();
 
-	}
+		/// <summary>
+		/// Task already formatted as JSON-LD
+		/// </summary>
+		public MJ.Task FormattedTask { get; set; } = new MJ.Task();
 
+	}
+	/// <summary>
+	/// Request class for publishing a list of Tasks
+	/// </summary>
+	public class TaskListRequest : BaseRequest
+	{
+		/// <summary>
+		/// List of specific activity, typically related to performing a function or achieving a goal.
+		/// </summary>
+		public List<object> TaskList { get; set; } = new List<object>();
+		/// <summary>
+		/// HasLanguageMaps
+		/// If false, will format input using the plain Task classes otherwise the JSON-LD class
+		/// </summary>
+		public bool HasLanguageMaps { get; set; }
+	}
 
 	/// <summary>
 	/// Request class for publishing a WorkRole

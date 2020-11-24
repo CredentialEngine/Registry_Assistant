@@ -10,10 +10,11 @@ using EntityRequest = RA.Models.Input.CredentialRequest;
 using InputEntity = RA.Models.Input.Credential;
 using OutputEntity = RA.Models.JsonV2.Credential;
 //using OutputGraph = RA.Models.JsonV2.CredentialGraph;
-using GraphRequest = RA.Models.Input.GraphRequest;
+using GraphContentRequest = RA.Models.Input.GraphContentRequest;
 using GraphContainer = RA.Models.JsonV2.GraphContainer;
 using OutputGraph = RA.Models.JsonV2.GraphContainer;
 using Utilities;
+using System.Web.Caching;
 
 namespace RA.Services
 {
@@ -31,7 +32,7 @@ namespace RA.Services
 		/// <param name="request"></param>
 		/// <param name="isValid"></param>
 		/// <param name="helper"></param>
-		public void PublishGraph( GraphRequest request, ref bool isValid, RA.Models.RequestHelper helper, ref string outputCTID)
+		public void PublishGraph( GraphContentRequest request, ref bool isValid, RA.Models.RequestHelper helper, ref string outputCTID)
 		{
 			isValid = true;
 			string crEnvelopeId = request.RegistryEnvelopeId;
@@ -147,7 +148,7 @@ namespace RA.Services
 
 		}
 
-		public bool ToMapFromGraph(GraphRequest request, ref OutputEntity output, ref List<string> messages)
+		public bool ToMapFromGraph(GraphContentRequest request, ref OutputEntity output, ref List<string> messages)
 		{
 			CurrentEntityType = "Credential";
 			bool isValid = true;
@@ -214,20 +215,91 @@ namespace RA.Services
             var output = new OutputEntity();
             OutputGraph og = new OutputGraph();
 			//if ( environment != "production" )
-				//output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
-            if ( ToMap(request, output, helper.IsPublisherRequest, ref messages) )
-            {
+			//output.LastUpdated = DateTime.Now.ToUniversalTime().ToString( "yyyy-MM-dd HH:mm:ss UTC" );
+			if ( environment != "production" )
+			{	}
+				//populate the output. The profiles will be published only if the credential was successful. 
 
-                og.Graph.Add( output );
+			//datasetProfiles is populated by the latter
+			//var datasetProfiles = FormatHolderProfiles( request.HoldersProfile, ref messages );
+
+			if ( ToMap(request, output, helper.IsPublisherRequest, ref messages) )
+            {
+				var earningsProfile = FormatEarningsProfile( request.Earnings, ref messages );
+				var employmentOutcomeProfile = FormatEmploymentOutcomeProfile( request.EmploymentOutcome, ref messages );
+				var holdersProfile = FormatHolderProfiles( request.HoldersProfile, ref messages );
+
+				og.Graph.Add( output );
                 //TODO - is there other info needed, like in context?
-                if ( BlankNodes != null && BlankNodes.Count > 0 )
+                if ( holdersProfile != null && holdersProfile.Count > 0 )
                 {
-                    foreach ( var item in BlankNodes )
+					output.Holders = new List<string>();
+                    foreach ( var item in holdersProfile )
                     {
                         og.Graph.Add( item );
-                    }
+						output.Holders.Add( item.CtdlId );
+
+					}
                 }
-                og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
+				if ( earningsProfile != null && earningsProfile.Count > 0 )
+				{
+					output.Earnings = new List<string>();
+
+					foreach ( var item in earningsProfile )
+					{
+						og.Graph.Add( item );
+						output.Earnings.Add( item.CtdlId );
+
+					}
+				}
+				if ( employmentOutcomeProfile != null && employmentOutcomeProfile.Count > 0 )
+				{
+					output.EmploymentOutcome = new List<string>();
+
+					foreach ( var item in employmentOutcomeProfile )
+					{
+						og.Graph.Add( item );
+						output.EmploymentOutcome.Add( item.CtdlId );
+
+					}
+				}
+				//
+				if ( DataSetProfiles != null && DataSetProfiles.Count > 0 )
+				{
+					foreach ( var item in DataSetProfiles )
+					{
+						og.Graph.Add( item );
+					}
+
+					//can't have DataSetTimeFrames without DataSetProfiles
+					if ( DataSetTimeFrames != null && DataSetTimeFrames.Count > 0 )
+					{
+						foreach ( var item in DataSetTimeFrames )
+						{
+							og.Graph.Add( item );
+						}
+
+						//can't have DataProfiles without DataSetTimeFrames 
+						if ( DataProfiles != null && DataProfiles.Count > 0 )
+						{
+							foreach ( var item in DataProfiles )
+							{
+								og.Graph.Add( item );
+							}
+						}
+					}
+					
+				}
+
+				//
+				if ( BlankNodes != null && BlankNodes.Count > 0 )
+				{
+					foreach ( var item in BlankNodes )
+					{
+						og.Graph.Add( item );
+					}
+				}
+				og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
                 og.CTID = output.Ctid;
                 og.Type = output.CredentialType;
                 og.Context = ctdlContext;
@@ -247,6 +319,7 @@ namespace RA.Services
 					cer.IsManagedRequest = true;
 					//get publisher org
 					string publisherCTID = "";
+					//TODO - should return publisher and owner names for activity logging, etc.
 					if ( SupportServices.GetPublishingOrgByApiKey( cer.PublisherAuthorizationToken, ref publisherCTID, ref messages ) )
 					{
 						cer.PublishingByOrgCtid = publisherCTID;
@@ -278,8 +351,6 @@ namespace RA.Services
 				}
 				else
 				{
-
-
 					string identifier = "Credential_" + request.Credential.Ctid;
 					if ( cer.Publish( helper, submitter, identifier, ref status, ref crEnvelopeId ) )
 					{
@@ -333,11 +404,78 @@ namespace RA.Services
             isValid = true;
             IsAPublishRequest = false;
 			List<string> messages = new List<string>();
+			//not sure if this should be before or after the mapping
+			//doing before here so available where error occured. 
+			var earningsProfile = FormatEarningsProfile( request.Earnings, ref messages );
+			var employmentOutcomeProfile = FormatEmploymentOutcomeProfile( request.EmploymentOutcome, ref messages );
+			var holdersProfile = FormatHolderProfiles( request.HoldersProfile, ref messages );
 
 			if ( ToMap(request, output, helper.IsPublisherRequest, ref messages) )
             {
-                og.Graph.Add( output );
-                if (BlankNodes != null && BlankNodes.Count > 0)
+
+
+				og.Graph.Add( output );
+				if ( holdersProfile != null && holdersProfile.Count > 0 )
+				{
+					output.Holders = new List<string>();
+					foreach ( var item in holdersProfile )
+					{
+						og.Graph.Add( item );
+						output.Holders.Add( item.CtdlId );
+
+					}
+				}
+				if ( earningsProfile != null && earningsProfile.Count > 0 )
+				{
+					output.Earnings = new List<string>();
+
+					foreach ( var item in earningsProfile )
+					{
+						og.Graph.Add( item );
+						output.Earnings.Add( item.CtdlId );
+
+					}
+				}
+				if ( employmentOutcomeProfile != null && employmentOutcomeProfile.Count > 0 )
+				{
+					output.EmploymentOutcome = new List<string>();
+
+					foreach ( var item in employmentOutcomeProfile )
+					{
+						og.Graph.Add( item );
+						output.EmploymentOutcome.Add( item.CtdlId );
+
+					}
+				}
+				//
+				if ( DataSetProfiles != null && DataSetProfiles.Count > 0 )
+				{
+					foreach ( var item in DataSetProfiles )
+					{
+						og.Graph.Add( item );
+					}
+
+					//can't have DataSetTimeFrames without DataSetProfiles
+					if ( DataSetTimeFrames != null && DataSetTimeFrames.Count > 0 )
+					{
+						foreach ( var item in DataSetTimeFrames )
+						{
+							og.Graph.Add( item );
+						}
+
+						//can't have DataProfiles without DataSetTimeFrames 
+						if ( DataProfiles != null && DataProfiles.Count > 0 )
+						{
+							foreach ( var item in DataProfiles )
+							{
+								og.Graph.Add( item );
+							}
+						}
+					}
+
+				}
+
+				if ( BlankNodes != null && BlankNodes.Count > 0)
                 {
                     foreach (var item in BlankNodes)
                     {
@@ -358,7 +496,66 @@ namespace RA.Services
                 isValid = false;
                 //do payload anyway
                 og.Graph.Add( output );
-                if ( BlankNodes != null && BlankNodes.Count > 0 )
+				if ( holdersProfile != null && holdersProfile.Count > 0 )
+				{
+					output.Holders = new List<string>();
+					foreach ( var item in holdersProfile )
+					{
+						og.Graph.Add( item );
+						output.Holders.Add( item.CtdlId );
+
+					}
+				}
+				if ( earningsProfile != null && earningsProfile.Count > 0 )
+				{
+					output.Earnings= new List<string>();
+
+					foreach ( var item in earningsProfile )
+					{
+						og.Graph.Add( item );
+						output.Earnings.Add( item.CtdlId );
+
+					}
+				}
+				if ( employmentOutcomeProfile != null && employmentOutcomeProfile.Count > 0 )
+				{
+					output.EmploymentOutcome= new List<string>();
+
+					foreach ( var item in employmentOutcomeProfile )
+					{
+						og.Graph.Add( item );
+						output.EmploymentOutcome.Add( item.CtdlId );
+
+					}
+				}
+				//
+				if ( DataSetProfiles != null && DataSetProfiles.Count > 0 )
+				{
+					foreach ( var item in DataSetProfiles )
+					{
+						og.Graph.Add( item );
+					}
+
+					//can't have DataSetTimeFrames without DataSetProfiles
+					if ( DataSetTimeFrames != null && DataSetTimeFrames.Count > 0 )
+					{
+						foreach ( var item in DataSetTimeFrames )
+						{
+							og.Graph.Add( item );
+						}
+
+						//can't have DataProfiles without DataSetTimeFrames 
+						if ( DataProfiles != null && DataProfiles.Count > 0 )
+						{
+							foreach ( var item in DataProfiles )
+							{
+								og.Graph.Add( item );
+							}
+						}
+					}
+
+				}
+				if ( BlankNodes != null && BlankNodes.Count > 0 )
                 {
                     foreach ( var item in BlankNodes )
                     {
@@ -423,10 +620,10 @@ namespace RA.Services
                 output.InLanguage = PopulateInLanguage( input.InLanguage, "Credential", input.Name, hasDefaultLanguage, ref messages );
 
 				//required
-				output.Name = AssignLanguageMap( input.Name, input.Name_Map, "Name", DefaultLanguageForMaps, ref messages, true, 3 );
+				output.Name = AssignLanguageMap( input.Name, input.Name_Map, "Credential.Name", DefaultLanguageForMaps, ref messages, true, 3 );
 				CurrentEntityName = GetFirstItemValue( output.Name );
 
-                output.Description = AssignLanguageMap( input.Description, input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+                output.Description = AssignLanguageMap( input.Description, input.Description_Map, "Credential.Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
 
                 
                 if ( string.IsNullOrWhiteSpace( input.CredentialType ) )
@@ -437,14 +634,11 @@ namespace RA.Services
                 {
                     string validSchema = "";
 
-                    if ( input.CredentialType.IndexOf( "ceterms:" ) == -1 )
-                        input.CredentialType = "ceterms:" + input.CredentialType.Trim();
-                    property = input.CredentialType;
-                    //if ( ValidationServices.IsCredentialTypeValid( "credentialType", ref property ) )
-                    //{
-                    //    output.CredentialType = property;
-                    //}
-                    if ( ValidationServices.IsValidCredentialType( property, ref validSchema ) )
+					//if ( ValidationServices.IsCredentialTypeValid( "credentialType", ref property ) )
+					//{
+					//    output.CredentialType = property;
+					//}
+					if ( ValidationServices.IsValidCredentialType( input.CredentialType, ref validSchema ) )
                     {
                         output.CredentialType = validSchema;
                     }
@@ -458,9 +652,9 @@ namespace RA.Services
 				if ( !string.IsNullOrWhiteSpace( input.CredentialStatusType ) )
 				{
 					output.CredentialStatusType = FormatCredentialAlignment( "credentialStatusType", input.CredentialStatusType, ref messages );
-					if ( input.CredentialStatusType.ToLower().IndexOf( "deprecated" ) > -1 
-						|| input.CredentialStatusType.ToLower().IndexOf( "eliminated" ) > -1
-						|| input.CredentialStatusType.ToLower().IndexOf( "suspended" ) > -1 
+					if ( input.CredentialStatusType.ToLower().IndexOf( "active" ) == -1 
+						//|| input.CredentialStatusType.ToLower().IndexOf( "eliminated" ) > -1
+						//|| input.CredentialStatusType.ToLower().IndexOf( "suspended" ) > -1 
 						//|| input.CredentialStatusType.ToLower().IndexOf( "superseded" ) > -1 //this is now invalid?
 						)
 					{
@@ -477,7 +671,7 @@ namespace RA.Services
 				}
 				//
 				//must be valid, unless a deprecicated or other status?
-				output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
+				output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Credential.Subject Webpage", ref messages, true );
 
                 //need either ownedBy OR offeredBy
                 output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "Owning Organization", false, ref messages, false, true );
@@ -503,16 +697,16 @@ namespace RA.Services
 				output.EstimatedDuration = FormatDuration( input.EstimatedDuration, "Credential.EstimatedDuration", ref messages );
 				output.RenewalFrequency = FormatDurationItem( input.RenewalFrequency, "RenewalFrequency", ref messages );
 
-                output.Keyword = AssignLanguageMapList( input.Keyword, input.Keyword_Map, "Credential Keywords", ref messages );
+                output.Keyword = AssignLanguageMapList( input.Keyword, input.Keyword_Map, "Credential.Keywords", ref messages );
 
 				HandleCredentialAlignmentFields( input, output, ref messages );
 
-				output.ProcessStandards = AssignValidUrlAsString( input.ProcessStandards, "ProcessStandards", ref messages, false );
+				output.ProcessStandards = AssignValidUrlAsString( input.ProcessStandards, "Credential.ProcessStandards", ref messages, false );
                 output.ProcessStandardsDescription = AssignLanguageMap( ConvertSpecialCharacters( input.ProcessStandardsDescription ), input.ProcessStandardsDescription_Map,"ProcessStandardsDescription",  DefaultLanguageForMaps, ref messages );
 
 				//allows just ctid or full URI
                 output.CommonConditions = AssignRegistryResourceURIsListAsStringList( input.CommonConditions, "CommonConditions", ref messages, false );
-				output.CommonCosts = AssignRegistryResourceURIsListAsStringList( input.CommonCosts, "CommonCosts", ref messages, false );
+				output.CommonCosts = AssignRegistryResourceURIsListAsStringList( input.CommonCosts, "Credential.CommonCosts", ref messages, false );
 
 				if ( input.HasPart.Count > 0 )
 				{
@@ -525,7 +719,12 @@ namespace RA.Services
 					output.IsPartOf = FormatEntityReferencesList( input.IsPartOf, "", false, ref messages );
 				}
 
-
+				//
+				if ( allowingBaseSalary )
+				{
+					//TODO - should this be limited to only certain credential types?
+					output.BaseSalary = AssignMonetaryAmount( input.BaseSalary, "Credential.BaseSalary", "Credential", ref messages );
+				}
 				//
 				if ( allowingETPLData )
 				{
@@ -566,10 +765,10 @@ namespace RA.Services
 				//
 				output.AvailableAt = FormatAvailableAtList( input.AvailableAt, ref messages );
                
-				output.Recommends = FormatConditionProfile( input.Recommends, ref messages );
-				output.Requires = FormatConditionProfile( input.Requires, ref messages );
-				output.Corequisite = FormatConditionProfile( input.Corequisite, ref messages );
-                output.Renewal = FormatConditionProfile( input.Renewal, ref messages );
+				output.Recommends = FormatConditionProfile( input.Recommends, ref messages, "RecommendsCondition" );
+				output.Requires = FormatConditionProfile( input.Requires, ref messages, "RequiresCondition" );
+				output.Corequisite = FormatConditionProfile( input.Corequisite, ref messages, "CorequisiteCondition" );
+                output.Renewal = FormatConditionProfile( input.Renewal, ref messages, "RenewalCondition" );
 
                 output.AdministrationProcess = FormatProcessProfile( input.AdministrationProcess, ref messages );
 				output.MaintenanceProcess = FormatProcessProfile( input.MaintenanceProcess, ref messages );
@@ -581,7 +780,11 @@ namespace RA.Services
 
 				//output.FinancialAssistanceOLD = MapFinancialAssistance( input.FinancialAssistanceOLD, ref messages );
 				output.FinancialAssistance = MapFinancialAssistance( input.FinancialAssistance, ref messages, "Credential" );
-				
+				//
+				//output.EarningsProfile = FormatEarningsProfile( request.Earnings, ref messages );
+				//output.EmploymentOutcomeProfile = FormatEmploymentOutcomeProfile( request.EmploymentOutcome, ref messages );
+
+				//
 				//
 				output.AdvancedStandingFrom = FormatConnections( input.AdvancedStandingFrom, ref messages );
 				output.IsAdvancedStandingFor = FormatConnections( input.IsAdvancedStandingFor, ref messages );
@@ -599,7 +802,7 @@ namespace RA.Services
 					{
 						var rp = new RJ.RevocationProfile();
 						//rp.Description = Assign(r.Description, DefaultLanguageForMaps);
-						rp.Description = AssignLanguageMap( r.Description, r.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+						rp.Description = AssignLanguageMap( r.Description, r.Description_Map, "Revocation.Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
 						
 						rp.DateEffective = MapDate( r.DateEffective, "DateEffective", ref messages );
 						rp.RevocationCriteria = AssignValidUrlAsString( r.RevocationCriteria, "RevocationCriteria", ref messages, false );
@@ -659,8 +862,9 @@ namespace RA.Services
             //now literal
             //output.CodedNotation = AssignListToString( input.CodedNotation );
             output.CodedNotation = input.CodedNotation;
+			output.Identifier = AssignIdentifierListToList( input.Identifier, ref messages );
 
-            output.CredentialId = ( input.CredentialId ?? "" ).Length > 0 ? input.CredentialId : null;
+			output.CredentialId = ( input.CredentialId ?? "" ).Length > 0 ? input.CredentialId : null;
             output.DateEffective = MapDate( input.DateEffective, "DateEffective", ref messages );
 			//should have validation
 			output.ISICV4 = MapIsicV4(input.ISICV4);
@@ -763,7 +967,12 @@ namespace RA.Services
 			//can't depend on the codes being NAICS??
 			output.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( input.IndustryType, true, ref messages );
 			if ( input.Naics != null && input.Naics.Count > 0 )
-				output.Naics = input.Naics;
+			{
+				//should this be standardized?
+				//we want a method that just returns valid/normalized naics
+				output.Naics = ValidateListOfNAICS_Codes( input.Naics, ref messages );
+				//output.Naics = input.Naics;
+			}
 			else
 				output.Naics = null;
 			//append to IndustryType

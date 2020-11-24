@@ -11,8 +11,6 @@ namespace RA.Models.Input
 	/// </summary>
 	public class ValueProfile
 	{
-
-
 		/// <summary>
 		/// The level of credit associated with the credit awarded or required.
 		/// Concept
@@ -34,9 +32,10 @@ namespace RA.Models.Input
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-		
+
 		/// <summary>
 		/// A percentage for this purpose. 
+		/// Expected input as as a percentage of 100 (and can be greater, or negative). Examples: 95.2, 11, etc.
 		/// Do not use if providing any of value, minimum and maximum value.
 		/// qdata:percentage
 		/// </summary>
@@ -50,5 +49,14 @@ namespace RA.Models.Input
 		/// Do not use if providing a minimum and maximum value.
 		/// </summary>
 		public decimal Value { get; set; }
+
+		/// <summary>
+		/// Minimum value for this purpose. If provided, a maximum value must also be provided
+		/// </summary>
+		public decimal MinValue { get; set; }
+		/// <summary>
+		/// Maximum value for this purpose.
+		/// </summary>
+		public decimal MaxValue { get; set; }
 	}
 }

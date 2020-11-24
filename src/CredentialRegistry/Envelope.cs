@@ -44,8 +44,14 @@ namespace CredentialRegistry
 		[JsonProperty( PropertyName = "resource_public_key" )]
 		public string ResourcePublicKey { get; set; }
 
+		[JsonProperty( PropertyName = "documentOwnedBy" )]
+		public string documentOwnedBy { get; set; }
+
+		[JsonProperty( PropertyName = "documentPublishedBy" )]
+		public string documentPublishedBy { get; set; }
+
 		/// <summary>
-		/// We don't have access to this here, only via the accounts site???
+		/// We don't have access to this here
 		/// </summary>
 		[JsonProperty( PropertyName = "publisher_id" )]
 		public string publisher_id { get; set; }

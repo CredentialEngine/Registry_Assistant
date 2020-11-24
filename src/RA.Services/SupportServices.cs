@@ -9,12 +9,13 @@ using System.Web.Script.Serialization;
 
 using Newtonsoft.Json;
 using CER = RA.Services.RegistryServices;
-
+//using Factories;
 using RA.Models;
 using RA.Models.BusObj;
 using Utilities;
 using System.Web;
 using System.IO;
+using System.Web.Management;
 
 namespace RA.Services
 {
@@ -25,7 +26,11 @@ namespace RA.Services
 
 		public static string credentialRegistryBaseUrl = UtilityManager.GetAppKeyValue( "credentialRegistryBaseUrl" );
 		//
-
+		public SupportServices()
+		{
+			EntityName = "";
+			Community = "";
+		}
 		public SupportServices(string entityName, string community)
 		{
 			EntityName = entityName ?? "";
@@ -38,24 +43,31 @@ namespace RA.Services
 		//****TODO ****
 		//change to an API call
 		//Main concern is losing the payload etc
-	
-		public void AddHistory(string dataOwnerCTID, string payloadJSON, string publishMethodURI, string publishingEntityType, string ctdlType, string entityCtid, string payloadInput, string crEnvelopeId, ref string statusMessage, string publisherIdentifier, bool wasChanged)
+		public void CallAddHistory(string dataOwnerCTID, string payloadJSON, string publishMethodURI, string publishingEntityType, string ctdlType, string entityCtid, string payloadInput, string crEnvelopeId, ref string statusMessage, string publisherIdentifier, bool wasChanged, bool isAddTransaction = false )
 		{
 			//
-			string environment = UtilityManager.GetAppKeyValue( "environment", "unknown" );
-			var envFilter = string.IsNullOrWhiteSpace( Community ) ? environment : environment + "." + Community;
-			try
-			{
-				//hidden
-			}
-			catch ( Exception ex )
-			{
-				//eat any errors
-				LoggingHelper.DoTrace( 2, "SupportServices.AddHistory() " + ex.Message );
-			}
+			
+		}   //
+
+		public void AddHistory(string dataOwnerCTID, string payloadJSON, string publishMethodURI, string publishingEntityType, string ctdlType, string entityCtid, string payloadInput, string crEnvelopeId, ref string statusMessage, string publisherIdentifier, bool wasChanged, bool isAddTransaction )
+		{
+			
+	
 		} //
 
 
+		public void AddActivityForFormat( RA.Models.RequestHelper helper, string publishingEntityType, string entityName, string entityCtid, ref string statusMessage )
+		{
+		
+
+		} //
+
+
+		public bool AddActivity(  ActivityLog activity, ref string statusMessage )
+		{
+
+			return true;
+		} //
 		/// <summary>
 		/// Validate a publishing related transaction
 		/// </summary>
@@ -64,7 +76,7 @@ namespace RA.Services
 		/// <param name="publishMethodURI"></param>
 		/// <param name="messages"></param>
 		/// <returns></returns>
-		public static PublishRequestValidationResponse ValidateRegistryRequest(string publisherApikey, string dataOwnerCTID, string publishMethodURI, ref List<string> messages)
+		public PublishRequestValidationResponse ValidateRegistryRequest(string publisherApikey, string dataOwnerCTID, string publishMethodURI, ref List<string> messages)
 		{
 			//, bool allowCaching = true
 			PublishRequestValidationResponse response = new PublishRequestValidationResponse();
@@ -189,7 +201,7 @@ namespace RA.Services
 			return response;
 		}  //
 
-		public static PublishRequestValidationResponse ValidateDeleteRequest(string publisherApikey, string dataOwnerCTID, string publishMethodURI, ref List<string> messages)
+		public PublishRequestValidationResponse ValidateDeleteRequest(string publisherApikey, string dataOwnerCTID, string publishMethodURI, ref List<string> messages)
 		{
 			//
 			PublishRequestValidationResponse response = new PublishRequestValidationResponse();
@@ -633,109 +645,7 @@ namespace RA.Services
 		public static bool ValidateAgainstPastRequest( string entityType, string ctid, ref CER cer, ref List<string> messages, ref bool recordWasFound)
 		{
 			bool usedCEKeys = false;
-			string message = "";
-			var lastPublishEvent = GetMostRecentHistory(  ctid, ref recordWasFound, ref usedCEKeys, ref message, cer.Community ?? "" );
-			cer.HasBeenPreviouslyPublished = recordWasFound;
-
-			//if last action was a purge, treat as if record not found
-			if ( recordWasFound && lastPublishEvent.PublishMethodURI == RegistryServices.REGISTRY_ACTION_PURGE )
-			{
-				recordWasFound = false;
-				LoggingHelper.DoTrace( 5, string.Format( "ValidateAgainstPastRequest. {0} publish. Last action was a Registry Purge - treating as new. CTID: {1}, Used CEKeys: {2}, PublishMethodURI: {3} ", entityType, ctid, usedCEKeys, lastPublishEvent.PublishMethodURI ) );
-			}
-
-			if ( recordWasFound ) //found previous
-			{
-				//***** issue, if always send the org api key from the publisher. 
-				LoggingHelper.DoTrace( 5, string.Format( "ValidateAgainstPastRequest. {0} publish. Found a previous publish for CTID: {1}, Used CEKeys: {2}, PublishMethodURI: {3} ", entityType, ctid, usedCEKeys, lastPublishEvent.PublishMethodURI ) );
-				
-
-				if ( lastPublishEvent.DataOwnerCTID.ToLower() != cer.PublishingForOrgCtid.ToLower() )
-				{
-					//don't allow but may be moot if validating the apiKey owner ctid combination
-					//we should move the latter here then
-					messages.Add( string.Format( "Suspcious request. The provided data owner CTID is different from the data owner CTID used for previous requests. This condition is not allowed. Entity type: ({0}), CTID '{1}', DataOwnerCTID: '{2}', PublishingForOrgCtid: '{3}'.", entityType, ctid, lastPublishEvent.DataOwnerCTID, cer.PublishingForOrgCtid ) );
-
-					LoggingHelper.DoTrace( 5, messages[ messages.Count() - 1 ] );
-					//isValid = false;
-					return false;
-
-				}
-				else if ( usedCEKeys )
-				//want to always the original publishing keys - which will always be proper in the last event
-				{
-					if ( cer.IsManagedRequest )
-					{
-						LoggingHelper.DoTrace( 5, entityType + " publish. Received a managed request but OVERRIDING to CE Self-Publish." );
-						cer.IsManagedRequest = false;   //should record override
-						cer.OverrodeOriginalRequest = true;
-					}
-				}
-				else //if ( !usedCEKeys )
-				{
-					cer.IsManagedRequest = true;   //should record override
-
-					//19-03-25 - this is very likely for anything new after this date.
-					//			- and will likely be managed
-					if ( lastPublishEvent.PublishMethodURI == RegistryServices.CE_PUBLISH_METHOD_MANUAL_ENTRY )
-					{
-						cer.OverrodeOriginalRequest = true;
-					}else if ( lastPublishEvent.PublishMethodURI == RegistryServices.REGISTRY_ACTION_TRANSFER )
-					{
-						//may not be any action, not an override - 
-					}
-
-					LoggingHelper.DoTrace( 5, entityType + " publish. Received a CE Publish request but OVERRIDING to Managed request and cer.OverrodeOriginalRequest = " + cer.OverrodeOriginalRequest );
-					//this should not happen. Means used publisher 
-					//- actually now enabling:
-					//	- done via publisher, using 
-					//import to log this in publisher activity log
-
-				}
-			}
-			else//not previously published
-			{
-				//eventually will always do managed
-				if ( !cer.IsManagedRequest ) //Duh if PublisherAuthorizationToken present, will be managed!!
-				{
-					//but only if an api key was provide
-					if ( cer.HasValidPublisherToken() )
-					{
-						//|| ServiceHelperV2.environment != "staging"
-						if ( !forcingUseOfCEKeys )
-						{
-							LoggingHelper.DoTrace( 5, entityType + " publish. Received a CE Publish request but OVERRIDING to Managed request - first publish event for this entity." );
-							cer.OverrodeOriginalRequest = true;
-							cer.IsManagedRequest = true;
-						}
-					}
-				}
-				else //IsManagedRequest
-				{
-					//was there a case for doing something here?
-					/*need to set the publishing method, where
-					 * - inititated from publisher
-					 * - first time
-					 * - apikey is now provided by publisher, so need to handle
-					 */
-					if ( cer.IsPublisherRequest )
-					{
-						LoggingHelper.DoTrace( 5, entityType + " publish. Received a Managed request that originated from CE Publish. This is the first publish event for this entity. JUST IN CASE, OVERRIDING to force publish type of publishMethod:ManualEntry." );
-						cer.OverrodeOriginalRequest = true;
-					}
-					//TEMP
-					if ( forcingUseOfCEKeys && ServiceHelperV2.environment == "staging" )
-					{
-						//force to Manual - ensure publishing type is updated!!
-						//cer.OverrodeOriginalRequest = true;
-						//cer.IsManagedRequest = false;
-
-						//LoggingHelper.DoTrace( 5, entityType + " publish. HOLD ON - FOR NOW, ALL STAGING PUBLISHING WILL USE SELF VERSION." );
-					}
-				}
-
-			}
-
+		
 			return true;//??
 		}
 
@@ -753,51 +663,7 @@ namespace RA.Services
 		public static RegistryPublishingHistory GetMostRecentHistory( string ctid, ref bool recordWasFound, ref bool usedCEKeys, ref string message, string community="" )
 		{
 			var lastPublishEvent = new RegistryPublishingHistory();
-			message = "";
-			recordWasFound = false;
-			//note may need to use sandbox if value is development
-			string environment = UtilityManager.GetAppKeyValue( "environment" );
-			//TODO - change to use API
-			//returns object serialized as a string
-			var result = "";// RegistryPublishManager.GetMostRecentHistory( ctid, environment, community );
-			if ( result == "" )
-			{
-				return lastPublishEvent;
-			}
-			try
-			{
-				lastPublishEvent = JsonConvert.DeserializeObject<RegistryPublishingHistory>( result );
-				if ( lastPublishEvent == null || string.IsNullOrWhiteSpace( lastPublishEvent.EntityCtid ) )
-				{
-					//actually may be OK if first publish effort
-					//messages.Add( string.Format( "A registry {0}", ctid ));
-					return lastPublishEvent;
-				}
-				//must match type. 19-04-01: 
-				recordWasFound = true;
-				//problem here with overriding
-				//WATCH FOR DELETES OR TRANSFERS!
-				//A transfer should always(?) mean to registry managed keys?
-				//
-				if ( lastPublishEvent.PublishMethodURI == RegistryServices.REGISTRY_ACTION_TRANSFER )
-				{
-					//this should be OK, once transfer should use the org keys, 
-					//however the publish method should start using: publishMethod:ManualEntry
-					usedCEKeys = false;
-				} 
-				else if ( lastPublishEvent.PublishMethodURI == RegistryServices.CE_PUBLISH_METHOD_USING_CEKEYS )
-					usedCEKeys = true;
-
-				//may want to get the ownedBy CTID and compare to input
-
-			}
-			catch ( Exception ex )
-			{
-				LoggingHelper.LogError( ex, "SupportServices.GetMostRecentHistory" );
-				//no message, just 
-				message = string.Format( "Error encounterd checking history for Type: {0}, CTID: {1}", ctid, ex.Message );
-			}
-
+			
 			return lastPublishEvent;
 		}
 		#endregion
@@ -975,89 +841,6 @@ namespace RA.Services
 		//}
 		#endregion
 
-		#region === Application Keys Methods WHY HERE???===
-
-		///// <summary>
-		///// Gets the value of an application key from web.config. Returns blanks if not found
-		///// </summary>
-		///// <remarks>This clientProperty is explicitly thread safe.</remarks>
-		//public static string GetAppKeyValue(string keyName)
-		//{
-
-		//	return GetAppKeyValue(keyName, "");
-		//} //
-
-		///// <summary>
-		///// Gets the value of an application key from web.config. Returns the default value if not found
-		///// </summary>
-		///// <remarks>This clientProperty is explicitly thread safe.</remarks>
-		//public static string GetAppKeyValue(string keyName, string defaultValue)
-		//{
-		//	string appValue = "";
-		//	if (string.IsNullOrWhiteSpace(keyName))
-		//	{
-		//		LoggingHelper.LogError(string.Format("@@@@ Error: Empty string AppKey was encoutered, using default of: {0}", defaultValue));
-		//		return defaultValue;
-		//	}
-		//	try
-		//	{
-		//		appValue = System.Configuration.ConfigurationManager.AppSettings[keyName];
-		//		if (appValue == null)
-		//			appValue = defaultValue;
-		//	}
-		//	catch
-		//	{
-		//		appValue = defaultValue;
-		//		LoggingHelper.LogError(string.Format("@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue));
-		//	}
-
-		//	return appValue;
-		//} //
-		//public static int GetAppKeyValue(string keyName, int defaultValue)
-		//{
-		//	int appValue = -1;
-		//	if (string.IsNullOrWhiteSpace(keyName))
-		//	{
-		//		LoggingHelper.LogError(string.Format("@@@@ Error: Empty int AppKey was encoutered, using default of: {0}", defaultValue));
-		//		return defaultValue;
-		//	}
-		//	try
-		//	{
-		//		appValue = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings[keyName]);
-
-		//		// If we get here, then number is an integer, otherwise we will use the default
-		//	}
-		//	catch
-		//	{
-		//		appValue = defaultValue;
-		//		LoggingHelper.LogError(string.Format("@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue));
-		//	}
-
-		//	return appValue;
-		//} //
-		//public static bool GetAppKeyValue(string keyName, bool defaultValue)
-		//{
-		//	bool appValue = false;
-		//	if (string.IsNullOrWhiteSpace(keyName))
-		//	{
-		//		LoggingHelper.LogError(string.Format("@@@@ Error: Empty bool AppKey was encoutered, using default of: {0}", defaultValue));
-		//		return defaultValue;
-		//	}
-		//	try
-		//	{
-		//		appValue = bool.Parse(System.Configuration.ConfigurationManager.AppSettings[keyName]);
-
-		//		// If we get here, then number is an integer, otherwise we will use the default
-		//	}
-		//	catch
-		//	{
-		//		appValue = defaultValue;
-		//		LoggingHelper.LogError(string.Format("@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue));
-		//	}
-
-		//	return appValue;
-		//} //
-		#endregion
 	}
 	[Serializable]
 	public class GetOrgResult
@@ -1110,16 +893,7 @@ namespace RA.Services
 
 		#endregion
 	}
-	//[Serializable]
-	//public class Address 
-	//{
-	//	public string Name { get; set; }
-	//	public string StreetAddress { get; set; }
-	//	public string City { get; set; }
-	//	public string StateProvince { get; set; }
-	//	public string Country { get; set; }
-	//	public string PostalCode { get; set; }
-	//}
+
 
 	[Serializable]
 	public class OrgCache
@@ -1214,4 +988,29 @@ namespace RA.Services
 		public List<string> Messages { get; set; }
 
 	}
+
+
+	public class PublisherApiResponse
+	{
+		public PublisherApiResponse()
+		{
+			Messages = new List<string>();
+		}
+		public bool Successful { get; set; }
+
+		public List<string> Messages { get; set; }
+
+	}
+	public class PublisherLastHistoryResponse
+	{
+		public PublisherLastHistoryResponse()
+		{
+		}
+		public string data { get; set; }
+		public bool valid { get; set; }
+
+		public string status { get; set; }
+		public object extra { get; set; }
+	}
 }
+

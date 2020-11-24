@@ -57,10 +57,14 @@ namespace RA.Services
 			"ceterms:LearningOpportunityProfile",
 			"ceterms:ConditionManifest",
 			"ceterms:CostManifest",
+			"ceterms:Job",
+			"ceterms:Occupation",
 			"ceterms:Pathway",
 			"ceterms:PathwaySet",
 			"ceterms:Rubric",
-			"ceterms:TransferValueProfile"
+			"ceterms:Task",
+			"ceterms:TransferValueProfile",
+			"ceterms:WorkRole",
 		};
 		#endregion
 		static List<string> statusTypes = new List<string>()
@@ -75,21 +79,21 @@ namespace RA.Services
 		/// Check if the property exists
 		/// the proper case adjusted property name will be returned
 		/// </summary>
-		/// <param name="vocabulary"></param>
+		/// <param name="ctdlProperty"></param>
 		/// <param name="property"></param>
 		/// <returns></returns>
-		public static bool IsCredentialTypeValid( string vocabulary, ref string property )
+		public static bool IsCredentialTypeValid( string ctdlProperty, ref string property )
 		{
 			//var credentialTypes = SchemaServices.GetConceptSchemeFromPropertyRange( "http://credreg.net/ctdl/schema/encoding/json", "ceterms:credentialType" );
 
 			//if ( CtdlHelper.CodesManager.IsPropertySchemaValid( categoryCode, ref property ) == false )
 			//    return false;
 
-			//CodeItem ci = GetVocabularyTermJson(vocabulary, property, ref isValid );
+			//CodeItem ci = GetConceptSchemeTermJson(ctdlProperty, property, ref isValid );
 			try
 			{
-				var targetVocab = vocabulary.Contains( ':' ) ? vocabulary.Split( ':' )[ 1 ] : vocabulary;
-				targetVocab = GetVocabularyConceptScheme( vocabulary );
+				var targetVocab = ctdlProperty.Contains( ':' ) ? ctdlProperty.Split( ':' )[ 1 ] : ctdlProperty;
+				targetVocab = GetConceptSchemeForProperty( ctdlProperty );
 				if ( string.IsNullOrWhiteSpace( targetVocab ) )
 				{
 					//what to do ??
@@ -107,7 +111,7 @@ namespace RA.Services
 					//what to do ??
 					return false;
 				}
-				string parentSchema = GetVocabularyConceptScheme( vocabulary );
+				string parentSchema = GetConceptSchemeForProperty( ctdlProperty );
 				var result = new CodeItem()
 				{
 					SchemaName = data.id,
@@ -136,9 +140,17 @@ namespace RA.Services
 		public static bool IsValidCredentialType( string credentialType, ref string validSchema, bool formattingAsUri = false )
 		{
 			bool isValid = false;
+			if ( string.IsNullOrWhiteSpace( credentialType ) )
+				return false;
 			//prefix if necessary
 			if ( credentialType.IndexOf( "ceterms" ) == -1 )
-				credentialType = "ceterms:" + credentialType;
+				credentialType = "ceterms:" + credentialType.Trim();
+			if ( credentialType.IndexOf("'") > -1 || credentialType.IndexOf(" ") > -1)
+				credentialType = credentialType.Replace( " ", "" ).Replace( "'", "" );
+			//some helper corrections
+			credentialType = credentialType.Replace( "AssociatesDegree", "AssociateDegree" );
+			credentialType = credentialType.Replace( "BachelorsDegree", "BachelorDegree" );
+			credentialType = credentialType.Replace( "MastersDegree", "MasterDegree" );
 			validSchema = "";
 			string exists = credentialTypes.FirstOrDefault( s => s.ToLower() == credentialType.ToLower() );
 			//or maybe loop thru and check case independent
@@ -204,15 +216,15 @@ namespace RA.Services
 		/// <summary>
 		/// Validate property
 		/// </summary>
-		/// <param name="vocabulary"></param>
+		/// <param name="ctdlProperty"></param>
 		/// <param name="property"></param>
 		/// <param name="code"></param>
 		/// <returns></returns>
-		public static bool IsTermValid( string ctdlProperty, string term, ref CodeItem code )
+		public static bool IsTermValid( string ctdlProperty, string term, ref CodeItem code, string schemaType= "ctdl" )
 		{
 			bool isValid = true;
 
-			code = GetVocabularyTermJson( ctdlProperty, term, ref isValid );
+			code = GetConceptSchemeTermJson( ctdlProperty, term, ref isValid, schemaType );
 
 			return isValid;
 		}
@@ -228,7 +240,7 @@ namespace RA.Services
 		//	return isValid;
 		//}
 
-		public static bool IsSchemaNameValid( string classSchema, ref string validSchema )
+		public static bool IsSchemaNameValid( string classSchema, ref string validSchema, string prefix="ceterms" )
 		{
 			bool isValid = false;
 			validSchema = "";
@@ -239,8 +251,8 @@ namespace RA.Services
 			}
 				
 			//prefix if necessary
-			if ( classSchema.IndexOf( "ceterms" ) == -1 )
-				classSchema = "ceterms:" + classSchema;
+			if ( classSchema.IndexOf( prefix ) == -1 )
+				classSchema = prefix + ":" + classSchema;
 			
 			string exists = otherClassTypes.FirstOrDefault( s => s == classSchema );
 			//or maybe loop thru and check case independent
@@ -341,26 +353,28 @@ namespace RA.Services
             //}
             return code;
         }
-        #endregion
+		#endregion
 
-        #region  validation using webservice
-        /// <summary>
-        /// Get concept scheme for a cdtl property, and verify the passed term is a valid concept
-        /// </summary>
-        /// <param name="ctdlProperty"></param>
-        /// <param name="term"></param>
-        /// <returns></returns>
-        public static CodeItem GetVocabularyTermJson( string ctdlProperty, string term, ref bool isValid )
+		#region  validation using webservice
+		/// <summary>
+		/// Get concept scheme for a cdtl property, and verify the passed term is a valid concept
+		/// </summary>
+		/// <param name="ctdlProperty"></param>
+		/// <param name="term"></param>
+		/// <returns></returns>
+		public static CodeItem GetConceptSchemeTermJson( string ctdlProperty, string term, ref bool isValid, string schemaType="ctdl" )
 		{
 			isValid = true;
 			try
 			{
 				//may want to be configurable to use pending
-				var ctdlUrl = Utilities.UtilityManager.GetAppKeyValue( "credRegVocabsApi", "http://credreg.net/ctdl/vocabs/");
+				var ctdlConceptVocabUrl = Utilities.UtilityManager.GetAppKeyValue( "credRegVocabsApi", "http://credreg.net/ctdl/vocabs/");
+				if ( schemaType == "qdata")
+					ctdlConceptVocabUrl = Utilities.UtilityManager.GetAppKeyValue( "qdataVocabsApi", "http://credreg.net/qdata/vocabs/" );
 
 				//var targetVocab = ctdlProperty.Contains( ':' ) ? ctdlProperty.Split( ':' )[ 1 ] : ctdlProperty;
-                //actually full conceptScheme (property was in cache returns without ceterms
-				var targetVocab = GetVocabularyConceptScheme( ctdlProperty );
+				//actually full conceptScheme (property was in cache returns without ceterms
+				var targetVocab = GetConceptSchemeForProperty( ctdlProperty, schemaType );
 				if ( string.IsNullOrWhiteSpace( targetVocab ) )
 				{
 					//what to do ??
@@ -375,7 +389,7 @@ namespace RA.Services
 				var nextTarget = conceptSchemePlain;
 				if( conceptSchemePlain == "FinancialAssistance" )
 					nextTarget = "financialAid";
-				var rawJson = new HttpClient().GetAsync( ctdlUrl + nextTarget + "/" + targetTerm + "/json" ).Result.Content.ReadAsStringAsync().Result;
+				var rawJson = new HttpClient().GetAsync( ctdlConceptVocabUrl + nextTarget + "/" + targetTerm + "/json" ).Result.Content.ReadAsStringAsync().Result;
 				//just getting minimum properties
 				var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiTermResult>( rawJson );
 				var data = deserialized.graph.First();
@@ -433,14 +447,19 @@ namespace RA.Services
 			return "";
 		}
 
-		public static string GetVocabularyConceptScheme( string vocabulary )
+		/// <summary>
+		/// Get the concept scheme for a property name
+		/// </summary>
+		/// <param name="ctdlProperty"></param>
+		/// <returns></returns>
+		public static string GetConceptSchemeForProperty( string ctdlProperty, string schemaType = "ctdl" )
 		{
 			var concept = "";
 			bool isValid = false;
-			//vocabulary = Char.ToLowerInvariant( vocabulary[ 0 ] ) + vocabulary.Substring( 1 );
+			//ctdlProperty = Char.ToLowerInvariant( ctdlProperty[ 0 ] ) + ctdlProperty.Substring( 1 );
 
-			string key = "vocabulary_" + vocabulary;
-			//check cache for vocabulary
+			string key = "ctdlProperty_" + ctdlProperty;
+			//check cache for ctdlProperty
 			if ( HttpRuntime.Cache[ key ] != null )
 			{
 				concept = ( string ) HttpRuntime.Cache[ key ];
@@ -448,7 +467,7 @@ namespace RA.Services
 			}
 			else
 			{
-				var targetTerm = GetVocabularyFromTermJson( vocabulary, ref isValid );
+				var targetTerm = GetConceptSchemeFromTermJson( ctdlProperty, ref isValid, schemaType );
 				if ( isValid )
 				{
 					concept = targetTerm.Contains( ':' ) ? targetTerm.Split( ':' )[ 1 ] : targetTerm;
@@ -457,7 +476,7 @@ namespace RA.Services
 				}
 				else
 				{
-					if ( vocabulary.ToLower() == "audienceleveltype" )
+					if ( ctdlProperty.ToLower() == "audienceleveltype" )
 					{
 						concept = "AudienceLevel";
 						HttpRuntime.Cache.Insert( key, concept );
@@ -468,7 +487,14 @@ namespace RA.Services
 			return "";
 		} //
 
-		public static string GetVocabularyFromTermJson( string term, ref bool isValid )
+		/// <summary>
+		/// Get concept scheme for a property
+		/// </summary>
+		/// <param name="term"></param>
+		/// <param name="isValid"></param>
+		/// <param name="schemaType"></param>
+		/// <returns></returns>
+		public static string GetConceptSchemeFromTermJson( string ctdlProperty, ref bool isValid, string schemaType = "ctdl" )
 		{
 			string rawJson = "";
 			
@@ -476,13 +502,16 @@ namespace RA.Services
 			{
 				isValid = false;
 				var ctdlUrl = Utilities.UtilityManager.GetAppKeyValue( "credRegTermsApi", "http://credreg.net/ctdl/terms/" );
-
-				var target = term.Contains( ':' ) ? term.Split( ':' )[ 1 ] : term;
+				if ( schemaType == "qdata" )
+				{
+					ctdlUrl = Utilities.UtilityManager.GetAppKeyValue( "qdataTermsApi", "http://credreg.net/qdata/terms/" );
+				}
+				var target = ctdlProperty.Contains( ':' ) ? ctdlProperty.Split( ':' )[ 1 ] : ctdlProperty;
 				rawJson = new HttpClient().GetAsync( ctdlUrl + target + "/json" ).Result.Content.ReadAsStringAsync().Result;
 				var deserialized = Newtonsoft.Json.JsonConvert.DeserializeObject<ApiTermResult>( rawJson );
 				var data = deserialized.graph.First();
 				//seems like another change
-				//20-02-05 - targetScheme is not returned for FinancialAis, or Audience
+				//20-02-05 - targetScheme is not returned for FinancialAid, or Audience or qdata
 				if ( data.targetScheme != null &&  data.targetScheme.Count > 0 ) 
 				{
 					isValid = true;
@@ -522,6 +551,9 @@ namespace RA.Services
 			public string id { get; set; } //The @id field contains the term with prefix
 			[JsonProperty( "@type" )]
 			public string type { get; set; }
+			/// <summary>
+			/// label is for concept scheme
+			/// </summary>
 			//[JsonProperty( "rdfs:label" )]
 			//public object rdfs_label { get; set; } //Name
 
@@ -591,9 +623,10 @@ namespace RA.Services
 		{
 			if (codes == null || codes.Count() == 0)
 				return null;
+			//O*NET-SOC Taxonomy
 			string frameworkName = "Standard Occupational Classification";
-			string framework = "https://www.bls.gov/soc/";
-			string template = "http://www.onetonline.org/link/summary/";
+			string framework = "https://www.onetcenter.org/taxonomy.html";//" https://www.bls.gov/soc/";
+			//string template = "http://www.onetonline.org/link/summary/";
 			bool doingBulk = true;
 			var output = new List<FrameworkItem>();
 			//might be better to do one at a time to be able to mark any not found!
@@ -606,6 +639,8 @@ namespace RA.Services
 
 				//foreach ( var item in list )
 				//{
+				//	if ( item == null )
+				//		continue;
 				//	//not sure
 				//	fi = new FrameworkItem()
 				//	{
@@ -653,6 +688,8 @@ namespace RA.Services
 
 				//foreach ( var item in list )
 				//{
+				//	if ( item == null )
+				//		continue;
 				//	//not sure
 				//	fi = new FrameworkItem()
 				//	{
@@ -660,7 +697,7 @@ namespace RA.Services
 				//		FrameworkName = frameworkName,
 				//		Name = item.Name,
 				//		Description = item.Description,
-				//		CodedNotation = item.Code,
+				//		CodedNotation = item.CodedNotation,
 				//		TargetNode = item.URL
 				//	};
 				//	output.Add( fi );
@@ -700,6 +737,8 @@ namespace RA.Services
 
 				//foreach ( var item in list )
 				//{
+				//	if ( item == null )
+				//		continue;
 				//	//not sure
 				//	fi = new FrameworkItem()
 				//	{
@@ -707,7 +746,7 @@ namespace RA.Services
 				//		FrameworkName = frameworkName,
 				//		Name = item.Name,
 				//		Description = item.Description,
-				//		CodedNotation = item.Code,
+				//		CodedNotation = item.CodedNotation,
 				//		TargetNode = item.URL
 				//	};
 				//	output.Add( fi );
@@ -735,7 +774,7 @@ namespace RA.Services
 		/// Code is a convenience property to handle where a code item has a character key, or where need to use a non-integer display - rare
 		/// </summary>
 		public string Code { get; set; }
-
+		public string CodedNotation { get; set; }
 		public string Name { get; set; }
 
 		public string Description { get; set; }

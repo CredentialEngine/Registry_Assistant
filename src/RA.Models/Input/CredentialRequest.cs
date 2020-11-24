@@ -187,8 +187,24 @@ namespace RA.Models.Input
 
 
 
-		public List<string> AudienceLevelType { get; set; }
+		/// <summary>
+		/// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
+		/// audience:Citizen audience:CurrentMilitary audience:CurrentMilitaryDependent audience:CurrentMilitarySpouse audience:CurrentStudent audience:FormerMilitary audience:FormerMilitaryDependent audience:FormerMilitarySpouse audience:FormerStudent audience:FullTime audience:Member audience:NonCitizen audience:NonMember audience:NonResident audience:PartTime audience:PrivateEmployee audience:PublicEmployee audience:Resident
+		/// <see cref="https://credreg.net/ctdl/terms/Audience"/>
+		/// </summary>
 		public List<string> AudienceType { get; set; }
+		/// <summary>
+		/// Type of level indicating a point in a progression through an educational or training context, for which the credential is intended; select from an existing enumeration of such types.
+		/// audLevel:AdvancedLevel audLevel:AssociatesDegreeLevel audLevel:BachelorsDegreeLevel audLevel:BeginnerLevel audLevel:DoctoralDegreeLevel audLevel:GraduateLevel audLevel:IntermediateLevel audLevel:LowerDivisionLevel audLevel:MastersDegreeLevel audLevel:PostSecondaryLevel audLevel:ProfessionalLevel audLevel:SecondaryLevel audLevel:UndergraduateLevel audLevel:UpperDivisionLevel
+		/// <see cref="https://credreg.net/ctdl/terms/AudienceLevel"/>
+		/// </summary>
+		public List<string> AudienceLevelType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Delivery type for the assessment for the credential.
+		/// deliveryType:BlendedDelivery deliveryType:InPerson deliveryType:OnlineOnly
+		/// <see cref="https://credreg.net/ctdl/terms/Delivery"/>
+		/// </summary>
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
 		/// <summary>
 		/// AvailableOnlineAt URL
@@ -355,6 +371,12 @@ namespace RA.Models.Input
 
 		public List<string> Keyword { get; set; }
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+
+		/// <summary>
+		/// Delivery type for the learning opportunity for the credential.
+		/// deliveryType:BlendedDelivery deliveryType:InPerson deliveryType:OnlineOnly
+		/// <see cref="https://credreg.net/ctdl/terms/Delivery"/>
+		/// </summary>
 		public List<string> LearningDeliveryType { get; set; } = new List<string>();
 		public string ProcessStandards { get; set; }
 		public string ProcessStandardsDescription { get; set; }
@@ -459,7 +481,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Only valid with a Quality Assurance credential.
-		/// List of CTIDs for credentials, or assessments, or learning opportunities that are 'members' of this quality assurance credential (essentially approved by the owner of the QA credential
+		/// List of CTIDs for credentials, or assessments, or learning opportunities that are 'members' of this quality assurance credential (essentially approved by the owner of the QA credential)
 		/// </summary>
 		public List<string> HasETPLResource { get; set; } = new List<string>();
 		#endregion

@@ -111,7 +111,9 @@ namespace RA.Models.Input
 		}
 
 		/// <summary>
-		/// Must be a valid CTDL cost type
+		/// Must be a valid CTDL cost type. 
+		/// Example: Tuition, Application, AggregateCost, RoomOrResidency
+		/// <see cref="https://credreg.net/ctdl/terms#CostType"/>
 		/// </summary>
 		public string DirectCostType { get; set; }
 		/// <summary>

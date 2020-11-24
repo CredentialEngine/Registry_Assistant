@@ -102,7 +102,7 @@ namespace RA.Models.JsonV2
 		/// Credit Value
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
-		public List<QuantitativeValue> CreditValue { get; set; } = null;
+		public List<ValueProfile> CreditValue { get; set; } = null;
 
 		/// <summary>
 		/// Resource that logically comes after this resource.

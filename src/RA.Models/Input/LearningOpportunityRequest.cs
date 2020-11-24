@@ -27,6 +27,7 @@ namespace RA.Models.Input
 			//Region = new List<GeoCoordinates>();
 
 			AudienceType = new List<string>();
+			AudienceType = new List<string>();
 			AvailabilityListing = new List<string>();
 			AvailableOnlineAt = new List<string>();
 			//CodedNotation = new List<string>();
@@ -110,7 +111,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// A credit-related value.
 		/// </summary>
-		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
+		public ValueProfile CreditValue { get; set; } = new ValueProfile();
 
 		/// <summary>
 		/// Competency that the learning opportunity is intended to teach.
@@ -119,6 +120,8 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Types of methods used to conduct the learning opportunity; select from an existing enumeration of such types.
+		/// Applied, Gaming, Laboratory, Lecture, Prerecorded, SelfPaced, Seminar, WorkBased
+		/// <see cref="https://credreg.net/ctdl/terms/LearningMethod#LearningMethod"/>
 		/// </summary>
 		public List<string> LearningMethodType { get; set; }
 
@@ -136,6 +139,8 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Type of means by which a learning opportunity or assessment is delivered to credential seekers and by which they interact; select from an existing enumeration of such types.
+		/// deliveryType:BlendedDelivery deliveryType:InPerson deliveryType:OnlineOnly
+		/// <see cref="https://credreg.net/ctdl/terms/Delivery"/>
 		/// </summary>
 		public List<string> DeliveryType { get; set; }
 
@@ -160,10 +165,22 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Type of method used to conduct an assessment; select from an existing enumeration of such types.
+		/// assessMethod:Artifact, assessMethod:Exam, assessMethod:Performance
+		/// <see cref="https://credreg.net/ctdl/terms/AssessmentMethod#AssessmentMethod"/>
 		/// </summary>
 		public List<string> AssessmentMethodType { get; set; } = new List<string>();
 
+		/// <summary>
+		/// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
+		/// audience:Citizen audience:CurrentMilitary audience:CurrentMilitaryDependent audience:CurrentMilitarySpouse audience:CurrentStudent audience:FormerMilitary audience:FormerMilitaryDependent audience:FormerMilitarySpouse audience:FormerStudent audience:FullTime audience:Member audience:NonCitizen audience:NonMember audience:NonResident audience:PartTime audience:PrivateEmployee audience:PublicEmployee audience:Resident
+		/// <see cref="https://credreg.net/ctdl/terms/Audience"/>
+		/// </summary>
 		public List<string> AudienceType { get; set; }
+		/// <summary>
+		/// Type of level indicating a point in a progression through an educational or training context, for which the credential is intended; select from an existing enumeration of such types.
+		/// audLevel:AdvancedLevel audLevel:AssociatesDegreeLevel audLevel:BachelorsDegreeLevel audLevel:BeginnerLevel audLevel:DoctoralDegreeLevel audLevel:GraduateLevel audLevel:IntermediateLevel audLevel:LowerDivisionLevel audLevel:MastersDegreeLevel audLevel:PostSecondaryLevel audLevel:ProfessionalLevel audLevel:SecondaryLevel audLevel:UndergraduateLevel audLevel:UpperDivisionLevel
+		/// <see cref="https://credreg.net/ctdl/terms/AudienceLevel"/>
+		/// </summary>
 		public List<string> AudienceLevelType { get; set; } = new List<string>();
 
 
@@ -277,8 +294,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
 		/// <summary>
-		/// List of valid NAICS codes. These will be mapped to industry type
-		/// See:
+		/// List of valid NAICS codes. See:
 		/// https://www.naics.com/search/
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();

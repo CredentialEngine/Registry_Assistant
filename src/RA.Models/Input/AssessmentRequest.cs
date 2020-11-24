@@ -169,7 +169,7 @@ namespace RA.Models.Input
 		//Credit Information
 		//Provide credit information in a quantative value
 		//system will check for this first, and then the old properties
-		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
+		public ValueProfile CreditValue { get; set; } = new ValueProfile();
 		//
 		/// <summary>
 		/// Detailed description of credit unit. 
@@ -289,7 +289,17 @@ namespace RA.Models.Input
 		//external classes
 		public List<CostProfile> EstimatedCost { get; set; }
 
+		/// <summary>
+		/// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
+		/// audience:Citizen audience:CurrentMilitary audience:CurrentMilitaryDependent audience:CurrentMilitarySpouse audience:CurrentStudent audience:FormerMilitary audience:FormerMilitaryDependent audience:FormerMilitarySpouse audience:FormerStudent audience:FullTime audience:Member audience:NonCitizen audience:NonMember audience:NonResident audience:PartTime audience:PrivateEmployee audience:PublicEmployee audience:Resident
+		/// <see cref="https://credreg.net/ctdl/terms/Audience"/>
+		/// </summary>
 		public List<string> AudienceType { get; set; }
+		/// <summary>
+		/// Type of level indicating a point in a progression through an educational or training context, for which the credential is intended; select from an existing enumeration of such types.
+		/// audLevel:AdvancedLevel audLevel:AssociatesDegreeLevel audLevel:BachelorsDegreeLevel audLevel:BeginnerLevel audLevel:DoctoralDegreeLevel audLevel:GraduateLevel audLevel:IntermediateLevel audLevel:LowerDivisionLevel audLevel:MastersDegreeLevel audLevel:PostSecondaryLevel audLevel:ProfessionalLevel audLevel:SecondaryLevel audLevel:UndergraduateLevel audLevel:UpperDivisionLevel
+		/// <see cref="https://credreg.net/ctdl/terms/AudienceLevel"/>
+		/// </summary>
 		public List<string> AudienceLevelType { get; set; } = new List<string>();
 		public string ScoringMethodDescription { get; set; }
 		public LanguageMap ScoringMethodDescription_Map { get; set; } = new LanguageMap();

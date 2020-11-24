@@ -62,7 +62,6 @@ namespace RA.Services
             if ( ToMap( request, output, ref messages ) )
             {
                 og.Graph.Add( output );
-                //TODO - is there other info needed, like in context?
                 if ( BlankNodes != null && BlankNodes.Count > 0 )
                 {
                     foreach ( var item in BlankNodes )
@@ -139,7 +138,6 @@ namespace RA.Services
                 if ( !string.IsNullOrWhiteSpace( status ) )
                     messages.Add( status );
                 og.Graph.Add( output );
-                //TODO - is there other info needed, like in context?
                 if ( BlankNodes != null && BlankNodes.Count > 0 )
                 {
                     foreach ( var item in BlankNodes )
@@ -262,15 +260,17 @@ namespace RA.Services
 				output.LearningMethodDescription = AssignLanguageMap( input.LearningMethodDescription, input.LearningMethodDescription_Map, "LearningMethodDescription", DefaultLanguageForMaps, ref messages, false, MinimumDescriptionLength );
 				//
 				output.AssessmentMethodDescription = AssignLanguageMap( input.AssessmentMethodDescription, input.AssessmentMethodDescription_Map, "AssessmentMethodDescription", DefaultLanguageForMaps, ref messages, false, MinimumDescriptionLength );
+				output.AssessmentMethodType = FormatCredentialAlignmentVocabs( "assessmentMethodType", input.AssessmentMethodType, ref messages );
 				//
 				output.EstimatedCost = FormatCosts( input.EstimatedCost, ref messages );
 				output.EstimatedDuration = FormatDuration( input.EstimatedDuration, "LearningOpportunity.EstimatedDuration", ref messages );
 
-				output.Recommends = FormatConditionProfile( input.Recommends, ref messages );
-				output.Requires = FormatConditionProfile( input.Requires, ref messages );
-				output.Corequisite = FormatConditionProfile( input.Corequisite, ref messages );
-				output.EntryCondition = FormatConditionProfile( input.EntryCondition, ref messages );
+				output.Recommends = FormatConditionProfile( input.Recommends, ref messages, "RecommendsCondition" );
+				output.Requires = FormatConditionProfile( input.Requires, ref messages, "RequiresCondition" );
+				output.Corequisite = FormatConditionProfile( input.Corequisite, ref messages, "CorequisiteCondition" );
+				output.EntryCondition = FormatConditionProfile( input.EntryCondition, ref messages, "EntryCondition" );
 
+				//if none of the following references a credential, need a specific check for a credential referencing this learning opp
 				output.AdvancedStandingFrom = FormatConnections( input.AdvancedStandingFrom, ref messages );
 				output.IsAdvancedStandingFor = FormatConnections( input.IsAdvancedStandingFor, ref messages );
 
@@ -280,6 +280,7 @@ namespace RA.Services
 				output.IsRecommendedFor = FormatConnections( input.IsRecommendedFor, ref messages );
 
 				output.Teaches = FormatCompetencies( input.Teaches, ref messages );
+
 
 				HandleAssertedINsProperties( input, output, helper, ref messages );
 			
@@ -339,10 +340,10 @@ namespace RA.Services
 			output.Name = AssignLanguageMap( input.Name, input.Name_Map, "LearningOpportunity.Name", DefaultLanguageForMaps, ref messages, true, 3 );
 			CurrentEntityName = GetFirstItemValue( output.Name );
 
-            output.Description = AssignLanguageMap( input.Description, input.Description_Map, "Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
+            output.Description = AssignLanguageMap( input.Description, input.Description_Map, "LearningOpportunity.Description", DefaultLanguageForMaps, ref messages, true, MinimumDescriptionLength );
 
             //
-            output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "Subject Webpage", ref messages, true );
+            output.SubjectWebpage = AssignValidUrlAsString( input.SubjectWebpage, "LearningOpportunitySubject Webpage", ref messages, true );
 
 
             output.OwnedBy = FormatOrganizationReferences( input.OwnedBy, "Owning Organization", false, ref messages, false, true );
@@ -372,15 +373,18 @@ namespace RA.Services
             //now literal
             //output.CodedNotation = AssignListToString( input.CodedNotation );
             output.CodedNotation = input.CodedNotation;
-            output.DeliveryTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.DeliveryTypeDescription ), input.DeliveryTypeDescription_Map, "DeliveryTypeDescription", DefaultLanguageForMaps, ref messages );
+			output.Identifier = AssignIdentifierListToList( input.Identifier, ref messages );
+
+			output.DeliveryTypeDescription = AssignLanguageMap( ConvertSpecialCharacters( input.DeliveryTypeDescription ), input.DeliveryTypeDescription_Map, "DeliveryTypeDescription", DefaultLanguageForMaps, ref messages );
 			//19-07-30 removed
 			//output.VerificationMethodDescription = AssignLanguageMap( ConvertSpecialCharacters( input.VerificationMethodDescription ), input.VerificationMethodDescription_Map,"VerificationMethodDescription",  DefaultLanguageForMaps, ref messages );
 
-			output.DateEffective = MapDate( input.DateEffective, "Learning Opportunity Date Effective", ref messages);
+			output.DateEffective = MapDate( input.DateEffective, "LearningOpportunity.Date Effective", ref messages);
+			output.ExpirationDate = MapDate( input.ExpirationDate, "LearningOpportunity.ExpirationDate", ref messages );
 
 			//
 			//output.CreditUnitType = null;
-			output.CreditValue = AssignQuantitiveValueToList( input.CreditValue, "CreditValue", "LearningOpportunity", ref messages );
+			output.CreditValue = AssignValueProfileToList( input.CreditValue, "CreditValue", "LearningOpportunity", ref messages );
 			//at this point could have had no data, or bad data
 			if ( output.CreditValue == null )
 			{

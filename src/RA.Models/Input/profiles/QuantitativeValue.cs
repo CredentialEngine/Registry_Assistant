@@ -31,12 +31,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public decimal MinValue { get; set; }
 		/// <summary>
-		/// Minimum value for this purpose.
+		/// Maximum value for this purpose.
 		/// </summary>
 		public decimal MaxValue { get; set; }
 
 		/// <summary>
 		/// A percentage for this purpose. 
+		/// Expected input as as a percentage of 100 (and can be greater, or negative). Examples: 95.2, 11, etc.
 		/// Do not use if providing any of value, minimum and maximum value.
 		/// qdata:percentage
 		/// </summary>

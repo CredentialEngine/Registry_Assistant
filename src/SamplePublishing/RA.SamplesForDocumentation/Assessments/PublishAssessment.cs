@@ -41,8 +41,16 @@ namespace RA.SamplesForDocumentation
 						Condition = new List<string>() { "Condition One", "Condition Two", "Condition Three" }
 					}
 				}
-			};          
-			
+			};
+			//add one of ownedBy or offeredBy, or both
+			myData.OwnedBy.Add( new OrganizationReference()
+			{
+				CTID = organizationIdentifierFromAccountsSite
+			} );
+			myData.OfferedBy.Add( new OrganizationReference()
+			{
+				CTID = organizationIdentifierFromAccountsSite
+			} );
 			//Add organization that is not in the credential registry
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{

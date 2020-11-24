@@ -40,8 +40,20 @@ namespace RA.Models.JsonV2
 		/// Optional description of the value, using either a string value or as a language map
 		/// </summary>
 		[JsonProperty( "schema:description" )]
-		public LanguageMap Description { get; set; }	
-		
+		public LanguageMap Description { get; set; }
+
+		/// <summary>
+		/// Minimum value for this purpose.
+		/// </summary>
+		[JsonProperty( "schema:minValue" )]
+		public decimal MinValue { get; set; }
+
+		/// <summary>
+		/// Maximum value for this purpose.
+		/// </summary>
+		[JsonProperty( "schema:maxValue" )]
+		public decimal MaxValue { get; set; }
+
 		/// <summary>
 		/// A percentage for this purpose. 
 		/// Do not use if providing value

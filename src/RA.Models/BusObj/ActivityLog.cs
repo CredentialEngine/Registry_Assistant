@@ -23,6 +23,7 @@ namespace RA.Models.BusObj
 
 		public string Application { get; set; }
 		public string ActivityType { get; set; }
+		public string PublishingOrganizationCTID { get; set; }
 		public string DataOwnerCTID { get; set; }
 		public string ActivityObjectCTID { get; set; }
 		public string Activity { get; set; }

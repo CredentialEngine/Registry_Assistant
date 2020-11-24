@@ -255,11 +255,10 @@ namespace RA.Services
 
 				output.EstimatedDuration = FormatDuration( input.EstimatedDuration, "Assessment.EstimatedDuration", ref messages );
 
-				output.Requires = FormatConditionProfile( input.Requires, ref messages );
-				output.Recommends = FormatConditionProfile( input.Recommends, ref messages );
-
-				output.Corequisite = FormatConditionProfile( input.Corequisite, ref messages );
-				output.EntryCondition = FormatConditionProfile( input.EntryCondition, ref messages );
+				output.Recommends = FormatConditionProfile( input.Recommends, ref messages, "RecommendsCondition" );
+				output.Requires = FormatConditionProfile( input.Requires, ref messages, "RequiresCondition" );
+				output.Corequisite = FormatConditionProfile( input.Corequisite, ref messages, "CorequisiteCondition" );
+				output.EntryCondition = FormatConditionProfile( input.EntryCondition, ref messages, "EntryCondition" );
 
 				output.AdvancedStandingFrom = FormatConnections( input.AdvancedStandingFrom, ref messages );
 				output.IsAdvancedStandingFor = FormatConnections( input.IsAdvancedStandingFor, ref messages );
@@ -293,7 +292,7 @@ namespace RA.Services
             }
 			catch ( Exception ex )
 			{
-				LoggingHelper.LogError( ex, "AssessmentServices.ToMap" );
+				LoggingHelper.LogError( ex, className + ".ToMap" );
 				messages.Add( ex.Message );
 			}
 
@@ -361,7 +360,9 @@ namespace RA.Services
             //output.CodedNotation = AssignListToString( input.CodedNotation );
             output.CodedNotation = input.CodedNotation;
 
-            output.AssessmentExample = AssignValidUrlAsString( input.AssessmentExample, "AssessmentExample", ref messages, false );
+			output.Identifier = AssignIdentifierListToList( input.Identifier, ref messages );
+
+			output.AssessmentExample = AssignValidUrlAsString( input.AssessmentExample, "AssessmentExample", ref messages, false );
             output.AssessmentExampleDescription = AssignLanguageMap( ConvertSpecialCharacters( input.AssessmentExampleDescription ), input.AssessmentExampleDescription_Map, "AssessmentExampleDescription", DefaultLanguageForMaps,  ref messages );
 
             output.AssessmentOutput = AssignLanguageMap( ConvertSpecialCharacters( input.AssessmentOutput ), input.AssessmentOutput_Map, "AssessmentOutput", DefaultLanguageForMaps, ref messages );
@@ -386,12 +387,14 @@ namespace RA.Services
             output.ProcessStandardsDescription = AssignLanguageMap( ConvertSpecialCharacters( input.ProcessStandardsDescription ), input.ProcessStandardsDescription_Map, "ProcessStandardsDescription",  DefaultLanguageForMaps, ref messages );
 
             output.DateEffective = MapDate( input.DateEffective, "DateEffective", ref messages );
-            output.ScoringMethodDescription = AssignLanguageMap( ConvertSpecialCharacters( input.ScoringMethodDescription ), input.ScoringMethodDescription_Map, "ScoringMethodDescription", DefaultLanguageForMaps, ref messages );
+			output.ExpirationDate = MapDate( input.ExpirationDate, "LearningOpportunity.ExpirationDate", ref messages );
+			//
+			output.ScoringMethodDescription = AssignLanguageMap( ConvertSpecialCharacters( input.ScoringMethodDescription ), input.ScoringMethodDescription_Map, "ScoringMethodDescription", DefaultLanguageForMaps, ref messages );
             output.ScoringMethodExampleDescription = AssignLanguageMap( ConvertSpecialCharacters( input.ScoringMethodExampleDescription ), input.ScoringMethodExampleDescription_Map, "ScoringMethodExampleDescription", DefaultLanguageForMaps, ref messages );
 
 			//
 			//output.CreditUnitType = null;
-			output.CreditValue = AssignQuantitiveValueToList( input.CreditValue, "CreditValue", "Assessment", ref messages );
+			output.CreditValue = AssignValueProfileToList( input.CreditValue, "CreditValue", "Assessment", ref messages );
 			//at this point could have had no data, or bad data
 			if ( output.CreditValue == null )
 			{

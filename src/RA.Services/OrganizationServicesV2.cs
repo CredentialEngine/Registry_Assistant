@@ -187,7 +187,17 @@ namespace RA.Services
 			bool recordExists = false;
 			int msgCnt = messages.Count();
 			//check if exists
-			//hidden
+			if ( SupportServices.FindOwningOrgByCTID( request.PublishForOrganizationIdentifier, ref recordExists, ref messages ) )
+			{
+				//hmm, if actual error occurs, do we stop or fall thru? If not in accounts, will get error later
+				if ( messages.Count() > msgCnt)
+					return false;
+			}
+			if (!recordExists)
+			{
+				//add to accounts
+				isValid = SupportServices.AddOrganizationToAccounts( request.Organization, apiKey, ref messages );
+			}
 			return isValid;
 		}
         //
@@ -324,7 +334,8 @@ namespace RA.Services
 				HandleLiteralFields( input, output, ref messages );
 
 				HandleUrlFields( input, output, ref messages );
-				HandleLocations( input, output, ref messages );
+				//20-09-15 moved contents to required
+				//HandleLocations( input, output, ref messages );
 
                 output.Keyword = AssignLanguageMapList( input.Keyword, input.Keyword_Map, "Organization Keywords", ref messages );
                 
@@ -428,35 +439,42 @@ namespace RA.Services
 			{
 				foreach ( var item in input.AgentType )
 				{
+					if ( item == null )
+						continue;
 					//output.AgentType.Add( FormatCredentialAlignment( item ) );
 					//should be concept scheme of organizationType
-					
+					//var types = SchemaServices.GetConceptScheme( "http://credreg.net/ctdl/terms/OrganizationType/json" );
 					output.AgentType.Add( FormatCredentialAlignment( "agentType", item, ref messages ) );
 				}
 			}
-			else
+
+			if ( output.AgentType == null || output.AgentType.Count() == 0 )
 			{
-				messages.Add( "Error = Agent type is a required property. At least one type must be provided." );
+				messages.Add( "Error = Agent type is a required property. At least one type must be provided. See: https://credreg.net/ctdl/terms#OrganizationType" );
 			}
 
 
 			//17-10-02 mp - can only have one sector type
 			if ( !string.IsNullOrWhiteSpace( input.AgentSectorType ) )
 			{
-				//foreach ( string item in input.AgentSectorType )
-				//{
-				output.AgentSectorType.Add( FormatCredentialAlignment( "agentSectorType", input.AgentSectorType, ref messages ) );
-				//}
+				output.AgentSectorType.Add( FormatCredentialAlignment( "agentSectorType", input.AgentSectorType, ref messages ) );			
 			}
 			else
 			{
-				messages.Add( "Error = Agent Sector Type is a required property. " );
+				messages.Add( "Error = Agent Sector Type is a required property. See: https://credreg.net/ctdl/terms#AgentSector" );
 				output.AgentSectorType = null;
 			}
 
-            //no longer included: 
-            //				( input.ContactPoint == null || input.ContactPoint.Count == 0 )
-            if ( (input.Address == null || input.Address.Count == 0) &&
+			if ( input.Email != null && input.Email.Count() > 0 )
+			{
+				output.Email = input.Email;
+			}
+
+			output.Address = FormatPlacesList( input.Address, ref messages );
+
+			//no longer included: 
+			//				( input.ContactPoint == null || input.ContactPoint.Count == 0 )
+			if ( (input.Address == null || input.Address.Count == 0) &&
 				( input.Email == null   || input.Email.Count == 0 ) 
 				)
 			{
@@ -468,8 +486,25 @@ namespace RA.Services
 
 		public void HandleLiteralFields( InputEntity input, OutputEntity output, ref List<string> messages )
 		{
-			//output.AlternativeIdentifier = AssignIdentifierValueToList( input.AlternativeIdentifier );
+
+
+			//20-10-22 mparsons: Added Identifier to replace AlternativeIdentifier
 			output.Identifier = AssignIdentifierListToList( input.Identifier, ref messages );
+			//This will be superseded by Identifier
+			//make obsolete once implemented
+			//var alternativeIdentifier = AssignIdentifierListToList( input.AlternativeIdentifier, ref messages );
+			//if (alternativeIdentifier != null && alternativeIdentifier.Any())
+			//{
+			//	if ( output.Identifier == null )
+			//		output.Identifier = new List<RJ.IdentifierValue>();
+			//	foreach ( var item in alternativeIdentifier )
+			//	{
+			//		if (item != null )
+			//			output.Identifier.Add( item );
+			//	}
+
+			//	warningMessages.Add( "Organization.AlternativeIdentifier is obsolete and has been replaced by Organization.Identifier. The API copied all AlternativeIdenfier data to Identifier." );
+			//}
 			//
 			output.MissionAndGoalsStatementDescription = AssignLanguageMap( ConvertSpecialCharacters( input.MissionAndGoalsStatementDescription ), input.MissionAndGoalsStatementDescription_Map, "MissionAndGoalsStatementDescription", DefaultLanguageForMaps, ref messages );
 			//
@@ -525,15 +560,15 @@ namespace RA.Services
 			//}
 
 			//17-06-14 MP - decided to not make email required
-			if ( input.Email != null && input.Email.Count() > 0 )
-			{
-				output.Email = input.Email;
-			}
+			//if ( input.Email != null && input.Email.Count() > 0 )
+			//{
+			//	output.Email = input.Email;
+			//}
 			//else
 			//{
 			//	messages.Add( "Error - A valid email must be entered." );
 			//}
-			output.Address = FormatPlacesList( input.Address, ref messages );
+			//output.Address = FormatPlacesList( input.Address, ref messages );
 			
 			//top level contact points will be added under a default place/address
             //no longer allowed at org level
@@ -552,8 +587,13 @@ namespace RA.Services
 		public void HandleVerificationProfiles( InputEntity input, OutputEntity output, ref List<string> messages )
 		{
 			RJ.EntityReferenceHelper helper = new RJ.EntityReferenceHelper();
+			if ( input.VerificationServiceProfiles == null || !input.VerificationServiceProfiles.Any() )
+				return;
+
 			foreach ( var vsp in input.VerificationServiceProfiles )
 			{
+				if ( vsp == null )
+					continue;
 				var vs = new RJ.VerificationServiceProfile
 				{
 					DateEffective = MapDate( vsp.DateEffective, "", ref messages ),
@@ -564,13 +604,14 @@ namespace RA.Services
 
                 };
 				vs.Jurisdiction = MapJurisdictions( vsp.Jurisdiction, ref messages );
-				vs.OfferedBy = FormatOrganizationReferences( vsp.OfferedBy, "Offered By", true, ref messages );
+				//should offeredBy be required?
+				vs.OfferedBy = FormatOrganizationReferences( vsp.OfferedBy, "VerificationService.Offered By", false, ref messages );
 				vs.OfferedIn = MapJurisdictionAssertionsList( vsp.OfferedIn, ref helper, ref messages );
 				//vs.Region = MapRegions( vsp.Region, ref messages );
 
 				vs.VerifiedClaimType = FormatCredentialAlignmentVocabs( "verifiedClaimType", vsp.VerifiedClaimType, ref messages );
 
-				vs.SubjectWebpage = AssignValidUrlAsString( vsp.SubjectWebpage, "Subject Webpage", ref messages, false );
+				vs.SubjectWebpage = AssignValidUrlAsString( vsp.SubjectWebpage, "VerificationService.Subject Webpage", ref messages, false );
 
 				if ( !IsUrlValid( vsp.VerificationDirectory, ref status, ref isUrlPresent ) )
 					messages.Add( "The Verification Directory is invalid" + status );
@@ -618,7 +659,11 @@ namespace RA.Services
 			//can't depend on the codes being NAICS
 			to.IndustryType = FormatCredentialAlignmentListFromFrameworkItemList( from.IndustryType, true, ref messages);
 			if ( from.Naics != null && from.Naics.Count > 0 )
-				to.Naics = from.Naics;
+			{
+				to.Naics = ValidateListOfNAICS_Codes( from.Naics, ref messages );
+
+				//to.Naics = from.Naics;
+			}
 			else
 				to.Naics = null;
 
@@ -685,5 +730,154 @@ namespace RA.Services
 
 		#endregion
 
+		public bool ReplaceVerificationProfiles( EntityRequest request, RA.Models.RequestHelper helper )
+		{
+			bool isValid = true;
+			if ( string.IsNullOrWhiteSpace( request.Organization.Ctid ) )
+			{
+				helper.AddError( "OrganizationServicesV2.ReplaceVerificationProfiles - a valid CTID must be provided" );
+				return false;
+			}
+			string crEnvelopeId = request.RegistryEnvelopeId;
+			//this is currently specific, assumes envelop contains an organization
+			//can use the hack for GetResourceType to determine the type, and then call the appropriate import method
+			string statusMessage = "";
+			//EntityServices mgr = new EntityServices();
+			string ctdlType = "";
+			try
+			{
+				//TODO - doesn't handle a community!!
+				string payload = RegistryServices.GetResourceGraph( request.Organization.Ctid, ref ctdlType, ref statusMessage, request.Community );
+
+				if ( string.IsNullOrWhiteSpace( payload ) )
+				{
+					helper.AddError( string.Format("An organization was not found for the provided CTID: {0}. ", request.Organization.Ctid ) + statusMessage );
+					return false;
+				}
+
+				InputEntity input = request.Organization;
+				var output = new OutputEntity();
+				OutputGraph og = new OutputGraph();
+				List<string> messages = new List<string>();
+
+				//
+				var bnodes = new List<RJ.BlankNode>();
+				var mainEntity = new Dictionary<string, object>();
+
+				Dictionary<string, object> dictionary = RegistryServices.JsonToDictionary( payload );
+				object graph = dictionary[ "@graph" ];
+				//serialize the graph object
+				var glist = JsonConvert.SerializeObject( graph );
+				//parse graph in to list of objects
+				JArray graphList = JArray.Parse( glist );
+				int cntr = 0;
+				foreach ( var item in graphList )
+				{
+					cntr++;
+					if ( cntr == 1 )
+					{
+						var main = item.ToString();
+						//may not use this. Could add a trace method
+						mainEntity = RegistryServices.JsonToDictionary( main );
+						output = JsonConvert.DeserializeObject<OutputEntity>( main );
+					}
+					else //is this too much of an assumption?
+					{
+						var bn = item.ToString();
+						bnodes.Add( JsonConvert.DeserializeObject<RJ.BlankNode>( bn ) );
+					}
+
+				}
+
+				//verify OK, then do
+				int cnt = messages.Count();
+				//reset current
+				output.VerificationServiceProfiles = new List<RJ.VerificationServiceProfile>();
+				HandleVerificationProfiles( input, output, ref messages );
+				if ( cnt == messages.Count() )
+				{
+					og.Graph.Add( output );
+					//TODO - is there other info needed, like in context?
+					if ( bnodes != null && bnodes.Count > 0 )
+					{
+						foreach ( var item in bnodes )
+						{
+							og.Graph.Add( item );
+						}
+					}
+					og.CtdlId = SupportServices.FormatRegistryUrl( GraphTypeUrl, output.Ctid, Community);
+					og.CTID = output.Ctid;
+					og.Type = output.Type;
+					og.Context = ctdlContext;
+					CurrentEntityName = output.Name.ToString();
+					helper.Payload = JsonConvert.SerializeObject( og, GetJsonSettings() );
+
+					CER cer = new CER( "Organization", output.Type, output.Ctid, helper.SerializedInput )
+					{
+						PublisherAuthorizationToken = helper.ApiKey,
+						IsPublisherRequest = helper.IsPublisherRequest,
+						EntityName = CurrentEntityName,
+						Community = request.Community ?? "",
+						PublishingForOrgCtid = helper.OwnerCtid
+					};
+					//
+					if ( cer.PublisherAuthorizationToken != null && cer.PublisherAuthorizationToken.Length >= 32 )
+					{
+						cer.IsManagedRequest = true;
+						//get publisher org
+						string publisherCTID = "";
+						if ( SupportServices.GetPublishingOrgByApiKey( cer.PublisherAuthorizationToken, ref publisherCTID, ref messages ) )
+						{
+							cer.PublishingByOrgCtid = publisherCTID;
+						}
+						else
+						{
+							//should be an error message returned
+							isValid = false;
+							helper.SetMessages( messages );
+							LoggingHelper.DoTrace( 4, string.Format( "OrganizationServices.Publish. Validate ApiKey failed. Org Ctid: {0}, Document Ctid: {1}, apiKey: {2}", helper.OwnerCtid, output.Ctid, cer.PublisherAuthorizationToken ) );
+							return false; //===================
+						}
+					}
+					else
+						cer.PublishingByOrgCtid = cer.PublishingForOrgCtid;
+					//a past request must exist
+					if ( !SupportServices.ValidateAgainstPastRequest( "Organization", output.Ctid, ref cer, ref messages ) )
+					{
+						isValid = false;
+						helper.SetMessages( messages );
+						return false; //===================
+					}
+
+					string identifier = "Organization_" + request.Organization.Ctid;
+					if ( cer.Publish( helper, "", identifier, ref status, ref crEnvelopeId ) )
+					{
+						helper.RegistryEnvelopeId = crEnvelopeId;
+						string msg = string.Format( "<p>Published organization: {0}</p><p>Subject webpage: {1}</p><p>CTID: {2}</p> <p>EnvelopeId: {3}</p> ", request.Organization.Name, output.SubjectWebpage.ToString(), output.Ctid, crEnvelopeId );
+						NotifyOnPublish( "Organization", msg );
+					}
+					else
+					{
+						messages.Add( status );
+						isValid = false;
+					}
+				}
+				else
+				{
+				}
+			}
+			catch ( Exception ex )
+			{
+				LoggingHelper.LogError( ex, thisClassName + ".ReplaceVerificationProfiles()" );
+				helper.AddError( ex.Message );
+				if ( ex.Message.IndexOf( "Path '@context', line 1" ) > 0 )
+				{
+					helper.AddWarning( "The referenced registry document is using an old schema. Please republish it with the latest schema!" );
+				}
+				return false;
+			}
+
+			return isValid;
+		}
 	}
 }

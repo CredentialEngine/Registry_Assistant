@@ -193,7 +193,7 @@ namespace RA.Models.Input.profiles.QData
 		public List<QuantitativeValue> SubjectsInSet { get; set; } = new List<QuantitativeValue>();
 
 		/// <summary>
-		/// Number of holders that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set.
+		/// Number of holders that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set (employmentDefinition).
 		/// qdata:sufficientEmploymentCriteria
 		/// </summary>
 		public List<QuantitativeValue> SufficientEmploymentCriteria { get; set; } = new List<QuantitativeValue>();

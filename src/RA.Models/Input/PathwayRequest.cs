@@ -299,7 +299,7 @@ namespace RA.Models.Input
 		/// Used by: 
 		/// ceterms:CourseComponent only 
 		/// </summary>
-		public List<QuantitativeValue> CreditValue { get; set; } = new List<QuantitativeValue>();
+		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 
 		/// <summary>
 		/// ProgramTerm

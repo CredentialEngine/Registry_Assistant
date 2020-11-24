@@ -168,9 +168,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:commonCosts" )]
 		public List<string> CommonCosts { get; set; }
 		//
+		//[JsonProperty( PropertyName = "ceterms:creditValue" )]
+		//public List<QuantitativeValue> CreditValue { get; set; } = null;
+		//20-10-31 CreditValue is now of type ValueProfile
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
-		public List<QuantitativeValue> CreditValue { get; set; } = null;
-
+		public List<ValueProfile> CreditValue { get; set; } = null;
 
 		[JsonProperty( PropertyName = "ceterms:creditUnitTypeDescription" )]
 		public LanguageMap CreditUnitTypeDescription { get; set; }
