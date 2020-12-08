@@ -9,15 +9,12 @@ namespace RA.Models.Input
 			CostManifest = new CostManifest();
 		}
 		public CostManifest CostManifest { get; set; }
-
-		//public List<BlankNode> BlankNodes = new List<BlankNode>();
 	}
 
 	public class CostManifest
 	{
 		public CostManifest()
 		{
-			//OwningOrganization = new OrganizationReference();
 			EstimatedCost = new List<CostProfile>();
 		}
 
@@ -37,23 +34,19 @@ namespace RA.Models.Input
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
         public string StartDate { get; set; }
-		public string EndDate { get; set; }
+	public string EndDate { get; set; }
 
-		public string Ctid { get; set; }
-		/// <summary>
-		/// URL for cost details
-		/// </summary>
-		public string CostDetails { get; set; }
+	public string Ctid { get; set; }
+	/// <summary>
+	/// URL for cost details
+	/// </summary>
+	public string CostDetails { get; set; }
 
-		/// <summary>
-		/// Organization that owns this CostManifest
-		/// </summary>
-		public OrganizationReference CostManifestOf { get; set; } = new OrganizationReference();
-        //public OrganizationReference OwningOrganization
-        //{
-        //    get { return CostManifestOf; }
-        //    set { CostManifestOf = value; }
-        //}
+	/// <summary>
+	/// Organization that owns this CostManifest
+	/// </summary>
+	public OrganizationReference CostManifestOf { get; set; } = new OrganizationReference();
+        
         public List<CostProfile> EstimatedCost { get; set; }
 	}
 }
