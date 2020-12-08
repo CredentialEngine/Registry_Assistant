@@ -37,7 +37,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// A percentage for this purpose. 
-		/// Expected input as as a percentage of 100 (and can be greater, or negative). Examples: 95.2, 11, etc.
+		/// Best practice is to treat the value of this property as a verbatim percentage; for example, a value of 1.5 should be interpreted as 1.5%
 		/// Do not use if providing any of value, minimum and maximum value.
 		/// qdata:percentage
 		/// </summary>

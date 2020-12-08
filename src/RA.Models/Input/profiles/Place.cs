@@ -88,13 +88,16 @@ namespace RA.Models.Input
 		/// </summary>
 		public string ContactType { get; set; }
 
+		/// <summary>
+		/// List of phone numbers for this contact point
+		/// </summary>
 		public List<string> PhoneNumbers { get; set; }
 		/// <summary>
-		/// List of email addresses
+		/// List of email addresses for this contact point
 		/// </summary>
 		public List<string> Emails { get; set; }
 		/// <summary>
-		/// List of URIs to social media pages
+		/// List of URIs to social media pages for this contact point
 		/// </summary>
 		public List<string> SocialMediaPages { get; set; }
 

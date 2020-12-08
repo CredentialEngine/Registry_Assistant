@@ -33,12 +33,6 @@ namespace RA.Models.Input
 		//if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would typically be required
 
 		/// <summary>
-		/// If the entity described below does exist in the registry, use this SameAs property to relate the two. 
-		/// Provide a CTID(recommended) or a URI to the thing in the credential registry.
-		/// </summary>
-		public string SameAs { get; set; }
-
-		/// <summary>
 		/// the type of the entity must be provided if the Id was not provided. examples
 		/// ceterms:AssessmentProfile
 		/// ceterms:LearningOpportunityProfile
@@ -52,6 +46,12 @@ namespace RA.Models.Input
 		/// Name of the entity (required)
 		/// </summary>
 		public string Name { get; set; }
+
+		/// <summary>
+		/// If the entity described below does exist in the registry, use this SameAs property to relate the two. 
+		/// Provide a CTID(recommended) or a URI to the thing in the credential registry.
+		/// </summary>
+		public string SameAs { get; set; }
 
 		/// <summary>
 		/// Subject webpage of the entity (required)
@@ -136,7 +136,7 @@ namespace RA.Models.Input
 		public List<ConditionProfile> Recommends { get; set; } = new List<ConditionProfile>();
 		public List<ConditionProfile> EntryCondition { get; set; } = new List<ConditionProfile>();
 		//LearningOpportunity only
-		public QuantitativeValue CreditValue { get; set; } = new QuantitativeValue();
+		public ValueProfile CreditValue { get; set; } = new ValueProfile();
 		//
 		public List<DurationProfile> EstimatedDuration { get; set; } = new List<DurationProfile>();
 

@@ -12,6 +12,9 @@ namespace RA.Models.Input
     /// </summary>
     public class ConditionProfile
     {
+		/// <summary>
+		/// Constructor
+		/// </summary>
         public ConditionProfile()
         {
             EstimatedCost = new List<CostProfile>();
@@ -35,7 +38,7 @@ namespace RA.Models.Input
 
         /// <summary>
         /// Name of this condition
-        /// Required
+        /// Optional
         /// </summary>
         public string Name { get; set; }
         /// <summary>
@@ -52,7 +55,10 @@ namespace RA.Models.Input
         /// Alternately can provide a language map
         /// </summary>
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
-        public string SubjectWebpage { get; set; } //URL
+		/// <summary>
+		///  Webpage that describes this condition
+		/// </summary>
+		public string SubjectWebpage { get; set; } //URL
 
 		/// <summary>
 		/// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
@@ -77,14 +83,25 @@ namespace RA.Models.Input
 		/// A single condition or aspect of experience that refines the conditions under which the resource being described is applicable.
 		/// </summary>
 		public List<string> Condition { get; set; }
+		/// <summary>
+		/// Or use a LanguageMapList
+		/// </summary>
         public LanguageMapList Condition_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
-		/// Aug. 2019 - changed to be list of URIs. Use SubmissionOfDescription for text values.
+		/// Artifact to be submitted such as a transcript, portfolio, or an affidavit.
+		/// Aug. 2019 - changed to be list of URIs. 
+		/// Use SubmissionOfDescription for text values.
 		/// </summary>
 		public List<string> SubmissionOf { get; set; }
 
+		/// <summary>
+		/// Name, label, or description of an artifact to be submitted such as a transcript, portfolio, or an affidavit.
+		/// </summary>
 		public string SubmissionOfDescription { get; set; }
+		/// <summary>
+		/// Or use a LanguageMap
+		/// </summary>
 		public LanguageMap SubmissionOfDescription_Map { get; set; } = new LanguageMap();
 
 		/// <summary>

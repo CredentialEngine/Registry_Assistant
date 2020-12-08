@@ -76,8 +76,6 @@ namespace RA.Models.Input
 
 		}
 
-
-
 		#region *** Required Properties ***
 		/// <summary>
 		/// The type of organization is one of :

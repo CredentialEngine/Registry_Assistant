@@ -1,5 +1,8 @@
 ﻿namespace RA.Models.Input
 {
+	/// <summary>
+	/// Class for delete by CTID
+	/// </summary>
 	public class DeleteRequest 
 	{
         /// <summary>
@@ -19,6 +22,9 @@
 		public string Community { get; set; }
 	}
 
+	/// <summary>
+	/// Class for delete by EnvelopeId
+	/// </summary>
     public class EnvelopeDelete
     {
         /// <summary>

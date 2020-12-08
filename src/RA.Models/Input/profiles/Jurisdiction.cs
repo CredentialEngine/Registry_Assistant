@@ -14,11 +14,20 @@ namespace RA.Models.Input
 	/// </summary>
 	public class Jurisdiction
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public Jurisdiction()
 		{
 			JurisdictionException = new List<RAPlace>();
 		}
+		/// <summary>
+		/// Whether or not the credential is useful, applicable or recognized everywhere.
+		/// </summary>
 		public bool? GlobalJurisdiction { get; set; }
+		/// <summary>
+		/// Statement, or characterization for the Jurisdiction. 
+		/// </summary>
 		public string Description { get; set; }
 
 		/// <summary>
@@ -27,7 +36,9 @@ namespace RA.Models.Input
 		/// </summary>
 		public RAPlace MainJurisdiction { get; set; } = new RAPlace();
 
-
+		/// <summary>
+		/// Geographic or political region in which the credential is not formally recognized or an organization has no authority to act .
+		/// </summary>
 		public List<RAPlace> JurisdictionException { get; set; }
 	}
 

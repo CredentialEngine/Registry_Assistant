@@ -35,7 +35,6 @@ namespace RA.Models.Input
 
 			AccreditedBy = new List<Input.OrganizationReference>();
 			ApprovedBy = new List<Input.OrganizationReference>();
-			OfferedBy = new List<Input.OrganizationReference>();
 			RecognizedBy = new List<Input.OrganizationReference>();
 			RegulatedBy = new List<Input.OrganizationReference>();
 
@@ -96,7 +95,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Organization(s) that offer this resource
 		/// </summary>
-		public List<OrganizationReference> OfferedBy { get; set; }
+		public List<OrganizationReference> OfferedBy { get; set; } = new List<Input.OrganizationReference>();
 		#endregion
 
 		#region at least one of the following
@@ -121,7 +120,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Types of methods used to conduct the learning opportunity; select from an existing enumeration of such types.
 		/// Applied, Gaming, Laboratory, Lecture, Prerecorded, SelfPaced, Seminar, WorkBased
-		/// <see cref="https://credreg.net/ctdl/terms/LearningMethod#LearningMethod"/>
+		/// <see cref="https://credreg.net/ctdl/terms/LearningMethod"/>
 		/// </summary>
 		public List<string> LearningMethodType { get; set; }
 
@@ -166,7 +165,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Type of method used to conduct an assessment; select from an existing enumeration of such types.
 		/// assessMethod:Artifact, assessMethod:Exam, assessMethod:Performance
-		/// <see cref="https://credreg.net/ctdl/terms/AssessmentMethod#AssessmentMethod"/>
+		/// <see cref="https://credreg.net/ctdl/terms/AssessmentMethod"/>
 		/// </summary>
 		public List<string> AssessmentMethodType { get; set; } = new List<string>();
 
