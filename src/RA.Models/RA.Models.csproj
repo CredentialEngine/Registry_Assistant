@@ -90,8 +90,8 @@
     <Compile Include="Input\profiles\EntityReference.cs" />
     <Compile Include="Input\profiles\FinancialAssistanceProfile.cs" />
     <Compile Include="Input\profiles\FrameworkItem.cs" />
-    <Compile Include="Input\profiles\HelperClasses.cs" />
     <Compile Include="Input\profiles\HoldersProfile.cs" />
+    <Compile Include="Input\profiles\IdentifierValue.cs" />
     <Compile Include="Input\profiles\Job.cs" />
     <Compile Include="Input\profiles\Jurisdiction.cs" />
     <Compile Include="Input\profiles\LanguageMap.cs" />
@@ -115,6 +115,7 @@
     <Compile Include="Input\TransferValueProfileRequest.cs" />
     <Compile Include="JsonV2\Agent.cs" />
     <Compile Include="JsonV2\AssessmentProfile.cs" />
+    <Compile Include="JsonV2\BlankNode.cs" />
     <Compile Include="JsonV2\Competency.cs" />
     <Compile Include="JsonV2\CompetencyFramework.cs" />
     <Compile Include="JsonV2\ConceptScheme.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="JsonV2\GraphDocument.cs" />
     <Compile Include="JsonV2\HelpersClass.cs" />
     <Compile Include="JsonV2\HoldersProfile.cs" />
+    <Compile Include="JsonV2\IdentifierValue.cs" />
     <Compile Include="JsonV2\Job.cs" />
     <Compile Include="JsonV2\JsonLDDocument.cs" />
     <Compile Include="JsonV2\JurisdictionProfile.cs" />

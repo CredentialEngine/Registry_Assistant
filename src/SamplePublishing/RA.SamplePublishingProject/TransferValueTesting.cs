@@ -15,7 +15,20 @@ namespace RA.SamplePublishingProject
 			//using simple post
 			new PublishTransferValueProfile().PublishSimpleRecord();
 		}
+		[TestMethod]
+		public void PublishACEIntroductorySociologyTVP()
+		{
+			//
+			new ACETransferValues().ACEIntroductorySociologyTVP(true);
 
+			//PublishACEPrinciplesOfFinanceTVP();
+		}
+		[TestMethod]
+		public void PublishACEPrinciplesOfFinanceTVP()
+		{
+			//ACEPrinciplesOfFinanceTVP
+			new ACETransferValues().ACEPrinciplesOfFinanceTVP( true );
+		}
 		[TestMethod]
 		public void TestPublishTransferValue2()
 		{

@@ -1,18 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
 using RA.Models.Input;
-
-using InputEntity = RA.Models.Input.TransferValueProfile;
 
 namespace RA.SamplesForDocumentation
 {
@@ -65,7 +56,7 @@ namespace RA.SamplesForDocumentation
 			} );
 			myData.Identifier.Add( new IdentifierValue()
 			{
-				Name = "ACE Course Code",
+				IdentifierTypeName = "ACE Course Code",
 				IdentifierType = "Internal Code",   //Formal name or acronym of the identifier type
 				IdentifierValueCode = "0276"        //Alphanumeric string identifier of the entity
 			} );
@@ -107,6 +98,7 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "https://myOrganization.com",
 				Description = "While optional, a description is helpful."
 			};
+			transferValueFrom.OwnedBy = new List<OrganizationReference>();
 			transferValueFrom.OwnedBy.Add( ownedBy );
 
 			myData.TransferValueFrom.Add( transferValueFrom );
@@ -168,7 +160,7 @@ namespace RA.SamplesForDocumentation
 		/// </summary>
 		/// <param name="usingSimplePost"></param>
 		/// <returns></returns>
-		public string PublishTVPSameAsCredentialRecord( bool usingSimplePost = true )
+		public string PublishTVPSameAsRecord( bool usingSimplePost = true )
 		{
 			// Holds the result of the publish action
 			var result = "";
@@ -484,7 +476,7 @@ namespace RA.SamplesForDocumentation
 			// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
 			myData.Identifier.Add( new IdentifierValue()
 			{
-				Name = "ACE Course Code",
+				IdentifierTypeName = "ACE Course Code",
 				IdentifierType = "Internal Code",   //Formal name or acronym of the identifier type
 				IdentifierValueCode = "0276"        //Alphanumeric string identifier of the entity
 			} );

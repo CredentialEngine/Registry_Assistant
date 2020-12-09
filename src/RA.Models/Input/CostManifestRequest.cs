@@ -9,23 +9,19 @@ namespace RA.Models.Input
 			CostManifest = new CostManifest();
 		}
 		public CostManifest CostManifest { get; set; }
-
-		//public List<BlankNode> BlankNodes = new List<BlankNode>();
 	}
 
 	public class CostManifest
 	{
 		public CostManifest()
 		{
-			//OwningOrganization = new OrganizationReference();
 			EstimatedCost = new List<CostProfile>();
 		}
+		/// <summary>
+		/// Required
+		/// </summary>
+		public string Ctid { get; set; }
 
-        public string Name { get; set; }
-        /// <summary>
-        /// Alternately can provide a language map
-        /// </summary>
-        public LanguageMap Name_Map { get; set; } = new LanguageMap();
         /// <summary>
         /// Description 
         /// Required
@@ -36,24 +32,31 @@ namespace RA.Models.Input
         /// </summary>
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-        public string StartDate { get; set; }
-		public string EndDate { get; set; }
-
-		public string Ctid { get; set; }
 		/// <summary>
 		/// URL for cost details
+		/// Required
 		/// </summary>
 		public string CostDetails { get; set; }
+
+		/// <summary>
+		/// Cost Manifest Name
+		/// Recommended
+		/// </summary>
+		public string Name { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		public string StartDate { get; set; }
+		public string EndDate { get; set; }
 
 		/// <summary>
 		/// Organization that owns this CostManifest
 		/// </summary>
 		public OrganizationReference CostManifestOf { get; set; } = new OrganizationReference();
-        //public OrganizationReference OwningOrganization
-        //{
-        //    get { return CostManifestOf; }
-        //    set { CostManifestOf = value; }
-        //}
+		/// <summary>
+		/// List of cost profiles
+		/// </summary>
         public List<CostProfile> EstimatedCost { get; set; }
 	}
 }

@@ -26,6 +26,13 @@ namespace RA.Models.JsonV2.QData
 		[JsonProperty( "ceterms:ctid" )]
 		public string Ctid { get; set; }
 
+
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap Name { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
+
 		/// <summary>
 		/// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
 		/// <see cref="https://credreg.net/ctdl/terms/administrationProcess#administrationProcess"/>
@@ -33,8 +40,6 @@ namespace RA.Models.JsonV2.QData
 		[ JsonProperty( PropertyName = "ceterms:administrationProcess" )]
 		public List<ProcessProfile> AdministrationProcess { get; set; } 
 
-		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap Description { get; set; }
 
 
 		/// <summary>
@@ -52,8 +57,6 @@ namespace RA.Models.JsonV2.QData
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:name" )]
-		public LanguageMap Name { get; set; } 
 
 		/// <summary>
 		/// Authoritative source of an entity's information.

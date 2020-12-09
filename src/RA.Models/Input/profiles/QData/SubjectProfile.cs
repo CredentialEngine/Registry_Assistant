@@ -23,7 +23,7 @@ namespace RA.Models.Input.profiles.QData
 		/// Type of subject included or excluded from the data set.
 		/// qdata:subjectType	
 		/// skos:Concept
-		/// <see cref="https://credreg.net/qdata/terms/SubjectCategory#SubjectCategory"/>
+		/// <see cref="https://credreg.net/qdata/terms/SubjectCategory"/>
 		/// subjectCategory:AssessmentCompleter
 		/// subjectCategory:CredentialHolder
 		/// subjectCategory:CredentialSeeker

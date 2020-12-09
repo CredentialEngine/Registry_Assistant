@@ -35,7 +35,12 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "schema:maxValue" )]
 		public decimal MaxValue { get; set; }
 
-
+		/// <summary>
+		/// A percentage for this purpose. 
+		/// Expected input is as a percentage of 100 (and can be greater, or negative). Examples: 95.2, 11, etc.
+		/// Do not use if providing any of value, minimum and maximum value.
+		/// qdata:percentage
+		/// </summary>
 		[JsonProperty( "qdata:percentage" )]
 		public decimal Percentage { get; set; }
 

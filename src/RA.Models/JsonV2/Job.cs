@@ -95,7 +95,7 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// <see cref="http://purl.org/ctdl/terms/identifier"/>
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:identifier" )]
 		public List<IdentifierValue> Identifier { get; set; }

@@ -238,6 +238,10 @@ namespace RA.SamplesForDocumentation
 		public bool PublishRequest( AssistantRequestHelper request )
 		{
 			string serviceUri = GetAppKeyValue( "registryAssistantApi" );
+			if (System.DateTime.Now.Day==8)
+			{
+				//serviceUri = "https://localhost:44312/";
+			}
 			request.EndpointUrl = serviceUri + string.Format( "{0}/{1}", request.EndpointType, request.RequestType );
 
 			return PostRequest( request );

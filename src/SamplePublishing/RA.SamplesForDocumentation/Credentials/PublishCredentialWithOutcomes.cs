@@ -18,8 +18,7 @@ namespace RA.SamplesForDocumentation
 	{
 		public bool CredentialWithHoldersProfile( string requestType = "format" )
 		{
-			//Holds the result of the publish action
-			var result = "";
+			
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -37,7 +36,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new Credential()
 			{
 				Name = "My Credential With Holders Profile",
-				Description = "This is some text that describes this credential.",
+				Description = "This credential has a HoldersProfile with all data provided for the DataProfile.",
 				Ctid = myCTID,
 				SubjectWebpage = "https://example.com/?t=credentialwhp",
 				CredentialType = "ceterms:Certification",
@@ -65,7 +64,7 @@ namespace RA.SamplesForDocumentation
 			//Preferably, use method that will exclude null/empty properties
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 			//call the Assistant API
-			//result = new SampleServices().SimplePost( "credential", requestType, payload, apiKey );
+			//var result = new SampleServices().SimplePost( "credential", requestType, payload, apiKey );
 
 			SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
 			{

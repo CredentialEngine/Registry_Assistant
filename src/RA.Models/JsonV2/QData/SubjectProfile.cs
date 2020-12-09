@@ -17,11 +17,12 @@ namespace RA.Models.JsonV2.QData
 		[JsonProperty( "@type" )]
 		public string Type { get; set; } = "qdata:SubjectProfile";
 
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap Name { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:name" )]
-		public LanguageMap Name { get; set; }
 
 		/// <summary>
 		/// Type of subject included or excluded from the data set.

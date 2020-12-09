@@ -139,14 +139,14 @@ namespace RA.Models.Input
 		public List<string> HasTopConcept { get; set; } = new List<string>();
 
 		//public List<string> HistoryNote { get; set; } = new List<string>();
-		/// <summary>
-		/// Concept Scheme history? not included anymore? 
-		/// </summary>
+		///// <summary>
+		///// Concept Scheme history? not included anymore? 
+		///// </summary>
 		//public string HistoryNote { get; set; }
 
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
+		///// <summary>
+		///// Alternately can provide a language map
+		///// </summary>
 		//public LanguageMap HistoryNote_Map { get; set; } = new LanguageMap();
 
 		/// <summary>

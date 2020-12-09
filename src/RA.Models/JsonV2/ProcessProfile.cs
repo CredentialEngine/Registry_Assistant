@@ -48,7 +48,10 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:externalInputType" )]
         public List<CredentialAlignmentObject> ExternalInputType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:processFrequency" )]
+		[JsonProperty( PropertyName = "qdata:dataCollectionMethodType" )]
+		public List<CredentialAlignmentObject> DataCollectionMethodType { get; set; }
+		
+		[ JsonProperty( PropertyName = "ceterms:processFrequency" )]
         public LanguageMap ProcessFrequency { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:processingAgent" )]

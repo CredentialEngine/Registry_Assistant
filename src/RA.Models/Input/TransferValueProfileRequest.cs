@@ -20,7 +20,9 @@ namespace RA.Models.Input
 		/// List of TransferValueProfiles to publish
 		/// </summary>
 		public TransferValueProfile TransferValueProfile { get; set; } = new TransferValueProfile();
-
+		/// <summary>
+		/// Proposed: use actual learning opportunity classes rather than entityReference
+		/// </summary>
 		public List<LearningOpportunity> TargetLearningOpportunities { get; set; } = new List<LearningOpportunity>();
 	}
 
@@ -95,11 +97,10 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
-		/// List of CTIDs for competencies or frameworks
-		/// Required?
+		/// List of CTIDs or should it be entityReferences?
 		/// ceasn:derivedFrom
 		/// </summary>
-		public List<string> DerivedFrom { get; set; } = new List<string>();
+		public List<EntityReference> DerivedFrom { get; set; } = new List<EntityReference>();
 
 
 		/// <summary>
@@ -153,17 +154,27 @@ namespace RA.Models.Input
 
 		/// <summary>
 		///  Resource that provides the transfer value described by this resource, according to the entity providing this resource.
-		/// <see cref="https://credreg.net/registry/assistant#EntityReference"/>
+		///  2020-12-07 The data type was changed to object. The handled CTDL classes are: 
+		///  - AssessmentProfile
+		///  - LearningOpportunityProfile
+		///  - All credential classes
 		/// </summary>
-		public List<EntityReference> TransferValueFrom { get; set; } = new List<EntityReference>();
+		public List<object> TransferValueFrom { get; set; } = new List<object>();
 
 		/// <summary>
 		///  Resource that accepts the transfer value described by this resource, according to the entity providing this resource.
 		/// <see cref="https://credreg.net/registry/assistant#EntityReference"/>
 		/// </summary>
-		public List<EntityReference> TransferValueFor { get; set; } = new List<EntityReference>();
+		public List<object> TransferValueFor { get; set; } = new List<object>();
 
+	}
 
+	/// <summary>
+	/// List of learning opportunities
+	/// </summary>
+	public class TransferValueLearningOpportunty : LearningOpportunity
+	{
+		//
 	}
 
 }

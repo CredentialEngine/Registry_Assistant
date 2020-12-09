@@ -78,6 +78,7 @@
     <Compile Include="SupportingData\InstructionalProgram_CIP.cs" />
     <Compile Include="SupportingData\Jurisdictions.cs" />
     <Compile Include="SupportingData\Occupations.cs" />
+    <Compile Include="TransferValueProfiles\ACETransferValues.cs" />
     <Compile Include="TransferValueProfiles\PublishTransferValueProfile.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -27,9 +27,21 @@ namespace RA.Models.JsonV2.QData
 		[JsonProperty( "@id" )]
 		public string CtdlId { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap Name { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:startDate" )]
+		public string StartDate { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:endDate" )]
+		public string EndDate { get; set; }
+
 		/// <summary>
 		/// Attributes of the data set.
-		/// TODO - change to blank node
+		/// URI to blank node
 		/// qdata:DataProfile
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:dataAttributes" )]
@@ -49,19 +61,6 @@ namespace RA.Models.JsonV2.QData
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:dataSourceCoverageType" )]
 		public List<CredentialAlignmentObject> DataSourceCoverageType { get; set; }
-		//public string DataSourceCoverageType { get; set; }
 
-
-		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap Description { get; set; }
-
-		[JsonProperty( PropertyName = "ceterms:name" )]
-		public LanguageMap Name { get; set; }
-
-		[JsonProperty( PropertyName = "ceterms:startDate" )]
-		public string StartDate { get; set; }
-
-		[JsonProperty( PropertyName = "ceterms:endDate" )]
-		public string EndDate { get; set; }
 	}
 }

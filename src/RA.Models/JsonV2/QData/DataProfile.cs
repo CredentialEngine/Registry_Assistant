@@ -26,6 +26,10 @@ namespace RA.Models.JsonV2.QData
 		[JsonProperty( "@id" )]
 		public string CtdlId { get; set; }
 
+
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
+
 		/// <summary>
 		/// Describes whether and how the provided earnings have been adjusted for factors such as inflation, participant demographics and economic conditions.
 		/// </summary>
@@ -71,8 +75,6 @@ namespace RA.Models.JsonV2.QData
 		[JsonProperty( PropertyName = "qdata:demographicEmploymentRate" )]
 		public List<QuantitativeValue> DemographicEmploymentRate { get; set; } 
 
-		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap Description { get; set; }
 
 		/// <summary>
 		/// Reference to an entity describing aggregate earnings.

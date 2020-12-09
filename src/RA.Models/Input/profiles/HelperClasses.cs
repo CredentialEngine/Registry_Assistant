@@ -9,10 +9,11 @@ namespace RA.Models.Input
 
 	/// <summary>
 	/// Alphanumeric Identifier value.
+	/// <see cref="https://credreg.net/ctdl/terms/TransferValueProfile"/>
 	/// </summary>
 	public class IdentifierValue
 	{
-		public string Name { get; set; }
+		public string IdentifierTypeName { get; set; }
 
 		public string Description { get; set; }
         public LanguageMap Description_Map { get; set; } = new LanguageMap();

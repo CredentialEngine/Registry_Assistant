@@ -8,9 +8,8 @@ namespace RA.Models.Input
 {
     /// <summary>
     /// CostProfile class
-    /// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
+    /// 2018-09-02 Where LanguageMap alternates are available, only enter one (string or language map). The system will check the string version first. 
     /// </summary>
-    //public class CostProfile : ICloneable
     public class CostProfile 
 	{
         /// <summary>
@@ -85,6 +84,9 @@ namespace RA.Models.Input
 		/// Optional
 		/// </summary>
 		public List<string> Condition { get; set; }
+		/// <summary>
+		/// Alternately use a LanguageMapList for the conditions
+		/// </summary>
         public LanguageMapList Condition_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
@@ -123,6 +125,8 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// List of Audience Types
+		/// audience:Citizen audience:CurrentMilitary audience:CurrentMilitaryDependent audience:CurrentMilitarySpouse audience:CurrentStudent audience:FormerMilitary audience:FormerMilitaryDependent audience:FormerMilitarySpouse audience:FormerStudent audience:FullTime audience:Member audience:NonCitizen audience:NonMember audience:NonResident audience:PartTime audience:PrivateEmployee audience:PublicEmployee audience:Resident
+		/// <see cref="https://credreg.net/ctdl/terms/Audience"/>
 		/// </summary>
 		public List<string> AudienceType { get; set; }
 
@@ -130,53 +134,15 @@ namespace RA.Models.Input
 		/// Payment Pattern
 		/// </summary>
 		public string PaymentPattern { get; set; }
+		/// <summary>
+		/// Alternately use a LanguageMap for PaymentPattern.
+		/// </summary>
         public LanguageMap PaymentPattern_Map { get; set; } = new LanguageMap();
         /// <summary>
         /// Price for this cost - optional
         /// </summary>
         public decimal Price { get; set; }
 
-
-
-
 	}
-	/// <summary>
-	/// Version of Cost Profile where all cost items are flattened into a single record.
-	/// That is:
-	/// - if there is a single cost profile with three costs
-	/// - Output will be three cost profiles with the cost profile specific properties repeated for each cost profile item
-	/// </summary>
-	public class CostProfileFlattened : CostProfile
-	{
-		public CostProfileFlattened()
-		{
-			ResidencyType = new List<string>();
-			AudienceType = new List<string>();
-		}
-		/// <summary>
-		/// Must be a valid CTDL cost type
-		/// </summary>
-		public string DirectCostType { get; set; }
-		/// <summary>
-		/// List of Residency items
-		/// </summary>
-		public List<string> ResidencyType { get; set; }
-
-		/// <summary>
-		/// List of Audience Types
-		/// </summary>
-		public List<string> AudienceType { get; set; }
-
-		/// <summary>
-		/// Price for this cost - optional
-		/// </summary>
-		public decimal Price { get; set; }
-
-		/// <summary>
-		/// Payment Pattern
-		/// </summary>
-		public string PaymentPattern { get; set; }
-	}
-
 
 }

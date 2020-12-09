@@ -62,7 +62,7 @@ namespace RA.Models.JsonV2
 		public string CodedNotation { get; set; }
 		//
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
-		public List<QuantitativeValue> CreditValue { get; set; } = null;
+		public List<ValueProfile> CreditValue { get; set; } = null;
 		[JsonProperty( PropertyName = "ceterms:estimatedDuration" )]
 		public List<DurationProfile> EstimatedDuration { get; set; }
 
