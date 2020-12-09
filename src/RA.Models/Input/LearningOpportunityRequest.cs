@@ -18,7 +18,6 @@ namespace RA.Models.Input
 	{
 		public LearningOpportunity()
 		{
-
 			Subject = new List<string>();
 			Keyword = new List<string>();
 			DeliveryType = new List<string>();
@@ -62,6 +61,10 @@ namespace RA.Models.Input
 			IsPartOfLearningOpportunity = new List<EntityReference>();
 			VersionIdentifier = new List<IdentifierValue>();
 		}
+		/// <summary>
+		/// Helper property for use with blank nodes
+		/// </summary>
+		public string Type { get; set; } = "LearningOpportunityProfile";
 
 
 

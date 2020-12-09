@@ -21,7 +21,7 @@ namespace RA.SamplePublishingProject
 			//
 			new ACETransferValues().ACEIntroductorySociologyTVP(true);
 
-			//PublishACEPrinciplesOfFinanceTVP();
+			PublishACEPrinciplesOfFinanceTVP();
 		}
 		[TestMethod]
 		public void PublishACEPrinciplesOfFinanceTVP()

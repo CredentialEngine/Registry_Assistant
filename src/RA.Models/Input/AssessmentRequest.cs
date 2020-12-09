@@ -70,8 +70,10 @@ namespace RA.Models.Input
 			VersionIdentifier = new List<IdentifierValue>();
 
 		}
-
-
+		/// <summary>
+		/// Helper property for use with blank nodes
+		/// </summary>
+		public string Type { get; set; } = "AssessmentProfile";
 
 		#region *** Required Properties ***
 		public string Name { get; set; }

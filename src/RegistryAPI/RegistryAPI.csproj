@@ -254,6 +254,10 @@
     <Content Include="Scripts\jquery-3.2.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\Github\Registry_Assistant\src\RA.Services\RA.Services.csproj">
+      <Project>{d1b78084-ead5-4b68-9ef2-99c068859fe9}</Project>
+      <Name>RA.Services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CredentialRegistry\CredentialRegistry.csproj">
       <Project>{ec0eb03d-04ff-449a-971b-acc4bbeefb2a}</Project>
       <Name>CredentialRegistry</Name>
@@ -265,10 +269,6 @@
     <ProjectReference Include="..\RA.Models\RA.Models.csproj">
       <Project>{3f55c8eb-5ccd-4eaf-ac31-691ee2681c85}</Project>
       <Name>RA.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RA.Services\RA.Services.csproj">
-      <Project>{d1b78084-ead5-4b68-9ef2-99c068859fe9}</Project>
-      <Name>RA.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

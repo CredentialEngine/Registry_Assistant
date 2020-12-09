@@ -157,24 +157,18 @@ namespace RA.Models.Input
 		///  2020-12-07 The data type was changed to object. The handled CTDL classes are: 
 		///  - AssessmentProfile
 		///  - LearningOpportunityProfile
-		///  - All credential classes
+		///  - All credential classes (pending)
 		/// </summary>
 		public List<object> TransferValueFrom { get; set; } = new List<object>();
 
 		/// <summary>
 		///  Resource that accepts the transfer value described by this resource, according to the entity providing this resource.
-		/// <see cref="https://credreg.net/registry/assistant#EntityReference"/>
+		///  2020-12-07 The data type was changed to object. The handled CTDL classes are: 
+		///  - AssessmentProfile
+		///  - LearningOpportunityProfile
+		///  - All credential classes (pending)
 		/// </summary>
 		public List<object> TransferValueFor { get; set; } = new List<object>();
 
 	}
-
-	/// <summary>
-	/// List of learning opportunities
-	/// </summary>
-	public class TransferValueLearningOpportunty : LearningOpportunity
-	{
-		//
-	}
-
 }

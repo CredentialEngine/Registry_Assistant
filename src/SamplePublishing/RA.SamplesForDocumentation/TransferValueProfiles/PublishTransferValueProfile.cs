@@ -75,14 +75,14 @@ namespace RA.SamplesForDocumentation
 			//==============	transfer value from ===================================================
 			//Resource that provides the transfer value described by this resource, according to the entity providing this resource.
 			//A list of entity references. If the CTID is known, then just provide it.
-			myData.TransferValueFrom.Add( new EntityReference()
-			{
-				CTID = "ce-476c1aca-6cd9-4dbe-ba91-16960bfb19ac"
-			} );
+			//myData.TransferValueFrom.Add( new EntityReference()
+			//{
+			//	CTID = "ce-476c1aca-6cd9-4dbe-ba91-16960bfb19ac"
+			//} );
 			//If not provided as much information as is available
 			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
 			//NOTE: you must provide owned by or offered by with TransferValueFrom or TransferValueFor
-			var transferValueFrom = new EntityReference()
+			var transferValueFrom = new LearningOpportunity()
 			{
 				Type = "LearningOpportunityProfile",
 				Name = "name of the learning opportunity",
@@ -209,7 +209,7 @@ namespace RA.SamplesForDocumentation
 			//NOTE: see separate example that uses SameAs to equate a learning opportunity in the registry with a learning opportunity described in a transfer value from (or for)
 			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
 			//NOTE: you must provide owned by or offered by with TransferValueFrom or TransferValueFor
-			var transferValueFrom = new EntityReference()
+			var transferValueFrom = new LearningOpportunity()
 			{
 				Type = "LearningOpportunityProfile",
 				Name = "name of the learning opportunity",
@@ -378,7 +378,7 @@ namespace RA.SamplesForDocumentation
 			} );
 			//If not provided as much information as is available
 			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
-			myData.TransferValueFrom.Add( new EntityReference()
+			myData.TransferValueFrom.Add( new LearningOpportunity()
 			{
 				Type = "LearningOpportunityProfile",
 				Name = "name of the learning opportunity",
@@ -445,7 +445,7 @@ namespace RA.SamplesForDocumentation
 			} );
 			//If not provided as much information as is available
 			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
-			myData.TransferValueFrom.Add( new EntityReference()
+			myData.TransferValueFrom.Add( new LearningOpportunity()
 			{
 				Type = "LearningOpportunityProfile",
 				Name = "name of the learning opportunity",
@@ -523,7 +523,7 @@ namespace RA.SamplesForDocumentation
 			//==============	transfer value from ===========================================
 			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
 
-			var learningOpportunity = new EntityReference()
+			var learningOpportunity = new LearningOpportunity()
 			{
 				Type = "LearningOpportunityProfile",
 				Name = "Environmental Challenges And Solutions",
@@ -563,9 +563,9 @@ namespace RA.SamplesForDocumentation
 			return myData;
 		}
 
-		private EntityReference AddTransferFromLearningOpportunity()
+		private LearningOpportunity AddTransferFromLearningOpportunity()
 		{
-			EntityReference er = new EntityReference()
+			var er = new LearningOpportunity()
 			{
 				Type = "LearningOpportunityProfile",
 				Name = "Packet Switched Networks",

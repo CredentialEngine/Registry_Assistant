@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistryAPI", "RegistryAPI\RegistryAPI.csproj", "{FAD84004-6AD6-404C-AA51-FA0A643D8C78}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RA.Models", "RA.Models\RA.Models.csproj", "{3F55C8EB-5CCD-4EAF-AC31-691EE2681C85}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{5AF99218-BBD8-48C4-BBDE-EFF5F35B4E05}"
@@ -36,18 +34,6 @@ Global
 		Test|Any CPU = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FAD84004-6AD6-404C-AA51-FA0A643D8C78}.Azure|Any CPU.ActiveCfg = Release|Any CPU
-		{FAD84004-6AD6-404C-AA51-FA0A643D8C78}.Azure|Any CPU.Build.0 = Release|Any CPU
-		{FAD84004-6AD6-404C-AA51-FA0A643D8C78}.ctiTest|Any CPU.ActiveCfg = Test|Any CPU
-		{FAD84004-6AD6-404C-AA51-FA0A643D8C78}.ctiTest|Any CPU.Build.0 = Test|Any CPU
-		{FAD84004-6AD6-404C-AA51-FA0A643D8C78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FAD84004-6AD6-404C-AA51-FA0A643D8C78}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FAD84004-6AD6-404C-AA51-FA0A643D8C78}.Github|Any CPU.ActiveCfg = Test|Any CPU
-		{FAD84004-6AD6-404C-AA51-FA0A643D8C78}.Github|Any CPU.Build.0 = Test|Any CPU
-		{FAD84004-6AD6-404C-AA51-FA0A643D8C78}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FAD84004-6AD6-404C-AA51-FA0A643D8C78}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FAD84004-6AD6-404C-AA51-FA0A643D8C78}.Test|Any CPU.ActiveCfg = Test|Any CPU
-		{FAD84004-6AD6-404C-AA51-FA0A643D8C78}.Test|Any CPU.Build.0 = Test|Any CPU
 		{3F55C8EB-5CCD-4EAF-AC31-691EE2681C85}.Azure|Any CPU.ActiveCfg = Azure|Any CPU
 		{3F55C8EB-5CCD-4EAF-AC31-691EE2681C85}.Azure|Any CPU.Build.0 = Azure|Any CPU
 		{3F55C8EB-5CCD-4EAF-AC31-691EE2681C85}.ctiTest|Any CPU.ActiveCfg = Release|Any CPU

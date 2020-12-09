@@ -40,7 +40,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new TransferValueProfile()
 			{
 				Name = "Introductory Sociology",
-				Description = "Credit is recommended for candidates scoring 50 and above. Updated",
+				Description = "Credit is recommended for candidates scoring 50 and above. Updated 12-08b",
 				Ctid = myCTID,
 				SubjectWebpage = "https://www.acenet.edu/National-Guide/Pages/Course.aspx?org=College%20Board%27s%20College-Level%20Examination%20Program%20(CLEP)&cid=fe05b1f6-84c4-ea11-a812-000d3a33232a",
 				StartDate = "2018-12-01",
@@ -75,7 +75,7 @@ namespace RA.SamplesForDocumentation
 			//If not provided as much information as is available
 			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
 			//NOTE: you must provide owned by or offered by with TransferValueFrom or TransferValueFor
-			var transferValueFrom = new EntityReference()
+			var transferValueFrom = new Assessment()
 			{
 				Type = "AssessmentProfile",
 				Name = "Introductory Sociology",
@@ -215,7 +215,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new TransferValueProfile()
 			{
 				Name = "Principles of Finance",
-				Description = "NOTE: Credit is recommended for candidates scoring 50 and above.",
+				Description = "NOTE: Credit is recommended for candidates scoring 50 and above. Updated 12-08b",
 				Ctid = myCTID,
 				SubjectWebpage = "https://www.acenet.edu/National-Guide/Pages/Course.aspx?org=SOPHIA+Learning%2c+LLC&cid=6bb6586f-94c4-ea11-a812-000d3a378a3a",
 				StartDate = "2020-06-01",
@@ -249,7 +249,7 @@ namespace RA.SamplesForDocumentation
 			//If not provided as much information as is available
 			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
 			//NOTE: you must provide owned by or offered by with TransferValueFrom or TransferValueFor
-			var transferValueFrom = new EntityReference()
+			var transferValueFrom = new LearningOpportunity()
 			{
 				Type = "LearningOpportunityProfile",
 				Name = "Principles of Finance",

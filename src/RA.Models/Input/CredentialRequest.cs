@@ -25,20 +25,17 @@ namespace RA.Models.Input
 		public Credential Credential { get; set; }
 
 		/// <summary>
-		/// SANDBOX ONLY - NOT FOR VALID IN PRODUCTION
 		/// Entity describing aggregate credential holder earnings data.
 		/// </summary>
 		public List<EarningsProfile> Earnings { get; set; } = new List<EarningsProfile>();
 
 		/// <summary>
-		/// SANDBOX ONLY - NOT FOR VALID IN PRODUCTION
 		/// Entity that describes employment outcomes and related statistical information for a given credential.
 		/// </summary>
 		public List<EmploymentOutcomeProfile> EmploymentOutcome { get; set; } = new List<EmploymentOutcomeProfile>();
 
 
 		/// <summary>
-		/// SANDBOX ONLY - NOT FOR VALID IN PRODUCTION
 		/// Entity describing the count and related statistical information of holders of a given credential.
 		/// </summary>
 		public List<HoldersProfile> HoldersProfile { get; set; } = new List<HoldersProfile>();
@@ -122,10 +119,18 @@ namespace RA.Models.Input
 			RevocationProcess = new List<ProcessProfile>();
 
 		}
+		/// <summary>
+		/// Helper property for use with blank nodes
+		/// </summary>
+		public string Type { get; set; } = "Credential";
 
 
 		#region *** Required Properties ***
 
+		/// <summary>
+		/// The credential type as defined in CTDL
+		/// </summary>
+		public string CredentialType { get; set; }
 
 		/// <summary>
 		/// Name of this credential
@@ -150,11 +155,6 @@ namespace RA.Models.Input
 		/// Organization that owns this credential
 		/// </summary>
 		public List<OrganizationReference> OwnedBy { get; set; }
-
-		/// <summary>
-		/// The credential type as defined in CTDL
-		/// </summary>
-		public string CredentialType { get; set; }
 
 		/// <summary>
 		/// The status type of this credential. 
