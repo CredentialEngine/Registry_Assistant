@@ -40,7 +40,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new TransferValueProfile()
 			{
 				Name = "Introductory Sociology",
-				Description = "Credit is recommended for candidates scoring 50 and above. Updated 12-08b",
+				Description = "Credit is recommended for candidates scoring 50 and above.",
 				Ctid = myCTID,
 				SubjectWebpage = "https://www.acenet.edu/National-Guide/Pages/Course.aspx?org=College%20Board%27s%20College-Level%20Examination%20Program%20(CLEP)&cid=fe05b1f6-84c4-ea11-a812-000d3a33232a",
 				StartDate = "2018-12-01",
@@ -129,52 +129,79 @@ namespace RA.SamplesForDocumentation
 		public List<CredentialAlignmentObject> AssignIntroductorySociologyCompetencies()
 		{
 			var frameworkName = "ACE - Introductory Sociology Skills Measured";
+			var frameworkCTID = "ce-85ea2bf0-b0a3-422c-9074-14f2efe51480";
+			var targetUrl = "https://sandbox.credentialengineregistry.org/resources/";
+
 			var output = new List<CredentialAlignmentObject>()
 			{
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-f53c9247-9775-4186-a1f1-edd0a965edeb",
 					TargetNodeName="Identification of specific names, facts, and concepts from sociological literature"
 				},
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-7351578b-f8d3-4ca6-8ff5-1818dd4092db",
 					TargetNodeName="Understanding of relationships between concepts, empirical generalizations, and theoretical propositions of sociology"
 				},
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
-					TargetNodeName="Understanding of the methods by which sociological relationships are established; application of concepts, propositions, and methods to hypothetical situations"
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-2b3b27a9-e42c-4021-bb7c-178766320134",                   
+					TargetNodeName="Understanding of the methods by which sociological relationships are established; "
 				},
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-6c4d0738-cb85-4263-badd-78ed1437b465",
+					TargetNodeName="application of concepts, propositions, and methods to hypothetical situations"
+				},
+				new CredentialAlignmentObject()
+				{
+					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-ec073a6d-ce14-4e21-a548-bcb9a5d5bb24",                   
 					TargetNodeName="Interpretation of tables and charts"
 				},
 
 				new CredentialAlignmentObject()
 				{
-					FrameworkName=frameworkName,
+					FrameworkName=frameworkName, Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-1cfa68c0-5ad5-483b-ad8a-e622f33d4a1a",                   
 					TargetNodeName="institutions", Weight=.2M
 				},
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-30c840c0-2978-49b9-9044-d74721c827c1",                   
 					TargetNodeName="social patterns", Weight=.1M
 				},
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-5d0cbcee-ef29-46fc-a8e4-b260cb737d3e",                   
 					TargetNodeName="social process", Weight=.25M
 				},
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-f7b31a05-4b6d-47f6-b001-1c7ad32ad6d1",                   
 					TargetNodeName="social stratification (process and structure)", Weight=.25M
 				},
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-90311565-e23b-40ec-8927-e1d9d04b599c",                   
 					TargetNodeName="the socialogical perspective", Weight=.2M
 				}
 			};
@@ -215,7 +242,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new TransferValueProfile()
 			{
 				Name = "Principles of Finance",
-				Description = "NOTE: Credit is recommended for candidates scoring 50 and above. Updated 12-08b",
+				Description = "NOTE: Credit is recommended for candidates scoring 50 and above.",
 				Ctid = myCTID,
 				SubjectWebpage = "https://www.acenet.edu/National-Guide/Pages/Course.aspx?org=SOPHIA+Learning%2c+LLC&cid=6bb6586f-94c4-ea11-a812-000d3a378a3a",
 				StartDate = "2020-06-01",
@@ -344,36 +371,50 @@ namespace RA.SamplesForDocumentation
 		public List<CredentialAlignmentObject> AssignPrinciplesFinanceCompetencies()
 		{
 			var frameworkName = "ACE - Principles of Finance Learning Outcomes";
+			var frameworkCTID = "ce-d3913e58-b578-42be-8c8e-a55c0b66f5ab";
+			var targetUrl = "https://sandbox.credentialengineregistry.org/resources/";
 			var output = new List<CredentialAlignmentObject>()
 			{
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-f3984fc3-4b1f-433b-91a1-d5ad81ed7ca9",
 					TargetNodeName="describe the operating environment of the firm, the role of financial institutions, and the structure of the capital markets and explain their impact on the financial performance of the firm"
 				},
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-581bac7e-a735-4755-a4cc-313cd705b986",                 
 					TargetNodeName="interpret financial statements and financial ratios"
 				},
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-49ce65e5-132e-4430-8eb0-4ff06ec451eb",                 
 					TargetNodeName="explain the time value of money and calculate future value and present value for single and multiple cash flows"
 				},
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-82339b05-b49f-4fa4-b0d8-b37d054a420f",                 
 					TargetNodeName="describe the characteristics of capital market instruments including stocks, bonds, and money market instruments"
 				},
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-faa89f86-7a55-4ee5-866e-91609a54cd1d",                 
 					TargetNodeName="explain the capital budgeting process and the basic elements of working capital management"
 				},
 				new CredentialAlignmentObject()
 				{
 					FrameworkName=frameworkName,
+					Framework= targetUrl + frameworkCTID,
+					TargetNode = targetUrl + "ce-07428927-1794-40ed-b9b7-9e0cffc458bb",                 
 					TargetNodeName="describe the sources of long-term capital and its importance to sustaining operations"
 				}
 			};

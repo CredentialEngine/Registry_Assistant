@@ -40,7 +40,7 @@ namespace RA.Models.Input
 		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a credential, learning opportunity competency, or assessment recognizes the entity in transactions with the external environment (e.g., in verifiable claims involving a credential).
 		/// required
 		/// </summary>
-		public string Ctid { get; set; }
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// A competency framework or competency from which this competency framework or competency is aligned.

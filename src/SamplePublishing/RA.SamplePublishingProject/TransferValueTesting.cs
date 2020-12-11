@@ -15,20 +15,7 @@ namespace RA.SamplePublishingProject
 			//using simple post
 			new PublishTransferValueProfile().PublishSimpleRecord();
 		}
-		[TestMethod]
-		public void PublishACEIntroductorySociologyTVP()
-		{
-			//
-			new ACETransferValues().ACEIntroductorySociologyTVP(true);
 
-			PublishACEPrinciplesOfFinanceTVP();
-		}
-		[TestMethod]
-		public void PublishACEPrinciplesOfFinanceTVP()
-		{
-			//ACEPrinciplesOfFinanceTVP
-			new ACETransferValues().ACEPrinciplesOfFinanceTVP( true );
-		}
 		[TestMethod]
 		public void TestPublishTransferValue2()
 		{
@@ -45,5 +32,36 @@ namespace RA.SamplePublishingProject
 			//using better post with details
 			new PublishTransferValueProfile().PublishList( false );
 		}
+
+
+		#region ACE
+		[TestMethod]
+		public void PublishACEIntroductorySociologyTVP()
+		{
+			//
+			new ACETransferValues().ACEIntroductorySociologyTVP( true );
+
+			PublishACEPrinciplesOfFinanceTVP();
+		}
+		[TestMethod]
+
+
+		public void PublishACEPrinciplesOfFinanceTVP()
+		{
+			//
+			new ACETransferValues().ACEPrinciplesOfFinanceTVP( true );
+		}
+		[TestMethod]
+		public void PublishACEPrinFinCompetencyamework()
+		{
+			//new PublishCompetencyFrameworks().PublishACEPrinFin( true );
+			//
+			new PublishCompetencyFrameworks().PublishACEIntroductorySociology( true );
+
+			new ACETransferValues().ACEIntroductorySociologyTVP( true );
+
+			new ACETransferValues().ACEPrinciplesOfFinanceTVP( true );
+		}
+		#endregion
 	}
 }
