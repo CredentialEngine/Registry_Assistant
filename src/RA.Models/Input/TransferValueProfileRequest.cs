@@ -74,7 +74,7 @@ namespace RA.Models.Input
 		/// Globally unique Credential Transparency Identifier (CTID)
 		/// Required
 		/// </summary>
-		public string Ctid { get; set; }
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// Name or title of the resource.

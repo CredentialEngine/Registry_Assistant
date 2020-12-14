@@ -35,7 +35,11 @@ namespace RA.Models.Input
 		public Pathway(){}
 
 		#region *** Required Properties ***
-		public string Ctid { get; set; }
+		/// <summary>
+		/// CTID
+		/// Required
+		/// </summary>
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// Pathway Name

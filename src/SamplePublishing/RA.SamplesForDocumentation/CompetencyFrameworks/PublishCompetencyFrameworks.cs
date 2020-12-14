@@ -76,7 +76,7 @@ namespace RA.SamplesForDocumentation
 			Competency output = new Competency()
 			{
 				competencyText_map = new LanguageMap( competency ),
-				Ctid = "ce-" + Guid.NewGuid().ToString().ToLower(),
+				CTID = "ce-" + Guid.NewGuid().ToString().ToLower(),
 				isPartOf = frameworkCTID
 			};
 			//add keywords
@@ -127,32 +127,32 @@ namespace RA.SamplesForDocumentation
 			{
 				new Competency()
 				{
-					Ctid = "ce-f3984fc3-4b1f-433b-91a1-d5ad81ed7ca9",
+					CTID = "ce-f3984fc3-4b1f-433b-91a1-d5ad81ed7ca9",
 					competencyText = "describe the operating environment of the firm, the role of financial institutions, and the structure of the capital markets and explain their impact on the financial performance of the firm"
 				},
 				new Competency()
 				{
-					Ctid = "ce-581bac7e-a735-4755-a4cc-313cd705b986",
+					CTID = "ce-581bac7e-a735-4755-a4cc-313cd705b986",
 					competencyText = "interpret financial statements and financial ratios"
 				},
 				new Competency()
 				{
-					Ctid = "ce-49ce65e5-132e-4430-8eb0-4ff06ec451eb",
+					CTID = "ce-49ce65e5-132e-4430-8eb0-4ff06ec451eb",
 					competencyText = "explain the time value of money and calculate future value and present value for single and multiple cash flows"
 				},
 				new Competency()
 				{
-					Ctid = "ce-82339b05-b49f-4fa4-b0d8-b37d054a420f",
+					CTID = "ce-82339b05-b49f-4fa4-b0d8-b37d054a420f",
 					competencyText = "describe the characteristics of capital market instruments including stocks, bonds, and money market instruments"
 				},
 				new Competency()
 				{
-					Ctid = "ce-faa89f86-7a55-4ee5-866e-91609a54cd1d",
+					CTID = "ce-faa89f86-7a55-4ee5-866e-91609a54cd1d",
 					competencyText = "explain the capital budgeting process and the basic elements of working capital management"
 				},
 				new Competency()
 				{
-					Ctid = "ce-07428927-1794-40ed-b9b7-9e0cffc458bb",
+					CTID = "ce-07428927-1794-40ed-b9b7-9e0cffc458bb",
 					competencyText = "describe the sources of long-term capital and its importance to sustaining operations"
 				}
 			};
@@ -217,53 +217,53 @@ namespace RA.SamplesForDocumentation
 			{
 				new Competency()
 				{
-					Ctid = "ce-f53c9247-9775-4186-a1f1-edd0a965edeb",
+					CTID = "ce-f53c9247-9775-4186-a1f1-edd0a965edeb",
 					competencyText="Identification of specific names, facts, and concepts from sociological literature"
 				},
 				new Competency()
 				{
-					Ctid = "ce-7351578b-f8d3-4ca6-8ff5-1818dd4092db",
+					CTID = "ce-7351578b-f8d3-4ca6-8ff5-1818dd4092db",
 					competencyText="Understanding of relationships between concepts, empirical generalizations, and theoretical propositions of sociology"
 				},
 				new Competency()
 				{
-					Ctid = "ce-2b3b27a9-e42c-4021-bb7c-178766320134",
+					CTID = "ce-2b3b27a9-e42c-4021-bb7c-178766320134",
 					competencyText="Understanding of the methods by which sociological relationships are established; "
 				},
 				new Competency()
 				{
-					Ctid = "ce-6c4d0738-cb85-4263-badd-78ed1437b465",
+					CTID = "ce-6c4d0738-cb85-4263-badd-78ed1437b465",
 					competencyText="application of concepts, propositions, and methods to hypothetical situations"
 				},
 				new Competency()
 				{
-					Ctid = "ce-ec073a6d-ce14-4e21-a548-bcb9a5d5bb24",
+					CTID = "ce-ec073a6d-ce14-4e21-a548-bcb9a5d5bb24",
 					competencyText="Interpretation of tables and charts"
 				},
 
 				new Competency()
 				{
-					Ctid = "ce-1cfa68c0-5ad5-483b-ad8a-e622f33d4a1a",
+					CTID = "ce-1cfa68c0-5ad5-483b-ad8a-e622f33d4a1a",
 					competencyText="institutions"
 				},
 				new Competency()
 				{
-					Ctid = "ce-30c840c0-2978-49b9-9044-d74721c827c1",
+					CTID = "ce-30c840c0-2978-49b9-9044-d74721c827c1",
 					competencyText="social patterns"
 				},
 				new Competency()
 				{
-					Ctid = "ce-5d0cbcee-ef29-46fc-a8e4-b260cb737d3e",
+					CTID = "ce-5d0cbcee-ef29-46fc-a8e4-b260cb737d3e",
 					competencyText="social process"
 				},
 				new Competency()
 				{
-					Ctid = "ce-f7b31a05-4b6d-47f6-b001-1c7ad32ad6d1",
+					CTID = "ce-f7b31a05-4b6d-47f6-b001-1c7ad32ad6d1",
 					competencyText="social stratification (process and structure)"
 				},
 				new Competency()
 				{
-					Ctid = "ce-90311565-e23b-40ec-8927-e1d9d04b599c",
+					CTID = "ce-90311565-e23b-40ec-8927-e1d9d04b599c",
 					competencyText="the socialogical perspective"
 				}
 			};

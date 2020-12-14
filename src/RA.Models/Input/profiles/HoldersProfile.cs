@@ -13,7 +13,7 @@ namespace RA.Models.Input
 	/// </summary>
 	public class HoldersProfile
 	{
-		public string Ctid { get; set; }
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// Effective date of this profile

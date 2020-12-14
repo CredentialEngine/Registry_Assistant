@@ -120,6 +120,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// A short description of this competency framework.
+		/// Required
 		/// </summary>
 		public string description { get; set; } 
 		//language map version of description
@@ -183,6 +184,8 @@ namespace RA.Models.Input
 		/// An agent responsible for making this entity available.
 		/// Also referred to as the promulgating agency of the entity.
 		/// List of URIs, for example to a ceterms:CredentialOrganization
+		/// Or provide a list of CTIDs and the Assistant API will format the proper URL for the environment.
+		/// Required
 		/// </summary>
 		public List<string> publisher { get; set; } = new List<string>();
 
@@ -243,7 +246,7 @@ namespace RA.Models.Input
 		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a credential, learning opportunity competency, or assessment recognizes the entity in transactions with the external environment (e.g., in verifiable claims involving a credential).
 		/// required
 		/// </summary>
-		public string Ctid { get; set; }
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// The text of the competency.

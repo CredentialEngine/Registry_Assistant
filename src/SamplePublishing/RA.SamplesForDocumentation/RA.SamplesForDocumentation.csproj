@@ -52,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assessments\PublishAssessment.cs" />
+    <Compile Include="CompetencyFrameworks\PublishCompetencyFrameworks.cs" />
+    <Compile Include="ConceptSchemes\PublishConceptSchemes.cs" />
     <Compile Include="ConditionManifests\PublishConditionManifest.cs" />
     <Compile Include="CostManifests\PublishCostManifest.cs" />
     <Compile Include="Credentials\PublishCredentialWithOutcomes.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="SupportingData\Occupations.cs" />
     <Compile Include="TransferValueProfiles\ACETransferValues.cs" />
     <Compile Include="TransferValueProfiles\PublishTransferValueProfile.cs" />
+    <Compile Include="TransferValueProfiles\PublishTransferValueProfileList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

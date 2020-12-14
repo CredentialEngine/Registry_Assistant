@@ -110,7 +110,7 @@ namespace RA.SamplesForDocumentation
 
 			HoldersProfile output = new HoldersProfile()
 			{
-				Ctid = hpctid,
+				CTID = hpctid,
 				Name = "My Holders Profile for a particular outcome.",
 				DateEffective = "2018-01-15",
 				Description = "Description of 'My Holders Profile for a particular outcome.'",

@@ -122,7 +122,7 @@ namespace RA.SamplesForDocumentation
 
 			HoldersProfile hp = new HoldersProfile()
 			{
-				Ctid = hpctid,
+				CTID = hpctid,
 				Description = "Consumer Report Card for A+/MCP Certification Training",
 			};
 

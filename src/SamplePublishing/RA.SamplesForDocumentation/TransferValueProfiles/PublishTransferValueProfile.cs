@@ -43,7 +43,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My Transfer Value Profile Name",
 				Description = "This is some text that describes my transfer value profile.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "http://example.com/transferValueProfile/1234",
 				StartDate = "2020-01-01",
 				EndDate = "2021-12-21"
@@ -145,7 +145,7 @@ namespace RA.SamplesForDocumentation
 				EndpointType = "transfervalue",
 				RequestType = "publish",
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.TransferValueProfile.Ctid.ToLower(),   //added here for logging
+				CTID = myRequest.TransferValueProfile.CTID.ToLower(),   //added here for logging
 				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};
@@ -180,7 +180,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My Transfer Value Profile Name",
 				Description = "This is some text that describes my transfer value profile.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "http://example.com/transferValueProfile/1234",
 				StartDate = "2020-01-01",
 				EndDate = "2021-12-21"
@@ -261,7 +261,7 @@ namespace RA.SamplesForDocumentation
 				EndpointType = "transfervalue",
 				RequestType = "publish",
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.TransferValueProfile.Ctid.ToLower(),   //added here for logging
+				CTID = myRequest.TransferValueProfile.CTID.ToLower(),   //added here for logging
 				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};
@@ -323,7 +323,7 @@ namespace RA.SamplesForDocumentation
 				EndpointType = "transfervalue",
 				RequestType = "bulkpublish",
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.TransferValueProfiles[ 0 ].Ctid.ToLower(),   //added here for logging
+				CTID = myRequest.TransferValueProfiles[ 0 ].CTID.ToLower(),   //added here for logging
 				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};
@@ -350,7 +350,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My Transfer Value Profile Name",
 				Description = "This is some text that describes my transfer value profile.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "http://example.com/transferValueProfile/tvp1"
 			};
 			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.
@@ -416,7 +416,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My Transfer Value Profile Number Two ",
 				Description = "This is some text that describes my transfer value profile number 2.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "http://example.com/transferValueProfile/tvp2"
 			};
 			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.
@@ -498,7 +498,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "Environmental Challenges And Solutions",
 				Description = "To provide knowledge of the scope and severity of environmental illnesses.",
-				Ctid = "ce-489406de-1c64-40bd-af31-f7a502b8b850",
+				CTID = "ce-489406de-1c64-40bd-af31-f7a502b8b850",
 				SubjectWebpage = "https://stagingweb.acenet.edu/national-guide/Pages/Course.aspx?org=Huntington%20College%20of%20Health%20Sciences&cid=ffb1a50b-82c4-ea11-a812-000d3a33232a"
 			};
 			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.

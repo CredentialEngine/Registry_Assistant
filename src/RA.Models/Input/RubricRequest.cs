@@ -23,8 +23,11 @@ namespace RA.Models.Input
 		public Rubric()
 		{
 		}
-
-		public string Ctid { get; set; }
+		/// <summary>
+		/// CTID
+		/// Required
+		/// </summary>
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// An account of the resource.

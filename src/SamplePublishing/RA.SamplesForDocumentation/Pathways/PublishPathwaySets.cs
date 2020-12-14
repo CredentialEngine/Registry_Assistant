@@ -20,7 +20,7 @@ namespace RA.SamplesForDocumentation.Pathways
 			var apiKey = SampleServices.GetMyApiKey();
 			// This is the CTID of the organization that owns the data being published
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
-			// Assign a Ctid for the entity being published and keep track of it
+			// Assign a CTID for the entity being published and keep track of it
 			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 
 			// A simple pathwaySet object - see below for sample class definition
@@ -28,11 +28,11 @@ namespace RA.SamplesForDocumentation.Pathways
 			{
 				Name = "Information Technology Pathways set.",
 				Description = "This is some text that describes this pathway set.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "https://example.org/pathwayset/1234"
 			};
-			// OwnedBy, etc. are organization references. As a convenience just the Ctid is necessary.
-			// The ownedBY Ctid is typically the same as the Ctid for the data owner.
+			// OwnedBy, etc. are organization references. As a convenience just the CTID is necessary.
+			// The ownedBY CTID is typically the same as the CTID for the data owner.
 			myData.OwnedBy.Add( new OrganizationReference()
 			{
 				CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
@@ -45,7 +45,7 @@ namespace RA.SamplesForDocumentation.Pathways
 
 			myData.HasPathway.AddRange( new List<string>() { pathway1CTID, pathway2CTID, pathway3CTID } );
 
-			// The input request class holds the pathwaySet and the identifier (Ctid) for the owning organization
+			// The input request class holds the pathwaySet and the identifier (CTID) for the owning organization
 			var myRequest = new PathwaySetRequest()
 			{
 				PathwaySet = myData,
@@ -74,14 +74,14 @@ namespace RA.SamplesForDocumentation.Pathways
 			{
 				Name = "Associate Degree: Information Technology - Cybersecurity Emphasis",
 				Description = "This is some text that describes my pathway.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "https://example.org/pathway/1234",
-				//add Ctid for Destination component
+				//add CTID for Destination component
 				HasDestinationComponent = new List<string>() { "ce-5e7fcaaf-74e2-47be-a4a9-2bed98f282d7" },
 				HasChild = new List<string>() { "ce-5e7fcaaf-74e2-47be-a4a9-2bed98f282d7" }
 			};
-			// OwnedBy, etc. are organization references. As a convenience just the Ctid is necessary.
-			// The ownedBY Ctid is typically the same as the Ctid for the data owner.
+			// OwnedBy, etc. are organization references. As a convenience just the CTID is necessary.
+			// The ownedBY CTID is typically the same as the CTID for the data owner.
 			myData.OwnedBy.Add( new OrganizationReference()
 			{
 				CTID = organizationIdentifierFromAccountsSite
@@ -89,7 +89,7 @@ namespace RA.SamplesForDocumentation.Pathways
 
 			//list of pathway components to publish
 			List<PathwayComponent> pathwayComponents = new List<PathwayComponent>();
-			//add the destination component (uses the same Ctid as for HasDestinationComponent
+			//add the destination component (uses the same CTID as for HasDestinationComponent
 			var destinationComponent = new PathwayComponent()
 			{
 				PathwayComponentType = "CredentialComponent",
@@ -113,7 +113,7 @@ namespace RA.SamplesForDocumentation.Pathways
 			} );
 
 
-			// The input request class holds the pathway and the identifier (Ctid) for the owning organization
+			// The input request class holds the pathway and the identifier (CTID) for the owning organization
 			var myRequest = new PathwayRequest()
 			{
 				Pathway = myData,
@@ -133,14 +133,14 @@ namespace RA.SamplesForDocumentation.Pathways
 			{
 				Name = "Associate Degree: Information Technology - Information Systems Emphasis",
 				Description = "This is some text that describes my pathway.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "https://example.org/pathway/1236",
-				//add Ctid for Destination component
+				//add CTID for Destination component
 				HasDestinationComponent = new List<string>() { "ce-5e7fcaaf-8500-47be-a4a9-2bed98f282d7" },
 				HasChild = new List<string>() { "ce-5e7fcaaf-8500-47be-a4a9-2bed98f282d7" }
 			};
-			// OwnedBy, etc. are organization references. As a convenience just the Ctid is necessary.
-			// The ownedBY Ctid is typically the same as the Ctid for the data owner.
+			// OwnedBy, etc. are organization references. As a convenience just the CTID is necessary.
+			// The ownedBY CTID is typically the same as the CTID for the data owner.
 			myData.OwnedBy.Add( new OrganizationReference()
 			{
 				CTID = organizationIdentifierFromAccountsSite
@@ -148,7 +148,7 @@ namespace RA.SamplesForDocumentation.Pathways
 
 			//list of pathway components to publish
 			List<PathwayComponent> pathwayComponents = new List<PathwayComponent>();
-			//add the destination component (uses the same Ctid as for HasDestinationComponent
+			//add the destination component (uses the same CTID as for HasDestinationComponent
 			var destinationComponent = new PathwayComponent()
 			{
 				PathwayComponentType = "CredentialComponent",
@@ -172,7 +172,7 @@ namespace RA.SamplesForDocumentation.Pathways
 			} );
 
 
-			// The input request class holds the pathway and the identifier (Ctid) for the owning organization
+			// The input request class holds the pathway and the identifier (CTID) for the owning organization
 			var myRequest = new PathwayRequest()
 			{
 				Pathway = myData,

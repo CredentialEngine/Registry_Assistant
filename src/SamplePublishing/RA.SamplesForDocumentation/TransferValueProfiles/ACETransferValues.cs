@@ -41,7 +41,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "Introductory Sociology",
 				Description = "Credit is recommended for candidates scoring 50 and above.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "https://www.acenet.edu/National-Guide/Pages/Course.aspx?org=College%20Board%27s%20College-Level%20Examination%20Program%20(CLEP)&cid=fe05b1f6-84c4-ea11-a812-000d3a33232a",
 				StartDate = "2018-12-01",
 				EndDate = "2023-11-30"
@@ -117,7 +117,7 @@ namespace RA.SamplesForDocumentation
 				EndpointType = "transfervalue",
 				RequestType = doingPublish ? "publish" :"format",
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.TransferValueProfile.Ctid.ToLower(),   //added here for logging
+				CTID = myRequest.TransferValueProfile.CTID.ToLower(),   //added here for logging
 				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};
@@ -243,7 +243,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "Principles of Finance",
 				Description = "NOTE: Credit is recommended for candidates scoring 50 and above.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "https://www.acenet.edu/National-Guide/Pages/Course.aspx?org=SOPHIA+Learning%2c+LLC&cid=6bb6586f-94c4-ea11-a812-000d3a378a3a",
 				StartDate = "2020-06-01",
 				EndDate = "2023-05-30"
@@ -359,7 +359,7 @@ namespace RA.SamplesForDocumentation
 				EndpointType = "transfervalue",
 				RequestType = doingPublish ? "publish" : "format",
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.TransferValueProfile.Ctid.ToLower(),   //added here for logging
+				CTID = myRequest.TransferValueProfile.CTID.ToLower(),   //added here for logging
 				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};

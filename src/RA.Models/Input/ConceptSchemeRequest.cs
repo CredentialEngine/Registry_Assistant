@@ -78,13 +78,7 @@ namespace RA.Models.Input
 		/// CTID - identifier for Concept Scheme. 
 		/// REQUIRED
 		/// </summary>
-		public string Ctid { get; set; }
-
-		public List<string> AltIdentifier { get; set; } = new List<string>();
-
-		//20-08-05 no longer on credReg.net
-		//public List<string> ChangeNote { get; set; } = new List<string>();
-		//public LanguageMapList ChangeNote_Map { get; set; } = new LanguageMapList();
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// Concept Keyword
@@ -137,6 +131,17 @@ namespace RA.Models.Input
 		/// List of CTIDs (recommended) or actual registry URIs
 		/// </summary>
 		public List<string> HasTopConcept { get; set; } = new List<string>();
+
+		//public List<string> HistoryNote { get; set; } = new List<string>();
+		///// <summary>
+		///// Concept Scheme history? not included anymore? 
+		///// </summary>
+		//public string HistoryNote { get; set; }
+
+		///// <summary>
+		///// Alternately can provide a language map
+		///// </summary>
+		//public LanguageMap HistoryNote_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Language. Required unless defaultLanguage is provided
@@ -212,11 +217,11 @@ namespace RA.Models.Input
 		//public string Id { get; set; }
 
 		/// <summary>
-		/// Ctid - identifier for concept. 
+		/// CTID - identifier for concept. 
 		/// Format: ce-UUID (lowercase)
 		/// example: ce-a044dbd5-12ec-4747-97bd-a8311eb0a042
 		/// </summary>
-		public string Ctid { get; set; }
+		public string CTID { get; set; }
 
 		public List<string> AltLabel { get; set; } = new List<string>();
 

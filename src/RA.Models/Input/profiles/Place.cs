@@ -48,6 +48,13 @@ namespace RA.Models.Input
         public string AddressRegion { get; set; }
         public LanguageMap AddressRegion_Map { get; set; } = new LanguageMap();
 		/// <summary>
+		/// Named area or division within a region, such as a county in the U.S. or Canada.
+		/// 20-11-06 PROPOSED NOT OFFICIAL AT THIS TIME
+		/// </summary>
+		public string SubRegion { get; set; }
+		public LanguageMap SubRegion_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
 		/// Postal Code
 		/// </summary>
 		public string PostalCode { get; set; }

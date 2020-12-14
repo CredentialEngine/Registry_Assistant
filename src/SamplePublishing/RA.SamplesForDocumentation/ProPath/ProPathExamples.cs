@@ -119,7 +119,7 @@ namespace RA.SamplesForDocumentation
 
 			HoldersProfile hp = new HoldersProfile()
 			{
-				Ctid = hpctid,
+				CTID = hpctid,
 				DateEffective = "2018-01-15",
 				Description = "ProPath HoldersProfile",
 			};
