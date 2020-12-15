@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assessments\PublishAssessment.cs" />
+    <Compile Include="CompetencyFrameworks\PublishACEFrameworks.cs" />
     <Compile Include="CompetencyFrameworks\PublishCompetencyFrameworks.cs" />
     <Compile Include="ConceptSchemes\PublishConceptSchemes.cs" />
     <Compile Include="ConditionManifests\PublishConditionManifest.cs" />

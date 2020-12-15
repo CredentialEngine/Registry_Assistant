@@ -30,7 +30,7 @@ namespace RA.SamplePublishingProject
 		public void TestBatchPublishTransferValueBulkPublish()
 		{
 			//using better post with details
-			new PublishTransferValueProfile().PublishList( false );
+			new PublishTransferValueProfileList().PublishList( false );
 		}
 
 
@@ -54,9 +54,9 @@ namespace RA.SamplePublishingProject
 		[TestMethod]
 		public void PublishACEPrinFinCompetencyamework()
 		{
-			//new PublishCompetencyFrameworks().PublishACEPrinFin( true );
+			new PublishACEFrameworks().PublishACEPrinFin( true );
 			//
-			new PublishCompetencyFrameworks().PublishACEIntroductorySociology( true );
+			new PublishACEFrameworks().PublishACEIntroductorySociology( true );
 
 			new ACETransferValues().ACEIntroductorySociologyTVP( true );
 

@@ -9,7 +9,6 @@ namespace RA.SamplesForDocumentation
 {
 	public class PublishTransferValueProfileList
 	{
-
 		public string PublishList( bool usingSimplePost = true )
 		{
 			// Holds the result of the publish action
@@ -33,17 +32,20 @@ namespace RA.SamplesForDocumentation
 			//add some transfer value profiles
 			myRequest.TransferValueProfiles.Add( GetTVPOne( organizationIdentifierFromAccountsSite ) );
 			myRequest.TransferValueProfiles.Add( GetTVPTwo( organizationIdentifierFromAccountsSite ) );
+			myRequest.TransferValueProfiles.Add( GetTVPEnvironmentalChallenges( organizationIdentifierFromAccountsSite ) );
 			// Serialize the request object
-			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
+			var payload = JsonConvert.SerializeObject( myRequest );
 
 
 			//assign publish endpoint
-			var assistantUrl = SampleServices.GetAppKeyValue( "registryAssistantApi" ) + "transfervalue/publish/";
+			var assistantUrl = SampleServices.GetAppKeyValue( "registryAssistantApi" ) + "transfervalue/bulkpublish/";
 			string jsonldPayload = "";
 			List<string> messages = new List<string>();
+
 			if ( usingSimplePost )
 			{
 				//use a simple method that returns a string
+				//note this method will return a list of responses, so likely the simple method should not be used. 
 				result = new SampleServices().SimplePost( assistantUrl, payload, apiKey, ref jsonldPayload, ref messages );
 
 				// Return the result
@@ -64,10 +66,11 @@ namespace RA.SamplesForDocumentation
 			bool isValid = new SampleServices().PublishRequest( req );
 			return result;
 		}
-
-
-
-
+		/// <summary>
+		/// uses transferValueFrom and TransferValueFor
+		/// </summary>
+		/// <param name="owningOrganizationCtid"></param>
+		/// <returns></returns>
 		public TransferValueProfile GetTVPOne( string owningOrganizationCtid )
 		{
 			// Assign a CTID for the entity being published and keep track of it
@@ -88,21 +91,28 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = owningOrganizationCtid
 			} );
+			//============== TransferValue ====================================================
 			myData.TransferValue = new List<ValueProfile>()
-		{
-			new ValueProfile()
 			{
-				Value=3,
-				CreditUnitType = new List<string>() {"DegreeCredit"},
-				CreditLevelType = new List<string>() {"LowerDivisionLevel"}
-			}
-		};
-
+				new ValueProfile()
+				{
+					Value=3,
+					CreditUnitType = new List<string>() {"DegreeCredit"},
+					CreditLevelType = new List<string>() {"LowerDivisionLevel"}
+				}
+			};
+			//==============	transfer value from ===========================================
+			//Resource that provides the transfer value described by this resource, according to the entity providing this resource.
+			//A list of entity references. If the CTID is known, then just provide it.
+			myData.TransferValueFrom.Add( new EntityReference()
+			{
+				CTID = "ce-476c1aca-6cd9-4dbe-ba91-16960bfb19ac"
+			} );
 			//If not provided as much information as is available
 			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
 			myData.TransferValueFrom.Add( new LearningOpportunity()
 			{
-				//Type = "LearningOpportunityProfile",
+				Type = "LearningOpportunityProfile",
 				Name = "name of the learning opportunity",
 				Description = "Description of the learning opportunity",
 				SubjectWebpage = "https://example.com/anotherlOPP",
@@ -113,7 +123,7 @@ namespace RA.SamplesForDocumentation
 
 			//						optional
 			//coded Notation could be replaced by Identifier in the near future
-			myData.StartDate = "2020-01-01";
+			myData.StartDate = "2015-01-01";
 			myData.EndDate = "2021-12-21";
 
 			return myData;
@@ -138,21 +148,24 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = owningOrganizationCtid
 			} );
-			myData.TransferValue = new List<ValueProfile>()
-		{
-			new ValueProfile()
-			{
-				Value=3,
-				CreditUnitType = new List<string>() {"DegreeCredit"},
-				CreditLevelType = new List<string>() {"LowerDivisionLevel"}
-			}
-		};
 
-			//If not provided as much information as is available
-			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
+			//============== TransferValue ====================================================
+			//REQUIRED
+			myData.TransferValue = new List<ValueProfile>()
+			{
+				new ValueProfile()
+				{
+					Value=3,
+					CreditUnitType = new List<string>() {"DegreeCredit"},
+					CreditLevelType = new List<string>() {"LowerDivisionLevel"}
+				}
+			};
+			//==============	transfer value from ===========================================
+			//Resource that provides the transfer value described by this resource, according to the entity providing this resource.
+			//TransferValueFrom is list of objects. Currently the classes handled are LearningOpportunity and Assessment. 
 			myData.TransferValueFrom.Add( new LearningOpportunity()
 			{
-				//Type = "LearningOpportunityProfile",
+				Type = "LearningOpportunityProfile",
 				Name = "name of the learning opportunity",
 				Description = "Description of the learning opportunity",
 				SubjectWebpage = "https://example.com/anotherlOPP",
@@ -161,15 +174,23 @@ namespace RA.SamplesForDocumentation
 
 			} );
 
+			//==============	transfer value For
+			//Resource that accepts the transfer value described by this resource, according to the entity providing this resource.
+			//TransferValueFor is list of objects. Currently the classes handled are LearningOpportunity and Assessment. 
+			myData.TransferValueFor.Add( new Assessment()
+			{
+				Type = "AssessmentProfile",
+				Name = "name of the target assessment",
+				Description = "Description of the assessment",
+				SubjectWebpage = "https://example.com/targetAssessment",
+				LearningMethodDescription = "A useful description of the learning method",
+				AssessmentMethodDescription = "How the assessment is conducted."
+			} );
+
+
 			//						optional
-			//coded Notation will likely be replaced by Identifier in the near future
 			myData.StartDate = "2020-01-01";
 			myData.EndDate = "2021-12-21";
-
-			//===================================================================================
-			//				additions in pending ( in near future)
-			//identifier will likely replace codedNotation for more flexibility. Although the name may change
-			// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
 			myData.Identifier.Add( new IdentifierValue()
 			{
 				IdentifierTypeName = "ACE Course Code",
@@ -180,7 +201,84 @@ namespace RA.SamplesForDocumentation
 			return myData;
 		}
 
+		/// <summary>
+		/// Environmental Challenges And Solutions
+		/// </summary>
+		/// <param name="owningOrganizationCtid"></param>
+		/// <returns></returns>
+		public TransferValueProfile GetTVPEnvironmentalChallenges( string owningOrganizationCtid )
+		{
 
+			//from previous test
+			//
+			var myData = new TransferValueProfile()
+			{
+				Name = "Environmental Challenges And Solutions",
+				Description = "To provide knowledge of the scope and severity of environmental illnesses.",
+				CTID = "ce-489406de-1c64-40bd-af31-f7a502b8b850",
+				SubjectWebpage = "https://stagingweb.acenet.edu/national-guide/Pages/Course.aspx?org=Huntington%20College%20of%20Health%20Sciences&cid=ffb1a50b-82c4-ea11-a812-000d3a33232a"
+			};
+			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.
+			// The ownedBY CTID is typically the same as the CTID for the data owner.
+			myData.OwnedBy.Add( new OrganizationReference()
+			{
+				CTID = owningOrganizationCtid
+			} );
+			myData.StartDate = "1994-09-01";
+			myData.EndDate = "2001-06-30";
+
+			//============== TransferValue ====================================================
+			myData.TransferValue = new List<ValueProfile>()
+			{
+				new ValueProfile()
+				{
+					Value=3,
+					CreditUnitType = new List<string>() {"DegreeCredit"},
+					CreditLevelType = new List<string>() {"LowerDivisionLevel"}
+				}
+			};
+			//==============	transfer value from ===========================================
+			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
+
+			var learningOpportunity = new LearningOpportunity()
+			{
+				Type = "LearningOpportunityProfile",
+				Name = "Environmental Challenges And Solutions",
+				Description = "To provide knowledge of the scope and severity of environmental illnesses.",
+				SubjectWebpage = "https://stagingweb.acenet.edu/national-guide/Pages/Course.aspx?org=Huntington%20College%20of%20Health%20Sciences&cid=ffb1a50b-82c4-ea11-a812-000d3a33232a",
+				DateEffective = "1994-09-01",
+				ExpirationDate = "2001-06-30",
+				EstimatedDuration = new List<DurationProfile>()
+				{
+					new DurationProfile() { Description= "135 hours (self-paced)" }
+				}
+			};
+			learningOpportunity.OwnedBy = new List<OrganizationReference>() {  new OrganizationReference()
+			{
+				Type = "CredentialOrganization",
+				Name = "Huntington College of Health Sciences",
+				Description = "To provide knowledge of the scope and severity of environmental illnesses.",
+				SubjectWebpage = "https://stagingweb.acenet.edu/national-guide/Pages/Course.aspx?org=Huntington%20College%20of%20Health%20Sciences&cid=ffb1a50b-82c4-ea11-a812-000d3a33232a"
+			} };
+			learningOpportunity.Teaches = new List<CredentialAlignmentObject>()
+			{
+				new CredentialAlignmentObject()
+				{
+					TargetNodeName="Upon successful completion of this course, the student will be able to recognize causes and effects of chemically induced illness"
+				},
+				new CredentialAlignmentObject()
+				{
+					TargetNodeName="And understand the role proper nutrition plays in avoiding and/or mitigating the damage these chemicals cause"
+				},
+				new CredentialAlignmentObject()
+				{
+					TargetNodeName="Know how to find alternative solutions to chemicals"
+				}
+			};
+			myData.TransferValueFrom.Add( learningOpportunity );
+
+			return myData;
+		}
 	}
 	
 }
