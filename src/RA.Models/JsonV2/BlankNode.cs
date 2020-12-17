@@ -91,6 +91,10 @@ namespace RA.Models.JsonV2
 		//for learning opportunity only
 		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
 		public string DateEffective { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:deliveryType" )]
+		public List<CredentialAlignmentObject> DeliveryType { get; set; }
+
 		//for learning opportunity only
 		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
 		public string ExpirationDate { get; set; }

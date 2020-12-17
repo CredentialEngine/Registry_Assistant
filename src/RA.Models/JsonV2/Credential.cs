@@ -78,17 +78,19 @@ namespace RA.Models.JsonV2
             Renewal = new List<ConditionProfile>();
         }
 
-        [JsonProperty( "@id" )]
-        public string CtdlId { get; set; }
-
         /// <summary>
         /// Need a custom mapping to @type based on input value
         /// </summary>
         [JsonProperty( "@type" )]
         public string CredentialType { get; set; }
 
+        [JsonProperty( "@id" )]
+        public string CtdlId { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:name" )]
+		[JsonProperty( PropertyName = "ceterms:ctid" )]
+		public string Ctid { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:name" )]
         public LanguageMap Name { get; set; } = new LanguageMap();
 
         [JsonProperty( PropertyName = "ceterms:description" )]
@@ -98,8 +100,6 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:dateEffective" )]
         public string DateEffective { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:ctid" )]
-        public string Ctid { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:alternateName" )]
         public LanguageMapList AlternateName { get; set; } = new LanguageMapList();

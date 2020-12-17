@@ -70,11 +70,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:ctid" )]
-		public string CTID { get; set; }
-
 		[JsonProperty( "@id" )]
 		public string CtdlId { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:ctid" )]
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// Name

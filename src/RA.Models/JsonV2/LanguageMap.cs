@@ -20,8 +20,18 @@ namespace RA.Models.JsonV2
         {
             this.Add( languageCode, text );
         }
-
-        public override string ToString()
+		/// <summary>
+		/// Return true if the language map is empty
+		/// </summary>
+		/// <returns></returns>
+		public bool IsEmpty()
+		{
+			if ( this == null || this.Count == 0 )
+				return true;
+			else
+				return false;
+		}
+		public override string ToString()
         {
             //if nothing found for default, should return first one
             string value = ToString( "en" );

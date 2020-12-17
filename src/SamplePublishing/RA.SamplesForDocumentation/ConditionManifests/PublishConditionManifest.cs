@@ -29,7 +29,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My ConditionManifest Name",
 				Description = "This is some text that describes my assessment.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "http://example.com?t=subjectwebpage",
 				//if this ID/CTID is not known, use a third party reference
 				ConditionManifestOf = new OrganizationReference()

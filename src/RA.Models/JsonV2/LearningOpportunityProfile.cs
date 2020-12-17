@@ -67,10 +67,25 @@ namespace RA.Models.JsonV2
 			VersionIdentifier = new List<IdentifierValue>();
 		}
 
-        [JsonProperty( PropertyName = "ceterms:name" )]
+		/// <summary>
+		/// Need a custom mapping to @type based on input value
+		/// ceterms:CredentialOrganization, oR
+		/// ceterms:QACredentialOrganization
+		/// </summary>
+		[JsonProperty( "@type" )]
+		public string Type { get; set; }
+
+
+		[JsonProperty( "@id" )]
+		public string CtdlId { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:name" )]
         public LanguageMap Name { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:description" )]
+		[JsonProperty( PropertyName = "ceterms:ctid" )]
+		public string Ctid { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:description" )]
         public LanguageMap Description { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:inLanguage" )]
@@ -104,19 +119,6 @@ namespace RA.Models.JsonV2
 		public string ExpirationDate { get; set; }
 		//
 
-		/// <summary>
-		/// Need a custom mapping to @type based on input value
-		/// ceterms:CredentialOrganization, oR
-		/// ceterms:QACredentialOrganization
-		/// </summary>
-		[JsonProperty( "@type" )]
-        public string Type { get; set; }
-
-        [JsonProperty( PropertyName = "ceterms:ctid" )]
-        public string Ctid { get; set; }
-
-        [JsonProperty( "@id" )]
-        public string CtdlId { get; set; }
 
         //[JsonProperty( PropertyName = "ceterms:verificationMethodDescription" )] 
         //public LanguageMap VerificationMethodDescription { get; set; }

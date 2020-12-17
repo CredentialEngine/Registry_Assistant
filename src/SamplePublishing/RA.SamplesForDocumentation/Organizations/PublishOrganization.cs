@@ -21,7 +21,6 @@ namespace RA.SamplesForDocumentation
 
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
-			//this is the CTID of the organization that owns the data being published
 			// This is the CTID of the organization that owns the data being published
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 			//Assign a CTID for the entity being published and keep track of it
@@ -38,9 +37,12 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "http://example.com",
 				Type = "ceterms:CredentialOrganization",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
-				AgentSectorType = "PrivateNonProfit",
 				Email = new List<string>() { "info@credreg.net" }
 			};
+			//required-concept from AgentSector: https://credreg.net/ctdl/terms/agentSectorType#AgentSector
+			myData.AgentSectorType = "PrivateNonProfit";
+			//required-One or more concepts from OrganizationType: https://credreg.net/ctdl/terms/agentType#OrganizationType
+			myData.AgentType.Add( "Business" );
 			//add addresses and contact points
 			var mainAddress = new Place()
 			{
@@ -122,7 +124,7 @@ namespace RA.SamplesForDocumentation
 			//this is the CTID of the organization that owns the data being published
 			var organizationIdentifierFromAccountsSite = "ce-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 
-			APIRequestOrganization output = new APIRequestOrganization
+			APIRequestOrganization myData = new APIRequestOrganization
 			{
 				Name = input.Name,
 				Description = input.Description,
@@ -132,7 +134,10 @@ namespace RA.SamplesForDocumentation
 				Image = input.ImageUrl,
 				Keyword = input.Keywords
 			};
-
+			//required-concept from AgentSector: https://credreg.net/ctdl/terms/agentSectorType#AgentSector
+			myData.AgentSectorType = "PrivateNonProfit";
+			//required-One or more concepts from OrganizationType: https://credreg.net/ctdl/terms/agentType#OrganizationType
+			myData.AgentType.Add( "Business" );
 			//add addresses and contact points
 			if ( input.Address != null && !string.IsNullOrWhiteSpace( input.Address.City ))
 			{
@@ -145,17 +150,17 @@ namespace RA.SamplesForDocumentation
 					PostalCode = input.Address.PostalCode,
 					Country = input.Address.Country
 				};
-				output.Address.Add( mainAddress );
+				myData.Address.Add( mainAddress );
 			}
 			//an organization can optional publish a 'owns' entry from all of its credentials, etc. 
 			//Alternately it is acceptable to only published the ownedBy assertions with credentials, etc. 
-			output.Owns.Add( new EntityReference()
+			myData.Owns.Add( new EntityReference()
 			{
 				CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
 			} );
 			//Add QA assertions such as Accredited by
 			//CTID for Higher learning commission.
-			output.AccreditedBy.Add( new OrganizationReference()
+			myData.AccreditedBy.Add( new OrganizationReference()
 			{
 				CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
 			} );
@@ -165,7 +170,7 @@ namespace RA.SamplesForDocumentation
 			//This holds the organization and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
 			{
-				Organization = output,
+				Organization = myData,
 				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
@@ -216,9 +221,12 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "http://example.com",
 				Type = "ceterms:CredentialOrganization",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
-				AgentSectorType = "agentSector:PrivateNonProfit",
 				Email = new List<string>() { "info@credreg.net" }
 			};
+			//required-concept from AgentSector: https://credreg.net/ctdl/terms/agentSectorType#AgentSector
+			myData.AgentSectorType = "PrivateNonProfit";
+			//required-One or more concepts from OrganizationType: https://credreg.net/ctdl/terms/agentType#OrganizationType
+			myData.AgentType.Add( "Business" );
 			//This holds the organization and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
 			{

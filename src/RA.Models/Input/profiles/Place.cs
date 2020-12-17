@@ -12,6 +12,9 @@ namespace RA.Models.Input
     /// </summary>
 	public class Place
 	{
+		/// <summary>
+		/// constructor
+		/// </summary>
 		public Place()
 		{
 		}
@@ -20,6 +23,16 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Name { get; set; }
         public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Optional description 
+		/// 2020-12-15 - adding back use of description
+		/// </summary>
+		public string Description { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Street Address1

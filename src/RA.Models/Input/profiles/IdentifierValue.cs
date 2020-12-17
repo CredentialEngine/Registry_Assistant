@@ -14,7 +14,8 @@ namespace RA.Models.Input
 	public class IdentifierValue
 	{
 		/// <summary>
-		/// Formal name or acronym of the identifier type such as ISBN and ISSN.
+		/// Framework, scheme, type, or other organizing principle of this identifier.
+		/// URI
 		/// </summary>
 		public string IdentifierType { get; set; }
 

@@ -20,7 +20,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Required
 		/// </summary>
-		public string Ctid { get; set; }
+		public string CTID { get; set; }
 
         /// <summary>
         /// Description 

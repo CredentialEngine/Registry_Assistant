@@ -63,6 +63,10 @@ namespace RA.Models.JsonV2
 		//
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
 		public List<ValueProfile> CreditValue { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceterms:deliveryType" )]
+		public List<CredentialAlignmentObject> DeliveryType { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:estimatedDuration" )]
 		public List<DurationProfile> EstimatedDuration { get; set; }
 

@@ -27,8 +27,14 @@ namespace RA.Models.Input
             RecommendedConditions = new List<ConditionProfile>();
 			CorequisiteConditions = new List<ConditionProfile>();
 		}
-
-        public string Name { get; set; }
+		/// <summary>
+		/// Required
+		/// </summary>
+		public string CTID { get; set; }
+		/// <summary>
+		/// Nmae for this ConditionManifest
+		/// </summary>
+		public string Name { get; set; }
         /// <summary>
         /// Alternately can provide a language map
         /// </summary>
@@ -43,7 +49,7 @@ namespace RA.Models.Input
         /// </summary>
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
         public string SubjectWebpage { get; set; } //URL
-		public string Ctid { get; set; }
+
 
         /// <summary>
         /// Organization that owns this ConditionManifest

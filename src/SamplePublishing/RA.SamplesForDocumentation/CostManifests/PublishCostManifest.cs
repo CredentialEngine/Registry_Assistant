@@ -28,7 +28,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My CostManifest Name",
 				Description = "This is some text that describes my assessment.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				CostDetails = "http://www.credreg.net/assessment/1234",
 				CostManifestOf = new OrganizationReference()
 				{
