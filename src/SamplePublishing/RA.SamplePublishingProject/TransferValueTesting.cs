@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using RA.SamplesForDocumentation;
 
+
 namespace RA.SamplePublishingProject
 {
 	[TestClass]
