@@ -108,8 +108,7 @@ namespace RA.SamplesForDocumentation.Pathways
 				CTID = "ce-1f8d3d06-3953-4bd8-8750-7dc5e9a062eb",
 				Name = "Programming Concepts and Methology I",
 				Description = "Description of the course",
-				ProgramTerm = "1st Term",
-				CodedNotation = "COMP B11"
+				ProgramTerm = "1st Term"
 			} );
 
 
@@ -167,8 +166,7 @@ namespace RA.SamplesForDocumentation.Pathways
 				CTID = "ce-1f8d3d06-8500-4bd8-8750-7dc5e9a062eb",
 				Name = "Programming Concepts and Methology I",
 				Description = "Description of the course",
-				ProgramTerm = "1st Term",
-				CodedNotation = "COMP B11"
+				ProgramTerm = "1st Term"
 			} );
 
 

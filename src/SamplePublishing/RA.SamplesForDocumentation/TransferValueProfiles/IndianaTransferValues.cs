@@ -62,7 +62,9 @@ namespace RA.SamplesForDocumentation
 			var transferValueFrom = new LearningOpportunity()
 			{
 				Type = "LearningOpportunityProfile",
-				Name = "Introduction to Business",
+				Name = "Introduction to Business-FROM",
+				SubjectWebpage = "https://example.org/?tbd=tbd=introToBusFrom",
+
 			};
 			var ownedBy = new OrganizationReference()
 			{
@@ -77,16 +79,18 @@ namespace RA.SamplesForDocumentation
 			var transferValueFor = new LearningOpportunity()
 			{
 				Type = "LearningOpportunityProfile",
-				Name = "Business, Introduction to",
+				Name = "Business, Introduction to - FOR",
+				SubjectWebpage = "https://example.org/?tbd=introToBusFor",
+
 			};
 			//
 			var offeredBy = new OrganizationReference()
 			{
 				Type = "CredentialOrganization",
 				Name = "A provider to be named later",
-				SubjectWebpage = "https://example.org/?tbd=url",
+				SubjectWebpage = "https://example.org/?tbd=forOfferedBy",
 			};
-			transferValueFor.OfferedBy.Add( ownedBy );
+			transferValueFor.OfferedBy.Add( offeredBy );
 			myData.TransferValueFor.Add( transferValueFor );
 			//===================================================================================
 

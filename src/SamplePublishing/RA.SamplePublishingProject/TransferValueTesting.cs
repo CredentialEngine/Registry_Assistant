@@ -14,7 +14,7 @@ namespace RA.SamplePublishingProject
 		public void TestPublishTransferValue()
 		{
 			//using simple post
-			new PublishTransferValueProfile().PublishSimpleRecord();
+			new PublishTransferValueProfile().PublishSimpleRecord(false);
 		}
 
 		[TestMethod]

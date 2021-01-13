@@ -20,10 +20,7 @@ namespace RA.Models.Input
 		/// List of TransferValueProfiles to publish
 		/// </summary>
 		public TransferValueProfile TransferValueProfile { get; set; } = new TransferValueProfile();
-		/// <summary>
-		/// Proposed: use actual learning opportunity classes rather than entityReference
-		/// </summary>
-		public List<LearningOpportunity> TargetLearningOpportunities { get; set; } = new List<LearningOpportunity>();
+
 	}
 
 	/// <summary>
@@ -102,6 +99,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<EntityReference> DerivedFrom { get; set; } = new List<EntityReference>();
 
+		/// <summary>
+		/// Entity describing the process by which the transfer value profile, or aspects of it, were created.
+		/// </summary>
+		public List<ProcessProfile> DevelopmentProcess { get; set; } = new List<ProcessProfile>();
 
 		/// <summary>
 		/// Organization(s) that owns this resource

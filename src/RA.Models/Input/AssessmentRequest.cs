@@ -120,9 +120,19 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Type of method used to conduct an assessment; select from an existing enumeration of such types.
+		/// assessMethod:Artifact, assessMethod:Exam, assessMethod:Performance
+		/// <see cref="https://credreg.net/ctdl/terms/AssessmentMethod"/>
 		/// </summary>
-		public List<string> AssessmentMethodType { get; set; }
+		public List<string> AssessmentMethodType { get; set; } = new List<string>();
+		/// <summary>
+		/// Type of means by which a learning opportunity or assessment is delivered to credential seekers and by which they interact; select from an existing enumeration of such types.
+		/// deliveryType:BlendedDelivery deliveryType:InPerson deliveryType:OnlineOnly
+		/// <see cref="https://credreg.net/ctdl/terms/Delivery"/>
+		/// </summary>
 		public List<string> DeliveryType { get; set; }
+		/// <summary>
+		/// Detailed description of the delivery type of an assessment or learning opportunity.
+		/// </summary>
 		public string DeliveryTypeDescription { get; set; }
 		public LanguageMap DeliveryTypeDescription_Map { get; set; } = new LanguageMap();
 		#endregion

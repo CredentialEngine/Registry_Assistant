@@ -161,11 +161,6 @@ namespace RA.Models.Input
 		}
 
 		/// <summary>
-		/// may replace with IdentifierValue
-		/// </summary>
-		public string CodedNotation { get; set; }
-
-		/// <summary>
 		/// Label identifying the category to further distinguish one component from another as designated by the promulgating body.
 		/// Examples may include "Required", "Core", "General Education", "Elective", etc.
 		/// </summary>

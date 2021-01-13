@@ -301,8 +301,21 @@ namespace RA.Models.Input
 		/// </summary>
 		public string LifecycleStatusType { get; set; }
 
+		/// <summary>
+		/// Webpage or online document that defines or explains the nature of transfer value handled by the organization.
+		/// URI
+		/// </summary>
+		public string TransferValueStatement { get; set; }
+		/// <summary>
+		/// Description of the nature of transfer value handled by the organization.
+		/// </summary>
+		public string TransferValueStatementDescription { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap TransferValueStatementDescription_Map { get; set; } = new LanguageMap();
 
-
+		//
 		public List<Jurisdiction> Jurisdiction { get; set; }
 
 		public string MissionAndGoalsStatement { get; set; }

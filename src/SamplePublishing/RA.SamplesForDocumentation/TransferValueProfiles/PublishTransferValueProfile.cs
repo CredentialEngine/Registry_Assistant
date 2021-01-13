@@ -29,6 +29,10 @@ namespace RA.SamplesForDocumentation
 			var result = "";
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
+			if ( string.IsNullOrWhiteSpace( apiKey ) )
+			{
+				//ensure you have added your apiKey to the app.config
+			}
 			// This is the CTID of the organization that owns the data being published
 			var organizationIdentifierFromAccountsSite = SampleServices.GetAppKeyValue( "myOrgCTID" );
 
@@ -57,7 +61,6 @@ namespace RA.SamplesForDocumentation
 			myData.Identifier.Add( new IdentifierValue()
 			{
 				IdentifierTypeName = "ACE Course Code",
-				IdentifierType = "Internal Code",   //Formal name or acronym of the identifier type
 				IdentifierValueCode = "0276"        //Alphanumeric string identifier of the entity
 			} );
 			//============== TransferValue ================================
@@ -69,6 +72,18 @@ namespace RA.SamplesForDocumentation
 					Value=3,
 					CreditUnitType = new List<string>() {"DegreeCredit"},
 					CreditLevelType = new List<string>() {"LowerDivisionLevel"}
+				}
+			};
+			//development prpcess profile
+			myData.DevelopmentProcess = new List<ProcessProfile>()
+			{
+				new ProcessProfile() 
+				{
+					 Description="Description of the development process for this transfer value profile",
+					 DateEffective="1991-05-16",
+					 SubjectWebpage="https://example.org?t=tvpswp",
+					 ExternalInputType = new List<string>() {"Business", "Education Administrators", "Associations" },
+					 ProcessFrequency="New development occurs on an as needed basis."
 				}
 			};
 

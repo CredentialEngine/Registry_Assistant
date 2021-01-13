@@ -27,7 +27,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Experimental
-		/// Allow a of codes for a known framework and API will validate and format as a CredentialAlignmentObject
+		/// Allow a list of codes for a known framework and API will validate and format as a CredentialAlignmentObject
 		/// Current supported frameworks: NAICS and O*Net
 		/// How to designate the framework
 		/// </summary>
