@@ -8,7 +8,7 @@ using RA.Models.Input;
 
 namespace RA.SamplesForDocumentation
 {
-	public class Occupations
+	public class OccupationsHelper
 	{
 		/// <summary>
 		/// Example for populating Occupations for a Credential Request. 

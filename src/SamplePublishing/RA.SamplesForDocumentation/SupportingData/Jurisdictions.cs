@@ -21,13 +21,14 @@ namespace RA.SamplesForDocumentation
 			};
 			entity.MainJurisdiction = new Place()
 			{
-				AddressRegion = "United States"
+				Country = "United States"
 			};
 			entity.JurisdictionException = new List<Place>()
 			{
 				new Place()
 				{
-					AddressRegion = "Oregon"
+					AddressRegion = "Oregon",
+					Country = "United States"
 				}
 			};
 

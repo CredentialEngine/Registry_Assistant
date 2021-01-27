@@ -35,7 +35,7 @@ namespace RA.SamplesForDocumentation
 				Name = "Introduction to Business",
 				Description = "IWU, USF, IUSB: Ancilla course will transfer as undistributed credit.",
 				CTID = myCTID,
-				SubjectWebpage = "https://example.org/?tbd=url",
+				SubjectWebpage = "https://transferin.net/transfer-resources/transfer-databases/core-transfer-library",
 			};
 			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.
 			// The ownedBY CTID is typically the same as the CTID for the data owner.

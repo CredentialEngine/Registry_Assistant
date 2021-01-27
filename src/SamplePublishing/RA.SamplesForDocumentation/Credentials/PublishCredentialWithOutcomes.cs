@@ -124,6 +124,7 @@ namespace RA.SamplesForDocumentation
 			var relevantDataSet = new DataSetProfile()
 			{
 				Name = "Dataset profile for holdersprofile",
+				Description="A helpful description of this dataset profile.",
 				CTID = datasetProfileCtid,
 				DataProvider = new OrganizationReference() { CTID = owningOrganizationCTID },
 				//RelevantDataSetFor = hpctid //this will be derived by the API
@@ -183,28 +184,29 @@ namespace RA.SamplesForDocumentation
 
 
 			//subjects
-			dataProfile.SubjectIncluded.Add( new SubjectProfile()
-			{
-				Name = "Subject Included Name",
-				Description = "Subject Included description",
-				SubjectType = new List<string>() { "CredentialHolder", "CredentialSeeker" }, 
-				SubjectValue = new List<QuantitativeValue>() { new QuantitativeValue()
-					{
-						Value=22, Description="some description"
-					} 
-				}
-			} );
-			dataProfile.SubjectExcluded.Add( new SubjectProfile()
-			{
-				Name = "Subject Excluded Name",
-				Description = "Subject Excluded description",
-				SubjectType = new List<string>() { "Enrollee", "InsufficientDataAvailable" },
-				SubjectValue = new List<QuantitativeValue>() { new QuantitativeValue()
-					{
-						Value=22, Description="some description"
-					}
-				}
-			} );
+			//21-01-26 - removed SubjectIncluded and SubjectExcluded from QData.DataProfile
+			//dataProfile.SubjectIncluded.Add( new SubjectProfile()
+			//{
+			//	Name = "Subject Included Name",
+			//	Description = "Subject Included description",
+			//	SubjectType = new List<string>() { "CredentialHolder", "CredentialSeeker" }, 
+			//	SubjectValue = new List<QuantitativeValue>() { new QuantitativeValue()
+			//		{
+			//			Value=22, Description="some description"
+			//		} 
+			//	}
+			//} );
+			//dataProfile.SubjectExcluded.Add( new SubjectProfile()
+			//{
+			//	Name = "Subject Excluded Name",
+			//	Description = "Subject Excluded description",
+			//	SubjectType = new List<string>() { "Enrollee", "InsufficientDataAvailable" },
+			//	SubjectValue = new List<QuantitativeValue>() { new QuantitativeValue()
+			//		{
+			//			Value=22, Description="some description"
+			//		}
+			//	}
+			//} );
 
 
 			//
