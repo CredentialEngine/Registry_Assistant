@@ -174,17 +174,19 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public List<QuantitativeValue> RelatedEmployment { get; set; } = new List<QuantitativeValue>();
 
-		/// <summary>
-		/// Category of subject excluded from the data.
-		/// qdata:subjectExcluded
-		/// </summary>
-		public List<SubjectProfile> SubjectExcluded { get; set; } = new List<SubjectProfile>();
+		///// <summary>
+		///// Category of subject excluded from the data.
+		///// qdata:subjectExcluded
+		///// </summary>
+		//[Obsolete]
+		//public List<SubjectProfile> SubjectExcluded { get; set; } = new List<SubjectProfile>();
 
-		/// <summary>
-		/// Category of subject included in the data.
-		/// qdata:subjectIncluded
-		/// </summary>
-		public List<SubjectProfile> SubjectIncluded { get; set; } = new List<SubjectProfile>();
+		///// <summary>
+		///// Category of subject included in the data.
+		///// qdata:subjectIncluded
+		///// </summary>
+		//[Obsolete]
+		//public List<SubjectProfile> SubjectIncluded { get; set; } = new List<SubjectProfile>();
 
 		/// <summary>
 		/// Total credential holders and non-holders in the final data collection and reporting.
