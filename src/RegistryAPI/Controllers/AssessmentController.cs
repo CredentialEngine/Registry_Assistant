@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using System.Web.Http;
 
 using RA.Models;
 using RA.Models.Input;
+using EntityRequest = RA.Models.Input.AssessmentRequest;
 using RA.Services;
+using MgrV2 = RA.Services.AssessmentServicesV2;
 using ServiceHelper = RA.Services.ServiceHelperV2;
 using Utilities;
 
@@ -13,16 +16,22 @@ namespace RegistryAPI.Controllers
     public class AssessmentController : BaseController
     {
 		string statusMessage = "";
-		string thisClassName = "AssessmentController";
-		string controller = "assessment";
-		RA.Models.RequestHelper helper = new RequestHelper();
+		readonly string thisClassName = "AssessmentController";
+		readonly string controllerEntity = "assessment";
+		RA.Models.RequestHelper helper = ServiceHelper.InitializeRequestHelper();
+		MgrV2 mgr = new MgrV2();
 
+        /// <summary>
+        /// Handle request to format an Assessment document as CTDL Json-LD
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost, Route( "Assessment/format" )]
-        public RegistryAssistantResponse Format( AssessmentRequest request )
+        public RegistryAssistantFormatResponse Format( EntityRequest request )
         {
             bool isValid = true;
             List<string> messages = new List<string>();
-            var response = new RegistryAssistantResponse();
+            var response = new RegistryAssistantFormatResponse();
 
             try
             {
@@ -35,7 +44,9 @@ namespace RegistryAPI.Controllers
                 ServiceHelper.LogInputFile( request, request.Assessment.Ctid, "Assessment", "Format" );
 
                 response.Payload = new AssessmentServicesV2().FormatAsJson( request, ref isValid, ref messages );
-                response.Successful = isValid;
+				new SupportServices().AddActivityForFormat( helper, "Assessment", mgr.CurrentEntityName, request.Assessment.Ctid, ref statusMessage );
+
+				response.Successful = isValid;
 
                 if ( !isValid )
                 {
@@ -50,50 +61,59 @@ namespace RegistryAPI.Controllers
             return response;
         } //
 
-		[HttpPost, Route( "Assessment/publish" )]
-        public RegistryAssistantResponse Publish( AssessmentRequest request )
+
+        /// <summary>
+        /// Handle request to publish an Assessment document to the Credential Registry
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost, Route( "Assessment/publish" )]
+        public RegistryAssistantResponse Publish( EntityRequest request )
         {
             bool isValid = true;
-            //List<string> messages = new List<string>();
             var response = new RegistryAssistantResponse();
 
             try
             {
+                //var domain = Request.RequestUri.Host;
+                //string domainName = HttpContext.Current.Request.Url.GetLeftPart( UriPartial.Authority );
+
                 if ( request == null || request.Assessment == null )
                 {
                     response.Messages.Add( "Error - please provide a valid Assessment request." );
                     return response;
                 }
-
-                LoggingHelper.DoTrace( 2, string.Format( "RegistryAssistant.{0}.PublishVrequest. IPaddress: {1}, ctid: {2}, envelopeId: {3}", thisClassName, ServiceHelper.GetCurrentIP(), request.Assessment.Ctid, request.RegistryEnvelopeId ) );
-                helper = new RequestHelper();
-                helper.OwnerCtid = request.PublishForOrganizationIdentifier;
-                if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage ) )
+				if ( string.IsNullOrWhiteSpace( request.PublishForOrganizationIdentifier ) )
+				{
+					response.Messages.Add( "Error - please provide a valid CTID for PublishForOrganizationIdentifier." );
+					return response;
+				}
+				LoggingHelper.DoTrace( 2, string.Format( "RegistryAssistant.{0}.PublishRequest. IPaddress: {1}, ctid: {2}, envelopeId: {3}", thisClassName, ServiceHelper.GetCurrentIP(), request.Assessment.Ctid, request.RegistryEnvelopeId ) );
+				helper = new RequestHelper
+				{
+					OwnerCtid = request.PublishForOrganizationIdentifier
+				};
+				if ( !new AuthorizationServices().ValidateRequest( helper, ref statusMessage ) )
                 {
                     response.Messages.Add( statusMessage );
                 }
                 else
                 {
                     helper.SerializedInput = ServiceHelper.LogInputFile( request, request.Assessment.Ctid, "Assessment", "Publish", 5 );
-                    string origCTID = request.Assessment.Ctid ?? "";
 
                     new AssessmentServicesV2().Publish( request, ref isValid, helper );
 
-                    //CredentialServices.Publish( request, ref isValid, ref messages, ref payload, ref registryEnvelopeId );
-
-                    response.CTID = request.Assessment.Ctid;
+                    response.CTID = request.Assessment.Ctid.ToLower();
                     response.Payload = helper.Payload;
                     response.Successful = isValid;
                     if ( isValid )
                     {
-                        response.RegistryEnvelopeIdentifier = helper.RegistryEnvelopeId;
-                        if ( helper.Messages.Count > 0 )
-                            response.Messages = helper.GetAllMessages();
-                        response.CTID = request.Assessment.Ctid;
-                        if ( response.CTID != origCTID )
-                        {
-                            response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this Assessment. If not provided, the future request will be treated as a new Assessment." );
-                        }
+						if (helper.Messages.Count > 0)
+							response.Messages = helper.GetAllMessages();
+
+						UpdateResponse(helper, response);
+
+						response.CredentialFinderUrl = string.Format(mgr.credentialFinderDetailUrl, "Assessment", response.CTID);
 
                     }
                     else
@@ -116,54 +136,34 @@ namespace RegistryAPI.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpDelete, Route( "assessment/delete" )]
-        public RegistryAssistantResponse Delete( DeleteRequest request )
+        public RegistryAssistantDeleteResponse Delete( DeleteRequest request )
         {
             bool isValid = true;
             List<string> messages = new List<string>();
-            var response = new RegistryAssistantResponse();
-            string statusMessage = "";
+            var response = new RegistryAssistantDeleteResponse();
 
-            try
-            {
-                if ( request == null
-                    || string.IsNullOrWhiteSpace( request.CTID )
-                    || string.IsNullOrWhiteSpace( request.PublishForOrganizationIdentifier )
-                    )
-                {
-                    response.Messages.Add( "Error - please provide a valid delete request with a CTID, and the owning organization." );
-                    return response;
-                }
+			try
+			{
 
-                helper.OwnerCtid = request.PublishForOrganizationIdentifier;
-                if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage, true ) )
-                {
-                    response.Messages.Add( statusMessage );
-                }
-                else
-                {
-                    RegistryServices cer = new RegistryServices( "Assessment", "", request.CTID );
+				RegistryServices cer2 = new RegistryServices( controllerEntity, "", request.CTID );
+				isValid = cer2.DeleteRequest( request, controllerEntity, ref messages );
+				if ( isValid )
+				{
+					response.Successful = true;
+				}
+				else
+				{
+					response.Messages.AddRange( messages );
+					response.Successful = false;
+				}
+			}
+			catch ( Exception ex )
+			{
+				response.Messages.Add( ex.Message );
+				response.Successful = false;
+			}
+			return response;
 
-                    isValid = cer.ManagedDelete( request.PublishForOrganizationIdentifier, request.CTID, helper.ApiKey, ref statusMessage );
-
-                    response.Successful = isValid;
-
-                    if ( isValid )
-                    {
-                        response.Successful = true;
-                    }
-                    else
-                    {
-                        response.Messages.Add(statusMessage);
-                        response.Successful = false;
-                    }
-                }
-            }
-            catch ( Exception ex )
-            {
-                response.Messages.Add( ex.Message );
-                response.Successful = false;
-            }
-            return response;
         } //
 
         /// <summary>
@@ -172,11 +172,11 @@ namespace RegistryAPI.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpDelete, Route( "assessment/envelopeDelete" )]
-        public RegistryAssistantResponse CustomDelete( EnvelopeDelete request )
+        public RegistryAssistantDeleteResponse CustomDelete( EnvelopeDelete request )
         {
             bool isValid = true;
             List<string> messages = new List<string>();
-            var response = new RegistryAssistantResponse();
+            var response = new RegistryAssistantDeleteResponse();
             string statusMessage = "";
 
             try
@@ -190,23 +190,21 @@ namespace RegistryAPI.Controllers
                     return response;
                 }
 
-                helper.OwnerCtid = request.PublishForOrganizationIdentifier;
-                if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage ) )
+                helper.OwnerCtid = request.PublishForOrganizationIdentifier.ToLower();
+                if ( !new AuthorizationServices().ValidateRequest( helper, ref statusMessage, true ) )
                 {
                     response.Messages.Add( statusMessage );
                 }
                 else
                 {
                     RegistryServices cer = new RegistryServices( "Assessment", "", request.CTID );
-                    isValid = cer.CredentialRegistry_SelfManagedKeysDelete( request.RegistryEnvelopeId, request.CTID, "registry assistant", ref statusMessage );
+                    isValid = cer.CredentialRegistry_SelfManagedKeysDelete( request, "registry assistant", ref statusMessage );
 
                     response.Successful = isValid;
 
                     if ( isValid )
                     {
                         response.Successful = true;
-                        response.RegistryEnvelopeIdentifier = request.RegistryEnvelopeId;
-                        response.CTID = request.CTID;
                     }
                     else
                     {

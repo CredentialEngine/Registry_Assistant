@@ -9,6 +9,7 @@ using RA.Models;
 using RA.Models.Input;
 using Newtonsoft.Json;
 using RA.Services;
+using Mgr = RA.Services.LearningOpportunityServicesV2;
 using ServiceHelper = RA.Services.ServiceHelperV2;
 using Utilities;
 
@@ -21,130 +22,21 @@ namespace RegistryAPI.Controllers
     {
 		string statusMessage = "";
 		string thisClassName = "LearningOpportunityController";
-		string controller = "LearningOpportunity";
-		RA.Models.RequestHelper helper = new RequestHelper();
+		string controllerEntity = "LearningOpportunity";
+		RA.Models.RequestHelper helper = ServiceHelper.InitializeRequestHelper();
+		Mgr mgr = new Mgr();
 
 		/// <summary>
 		/// Handle request to format a Learning Opportunity document as CTDL Json-LD
-		/// OBSOLETE - redirects to FormatV2
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
-		//[HttpPost, Route( "learningopportunity/format" )]
-		//public RegistryAssistantResponse Format( LearningOpportunityRequest request )
-		//{
-		//	var response = FormatV2( request );
-		//	response.Messages.Add( FormatObsoleteEndpoint( controller, "formatV2" ) );
-		//	return response;
-			//bool isValid = true;
-			//List<string> messages = new List<string>();
-			//var response = new RegistryAssistantResponse();
-
-			//try
-			//{
-			//             if ( request == null || request.LearningOpportunity == null )
-			//             {
-			//                 response.Messages.Add( "Error - please provide a valid LearningOpportunity request." );
-			//                 return response;
-			//             }
-			//             ServiceHelper.LogInputFile( request, request.LearningOpportunity.Ctid, "LearningOpportunity", "Format" );
-
-			//             response.Payload = LearningOpportunityServices.FormatAsJson( request, ref isValid, ref messages );
-			//	response.Successful = isValid;
-
-			//	if ( !isValid )
-			//	{
-			//		response.Messages = messages;
-			//	}
-			//}
-			//catch ( Exception ex )
-			//{
-			//	response.Messages.Add( ex.Message );
-			//	response.Successful = false;
-			//}
-			//return response;
-		//} //
-
-		/// <summary>
-		/// Publish a Learning Opportunity to the Credential Engine Registry
-		/// </summary>
-		/// <param name="request"></param>
-		/// <returns></returns>
-		//[HttpPost, Route( "learningopportunity/publish" )]
-		//public RegistryAssistantResponse Publish( LearningOpportunityRequest request )
-		//{
-		//	var response = PublishV2( request );
-		//	response.Messages.Add( FormatObsoleteEndpoint( controller, "publishV2" ) );
-		//	return response;
-			//bool isValid = true;
-			//List<string> messages = new List<string>();
-			//var response = new RegistryAssistantResponse();
-
-			//string registryEnvelopeId = "";
-			//try
-			//{
-			//	if ( request == null || request.LearningOpportunity == null )
-			//	{
-			//		response.Messages.Add( "Error - please provide a valid Learning Opportunity request." );
-			//		return response;
-			//	}
-			//	LoggingHelper.DoTrace( 2, string.Format( "RegistryAssistant.{0}.Trace request. IPaddress: {1}, ctid: {2}, envelopeId: {3}", thisClassName, ServiceHelper.GetCurrentIP(),  request.LearningOpportunity.Ctid, request.RegistryEnvelopeId ) );
-
-			//             helper.OwnerCtid = request.PublishForOrganizationIdentifier;
-			//             if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage ) )
-			//	{
-			//		response.Messages.Add( statusMessage );
-			//	}
-			//	else
-			//	{
-			//                 helper.SerializedInput = ServiceHelper.LogInputFile( request, request.LearningOpportunity.Ctid, "LearningOpportunity", "Publish", 5 );
-
-			//                 registryEnvelopeId = request.RegistryEnvelopeId;
-			//		string origCTID = request.LearningOpportunity.Ctid ?? "";
-
-			//		LearningOpportunityServices.Publish( request, ref isValid, helper );
-
-			//                 //CredentialServices.Publish( request, ref isValid, ref messages, ref payload, ref registryEnvelopeId );
-
-			//                 response.CTID = request.LearningOpportunity.Ctid;
-			//                 response.Payload = helper.Payload;
-			//                 response.Successful = isValid;
-
-			//                 if ( isValid )
-			//		{
-			//                     response.RegistryEnvelopeIdentifier = helper.RegistryEnvelopeId;
-			//                     if ( helper.Messages.Count > 0 )
-			//                         response.Messages = helper.GetAllMessages();
-			//                     response.CTID = request.LearningOpportunity.Ctid;
-			//			if ( response.CTID != origCTID )
-			//			{
-			//				response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this Learning Opportunity. If not provided, the future request will be treated as a new Learning Opportunity." );
-			//			}
-			//		}
-			//		else
-			//		{
-			//                     response.Messages = helper.GetAllMessages();
-			//                 }
-			//	}
-			//}
-			//catch ( Exception ex )
-			//{
-			//	response.Messages.Add( ex.Message );
-			//	response.Successful = false;
-			//}
-			//return response;
-		//} //
-        /// <summary>
-        /// Handle request to format a Learning Opportunity document as CTDL Json-LD
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost, Route( "learningopportunity/format" )]
-        public RegistryAssistantResponse Format( LearningOpportunityRequest request )
+		[HttpPost, Route( "learningopportunity/format" )]
+        public RegistryAssistantFormatResponse Format( LearningOpportunityRequest request )
         {
             bool isValid = true;
             List<string> messages = new List<string>();
-            var response = new RegistryAssistantResponse();
+            var response = new RegistryAssistantFormatResponse();
 
             try
             {
@@ -156,7 +48,9 @@ namespace RegistryAPI.Controllers
                 ServiceHelper.LogInputFile( request, request.LearningOpportunity.Ctid, "LearningOpportunity", "Format" );
 
                 response.Payload = new LearningOpportunityServicesV2().FormatAsJson( request, ref isValid, ref messages );
-                response.Successful = isValid;
+				new SupportServices().AddActivityForFormat( helper, "LearningOpportunity", mgr.CurrentEntityName, request.LearningOpportunity.Ctid, ref statusMessage );
+
+				response.Successful = isValid;
 
                 if ( !isValid )
                 {
@@ -191,10 +85,15 @@ namespace RegistryAPI.Controllers
                     response.Messages.Add( "Error - please provide a valid Learning Opportunity request." );
                     return response;
                 }
-                LoggingHelper.DoTrace( 2, string.Format( "RegistryAssistant.{0}.Trace request. IPaddress: {1}, ctid: {2}, envelopeId: {3}", thisClassName, ServiceHelper.GetCurrentIP(), request.LearningOpportunity.Ctid, request.RegistryEnvelopeId ) );
+				if ( string.IsNullOrWhiteSpace( request.PublishForOrganizationIdentifier ) )
+				{
+					response.Messages.Add( "Error - please provide a valid CTID for PublishForOrganizationIdentifier." );
+					return response;
+				}
+				LoggingHelper.DoTrace( 2, string.Format( "RegistryAssistant.{0}.Trace request. IPaddress: {1}, ctid: {2}, envelopeId: {3}", thisClassName, ServiceHelper.GetCurrentIP(), request.LearningOpportunity.Ctid, request.RegistryEnvelopeId ) );
 
-                helper.OwnerCtid = request.PublishForOrganizationIdentifier;
-                if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage ) )
+                helper.OwnerCtid = request.PublishForOrganizationIdentifier.ToLower();
+                if ( !new AuthorizationServices().ValidateRequest( helper, ref statusMessage ) )
                 {
                     response.Messages.Add( statusMessage );
                 }
@@ -203,26 +102,32 @@ namespace RegistryAPI.Controllers
                     helper.SerializedInput = ServiceHelper.LogInputFile( request, request.LearningOpportunity.Ctid, "LearningOpportunity", "Publish", 5 );
 
                     registryEnvelopeId = request.RegistryEnvelopeId;
-                    string origCTID = request.LearningOpportunity.Ctid ?? "";
+                    string originalCTID = request.LearningOpportunity.Ctid ?? "";
 
                     new LearningOpportunityServicesV2().Publish( request, ref isValid, helper );
 
                     //CredentialServices.Publish( request, ref isValid, ref messages, ref payload, ref registryEnvelopeId );
 
-                    response.CTID = request.LearningOpportunity.Ctid;
+                    response.CTID = request.LearningOpportunity.Ctid.ToLower();
                     response.Payload = helper.Payload;
                     response.Successful = isValid;
 
                     if ( isValid )
                     {
-                        response.RegistryEnvelopeIdentifier = helper.RegistryEnvelopeId;
-                        if ( helper.Messages.Count > 0 )
-                            response.Messages = helper.GetAllMessages();
-                        response.CTID = request.LearningOpportunity.Ctid;
-                        if ( response.CTID != origCTID )
-                        {
-                            response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this Learning Opportunity. If not provided, the future request will be treated as a new Learning Opportunity." );
-                        }
+						if (helper.Messages.Count > 0)
+							response.Messages = helper.GetAllMessages();
+
+						UpdateResponse(helper, response);
+
+						//response.RegistryEnvelopeIdentifier = helper.RegistryEnvelopeId;						
+						//response.EnvelopeUrl = mgr.credentialRegistryBaseUrl + "envelopes/" + response.RegistryEnvelopeIdentifier;
+
+						response.CredentialFinderUrl = string.Format( mgr.credentialFinderDetailUrl, "LearningOpportunity", response.CTID);
+
+                        //if ( response.CTID != originalCTID )
+                        //{
+                        //    response.Messages.Add( "Warning - a CTID was generated for this request. This CTID must be used for any future requests to update this Learning Opportunity. If not provided, the future request will be treated as a new Learning Opportunity." );
+                        //}
                     }
                     else
                     {
@@ -243,34 +148,71 @@ namespace RegistryAPI.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpDelete, Route( "learningopportunity/delete" )]
-        public RegistryAssistantResponse Delete( DeleteRequest request )
+        public RegistryAssistantDeleteResponse Delete( DeleteRequest request )
         {
             bool isValid = true;
             List<string> messages = new List<string>();
-            var response = new RegistryAssistantResponse();
+            var response = new RegistryAssistantDeleteResponse();
+            try
+            {
+                if ( request == null || request.CTID == null )
+                {
+                    response.Messages.Add( "Error - please provide a valid delete request." );
+                    return response;
+                }
+                RegistryServices cer2 = new RegistryServices( controllerEntity, "", request.CTID );
+                isValid = cer2.DeleteRequest( request, controllerEntity, ref messages );
+                if ( isValid )
+                {
+                    response.Successful = true;
+                }
+                else
+                {
+                    response.Messages.AddRange( messages );
+                    response.Successful = false;
+                }
+            }
+            catch ( Exception ex )
+            {
+                response.Messages.Add( ex.Message );
+                response.Successful = false;
+            }
+            return response;
+        } //
+
+        /// <summary>
+        /// Delete request of an Learning Opportunity by EnvelopeId and CTID
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpDelete, Route( "learningopportunity/envelopeDelete" )]
+        public RegistryAssistantDeleteResponse CustomDelete(EnvelopeDelete request)
+        {
+            bool isValid = true;
+            List<string> messages = new List<string>();
+            var response = new RegistryAssistantDeleteResponse();
             string statusMessage = "";
 
             try
             {
                 if ( request == null
                     || string.IsNullOrWhiteSpace( request.CTID )
-                    || string.IsNullOrWhiteSpace( request.PublishForOrganizationIdentifier )
+                    || string.IsNullOrWhiteSpace( request.RegistryEnvelopeId )
                     )
                 {
-                    response.Messages.Add( "Error - please provide a valid delete request with a CTID, and the owning organization." );
+                    response.Messages.Add( "Error - please provide a valid delete request with a CTID, and envelope ID." );
                     return response;
                 }
 
-                helper.OwnerCtid = request.PublishForOrganizationIdentifier;
-                if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage, true ) )
+                helper.OwnerCtid = request.PublishForOrganizationIdentifier.ToLower();
+                if ( !new AuthorizationServices().ValidateRequest( helper, ref statusMessage, true ) )
                 {
                     response.Messages.Add( statusMessage );
                 }
                 else
                 {
                     RegistryServices cer = new RegistryServices( "LearningOpportunity", "", request.CTID );
-
-                    isValid = cer.ManagedDelete( request.PublishForOrganizationIdentifier, request.CTID, helper.ApiKey, ref statusMessage );
+                    isValid = cer.CredentialRegistry_SelfManagedKeysDelete( request, "registry assistant", ref statusMessage );
 
                     response.Successful = isValid;
 
@@ -280,7 +222,8 @@ namespace RegistryAPI.Controllers
                     }
                     else
                     {
-                        response.Messages.Add(statusMessage);
+                        //if not valid, could return the payload as reference?
+                        response.Messages.Add( statusMessage );
                         response.Successful = false;
                     }
                 }
@@ -292,58 +235,5 @@ namespace RegistryAPI.Controllers
             }
             return response;
         } //
-
-        [HttpDelete, Route( "learningopportunity/envelopeDelete" )]
-		public RegistryAssistantResponse CustomDelete( EnvelopeDelete request )
-		{
-			bool isValid = true;
-			List<string> messages = new List<string>();
-			var response = new RegistryAssistantResponse();
-			string statusMessage = "";
-
-			try
-			{
-				if ( request == null
-					|| string.IsNullOrWhiteSpace( request.CTID )
-					|| string.IsNullOrWhiteSpace( request.RegistryEnvelopeId )
-					)
-				{
-					response.Messages.Add( "Error - please provide a valid delete request with a CTID, and envelope ID." );
-					return response;
-				}
-
-                helper.OwnerCtid = request.PublishForOrganizationIdentifier;
-                if ( !ServiceHelper.ValidateRequest( helper, ref statusMessage ) )
-				{
-					response.Messages.Add( statusMessage );
-				}
-				else
-				{
-                    RegistryServices cer = new RegistryServices( "LearningOpportunity", "", request.CTID );
-                    isValid = cer.CredentialRegistry_SelfManagedKeysDelete( request.RegistryEnvelopeId, request.CTID, "registry assistant", ref statusMessage );
-
-					response.Successful = isValid;
-
-					if ( isValid )
-					{
-						response.Successful = true;
-						response.RegistryEnvelopeIdentifier = request.RegistryEnvelopeId;
-						response.CTID = request.CTID;
-					}
-					else
-					{
-						//if not valid, could return the payload as reference?
-						response.Messages.Add(statusMessage);
-						response.Successful = false;
-					}
-				}
-			}
-			catch ( Exception ex )
-			{
-				response.Messages.Add( ex.Message );
-				response.Successful = false;
-			}
-			return response;
-		} //
-	}
+    }
 }
