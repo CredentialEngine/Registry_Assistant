@@ -61,7 +61,8 @@ namespace RA.Models.JsonV2
 		/// ceterms:classification
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:classification" )]
-		public List<CredentialAlignmentObject> Classification { get; set; } 
+		public List<string> Classification { get; set; }
+		//public List<CredentialAlignmentObject> Classification { get; set; }
 
 		/// <summary>
 		/// Comment

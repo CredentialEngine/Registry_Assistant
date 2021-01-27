@@ -82,7 +82,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
 		public string SubjectWebpage { get; set; } //URL
 
-
 		/// <summary>
 		/// The status type of this Organization. 
 		/// The default is Active. 
@@ -194,7 +193,18 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:availabilityListing" )]
         public List<string> AvailabilityListing { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:serviceType" )]
+
+		/// <summary>
+		/// Webpage or online document that defines or explains the nature of transfer value handled by the organization.
+		/// URI
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:transferValueStatement" )]
+		public string TransferValueStatement { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:transferValueStatementDescription" )]
+		public LanguageMap TransferValueStatementDescription { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:serviceType" )]
         public List<CredentialAlignmentObject> ServiceType { get; set; }
 
         //public Jurisdiction Jurisdiction { get; set; }

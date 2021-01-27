@@ -22,6 +22,7 @@ namespace RA.Models.JsonV2
         }
 		/// <summary>
 		/// Return true if the language map is empty
+		/// !!doesnt' work
 		/// </summary>
 		/// <returns></returns>
 		public bool IsEmpty()

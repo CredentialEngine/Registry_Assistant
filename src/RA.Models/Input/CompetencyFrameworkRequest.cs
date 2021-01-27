@@ -29,11 +29,16 @@ namespace RA.Models.Input
         {
         }
 
-        /// <summary>
+		/// <summary>
+		/// Helper property for use with blank nodes
+		/// </summary>
+		public string Type { get; set; } = "CompetencyFramework";
+
+		/// <summary>
 		/// A unique URI for this framework. 
 		/// If not entered, a credential registry URI will be generated using the CTID.
 		/// </summary>
-        public string CtdlId { get; set; }
+		public string CtdlId { get; set; }
 
 
 		/// <summary>
@@ -241,6 +246,10 @@ namespace RA.Models.Input
         public Competency()
         {
         }
+		/// <summary>
+		/// Helper property for use with blank nodes
+		/// </summary>
+		public string Type { get; set; } = "Competency";
 
 		/// <summary>
 		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a credential, learning opportunity competency, or assessment recognizes the entity in transactions with the external environment (e.g., in verifiable claims involving a credential).
