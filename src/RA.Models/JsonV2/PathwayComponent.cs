@@ -4,7 +4,10 @@ using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
-
+	/// <summary>
+	/// History
+	/// 21-01-06 remove CodedNotation
+	/// </summary>
 	public class PathwayComponent
 	{
 		public PathwayComponent() { }
@@ -21,8 +24,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
 
-		[JsonProperty( PropertyName = "ceasn:codedNotation" )]
-		public string CodedNotation { get; set; }
+		//[JsonProperty( PropertyName = "ceasn:codedNotation" )]
+		//public string CodedNotation { get; set; }
 
 		//
 		[JsonProperty( PropertyName = "ceterms:componentCategory" )]

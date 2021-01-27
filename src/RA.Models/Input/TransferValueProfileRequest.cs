@@ -40,31 +40,11 @@ namespace RA.Models.Input
 
 	/// <summary>
 	/// Description of transfer value for a resource.
+	/// History
+	/// 21-01-13 Added DevelopementProcess
 	/// </summary>
 	public class TransferValueProfile
 	{
-		/*
-		 * 
-			ceterms:name
-			ceterms:description
-			ceterms:ctid
-			ceterms:subjectWebpage
-			ceterms:startDate
-			ceterms:endDate
-			ceterms:statusType
-			ceterms:identifier
-			ceterms:ownedBy
-			ceterms:derivedFrom
-			ceterms:transferValue
-			ceterms:transferValueFrom
-			ceterms:transferValueFor
-			--------------
-			ceterms:learningMethodDescription
-			ceterms:assessmentMethodDescription
-			ceterms:recognizes
-			ceterms:owns
-		 * 
-		 */
 
 		#region Required 
 		/// <summary>
@@ -158,7 +138,10 @@ namespace RA.Models.Input
 		///  2020-12-07 The data type was changed to object. The handled CTDL classes are: 
 		///  - AssessmentProfile
 		///  - LearningOpportunityProfile
-		///  - All credential classes (pending)
+		///  - All credential classes
+		///  - Competency - TBD
+		///  - Job  - TBD
+		///  - Occupation  - TBD
 		/// </summary>
 		public List<object> TransferValueFrom { get; set; } = new List<object>();
 
@@ -167,7 +150,10 @@ namespace RA.Models.Input
 		///  2020-12-07 The data type was changed to object. The handled CTDL classes are: 
 		///  - AssessmentProfile
 		///  - LearningOpportunityProfile
-		///  - All credential classes (pending)
+		///  - All credential classes
+		///  - Competency - TBD
+		///  - Job  - TBD
+		///  - Occupation  - TBD
 		/// </summary>
 		public List<object> TransferValueFor { get; set; } = new List<object>();
 

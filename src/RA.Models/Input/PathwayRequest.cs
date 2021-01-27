@@ -135,6 +135,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
 	}
+
+	/// <summary>
+	/// History
+	/// 21-01-06 remove CodedNotation
+	/// </summary>
 	public class PathwayComponent : BaseRequestClass
 	{
 		/// <summary>
@@ -178,7 +183,6 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Resource(s) that describes what must be done to complete a PathwayComponent, or part thereof, as determined by the issuer of the Pathway.
-		/// Provide the CTID or the full URI for the target environment. 
 		/// ceterms:ComponentCondition
 		/// </summary>
 		public List<ComponentCondition> HasCondition { get; set; } = new List<ComponentCondition>();

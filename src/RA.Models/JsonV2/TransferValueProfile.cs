@@ -8,6 +8,10 @@ using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
+	/// <summary>
+	/// History
+	/// 21-01-13 Added DevelopementProcess
+	/// </summary>
 	public class TransferValueProfile
 	{
 		public TransferValueProfile()
@@ -35,7 +39,10 @@ namespace RA.Models.JsonV2
 		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:derivedFrom" )]
-		public List<string> DerivedFrom { get; set; } 
+		public List<string> DerivedFrom { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
 		/// <summary>
 		/// The webpage that describes this TransferValueProfile.
