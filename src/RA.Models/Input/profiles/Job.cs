@@ -11,6 +11,10 @@ namespace RA.Models.Input
 	/// </summary>
 	public class Job
 	{
+		/// <summary>
+		/// Helper property for use with blank nodes
+		/// </summary>
+		public string Type { get; set; } = "Job";
 
 		/// <summary>
 		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a resource recognizes it in transactions with the external environment (e.g., in verifiable claims involving the resource).
