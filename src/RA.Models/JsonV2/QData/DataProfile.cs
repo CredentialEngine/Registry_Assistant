@@ -189,17 +189,17 @@ namespace RA.Models.JsonV2.QData
 		[JsonProperty( PropertyName = "qdata:relatedEmployment" )]
 		public List<QuantitativeValue> RelatedEmployment { get; set; } 
 
-		/// <summary>
-		/// Category of subject excluded from the data.
-		/// </summary>
-		[JsonProperty( PropertyName = "qdata:subjectExcluded" )]
-		public List<SubjectProfile> SubjectExcluded { get; set; } 
+		///// <summary>
+		///// Category of subject excluded from the data.
+		///// </summary>
+		//[JsonProperty( PropertyName = "qdata:subjectExcluded" )]
+		//public List<SubjectProfile> SubjectExcluded { get; set; } 
 
-		/// <summary>
-		/// Category of subject included in the data.
-		/// </summary>
-		[JsonProperty( PropertyName = "qdata:subjectIncluded" )]
-		public List<SubjectProfile> SubjectIncluded { get; set; } 
+		///// <summary>
+		///// Category of subject included in the data.
+		///// </summary>
+		//[JsonProperty( PropertyName = "qdata:subjectIncluded" )]
+		//public List<SubjectProfile> SubjectIncluded { get; set; } 
 
 		/// <summary>
 		/// Total credential holders and non-holders in the final data collection and reporting.
