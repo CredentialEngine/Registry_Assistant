@@ -36,8 +36,8 @@ namespace RA.SamplesForDocumentation
 				Ctid = myOrgCTID,
 				SubjectWebpage = "http://example.com",
 				Type = "ceterms:CredentialOrganization",
-				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
-				Email = new List<string>() { "info@credreg.net" }
+				Keyword = new List<string>() { "Credentials", "Technical Training", "Credential Registry Consulting" },
+				Email = new List<string>() { "info@myOrg.com" }
 			};
 			//required-concept from AgentSector: https://credreg.net/ctdl/terms/agentSectorType#AgentSector
 			myData.AgentSectorType = "PrivateNonProfit";
@@ -63,6 +63,21 @@ namespace RA.SamplesForDocumentation
 			};
 			myData.Address.Add( mainAddress );
 
+			//Add a tech support contact point without an address, including a phone number and email
+			var techSupport = new Place()
+			{
+				ContactPoint = new List<ContactPoint>()
+				{
+					new ContactPoint()
+					{   ContactType="Tech-Support",
+						PhoneNumbers = new List<string>() {"800-555-1212" }, 
+						Emails = new List<string>() {"techSupport@myOrg.com"}
+					}
+				}
+			};
+			myData.Address.Add( techSupport );
+
+
 			//use organization reference to add a department for the organization
 			myData.Department.Add( new OrganizationReference()
 			{
@@ -71,12 +86,14 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "http://example.com?t=testDepartment",
 				Type = OrganizationReference.CredentialOrganization
 			} );
-			//if i know the CTID, then only specify CTID
+			//		QA
+			//if you know the CTID, then only specify CTID
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{
 				CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
 			} );
-			//Add organization that is not in the credential registry
+
+			//Add organization that is not in the credential registry (OR the CTID is not known)
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{
 				Type = "CredentialOrganization",
@@ -85,13 +102,6 @@ namespace RA.SamplesForDocumentation
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
 			} );
 
-			//if the CTID is not known, or if not sure a QA organization is in the registry, use a refer
-			myData.Department.Add( new OrganizationReference()
-			{
-				Name = "A Quality Assurance Organization",
-				SubjectWebpage = "http://example.com/qualityAssuranceIsUs",
-				Type = OrganizationReference.QACredentialOrganization
-			} );
 
 			//This holds the organization and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
@@ -221,7 +231,7 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "http://example.com",
 				Type = "ceterms:CredentialOrganization",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
-				Email = new List<string>() { "info@credreg.net" }
+				Email = new List<string>() { "info@myOrg.com" }
 			};
 			//required-concept from AgentSector: https://credreg.net/ctdl/terms/agentSectorType#AgentSector
 			myData.AgentSectorType = "PrivateNonProfit";

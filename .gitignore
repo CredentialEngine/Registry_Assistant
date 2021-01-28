@@ -252,3 +252,4 @@ paket-files/
 *.sln.iml
 /src/SamplePublishing/RA.SamplesForDocumentation/SupportingData/DurationProfile.cs
 /src/Notes.txt
+/src/SamplePublishing/SourceModels
