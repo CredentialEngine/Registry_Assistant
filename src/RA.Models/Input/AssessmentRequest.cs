@@ -313,6 +313,13 @@ namespace RA.Models.Input
 		/// <see cref="https://credreg.net/ctdl/terms/AudienceLevel"/>
 		/// </summary>
 		public List<string> AudienceLevelType { get; set; } = new List<string>();
+		/// <summary>
+		/// Another source of information about the entity being described.
+		/// HINT: If the SameAs target is a resource in the Credential Registry, just the CTID needs to be provided. 
+		/// ceterms:sameAs
+		/// </summary>
+		public List<string> SameAs { get; set; } = new List<string>();
+
 		public string ScoringMethodDescription { get; set; }
 		public LanguageMap ScoringMethodDescription_Map { get; set; } = new LanguageMap();
 		public string ScoringMethodExample { get; set; }

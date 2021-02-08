@@ -247,7 +247,12 @@ namespace RA.Models.Input
 		public List<string> Keyword { get; set; }
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
-
+		/// <summary>
+		/// Another source of information about the entity being described.
+		/// HINT: If the SameAs target is a resource in the Credential Registry, just the CTID needs to be provided. 
+		/// ceterms:sameAs
+		/// </summary>
+		public List<string> SameAs { get; set; } = new List<string>();
 		public List<string> Subject { get; set; }
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 

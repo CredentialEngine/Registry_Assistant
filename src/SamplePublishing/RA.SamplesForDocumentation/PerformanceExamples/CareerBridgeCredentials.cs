@@ -29,8 +29,9 @@ namespace RA.SamplesForDocumentation
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
 			{
 				//ensure you have added your apiKey to the app.config
+				//		75a11a1a-2806-4a54-b12e-388d0045fba5
 			}
-			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
+			var organizationIdentifierFromAccountsSite = "ce-43cfb849-94af-4324-b1f3-d3c0df784fbb";// SampleServices.GetMyOrganizationCTID();
 			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
 			{
 				//ensure you have added your organization account CTID to the app.config
@@ -38,8 +39,8 @@ namespace RA.SamplesForDocumentation
 			RequestHelper helper = new RA.Models.RequestHelper();
 			//create a new CTID (then save for reuse).
 			var credCtid = "ce-343120e2-c068-4630-bb39-0a09e56d5613"; ;
-			var hpctid = "ce-" + Guid.NewGuid().ToString().ToLower();
-			var datasetProfileCtid = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var hpctid = "ce-63920d52-04f5-4dd0-b8a4-b4f7f4e0cf81";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var datasetProfileCtid = "ce-13e36d12-5d9b-4f56-a885-319a46302e29";// "ce-" + Guid.NewGuid().ToString().ToLower();
 
 			var myData = new Credential()
 			{
@@ -56,6 +57,7 @@ namespace RA.SamplesForDocumentation
 				new OrganizationReference()
 				{
 					Type="CredentialOrganization",
+					CTID="ce-43cfb849-94af-4324-b1f3-d3c0df784fbb",
 					Name="Bates Technical College",
 					Description="Bates Technical College is a Technical College located in Tacoma, WA", 
 					SubjectWebpage="http://www.batestech.edu/"

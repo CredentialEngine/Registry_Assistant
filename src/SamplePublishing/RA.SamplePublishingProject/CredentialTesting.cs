@@ -4,6 +4,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using RA.SamplesForDocumentation;
 
+using RA.SamplesForDocumentation.Credentials;
+
 namespace RA.SamplePublishingProject
 {
 	[TestClass]
@@ -26,13 +28,21 @@ namespace RA.SamplePublishingProject
 		public void CredentialWithHoldersProfile()
 		{
 			//using simple post
-			new PublishCredentialWithOutcomes().CredentialWithHoldersProfile( "publish" );
+			new PublishCredentialWithOutcomes().CredentialWithEmploymentOutcomeProfiles( "publish" );
 		}
+
+		[TestMethod]
+		public void CareerBridgeCredentialsCredentialWithHoldersProfile()
+		{
+			//using simple post
+			new CareerBridgeCredentials().CredentialWithHoldersProfile( "publish" );
+		}
+
 		[TestMethod]
 		public void PublishQACredential()
 		{
 			//using simple post
-			new PublishCredential().PublishQACredentialWithETPL( "publish" );
+			new PublishQACredentialWithETPL().Publish( true );
 		}
 		[TestMethod]
 		public void PublishProPathCredential()

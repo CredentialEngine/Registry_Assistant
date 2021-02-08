@@ -18,6 +18,7 @@ namespace RA.SamplesForDocumentation
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
 			{
 				//ensure you have added your apiKey to the app.config
+				//0d9d86e0-f7cc-43e8-be0c-21ec24025758
 			}
 			// This is the CTID of the organization that owns the data being published
 			//TODO - publish Indiana - copy from production
@@ -32,7 +33,7 @@ namespace RA.SamplesForDocumentation
 			// A simple transfer value profile object - required properties
 			var myData = new TransferValueProfile()
 			{
-				Name = "Introduction to Business",
+				Name = "Business, Introduction to",
 				Description = "IWU, USF, IUSB: Ancilla course will transfer as undistributed credit.",
 				CTID = myCTID,
 				SubjectWebpage = "https://transferin.net/transfer-resources/transfer-databases/core-transfer-library",
@@ -59,7 +60,7 @@ namespace RA.SamplesForDocumentation
 			//If not provided as much information as is available
 			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
 			//NOTE: you must provide owned by or offered by with TransferValueFrom or TransferValueFor
-			var transferValueFrom = new LearningOpportunity()
+			var ancillaCollegeLopp = new LearningOpportunity()
 			{
 				Type = "LearningOpportunityProfile",
 				Name = "Introduction to Business-FROM",
@@ -72,14 +73,22 @@ namespace RA.SamplesForDocumentation
 				Name = "Ancilla College",
 				SubjectWebpage = "https://example.org/?tbd=url",
 			};
-			transferValueFrom.OfferedBy = new List<OrganizationReference>();
-			transferValueFrom.OfferedBy.Add( ownedBy );
-			myData.TransferValueFrom.Add( transferValueFrom );
+			ancillaCollegeLopp.OfferedBy = new List<OrganizationReference>();
+			ancillaCollegeLopp.OfferedBy.Add( ownedBy );
+			ancillaCollegeLopp.Identifier = new List<IdentifierValue>()
+			{
+				new IdentifierValue()
+				{
+					IdentifierTypeName="Course Number",
+					IdentifierValueCode="BADM 100"
+				}
+			};
+			myData.TransferValueFrom.Add( ancillaCollegeLopp );
 			//
-			var transferValueFor = new LearningOpportunity()
+			var genericLoppFor = new LearningOpportunity()
 			{
 				Type = "LearningOpportunityProfile",
-				Name = "Business, Introduction to - FOR",
+				Name = "Introduction to Business - CTL",
 				SubjectWebpage = "https://example.org/?tbd=introToBusFor",
 
 			};
@@ -87,11 +96,11 @@ namespace RA.SamplesForDocumentation
 			var offeredBy = new OrganizationReference()
 			{
 				Type = "CredentialOrganization",
-				Name = "A provider to be named later",
-				SubjectWebpage = "https://example.org/?tbd=forOfferedBy",
+				Name = "Indiana Commission for Higher Education",
+				SubjectWebpage = "https://example.org/?tbd=url",
 			};
-			transferValueFor.OfferedBy.Add( offeredBy );
-			myData.TransferValueFor.Add( transferValueFor );
+			genericLoppFor.OfferedBy.Add( offeredBy );
+			myData.TransferValueFor.Add( genericLoppFor );
 			//===================================================================================
 
 

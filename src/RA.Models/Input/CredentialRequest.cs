@@ -389,7 +389,13 @@ namespace RA.Models.Input
 		public string NextVersion { get; set; } //URL
 		public string SupersededBy { get; set; } //URL
 		public string Supersedes { get; set; } //URL
-
+											  
+		/// <summary>
+		/// Another source of information about the entity being described.
+		/// HINT: If the SameAs target is a resource in the Credential Registry, just the CTID needs to be provided. 
+		/// ceterms:sameAs
+		/// </summary>
+		public List<string> SameAs { get; set; } = new List<string>();
 		public List<string> Subject { get; set; }
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 

@@ -58,6 +58,7 @@
     <Compile Include="ConditionManifests\PublishConditionManifest.cs" />
     <Compile Include="CostManifests\PublishCostManifest.cs" />
     <Compile Include="Credentials\PublishCredentialWithOutcomes.cs" />
+    <Compile Include="Credentials\PublishQACredentialWithETPL.cs" />
     <Compile Include="Employment\Occupations.cs" />
     <Compile Include="PerformanceExamples\CareerBridgeCredentials.cs" />
     <Compile Include="ProPath\ProPathExamples.cs" />
