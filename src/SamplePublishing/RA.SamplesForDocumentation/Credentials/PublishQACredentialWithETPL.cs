@@ -14,6 +14,11 @@ namespace RA.SamplesForDocumentation.Credentials
 {
 	public class PublishQACredentialWithETPL
 	{
+		/// <summary>
+		/// Publish a QualityAssurance credential with HasETPLResource = list of credentials on a (for example) state's ETPL list
+		/// </summary>
+		/// <param name="doingPublish"></param>
+		/// <returns></returns>
 		public string Publish( bool doingPublish = false )
 		{
 			// Assign the api key - acquired from organization account of the organization doing the publishing
