@@ -114,7 +114,26 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Must be a valid CTDL cost type. 
-		/// Example: Tuition, Application, AggregateCost, RoomOrResidency
+		/// costType:AggregateCost
+		///	costType:Application
+		///	costType:BackgroundCheck
+		///	costType:EnrollmentFee
+		///	costType:GraduationFee
+		///	costType:LearningResource
+		///	costType:Meals
+		///	costType:MixedFees
+		///	costType:OptionalCharges
+		///	costType:ProcessingFee
+		///	costType:ProgramSpecificFee
+		///	costType:ReexaminationFee
+		///	costType:RenewalFee
+		///	costType:ReschedulingFee
+		///	costType:RoomOrResidency
+		///	costType:ScoringFee
+		///	costType:StandaloneAssessment
+		///	costType:StudentServicesFee
+		///	costType:TechnologyFee
+		///	costType:Tuition
 		/// <see cref="https://credreg.net/ctdl/terms/CostType#CostType"/>
 		/// </summary>
 		public string DirectCostType { get; set; }
