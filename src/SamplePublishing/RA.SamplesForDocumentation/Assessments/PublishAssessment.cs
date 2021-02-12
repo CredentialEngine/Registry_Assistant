@@ -60,6 +60,41 @@ namespace RA.SamplesForDocumentation
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
 			} );
 
+			//
+			//A assessment *must* be connected to a credential in order to be published.
+			//The connection can be made using a Required condition profile in the Credential or using a RequiredFor Connection from the assessment
+
+			myData.IsRequiredFor = new List<Connections>()
+			{
+				new Connections()
+				{
+					Description="This assessment is required for the 'Acme Credential'.",
+					TargetCredential = new List<EntityReference>()
+					{
+						new EntityReference()
+						{
+							Type="Certificate", //optional, but helpful
+							CTID="ce-f5d9bf2a-d930-4e77-a69b-85788943851c"
+						}
+					}
+				},
+				//if the credential is not in the registry (often where the owner is not the same as the owner of the assessment), or the publisher doesn't have the CTID, a full EntityReference can be provided. 
+				new Connections()
+				{
+					Description="This assessment is required for the 'Third Party Credential'.",
+					TargetCredential = new List<EntityReference>()
+					{
+						new EntityReference()
+						{
+							Type="Certificate", //required here
+							Name="Third Party Credential",
+							SubjectWebpage="https://example.com?t=thisCredential",
+							Description="Description of this credential"
+						}
+					}
+				}
+			};
+
 			//This holds the assessment and the identifier (CTID) for the owning organization
 			var myRequest = new AssessmentRequest()
 			{

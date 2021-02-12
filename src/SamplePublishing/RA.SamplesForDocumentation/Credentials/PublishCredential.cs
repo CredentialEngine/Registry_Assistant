@@ -238,57 +238,6 @@ namespace RA.SamplesForDocumentation
 			return result;
 		}
 
-		public string PublishQACredentialWithETPL( string requestType = "publish" )
-		{
-			//Holds the result of the publish action
-			var result = "";
-			// Assign the api key - acquired from organization account of the organization doing the publishing
-			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
-			// This is the CTID of the organization that owns the data being published
-			var organizationIdentifierFromAccountsSite = SampleServices.GetAppKeyValue( "myOrgCTID" );
-			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString();
-
-			//A simple credential object - see below for sample class definition
-			var myData = new Credential()
-			{
-				Name = "My Quality Assurance Credential Name",
-				Description = "This is some text that describes my quality assurance credential.",
-				Ctid = myCTID,
-				SubjectWebpage = "http://example.com/credential/1234",
-				CredentialType = "ceterms:QualityAssuranceCredential",
-				InLanguage = new List<string>() { "en-US" },
-				Keyword = new List<string>() { "ETPL", "QualityAssurance" }
-			};
-			//typically the ownedBy is the same as the CTID for the data owner
-			myData.OwnedBy.Add( new OrganizationReference()
-			{
-				CTID = organizationIdentifierFromAccountsSite
-			} );
-			//list of CTIDs for credentials that have been published to the registry
-			//API will validate that the target credential exists. If not found, the request will be rejected. 
-			myData.HasETPLResource = new List<string>()
-			{
-				"ce-8d68b772-fe52-4b7b-9f3e-cb4fe93bb0ab","ce-7d77fdf7-8591-4fe4-b3ed-5aa798879651","ce-8d0ead8a-bff9-4231-be30-6db0b262bc44"
-			};
-
-			//This holds the credential and the identifier (CTID) for the owning organization
-			var myRequest = new APIRequest()
-			{
-				Credential = myData,
-				DefaultLanguage = "en-us",
-				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
-			};
-			//Serialize the credential request object
-			//var payload = JsonConvert.SerializeObject( myRequest );
-			//Preferably, use method that will exclude null/empty properties
-			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
-			//call the Assistant API
-			result = new SampleServices().SimplePost( "credential", requestType, payload, apiKey );
-			//Return the result
-			return result;
-		}
-
 		/// <summary>
 		/// Possible Input Types
 		/// - List of frameworks
