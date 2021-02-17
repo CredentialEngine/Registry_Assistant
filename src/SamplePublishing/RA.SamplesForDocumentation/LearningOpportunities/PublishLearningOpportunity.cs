@@ -92,6 +92,7 @@ namespace RA.SamplesForDocumentation
 			//Must be a valid CTDL cost type.
 			// Example: Tuition, Application, AggregateCost, RoomOrResidency
 			//see: https://credreg.net/ctdl/terms#CostType
+			//Description and CostDetails are required properties
 			myData.EstimatedCost.Add( new CostProfile()
 			{
 				Description = "A required description of the cost profile",
