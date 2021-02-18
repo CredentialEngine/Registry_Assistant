@@ -172,7 +172,8 @@ namespace RA.Models.Input
 		/// The text string denoting the subject of the competency framework or competency as designated by the promulgating agency.
 		/// The localSubject property and subject property may or may not point to the same subject. If so, enter the text string for the subject as the value of this property and the URI for that subject in the subject property.
 		/// </summary>
-		public LanguageMapList localSubject { get; set; } = new LanguageMapList();
+		public List<string> localSubject { get; set; } = new List<string>();
+		public LanguageMapList localSubject_maplist { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// The name or title of this competency framework.
@@ -232,14 +233,58 @@ namespace RA.Models.Input
 		/// </summary>
 		public string tableOfContents { get; set; }
 		public LanguageMap tableOfContents_map { get; set; } = new LanguageMap();
-		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
 
+		#region Occupations, Industries, and instructional programs
+		//=====================================================================
+		//List of occupations from a published framework, that is with a web URL
+		/// <summary>
+		/// OccupationType
+		/// Type of occupation; select from an existing enumeration of such types.
+		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
+		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
+		/// </summary>
+		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+		/// <summary>
+		/// AlternativeOccupationType
+		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
+		/// Any occupations added using this property will be added to or appended to the OccupationType output.
+		/// </summary>
+		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// List of valid O*Net codes. See:
+		/// https://www.onetonline.org/find/
+		/// The API will validate and format the ONet codes as Occupations
+		/// </summary>
+		public List<string> ONET_Codes { get; set; } = new List<string>();
+
+		//=============================================================================
+		/// <summary>
+		/// IndustryType
+		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
+		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
+		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
+		/// </summary>
 		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+
+		/// <summary>
+		/// AlternativeIndustryType
+		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
+		/// Any industries added using this property will be added to or appended to the IndustryType output.
+		/// </summary>
+		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+		/// <summary>
+		/// List of valid NAICS codes. See:
+		/// https://www.naics.com/search/
+		/// </summary>
+		public List<string> NaicsList { get; set; } = new List<string>();
+
+		#endregion
 
 
 	}
 
-    public class Competency 
+	public class Competency 
     {
         //required": [ "@type", "@id", "ceasn:competencyText", "ceasn:inLanguage", "ceasn:isPartOf", "ceterms:ctid" ]
         
@@ -412,6 +457,8 @@ namespace RA.Models.Input
 		public List<string> identifier { get; set; } = new List<string>();
 
 
+
+		//
 		/// <summary>
 		/// Is Child Of
 		/// Definition:	en-US: The referenced competency is higher in some arbitrary hierarchy than this competency.
@@ -441,7 +488,6 @@ namespace RA.Models.Input
 
         public List<string> prerequisiteAlignment { get; set; } = new List<string>();
 
-
 		/// <summary>
 		/// Body of information embodied either directly or indirectly in this resource.
 		/// List of CTIDs for a competency
@@ -464,7 +510,56 @@ namespace RA.Models.Input
 		public List<string> hasMaintenanceTask { get; set; } = new List<string>();
 
 		public List<string> hasTrainingTask { get; set; } = new List<string>();
+
+		#region Occupations, Industries, and instructional programs
+		//=====================================================================
+		//List of occupations from a published framework, that is with a web URL
+		/// <summary>
+		/// OccupationType
+		/// Type of occupation; select from an existing enumeration of such types.
+		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
+		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
+		/// </summary>
+		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+		/// <summary>
+		/// AlternativeOccupationType
+		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
+		/// Any occupations added using this property will be added to or appended to the OccupationType output.
+		/// </summary>
+		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// List of valid O*Net codes. See:
+		/// https://www.onetonline.org/find/
+		/// The API will validate and format the ONet codes as Occupations
+		/// </summary>
+		public List<string> ONET_Codes { get; set; } = new List<string>();
+
+		//=============================================================================
+		/// <summary>
+		/// IndustryType
+		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
+		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
+		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
+		/// </summary>
+		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+
+		/// <summary>
+		/// AlternativeIndustryType
+		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
+		/// Any industries added using this property will be added to or appended to the IndustryType output.
+		/// </summary>
+		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+		/// <summary>
+		/// List of valid NAICS codes. See:
+		/// https://www.naics.com/search/
+		/// </summary>
+		public List<string> NaicsList { get; set; } = new List<string>();
+
+		#endregion
+
+
 	}
 
-        
+
 }

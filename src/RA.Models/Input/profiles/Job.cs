@@ -199,5 +199,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
 
+
 	}
 }

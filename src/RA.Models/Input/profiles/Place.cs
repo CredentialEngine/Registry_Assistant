@@ -83,6 +83,13 @@ namespace RA.Models.Input
 		public double Longitude { get; set; }
 
 		/// <summary>
+		/// Identifier
+		/// Definition:	en-US: Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// For example state FIPS codes, or LWIAs (Local workforcement investment areas)
+		/// </summary>
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
+		/// <summary>
 		/// URI to geonames location
 		/// </summary>
 		public string GeoURI { get; set; }

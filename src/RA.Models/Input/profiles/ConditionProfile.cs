@@ -117,30 +117,34 @@ namespace RA.Models.Input
         public decimal Weight { get; set; }
 		//Credit Information
 		//20-09-30 being replaced by ValueProfile
-		public ValueProfile CreditValue { get; set; } = new ValueProfile();
+		public ValueProfile CreditValue { get; set; } //= new ValueProfile();
 		//
 		public string CreditUnitTypeDescription { get; set; }
         public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
 
 
-        #region CreditHourType and CreditUnitType are obsolete
-        //[Obsolete]
-        //public string CreditHourType { get; set; }
-        //public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
-        //[Obsolete]
-        //public decimal CreditHourValue { get; set; }
+		#region CreditHourType and CreditUnitType are obsolete
+		//[Obsolete]
+		//public string CreditHourType { get; set; }
+		//public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
+		//[Obsolete]
+		//public decimal CreditHourValue { get; set; }
 
-        ///// <summary>
-        ///// Only one credit unit type is allowed for input
-        ///// </summary>
-        //[Obsolete]
-        //public string CreditUnitType { get; set; }
-        //[Obsolete]
-        //public decimal CreditUnitValue { get; set; }
-        #endregion
+		///// <summary>
+		///// Only one credit unit type is allowed for input
+		///// </summary>
+		//[Obsolete]
+		//public string CreditUnitType { get; set; }
+		//[Obsolete]
+		//public decimal CreditUnitValue { get; set; }
+		#endregion
 
-        //external classes =====================================
-        public List<CostProfile> EstimatedCost { get; set; }
+		//external classes =====================================
+		/// <summary>
+		/// List of CTIDs (recommended) or full URLs for a CostManifest published by the owning organization
+		/// </summary>
+		public List<string> CommonCosts { get; set; }
+		public List<CostProfile> EstimatedCost { get; set; }
 		/// <summary>
 		/// Jurisdiction Profile
 		/// Geo-political information about applicable geographic areas and their exceptions.

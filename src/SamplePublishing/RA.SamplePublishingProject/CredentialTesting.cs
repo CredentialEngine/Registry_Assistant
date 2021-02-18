@@ -30,7 +30,13 @@ namespace RA.SamplePublishingProject
 			//using simple post
 			new PublishCredentialWithOutcomes().CredentialWithEmploymentOutcomeProfiles( "publish" );
 		}
-
+		//
+		[TestMethod]
+		public void CredentialWithAlternativeConditions()
+		{
+			//using simple post
+			new PublishCredentialWithMultipleCampuses().PublishSimpleRecord( "publish" );
+		}
 		[TestMethod]
 		public void CareerBridgeCredentialsCredentialWithHoldersProfile()
 		{

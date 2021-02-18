@@ -487,7 +487,7 @@ namespace RA.Models.Input
 		#region Properties allowed only for a Quality Assurance Credential
 
 		/// <summary>
-		/// Only valid with a Quality Assurance credential.
+		/// Only valid with a Quality Assurance credential. ("ceterms:QualityAssuranceCredential")
 		/// List of CTIDs for credentials, or assessments, or learning opportunities that are 'members' of this quality assurance credential (essentially approved by the owner of the QA credential)
 		/// </summary>
 		public List<string> HasETPLResource { get; set; } = new List<string>();
@@ -518,7 +518,7 @@ namespace RA.Models.Input
 		/// A single DurationItem, using Years, Months, etc. or a combination.
 		/// Alternately the actual ISO8601 format may be provided (using Duration_ISO8601)
 		/// </summary>
-		public DurationItem RenewalFrequency { get; set; } = new DurationItem();
+		public DurationItem RenewalFrequency { get; set; } //= new DurationItem();
 
 		/// <summary>
 		/// Revocation Profile
@@ -564,6 +564,8 @@ namespace RA.Models.Input
 		public List<ProcessProfile> ReviewProcess { get; set; }
 		public List<ProcessProfile> RevocationProcess { get; set; }
 		#endregion
+
+		public List<string> TargetPathway { get; set; } = new List<string>();
 
 
 		#region Alignments

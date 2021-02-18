@@ -312,7 +312,7 @@ namespace RA.SamplesForDocumentation
 							//
 							if ( response.Successful )
 							{
-								LoggingHelper.WriteLogFile( 5, request.Identifier + "_payload_Successful.json", response.Payload, "", false );
+								LoggingHelper.WriteLogFile( 5, request.EndpointType + "_" + request.Identifier + "_payload_Successful.json", response.Payload, "", false );
 
 								request.FormattedPayload = response.Payload;
 								request.EnvelopeIdentifier = response.RegistryEnvelopeIdentifier;

@@ -407,6 +407,7 @@ namespace RA.Models.Input
 
 		#endregion
 
+		public List<string> TargetPathway { get; set; } = new List<string>();
 
 
 		/// <summary>
