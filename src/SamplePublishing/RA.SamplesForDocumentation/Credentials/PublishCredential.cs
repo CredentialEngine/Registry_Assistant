@@ -167,6 +167,11 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
 			} );
+
+			myData.Jurisdiction.Add( Jurisdictions.SampleJurisdiction() );
+			//Add a jurisdiction assertion for Recognized in 
+			myData.RecognizedIn.Add( Jurisdictions.SampleJurisdictionAssertion() );
+
 			//add a requires Condition profile with conditions and a required learning opportunity.
 			/*Scenario: 
 				- The learning opportunity will be published to the credential registry
