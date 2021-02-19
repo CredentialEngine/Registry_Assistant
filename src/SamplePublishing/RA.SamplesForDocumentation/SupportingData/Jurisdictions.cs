@@ -19,10 +19,15 @@ namespace RA.SamplesForDocumentation
 				Description = "Description of Jurisdiction",
 				GlobalJurisdiction = false
 			};
+			//A main jurisdiction is defined using the Place class. 
+			//The Place GEO properties such as Country, AddressRegion or City
+			//Or the Name property could be used for say, a continent
 			entity.MainJurisdiction = new Place()
 			{
 				Country = "United States"
 			};
+			//Include any exceptions to the MainJurisdiction.
+			//Example: If a credential is valid in all states, except Oregon, add the latter as an exception.
 			entity.JurisdictionException = new List<Place>()
 			{
 				new Place()
