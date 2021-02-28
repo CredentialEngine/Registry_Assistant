@@ -57,7 +57,7 @@ namespace RA.SamplesForDocumentation
 			};
 			//add holders profile to the request
 			myRequest.HoldersProfile.Add( FormatHoldersProfile( organizationIdentifierFromAccountsSite ) );
-			myRequest.Earnings.Add( FormatEarningsProfile( organizationIdentifierFromAccountsSite ) );
+			myRequest.EarningsProfile.Add( FormatEarningsProfile( organizationIdentifierFromAccountsSite ) );
 			myRequest.EmploymentOutcome.Add( FormatEmploymentOutcomeProfile( organizationIdentifierFromAccountsSite ) );
 
 
@@ -462,8 +462,15 @@ namespace RA.SamplesForDocumentation
 				Name = "My EmploymentOutcome Profile for a particular outcome.",
 				DateEffective = "2018-01-15",
 				Description = "Description of 'My EmploymentOutcome Profile for a particular outcome.'",
-				JobsObtained = 56,
 				Source = "https://example.org/?t=EmploymentOutcomeProfileSource"
+			};
+			output.JobsObtainedList = new List<QuantitativeValue>()
+			{
+				new QuantitativeValue()
+				{
+					Value=88,
+					Description="Relevent information about this value for JobsObtained. "
+				}
 			};
 			output.Jurisdiction.Add( Jurisdictions.SampleJurisdiction() );
 

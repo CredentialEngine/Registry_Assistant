@@ -39,10 +39,10 @@ namespace RA.Models.Input
 
 			//JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
 
-			Corequisite = new List<ConditionProfile>();
-			Recommends = new List<ConditionProfile>();
-			Requires = new List<ConditionProfile>();
-			EntryCondition = new List<ConditionProfile>();
+			//Corequisite = new List<ConditionProfile>();
+			//Recommends = new List<ConditionProfile>();
+			//Requires = new List<ConditionProfile>();
+			//EntryCondition = new List<ConditionProfile>();
 
 			Teaches = new List<CredentialAlignmentObject>();
 

@@ -195,7 +195,10 @@ namespace RA.SamplesForDocumentation
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//add holders profile to the request
+			//OLD
 			myRequest.HoldersProfile.Add( hp );
+			//NEW
+			myRequest.Credential.Holders.Add( hp );
 
 			//create a literal to hold data to use with ARC
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );

@@ -27,17 +27,20 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Entity describing aggregate credential holder earnings data.
 		/// </summary>
-		public List<EarningsProfile> Earnings { get; set; } = new List<EarningsProfile>();
+		[Obsolete]
+		public List<EarningsProfile> EarningsProfile { get; set; } = new List<EarningsProfile>();
 
 		/// <summary>
 		/// Entity that describes employment outcomes and related statistical information for a given credential.
 		/// </summary>
+		[Obsolete]
 		public List<EmploymentOutcomeProfile> EmploymentOutcome { get; set; } = new List<EmploymentOutcomeProfile>();
 
 
 		/// <summary>
 		/// Entity describing the count and related statistical information of holders of a given credential.
 		/// </summary>
+		[Obsolete]
 		public List<HoldersProfile> HoldersProfile { get; set; } = new List<HoldersProfile>();
 	}
 
@@ -78,7 +81,6 @@ namespace RA.Models.Input
 
 			// Region = new List<GeoCoordinates>();
 			OwnedBy = new List<OrganizationReference>();
-			CopyrightHolder = new OrganizationReference();
 
 			AccreditedBy = new List<Input.OrganizationReference>();
 			ApprovedBy = new List<Input.OrganizationReference>();
@@ -332,7 +334,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// The salary value or range associated with this credential.
 		/// </summary>
-		public MonetaryAmount BaseSalary { get; set; } = new MonetaryAmount();
+		public MonetaryAmount BaseSalary { get; set; } 
 
 		/// <summary>
 		/// List of cost profiles for this credential
@@ -493,19 +495,34 @@ namespace RA.Models.Input
 		public List<string> HasETPLResource { get; set; } = new List<string>();
 		#endregion
 		//external classes
-	
+
+		#region Outcome data - 21-02-19 two options in progress: embedded as follows or as a separate list of classes in the request object
+		/// <summary>
+		///  Resource containing summary/statistical employment outcome, earnings, and/or holders information.
+		///  For deeper information, include qdata:DataSetProfile.
+		/// </summary>
+		public List<AggregateDataProfile> AggregateData { get; set; }
+
+		/// <summary>
+		///  Entity that describes earning and related statistical information for a given credential.
+		/// </summary>
+		[Obsolete]
+		public List<EarningsProfile> Earnings { get; set; }
+
+		/// <summary>
+		/// Entity that describes employment outcomes and related statistical information for a given credential.
+		/// </summary>
+		[Obsolete]
+		public List<EmploymentOutcomeProfile> EmploymentOutcome { get; set; }
 
 		/// <summary>
 		/// Entity describing aggregate credential holder earnings data.
 		/// List of CTIDs for a earnings profile in Request.EarningsProfile
 		/// </summary>
-		//public List<string> EarningsProfile { get; set; } = new List<string>();
-		/// <summary>
-		/// Entity that describes employment outcomes and related statistical information for a given credential.
-		/// </summary>
-		//public List<string> EmploymentOutcomeList { get; set; } = new List<string>();
-		
+		[Obsolete]
+		public List<HoldersProfile> Holders { get; set; }
 
+		#endregion
 		/// <summary>
 		/// Jurisdiction Profile
 		/// Geo-political information about applicable geographic areas and their exceptions.

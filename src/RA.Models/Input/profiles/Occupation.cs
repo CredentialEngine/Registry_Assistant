@@ -59,7 +59,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Category or classification of this resource.
 		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-		/// URI to a competency or maybe a concept???(based on the ONet work activities example
+		/// URI to a concept(based on the ONet work activities example
 		/// ceterms:classification
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();

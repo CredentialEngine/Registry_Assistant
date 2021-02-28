@@ -16,14 +16,20 @@ namespace RA.Models.Input.profiles.QData
 	/// </summary>
 	public class DataSetProfile
 	{
+		/// <summary>
+		/// CTID - Required 
+		/// </summary>
 		public string CTID { get; set; }
 
 		/// <summary>
 		/// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
-		/// <see cref="https://credreg.net/ctdl/terms/administrationProcess#administrationProcess"/>
+		/// <see cref="https://credreg.net/ctdl/terms/administrationProcess"/>
 		/// </summary>
 		public List<ProcessProfile> AdministrationProcess { get; set; } = new List<ProcessProfile>();
 
+		/// <summary>
+		/// Description - Required 
+		/// </summary>
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
@@ -49,8 +55,21 @@ namespace RA.Models.Input.profiles.QData
 		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
 		/// </summary>
 		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
+
 		public string Name { get; set; }
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Relevant Data Set For
+		/// Data set for the entity being referenced.
+		/// REQUIRED when dataSetProfile published separately.
+		/// Inverse property	- point back to the parent
+		/// 21-02-19 mparsons	Removing these from range: HoldersProfile, EarningsProfile, EmploymentOutlook
+		///						- adding credential, assessment, and lopp
+		/// List of URIs/CTIDs
+		/// </summary>
+		public List<string> RelevantDataSetFor { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Authoritative source of an entity's information.
 		/// URL
@@ -66,7 +85,7 @@ namespace RA.Models.Input.profiles.QData
 		/// Data Set Time Period
 		/// Short- and long-term post-award reporting intervals including start and end dates.
 		/// </summary>
-		public List<DataSetTimeFrame> DataSetTimePeriod { get; set; } = new List<DataSetTimeFrame>();		
+		public List<DataSetTimeFrame> DataSetTimePeriod { get; set; } = new List<DataSetTimeFrame>();	
 
 		/// <summary>
 		/// Data Suppression Policy

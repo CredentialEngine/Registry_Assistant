@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,13 +8,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using System.Web.SessionState;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+
+//using Models.Common;
 
 namespace Utilities
 {
-    public class UtilityManager
+	public class UtilityManager
     {
         const string thisClassName = "UtilityManager";
 
@@ -48,7 +45,9 @@ namespace Utilities
                 resultString = Regex.Replace( resKey, "\\.", "_" );
                 resultString = Regex.Replace( resultString, "\\*", "_" );
             }
+#pragma warning disable CS0168 // Variable is declared but never used
             catch ( ArgumentException ex )
+#pragma warning restore CS0168 // Variable is declared but never used
             {
                 // Syntax error in the regular expression
                 resultString = resKey;
@@ -168,7 +167,7 @@ namespace Utilities
 
             return appValue;
         } //
-        public static bool GetAppKeyValue( string keyName, bool defaultValue )
+        public static bool GetAppKeyValue( string keyName, bool defaultValue, bool reportMissingKey = true )
         {
             bool appValue = false;
 
@@ -179,7 +178,7 @@ namespace Utilities
             catch (Exception ex)
             {
                 appValue = defaultValue;
-				if ( HasMessageBeenPreviouslySent( keyName ) == false )
+				if ( reportMissingKey && HasMessageBeenPreviouslySent( keyName ) == false )
 					 LoggingHelper.LogError( string.Format( "@@@@ Error on appKey: {0},  using default of: {1}", keyName, defaultValue ) );
             }
 
@@ -351,6 +350,26 @@ namespace Utilities
                     return sb.ToString();
             }
 		}
+		public static string CreateCtidFromString( string property)
+		{
+			//assign default, just in case
+			string ctid = "ce-" + Guid.NewGuid().ToString().ToLower();
+			if (string.IsNullOrWhiteSpace(property))
+			{				
+				return ctid;
+			}
+			string id = GenerationMD5String( property );
+			if ( id.Length == 32 )
+			{
+				ctid = "ce-" + id.Substring( 0, 8 ) + "-" + id.Substring( 8, 4 ) + "-" + id.Substring( 12, 4 ) + "-" + id.Substring( 16, 4 ) + "-" + id.Substring( 20, 12 );
+				LoggingHelper.DoTrace( 1, "CreateCtidFromString. Input: " + property + ", CTID: " + ctid );
+			} else
+			{
+
+			}
+		
+			return ctid;
+		}
 		#endregion
 
 		#region === Path related Methods ===
@@ -362,22 +381,37 @@ namespace Utilities
 		/// <returns></returns>
 		public static string FormatAbsoluteUrl( string path, string uriScheme = null )
 		{
-			uriScheme = uriScheme ?? HttpContext.Current.Request.Url.Scheme; //allow overriding http or https
+			try
+			{
+				//need to handle where called from batch!!!!
+				if ( HttpContext.Current == null )
+				{
+					//try other methods
+					return FormatAbsoluteUrl( path, false );
+				}
 
-			var environment = System.Configuration.ConfigurationManager.AppSettings[ "envType" ]; //Use port number only on localhost because https redirecting to a port on production screws this up
-			var host = environment == "dev" ? HttpContext.Current.Request.Url.Authority : HttpContext.Current.Request.Url.Host;
+				uriScheme = uriScheme ?? HttpContext.Current.Request.Url.Scheme; //allow overriding http or https
 
-			return uriScheme + "://" +
-				( host + "/" + HttpContext.Current.Request.ApplicationPath + path.Replace( "~/", "/" ) )
-				.Replace( "///", "/" )
-				.Replace( "//", "/" );
+				var environment = System.Configuration.ConfigurationManager.AppSettings[ "environment" ]; //Use port number only on localhost because https redirecting to a port on production screws this up
+				string host = environment == "development" ? HttpContext.Current.Request.Url.Authority : HttpContext.Current.Request.Url.Host;
+
+				return uriScheme + "://" +
+					( host + "/" + HttpContext.Current.Request.ApplicationPath + path.Replace( "~/", "/" ) )
+					.Replace( "///", "/" )
+					.Replace( "//", "/" );
+			}
+			catch ( Exception ex )
+			{
+				//try other methods
+				return FormatAbsoluteUrl( path, false );
+			}
 		}
 		//
 		/// <summary>
 		/// Format a relative, internal URL as a full URL, with http or https depending on the environment. 
 		/// Determines the current host and then calls overloaded method to complete the formatting
 		/// </summary>
-		/// <param name="relativeUrl">Internal URL, usually beginning with /vos_portal/</param>
+		/// <param name="relativeUrl">Internal URL, usually beginning with the path after the domain/</param>
 		/// <param name="isSecure">If the URL is to be formatted as a secure URL, set this value to true.</param>
 		/// <returns>Formatted URL</returns>
 		public static string FormatAbsoluteUrl( string relativeUrl, bool isSecure )
@@ -415,117 +449,27 @@ namespace Utilities
         /// Format a relative, internal URL as a full URL, with http or https depending on the environment.
         /// </summary>
         /// <param name="relativeUrl">Internal URL, usually beginning with /vos_portal/</param>
-        /// <param name="host">name of host (e.g. localhost, edit.illinoisworknet.com, www.illinoisworknet.com)</param>
+        /// <param name="host">name of host (e.g. localhost, edit.credentialengine.org, www.credentialengine.org)</param>
         /// <param name="isSecure">If the URL is to be formatted as a secure URL, set this value to true.</param>
         /// <returns>Formatted URL</returns>
-        public static string FormatAbsoluteUrl( string relativeUrl, string host, bool isSecure )
+        private static string FormatAbsoluteUrl( string relativeUrl, string host, bool isSecure )
         {
             string url = "";
             if ( string.IsNullOrEmpty( relativeUrl ) )
                 return "";
             if ( string.IsNullOrEmpty( host ) )
                 return "";
-            //ensure not already an absolute
-            if ( relativeUrl.ToLower().StartsWith( "http" ) )
-                return relativeUrl;
-			//
-			if ( isSecure && GetAppKeyValue( "usingSSL", false ))
-            {
-                url = "https://" + host + relativeUrl;
-            }
-            else
-            {
-                url = "http://" + host + relativeUrl;
-            }
-            return url;
+			//ensure not already an absolute
+			if ( host.ToLower().StartsWith( "http" ) )
+			{
+				if ( host.EndsWith( "/" ) && relativeUrl.StartsWith( "/" ) )
+					relativeUrl = relativeUrl.TrimStart( '/' );
+				url = ( host + relativeUrl );
+				return url;
+			}
+			//            if ( relativeUrl.ToLower().StartsWith( "http" ) )
+			return relativeUrl;
         }
-        /// <summary>
-        /// get current url, including query parameters
-        /// </summary>
-        /// <returns></returns>
-        public static string GetCurrentUrl()
-        {
-            string url = GetPublicUrl( HttpContext.Current.Request.QueryString.ToString() );
-
-            url = HttpUtility.UrlDecode( url );
-
-            return url;
-        }//
-
-        /// <summary>
-        /// Return the public version of the current MCMS url - removes MCMS specific parameters
-        /// </summary>
-        public static string GetPublicUrl( string url )
-        {
-            string publicUrl = "";
-
-            //find common parms
-            int nrmodePos = url.ToLower().IndexOf( "nrmode" );
-            int urlStartPos = url.ToLower().IndexOf( "nroriginalurl" );
-            int urlEndPos = url.ToLower().IndexOf( "&nrcachehint" );
-
-            if ( urlStartPos > 0 && urlEndPos > urlStartPos )
-            {
-                publicUrl = url.Substring( urlStartPos + 14, urlEndPos - ( urlStartPos + 14 ) );
-            }
-            else
-            {
-                //just take everything??
-                publicUrl = url;
-            }
-            publicUrl = publicUrl.Replace( "%2f", "/" );
-            publicUrl = publicUrl.Replace( "%2e", "." );
-            publicUrl = publicUrl.Replace( "%3a", ":" );
-            return publicUrl;
-        } //
-
-        /// <summary>
-        /// Extract the domain from the passed url
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns>domain main or blank</returns>
-        public static string GetUrlDomain( string url )
-        {
-            string domain = "";
-            if ( url == null || url.Length == 0 || url.ToLower().StartsWith( "nrmode" ) )
-                return domain;
-
-            try
-            {
-                int opt = 1;
-
-                if ( opt == 1 )
-                {
-                    //option 1
-                    if ( !url.Contains( "://" ) )
-                        url = "http://" + url;
-
-                    domain = new Uri( url ).Host;
-
-                }
-                else if ( opt == 2 )
-                {
-                    if ( url.Contains( @"://" ) )
-                        url = url.Split( new string[] { "://" }, 2, StringSplitOptions.None )[ 1 ];
-
-                    domain = url.Split( '/' )[ 0 ];
-                }
-                else if ( opt == 3 )
-                {
-                    domain = System.Text.RegularExpressions.Regex.Replace(
-                                        url,
-                                        @"^([a-zA-Z]+:\/\/)?([^\/]+)\/.*?$",
-                                        "$2" );
-
-                }
-            }
-            catch ( Exception ex )
-            {
-                domain = "";
-            }
-            return domain;
-
-        }//
 
         /// <summary>
         /// Gets the last section (subchannel) of passed url
@@ -546,14 +490,9 @@ namespace Utilities
                     section = dirArray[ i - 1 ].Trim();
                     break;
                 }
-
-
             }
-
             return section;
         }//
-
-
 
         /// <summary>
         /// Insert soft breaks into long URLs or email addresses in text string
@@ -1091,18 +1030,5 @@ namespace Utilities
         #endregion
 
 
-        public static decimal ConvertRatingRange(int oldMin, int oldMax, decimal value, int newMin, int newMax)
-        {
-            decimal oldRange = (decimal)oldMax - (decimal)oldMin;
-            decimal newRange = (decimal)newMax - (decimal)newMin;
-            decimal multiplier = newRange / oldRange;
-
-            decimal retVal = value - oldMin;
-            retVal = retVal * multiplier;
-            retVal += newMin;
-
-            return retVal;
-        }
-
-    }
+	}
 }

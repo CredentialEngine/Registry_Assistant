@@ -48,6 +48,7 @@
     <Compile Include="TransferValueTesting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PathwaysTesting.cs" />
+    <Compile Include="ToolTesting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -70,6 +71,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Utilities\Utilities.csproj">
+      <Project>{5af99218-bbd8-48c4-bbde-eff5f35b4e05}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RA.SamplesForDocumentation\RA.SamplesForDocumentation.csproj">
       <Project>{4197f0f4-f426-4fb2-bafd-0a30245f3114}</Project>
       <Name>RA.SamplesForDocumentation</Name>

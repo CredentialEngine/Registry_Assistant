@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Web;
 
 
@@ -8,16 +9,33 @@ namespace Utilities
     public class LoggingHelper
     {
         const string thisClassName = "LoggingHelper";
+		private static string DefaultSubject = "Credential Publisher Application Exception encountered";
 
-        public LoggingHelper() { }
+		public LoggingHelper() { }
 
 		#region Error Logging ================================================
+		public static void LogError( Exception ex, string message )
+		{
+			string subject = DefaultSubject;
+			bool notifyAdmin = false;
+			if ( UtilityManager.GetAppKeyValue( "notifyOnException", "no" ).ToLower() == "yes" )
+				notifyAdmin = true;
+			LogError( ex, message, notifyAdmin, subject );
+		}
+		public static void LogError( Exception ex, string message, bool notifyAdmin )
+		{
+			string subject = DefaultSubject;
+			//bool notifyAdmin = false;
+			if ( UtilityManager.GetAppKeyValue( "notifyOnException", "no" ).ToLower() == "yes" )
+				notifyAdmin = true;
+			LogError( ex, message, notifyAdmin, subject );
+		}
 		/// <summary>
 		/// Format an exception and message, and then log it
 		/// </summary>
 		/// <param name="ex">Exception</param>
 		/// <param name="message">Additional message regarding the exception</param>
-		public static void LogError( Exception ex, string message, string subject = "Credential Publisher Application Exception encountered" )
+		public static void LogError( Exception ex, string message, string subject )
         {
             bool notifyAdmin = false;
             if ( UtilityManager.GetAppKeyValue( "notifyOnException", "no" ).ToLower() == "yes" )
@@ -45,36 +63,36 @@ namespace Utilities
 
             try
             {
-                
+				if ( HttpContext.Current != null )
+				{
+					if ( HttpContext.Current.Session != null)
+						sessionId = HttpContext.Current.Session.SessionID.ToString();
+					remoteIP = HttpContext.Current.Request.ServerVariables[ "REMOTE_HOST" ];
 
-                sessionId = HttpContext.Current.Session.SessionID.ToString();
-                remoteIP = HttpContext.Current.Request.ServerVariables[ "REMOTE_HOST" ];
+					if ( HttpContext.Current.Request.UrlReferrer != null )
+					{
+						lRefererPage = HttpContext.Current.Request.UrlReferrer.ToString();
+					}
+					string serverName = UtilityManager.GetAppKeyValue( "serverName", HttpContext.Current.Request.ServerVariables[ "LOCAL_ADDR" ] );
+					path = serverName + HttpContext.Current.Request.Path;
 
-                if ( HttpContext.Current.Request.UrlReferrer != null )
-                {
-                    lRefererPage = HttpContext.Current.Request.UrlReferrer.ToString();
-                }
-                string serverName = UtilityManager.GetAppKeyValue( "serverName", HttpContext.Current.Request.ServerVariables[ "LOCAL_ADDR" ] );
-                path = serverName + HttpContext.Current.Request.Path;
+					if ( FormHelper.IsValidRequestString() == true )
+					{
+						queryString = HttpContext.Current.Request.Url.AbsoluteUri.ToString();
+						//url = GetPublicUrl( queryString );
 
-                if ( FormHelper.IsValidRequestString() == true )
-                {
-                    queryString = HttpContext.Current.Request.Url.AbsoluteUri.ToString();
-                    //url = GetPublicUrl( queryString );
-
-                    url = HttpContext.Current.Server.UrlDecode( queryString );
-                    //if ( url.IndexOf( "?" ) > -1 )
-                    //{
-                    //    parmsString = url.Substring( url.IndexOf( "?" ) + 1 );
-                    //    url = url.Substring( 0, url.IndexOf( "?" ) );
-                    //}
-                }
-                else
-                {
-                    url = "suspicious url encountered!!";
-                }
-                //????
-                //userId = WUM.GetCurrentUserid();
+						url = HttpContext.Current.Server.UrlDecode( queryString );
+						//if ( url.IndexOf( "?" ) > -1 )
+						//{
+						//    parmsString = url.Substring( url.IndexOf( "?" ) + 1 );
+						//    url = url.Substring( 0, url.IndexOf( "?" ) );
+						//}
+					}
+					else
+					{
+						url = "suspicious url encountered!!";
+					}
+				}
             }
             catch
             {
@@ -113,6 +131,88 @@ namespace Utilities
 
         } //
 
+
+		/// <summary>
+		/// Write the message to the log file.
+		/// </summary>
+		/// <remarks>
+		/// The message will be appended to the log file only if the flag "logErrors" (AppSetting) equals yes.
+		/// The log file is configured in the web.config, appSetting: "error.log.path"
+		/// </remarks>
+		/// <param name="message">Message to be logged.</param>
+		public static void LogError( string message, string subject = "" )
+        {
+
+            if ( UtilityManager.GetAppKeyValue( "notifyOnException", "no" ).ToLower() == "yes" )
+            {
+                LogError( message, true, subject );
+            }
+            else
+            {
+                LogError( message, false, subject );
+            }
+
+        } //
+        /// <summary>
+        /// Write the message to the log file.
+        /// </summary>
+        /// <remarks>
+        /// The message will be appended to the log file only if the flag "logErrors" (AppSetting) equals yes.
+        /// The log file is configured in the web.config, appSetting: "error.log.path"
+        /// </remarks>
+        /// <param name="message">Message to be logged.</param>
+        /// <param name="notifyAdmin"></param>
+        public static void LogError( string message, bool notifyAdmin, string subject = "" )
+        {
+			if ( string.IsNullOrWhiteSpace( subject ) )
+				subject = DefaultSubject;
+
+            if ( UtilityManager.GetAppKeyValue( "logErrors" ).ToString().Equals( "yes" ) )
+            {
+                try
+                {
+                    //would like to limit number, just need a means to overwrite the first time used in a day
+                    //- check existance, then if for a previous day, overwrite
+                    string datePrefix1 = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
+                    string datePrefix = System.DateTime.Today.ToString("yyyy-dd");
+                    string logFile = UtilityManager.GetAppKeyValue( "path.error.log", "" );
+                    if (!string.IsNullOrWhiteSpace(logFile))
+                    {
+                        string outputFile = logFile.Replace("[date]", datePrefix);
+                        
+                        if (File.Exists(outputFile))
+                        {
+                            if (File.GetLastWriteTime(outputFile).Month != DateTime.Now.Month)
+                                File.Delete(outputFile);
+                        }
+						else
+						{
+							System.IO.FileInfo f = new System.IO.FileInfo( outputFile );
+							f.Directory.Create(); // If the directory already exists, this method does nothing.
+												  //just incase, create folders
+							//FileSystemHelper.CreateDirectory( outputFile );
+						}
+
+						StreamWriter file = File.AppendText(outputFile);
+                        file.WriteLine(DateTime.Now + ": " + message);
+                        file.WriteLine("---------------------------------------------------------------------");
+                        file.Close();
+
+                        if (notifyAdmin)
+                        {
+                            if (ShouldMessagesBeSkipped(message) == false)
+                                EmailManager.NotifyAdmin(subject, message);
+                        }
+                    }
+                }
+                catch ( Exception ex )
+                {
+                    //eat any additional exception
+                    DoTrace( 5, thisClassName + ".LogError(string message, bool notifyAdmin). Exception: " + ex.Message );
+                }
+            }
+        } //
+
 		/// <summary>
 		/// Format an exception handling inner exceptions as well
 		/// </summary>
@@ -138,75 +238,6 @@ namespace Utilities
 			return message;
 		}
 
-		/// <summary>
-		/// Write the message to the log file.
-		/// </summary>
-		/// <remarks>
-		/// The message will be appended to the log file only if the flag "logErrors" (AppSetting) equals yes.
-		/// The log file is configured in the web.config, appSetting: "error.log.path"
-		/// </remarks>
-		/// <param name="message">Message to be logged.</param>
-		public static void LogError( string message, string subject = "Credential Publisher Application Exception encountered" )
-        {
-
-            if ( UtilityManager.GetAppKeyValue( "notifyOnException", "no" ).ToLower() == "yes" )
-            {
-                LogError( message, true, subject );
-            }
-            else
-            {
-                LogError( message, false, subject );
-            }
-
-        } //
-        /// <summary>
-        /// Write the message to the log file.
-        /// </summary>
-        /// <remarks>
-        /// The message will be appended to the log file only if the flag "logErrors" (AppSetting) equals yes.
-        /// The log file is configured in the web.config, appSetting: "error.log.path"
-        /// </remarks>
-        /// <param name="message">Message to be logged.</param>
-        /// <param name="notifyAdmin"></param>
-        public static void LogError( string message, bool notifyAdmin, string subject = "Credential Publisher Application Exception encountered" )
-        {
-            if ( UtilityManager.GetAppKeyValue( "logErrors" ).ToString().Equals( "yes" ) )
-            {
-                try
-                {
-                    //would like to limit number, just need a means to overwrite the first time used in a day
-                    //- check existance, then if for a previous day, overwrite
-                    string datePrefix1 = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
-                    string datePrefix = System.DateTime.Today.ToString("yyyy-dd");
-                    string logFile = UtilityManager.GetAppKeyValue( "path.error.log", "" );
-                    if (!string.IsNullOrWhiteSpace(logFile))
-                    {
-                        string outputFile = logFile.Replace("[date]", datePrefix);
-                        
-                        if (File.Exists(outputFile))
-                        {
-                            if (File.GetLastWriteTime(outputFile).Month != DateTime.Now.Month)
-                                File.Delete(outputFile);
-                        }
-                        StreamWriter file = File.AppendText(outputFile);
-                        file.WriteLine(DateTime.Now + ": " + message);
-                        file.WriteLine("---------------------------------------------------------------------");
-                        file.Close();
-
-                        if (notifyAdmin)
-                        {
-                            if (ShouldMessagesBeSkipped(message) == false)
-                                EmailManager.NotifyAdmin(subject, message);
-                        }
-                    }
-                }
-                catch ( Exception ex )
-                {
-                    //eat any additional exception
-                    DoTrace( 5, thisClassName + ".LogError(string message, bool notifyAdmin). Exception: " + ex.Message );
-                }
-            }
-        } //
 		private static bool ShouldMessagesBeSkipped(string message)
 		{
 
@@ -215,40 +246,7 @@ namespace Utilities
 
 			return false;
 		}
-		public static void LogIssue( string message, bool notifyAdmin, string subject = "Credential Publisher Application Issue Encountered" )
-		{
-			if ( UtilityManager.GetAppKeyValue( "logErrors" ).ToString().Equals( "yes" ) )
-			{
-				try
-				{
-					string datePrefix = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
-					string logFile = UtilityManager.GetAppKeyValue( "path.error.log", "" );
-                    if (!string.IsNullOrWhiteSpace(logFile))
-                    {
-                        string outputFile = logFile.Replace("[date]", datePrefix);
-
-                        StreamWriter file = File.AppendText(outputFile);
-                        file.WriteLine(DateTime.Now + ": " + message);
-                        file.WriteLine("---------------------------------------------------------------------");
-                        file.Close();
-
-                        if (notifyAdmin)
-                        {
-                            if (UtilityManager.GetAppKeyValue("notifyOnException", "no").ToLower() == "yes")
-                            {
-                                EmailManager.NotifyAdmin(subject, message);
-                            }
-                        }
-                    }
-				}
-				catch ( Exception ex )
-				{
-					//eat any additional exception
-					DoTrace( 5, thisClassName + ".LogError(string message, bool notifyAdmin). Exception: " + ex.Message );
-				}
-			}
-		} //
-
+	
         #endregion
 
 
@@ -268,69 +266,75 @@ namespace Utilities
             DoTrace( appTraceLevel, message, true );
         }
 
-        /// <summary>
-        /// Handle trace requests - typically during development, but may be turned on to track code flow in production.
-        /// </summary>
-        /// <param name="level"></param>
-        /// <param name="message"></param>
-        public static void DoTrace( int level, string message )
-        {
-            DoTrace( level, message, true );
-        }
 
-        /// <summary>
-        /// Handle trace requests - typically during development, but may be turned on to track code flow in production.
-        /// </summary>
-        /// <param name="level"></param>
-        /// <param name="message"></param>
-        /// <param name="showingDatetime">If true, precede message with current date-time, otherwise just the message> The latter is useful for data dumps</param>
-        public static void DoTrace( int level, string message, bool showingDatetime )
-        {
-            //TODO: Future provide finer control at the control level
-            string msg = "";
-            int appTraceLevel = 0;
-            //bool useBriefFormat = true;
+		/// <summary>
+		/// Handle trace requests - typically during development, but may be turned on to track code flow in production.
+		/// </summary>
+		/// <param name="level"></param>
+		/// <param name="message"></param>
+		/// <param name="showingDatetime">If true, precede message with current date-time, otherwise just the message> The latter is useful for data dumps</param>
+		public static void DoTrace( int level, string message, bool showingDatetime = true )
+		{
+			//TODO: Future provide finer control at the control level
+			string msg = "";
+			int appTraceLevel = UtilityManager.GetAppKeyValue( "appTraceLevel", 6 );
+			//bool useBriefFormat = true;
+			const int NumberOfRetries = 4;
+			const int DelayOnRetry = 1000;
+			if ( showingDatetime )
+				msg = "\n " + System.DateTime.Now.ToString() + " - " + message;
+			else
+				msg = "\n " + message;
+			string datePrefix1 = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
+			string datePrefix = System.DateTime.Today.ToString( "yyyy-dd" );
+			string logFile = UtilityManager.GetAppKeyValue( "path.trace.log", "" );
 
-            try
-            {
-                appTraceLevel = UtilityManager.GetAppKeyValue( "appTraceLevel", 6 );
+			//Allow if the requested level is <= the application thresh hold
+			if ( string.IsNullOrWhiteSpace( logFile ) || level > appTraceLevel )
+			{
+				return;
+			}
+			string outputFile = "";
 
-                //Allow if the requested level is <= the application thresh hold
-                if ( level <= appTraceLevel )
-                {
+			//added retries where log file is in use
+			for ( int i = 1; i <= NumberOfRetries; ++i )
+			{
+				try
+				{
+					outputFile = logFile.Replace( "[date]", datePrefix + ( i < 3 ? "" : "_" + i.ToString() ) );
 
-                    if ( showingDatetime )
-                        msg = "\n " + System.DateTime.Now.ToString() + " - " + message;
-                    else
-                        msg = "\n " + message;
+					if ( File.Exists( outputFile ) )
+					{
+						if ( File.GetLastWriteTime( outputFile ).Month != DateTime.Now.Month )
+							File.Delete( outputFile );
+					} else
+					{
+						System.IO.FileInfo f = new System.IO.FileInfo( outputFile );
+						f.Directory.Create(); // If the directory already exists, this method does nothing.
+					}
 
+					StreamWriter file = File.AppendText( outputFile );
 
-                    string datePrefix1 = System.DateTime.Today.ToString("u").Substring(0, 10);
-                    string datePrefix = System.DateTime.Today.ToString("yyyy-dd");
-                    string logFile = UtilityManager.GetAppKeyValue( "path.trace.log", "" );
-                    if (!string.IsNullOrWhiteSpace(logFile))
-                    {
-                        string outputFile = logFile.Replace("[date]", datePrefix);
-
-                        if (File.Exists(outputFile))
-                        {
-                            if (File.GetLastWriteTime(outputFile).Month != DateTime.Now.Month)
-                                File.Delete(outputFile);
-                        }
-
-                        StreamWriter file = File.AppendText(outputFile);
-
-                        file.WriteLine(msg);
-                        file.Close();
-                    }
-					Console.WriteLine( message );
+					file.WriteLine( msg );
+					file.Close();
+					Console.WriteLine( msg );
+					break;
 				}
-            }
-            catch
-            {
-                //ignore errors
-            }
-
+				catch ( IOException e ) when ( i <= NumberOfRetries )
+				{
+					// You may check error code to filter some exceptions, not every error
+					// can be recovered.
+					Thread.Sleep( DelayOnRetry );
+				}
+				catch ( Exception ex )
+				{
+					//ignore most errors
+					if ( ex.Message.IndexOf( "Access to the path" ) > -1 )
+					{
+						break;
+					}
+				}
+			}
         }
 		public static void WriteLogFile( int level, string filename, string message, string datePrefixOverride = "", bool appendingText = true )
 		{
@@ -343,17 +347,26 @@ namespace Utilities
 				//Allow if the requested level is <= the application thresh hold
 				if ( level <= appTraceLevel )
 				{					
-					string datePrefix = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
-					if ( !string.IsNullOrWhiteSpace( datePrefixOverride ) )
+					string datePrefix1 = System.DateTime.Today.ToString( "u" ).Substring( 0, 10 );
+					string datePrefix = System.DateTime.Today.ToString( "yyyy-dd" );
+					string dateTemplate = "[date]";
+					if ( datePrefixOverride == "__" )
+					{
+						datePrefix = "";
+						dateTemplate = "[date]_";
+					}
+					else if ( !string.IsNullOrWhiteSpace( datePrefixOverride ) )
 						datePrefix = datePrefixOverride;
 
 					string logFile = UtilityManager.GetAppKeyValue( "path.log.file", "C:\\LOGS.txt" );
-					string outputFile = logFile.Replace( "[date]", datePrefix ).Replace( "[filename]", filename );
+					string outputFile = logFile.Replace( dateTemplate, datePrefix ).Replace( "[filename]", filename );
 					if ( outputFile.IndexOf( "csv.txt" ) > 1 )
 						outputFile = outputFile.Replace( "csv.txt", "csv" );
                     else if ( outputFile.IndexOf( "csv.json" ) > 1 )
                         outputFile = outputFile.Replace( "csv.json", "csv" );
-                    else if ( outputFile.IndexOf( "json.txt" ) > 1 )
+					else if ( outputFile.IndexOf( "cs.json" ) > 1 )
+						outputFile = outputFile.Replace( "cs.json", "cs" );
+					else if ( outputFile.IndexOf( "json.txt" ) > 1 )
                         outputFile = outputFile.Replace( "json.txt", "json" );
                     else if ( outputFile.IndexOf( "json.json" ) > 1 )
 						outputFile = outputFile.Replace( "json.json", "json" );
@@ -408,8 +421,13 @@ namespace Utilities
                             if (File.GetLastWriteTime( outputFile ).Month != DateTime.Now.Month)
                                 File.Delete( outputFile );
                         }
+						else
+						{
+							//just incase, create folders
+							FileSystemHelper.CreateDirectory( outputFile );
+						}
 
-                        StreamWriter file = File.AppendText( outputFile );
+						StreamWriter file = File.AppendText( outputFile );
 
                         file.WriteLine( msg );
                         file.Close();
@@ -427,3 +445,4 @@ namespace Utilities
         #endregion
     }
 }
+;

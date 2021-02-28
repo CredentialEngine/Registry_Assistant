@@ -33,10 +33,14 @@ namespace RA.Models.Input
 
 		/// <summary>
 		///  Number of jobs obtained in the region during a given timeframe.
+		///  21-02-19 - UPDATE added JobsObtainedList, which uses QuantitativeValue. This allows for providing percentage data - typically with a description. 
 		///  ceterms:jobsObtained
 		/// </summary>
+		public List<QuantitativeValue> JobsObtainedList { get; set; }
+		/// <summary>
+		/// Where JobsObtained is a simple integer, this property can be used. 
+		/// </summary>
 		public int JobsObtained { get; set; }
-
 		/// <summary>
 		/// Jurisdiction Profile
 		/// Geo-political information about applicable geographic areas and their exceptions.
@@ -60,6 +64,7 @@ namespace RA.Models.Input
 		/// Data Set on which earnings or employment data is based.
 		/// qdata:relevantDataSet
 		/// </summary>
-		public List<DataSetProfile> RelevantDataSet { get; set; } = new List<DataSetProfile>();
+		public List<DataSetProfile> RelevantDataSet { get; set; }
+		public List<string> RelevantDataSetList { get; set; }
 	}
 }

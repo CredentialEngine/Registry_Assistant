@@ -80,6 +80,7 @@
     <Compile Include="Input\PathwaySetRequest.cs" />
     <Compile Include="Input\PlainGraphRequest.cs" />
     <Compile Include="Input\profiles\AccreditAction.cs" />
+    <Compile Include="Input\profiles\AggregateDataProfile.cs" />
     <Compile Include="Input\profiles\CompetencyFrameworksGraph.cs" />
     <Compile Include="Input\profiles\ConditionProfile.cs" />
     <Compile Include="Input\profiles\CostProfile.cs" />

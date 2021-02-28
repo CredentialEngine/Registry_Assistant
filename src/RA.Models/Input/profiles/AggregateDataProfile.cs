@@ -8,23 +8,14 @@ using RA.Models.Input.profiles.QData;
 
 namespace RA.Models.Input
 {
-	/// <summary>
-	/// Entity describing the count and related statistical information of holders of a given credential.
-	/// </summary>
-	public class HoldersProfile
+	public class AggregateDataProfile
 	{
-		public string CTID { get; set; }
-
+	
 		/// <summary>
 		/// Effective date of this profile
-		/// ceterms:dateEffective
 		/// </summary>
 		public string DateEffective { get; set; }
 
-		/// <summary>
-		/// Description of this profile
-		/// ceterms:description
-		/// </summary>
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
@@ -38,8 +29,42 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap DemographicInformation_Map { get; set; } = new LanguageMap();
 
+		/// <summary>
+		///  Upper interquartile earnings.
+		/// </summary>
+		public int HighEarnings { get; set; }
+
+		/// <summary>
+		///  Number of jobs obtained in the region during a given timeframe.
+		///  21-02-19 - UPDATE added JobsObtainedList, which uses QuantitativeValue. This allows for providing percentage data - typically with a description. 
+		///  ceterms:jobsObtained
+		/// </summary>
+		public List<QuantitativeValue> JobsObtainedList { get; set; }
+		/// <summary>
+		/// Where JobsObtained is a simple integer, this property can be used. 
+		/// </summary>
+		public int JobsObtained { get; set; }
+
+		/// <summary>
+		/// Jurisdiction Profile
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+		/// </summary>
+		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
+
+		/// <summary>
+		///  Lower interquartile earnings.
+		/// </summary>
+		public int LowEarnings { get; set; }
+
+		/// <summary>
+		///  Median earnings.
+		/// </summary>
+		public int MedianEarnings { get; set; }
+
 		public string Name { get; set; }
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
 		/// <summary>
 		///  Number of credentials awarded.
 		///  ceterms:numberAwarded
@@ -47,19 +72,10 @@ namespace RA.Models.Input
 		public int NumberAwarded { get; set; }
 
 		/// <summary>
-		/// Jurisdiction Profile
-		/// Geo-political information about applicable geographic areas and their exceptions.
-		/// ceterms:jurisdiction
-		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+		/// Number of months after earning a credential when employment and earnings data is collected.
+		/// Number of months usually range between 3 months (one quarter) to ten years.
 		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
-
-		/// <summary>
-		/// Rate computed by dividing the number of subjects passing an assessment by the total number taking the assessment.
-		///  ceterms:passRate
-		/// </summary>
-		public List<QuantitativeValue> PassRate { get; set; } = new List<QuantitativeValue>();
-
+		public int PostReceiptMonths { get; set; }
 
 		/// <summary>
 		/// Authoritative source of an entity's information.
@@ -73,8 +89,7 @@ namespace RA.Models.Input
 		/// Data Set on which earnings or employment data is based.
 		/// qdata:relevantDataSet
 		/// </summary>
-		public List<DataSetProfile> RelevantDataSet { get; set; } = new List<DataSetProfile>();
-		//21-02-19 mparsons - change to external reference by URI/CTID
-		public List<string> RelevantDataSetList { get; set; } = new List<string>();
+		public List<DataSetProfile> RelevantDataSet { get; set; }
+		public List<string> RelevantDataSetList { get; set; }
 	}
 }

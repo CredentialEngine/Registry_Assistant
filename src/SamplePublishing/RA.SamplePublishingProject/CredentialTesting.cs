@@ -54,8 +54,8 @@ namespace RA.SamplePublishingProject
 		public void PublishProPathCredential()
 		{
 			//
-			//new ProPathExamples().CredentialWithHoldersProfile( "format" );
-			new ProPathExamples().CredentialWithHoldersProfile( "publish" );
+			new ProPathExamples().CredentialWithAggregateDataProfile( "publish" );
+			//new ProPathExamples().CredentialWithHoldersProfile( "publish" );
 			//PublishProPathLearningOpportunity();
 		}
 		[TestMethod]

@@ -56,7 +56,7 @@ namespace RA.SamplesForDocumentation
 					SubjectWebpage="https://example.com?t=myqasite",
 					Description="An optional but useful description of this QA organization."
 				}
-			}
+			};
 			//A main jurisdiction is defined using the Place class. 
 			//The Place GEO properties such as Country, AddressRegion or City
 			//Or the Name property could be used for say, a continent
