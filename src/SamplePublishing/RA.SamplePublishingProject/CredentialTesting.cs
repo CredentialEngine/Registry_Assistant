@@ -43,7 +43,12 @@ namespace RA.SamplePublishingProject
 			//using simple post
 			new CareerBridgeCredentials().CredentialWithHoldersProfile( "publish" );
 		}
-
+		[TestMethod]
+		public void KansasCredentialWithAggregateData()
+		{
+			//using simple post
+			new KansasExamples().CredentialWithAggregateDataProfile( "format" );
+		}
 		[TestMethod]
 		public void PublishQACredential()
 		{

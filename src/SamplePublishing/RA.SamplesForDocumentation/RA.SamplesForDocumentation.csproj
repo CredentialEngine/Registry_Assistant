@@ -62,6 +62,7 @@
     <Compile Include="Credentials\PublishQACredentialWithETPL.cs" />
     <Compile Include="Employment\Occupations.cs" />
     <Compile Include="PerformanceExamples\CareerBridgeCredentials.cs" />
+    <Compile Include="PerformanceExamples\KansasExamples.cs" />
     <Compile Include="ProPath\ProPathExamples.cs" />
     <Compile Include="Credentials\PublishCredential.cs" />
     <Compile Include="LearningOpportunities\PublishLearningOpportunity.cs" />
