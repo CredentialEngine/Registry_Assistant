@@ -89,7 +89,7 @@ namespace RA.Models.Input
 		/// Data Set on which earnings or employment data is based.
 		/// qdata:relevantDataSet
 		/// </summary>
-		public List<DataSetProfile> RelevantDataSet { get; set; }
+		public List<DataSetProfile> RelevantDataSet { get; set; } = new List<DataSetProfile>();
 		public List<string> RelevantDataSetList { get; set; }
 	}
 }

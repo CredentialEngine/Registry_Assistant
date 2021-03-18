@@ -278,7 +278,25 @@ namespace RA.Models.Input
 		/// https://www.naics.com/search/
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
+		//=============================================================================
+		/// <summary>
+		/// InstructionalProgramType
+		/// Type of instructional program; select from an existing enumeration of such types.
+		/// </summary>
+		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
 
+		/// <summary>
+		/// AlternativeInstructionalProgramType
+		/// Programs that are not found in a formal framework can be still added using AlternativeInstructionalProgramType. 
+		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
+		/// </summary>
+		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// List of valid Classification of Instructional Program codes. See:
+		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
+		/// </summary>
+		public List<string> CIP_Codes { get; set; } = new List<string>();
 		#endregion
 
 
@@ -555,7 +573,25 @@ namespace RA.Models.Input
 		/// https://www.naics.com/search/
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
+		//=============================================================================
+		/// <summary>
+		/// InstructionalProgramType
+		/// Type of instructional program; select from an existing enumeration of such types.
+		/// </summary>
+		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
 
+		/// <summary>
+		/// AlternativeInstructionalProgramType
+		/// Programs that are not found in a formal framework can be still added using AlternativeInstructionalProgramType. 
+		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
+		/// </summary>
+		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// List of valid Classification of Instructional Program codes. See:
+		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
+		/// </summary>
+		public List<string> CIP_Codes { get; set; } = new List<string>();
 		#endregion
 
 

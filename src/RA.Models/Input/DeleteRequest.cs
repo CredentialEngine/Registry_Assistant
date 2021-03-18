@@ -11,6 +11,10 @@ namespace RA.Models.Input
         /// CTID of document to be deleted
         /// </summary>
 		public string CTID { get; set; }
+
+		/// <summary>
+		/// Optionally provide a list of CTIDs where many records are to be deleted
+		/// </summary>
 		public List<string> CTIDList { get; set; } = new List<string>();
 		/// <summary>
 		/// Identifier for Organization which Owns the data being deleted

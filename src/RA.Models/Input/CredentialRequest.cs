@@ -248,6 +248,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public string DateEffective { get; set; }
 
+		/// <summary>
+		/// Date beyond which the resource is no longer offered or available.
+		/// Previously earned, completed, or attained resources may still be valid even if they are no longer offered.
+		/// </summary>
+		public string ExpirationDate { get; set; }
 
 		#region -- Quality Assurance BY --
 		/// <summary>
@@ -501,7 +506,7 @@ namespace RA.Models.Input
 		///  Resource containing summary/statistical employment outcome, earnings, and/or holders information.
 		///  For deeper information, include qdata:DataSetProfile.
 		/// </summary>
-		public List<AggregateDataProfile> AggregateData { get; set; }
+		public List<AggregateDataProfile> AggregateData { get; set; } = new List<AggregateDataProfile>();
 
 		/// <summary>
 		///  Entity that describes earning and related statistical information for a given credential.

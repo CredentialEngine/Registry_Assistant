@@ -114,7 +114,8 @@ namespace RA.Models.Input
 		/// Example: Registration
 		/// </summary>
 		public string ContactType { get; set; }
-
+		//
+		public List<string> FaxNumber { get; set; }
 		/// <summary>
 		/// List of phone numbers for this contact point
 		/// </summary>
