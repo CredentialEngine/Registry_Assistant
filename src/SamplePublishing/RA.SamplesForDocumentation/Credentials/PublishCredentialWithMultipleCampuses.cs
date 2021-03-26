@@ -14,7 +14,12 @@ namespace RA.SamplesForDocumentation.Credentials
 {
 	public class PublishCredentialWithMultipleCampuses
 	{
-		public bool PublishSimpleRecord( string requestType = "format" )
+		/// <summary>
+		/// Publish credential that uses AlternateCondition to show that the credential can be attained at multiple campuses.
+		/// </summary>
+		/// <param name="requestType"></param>
+		/// <returns></returns>
+		public bool PublishRecord( string requestType = "format" )
 		{
 			//Holds the result of the publish action
 			var result = "";

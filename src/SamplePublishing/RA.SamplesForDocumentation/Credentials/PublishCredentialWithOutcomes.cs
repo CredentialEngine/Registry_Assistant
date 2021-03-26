@@ -47,6 +47,15 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
+			//
+			var aggregateProfile = new AggregateDataProfile()
+			{
+				Description = "Median Earnings of Program Graduates in Region upon entry",
+				MedianEarnings = 44439,
+				PostReceiptMonths = 0
+			};
+			//format an AggregateDataProfile
+			myData.AggregateData = new List<AggregateDataProfile>() { FormatAggregateDataProfile( organizationIdentifierFromAccountsSite ) };
 
 			//This holds the credential and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
@@ -55,10 +64,6 @@ namespace RA.SamplesForDocumentation
 				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
-			//add holders profile to the request
-			myRequest.HoldersProfile.Add( FormatHoldersProfile( organizationIdentifierFromAccountsSite ) );
-			myRequest.EarningsProfile.Add( FormatEarningsProfile( organizationIdentifierFromAccountsSite ) );
-			myRequest.EmploymentOutcome.Add( FormatEmploymentOutcomeProfile( organizationIdentifierFromAccountsSite ) );
 
 
 			//Serialize the credential request object
@@ -82,19 +87,16 @@ namespace RA.SamplesForDocumentation
 
 		}
 
-		private HoldersProfile FormatHoldersProfile( string owningOrganizationCTID )
+		private AggregateDataProfile FormatAggregateDataProfile( string owningOrganizationCTID )
 		{
 
 			/*
-			 * The HoldersProfile is an entity describing the count and related statistical information of holders of a given credential.
-				An EarningsProfile is currently only published with a Credential   
-				The EarningsProfile has the following relationships
-			  	EarningsProfile
+			 * The AggregateDataProfile is a resource containing summary statistical data..
+				The AggregateDataProfile has the following relationships
+			  	AggregateDataProfile
 			  		DataSetProfile
 			  			DataSetTimeFrame
 			  				DataProfile
-			 * The HoldersProfile requires a CTID at this time (may change)
-			 * The profile has high level statistical information plus a relevantDataset (a list for multiple) which is the DataSetProfile class 
 			 * 
 			 * DataSetProfile -  Particular characteristics or properties of a data set and its records.
 			 * Requires a CTID.
@@ -113,38 +115,24 @@ namespace RA.SamplesForDocumentation
 			 * 
 			 * Additional properties are also expected to be added. 
 			 */
-			var hpctid = "ce-27915af9-fa02-41dc-8dee-7c79d34ee913";//"ce-" + Guid.NewGuid().ToString().ToLower();
 			var datasetProfileCtid = "ce-5d551a88-6916-4bfc-a271-073f2caf1930";// "ce-" + Guid.NewGuid().ToString().ToLower();
 
-			HoldersProfile output = new HoldersProfile()
+			var output = new AggregateDataProfile()
 			{
-				CTID = hpctid,
-				Name = "My Holders Profile for a particular outcome.",
+				Name = "My AggregateDataProfile Profile for a particular outcome.",
 				DateEffective = "2018-01-15",
-				Description = "Description of 'My Holders Profile for a particular outcome.'",
+				Description = "Description of 'My AggregateDataProfile Profile for a particular outcome.'",
 				DemographicInformation = "Description of Demographic Information",
 				NumberAwarded = 234,
-				Source = "https://example.org/?t=holdersProfileSource"
+				Source = "https://example.org/?t=AggregateDataProfileProfileSource"
 			};
-			output.PassRate = new List<QuantitativeValue>()
-			{
-				new QuantitativeValue()
-				{
-					Description="Pass Rate for 2020",
-					 Percentage=78.3m,
-				},
-				new QuantitativeValue()
-				{
-					Description="Pass Rate for 2019",
-					 Percentage=74.8m,
-				}
-			};
+
 			output.Jurisdiction.Add( Jurisdictions.SampleJurisdiction() );
 			//============= DataSetProfile ===================
-			//referenced from a HoldersProfile (RelevantDataSet)
+			//referenced from a AggregateDataProfileProfile (RelevantDataSet)
 			var relevantDataSet = new DataSetProfile()
 			{
-				Name = "Dataset profile for holdersprofile",
+				Name = "Dataset profile for AggregateDataProfileprofile",
 				Description="A helpful description of this dataset profile.",
 				CTID = datasetProfileCtid,
 				DataProvider = new OrganizationReference() { CTID = owningOrganizationCTID },
@@ -154,7 +142,7 @@ namespace RA.SamplesForDocumentation
 			//DataSetTimeFrame referenced from a DataSetProfile (DataAttributes)
 			DataSetTimeFrame dstp = new DataSetTimeFrame()
 			{
-				Description = "Holders Profile DataSetTimeFrame",
+				Description = "AggregateDataProfile Profile DataSetTimeFrame",
 				DataSourceCoverageType = new List<string>() { "Global" },
 				StartDate = "2017-01-11",
 				EndDate = "2019-03-20"
@@ -174,7 +162,7 @@ namespace RA.SamplesForDocumentation
 			#region 
 			dataProfile.DataAvailable.Add( SampleServices.AddQuantitativeValue( 15, "Data Available spring" ) );
 			dataProfile.DataAvailable.Add( SampleServices.AddQuantitativeValue( 45, "Data Available fall" ) );
-			dataProfile.DataNotAvailable.Add( SampleServices.AddQuantitativeValue( 22, "Number of credential holders in the reporting group for which employment and earnings data has not been included in the data set" ) );
+			dataProfile.DataNotAvailable.Add( SampleServices.AddQuantitativeValue( 22, "Number of credential AggregateDataProfile in the reporting group for which employment and earnings data has not been included in the data set" ) );
 			dataProfile.DemographicEarningsRate.Add( SampleServices.AddQuantitativeValue( 29.12M, "Earnings rate for a demographic category." ) );
 			dataProfile.DemographicEmploymentRate.Add( SampleServices.AddQuantitativePercentage( 8.4M, "Employment rate for a demographic category." ) );
 			//
@@ -274,311 +262,6 @@ namespace RA.SamplesForDocumentation
 			return output;
 		}
 
-		private EarningsProfile FormatEarningsProfile( string owningOrganizationCTID )
-		{
 
-			/*
-			   The EarningsProfile is an entity that describes earning and related statistical information for a given credential.
-			   An EarningsProfile is currently only published with a Credential
-			   The EarningsProfile uses the same pattern of relationships as a HolderProfile
-			  	EarningsProfile
-			  		DataSetProfile
-			  			DataSetTimeFrame
-			  				DataProfile
-			 * The EarningsProfile requires a CTID at this time (may change)
-			 * The profile has high level statistical information plus a relevantDataset (a list for multiple) which is the DataSetProfile class 
-			 * 
-			 * DataSetProfile -  Particular characteristics or properties of a data set and its records.
-			 * Requires a CTID.
-			 * A key property is qdata:dataSetTimePeriod which a list of the class: qdata:DataSetTimeFrame
-			 * 
-			 * qdata:DataSetTimeFrame - Time frame including earnings and employment start and end dates of the data set.
-			 * This class describes the timeframe for a set of statistics. 
-			 * The property: qdata:dataAttributes is a list of the class: qdata:DataProfile. 
-			 * 
-			 * qdata:DataProfile - Entity describing the attributes of the data set, its subjects and their values.
-			 * This class has a large number of properties for describing statitics.
-			 * Three new properties are being added that are not yet shown on https://credreg.net/qdata/terms/DataProfile#DataProfile:
-			 * - TotalWIOACompleters
-			 * - TotalWIOAExiters
-			 * - TotalWIOAParticipants
-			 * 
-			 * Additional properties are also expected to be added. 
-			 */
-			var ctid = "ce-27915af9-4101-41dc-8dee-7c79d34ee913";//"ce-" + Guid.NewGuid().ToString().ToLower();
-			var datasetProfileCtid = "ce-5d551a88-4101-4bfc-a271-073f2caf1930";// "ce-" + Guid.NewGuid().ToString().ToLower();
-
-			var output = new EarningsProfile()
-			{
-				CTID = ctid,
-				Name = "My Earnings Profile for a particular outcome.",
-				DateEffective = "2021-02-02",
-				Description = "Description of 'My Earnings Profile for a particular outcome.'",
-				 LowEarnings = 33000,
-				 MedianEarnings=43000,
-				 HighEarnings=57000,
-				  PostReceiptMonths=36,
-				Source = "https://example.org/?t=EarningsProfileSource"
-			};
-			output.Jurisdiction.Add( Jurisdictions.SampleJurisdiction() );
-
-
-			//============= DataSetProfile ===================
-			//referenced from a EarningsProfile (RelevantDataSet)
-			var relevantDataSet = new DataSetProfile()
-			{
-				Name = "Dataset profile for Earnings Profile",
-				Description = "A helpful description of this dataset profile.",
-				CTID = datasetProfileCtid,
-				DataProvider = new OrganizationReference() { CTID = owningOrganizationCTID },
-				//RelevantDataSetFor = hpctid //this will be derived by the API
-			};
-
-			//DataSetTimeFrame referenced from a DataSetProfile (DataAttributes)
-			DataSetTimeFrame dstp = new DataSetTimeFrame()
-			{
-				Description = "Earnings Profile DataSetTimeFrame",
-				DataSourceCoverageType = new List<string>() { "Global" },
-				StartDate = "2017-01-11",
-				EndDate = "2019-03-20"
-			};
-			////DataProfile referenced from a DataSetTimeFrame ()
-			var dataProfile = new DataProfile()
-			{
-				AdministrativeRecordType = "adminRecord:Tax1099",
-				Description = "Data Profile with all properties",
-				Adjustment = "Describes whether and how the provided earnings have been adjusted for factors such as inflation, participant demographics and economic conditions. ",
-				EarningsDefinition = "Definition of \"earnings\" used by the data source in the context of the reporting group.",
-				EmploymentDefinition = "Statement of criteria used to determine whether sufficient levels of work time and/or earnings have been met to be considered employed during the earning time period.",
-				IncomeDeterminationType = "AnnualizedEarnings",
-				WorkTimeThreshold = "Statement of earnings thresholds used in determining whether a sufficient level of workforce attachment has been achieved to qualify as employed during the chosen employment and earnings time period."
-
-			};
-			dataProfile.DataAvailable.Add( SampleServices.AddQuantitativeValue( 15, "Data Available spring" ) );
-			dataProfile.DataAvailable.Add( SampleServices.AddQuantitativeValue( 45, "Data Available fall" ) );
-			dataProfile.DataNotAvailable.Add( SampleServices.AddQuantitativeValue( 22, "Number of credential Earnings in the reporting group for which employment and earnings data has not been included in the data set" ) );
-			dataProfile.DemographicEarningsRate.Add( SampleServices.AddQuantitativeValue( 29.12M, "Earnings rate for a demographic category." ) );
-			dataProfile.DemographicEmploymentRate.Add( SampleServices.AddQuantitativePercentage( 8.4M, "Employment rate for a demographic category." ) );
-			//
-			dataProfile.EarningsDistribution.Add( new MonetaryAmountDistribution()
-			{
-				Currency = "USD",
-				Median = 52000,
-				Percentile10 = 29000,
-				Percentile25 = 36000,
-				Percentile75 = 58000,
-				Percentile90 = 67000
-			} );
-			//
-			dataProfile.EmploymentOutlook.Add( SampleServices.AddQuantitativeValue( 333, "Projected employment estimate." ) );
-			dataProfile.EmploymentRate.Add( SampleServices.AddQuantitativeValue( 45.4M, "Rate computed by dividing the number of Earnings or subjects meeting the data set's criteria of employment (meetEmploymentCriteria) by the number of Earnings or subjects for which data was available (dataAvailable)." ) );
-			dataProfile.IndustryRate.Add( SampleServices.AddQuantitativeValue( 12.4M, "Employment rate for an industry category." ) );
-			dataProfile.InsufficientEmploymentCriteria.Add( SampleServices.AddQuantitativeValue( 555, "Number of Earnings that do not meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set." ) );
-			dataProfile.MeetEmploymentCriteria.Add( SampleServices.AddQuantitativeValue( 555, "Number of Earnings that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set." ) );
-			dataProfile.NonCompleters.Add( SampleServices.AddQuantitativeValue( 33, "Non-Earnings who departed or are likely to depart higher education prematurely." ) );
-			dataProfile.NonHoldersInSet.Add( SampleServices.AddQuantitativeValue( 44, "Non-holder subject actively pursuing the credential through a program or assessment." ) );
-			//
-			dataProfile.OccupationRate.Add( SampleServices.AddQuantitativeValue( 12M, "Employment rate for an occupation category." ) );
-			dataProfile.RegionalEarningsDistribution.Add( SampleServices.AddQuantitativeValue( 44000, "Reference to an entity describing median earnings as well as earnings at various percentiles for Earnings or subjects in the region." ) );
-			dataProfile.RegionalEmploymentRate.Add( SampleServices.AddQuantitativeValue( 44000, "Reference to an entity describing median earnings as well as earnings at various percentiles for Earnings or subjects in the region." ) );
-			dataProfile.RelatedEmployment.Add( SampleServices.AddQuantitativeValue( 321, "Number of people employed in the area of work (e.g., industry, occupation) in which the credential provided preparation." ) );
-			dataProfile.SubjectsInSet.Add( SampleServices.AddQuantitativeValue( 235, "Total credential Earnings and non-Earnings in the final data collection and reporting." ) );
-			dataProfile.SufficientEmploymentCriteria.Add( SampleServices.AddQuantitativeValue( 55, "Number of Earnings that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set" ) );
-			dataProfile.UnrelatedEmployment.Add( SampleServices.AddQuantitativeValue( 55, "Number of people employed outside the area of work (e.g., industry, occupation) in which the credential provided preparation." ) );
-
-			//
-			dataProfile.TotalWIOACompleters.Add( SampleServices.AddQuantitativeValue( 415, "All Completers" ) );
-			dataProfile.HoldersInSet.Add( SampleServices.AddQuantitativeValue( 344, "Successful Completers" ) );
-			dataProfile.TotalWIOAExiters.Add( SampleServices.AddQuantitativeValue( 329, "Completed Successfully and Exited WIOA" ) );
-			dataProfile.TotalWIOAParticipants.Add( SampleServices.AddQuantitativeValue( 416, "Total Enrollment (Including Currently Enrolled)" ) );
-
-			//fill out
-
-
-			//Data profile for unrelated employment
-			var dataProfileUnrelatedEmployment = new DataProfile() { Description = "Training unrelated employment", };
-			dataProfileUnrelatedEmployment.UnrelatedEmployment.Add( SampleServices.AddQuantitativeValue( 22, "Hired for a Non-Training Related Job" ) );
-			//EarningsAmount
-			dataProfileUnrelatedEmployment.EarningsAmount.Add( new MonetaryAmount()
-			{
-				Currency = "USD",
-				Value = 15.91M,
-				Description = "Average Wage"
-			} );
-
-			//Data profile for related employment
-			var dataProfileRelatedEmployment = new DataProfile() { Description = "Training related employment", };
-			dataProfileRelatedEmployment.RelatedEmployment.Add( SampleServices.AddQuantitativeValue( 195, "Hired for a Training-Related Job" ) );
-			dataProfileRelatedEmployment.EarningsAmount.Add( new MonetaryAmount()
-			{
-				Currency = "USD",
-				Value = 19.35M,
-				Description = "Average Wage"
-			} );
-			//==========================================
-			//populate all
-			dstp.DataAttributes.Add( dataProfile );
-			dstp.DataAttributes.Add( dataProfileUnrelatedEmployment );
-			dstp.DataAttributes.Add( dataProfileRelatedEmployment );
-
-			relevantDataSet.DataSetTimePeriod.Add( dstp );
-			output.RelevantDataSet.Add( relevantDataSet );
-
-
-			//
-			return output;
-		}
-		private EmploymentOutcomeProfile FormatEmploymentOutcomeProfile( string owningOrganizationCTID )
-		{
-
-			/*
-			   The EmploymentOutcomeProfile is an entity that describes employment outcomes and related statistical information for a given credential.
-			   An EmploymentOutcomeProfile is currently only published with a Credential
-			   The EmploymentOutcomeProfile uses the same pattern of relationships as a HolderProfile
-			  	EmploymentOutcomeProfile
-			  		DataSetProfile
-			  			DataSetTimeFrame
-			  				DataProfile
-			 * The EmploymentOutcomeProfile requires a CTID at this time (may change)
-			 * The profile has high level statistical information plus a relevantDataset (a list for multiple) which is the DataSetProfile class 
-			 * 
-			 * DataSetProfile -  Particular characteristics or properties of a data set and its records.
-			 * Requires a CTID.
-			 * A key property is qdata:dataSetTimePeriod which a list of the class: qdata:DataSetTimeFrame
-			 * 
-			 * qdata:DataSetTimeFrame - Time frame including EmploymentOutcome and employment start and end dates of the data set.
-			 * This class describes the timeframe for a set of statistics. 
-			 * The property: qdata:dataAttributes is a list of the class: qdata:DataProfile. 
-			 * 
-			 * qdata:DataProfile - Entity describing the attributes of the data set, its subjects and their values.
-			 * This class has a large number of properties for describing statitics.
-			 */
-			var ctid = "ce-27915af9-5555-41dc-8dee-7c79d34ee913";//"ce-" + Guid.NewGuid().ToString().ToLower();
-			var datasetProfileCtid = "ce-5d551a88-5555-4bfc-a271-073f2caf1930";// "ce-" + Guid.NewGuid().ToString().ToLower();
-
-			var output = new EmploymentOutcomeProfile()
-			{
-				CTID = ctid,
-				Name = "My EmploymentOutcome Profile for a particular outcome.",
-				DateEffective = "2018-01-15",
-				Description = "Description of 'My EmploymentOutcome Profile for a particular outcome.'",
-				Source = "https://example.org/?t=EmploymentOutcomeProfileSource"
-			};
-			output.JobsObtainedList = new List<QuantitativeValue>()
-			{
-				new QuantitativeValue()
-				{
-					Value=88,
-					Description="Relevent information about this value for JobsObtained. "
-				}
-			};
-			output.Jurisdiction.Add( Jurisdictions.SampleJurisdiction() );
-
-
-			//============= DataSetProfile ===================
-			//referenced from a EmploymentOutcomeProfile (RelevantDataSet)
-			var relevantDataSet = new DataSetProfile()
-			{
-				Name = "Dataset profile for EmploymentOutcomeProfile",
-				Description = "A helpful description of this dataset profile.",
-				CTID = datasetProfileCtid,
-				DataProvider = new OrganizationReference() { CTID = owningOrganizationCTID },
-				//RelevantDataSetFor = hpctid //this will be derived by the API
-			};
-
-			//DataSetTimeFrame referenced from a DataSetProfile (DataAttributes)
-			DataSetTimeFrame dstp = new DataSetTimeFrame()
-			{
-				Description = "EmploymentOutcome Profile DataSetTimeFrame",
-				DataSourceCoverageType = new List<string>() { "Global" },
-				StartDate = "2017-01-11",
-				EndDate = "2019-03-20"
-			};
-			////DataProfile referenced from a DataSetTimeFrame ()
-			var dataProfile = new DataProfile()
-			{
-				AdministrativeRecordType = "adminRecord:Tax1099",
-				Description = "Data Profile with all properties",
-				Adjustment = "Describes whether and how the provided EmploymentOutcome have been adjusted for factors such as inflation, participant demographics and economic conditions. ",
-				EarningsDefinition = "Definition of \"EmploymentOutcome\" used by the data source in the context of the reporting group.",
-				EmploymentDefinition = "Statement of criteria used to determine whether sufficient levels of work time and/or EmploymentOutcome have been met to be considered employed during the earning time period.",
-				IncomeDeterminationType = "AnnualizedEarnings",
-				WorkTimeThreshold = "Statement of EmploymentOutcome thresholds used in determining whether a sufficient level of workforce attachment has been achieved to qualify as employed during the chosen employment and EmploymentOutcome time period."
-
-			};
-			dataProfile.DataAvailable.Add( SampleServices.AddQuantitativeValue( 15, "Data Available spring" ) );
-			dataProfile.DataAvailable.Add( SampleServices.AddQuantitativeValue( 45, "Data Available fall" ) );
-			dataProfile.DataNotAvailable.Add( SampleServices.AddQuantitativeValue( 22, "Number of credential holders in the reporting group for which employment and EmploymentOutcome data has not been included in the data set" ) );
-			dataProfile.DemographicEarningsRate.Add( SampleServices.AddQuantitativeValue( 29.12M, "EmploymentOutcome rate for a demographic category." ) );
-			dataProfile.DemographicEmploymentRate.Add( SampleServices.AddQuantitativePercentage( 8.4M, "Employment rate for a demographic category." ) );
-			//
-			dataProfile.EarningsDistribution.Add( new MonetaryAmountDistribution()
-			{
-				Currency = "USD",
-				Median = 52000,
-				Percentile10 = 29000,
-				Percentile25 = 36000,
-				Percentile75 = 58000,
-				Percentile90 = 67000
-			} );
-			//
-			dataProfile.EmploymentOutlook.Add( SampleServices.AddQuantitativeValue( 333, "Projected employment estimate." ) );
-			dataProfile.EmploymentRate.Add( SampleServices.AddQuantitativeValue( 45.4M, "Rate computed by dividing the number of holders or subjects meeting the data set's criteria of employment (meetEmploymentCriteria) by the number of holders or subjects for which data was available (dataAvailable)." ) );
-			dataProfile.IndustryRate.Add( SampleServices.AddQuantitativeValue( 12.4M, "Employment rate for an industry category." ) );
-			dataProfile.InsufficientEmploymentCriteria.Add( SampleServices.AddQuantitativeValue( 555, "Number of holders that do not meet the prescribed employment threshold in terms of EmploymentOutcome or time engaged in work as defined for the data set." ) );
-			dataProfile.MeetEmploymentCriteria.Add( SampleServices.AddQuantitativeValue( 555, "Number of holders that meet the prescribed employment threshold in terms of EmploymentOutcome or time engaged in work as defined for the data set." ) );
-			dataProfile.NonCompleters.Add( SampleServices.AddQuantitativeValue( 33, "Non-holders who departed or are likely to depart higher education prematurely." ) );
-			dataProfile.NonHoldersInSet.Add( SampleServices.AddQuantitativeValue( 44, "Non-holder subject actively pursuing the credential through a program or assessment." ) );
-			//
-			dataProfile.OccupationRate.Add( SampleServices.AddQuantitativeValue( 12M, "Employment rate for an occupation category." ) );
-			dataProfile.RegionalEarningsDistribution.Add( SampleServices.AddQuantitativeValue( 44000, "Reference to an entity describing median EmploymentOutcome as well as EmploymentOutcome at various percentiles for holders or subjects in the region." ) );
-			dataProfile.RegionalEmploymentRate.Add( SampleServices.AddQuantitativeValue( 44000, "Reference to an entity describing median EmploymentOutcome as well as EmploymentOutcome at various percentiles for holders or subjects in the region." ) );
-			dataProfile.RelatedEmployment.Add( SampleServices.AddQuantitativeValue( 321, "Number of people employed in the area of work (e.g., industry, occupation) in which the credential provided preparation." ) );
-			dataProfile.SubjectsInSet.Add( SampleServices.AddQuantitativeValue( 235, "Total credential holders and non-holders in the final data collection and reporting." ) );
-			dataProfile.SufficientEmploymentCriteria.Add( SampleServices.AddQuantitativeValue( 55, "Number of holders that meet the prescribed employment threshold in terms of EmploymentOutcome or time engaged in work as defined for the data set" ) );
-			dataProfile.UnrelatedEmployment.Add( SampleServices.AddQuantitativeValue( 55, "Number of people employed outside the area of work (e.g., industry, occupation) in which the credential provided preparation." ) );
-
-			//
-			dataProfile.TotalWIOACompleters.Add( SampleServices.AddQuantitativeValue( 415, "All Completers" ) );
-			dataProfile.HoldersInSet.Add( SampleServices.AddQuantitativeValue( 344, "Successful Completers" ) );
-			dataProfile.TotalWIOAExiters.Add( SampleServices.AddQuantitativeValue( 329, "Completed Successfully and Exited WIOA" ) );
-			dataProfile.TotalWIOAParticipants.Add( SampleServices.AddQuantitativeValue( 416, "Total Enrollment (Including Currently Enrolled)" ) );
-
-			//fill out
-
-
-			//Data profile for unrelated employment
-			var dataProfileUnrelatedEmployment = new DataProfile() { Description = "Training unrelated employment", };
-			dataProfileUnrelatedEmployment.UnrelatedEmployment.Add( SampleServices.AddQuantitativeValue( 22, "Hired for a Non-Training Related Job" ) );
-			//EmploymentOutcomeAmount
-			dataProfileUnrelatedEmployment.EarningsAmount.Add( new MonetaryAmount()
-			{
-				Currency = "USD",
-				Value = 15.91M,
-				Description = "Average Wage"
-			} );
-
-			//Data profile for related employment
-			var dataProfileRelatedEmployment = new DataProfile() { Description = "Training related employment", };
-			dataProfileRelatedEmployment.RelatedEmployment.Add( SampleServices.AddQuantitativeValue( 195, "Hired for a Training-Related Job" ) );
-			dataProfileRelatedEmployment.EarningsAmount.Add( new MonetaryAmount()
-			{
-				Currency = "USD",
-				Value = 19.35M,
-				Description = "Average Wage"
-			} );
-			//==========================================
-			//populate all
-			dstp.DataAttributes.Add( dataProfile );
-			dstp.DataAttributes.Add( dataProfileUnrelatedEmployment );
-			dstp.DataAttributes.Add( dataProfileRelatedEmployment );
-
-			relevantDataSet.DataSetTimePeriod.Add( dstp );
-			output.RelevantDataSet.Add( relevantDataSet );
-
-
-			//
-			return output;
-		}
 	}
 }

@@ -57,11 +57,11 @@ namespace RA.SamplesForDocumentation
 			using ( var client = new HttpClient() )
 			{
 				// Accept JSON
-				client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application / json" ) );
+				client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
 				// Add API Key (for a publish request)
 				client.DefaultRequestHeaders.Add( "Authorization", "ApiToken " + apiKey );
 				// Format the json as content
-				var content = new StringContent( payload, Encoding.UTF8, "application / json" );
+				var content = new StringContent( payload, Encoding.UTF8, "application/json" );
 				// The endpoint to publish to
 				var publishEndpoint = "https://sandbox.credentialengine.org/assistant/CompetencyFramework/publish/";
 				// Perform the actual publish action and return the result

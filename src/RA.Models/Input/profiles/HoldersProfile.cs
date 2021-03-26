@@ -55,13 +55,6 @@ namespace RA.Models.Input
 		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 
 		/// <summary>
-		/// Rate computed by dividing the number of subjects passing an assessment by the total number taking the assessment.
-		///  ceterms:passRate
-		/// </summary>
-		public List<QuantitativeValue> PassRate { get; set; } = new List<QuantitativeValue>();
-
-
-		/// <summary>
 		/// Authoritative source of an entity's information.
 		/// URL
 		/// ceterms:source

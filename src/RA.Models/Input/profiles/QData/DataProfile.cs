@@ -56,6 +56,7 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public List<QuantitativeValue> DemographicEmploymentRate { get; set; } = new List<QuantitativeValue>();
 
+		//not required
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 

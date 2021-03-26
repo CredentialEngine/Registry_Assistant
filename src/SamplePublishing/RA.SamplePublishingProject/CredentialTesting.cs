@@ -15,14 +15,14 @@ namespace RA.SamplePublishingProject
 		public void DoAFormatRequest()
 		{
 			//using simple post
-			new PublishCredential().PublishSimpleRecord("format");
+			new PublishCredential().PublishDetailedRecord( "format");
 		}
 
 		[TestMethod]
 		public void DoAPublishRequest()
 		{
 			//using simple post
-			new PublishCredential().PublishSimpleRecord( "publish" );
+			new PublishCredential().PublishDetailedRecord( "publish" );
 		}
 		[TestMethod]
 		public void CredentialWithHoldersProfile()
@@ -35,7 +35,7 @@ namespace RA.SamplePublishingProject
 		public void CredentialWithAlternativeConditions()
 		{
 			//using simple post
-			new PublishCredentialWithMultipleCampuses().PublishSimpleRecord( "publish" );
+			new PublishCredentialWithMultipleCampuses().PublishRecord( "publish" );
 		}
 		[TestMethod]
 		public void CareerBridgeCredentialsCredentialWithHoldersProfile()
@@ -84,7 +84,7 @@ namespace RA.SamplePublishingProject
 			};
 
 			//using simple post
-			new PublishCredential().PublishFromInput( input ) ;
+			new PublishCredential().PublishFromInputClass( input ) ;
 		}
 	}
 }

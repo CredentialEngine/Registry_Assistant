@@ -52,15 +52,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assessments\PublishAssessment.cs" />
+    <Compile Include="Assessments\SampleAssessmentPublish.cs" />
     <Compile Include="CompetencyFrameworks\PublishACEFrameworks.cs" />
     <Compile Include="CompetencyFrameworks\PublishCompetencyFrameworks.cs" />
     <Compile Include="ConceptSchemes\PublishConceptSchemes.cs" />
     <Compile Include="ConditionManifests\PublishConditionManifest.cs" />
     <Compile Include="CostManifests\PublishCostManifest.cs" />
+    <Compile Include="Credentials\PublishCredentialWithOutcomeProfiles.cs" />
+    <Compile Include="Credentials\SampleCredentialPublish.cs" />
     <Compile Include="Credentials\PublishCredentialWithMultipleCampuses.cs" />
     <Compile Include="Credentials\PublishCredentialWithOutcomes.cs" />
     <Compile Include="Credentials\PublishQACredentialWithETPL.cs" />
     <Compile Include="Employment\Occupations.cs" />
+    <Compile Include="LearningOpportunities\SampleLearningOpportunityPublish.cs" />
     <Compile Include="PerformanceExamples\CareerBridgeCredentials.cs" />
     <Compile Include="PerformanceExamples\KansasExamples.cs" />
     <Compile Include="ProPath\ProPathExamples.cs" />

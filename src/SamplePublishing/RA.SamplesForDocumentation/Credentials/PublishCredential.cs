@@ -14,6 +14,181 @@ namespace RA.SamplesForDocumentation
 {
 	public class PublishCredential
 	{
+
+		public string PublishDetailedRecord( string requestType = "publish" )
+		{
+			//Holds the result of the publish action
+			var result = "";
+			// Assign the api key - acquired from organization account of the organization doing the publishing
+			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
+			// This is the CTID of the organization that owns the data being published
+			var organizationIdentifierFromAccountsSite = SampleServices.GetAppKeyValue( "myOrgCTID" );
+			//Assign a CTID for the entity being published and keep track of it
+			var myCTID = "ce-" + Guid.NewGuid().ToString();
+			DataService.SaveCredentialCTID( myCTID );
+
+			//A simple credential object - see below for sample class definition
+			var myData = new Credential()
+			{
+				Name = "My Certification Name",
+				Description = "This is some text that describes my credential.",
+				Ctid = myCTID,
+				SubjectWebpage = "http://example.com/credential/1234",
+				CredentialType = "ceterms:Certification",
+				InLanguage = new List<string>() { "en-US" },
+				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
+				Naics = new List<string>() { "333922", "333923", "333924" }
+			};
+			//typically the ownedBy is the same as the CTID for the data owner
+			myData.OwnedBy.Add( new OrganizationReference()
+			{
+				CTID = organizationIdentifierFromAccountsSite
+			} );
+
+			//==================== QUALITY ASSURANCE RECEIVED ====================
+
+			//CTID for Higher learning commission.
+			myData.AccreditedBy.Add( new OrganizationReference()
+			{
+				CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
+			} );
+			//Add organization that is NOT in the credential registry
+			myData.AccreditedBy.Add( new OrganizationReference()
+			{
+				Type = "CredentialOrganization",
+				Name = "Council on Social Work Education (CSWE)",
+				SubjectWebpage = "https://www.cswe.org/",
+				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
+			} );
+
+			//==================== JURISDICTION and Recognized In (specialized jurisdiction) ====================
+
+			myData.Jurisdiction.Add( Jurisdictions.SampleJurisdiction() );
+			//Add a jurisdiction assertion for Recognized in 
+			myData.RecognizedIn.Add( Jurisdictions.SampleJurisdictionAssertion() );
+
+			//==================== CONDITION PROFILE ====================
+			// add a requires Condition profile with conditions and a required learning opportunity. 
+			/*Scenario: 
+				- The learning opportunity will be published to the credential registry
+				- The credential must be published before the learning opportunity
+				- The learning opportunity is referenced using the Condition Profile property of TargetLearningOpportunity
+				- Only the CTID need be provided for a learning opportunity that will be published
+
+			*/
+			myData.Requires = new List<ConditionProfile>()
+			{
+				new ConditionProfile()
+				{
+					Description = "To earn this credential the following conditions must be met, and the target learning opportunity must be completed.",
+					Condition = new List<string>() { "Complete High School", "Have a drivers licence." },
+					TargetLearningOpportunity = new List<EntityReference>()
+					{
+						//if the target learning opportunity exists in the registry, then only the CTID has to be provided in the EntityReference
+						new EntityReference()
+						{
+							CTID="ce-ccd00a32-d5ad-41e7-b14c-5c096bc9eea0"
+						},
+						new EntityReference()
+						{
+							//Learning opportunities not in the registry may still be published as 'blank nodes'
+							//The type, name, and subject webpage are required. The description while useful is optional.
+							Type="LearningOpportunity",
+							Name="Another required learning opportunity (external)",
+							Description="A required learning opportunity that has not been published to Credential Registry. The type, name, and subject webpage are required. The description while useful is optional. ",
+							SubjectWebpage="https://example.org?t=anotherLopp",
+							 CodedNotation="Learning 101"
+						}
+					}
+				}
+			};
+			//====================	COSTS	====================
+			//Must be a valid CTDL cost type.
+			// Example: Tuition, Application, AggregateCost, RoomOrResidency
+			//see: https://credreg.net/ctdl/terms#CostType
+			myData.EstimatedCost.Add( new CostProfile()
+			{
+				Description = "A required description of the cost profile",
+				CostDetails = "https://example.com/t=loppCostProfile",
+				Currency = "USD",
+				CostItems = new List<CostProfileItem>()
+				 {
+					 new CostProfileItem()
+					 {
+						 DirectCostType="Application",
+						 Price=100,
+					 },
+					 new CostProfileItem()
+					 {
+						 DirectCostType="Tuition",
+						 Price=12999,
+						 PaymentPattern="Full amount due at time of registration"
+					 }
+				 }
+			} );
+
+			//====================	OCCUPATIONS ====================
+			PopulateOccupations( myData );
+			//====================	INDUSTRIES	====================
+			PopulateIndustries( myData );
+			//====================	PROGRAMS	====================
+			PopulatePrograms( myData );
+
+			//====================	CONNECTIONS ====================
+			//Connections between credentials can be published using properties such as
+			//- isPreparationFor, PreparationFrom, isAdvancedStandingFor, AdvancedStandingFrom, IsRequiredFor, and IsRecommendedFor. 
+			//example of a connection to a credential for which the current credential will prepare a student.
+			var isPreparationFor = new Connections
+			{
+				Description = "This certification will prepare a student for the target credential",
+				TargetCredential = new List<EntityReference>()
+				{
+					//the referenced credential could be for an external credential, not known to be in the credential registry
+					new EntityReference()
+					{
+						Type="MasterDegree",
+						Name="Cybersecurity Technology Master's Degree  ",
+						Description="A helpful description",
+						SubjectWebpage="https://example.org?t=masters"
+					}
+				}
+			};
+			myData.IsPreparationFor.Add( isPreparationFor );
+
+			//add credential that prepares for this credential. 
+			var preparationFrom = new Connections
+			{
+				Description = "This credential will prepare a student for this credential",
+				TargetCredential = new List<EntityReference>()
+				{
+					//the referenced credential is known to be in the credential registry, so only the CTID need be provided
+					new EntityReference()
+					{
+						CTID="ce-40c3e860-5034-4375-80e8-f7455ff86a48"
+					}
+				}
+			};
+			myData.PreparationFrom.Add( preparationFrom );
+
+			//====================	CREDENTIAL REQUEST ====================
+			//This holds the credential and the identifier (CTID) for the owning organization
+			var myRequest = new APIRequest()
+			{
+				Credential = myData,
+				DefaultLanguage = "en-us",
+				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
+			};
+
+			//Serialize the credential request object
+			//Preferably, use method that will exclude null/empty properties
+			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
+
+			//call the Assistant API
+			result = new SampleServices().SimplePost( "credential", requestType, payload, apiKey );
+			//Return the result
+			return result;
+		}
+
 		/// <summary>
 		/// Publish a credential using an input class
 		/// An organization will have its data stored somewhere. The first step would be to have a process retrieve the information and send that data to a method to do the publishing. 		
@@ -39,7 +214,7 @@ namespace RA.SamplesForDocumentation
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
-		public string PublishFromInput( YourCredential input )
+		public string PublishFromInputClass( YourCredential input )
 		{
 			//Holds the result of the publish action
 			var result = "";
@@ -69,6 +244,9 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
+
+			//==================== Quality Assurance Received ====================
+
 			//CTID for Higher learning commission.
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{
@@ -132,117 +310,6 @@ namespace RA.SamplesForDocumentation
 
 			return result;
 		}
-
-		public string PublishSimpleRecord( string requestType = "publish" )
-		{
-			//Holds the result of the publish action
-			var result = "";
-			// Assign the api key - acquired from organization account of the organization doing the publishing
-			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
-			// This is the CTID of the organization that owns the data being published
-			var organizationIdentifierFromAccountsSite = SampleServices.GetAppKeyValue( "myOrgCTID" );
-			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString();
-			DataService.SaveCredentialCTID( myCTID );
-
-			//A simple credential object - see below for sample class definition
-			var myData = new Credential()
-			{
-				Name = "My Credential Name",
-				Description = "This is some text that describes my credential.",
-				Ctid = myCTID,
-				SubjectWebpage = "http://example.com/credential/1234",
-				CredentialType = "ceterms:Certificate",
-				InLanguage = new List<string>() { "en-US" },
-				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
-				Naics = new List<string>() { "333922", "333923", "333924" }
-			};
-			//typically the ownedBy is the same as the CTID for the data owner
-			myData.OwnedBy.Add( new OrganizationReference()
-			{
-				CTID = organizationIdentifierFromAccountsSite
-			} );
-			//CTID for Higher learning commission.
-			myData.AccreditedBy.Add( new OrganizationReference()
-			{
-				CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
-			} );
-
-			myData.Jurisdiction.Add( Jurisdictions.SampleJurisdiction() );
-			//Add a jurisdiction assertion for Recognized in 
-			myData.RecognizedIn.Add( Jurisdictions.SampleJurisdictionAssertion() );
-
-			//add a requires Condition profile with conditions and a required learning opportunity.
-			/*Scenario: 
-				- The learning opportunity will be published to the credential registry
-				- The credential must be published before the learning opportunity
-				- The learning opportunity is referenced using the Condition Profile property of TargetLearningOpportunity
-				- Only the CTID need be provided for a learning opportunity that will be published
-
-			*/
-			myData.Requires = new List<ConditionProfile>()
-			{
-				new ConditionProfile()
-				{
-					Description = "To earn this credential the following conditions must be met, and the program must be completed.",
-					Condition = new List<string>() { "Complete High School", "Have a drivers licence." }, 
-					TargetLearningOpportunity = new List<EntityReference>()
-					{
-						new EntityReference()
-						{
-							CTID="ce-ccd00a32-d5ad-41e7-b14c-5c096bc9eea0"
-						}
-					}
-				}
-			};
-			//add costs
-			//Must be a valid CTDL cost type.
-			// Example: Tuition, Application, AggregateCost, RoomOrResidency
-			//see: https://credreg.net/ctdl/terms#CostType
-			myData.EstimatedCost.Add( new CostProfile()
-			{
-				Description = "A required description of the cost profile",
-				CostDetails = "https://example.com/t=loppCostProfile",
-				Currency = "USD",
-				CostItems = new List<CostProfileItem>()
-				 {
-					 new CostProfileItem()
-					 {
-						 DirectCostType="Application",
-						 Price=100,
-					 },
-					 new CostProfileItem()
-					 {
-						 DirectCostType="Tuition",
-						 Price=12999,
-						 PaymentPattern="Full amount due at time of registration"
-					 }
-				 }
-			} );
-			//add occupations
-			PopulateOccupations( myData );
-			//industries
-			PopulateIndustries( myData );
-			//Programs
-			PopulatePrograms( myData );
-
-			//This holds the credential and the identifier (CTID) for the owning organization
-			var myRequest = new APIRequest()
-			{
-				Credential = myData,
-				DefaultLanguage = "en-us",
-				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
-			};
-			//Serialize the credential request object
-			//var payload = JsonConvert.SerializeObject( myRequest );
-			//Preferably, use method that will exclude null/empty properties
-			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
-			//call the Assistant API
-			result = new SampleServices().SimplePost( "credential", requestType, payload, apiKey );
-			//Return the result
-			return result;
-		}
-
 		/// <summary>
 		/// Possible Input Types
 		/// - List of frameworks
@@ -364,6 +431,8 @@ namespace RA.SamplesForDocumentation
 			//CIP code helper - ALternately provided a list of CIP codes. The Assistant API will validate the codes and format the output including the framework name and URL, the name, description, and code
 			request.CIP_Codes = new List<string>() { "31.0504", "31.0505", "31.0599", "31.9999" };
 		}
+
+
 		public class DataService
 		{
 			internal static void SaveCredentialCTID( string myCTID )
