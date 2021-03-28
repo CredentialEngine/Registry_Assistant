@@ -19,13 +19,24 @@ namespace RA.SamplesForDocumentation
 		{
 			//Holds the result of the publish action
 			var result = "";
+
 			// Assign the api key - acquired from organization account of the organization doing the publishing
-			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
+			var apiKey = SampleServices.GetMyApiKey();
+			if ( string.IsNullOrWhiteSpace( apiKey ) )
+			{
+				//ensure you have added your apiKey to the app.config
+			}
+
 			// This is the CTID of the organization that owns the data being published
-			var organizationIdentifierFromAccountsSite = SampleServices.GetAppKeyValue( "myOrgCTID" );
+			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
+			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
+			{
+				//ensure you have added your organization account CTID to the app.config
+			}//
+
+
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString();
-			DataService.SaveCredentialCTID( myCTID );
+			var myCTID = "ce-5a33409a-f3db-42f3-8a3c-b00c7bb393af"; //"ce-" + Guid.NewGuid().ToString();
 
 			//A simple credential object - see below for sample class definition
 			var myData = new Credential()
@@ -55,7 +66,7 @@ namespace RA.SamplesForDocumentation
 			//Add organization that is NOT in the credential registry
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{
-				Type = "CredentialOrganization",
+				Type = "QACredentialOrganization",
 				Name = "Council on Social Work Education (CSWE)",
 				SubjectWebpage = "https://www.cswe.org/",
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
@@ -184,9 +195,20 @@ namespace RA.SamplesForDocumentation
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 
 			//call the Assistant API
-			result = new SampleServices().SimplePost( "credential", requestType, payload, apiKey );
+		
+			SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
+			{
+				EndpointType = "credential",
+				RequestType = requestType,
+				OrganizationApiKey = apiKey,
+				CTID = myRequest.Credential.Ctid.ToLower(),   //added here for logging
+				Identifier = "testing",     //useful for logging, might use the ctid
+				InputPayload = payload
+			};
+
+			bool isValid = new SampleServices().PublishRequest( req );
 			//Return the result
-			return result;
+			return req.FormattedPayload;
 		}
 
 		/// <summary>
@@ -432,14 +454,6 @@ namespace RA.SamplesForDocumentation
 			request.CIP_Codes = new List<string>() { "31.0504", "31.0505", "31.0599", "31.9999" };
 		}
 
-
-		public class DataService
-		{
-			internal static void SaveCredentialCTID( string myCTID )
-			{
-				throw new NotImplementedException();
-			}
-		}
 
 	}
 }

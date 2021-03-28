@@ -16,7 +16,7 @@ namespace RA.SamplesForDocumentation
 {
 	public class PublishCredentialWithOutcomes
 	{
-		public bool CredentialWithEmploymentOutcomeProfiles( string requestType = "format" )
+		public bool CredentialWithOutcomeData( string requestType = "format" )
 		{
 			
 			// Assign the api key - acquired from organization account of the organization doing the publishing
@@ -119,12 +119,20 @@ namespace RA.SamplesForDocumentation
 
 			var output = new AggregateDataProfile()
 			{
-				Name = "My AggregateDataProfile Profile for a particular outcome.",
+				Name = "My Aggregate Data Profile for a particular outcome.",
 				DateEffective = "2018-01-15",
-				Description = "Description of 'My AggregateDataProfile Profile for a particular outcome.'",
+				Description = "Description of 'My AggregateDataProfile Profile for a particular set of outcomes.'",
 				DemographicInformation = "Description of Demographic Information",
 				NumberAwarded = 234,
-				Source = "https://example.org/?t=AggregateDataProfileProfileSource"
+				Source = "https://example.org/?t=AggregateDataProfileProfileSource",
+				JobsObtained = new List<QuantitativeValue>()
+				{
+					new QuantitativeValue()
+					{ 
+						Value = 188, 
+						Description = "Program graduates employed in the region."
+					}
+				}
 			};
 
 			output.Jurisdiction.Add( Jurisdictions.SampleJurisdiction() );
@@ -135,8 +143,7 @@ namespace RA.SamplesForDocumentation
 				Name = "Dataset profile for AggregateDataProfileprofile",
 				Description="A helpful description of this dataset profile.",
 				CTID = datasetProfileCtid,
-				DataProvider = new OrganizationReference() { CTID = owningOrganizationCTID },
-				//RelevantDataSetFor = hpctid //this will be derived by the API
+				DataProvider = new OrganizationReference() { CTID = owningOrganizationCTID }
 			};
 
 			//DataSetTimeFrame referenced from a DataSetProfile (DataAttributes)

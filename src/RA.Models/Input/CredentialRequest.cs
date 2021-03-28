@@ -131,6 +131,10 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// The credential type as defined in CTDL
+		/// <see cref="https://credreg.net/page/typeslist"/>
+		/// NOTE: The following types are 'top level' types that may not be published:
+		///		Credential, Degree, Diploma
+		/// Only the sub-types under the latter may be used in publishing
 		/// </summary>
 		public string CredentialType { get; set; }
 
@@ -569,11 +573,48 @@ namespace RA.Models.Input
 
 
 		#region -- Connections Profiles --
+		//Connection Profiles are Condition Profiles but typically only a subject of the Condition Profile properties are used. 
+		/// <summary>
+		/// Credential that has its time or cost reduced by another credential, assessment or learning opportunity.
+		/// ceterms:advancedStandingFrom
+		/// <seealso cref="https://credreg.net/ctdl/terms/advancedStandingFrom"/>
+		/// </summary>
 		public List<Connections> AdvancedStandingFrom { get; set; }
+
+		/// <summary>
+		/// This credential, assessment, or learning opportunity reduces the time or cost required to earn or complete the referenced credential, assessment, or learning opportunity.
+		/// <para>A third-party credential agent claiming that its credential provides advanced standing for the credential of another credential agent should consider using ceterms:recommendedFor instead of ceterms:advancedStandingFor in the absence of an explicit and verifiable agreement on advanced standing between the agents of the two credentials.</para>
+		/// ceterms:isAdvancedStandingFor
+		/// <seealso cref="https://credreg.net/ctdl/terms/isAdvancedStandingFor"/>
+		/// </summary>
 		public List<Connections> IsAdvancedStandingFor { get; set; }
+
+		/// <summary>
+		/// This credential, assessment, or learning opportunity provides preparation for the credential, assessment, or learning opportunity being referenced.
+		/// ceterms:isPreparationFor
+		/// <seealso cref="https://credreg.net/ctdl/terms/isPreparationFor"/>
+		/// </summary>
 		public List<Connections> IsPreparationFor { get; set; }
+
+		/// <summary>
+		/// It is recommended to earn or complete this credential, assessment, or learning opportunity before attempting to earn or complete the referenced credential, assessment, or learning opportunity.
+		/// ceterms:isRecommendedFor
+		/// <seealso cref="https://credreg.net/ctdl/terms/isRecommendedFor"/>
+		/// </summary>
 		public List<Connections> IsRecommendedFor { get; set; }
+
+		/// <summary>
+		/// This credential, assessment, or learning opportunity must be earned or completed prior to attempting to earn or complete the referenced credential, assessment, or learning opportunity.
+		/// ceterms:isRequiredFor
+		/// <seealso cref="https://credreg.net/ctdl/terms/isRequiredFor"/>
+		/// </summary>
 		public List<Connections> IsRequiredFor { get; set; }
+
+		/// <summary>
+		///  Another credential, learning opportunity or assessment that provides preparation for this credential, learning opportunity or assessment.
+		/// ceterms:preparationFrom
+		/// <seealso cref="https://credreg.net/ctdl/terms/preparationFrom"/>
+		/// </summary>
 		public List<Connections> PreparationFrom { get; set; }
 		#endregion
 

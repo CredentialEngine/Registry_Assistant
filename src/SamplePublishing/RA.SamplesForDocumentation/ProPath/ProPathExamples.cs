@@ -121,7 +121,14 @@ namespace RA.SamplesForDocumentation
 			{
 				DateEffective = "2018-01-15",
 				Description = "ProPath AggregateDataProfile",
-				JobsObtained = 111,
+				JobsObtained = new List<QuantitativeValue>()
+				{
+					new QuantitativeValue()
+					{
+						Value = 111,
+						Description = "Program graduates employed in the region."
+					}
+				},
 				LowEarnings = 25000,
 				MedianEarnings = 41000,
 				HighEarnings = 51000,

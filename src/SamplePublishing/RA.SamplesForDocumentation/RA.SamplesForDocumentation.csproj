@@ -58,7 +58,7 @@
     <Compile Include="ConceptSchemes\PublishConceptSchemes.cs" />
     <Compile Include="ConditionManifests\PublishConditionManifest.cs" />
     <Compile Include="CostManifests\PublishCostManifest.cs" />
-    <Compile Include="Credentials\PublishCredentialWithOutcomeProfiles.cs" />
+    <Compile Include="Credentials\obsolete\PublishCredentialWithOutcomeProfiles.cs" />
     <Compile Include="Credentials\SampleCredentialPublish.cs" />
     <Compile Include="Credentials\PublishCredentialWithMultipleCampuses.cs" />
     <Compile Include="Credentials\PublishCredentialWithOutcomes.cs" />
@@ -95,7 +95,15 @@
     <Compile Include="TransferValueProfiles\PublishTransferValueProfileList.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Credentials\files\Credential_PublishDetailedRecord_API_Input.json" />
+    <None Include="Credentials\files\Credential_PublishDetailedRecord_API_output.json" />
+    <None Include="Credentials\files\Credential_WithOutcomeData_Credential_API_Input.json" />
+    <None Include="Credentials\files\Credential_WithOutcomeData_Credential_API_output.json" />
     <None Include="packages.config" />
+    <None Include="PerformanceExamples\files\CareerBridge_Credential_WithAggregateDataProfile_API_Input.json" />
+    <None Include="PerformanceExamples\files\CareerBridge_Credential_WithAggregateDataProfile_API_Output.json" />
+    <None Include="PerformanceExamples\files\Kansas_Credential_WithAggregateDataProfile_API_Input.json" />
+    <None Include="PerformanceExamples\files\Kansas_Credential_WithAggregateDataProfile_API_Output.json" />
     <None Include="ProPath\LearningOpportunity_160 Driving Academy_input.json" />
     <None Include="ProPath\LearningOpportunity_160 Driving Academy_published.json" />
     <None Include="ProPath\ProPath_Input.json" />

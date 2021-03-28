@@ -71,6 +71,12 @@ namespace RA.Models.Input.profiles.QData
 		public List<string> RelevantDataSetFor { get; set; } = new List<string>();
 
 		/// <summary>
+		/// NEW
+		/// Means to point to a credential where data is published by a third party.
+		/// </summary>
+		public List<EntityReference> About { get; set; } = new List<EntityReference>();
+
+		/// <summary>
 		/// Authoritative source of an entity's information.
 		/// URL
 		/// </summary>

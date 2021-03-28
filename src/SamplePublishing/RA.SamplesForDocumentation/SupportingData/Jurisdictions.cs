@@ -51,7 +51,7 @@ namespace RA.SamplesForDocumentation
 			{
 				new OrganizationReference()
 				{
-					Type="QACredentialingOrganization",
+					Type="QACredentialOrganization",
 					Name="A QA Organization",
 					SubjectWebpage="https://example.com?t=myqasite",
 					Description="An optional but useful description of this QA organization."

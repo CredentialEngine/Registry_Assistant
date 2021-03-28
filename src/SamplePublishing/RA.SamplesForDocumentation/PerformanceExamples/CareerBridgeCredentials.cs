@@ -19,17 +19,18 @@ namespace RA.SamplesForDocumentation
 		/// <summary>
 		/// Publish a CareerBridge credential with a holders profile
 		/// Based on A+/MCP Certification Training <see cref="https://credentialfinder.org/credential/18228/A_MCP_Certification_Training"/>
+		/// Published to sandbox <see cref="https://sandbox.credentialengine.org/finder/credential/ce-343120e2-c068-4630-bb39-0a09e56d5613"/>
 		/// See published JSON-LD: <see cref="https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/SamplePublishing/RA.SamplesForDocumentation/CareerBridge/CareerBridge_Published.json"/>
 		/// </summary>
 		/// <param name="requestType">Format or Publish</param>
-		public void CredentialWithHoldersProfile( string requestType = "format" )
+		public void CredentialWithAggregateDataProfile( string requestType = "format" )
 		{
 
 			var apiKey = SampleServices.GetMyApiKey();
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
 			{
 				//ensure you have added your apiKey to the app.config
-				//		75a11a1a-2806-4a54-b12e-388d0045fba5
+				//		NOTES.txt
 			}
 			var organizationIdentifierFromAccountsSite = "ce-43cfb849-94af-4324-b1f3-d3c0df784fbb";// SampleServices.GetMyOrganizationCTID();
 			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
@@ -38,9 +39,7 @@ namespace RA.SamplesForDocumentation
 			}//
 			RequestHelper helper = new RA.Models.RequestHelper();
 			//create a new CTID (then save for reuse).
-			var credCtid = "ce-343120e2-c068-4630-bb39-0a09e56d5613"; ;
-			var hpctid = "ce-63920d52-04f5-4dd0-b8a4-b4f7f4e0cf81";// "ce-" + Guid.NewGuid().ToString().ToLower();
-			var datasetProfileCtid = "ce-13e36d12-5d9b-4f56-a885-319a46302e29";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var credCtid = "ce-343120e2-c068-4630-bb39-0a09e56d5613"; 
 
 			var myData = new Credential()
 			{
@@ -100,10 +99,206 @@ namespace RA.SamplesForDocumentation
 
 
 			/*
+			 * The AggregateDataProfile is a resource containing summary statistical data..
+				The AggregateDataProfile has the following relationships
+			  	AggregateDataProfile
+			  		DataSetProfile
+			  			DataSetTimeFrame
+			  				DataProfile
+			 * 
+			 * The AggregateDataProfie has several useful properties to allow it to be used as a summary, and not have to include all the details of a DataSetProfile with DataProfile(s)
+			 * Earnings: 
+			 *		LowEarnings, MedianEarnings, HighEarnings
+			 * NumberAwarded	- Number of credentials awarded.
+			 * JobsObtained		- Number of jobs obtained in the region during a given timeframe.
+			 * 
+			 * 
+			 */
+
+			var adp = new AggregateDataProfile()
+			{
+				Name = "My Aggregate Data Profile for a particular outcome.",
+				DateEffective = "2018-01-15",
+				Description = "Description of 'My AggregateDataProfile for a particular set of outcomes.'",
+				DemographicInformation = "Description of Demographic Information",
+				NumberAwarded = 234,
+				Source = "https://example.org/?t=AggregateDataProfileProfileSource",
+				JobsObtained = new List<QuantitativeValue>()
+				{
+					new QuantitativeValue()
+					{
+						Value = 188,
+						Description = "Program graduates employed in the region."
+					}
+				}
+			};
+
+			adp.RelevantDataSet.Add( FormatDataSetProfile( myData ) );
+			myData.AggregateData.Add( adp );
+
+			//This holds the credential and the identifier (CTID) for the owning organization
+			var myRequest = new APIRequest()
+			{
+				Credential = myData,
+				DefaultLanguage = "en-us",
+				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
+			};
+
+
+			//create a literal to hold data to use with ARC
+			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
+
+			//call the Assistant API
+			SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
+			{
+				EndpointType = "credential",
+				RequestType = requestType,
+				OrganizationApiKey = apiKey,
+				CTID = myRequest.Credential.Ctid.ToLower(),   //added here for logging
+				Identifier = "testing",     //useful for logging, might use the ctid
+				InputPayload = payload
+			};
+
+			bool isValid = new SampleServices().PublishRequest( req );
+
+		}
+
+		/// <summary>
+		/// Publish a credential with a HoldersProfile
+		/// 2021-03-01	- HoldersProfile is a candidate to be deprecated. Instead AggregateDataProfile should be used.
+		/// </summary>
+		/// <param name="requestType"></param>
+		[Obsolete]
+		public void CredentialWithHoldersProfile( string requestType = "format" )
+		{
+
+			var apiKey = SampleServices.GetMyApiKey();
+			if ( string.IsNullOrWhiteSpace( apiKey ) )
+			{
+				//ensure you have added your apiKey to the app.config
+				//		
+			}
+			var organizationIdentifierFromAccountsSite = "ce-43cfb849-94af-4324-b1f3-d3c0df784fbb";// SampleServices.GetMyOrganizationCTID();
+			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
+			{
+				//ensure you have added your organization account CTID to the app.config
+			}//
+			RequestHelper helper = new RA.Models.RequestHelper();
+			//create a new CTID (then save for reuse).
+			var credCtid = "ce-343120e2-c068-1234-bb39-0a09e56d5613";
+			//2021-03-01	- HoldersProfile is a candidate to be deprecated. 
+			//				- Updated to use AggregateDataProfile
+			var hpctid = "ce-63920d52-04f5-4dd0-b8a4-b4f7f4e0cf81";// "ce-" + Guid.NewGuid().ToString().ToLower();
+
+			var myData = new Credential()
+			{
+				Name = "A+/MCP Certification Training",
+				Ctid = credCtid,
+				Description = "Structured as a shorter alternative to the computer networking systems technician program, students prepare for employment as computer systems technicians. Instruction includes A+, CCNA, the Cisco Networking Academy, MCP (Microsoft Certified Professional) Windows operating systems, and one of two electives: Fundamentals of UNIX or Career Advancement Strategies. Students are encouraged to obtain industry certifications before graduating, including Cisco Networking Academy, CompTIA A+ (two tests), Microsoft Certified Professional (one test).",
+				SubjectWebpage = "https://batestech.edu/",
+				CredentialType = "Certificate",
+				CredentialStatusType = "Active"
+			};
+			//20-11-09 - Bates Technical College doesn't exist in sandbox, so using a reference org.
+			myData.OwnedBy = new List<OrganizationReference>()
+			{
+				new OrganizationReference()
+				{
+					Type="CredentialOrganization",
+					CTID="ce-43cfb849-94af-4324-b1f3-d3c0df784fbb",
+					Name="Bates Technical College",
+					Description="Bates Technical College is a Technical College located in Tacoma, WA",
+					SubjectWebpage="http://www.batestech.edu/"
+				}
+			};
+			//where owner also offers:
+			myData.OfferedBy = myData.OwnedBy;
+
+			//duration
+			myData.EstimatedDuration = new List<DurationProfile>()
+			{
+				new DurationProfile()
+				{
+					ExactDuration = new DurationItem()
+					{
+						Months=9
+					}
+				}
+			};
+			//learning delivery type
+			myData.LearningDeliveryType = new List<string>()
+			{
+				"In-Person","Online Only"
+			};
+			myData.AvailableAt = new List<Place>()
+			{
+				new Place()
+				{
+					Address1="1101 S. Yakima",
+					City="Tacoma",
+					PostalCode="98405",
+					AddressRegion="WA",
+					Country="United States"
+				}
+			};
+
+			//Conditions
+			//NONE
+
+
+
+			/*
 			 * The HoldersProfile is an entity describing the count and related statistical information of holders of a given credential. 
 			 * The HoldersProfile requires a CTID at this time (may change)
 			 * The profile has high level statistical information plus a relevantDataset (a list for multiple) which is the DataSetProfile class 
-			 * 
+
+			 */
+
+			HoldersProfile hp = new HoldersProfile()
+			{
+				CTID = hpctid,
+				Description = "Consumer Report Card for A+/MCP Certification Training",
+			};
+
+			//add DataSetProfile and related classes
+			hp.RelevantDataSet.Add( FormatDataSetProfile( myData ) );
+
+
+			//This holds the credential and the identifier (CTID) for the owning organization
+			var myRequest = new APIRequest()
+			{
+				Credential = myData,
+				DefaultLanguage = "en-us",
+				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
+			};
+			//add holders profile to the request
+			//NEW
+			myRequest.Credential.Holders.Add( hp );
+
+			//create a literal to hold data to use with ARC
+			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
+
+			//call the Assistant API
+			SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
+			{
+				EndpointType = "credential",
+				RequestType = requestType,
+				OrganizationApiKey = apiKey,
+				CTID = myRequest.Credential.Ctid.ToLower(),   //added here for logging
+				Identifier = "testing",     //useful for logging, might use the ctid
+				InputPayload = payload
+			};
+
+			bool isValid = new SampleServices().PublishRequest( req );
+
+			LoggingHelper.WriteLogFile( 2, string.Format( "CareerBridge_red_{0}_payload.json", myRequest.Credential.Ctid ), req.FormattedPayload, "", false );
+
+		}
+
+		private DataSetProfile FormatDataSetProfile( Credential myData)
+		{
+			/*
+			 * 	 
 			 * DataSetProfile -  Particular characteristics or properties of a data set and its records.
 			 * Requires a CTID.
 			 * A key property is qdata:dataSetTimePeriod which a list of the class: qdata:DataSetTimeFrame
@@ -121,22 +316,16 @@ namespace RA.SamplesForDocumentation
 			 * 
 			 * Additional properties are also expected to be added. 
 			 */
-
-			HoldersProfile hp = new HoldersProfile()
-			{
-				CTID = hpctid,
-				Description = "Consumer Report Card for A+/MCP Certification Training",
-			};
-
-			//============= DataSetProfile ===================
-			//referenced from a HoldersProfile (RelevantDataSet)
+			var datasetProfileCtid = "ce-13e36d12-5d9b-4f56-a885-319a46302e29";// "ce-" + Guid.NewGuid().ToString().ToLower();
 			var relevantDataSet = new DataSetProfile()
 			{
 				CTID = datasetProfileCtid,
-				Description = "Consumer Report Card for A+/MCP Certification Training",
+				Description = "Consumer Report Card for A+/MCP Certification Training - updated",
 				DataProvider = myData.OwnedBy[ 0 ],
 				//RelevantDataSetFor = hpctid //this will be derived by the API
 			};
+			relevantDataSet.About = new List<EntityReference>() { new EntityReference() { CTID = myData.Ctid } };
+			//
 			//DataSetTimeFrame referenced from a DataSetProfile (DataAttributes)
 			DataSetTimeFrame dstp = new DataSetTimeFrame()
 			{
@@ -184,40 +373,8 @@ namespace RA.SamplesForDocumentation
 			dstp.DataAttributes.Add( dataProfileRelatedEmployment );
 
 			relevantDataSet.DataSetTimePeriod.Add( dstp );
-			hp.RelevantDataSet.Add( relevantDataSet );
 
-
-			//This holds the credential and the identifier (CTID) for the owning organization
-			var myRequest = new APIRequest()
-			{
-				Credential = myData,
-				DefaultLanguage = "en-us",
-				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
-			};
-			//add holders profile to the request
-			//OLD
-			myRequest.HoldersProfile.Add( hp );
-			//NEW
-			myRequest.Credential.Holders.Add( hp );
-
-			//create a literal to hold data to use with ARC
-			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
-
-			//call the Assistant API
-			SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
-			{
-				EndpointType = "credential",
-				RequestType = requestType,
-				OrganizationApiKey = apiKey,
-				CTID = myRequest.Credential.Ctid.ToLower(),   //added here for logging
-				Identifier = "testing",     //useful for logging, might use the ctid
-				InputPayload = payload
-			};
-
-			bool isValid = new SampleServices().PublishRequest( req );
-
-			LoggingHelper.WriteLogFile( 2, string.Format( "CareerBridge_red_{0}_payload.json", myRequest.Credential.Ctid ), req.FormattedPayload, "", false );
-
+			return relevantDataSet;
 		}
 
 	}

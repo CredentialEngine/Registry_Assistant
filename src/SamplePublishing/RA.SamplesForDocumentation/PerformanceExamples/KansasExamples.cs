@@ -56,8 +56,8 @@ namespace RA.SamplesForDocumentation
 				new OrganizationReference()
 				{
 					Type="CredentialOrganization",
-					CTID="ce-3382bacb-2f29-4037-874e-9a53e2398661",
-					Name="Coffeyville Community College",
+					CTID="ce-3382bacb-2f29-4037-874e-9a53e2398661", //now published, only need CTID
+					//Name="Coffeyville Community College",
 					//Description="Coffeyville Community College is dedicated to identifying and addressing community and area needs, providing accessible, affordable quality education and training, and promoting opportunities for lifelong learning. CCC offers a wide variety of traditional and technical classes to serve our diverse student population. CCC strives to provide educational classes that are beneficial to the individual student and encourage a healthy engagement in the community. CCC collaborates with area business and industry to train and develop future employees for the area.",
 					//SubjectWebpage="http://www.coffeyville.edu/"
 				}
@@ -82,23 +82,28 @@ namespace RA.SamplesForDocumentation
 			/*
 			 * The AggregateDataProfile is an entity describing the count and related statistical information for a given credential. 
 			 * The profile has high level statistical information plus a relevantDataset (a list for multiple) which is the DataSetProfile class 
-
+			have to include all the details of a DataSetProfile with DataProfile(s)
+			 * Earnings: 
+			 *		LowEarnings, MedianEarnings, HighEarnings
+			 * NumberAwarded	- Number of credentials awarded.
+			 * JobsObtained		- Number of jobs obtained in the region during a given timeframe.
 			 */
 
 			var aggregateProfile = new AggregateDataProfile()
 			{
 				Description = "Median Earnings of Program Graduates in Region upon entry",
-				MedianEarnings=44439,
-				PostReceiptMonths=0
-			};
-			aggregateProfile.JobsObtainedList = new List<QuantitativeValue>()
-			{
-				new QuantitativeValue()
+				MedianEarnings = 44439,
+				JobsObtained = new List<QuantitativeValue>()
 				{
-					Percentage=88,
-					Description="% of Program Graduates Employed in the Region"
-				}
+					new QuantitativeValue()
+					{
+						Percentage=88,
+						Description="% of Program Graduates Employed in the Region"
+					}
+				},
+				PostReceiptMonths = 0
 			};
+
 
 
 			myData.AggregateData = new List<AggregateDataProfile>() { aggregateProfile };
@@ -135,7 +140,7 @@ namespace RA.SamplesForDocumentation
 
 			bool isValid = new SampleServices().PublishRequest( req );
 
-			LoggingHelper.WriteLogFile( 2, string.Format( "coffeyfille_{0}_payload.json", myRequest.Credential.Ctid ), req.FormattedPayload, "", false );
+			//LoggingHelper.WriteLogFile( 2, string.Format( "coffeyfille_{0}_payload.json", myRequest.Credential.Ctid ), req.FormattedPayload, "", false );
 
 		}
 

@@ -138,7 +138,7 @@ namespace RA.Models.Input
 		public List<ConditionProfile> Recommends { get; set; } = new List<ConditionProfile>();
 		public List<ConditionProfile> EntryCondition { get; set; } = new List<ConditionProfile>();
 		//LearningOpportunity only
-		public ValueProfile CreditValue { get; set; } = new ValueProfile();
+		public ValueProfile CreditValue { get; set; } //= new ValueProfile();
 		//
 		public List<DurationProfile> EstimatedDuration { get; set; } = new List<DurationProfile>();
 

@@ -16,6 +16,10 @@ namespace RA.SamplePublishingProject
 		{
 			//using simple post
 			new PublishCredential().PublishDetailedRecord( "format");
+
+			new PublishCredentialWithOutcomes().CredentialWithOutcomeData( "format" );
+			//temp
+			new KansasExamples().CredentialWithAggregateDataProfile( "format" );
 		}
 
 		[TestMethod]
@@ -28,7 +32,7 @@ namespace RA.SamplePublishingProject
 		public void CredentialWithHoldersProfile()
 		{
 			//using simple post
-			new PublishCredentialWithOutcomes().CredentialWithEmploymentOutcomeProfiles( "publish" );
+			new PublishCredentialWithOutcomes().CredentialWithOutcomeData( "publish" );
 		}
 		//
 		[TestMethod]
@@ -41,7 +45,7 @@ namespace RA.SamplePublishingProject
 		public void CareerBridgeCredentialsCredentialWithHoldersProfile()
 		{
 			//using simple post
-			new CareerBridgeCredentials().CredentialWithHoldersProfile( "publish" );
+			new CareerBridgeCredentials().CredentialWithAggregateDataProfile( "publish" );
 		}
 		[TestMethod]
 		public void KansasCredentialWithAggregateData()

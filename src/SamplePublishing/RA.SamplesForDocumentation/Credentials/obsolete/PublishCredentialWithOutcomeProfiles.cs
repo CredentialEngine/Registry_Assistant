@@ -14,7 +14,7 @@ using APIRequest = RA.Models.Input.CredentialRequest;
 
 namespace RA.SamplesForDocumentation
 {
-	public class PublishCredentialWithOutcomeProfiles
+	public class PublishCredentialWithOutcomeProfilesObsolete
 	{
 		public bool CredentialWithEmploymentOutcomeProfiles( string requestType = "format" )
 		{

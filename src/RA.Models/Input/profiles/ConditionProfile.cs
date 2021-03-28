@@ -172,7 +172,7 @@ namespace RA.Models.Input
 	{
 		public Connections()
 		{
-			AssertedBy = new OrganizationReference();
+			//AssertedBy = new OrganizationReference();
 		
 			TargetAssessment = new List<EntityReference>();
 			TargetCredential = new List<EntityReference>();
@@ -208,27 +208,11 @@ namespace RA.Models.Input
 
 		//Credit Information
 		//20-09-30 being replaced by ValueProfile
-		public ValueProfile CreditValue { get; set; } = new ValueProfile();
+		public ValueProfile CreditValue { get; set; } //= new ValueProfile();
 
 		public string CreditUnitTypeDescription { get; set; }
         public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
 
-        //
-        #region CreditHourType and CreditUnitType are obsolete
-        //[Obsolete]
-        //public string CreditHourType { get; set; }
-        ////public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
-        //[Obsolete]
-        //public decimal CreditHourValue { get; set; }
-
-        ///// <summary>
-        ///// Only one credit unit type is allowed for input
-        ///// </summary>
-        //[Obsolete]
-        //public string CreditUnitType { get; set; }
-        //[Obsolete] 
-        //public decimal CreditUnitValue { get; set; }
-		#endregion
 		//external classes =====================================
 
 		public List<EntityReference> TargetAssessment { get; set; }

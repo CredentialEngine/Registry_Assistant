@@ -20,6 +20,12 @@ namespace RA.Models.Input
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
+		/// A currency code, for ex USD
+		/// Optional
+		/// </summary>
+		public string Currency { get; set; }
+
+		/// <summary>
 		/// DemographicInformation
 		/// Aggregate data or summaries of statistical data relating to the population of credential holders including data about gender, geopolitical regions, age, education levels, and other categories of interest.
 		/// </summary>
@@ -36,14 +42,9 @@ namespace RA.Models.Input
 
 		/// <summary>
 		///  Number of jobs obtained in the region during a given timeframe.
-		///  21-02-19 - UPDATE added JobsObtainedList, which uses QuantitativeValue. This allows for providing percentage data - typically with a description. 
 		///  ceterms:jobsObtained
 		/// </summary>
-		public List<QuantitativeValue> JobsObtainedList { get; set; }
-		/// <summary>
-		/// Where JobsObtained is a simple integer, this property can be used. 
-		/// </summary>
-		public int JobsObtained { get; set; }
+		public List<QuantitativeValue> JobsObtained { get; set; }
 
 		/// <summary>
 		/// Jurisdiction Profile
@@ -90,6 +91,11 @@ namespace RA.Models.Input
 		/// qdata:relevantDataSet
 		/// </summary>
 		public List<DataSetProfile> RelevantDataSet { get; set; } = new List<DataSetProfile>();
+
+		/// <summary>
+		/// Typically the DataSetProfile information will be published with the credential. 
+		/// In the future there could be use cases where a reference to an existing dataSetProfile will be published with the credential.
+		/// </summary>
 		public List<string> RelevantDataSetList { get; set; }
 	}
 }

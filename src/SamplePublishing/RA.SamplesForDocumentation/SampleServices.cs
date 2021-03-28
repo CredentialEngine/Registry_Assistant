@@ -238,7 +238,7 @@ namespace RA.SamplesForDocumentation
 		public bool PublishRequest( AssistantRequestHelper request )
 		{
 			string serviceUri = GetAppKeyValue( "registryAssistantApi" );
-			if (System.DateTime.Now.Day==16)
+			if (System.DateTime.Now.Day==28)
 			{
 				//serviceUri = "https://localhost:44312/";
 			}
@@ -252,6 +252,10 @@ namespace RA.SamplesForDocumentation
 			//for a bulk request, a list of Responses will be returned. 
 			var listResponse = new List<RAResponse>();
 			LoggingHelper.DoTrace( 5, string.Format( thisClassName + ".PostRequest, RequestType: {0}, CTID: {1}, payloadLen: {2}, starts: '{3}' ....", request.RequestType, request.CTID, ( request.InputPayload ?? "" ).Length, request.InputPayload.Substring( 0, request.InputPayload.Length > 200 ? 200 : request.InputPayload.Length ) ) );
+			//writelog of input formatted file
+			LoggingHelper.WriteLogFile( 5, request.EndpointType + "_" + request.CTID + "_" + request.RequestType + "_rainput.json", request.InputPayload, "", false );
+
+
 			string responseContents = "";
 			DateTime started = DateTime.Now;
 			try
@@ -312,7 +316,7 @@ namespace RA.SamplesForDocumentation
 							//
 							if ( response.Successful )
 							{
-								LoggingHelper.WriteLogFile( 5, request.EndpointType + "_" + request.Identifier + "_payload_Successful.json", response.Payload, "", false );
+								LoggingHelper.WriteLogFile( 5, request.EndpointType + "_" + request.CTID + "_payload_Successful.json", response.Payload, "", false );
 
 								request.FormattedPayload = response.Payload;
 								request.EnvelopeIdentifier = response.RegistryEnvelopeIdentifier;
@@ -340,7 +344,7 @@ namespace RA.SamplesForDocumentation
 								cntr++;
 								if ( lresponse.Successful )
 								{
-									LoggingHelper.WriteLogFile( 5, request.Identifier + string.Format( "_{0}_payload_Successful.json", cntr ), lresponse.Payload, "", false );
+									LoggingHelper.WriteLogFile( 5, request.EndpointType + string.Format( "_(#{0})_{1}_payload_Successful.json", cntr, lresponse.CTID ), lresponse.Payload, "", false );
 
 									//will assume we only want to return the last payload, the pathwaySet for example. 
 									if ( cntr == listResponse.Count() )
