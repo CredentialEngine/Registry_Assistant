@@ -29,7 +29,7 @@ namespace RA.SamplePublishingProject
 			new PublishCredential().PublishDetailedRecord( "publish" );
 		}
 		[TestMethod]
-		public void CredentialWithHoldersProfile()
+		public void CredentialWithOutcomeData()
 		{
 			//using simple post
 			new PublishCredentialWithOutcomes().CredentialWithOutcomeData( "publish" );

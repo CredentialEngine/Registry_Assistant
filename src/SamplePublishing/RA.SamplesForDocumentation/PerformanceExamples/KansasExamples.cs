@@ -20,8 +20,8 @@ namespace RA.SamplesForDocumentation
 		/// Publish a Kansas credential with aggregate data
 		/// Based on Cofferville <see cref="https://ksdegreestats.org/ProspectusController?app=prospectus&ficeInstId=001910&programNbr=283"/>
 		/// credential: MEDICAL LABORATORY TECHNOLOGY AAS <see cref="https://credentialfinder.org/credential/7381/MEDICAL_LABORATORY_TECHNOLOGY-ASSOCIATE_OF_APPLIED_SCIENCE"/>
-		/// sandbox: <see cref="https://sandbox.credentialengineregistry.org/graph/ce-bd860014-039c-9c32-f816-e4f429b17f40"/>
-		/// </summary>
+		/// sandbox registry: <see cref="https://sandbox.credentialengineregistry.org/graph/ce-bd860014-039c-9c32-f816-e4f429b17f40"/>
+		/// sandbox finder: <see cref="https://sandbox.credentialengine.org/finder/credential/ce-bd860014-039c-9c32-f816-e4f429b17f40"/>
 		/// <param name="requestType">Format or Publish</param>
 		public void CredentialWithAggregateDataProfile( string requestType = "format" )
 		{

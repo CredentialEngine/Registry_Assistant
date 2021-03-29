@@ -16,6 +16,11 @@ namespace RA.SamplesForDocumentation
 {
 	public class PublishCredentialWithOutcomes
 	{
+		/// <summary>
+		/// Publish a credential with aggregate data
+		/// sandbox registry: <see cref="https://sandbox.credentialengineregistry.org/graph/ce-f5b8d26a-690a-4671-bda6-d8fc92647a05"/>
+		/// sandbox finder: <see cref="https://sandbox.credentialengine.org/finder/credential/ce-f5b8d26a-690a-4671-bda6-d8fc92647a05"/>
+		/// <param name="requestType">Format or Publish</param>
 		public bool CredentialWithOutcomeData( string requestType = "format" )
 		{
 			
@@ -35,8 +40,8 @@ namespace RA.SamplesForDocumentation
 
 			var myData = new Credential()
 			{
-				Name = "My Credential With Outcome data, including: Holders Profile, EarningsProfile, and EmploymentOutcomeProfile",
-				Description = "This credential has a Holders Profile, EarningsProfile, and EmploymentOutcomeProfile, with all data provided for the DataProfile.",
+				Name = "My Credential With Outcome data, using: Aggregate Data Profile",
+				Description = "This credential has outcomes data including all data provided for the DataProfile.",
 				Ctid = myCTID,
 				SubjectWebpage = "https://example.com/?t=credentialwhp",
 				CredentialType = "ceterms:Certification",
