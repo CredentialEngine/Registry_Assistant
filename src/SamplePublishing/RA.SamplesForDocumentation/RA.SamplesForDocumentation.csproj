@@ -104,6 +104,8 @@
     <None Include="PerformanceExamples\files\CareerBridge_Credential_WithAggregateDataProfile_API_Output.json" />
     <None Include="PerformanceExamples\files\Kansas_Credential_WithAggregateDataProfile_API_Input.json" />
     <None Include="PerformanceExamples\files\Kansas_Credential_WithAggregateDataProfile_API_Output.json" />
+    <None Include="PerformanceExamples\Indiana\Indiana University South Bend-B.S. in Nursing %28Pre-Licensure%29_API_Input.json" />
+    <None Include="PerformanceExamples\Indiana\Indiana University South Bend-B.S. in Nursing %28Pre-Licensure%29_API_Output_CTDL.json" />
     <None Include="ProPath\LearningOpportunity_160 Driving Academy_input.json" />
     <None Include="ProPath\LearningOpportunity_160 Driving Academy_published.json" />
     <None Include="ProPath\ProPath_Input.json" />
@@ -115,5 +117,6 @@
       <Name>RA.Models</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
