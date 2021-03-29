@@ -51,7 +51,7 @@ namespace RA.SamplePublishingProject
 		public void KansasCredentialWithAggregateData()
 		{
 			//using simple post
-			new KansasExamples().CredentialWithAggregateDataProfile( "format" );
+			new KansasExamples().CredentialWithAggregateDataProfile( "publish" );
 		}
 		[TestMethod]
 		public void PublishQACredential()

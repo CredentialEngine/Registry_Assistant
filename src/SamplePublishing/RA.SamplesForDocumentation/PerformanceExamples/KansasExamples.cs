@@ -92,6 +92,7 @@ namespace RA.SamplesForDocumentation
 			var aggregateProfile = new AggregateDataProfile()
 			{
 				Description = "Median Earnings of Program Graduates in Region upon entry",
+				Currency="USD",
 				MedianEarnings = 44439,
 				JobsObtained = new List<QuantitativeValue>()
 				{
@@ -110,7 +111,8 @@ namespace RA.SamplesForDocumentation
 			var aggregateProfile2 = new AggregateDataProfile()
 			{
 				Description = "Median Earnings of Program Graduates in Region after 5 years.",
-				MedianEarnings = 44439,
+				Currency = "USD",
+				MedianEarnings = 49333,
 				PostReceiptMonths = 60
 			};
 			myData.AggregateData.Add( aggregateProfile2 );
