@@ -16,6 +16,9 @@ namespace RA.SamplesForDocumentation
 		/// <summary>
 		/// Publish a ProPath credential with a holders profile
 		/// Based on 160 Driving Academy <see cref="https://apps.illinoisworknet.com/cis/wioatraining/program/1006549_1007283"/>
+		/// In finder sandbox <see cref="https://sandbox.credentialengine.org/finder/credential/1565/160_Driving_Academy"/>
+		/// See API input class <see cref="https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/SamplePublishing/RA.SamplesForDocumentation/ProPath/ProPath_Input.json"/>
+		/// </summary>
 		/// See published JSON-LD: <see cref="https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/SamplePublishing/RA.SamplesForDocumentation/ProPath/ProPath_Published.json"/>
 		/// </summary>
 		/// <param name="requestType">Format or Publish</param>
@@ -229,6 +232,7 @@ namespace RA.SamplesForDocumentation
 
 		}
 
+		[Obsolete]
 		public void CredentialWithHoldersProfile( string requestType = "format" )
 		{
 
@@ -606,7 +610,7 @@ namespace RA.SamplesForDocumentation
 			};
 
 			bool isValid = new SampleServices().PublishRequest( req );
-			LoggingHelper.WriteLogFile( 2, string.Format( "ProPath_lopp_{0}_payload.json", myRequest.LearningOpportunity.Ctid ), req.FormattedPayload, "", false );
+			//LoggingHelper.WriteLogFile( 2, string.Format( "ProPath_lopp_{0}_payload.json", myRequest.LearningOpportunity.Ctid ), req.FormattedPayload, "", false );
 
 
 		}
