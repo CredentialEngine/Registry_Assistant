@@ -21,6 +21,10 @@ namespace RA.Models.Input
 		public string Name { get; set; }
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
+		/// <summary>
+		/// Description is not required.
+		/// There is no minimum length, but should be reasonable.
+		/// </summary>
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 		public string SubjectWebpage { get; set; }

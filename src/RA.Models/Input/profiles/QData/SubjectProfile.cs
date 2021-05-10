@@ -12,7 +12,7 @@ namespace RA.Models.Input.profiles.QData
 	/// </summary>
 	public class SubjectProfile
 	{		
-
+		//NOT required
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 

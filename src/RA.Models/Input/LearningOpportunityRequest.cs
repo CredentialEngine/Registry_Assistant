@@ -185,7 +185,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AudienceLevelType { get; set; } = new List<string>();
 
-
+		/// <summary>
+		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
+		/// ceterms:codedNotation
+		/// </summary>
 		public string CodedNotation { get; set; }
 
 		public List<string> CommonCosts { get; set; }
@@ -418,6 +421,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public string LifecycleStatusType { get; set; }
 
+		/// <summary>
+		///  FUTURE
+		///  Resource containing summary/statistical employment outcome, earnings, and/or holders information.
+		///  For deeper information, include qdata:DataSetProfile.
+		/// </summary>
+		public List<AggregateDataProfile> AggregateData { get; set; } = new List<AggregateDataProfile>();
 
 
 

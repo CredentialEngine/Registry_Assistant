@@ -97,7 +97,7 @@ namespace RA.Models.Input
 		/// Creator
 		/// An entity primarily responsible for making this resource.
 		/// </summary>
-		public OrganizationReference Creator { get; set; } = new OrganizationReference();
+		public List<OrganizationReference> Creator { get; set; } = new List<OrganizationReference>();
 
 		/// <summary>
 		/// Date Copyrighted
@@ -178,6 +178,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// An agent responsible for making this resource available.
+		/// This was originally defined as a single, and continuing to match CaSS.
 		/// </summary>
 		//public string Publisher { get; set; }
 		public OrganizationReference Publisher { get; set; } = new OrganizationReference();

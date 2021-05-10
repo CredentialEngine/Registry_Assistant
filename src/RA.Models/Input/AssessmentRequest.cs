@@ -116,6 +116,10 @@ namespace RA.Models.Input
 		#endregion
 
 		#region *** Recommended Benchmark ***
+		/// <summary>
+		///  Competency evaluated through the assessment.
+		///  
+		/// </summary>
 		public List<CredentialAlignmentObject> Assesses { get; set; }
 
 		/// <summary>
@@ -207,6 +211,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public string LifecycleStatusType { get; set; }
 
+		/// <summary>
+		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
+		/// ceterms:codedNotation
+		/// </summary>
 		public string CodedNotation { get; set; }
 
 		public string AssessmentExampleDescription { get; set; }

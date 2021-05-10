@@ -55,4 +55,26 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Community { get; set; }
 	}
+
+	public class PurgeRequest
+	{
+		/// <summary>
+		/// EntityType to be deleted. Example: credential
+		/// Valid:
+		/// </summary>
+		public string EntityType { get; set; }
+
+		public string FromDate { get; set; }
+		public string UntilDate { get; set; }
+
+		/// <summary>
+		/// Identifier for Organization which published the data to be purged
+		/// </summary>
+		public string PublishByOrganizationIdentifier { get; set; }
+
+		/// <summary>
+		/// Leave blank for default
+		/// </summary>
+		public string Community { get; set; }
+	}
 }

@@ -19,7 +19,6 @@ namespace RA.Models.Input
 			TargetCredential = new List<EntityReference>();
 			TargetAssessment = new List<EntityReference>();
 			TargetLearningOpportunity = new List<EntityReference>();
-			TargetCompetencyFramework = new List<EntityReference>();
 			//Region = new List<GeoCoordinates>();
 		}
 		/// <summary>
@@ -118,13 +117,14 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<EntityReference> TargetCredential { get; set; }
 		/// <summary>
-		/// 
+		/// Learning opportunity that is the focus of a condition, process or another learning opportunity.
 		/// </summary>
 		public List<EntityReference> TargetLearningOpportunity { get; set; }
 		/// <summary>
 		///  Competency framework relevant to the process being described.
+		///  List of URL or CTIDs (recommended) that must exist in the registry
 		/// </summary>
-		public List<EntityReference> TargetCompetencyFramework{ get; set; }
+		public List<string> TargetCompetencyFramework{ get; set; }
 
 		/// <summary>
 		/// Textual description of the methods used to evaluate an assessment, learning opportunity, process or verificaiton service for validity or reliability.

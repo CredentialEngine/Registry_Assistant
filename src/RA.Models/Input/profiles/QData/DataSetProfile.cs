@@ -28,7 +28,7 @@ namespace RA.Models.Input.profiles.QData
 		public List<ProcessProfile> AdministrationProcess { get; set; } = new List<ProcessProfile>();
 
 		/// <summary>
-		/// Description - Required 
+		/// Description - NOT Required 
 		/// </summary>
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();

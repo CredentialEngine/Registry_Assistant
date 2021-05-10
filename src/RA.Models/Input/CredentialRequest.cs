@@ -227,9 +227,11 @@ namespace RA.Models.Input
 		public List<Place> AvailableAt { get; set; }
 
 		/// <summary>
-		/// Set of alpha-numeric symbols that uniquely identifies the credential and supports its discovery and use.
+		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
+		/// ceterms:codedNotation
 		/// </summary>
 		public string CodedNotation { get; set; }
+
 		/// <summary>
 		/// ISIC Revision 4 Code
 		/// </summary>
@@ -395,11 +397,32 @@ namespace RA.Models.Input
 		public LanguageMap ProcessStandardsDescription_Map { get; set; } = new LanguageMap();
 
 		//version related
-		public string LatestVersion { get; set; } //URL
-		public string PreviousVersion { get; set; } //URL
-		public string NextVersion { get; set; } //URL
-		public string SupersededBy { get; set; } //URL
-		public string Supersedes { get; set; } //URL
+		//
+		/// <summary>
+		/// Latest version of the credential.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string LatestVersion { get; set; }
+		/// <summary>
+		/// Version of the resource that immediately precedes this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string PreviousVersion { get; set; } 
+		/// <summary>
+		/// Version of the resource that immediately follows this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string NextVersion { get; set; } 
+		/// <summary>
+		///  Resource that replaces this resource.
+		///  full URL OR CTID (recommended)
+		/// </summary>
+		public string SupersededBy { get; set; } 
+		/// <summary>
+		/// Resource that this resource replaces.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string Supersedes { get; set; } 
 											  
 		/// <summary>
 		/// Another source of information about the entity being described.
@@ -565,6 +588,9 @@ namespace RA.Models.Input
 		/// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
 		/// </summary>
 		public List<string> CommonConditions { get; set; }
+		/// <summary>
+		/// Requirement or set of requirements for this resource
+		/// </summary>
 		public List<ConditionProfile> Requires { get; set; }
 		public List<ConditionProfile> Recommends { get; set; }
 		public List<ConditionProfile> Corequisite { get; set; }
@@ -628,6 +654,10 @@ namespace RA.Models.Input
 		public List<ProcessProfile> RevocationProcess { get; set; }
 		#endregion
 
+		/// <summary>
+		/// List of CTIDs for a published pathway.
+		/// Blank nodes are not supported/relevent.
+		/// </summary>
 		public List<string> TargetPathway { get; set; } = new List<string>();
 
 

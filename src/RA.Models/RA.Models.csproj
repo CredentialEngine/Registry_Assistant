@@ -72,6 +72,7 @@
     <Compile Include="Input\CostManifestRequest.cs" />
     <Compile Include="Input\CredentialRequest.cs" />
     <Compile Include="Input\CtdlAttributes.cs" />
+    <Compile Include="Input\DataSetProfileRequest.cs" />
     <Compile Include="Input\DeleteRequest.cs" />
     <Compile Include="Input\LearningOpportunityRequest.cs" />
     <Compile Include="Input\OccupationRequest.cs" />

@@ -49,8 +49,28 @@ namespace RA.Models.Input
 		/// </summary>
 		public Job Job { get; set; } = new Job();
 
-	}
 
+		/// <summary>
+		/// Occupation already formatted as JSON-LD
+		/// ONLY USED WITH PUBLISH LIST
+		/// </summary>
+		public MJ.Job FormattedJob { get; set; } = new MJ.Job();
+	}
+	/// <summary>
+	/// Request class for publishing a list of Jobs
+	/// </summary>
+	public class JobListRequest : BaseRequest
+	{
+		/// <summary>
+		/// List of Jobs
+		/// </summary>
+		public List<object> JobList { get; set; } = new List<object>();
+		/// <summary>
+		/// HasLanguageMaps
+		/// If false, will format input using the plain Task classes otherwise the JSON-LD class
+		/// </summary>
+		public bool HasLanguageMaps { get; set; }
+	}
 
 	/// <summary>
 	/// Request class for publishing a Task
@@ -95,5 +115,27 @@ namespace RA.Models.Input
 		/// </summary>
 		public WorkRole WorkRole { get; set; } = new WorkRole();
 
+
+		/// <summary>
+		/// Task already formatted as JSON-LD
+		/// ONLY USED WITH PUBLISH LIST
+		/// </summary>
+		public MJ.WorkRole FormattedWorkRole { get; set; } = new MJ.WorkRole();
+	}
+
+	/// <summary>
+	/// Request class for publishing a list of WorkRoles
+	/// </summary>
+	public class WorkRoleListRequest : BaseRequest
+	{
+		/// <summary>
+		/// List of specific activity, typically related to performing a function or achieving a goal.
+		/// </summary>
+		public List<object> WorkRoleList { get; set; } = new List<object>();
+		/// <summary>
+		/// HasLanguageMaps
+		/// If false, will format input using the plain Task classes otherwise the JSON-LD class
+		/// </summary>
+		public bool HasLanguageMaps { get; set; }
 	}
 }

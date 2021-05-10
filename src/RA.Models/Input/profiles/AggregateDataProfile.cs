@@ -16,6 +16,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public string DateEffective { get; set; }
 
+		//NOT required
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 

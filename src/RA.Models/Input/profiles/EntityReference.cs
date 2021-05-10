@@ -137,6 +137,11 @@ namespace RA.Models.Input
 		public List<ConditionProfile> Corequisite { get; set; } = new List<ConditionProfile>();
 		public List<ConditionProfile> Recommends { get; set; } = new List<ConditionProfile>();
 		public List<ConditionProfile> EntryCondition { get; set; } = new List<ConditionProfile>();
+		//
+		/// <summary>
+		/// Assertions that recognize this entity in a specific Jurisdiction. 
+		/// </summary>
+		public List<JurisdictionAssertion> RecognizedIn { get; set; } = new List<JurisdictionAssertion>();
 		//LearningOpportunity only
 		public ValueProfile CreditValue { get; set; } //= new ValueProfile();
 		//

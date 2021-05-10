@@ -63,9 +63,10 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Named area or division within a region, such as a county in the U.S. or Canada.
 		/// 20-11-06 PROPOSED NOT OFFICIAL AT THIS TIME
+		/// 21-03-01 Identifier has been added, and so this may no longer be relevant?
 		/// </summary>
-		public string SubRegion { get; set; }
-		public LanguageMap SubRegion_Map { get; set; } = new LanguageMap();
+		//public string SubRegion { get; set; }
+		//public LanguageMap SubRegion_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Postal Code
@@ -76,7 +77,7 @@ namespace RA.Models.Input
 		/// Country
 		/// </summary>
 		public string Country { get; set; }
-        public LanguageMap Country_Map { get; set; } = new LanguageMap();
+        //public LanguageMap Country_Map { get; set; } = new LanguageMap();
 
         public double Latitude { get; set; }
 

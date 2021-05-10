@@ -33,6 +33,7 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public List<string> DataSourceCoverageType { get; set; } = new List<string>();
 
+		//NOT required
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 

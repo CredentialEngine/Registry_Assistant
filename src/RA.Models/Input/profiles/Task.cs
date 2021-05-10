@@ -59,11 +59,17 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Category or classification of this resource.
 		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-		/// URI to a competency
+		/// URI to a concept(based on the ONet work activities example)
 		/// ceterms:classification
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
 		//public List<CredentialAlignmentObject> Classification { get; set; } = new List<CredentialAlignmentObject>();
+		/// <summary>
+		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
+		/// ceterms:codedNotation
+		/// </summary>
+		public string CodedNotation { get; set; }
+
 		/// <summary>
 		/// Comment
 		/// Definition:	en-US: Supplemental text provided by the promulgating body that clarifies the nature, scope or use of this competency.

@@ -59,10 +59,18 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Category or classification of this resource.
 		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-		/// URI to a competency
+		/// URI to a Concept
+		/// CAN BE  A BLANK NODE - OR ALWAYS = use CredentialAlignmentObject - except may need additional properties
 		/// ceterms:classification
 		/// </summary>
-		public List<string> Classification { get; set; } = new List<string>();
+		public List<CredentialAlignmentObject> Classification { get; set; } = new List<CredentialAlignmentObject>();
+		public List<Concept> Classification2 { get; set; } = new List<Concept>();
+
+		/// <summary>
+		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
+		/// ceterms:codedNotation
+		/// </summary>
+		public string CodedNotation { get; set; }
 
 		/// <summary>
 		/// Comment
@@ -169,6 +177,11 @@ namespace RA.Models.Input
 		/// Organization(s) that offer this resource
 		/// </summary>
 		public List<OrganizationReference> OfferedBy { get; set; }
+
+		/// <summary>
+		/// Requirement or set of requirements for this resource
+		/// </summary>
+		public List<ConditionProfile> Requires { get; set; }
 
 		/// <summary>
 		/// Another source of information about the entity being described.

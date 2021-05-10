@@ -74,10 +74,10 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
-		/// List of CTIDs or should it be entityReferences?
+		/// List of CTIDs - must exist in the registry
 		/// ceasn:derivedFrom
 		/// </summary>
-		public List<EntityReference> DerivedFrom { get; set; } = new List<EntityReference>();
+		public List<string> DerivedFrom { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Entity describing the process by which the transfer value profile, or aspects of it, were created.
