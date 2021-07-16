@@ -24,6 +24,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public Credential Credential { get; set; }
 
+		/*
 		/// <summary>
 		/// Entity describing aggregate credential holder earnings data.
 		/// </summary>
@@ -42,6 +43,7 @@ namespace RA.Models.Input
 		/// </summary>
 		[Obsolete]
 		public List<HoldersProfile> HoldersProfile { get; set; } = new List<HoldersProfile>();
+		*/
 	}
 
 	/// <summary>
@@ -230,6 +232,7 @@ namespace RA.Models.Input
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
 		/// ceterms:codedNotation
 		/// </summary>
+		[Obsolete]
 		public string CodedNotation { get; set; }
 
 		/// <summary>

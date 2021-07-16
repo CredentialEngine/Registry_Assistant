@@ -189,6 +189,7 @@ namespace RA.Models.Input
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
 		/// ceterms:codedNotation
 		/// </summary>
+		[Obsolete]
 		public string CodedNotation { get; set; }
 
 		public List<string> CommonCosts { get; set; }

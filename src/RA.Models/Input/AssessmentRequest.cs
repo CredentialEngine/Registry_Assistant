@@ -22,7 +22,6 @@ namespace RA.Models.Input
 
 			AssessmentMethodType = new List<string>();
 			AudienceType = new List<string>();
-			//CodedNotation = new List<string>();
 			AssessmentUseType = new List<string>();
 
 			AvailabilityListing = new List<string>();
@@ -215,6 +214,7 @@ namespace RA.Models.Input
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
 		/// ceterms:codedNotation
 		/// </summary>
+		[Obsolete]
 		public string CodedNotation { get; set; }
 
 		public string AssessmentExampleDescription { get; set; }

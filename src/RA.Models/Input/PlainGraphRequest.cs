@@ -55,4 +55,21 @@ namespace RA.Models.Input
 		[JsonProperty( "@graph" )]
 		public object Graph { get; set; }
 	}
+
+	public class GraphNode
+	{
+
+		[JsonProperty( "@id" )]
+		public string Id { get; set; }
+
+		[JsonProperty( "@type" )]
+		public string Type { get; set; }
+
+
+		/// <summary>
+		/// CTID - present for toplevel node, but not always for child nodes
+		/// </summary>
+		[JsonProperty( "ceterms:ctid" )]
+		public object CTID { get; set; }
+	}
 }
