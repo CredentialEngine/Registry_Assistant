@@ -15,6 +15,7 @@ namespace RA.Models.Input
 		/// Effective date of this profile
 		/// </summary>
 		public string DateEffective { get; set; }
+		public string ExpirationDate { get; set; }
 
 		//NOT required
 		public string Description { get; set; }

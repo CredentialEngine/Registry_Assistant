@@ -48,5 +48,21 @@ namespace RA.SamplePublishingProject
 		#endregion
 
 
+		#region Job publishing
+		[TestMethod]
+		public void PublishJob()
+		{
+			new RA.SamplesForDocumentation.Employment.Jobs().PublishJob( "format" );
+
+		}
+
+
+		[TestMethod]
+		public void PublishJobList()
+		{
+			new RA.SamplesForDocumentation.Employment.Jobs().PublishJobList();
+		}
+		#endregion
+
 	}
 }

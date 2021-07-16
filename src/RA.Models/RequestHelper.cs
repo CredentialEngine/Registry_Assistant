@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace RA.Models
 {
 	public class RequestHelper
@@ -18,7 +19,8 @@ namespace RA.Models
         public string ApiKey { get; set; } = "";
         public string OwnerCtid { get; set; } = "";
         public string ClientIdentifier { get; set; } = "";
-
+		public string EntityName { get; set; } = "";
+		public string IPAddress { get; set; } = "";
 		//true if originates from publisher
 		public bool IsPublisherRequest { get; set; }
 		public bool IsPublishRequestType { get; set; }
@@ -82,6 +84,27 @@ namespace RA.Models
 
 			return messages;
 		}
+		public List<string> GetAllErrorMessages()
+		{
+			List<string> messages = new List<string>();
+			string prefix = "";
+			foreach ( RequestMessage msg in Messages.OrderBy( m => m.IsWarning ) )
+			{
+				prefix = "";
+				if ( !msg.IsWarning )
+				{
+					if ( msg.Message.ToLower().IndexOf( "error" ) == -1 && msg.Message.ToLower().IndexOf( "warning" ) == -1 && msg.Message.ToLower().IndexOf( "note" ) == -1 )
+						prefix = "Error - ";
+
+					if ( msg.Message.ToLower().IndexOf( "successful" ) == -1 )
+						messages.Add( prefix + msg.Message );
+				}
+				
+			}
+
+
+			return messages;
+		}
 		public void SetWarningMessages( List<string> messages )
 		{
 			foreach ( string msg in messages )
@@ -97,7 +120,8 @@ namespace RA.Models
 				if ( msg.ToLower().IndexOf( "warning" ) > -1 || msg.ToLower().IndexOf( "note" ) == 0 )
 					AddWarning( msg );
 				else
-					AddError( msg );
+					if(msg.ToLower().IndexOf("successful") == -1)
+						AddError( msg );
 			}
 
 		}

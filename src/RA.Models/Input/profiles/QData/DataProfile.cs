@@ -181,13 +181,14 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public List<QuantitativeValue> RelatedEmployment { get; set; } = new List<QuantitativeValue>();
 
-		///// <summary>
-		///// Category of subject excluded from the data.
-		///// qdata:subjectExcluded
-		///// </summary>
-		//[Obsolete]
-		//public List<SubjectProfile> SubjectExcluded { get; set; } = new List<SubjectProfile>();
+		/// <summary>
+		/// Category of subject excluded from the data.
+		/// Feb,2021 change type to QuantitativeValue
+		/// qdata:subjectExcluded
+		/// </summary>
+		public List<QuantitativeValue> SubjectExcluded { get; set; } = new List<QuantitativeValue>();
 
+		//deprecated Feb/2021
 		///// <summary>
 		///// Category of subject included in the data.
 		///// qdata:subjectIncluded

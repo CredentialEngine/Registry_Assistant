@@ -66,26 +66,28 @@ namespace RA.Models.Input.profiles.QData
 		/// Inverse property	- point back to the parent
 		/// 21-02-19 mparsons	Removing these from range: HoldersProfile, EarningsProfile, EmploymentOutlook
 		///						- adding credential, assessment, and lopp
-		/// List of URIs/CTIDs
+		/// 21-05-10 mparsons	- effectively obsolete outside of HoldersProfile, EarningsProfile, EmploymentOutlook and the latter are moving to be obsolete
 		/// </summary>
+		[Obsolete]
 		public List<string> RelevantDataSetFor { get; set; } = new List<string>();
 
 		/// <summary>
 		/// NEW
 		/// Means to point to a credential where data is published by a third party.
+		/// schema:about
 		/// </summary>
 		public List<EntityReference> About { get; set; } = new List<EntityReference>();
 
 		/// <summary>
 		/// Authoritative source of an entity's information.
-		/// URL
+		/// URL 
 		/// </summary>
 		public string Source { get; set; }
 
 		/// <summary>
 		/// Credentialing organization or a third party providing the data.
 		/// </summary>
-		public OrganizationReference DataProvider { get; set; } = new OrganizationReference();
+		public OrganizationReference  DataProvider { get; set; } = new OrganizationReference();
 
 		/// <summary>
 		/// Data Set Time Period

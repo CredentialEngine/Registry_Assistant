@@ -8,19 +8,20 @@ namespace RA.Models
 {
 	public class ConceptSchemes
 	{
-		public List<ConceptScheme> ConceptScheme { get; set; } = new List<ConceptScheme>();
+		public List<ConceptSchemeDTO> CTDLConceptSchemes { get; set; } = new List<ConceptSchemeDTO>();
 	}
-	public class ConceptScheme
+	public class ConceptSchemeDTO
 	{
 		public string Label { get; set; }
-		public string Scheme { get; set; }
+		public string ConceptSchemeId { get; set; }
 		//public string Definition { get; set; }
-		public List<Concept> Concepts { get; set; } = new List<Concept>();
+		public List<ConceptDTO> Concepts { get; set; } = new List<ConceptDTO>();
 	}
-	public class Concept
+	public class ConceptDTO
 	{
-		public Concept()
+		public ConceptDTO()
 		{
+			SortOrder = 10;
 		}
 
 		public string Label { get; set; }
@@ -28,6 +29,7 @@ namespace RA.Models
 		public string Definition { get; set; }
 		public string InScheme { get; set; }
 		public string SchemaLabel { get; set; }
+		public int SortOrder { get; set; }
 
 	}
 }

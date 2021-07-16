@@ -63,10 +63,13 @@
     <Compile Include="Credentials\PublishCredentialWithMultipleCampuses.cs" />
     <Compile Include="Credentials\PublishCredentialWithOutcomes.cs" />
     <Compile Include="Credentials\PublishQACredentialWithETPL.cs" />
+    <Compile Include="Employment\Jobs.cs" />
     <Compile Include="Employment\Occupations.cs" />
     <Compile Include="LearningOpportunities\SampleLearningOpportunityPublish.cs" />
     <Compile Include="PerformanceExamples\CareerBridgeCredentials.cs" />
+    <Compile Include="PerformanceExamples\IndianaPassRates.cs" />
     <Compile Include="PerformanceExamples\KansasExamples.cs" />
+    <Compile Include="PerformanceExamples\WIOAExamples.cs" />
     <Compile Include="ProPath\ProPathExamples.cs" />
     <Compile Include="Credentials\PublishCredential.cs" />
     <Compile Include="LearningOpportunities\PublishLearningOpportunity.cs" />
@@ -90,6 +93,7 @@
     <Compile Include="SupportingData\Occupations.cs" />
     <Compile Include="TransferValueProfiles\ACETransferValues.cs" />
     <Compile Include="TransferValueProfiles\IndianaTransferValues.cs" />
+    <Compile Include="TransferValueProfiles\KansasTransferValues.cs" />
     <Compile Include="TransferValueProfiles\NCCRSTransferValues.cs" />
     <Compile Include="TransferValueProfiles\PublishTransferValueProfile.cs" />
     <Compile Include="TransferValueProfiles\PublishTransferValueProfileList.cs" />

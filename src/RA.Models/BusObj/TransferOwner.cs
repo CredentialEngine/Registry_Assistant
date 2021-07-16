@@ -12,6 +12,7 @@ namespace RA.Models
 		public string NewOwnerCTID { get; set; }
 		public string PublishingEntityType { get; set; }
 		public string EntityCtid { get; set; }
+		public List<string> EntityCTIDList { get; set; } = new List<string>();
 		public string Community { get; set; }
 	}
 	public class TransferOwnerResponse

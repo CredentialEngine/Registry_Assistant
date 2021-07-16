@@ -141,6 +141,7 @@ namespace RA.Models.Input
 		///  - Competency - TBD
 		///  - Job  - TBD
 		///  - Occupation  - TBD
+		///  2021-05-10 An additional type will be a EntityReference. Actually any of the latter with a type and CTID
 		/// </summary>
 		public List<object> TransferValueFrom { get; set; } = new List<object>();
 
@@ -153,6 +154,7 @@ namespace RA.Models.Input
 		///  - Competency - TBD
 		///  - Job  - TBD
 		///  - Occupation  - TBD
+		///  2021-05-10 An additional type will be a EntityReference. Actually any of the latter with a type and CTID
 		/// </summary>
 		public List<object> TransferValueFor { get; set; } = new List<object>();
 

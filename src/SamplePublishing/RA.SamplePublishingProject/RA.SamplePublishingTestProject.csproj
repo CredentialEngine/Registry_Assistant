@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CredentialTesting.cs" />
+    <Compile Include="DataSetProfileTesting.cs" />
     <Compile Include="Testing.cs" />
     <Compile Include="TransferValueTesting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

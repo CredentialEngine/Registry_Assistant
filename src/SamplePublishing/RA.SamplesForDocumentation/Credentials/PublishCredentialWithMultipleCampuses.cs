@@ -16,6 +16,7 @@ namespace RA.SamplesForDocumentation.Credentials
 	{
 		/// <summary>
 		/// Publish credential that uses AlternateCondition to show that the credential can be attained at multiple campuses.
+		/// Feb. 18, 2021 - created for Minnesota to illustrate how to handle the scenario where a learning opportunity that is required for a credential and is offered at multiple locations. 
 		/// </summary>
 		/// <param name="requestType"></param>
 		/// <returns></returns>

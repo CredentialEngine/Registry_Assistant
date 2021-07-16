@@ -32,7 +32,8 @@ namespace RA.SamplesForDocumentation
 				//ensure you have added your apiKey to the app.config
 				//		NOTES.txt
 			}
-			var organizationIdentifierFromAccountsSite = "ce-43cfb849-94af-4324-b1f3-d3c0df784fbb";// SampleServices.GetMyOrganizationCTID();
+			//Bates Technical College
+			var organizationIdentifierFromAccountsSite = "ce-43cfb849-94af-4324-b1f3-d3c0df784fbb";
 			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
 			{
 				//ensure you have added your organization account CTID to the app.config
@@ -76,6 +77,36 @@ namespace RA.SamplesForDocumentation
 					}
 				}
 			};
+			myData.EstimatedCost = new List<CostProfile>()
+			{
+				new CostProfile()
+				{
+					CostDetails="https://batestech.edu/",
+					Description="Financial information, including tuition",
+					CostItems = new List<CostProfileItem>()
+					{
+						new CostProfileItem()
+						{
+							DirectCostType="Tuition",
+							Price=1082,
+							PaymentPattern="1082/per 12 credits",
+							ResidencyType = new List<string>() {"OutOfState" }
+						},
+						new CostProfileItem()
+						{
+							DirectCostType="Tuition",
+							Price=99.32M,
+							PaymentPattern="99.32/per credit",
+							ResidencyType = new List<string>() {"InState" }
+						},
+						new CostProfileItem()
+						{
+							DirectCostType="LearningResource",
+							Price=20
+						}
+					}
+				}
+			};
 			//learning delivery type
 			myData.LearningDeliveryType = new List<string>()
 			{
@@ -92,6 +123,7 @@ namespace RA.SamplesForDocumentation
 					Country="United States"
 				}
 			};
+			myData.SameAs = new List<string>() { "https://credentialfinder.org/credential/18228/A_MCP_Certification_Training" };
 
 			//Conditions
 			//NONE
@@ -117,20 +149,13 @@ namespace RA.SamplesForDocumentation
 
 			var adp = new AggregateDataProfile()
 			{
-				Name = "My Aggregate Data Profile for a particular outcome.",
+				//Name = "My Aggregate Data Profile for a particular outcome.",
 				DateEffective = "2018-01-15",
-				Description = "Description of 'My AggregateDataProfile for a particular set of outcomes.'",
-				DemographicInformation = "Description of Demographic Information",
-				NumberAwarded = 234,
-				Source = "https://example.org/?t=AggregateDataProfileProfileSource",
-				JobsObtained = new List<QuantitativeValue>()
-				{
-					new QuantitativeValue()
-					{
-						Value = 188,
-						Description = "Program graduates employed in the region."
-					}
-				}
+				//Description = "Description of 'My AggregateDataProfile for a particular set of outcomes.'",
+				//DemographicInformation = "Description of Demographic Information",
+				//NumberAwarded = 234,
+				Source = "https://www.careerbridge.wa.gov/Detail_Program.aspx?program=2670",
+				MedianEarnings=41489
 			};
 
 			adp.RelevantDataSet.Add( FormatDataSetProfile( myData ) );
@@ -327,9 +352,119 @@ namespace RA.SamplesForDocumentation
 			relevantDataSet.About = new List<EntityReference>() { new EntityReference() { CTID = myData.Ctid } };
 			//
 			//DataSetTimeFrame referenced from a DataSetProfile (DataAttributes)
+			DataSetTimeFrame dstp2018 = new DataSetTimeFrame()
+			{
+				Description = "The information on this page is based on employment for 2018."
+			};
+			//==================== 2018 =======================
+			var dataProfile2018 = new DataProfile()
+			{
+				PassRate = new List<QuantitativeValue>()
+				{
+					new QuantitativeValue()
+					{
+						Percentage=93.3M,
+						Value=126,
+						Description=""
+					}
+				},
+				SubjectsInSet= new List<QuantitativeValue>()
+				{
+					new QuantitativeValue()
+					{
+						Value=135 
+					}
+				}
+			};
+			dstp2018.DataAttributes.Add( dataProfile2018 );
+			//==================== 2019 =======================
+			var dataProfile2019 = new DataProfile()
+			{
+				PassRate = new List<QuantitativeValue>()
+				{
+					new QuantitativeValue()
+					{
+						Percentage=93.3M,
+						Value=126,
+						Description=""
+					}
+				},
+				SubjectsInSet = new List<QuantitativeValue>()
+				{
+					new QuantitativeValue()
+					{
+						Value=135
+					}
+				}
+			};
+			dstp2018.DataAttributes.Add( dataProfile2018 );
+			//==================== 2020 =======================
+			var dataProfile2020 = new DataProfile()
+			{
+				PassRate = new List<QuantitativeValue>()
+				{
+					new QuantitativeValue()
+					{
+						Percentage=93.3M,
+						Value=126,
+						Description=""
+					}
+				},
+				SubjectsInSet = new List<QuantitativeValue>()
+				{
+					new QuantitativeValue()
+					{
+						Value=135
+					}
+				}
+			};
+			dstp2018.DataAttributes.Add( dataProfile2018 );
+
+
+			//==========================================
+			//populate all
+
+
+			relevantDataSet.DataSetTimePeriod.Add( dstp2018 );
+
+			return relevantDataSet;
+		}
+
+		public DataSetProfile FormatSampleDataSetProfile( Credential myData )
+		{
+			/*
+			 * 	 
+			 * DataSetProfile -  Particular characteristics or properties of a data set and its records.
+			 * Requires a CTID.
+			 * A key property is qdata:dataSetTimePeriod which a list of the class: qdata:DataSetTimeFrame
+			 * 
+			 * qdata:DataSetTimeFrame - Time frame including earnings and employment start and end dates of the data set.
+			 * This class describes the timeframe for a set of statistics. 
+			 * The property: qdata:dataAttributes is a list of the class: qdata:DataProfile. 
+			 * 
+			 * qdata:DataProfile - Entity describing the attributes of the data set, its subjects and their values.
+			 * This class has a large number of properties for describing statitics.
+			 * Three new properties are being added that are not yet shown on https://credreg.net/qdata/terms/DataProfile#DataProfile:
+			 * - TotalWIOACompleters
+			 * - TotalWIOAExiters
+			 * - TotalWIOAParticipants
+			 * 
+			 * Additional properties are also expected to be added. 
+			 */
+			var datasetProfileCtid = "ce-13e36d12-5d9b-4f56-a885-319a46302e29";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var relevantDataSet = new DataSetProfile()
+			{
+				CTID = datasetProfileCtid,
+				Description = "Consumer Report Card for A+/MCP Certification Training - updated",
+				DataProvider = myData.OwnedBy[ 0 ],
+				//RelevantDataSetFor = hpctid //this will be derived by the API
+			};
+			relevantDataSet.About = new List<EntityReference>() { new EntityReference() { CTID = myData.Ctid } };
+			//
+			//DataSetTimeFrame referenced from a DataSetProfile (DataAttributes)
 			DataSetTimeFrame dstp = new DataSetTimeFrame()
 			{
-				Description = "CareerBridge DataSetTimeFrame",
+				Description = "The information on this page is based on employment for the most recent three years for which data is available.",
 				DataSourceCoverageType = new List<string>() { "Global" },
 			};
 			////DataProfile referenced from a DataSetTimeFrame ()

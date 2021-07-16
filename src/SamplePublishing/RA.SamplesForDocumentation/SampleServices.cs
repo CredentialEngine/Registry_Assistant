@@ -238,7 +238,7 @@ namespace RA.SamplesForDocumentation
 		public bool PublishRequest( AssistantRequestHelper request )
 		{
 			string serviceUri = GetAppKeyValue( "registryAssistantApi" );
-			if (System.DateTime.Now.Day==28)
+			if (System.DateTime.Now.Day==10)
 			{
 				//serviceUri = "https://localhost:44312/";
 			}
@@ -285,6 +285,8 @@ namespace RA.SamplesForDocumentation
 
 					LoggingHelper.DoTrace( 6, "Publisher.PostRequest: doing PostAsync to: " + request.EndpointUrl );
 					var task = client.PostAsync( request.EndpointUrl, new StringContent( request.InputPayload, Encoding.UTF8, "application/json" ) );
+					//increase timeout for debugging
+					//client.Timeout = new TimeSpan( 0, 30, 0 );
 
 					task.Wait();
 					var result = task.Result;
@@ -374,7 +376,7 @@ namespace RA.SamplesForDocumentation
 				}
 			}
 			catch ( AggregateException ae )
-			{
+				{
 				var timeOutNote = "";
 				TimeSpan duration = DateTime.Now.Subtract( started );
 				if ( duration.TotalSeconds > 60 )

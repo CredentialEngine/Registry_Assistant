@@ -197,8 +197,10 @@ namespace RA.SamplesForDocumentation
 			dstp.DataAttributes.Add( dataProfileRelatedEmployment );
 
 			relevantDataSet.DataSetTimePeriod.Add( dstp );
-			adp.RelevantDataSet = new List<DataSetProfile>();
-			adp.RelevantDataSet.Add( relevantDataSet );
+			adp.RelevantDataSet = new List<DataSetProfile>
+			{
+				relevantDataSet
+			};
 
 
 			//This holds the credential and the identifier (CTID) for the owning organization
