@@ -62,7 +62,6 @@
     <Compile Include="BusObj\ActivityLog.cs" />
     <Compile Include="BusObj\ConceptScheme.cs" />
     <Compile Include="BusObj\TransferOwner.cs" />
-    <Compile Include="ConceptSchemes.cs" />
     <Compile Include="Input\AssessmentRequest.cs" />
     <Compile Include="Input\BaseRequest.cs" />
     <Compile Include="Input\BaseRequestClass.cs" />
@@ -162,7 +161,6 @@
     <Compile Include="JsonV2\WorkRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryAssistantResponse.cs" />
-    <Compile Include="RegistryPublishingHistory.cs" />
     <Compile Include="RequestHelper.cs" />
     <Compile Include="SiteActivity.cs" />
   </ItemGroup>
