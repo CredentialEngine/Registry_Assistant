@@ -147,7 +147,7 @@ namespace RA.Models.Input
 		/// Type of method by which the data was collected.
 		/// Concept
 		/// CER Target Scheme:	qdata:CollectionMethod
-		/// <see cref="https://credreg.net/qdata/terms/CollectionMethod#CollectionMethod"/>
+		/// <see cref="https://credreg.net/qdata/terms/CollectionMethod"/>
 		/// collectionMethod:AdministrativeRecordMatching
 		/// collectionMethod:CredentialHolderReporting 
 		/// collectionMethod:CredentialHolderSurvey 

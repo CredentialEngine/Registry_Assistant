@@ -81,6 +81,7 @@ namespace RA.Models.Input
 		/// The type of organization is one of :
 		/// - CredentialOrganization
 		/// - QACredentialOrganization
+		/// - Organization (new 2021-05-31)
 		/// Required
 		/// </summary>
 		public string Type { get; set; }
@@ -89,7 +90,7 @@ namespace RA.Models.Input
 		{
 			get 
 			{ 
-				if ( Type.ToLower().IndexOf("qacredentialorganization") > -1 )
+				if ( !string.IsNullOrWhiteSpace(Type) && Type.ToLower().IndexOf("qacredentialorganization") > -1 )
 					return true;
 				else
 					return false;
@@ -133,13 +134,16 @@ namespace RA.Models.Input
 		/// The type of the described agent.
 		/// Must provide valid organization types.
 		/// May provide with or without the orgType namespace
+		/// Required
 		/// Example: orgType:CertificationBody
 		/// <see cref="https://credreg.net/ctdl/terms/agentType"/>
 		/// </summary>
 		public List<string> AgentType { get; set; }
 
 		/// <summary>
-		/// The types of sociological, economic, or political subdivision of society served by an agent. Enter one of:
+		/// The types of sociological, economic, or political subdivision of society served by an agent. 
+		/// Required
+		/// Enter one of:
 		/// <value>
 		/// agentSector:PrivateForProfit 
 		/// agentSector:PrivateNonProfit 
@@ -152,10 +156,12 @@ namespace RA.Models.Input
 		//also require contact information via at least one of 
 		/// <summary>
 		/// Email addresses for organization
+		/// Require at least Email or Address
 		/// </summary>
 		public List<string> Email { get; set; }
 		/// <summary>
 		/// Addresses for organization
+		/// Require at least Email or Address
 		/// </summary>
 		public List<Place> Address { get; set; }
 		#endregion
@@ -236,16 +242,6 @@ namespace RA.Models.Input
 		public List<string> ServiceType { get; set; }
 		#endregion
 
-		/// <summary>
-		/// Alternative Identifier
-		/// 20-10-22 mparsons: AlternativeIdentifier is now obsolete. Added Identifier to replace AlternativeIdentifier
-		///						The API will initially handle mapping any use of AlternativeIdentifier to Identifier and return a warning. 
-		///						This property will be removed permanently 20-11-15
-		/// 
-		/// Alternative, publicly available and globally unique identifier for an organization issued by an authoritative entity.
-		/// </summary>
-		//[Obsolete]
-		//public List<IdentifierValue> AlternativeIdentifier { get; set; } = new List<IdentifierValue>();
 
 		/// <summary>
 		/// Alias for the organization including acronyms, alpha-numeric notations, and other forms of name abbreviations in common use

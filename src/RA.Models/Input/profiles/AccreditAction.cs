@@ -9,7 +9,7 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Accredit Action
 	/// Action by an independent, neutral, and authoritative agent that certifies an entity as meeting a prescribed set of standards.
-	/// <seealso cref="https://credreg.net/ctdl/terms#AccreditAction"/>
+	/// <seealso cref="https://credreg.net/ctdl/terms"/>
 	/// </summary>
 	public class AccreditAction
 	{

@@ -60,13 +60,7 @@ namespace RA.Models.Input
 		/// </summary>
         public string AddressRegion { get; set; }
         public LanguageMap AddressRegion_Map { get; set; } = new LanguageMap();
-		/// <summary>
-		/// Named area or division within a region, such as a county in the U.S. or Canada.
-		/// 20-11-06 PROPOSED NOT OFFICIAL AT THIS TIME
-		/// 21-03-01 Identifier has been added, and so this may no longer be relevant?
-		/// </summary>
-		//public string SubRegion { get; set; }
-		//public LanguageMap SubRegion_Map { get; set; } = new LanguageMap();
+
 
 		/// <summary>
 		/// Postal Code

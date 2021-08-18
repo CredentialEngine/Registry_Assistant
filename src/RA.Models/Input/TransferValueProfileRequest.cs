@@ -123,12 +123,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public string EndDate { get; set; }
 
-		/// <summary>
-		/// FUTURE
-		/// Type of official status of the TransferProfile; select from an enumeration of such types.
-		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
-		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
-		/// </summary>
+		///// <summary>
+		///// FUTURE
+		///// Type of official status of the TransferProfile; select from an enumeration of such types.
+		///// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		///// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		///// </summary>
 		//public string LifecycleStatusType { get; set; }
 
 
@@ -159,4 +159,6 @@ namespace RA.Models.Input
 		public List<object> TransferValueFor { get; set; } = new List<object>();
 
 	}
+
+	
 }

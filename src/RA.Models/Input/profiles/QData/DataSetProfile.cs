@@ -110,16 +110,6 @@ namespace RA.Models.Input.profiles.QData
 		public List<string> DistributionFile { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Relevant Data Set For
-		/// Data set for the entity being referenced.
-		/// ??Inverse property so not relevent for API input.
-		/// Might be relevent where parent is a holder profile
-		/// Currently derived from parent (HoldersProfile, EarningsProfile, ...)
-		/// URI/CTID
-		/// </summary>
-		//public string RelevantDataSetFor { get; set; } 
-
-		/// <summary>
 		/// Identification of data point(s) in the data set that describe personal subject attribute(s) used to uniquely identify a subject for the purpose of matching records and an indication of level of confidence in the accuracy of the match.
 		/// </summary>
 		public string SubjectIdentification { get; set; }

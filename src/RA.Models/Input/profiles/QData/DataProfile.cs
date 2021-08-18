@@ -24,7 +24,7 @@ namespace RA.Models.Input.profiles.QData
 		/// Type of administrative record used; e.g. W2, 1099, and Unemployment Insurance Wage Record.
 		/// qdata:administrativeRecordType
 		/// skos:Concept
-		/// <see cref="https://credreg.net/qdata/terms/administrativeRecordType#AdministrativeRecordCategory"/>
+		/// <see cref="https://credreg.net/qdata/terms/administrativeRecordType"/>
 		/// adminRecord:Tax1099
 		/// adminRecord:TaxW2
 		/// adminRecord:UnemploymentInsurance
@@ -115,7 +115,7 @@ namespace RA.Models.Input.profiles.QData
 		/// Mechanism by which income is determined; i.e., actual or annualized earnings.
 		/// qdata:incomeDeterminationType
 		/// skos:Concept
-		/// <see cref="https://credreg.net/qdata/terms/IncomeDeterminationMethod#IncomeDeterminationMethod"/>
+		/// <see cref="https://credreg.net/qdata/terms/IncomeDeterminationMethod"/>
 		/// incomeDetermination:ActualEarnings 
 		/// incomeDetermination:AnnualizedEarnings
 		/// </summary>

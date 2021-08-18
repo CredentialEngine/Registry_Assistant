@@ -192,7 +192,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
-		/// List of CTIDs for a competency
+		/// List of CTIDs for a competency (or others?)
 		/// ceasn:skillEmbodied
 		/// </summary>
 		public List<string> SkillEmbodied { get; set; } = new List<string>();

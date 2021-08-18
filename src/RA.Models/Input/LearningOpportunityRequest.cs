@@ -58,7 +58,7 @@ namespace RA.Models.Input
 			CommonCosts = new List<string>();
 
 			HasPart = new List<EntityReference>();
-			IsPartOfLearningOpportunity = new List<EntityReference>();
+			IsPartOf = new List<EntityReference>();
 			VersionIdentifier = new List<IdentifierValue>();
 		}
 		/// <summary>
@@ -111,9 +111,14 @@ namespace RA.Models.Input
 
 		#region *** Recommended Benchmark ***
 		/// <summary>
+		/// Provide credit information in a ValueProfile value
 		/// A credit-related value.
+		/// 21-07-19 - updating Creditvalue to also allow a list. It is defined as an object. The API will accept either a ValueProfile object or List of ValueProfiles
+		/// 12-08-18 - Changing permantly to the List, as only existing use was from the publisher (and the latter is updated to use the list)
 		/// </summary>
-		public ValueProfile CreditValue { get; set; } = new ValueProfile();
+		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
+		//public object CreditValue { get; set; }   
+
 
 		/// <summary>
 		/// Competency that the learning opportunity is intended to teach.
@@ -192,7 +197,15 @@ namespace RA.Models.Input
 		[Obsolete]
 		public string CodedNotation { get; set; }
 
+		/// <summary>
+		/// List of CTIDs (recommended) or full URLs for a CostManifest published by the owning organization.
+		/// Set of costs maintained at an organizational or sub-organizational level, which apply to this learning opportunity.
+		/// </summary>
 		public List<string> CommonCosts { get; set; }
+		/// <summary>
+		/// List of CTIDs or full URLs for a ConditionManifest published by the owning organization.
+		/// Set constraints, prerequisites, entry conditions, or requirements that are shared across an organization, organizational subdivision, set of credentials, or category of entities and activities.
+		/// </summary>
 		public List<string> CommonConditions { get; set; }
 
 		/// <summary>
@@ -219,10 +232,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public string ExpirationDate { get; set; }
 
+		/// <summary>
+		/// Entity that describes financial assistance that is offered or available.
+		/// </summary>
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 
 		/// <summary>
-		/// List of 'child' learning opps
+		///  Indicates a separately identifiable and independently useful component of the entity.
 		/// </summary>
 		public List<EntityReference> HasPart { get; set; }
 
@@ -237,9 +253,10 @@ namespace RA.Models.Input
 		public List<string> InLanguage { get; set; }
 
 		/// <summary>
-		/// Not sure of best use. Should be initially limited to lopps?
+		/// Indicates another entity of which this entity is a component. That is of another Learning Opportunity
+		/// Covers partitive notions such as "embedded".
 		/// </summary>
-		public List<EntityReference> IsPartOfLearningOpportunity { get; set; }
+		public List<EntityReference> IsPartOf { get; set; }
 
 		/// <summary>
 		/// Jurisdiction Profile
@@ -260,9 +277,6 @@ namespace RA.Models.Input
 		public List<string> Subject { get; set; }
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 
-		public List<string> TargetLearningResource { get; set; } = new List<string>();
-
-		public List<IdentifierValue> VersionIdentifier { get; set; }
 
 
 		#region Occupations, Industries, and instructional programs
@@ -364,15 +378,6 @@ namespace RA.Models.Input
 		//- Publish using ehe separate specific properties like AccreditedIn, ApprovedIn, etc
 		// 2010-01-06 The property JurisdictionAssertions may become obsolete soon. We recomend to NOT use this property.
 
-		/// <summary>
-		/// Handling assertions in jurisdictions
-		/// The property JurisdictionAssertions is a simple approach, using one record per asserting organization - where that organization will have multiple assertion types. 
-		/// The JurisdictionAssertedInProfile has a list of boolean properties where the assertion(s) can be selected.
-		/// This approach simplifies the input where the same organization asserts more than action.
-		/// 2010-01-06 TBD - this property will LIKELY be made obsolete once any partner who has been using it has been informed.
-		/// </summary>
-		//[Obsolete]
-		//public List<JurisdictionAssertedInProfile> JurisdictionAssertions { get; set; } = new List<JurisdictionAssertedInProfile>();
 
 		//JurisdictionAssertion
 		//Each 'IN' property must include one or more organizations and a Main jurisdiction. Only one main jusrisdiction (and multiple exceptions) can be entered with each property.
@@ -410,8 +415,26 @@ namespace RA.Models.Input
 		public List<JurisdictionAssertion> RevokedIn { get; set; } = new List<JurisdictionAssertion>();
 
 		#endregion
+		/// <summary>
+		/// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.
+		/// </summary>
+		public List<EntityReference> TargetAssessment { get; set; }
+		/// <summary>
+		/// Learning opportunity that is the focus of a condition, process or another learning opportunity.
+		/// </summary>
+		public List<EntityReference> TargetLearningOpportunity { get; set; }
 
-		public List<string> TargetPathway { get; set; } = new List<string>();
+		/// <summary>
+		/// Learning object or resource that is used as part of an learning activity.
+		/// </summary>
+		public List<EntityReference> TargetLearningResource1 { get; set; } = new List<EntityReference>();
+		public List<string> TargetLearningResource { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
+		/// </summary>
+		public List<IdentifierValue> VersionIdentifier { get; set; }
+		//public List<string> TargetPathway { get; set; } = new List<string>();
 
 
 		/// <summary>

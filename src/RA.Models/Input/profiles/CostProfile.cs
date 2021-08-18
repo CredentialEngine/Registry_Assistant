@@ -134,7 +134,7 @@ namespace RA.Models.Input
 		///	costType:StudentServicesFee
 		///	costType:TechnologyFee
 		///	costType:Tuition
-		/// <see cref="https://credreg.net/ctdl/terms/CostType#CostType"/>
+		/// <see cref="https://credreg.net/ctdl/terms/CostType"/>
 		/// </summary>
 		public string DirectCostType { get; set; }
 		/// <summary>

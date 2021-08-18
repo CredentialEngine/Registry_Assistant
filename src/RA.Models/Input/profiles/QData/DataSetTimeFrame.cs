@@ -22,9 +22,9 @@ namespace RA.Models.Input.profiles.QData
 		/// <summary>
 		/// Data Source Coverage Type
 		/// Type of geographic coverage of the subjects.
-		/// <see cref="https://credreg.net/qdata/terms/dataSourceCoverageType#dataSourceCoverageType"/>
+		/// <see cref="https://credreg.net/qdata/terms/dataSourceCoverageType"/>
 		/// skos:Concept
-		/// <see cref="https://credreg.net/qdata/terms/DataSourceCoverage#DataSourceCoverage"/>
+		/// <see cref="https://credreg.net/qdata/terms/DataSourceCoverage"/>
 		/// sourceCoverage:Country
 		///	sourceCoverage:Global
 		///	sourceCoverage:Region
