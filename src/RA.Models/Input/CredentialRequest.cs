@@ -342,7 +342,8 @@ namespace RA.Models.Input
 
 		#region Costs, duration, assistance
 		/// <summary>
-		/// List of CTIDs (recommended) or full URLs for a CostManifest published by the owning organization
+		/// List of CTIDs (recommended) or full URLs for a CostManifest published by the owning organization.
+		/// Set of costs maintained at an organizational or sub-organizational level, which apply to this credential.
 		/// </summary>
 		public List<string> CommonCosts { get; set; }
 		/// <summary>
@@ -657,12 +658,7 @@ namespace RA.Models.Input
 		public List<ProcessProfile> RevocationProcess { get; set; }
 		#endregion
 
-		/// <summary>
-		/// List of CTIDs for a published pathway.
-		/// Blank nodes are not supported/relevent.
-		/// </summary>
-		public List<string> TargetPathway { get; set; } = new List<string>();
-
+		
 
 		#region Alignments
 		/// <summary>

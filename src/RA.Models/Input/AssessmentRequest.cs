@@ -13,6 +13,11 @@ namespace RA.Models.Input
 		public Assessment Assessment { get; set; }
 
 	}
+	/// <summary>
+	/// Assessment request input class
+	/// History
+	/// 2021-05-31 CodedNotation is no longer part of the AssessmentProfile class. The property will be left in the input class until later this year and then removed. If provided, the data will be moved to the Identifier property and a warning will be returned. 
+	/// </summary>
 	public class Assessment
 	{
 		public Assessment()
@@ -181,10 +186,15 @@ namespace RA.Models.Input
 		public List<DurationProfile> EstimatedDuration { get; set; }
 		public List<ConditionProfile> Requires { get; set; }
 
-		//Credit Information
-		//Provide credit information in a quantative value
-		//system will check for this first, and then the old properties
-		public ValueProfile CreditValue { get; set; } = new ValueProfile();
+		/// <summary>
+		/// Provide credit information in a ValueProfile value
+		/// A credit-related value.
+		/// 21-07-19 - updating Creditvalue to also allow a list. It is defined as an object. The API will accept either a ValueProfile object or List of ValueProfiles
+		/// 12-08-18 - Changing permantly to the List, as only existing use was from the publisher (and the latter is updated to use the list)
+		/// </summary>
+		//public object CreditValue { get; set; } 
+		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
+
 		//
 		/// <summary>
 		/// Detailed description of credit unit. 
@@ -396,17 +406,34 @@ namespace RA.Models.Input
 		//required competencies are handled with condition profiles
 		//public List<CredentialAlignmentObject> RequiresCompetency { get; set; }
 
-
+		/// <summary>
+		/// List of CTIDs (recommended) or full URLs for a CostManifest published by the owning organization.
+		/// Set of costs maintained at an organizational or sub-organizational level, which apply to this assessment.
+		/// </summary>
 		public List<string> CommonCosts { get; set; }
+		/// <summary>
+		/// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
+		/// Set constraints, prerequisites, entry conditions, or requirements that are shared across an organization, organizational subdivision, set of credentials, or category of entities and activities.
+		/// </summary>
 		public List<string> CommonConditions { get; set; }
-		//[obsolete]
-		//public List<FinancialAlignmentObject> FinancialAssistanceOLD { get; set; } = new List<FinancialAlignmentObject>();
+		/// <summary>
+		/// Entity that describes financial assistance that is offered or available.
+		/// </summary>
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 
-		public List<string> TargetAssessment { get; set; } = new List<string>();
+		/// <summary>
+		/// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.
+		/// </summary>
+		public List<EntityReference> TargetAssessment { get; set; }
+		/// <summary>
+		/// Learning object or resource that is used as part of an learning activity.
+		/// </summary>
+		public List<EntityReference> TargetLearningResource1 { get; set; } = new List<EntityReference>();
 		public List<string> TargetLearningResource { get; set; } = new List<string>();
-
-		public List<string> TargetPathway { get; set; } = new List<string>();
+		//public List<string> TargetPathway { get; set; } = new List<string>();
+		/// <summary>
+		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
+		/// </summary>
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 	}
 }
