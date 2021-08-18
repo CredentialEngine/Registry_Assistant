@@ -30,7 +30,7 @@ namespace RA.Models.Input
 		public string SubjectWebpage { get; set; }
 		/// <summary>
 		/// The financial assistance type is a list of one or more concepts from the ceterms:FinancialAssistance concept scheme. 
-		/// <see cref="https://credreg.net/ctdl/terms/financialAssistanceType#FinancialAssistance"/>
+		/// <see cref="https://credreg.net/ctdl/terms/financialAssistanceType"/>
 		/// </summary>
 		public List<string> FinancialAssistanceType { get; set; } = new List<string>();
 		/// <summary>

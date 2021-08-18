@@ -117,27 +117,12 @@ namespace RA.Models.Input
         public decimal Weight { get; set; }
 		//Credit Information
 		//20-09-30 being replaced by ValueProfile
-		public ValueProfile CreditValue { get; set; } //= new ValueProfile();
+		//21-04-04 had started with singles now allowing a List 
+		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
+
 		//
 		public string CreditUnitTypeDescription { get; set; }
         public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
-
-
-		#region CreditHourType and CreditUnitType are obsolete
-		//[Obsolete]
-		//public string CreditHourType { get; set; }
-		//public LanguageMap CreditHourType_Map { get; set; } = new LanguageMap();
-		//[Obsolete]
-		//public decimal CreditHourValue { get; set; }
-
-		///// <summary>
-		///// Only one credit unit type is allowed for input
-		///// </summary>
-		//[Obsolete]
-		//public string CreditUnitType { get; set; }
-		//[Obsolete]
-		//public decimal CreditUnitValue { get; set; }
-		#endregion
 
 		//external classes =====================================
 		/// <summary>
