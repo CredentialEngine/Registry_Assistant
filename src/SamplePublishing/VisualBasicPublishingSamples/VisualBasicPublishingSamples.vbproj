@@ -92,9 +92,11 @@
     <Import Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Credential\PublishCredential.vb" />
     <Compile Include="LoggingHelper.vb" />
     <Compile Include="Organization\PublishOrganization.vb" />
     <Compile Include="SampleModels\BaseModel.vb" />
+    <Compile Include="SampleModels\Credential.vb" />
     <Compile Include="SampleModels\Organization.vb" />
     <Compile Include="SampleServices.vb" />
     <Compile Include="RegistryTesting.vb" />
@@ -136,13 +138,15 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Credential\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\RA.Models\RA.Models.csproj">
       <Project>{3f55c8eb-5ccd-4eaf-ac31-691ee2681c85}</Project>
       <Name>RA.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RA.SamplesForDocumentation\RA.SamplesForDocumentation.csproj">
+      <Project>{4197f0f4-f426-4fb2-bafd-0a30245f3114}</Project>
+      <Name>RA.SamplesForDocumentation</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
