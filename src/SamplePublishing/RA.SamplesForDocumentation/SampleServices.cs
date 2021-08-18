@@ -21,7 +21,7 @@ namespace RA.SamplesForDocumentation
 	public class SampleServices
 	{
 		public static string thisClassName = "SampleServices";
-		public string environment = GetAppKeyValue( "envType" );
+		public string environment = GetAppKeyValue( "environment" );
 		//helpers. Could hard code or retrieve from the config file. 
 		public static string GetMyApiKey()
 		{
@@ -303,7 +303,7 @@ namespace RA.SamplesForDocumentation
 						request.Messages.AddRange( response.Messages );
 
 						LoggingHelper.DoTrace( 4, thisClassName + string.Format( ".PostRequest() {0} {1} failed: {2}", request.EndpointType, request.RequestType, status ) );
-						LoggingHelper.LogError( thisClassName + string.Format( ".PostRequest()  {0} {1}. Failed\n\rMessages: {2}" + "\r\nResponse: " + response + "\n\r" + responseContents + ". payload: " + response.Payload, request.EndpointType, request.RequestType, status ) );
+						LoggingHelper.LogError( thisClassName + string.Format( ".PostRequest()  {0} {1}. Failed\n\rMessages: {2}" + "\r\nResponse: " + response.ToString() + "\n\r" + responseContents + ". payload: " + response.Payload, request.EndpointType, request.RequestType, status ) );
 						return false;
 					}
 					else

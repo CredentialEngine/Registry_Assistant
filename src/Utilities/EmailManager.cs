@@ -306,7 +306,7 @@ namespace Utilities
         /// <returns></returns>
         public static string GetSendingDomain( string emailName, string emailPrefix )
         {
-            string env = UtilityManager.GetAppKeyValue( "envType" );
+            string env = UtilityManager.GetAppKeyValue( "environment" );
             if ( env != "production" )
                 emailName = env + " - " + emailName;
             return emailName + " <" + emailPrefix + "@" + UtilityManager.GetAppKeyValue( "MailgunSendingDomainName" ) + ">";

@@ -401,7 +401,8 @@ namespace RA.SamplesForDocumentation
 
 			relevantDataSet.DataSetTimePeriod.Add( dstp );
 			hp.RelevantDataSet.Add( relevantDataSet );
-
+			//add holders profile to the request
+			myData.Holders.Add( hp );
 
 			//This holds the credential and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
@@ -410,8 +411,7 @@ namespace RA.SamplesForDocumentation
 				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
-			//add holders profile to the request
-			myRequest.HoldersProfile.Add( hp );
+
 
 			//create a literal to hold data to use with ARC
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );

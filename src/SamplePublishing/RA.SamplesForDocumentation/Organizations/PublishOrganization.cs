@@ -14,8 +14,6 @@ namespace RA.SamplesForDocumentation
 {
     public class PublishOrganization
     {
-
-
 		public string PublishSimpleRecord()
 		{
 
@@ -149,18 +147,26 @@ namespace RA.SamplesForDocumentation
 			//required-One or more concepts from OrganizationType: https://credreg.net/ctdl/terms/agentType#OrganizationType
 			myData.AgentType.Add( "Business" );
 			//add addresses and contact points
-			if ( input.Address != null && !string.IsNullOrWhiteSpace( input.Address.City ))
+			if ( input.Address != null && input.Address.Count > 0)
 			{
-				var mainAddress = new Place()
+				foreach(var item in input.Address )
 				{
-					Address1 = input.Address.Address1,
-					Address2 = input.Address.Address2, //Address1 and Address2 are concatenated in the registry
-					City = input.Address.City,
-					AddressRegion = input.Address.AddressRegion,
-					PostalCode = input.Address.PostalCode,
-					Country = input.Address.Country
-				};
-				myData.Address.Add( mainAddress );
+					//a minimum check for data, probably would be more expansive
+					if ( !string.IsNullOrWhiteSpace( item.City ) )
+					{
+						var mainAddress = new Place()
+						{
+							Address1 = item.Address1,
+							Address2 = item.Address2, //Address1 and Address2 are concatenated in the registry
+							City = item.City,
+							AddressRegion = item.AddressRegion,
+							PostalCode = item.PostalCode,
+							Country = item.Country
+						};
+						myData.Address.Add( mainAddress );
+					}
+				}
+				
 			}
 			//an organization can optional publish a 'owns' entry from all of its credentials, etc. 
 			//Alternately it is acceptable to only published the ownedBy assertions with credentials, etc. 

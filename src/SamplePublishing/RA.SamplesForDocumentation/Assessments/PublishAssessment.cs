@@ -17,10 +17,17 @@ namespace RA.SamplesForDocumentation
 			var result = "";
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
+			if ( string.IsNullOrWhiteSpace( apiKey ) )
+			{
+				//ensure you have added your apiKey to the app.config
+			}
 			// This is the CTID of the organization that owns the data being published
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
-
-			//Assign a CTID for the entity being published and keep track of it
+			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
+			{
+				//ensure you have added your organization account CTID to the app.config
+			}//
+			 //Assign a CTID for the entity being published and keep track of it
 			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 			//DataService.SaveAssessmentCTID( myCTID );
 

@@ -16,6 +16,7 @@ namespace RA.SamplesForDocumentation
 {
 	public class PublishCredentialWithOutcomeProfilesObsolete
 	{
+		[Obsolete]
 		public bool CredentialWithEmploymentOutcomeProfiles( string requestType = "format" )
 		{
 
@@ -47,6 +48,11 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
+			//add holders profile to the request
+			myData.Holders.Add( FormatHoldersProfile( organizationIdentifierFromAccountsSite ) );
+			myData.Earnings.Add( FormatEarningsProfile( organizationIdentifierFromAccountsSite ) );
+			myData.EmploymentOutcome.Add( FormatEmploymentOutcomeProfile( organizationIdentifierFromAccountsSite ) );
+
 
 			//This holds the credential and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
@@ -55,10 +61,6 @@ namespace RA.SamplesForDocumentation
 				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
-			//add holders profile to the request
-			myRequest.HoldersProfile.Add( FormatHoldersProfile( organizationIdentifierFromAccountsSite ) );
-			myRequest.EarningsProfile.Add( FormatEarningsProfile( organizationIdentifierFromAccountsSite ) );
-			myRequest.EmploymentOutcome.Add( FormatEmploymentOutcomeProfile( organizationIdentifierFromAccountsSite ) );
 
 
 			//Serialize the credential request object
