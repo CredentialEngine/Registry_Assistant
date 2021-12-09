@@ -65,7 +65,7 @@ namespace RA.Models.Input
 		/// A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
 		/// List of Names
 		/// </summary>
-		public List<string> author { get; set; } = new List<string>();
+		public string author { get; set; } 
 
 		/// <summary>
 		/// A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
@@ -330,6 +330,14 @@ namespace RA.Models.Input
 		public string competencyLabel { get; set; }
 		public LanguageMap competencyLabel_map { get; set; } = new LanguageMap();
 
+
+		/// <summary>
+		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
+		/// The abilityEmbodied property may referenced a defined ability in an ontology such as O*NET or an existing competency defined in a competency framework.
+		/// List of CTIDs for a competency
+		/// ceasn:abilityEmbodied
+		/// </summary>
+		public List<string> abilityEmbodied { get; set; } = new List<string>();
 		/// <summary>
 		/// A competency framework or competency from which this competency framework or competency is aligned.
 		/// An alignment is an assertion of some degree of equivalency between the subject and the object of the assertion.
@@ -594,6 +602,97 @@ namespace RA.Models.Input
 		public List<string> CIP_Codes { get; set; } = new List<string>();
 		#endregion
 
+		//New 2021-09-30
+
+		/// <summary>
+		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; select from an existing enumeration of such types.
+		/// </summary>
+		public List<string> EnvironmentalHazardType { get; set; }
+
+		//only for collection context
+		public List<string> inLanguage { get; set; }
+
+		/// <summary>
+		/// Collection to which this resource belongs.
+		/// </summary>
+		public string IsMemberOf { get; set; }
+
+		/// <summary>
+		/// A legal document giving official permission to do something with this resource.
+		/// Collections only
+		/// </summary>
+		public string License { get; set; }
+
+		/// <summary>
+		/// Type of required or expected performance level for a resource; select from an existing enumeration of such types.
+		/// </summary>
+		public List<string> PerformanceLevelType { get; set; }
+
+		/// <summary>
+		/// Type of physical activity required or expected in performance; select from an existing enumeration of such types.
+		/// </summary>
+		public List<string> PhysicalCapabilityType { get; set; }
+
+		/// <summary>
+		/// Type of required or expected sensory capability; select from an existing enumeration of such types.
+		/// </summary>
+		public List<string> SensoryCapabilityType { get; set; }
+
+		/// <summary>
+		/// Human-readable information resource other than a competency framework from which this competency was generated or derived by humans or machines.
+		/// URI
+		/// </summary>
+		public string SourceDocumentation { get; set; }
+
+		/// <summary>
+		/// Aspects of the referenced Competency Framework provide some justification that the resource being described is useful.
+		/// </summary>
+		public string SubstantiatingCompetencyFramework { get; set; }
+
+		/// <summary>
+		/// Aspects of the referenced Credential provide some justification that the resource being described is useful.
+		/// </summary>
+		public string SubstantiatingCredential { get; set; }
+
+		/// <summary>
+		/// Aspects of the referenced Job provide some justification that the resource being described is useful.
+		/// </summary>
+		public string substantiatingJob { get; set; }
+
+		/// <summary>
+		/// Aspects of the referenced Occupation provide some justification that the resource being described is useful.
+		/// </summary>
+		public string SubstantiatingOccupation { get; set; }
+
+		/// <summary>
+		/// Aspects of the referenced Organization provide some justification that the resource being described is useful.
+		/// </summary>
+		public string SubstantiatingOrganization { get; set; }
+
+		/// <summary>
+		/// Aspects of the referenced resource provide some justification that the resource being described is useful.
+		/// </summary>
+		public string SubstantiatingResource { get; set; }
+
+		/// <summary>
+		/// Referenced Task attests to some level of achievement/mastery of the competency being described.
+		/// </summary>
+		public string SubstantiatingTask { get; set; }
+
+		/// <summary>
+		/// Referenced Workrole attests to some level of achievement/mastery of the competency being described.
+		/// </summary>
+		public string SubstantiatingWorkrole { get; set; }
+
+		/// <summary>
+		/// Level of workforce demand for the resource.
+		/// </summary>
+		public string DemandLevel { get; set; }
+
+		/// <summary>
+		/// Task related to this resource.
+		/// </summary>
+		public string HasTask { get; set; }
 
 	}
 

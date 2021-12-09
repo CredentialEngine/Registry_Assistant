@@ -8,6 +8,72 @@ namespace RA.Models.Input
 {
 
 	/// <summary>
+	/// An outline entity used to determine the type of a entity to be processed.
+	/// </summary>
+	public class BaseEntityReference
+	{
+		/// <summary>
+		/// Id is a resovable URI
+		/// If the entity exists in the registry, provide the URI. 
+		/// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
+		/// Alterate URIs are under consideration. For example
+		/// http://dbpedia.com/Stanford_University
+		/// </summary>
+		public string Id { get; set; }
+
+		/// <summary>
+		/// Optionally, a CTID can be entered instead of an Id. 
+		/// A CTID is recommended for flexibility.
+		/// Only enter Id or CTID, but not both.
+		/// </summary>
+		public string CTID { get; set; }
+
+		//if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would typically be required
+
+		/// <summary>
+		/// the type of the entity must be provided if the Id was not provided. examples
+		/// ceterms:AssessmentProfile
+		/// ceterms:LearningOpportunityProfile
+		/// ceterms:ConditionManifest
+		/// ceterms:CostManifest
+		/// or the many credential subclasses!!
+		/// </summary>
+		public string Type { get; set; }
+
+		/// <summary>
+		/// Name of the entity (required)
+		/// </summary>
+		public string Name { get; set; }
+
+		public bool IsLearningOpportunityType
+		{
+			get 
+			{
+				if ( Type == "LearningOpportunity"
+					|| Type == "LearningOpportunityProfile"
+					|| Type == "Course"
+					|| Type == "LearningProgram"
+					)
+					return true;
+				else
+					return false;
+			}
+		}
+		public bool IsAssessmentType
+		{
+			get
+			{
+				if ( Type == "Assessment"
+					|| Type == "AssessmentProfile"
+					)
+					return true;
+				else
+					return false;
+			}
+		}
+	}
+
+	/// <summary>
 	/// Class for handling references to an entity such as an Assessment, Organization, Learning opportunity, or credential that may or may not be in the Credential Registry.
 	/// Either the Id as an resolvable URL, a CTID where the document exists in the Credential Registry, or provide specific properities for the entity.
 	/// If neither a CTID or Id is provided, a blank node will be added the @graph.
@@ -40,7 +106,7 @@ namespace RA.Models.Input
 		/// ceterms:CostManifest
 		/// or the many credential subclasses!!
 		/// </summary>
-		public virtual string Type { get; set; }
+		public string Type { get; set; }
 
 		/// <summary>
 		/// Name of the entity (required)

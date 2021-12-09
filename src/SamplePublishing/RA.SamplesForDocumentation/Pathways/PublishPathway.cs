@@ -18,8 +18,18 @@ namespace RA.SamplesForDocumentation
 			var result = "";
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
+			if ( string.IsNullOrWhiteSpace( apiKey ) )
+			{
+				//ensure you have added your apiKey to the app.config
+			}
+
 			// This is the CTID of the organization that owns the data being published
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
+			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
+			{
+				//ensure you have added your organization account CTID to the app.config
+			}//
+	
 			// Assign a CTID for the entity being published and keep track of it
 			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 
@@ -39,7 +49,7 @@ namespace RA.SamplesForDocumentation
 			// The ownedBY CTID is typically the same as the CTID for the data owner.
 			myData.OwnedBy.Add( new OrganizationReference()
 			{
-				CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
+				CTID = "ce-a588a18b-2616-4c74-bdcd-6507c0693d0e"	//sandbox org
 			} );
 
 			//list of pathway components to publish
@@ -51,7 +61,8 @@ namespace RA.SamplesForDocumentation
 				CTID = "ce-5e7fcaaf-74e2-47be-a4a9-2bed98f282d7",
 				Name = "Associate Degree: Biotechnology",
 				Description = "This badge is earned in Canvas for completing BIO 193 and BIO 202.",
-				CredentialType = "DigitalBadge"
+				CredentialType = "DigitalBadge",
+				SourceData =""	//if provided: URI or CTID of an existing credential
 			};
 
 			//add to input component list
@@ -59,14 +70,14 @@ namespace RA.SamplesForDocumentation
 			//add some more components
 			pathwayComponents.Add( new PathwayComponent()
 			{
-				PathwayComponentType = "CourseComponent",
+				PathwayComponentType = "AssessmentComponent",
 				CTID = "ce-1f8d3d06-3953-4bd8-8750-7dc5e9a062eb",
-				Name = "Programming Concepts and Methology I",
+				Name = "Programming Concepts and Methology Assessment",
 				Description = "Description of the course",
 				ProgramTerm = "1st Term"
 			} );
 			//add a selection component
-			pathwayComponents.Add( AddSelectionComponent() );
+			AddSelectionComponent( ref pathwayComponents );
 
 			// The input request class holds the pathway and the identifier (CTID) for the owning organization
 			var myRequest = new PathwayRequest()
@@ -83,12 +94,25 @@ namespace RA.SamplesForDocumentation
 			//Preferably, use method that will exclude null/empty properties
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 			//call the Assistant API
-			result = new SampleServices().SimplePost( "pathway", requestType, payload, apiKey );
-			// Return the result
-			return result;
+			//result = new SampleServices().SimplePost( "pathway", requestType, payload, apiKey );
+			SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
+			{
+				EndpointType = "pathway",
+				RequestType = requestType,
+				OrganizationApiKey = apiKey,
+				CTID = myRequest.Pathway.CTID.ToLower(),   //added here for logging
+				Identifier = "testing",     //useful for logging, might use the ctid
+				InputPayload = payload
+			};
+
+			bool isValid = new SampleServices().PublishRequest( req );
+			//Return the result
+			return req.FormattedPayload;
+
 		}
-		public PathwayComponent AddSelectionComponent()
+		public void AddSelectionComponent( ref List<PathwayComponent> pathwayComponents )
 		{
+			//create a selection component that references three components 
 			var output = new PathwayComponent()
 			{
 				Name = "Selection Component",
@@ -98,17 +122,42 @@ namespace RA.SamplesForDocumentation
 				ComponentCategory = "Selection",
 				HasChild = new List<string>() { "ce-e1d14d25-f9cf-45e9-b625-ef79ed003f6b", "ce-39da55fa-140b-4c0a-92e2-c8e38e5f07f0", "ce-88d5a63d-4ca5-4689-bec1-55c88b6a5529" }
 			};
-
+			//include a condition indicating that 2 of the 3 are required. 
 			var conditions = new ComponentCondition()
 			{
 				Name = "Conditions for this SelectionComponent",
 				Description = "Require two of the target components.",
-				RequiredNumber = 3,
+				RequiredNumber = 2,
 				TargetComponent = new List<string>() { "ce-e1d14d25-f9cf-45e9-b625-ef79ed003f6b", "ce-39da55fa-140b-4c0a-92e2-c8e38e5f07f0", "ce-88d5a63d-4ca5-4689-bec1-55c88b6a5529" }
 			};
 			output.HasCondition.Add( conditions );
 
-			return output;
+			pathwayComponents.Add( output );
+			//now add the three components
+			pathwayComponents.Add( new PathwayComponent()
+			{
+				PathwayComponentType = "CourseComponent",
+				CTID = "ce-e1d14d25-f9cf-45e9-b625-ef79ed003f6b",
+				Name = "Programming Concepts and Methology 102",
+				Description = "Description of the course",
+				ProgramTerm = "1st Term"
+			} );
+			pathwayComponents.Add( new PathwayComponent()
+			{
+				PathwayComponentType = "CourseComponent",
+				CTID = "ce-39da55fa-140b-4c0a-92e2-c8e38e5f07f0",
+				Name = "Programming Concepts and Methology 103",
+				Description = "Description of the course",
+				ProgramTerm = "1st Term"
+			} );
+			pathwayComponents.Add( new PathwayComponent()
+			{
+				PathwayComponentType = "CourseComponent",
+				CTID = "ce-88d5a63d-4ca5-4689-bec1-55c88b6a5529",
+				Name = "Programming Concepts and Methology 104",
+				Description = "Description of the course",
+				ProgramTerm = "1st Term"
+			} );
 		}
 
 		/*

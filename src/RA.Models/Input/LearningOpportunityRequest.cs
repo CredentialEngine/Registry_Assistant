@@ -29,8 +29,6 @@ namespace RA.Models.Input
 			AudienceType = new List<string>();
 			AvailabilityListing = new List<string>();
 			AvailableOnlineAt = new List<string>();
-			//CodedNotation = new List<string>();
-
 
 			AccreditedBy = new List<Input.OrganizationReference>();
 			ApprovedBy = new List<Input.OrganizationReference>();
@@ -85,6 +83,15 @@ namespace RA.Models.Input
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
 		public string SubjectWebpage { get; set; } //URL
+
+		/// <summary>
+		/// Credential Identifier
+		/// format: 
+		/// ce-UUID (guid)
+		/// Required
+		/// </summary>
+		public string CTID { get; set; }
+		//original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
 		public string Ctid { get; set; }
 
 
@@ -443,7 +450,7 @@ namespace RA.Models.Input
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		/// </summary>
-		public string LifecycleStatusType { get; set; }
+		public string LifeCycleStatusType { get; set; }
 
 		/// <summary>
 		///  FUTURE

@@ -62,8 +62,8 @@ namespace RA.Models.Input
 		/// URI to a concept(based on the ONet work activities example)
 		/// ceterms:classification
 		/// </summary>
-		public List<string> Classification { get; set; } = new List<string>();
-		//public List<CredentialAlignmentObject> Classification { get; set; } = new List<CredentialAlignmentObject>();
+		//public List<string> Classification { get; set; } = new List<string>();
+		public List<Concept> Classification { get; set; } = new List<Concept>();
 		/// <summary>
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
 		/// ceterms:codedNotation

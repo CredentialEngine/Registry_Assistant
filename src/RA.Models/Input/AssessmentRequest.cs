@@ -95,7 +95,16 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
+		/// <summary>
+		/// Credential Identifier
+		/// format: 
+		/// ce-UUID (guid)
+		/// Required
+		/// </summary>
+		public string CTID { get; set; }
+		//original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
 		public string Ctid { get; set; }
+
 		public string SubjectWebpage { get; set; } //URL
 
 		#region at least one of
@@ -218,7 +227,7 @@ namespace RA.Models.Input
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		/// </summary>
-		public string LifecycleStatusType { get; set; }
+		public string LifeCycleStatusType { get; set; }
 
 		/// <summary>
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.

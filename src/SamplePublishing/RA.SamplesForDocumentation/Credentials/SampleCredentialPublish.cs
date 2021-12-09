@@ -54,7 +54,7 @@ namespace RA.SamplesForDocumentation.Credentials
 							new EntityReference()
 							{
 								Type="LearningOpportunity",
-								CTID="ce-" + Guid.NewGuid().ToString()
+								CTID="ce-" + Guid.NewGuid().ToString().ToLower()
 							}
 						}
 					}

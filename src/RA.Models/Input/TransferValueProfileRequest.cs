@@ -129,7 +129,7 @@ namespace RA.Models.Input
 		///// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
 		///// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		///// </summary>
-		//public string LifecycleStatusType { get; set; }
+		//public string LifeCycleStatusType { get; set; }
 
 
 		/// <summary>

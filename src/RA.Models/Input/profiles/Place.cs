@@ -61,7 +61,6 @@ namespace RA.Models.Input
         public string AddressRegion { get; set; }
         public LanguageMap AddressRegion_Map { get; set; } = new LanguageMap();
 
-
 		/// <summary>
 		/// Postal Code
 		/// </summary>

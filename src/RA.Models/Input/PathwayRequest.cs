@@ -140,7 +140,7 @@ namespace RA.Models.Input
 	/// History
 	/// 21-01-06 remove CodedNotation
 	/// </summary>
-	public class PathwayComponent : BaseRequestClass
+	public class PathwayComponent 
 	{
 		/// <summary>
 		/// Type of PathwayComponent. 
@@ -159,11 +159,7 @@ namespace RA.Models.Input
 		public string PathwayComponentType { get; set; }
 
 		#region Common Properties
-		public string CTID
-		{
-			get { return this.Ctid; }
-			set { this.Ctid = value; }
-		}
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// Label identifying the category to further distinguish one component from another as designated by the promulgating body.

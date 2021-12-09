@@ -10,8 +10,14 @@ namespace RA.SamplePublishingProject
 	public class PathwaysTesting
 	{
 		[TestMethod]
-		public void TestMethod1()
+		public void DoAFormatRequest()
 		{
+			//using simple post
+			new PublishPathway().PublishSimpleRecord( "format" );
+
+			new PublishCredentialWithOutcomes().CredentialWithOutcomeData( "format" );
+			//temp
+			new KansasExamples().CredentialWithAggregateDataProfile( "format" );
 		}
 	}
 }

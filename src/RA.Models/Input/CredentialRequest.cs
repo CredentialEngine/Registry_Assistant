@@ -70,6 +70,7 @@ namespace RA.Models.Input
 	{
 		public Credential()
 		{
+			Type = "Credential";
 			AudienceLevelType = new List<string>();
 			AudienceType = new List<string>();
 			Subject = new List<string>();
@@ -170,12 +171,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CredentialStatusType { get; set; }
 		/// <summary>
-		/// CTID - unique identifier
-		/// If not provided, will be set to ce-UUID
-		/// ex: ce-F22CA1DC-2D2E-49C0-9E72-0457AD348873
-		/// It will be the primary key for retrieving this entity from the registry. 
-		/// Also it must be provided 
+		/// Credential Identifier
+		/// format: 
+		/// ce-UUID (guid)
+		/// Required
 		/// </summary>
+		public string CTID { get; set; }
+		//original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
 		public string Ctid { get; set; }
 
 		/// <summary>
@@ -228,12 +230,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<Place> AvailableAt { get; set; }
 
-		/// <summary>
-		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
-		/// ceterms:codedNotation
-		/// </summary>
-		[Obsolete]
-		public string CodedNotation { get; set; }
 
 		/// <summary>
 		/// ISIC Revision 4 Code
@@ -297,11 +293,6 @@ namespace RA.Models.Input
 
 
 		#region Quality Assurance IN - Jurisdiction based Quality Assurance  (INs)
-		//There are currently two separate approaches to publishing properties like assertedIn
-		//- Publish all 'IN' properties using JurisdictionAssertions
-		//- Publish using ehe separate specific properties like AccreditedIn, ApprovedIn, etc
-		// 2010-01-06 The property JurisdictionAssertions may become obsolete soon. We recomend to NOT use this property.
-
 
 		/// <summary>
 		/// List of Organizations that accredit this credential in a specific Jurisdiction. 
@@ -339,6 +330,12 @@ namespace RA.Models.Input
 		public List<JurisdictionAssertion> RevokedIn { get; set; } = new List<JurisdictionAssertion>();
 
 		#endregion
+		/// <summary>
+		/// Action related to the credential
+		/// This may end up being a list of CTIDs?
+		/// PROPOSED - NOT VALID FOR PRODUCTION YET
+		/// </summary>
+		public List<CredentialingAction> RelatedAction { get; set; } = new List<CredentialingAction>();
 
 		#region Costs, duration, assistance
 		/// <summary>
@@ -348,6 +345,7 @@ namespace RA.Models.Input
 		public List<string> CommonCosts { get; set; }
 		/// <summary>
 		/// The salary value or range associated with this credential.
+		/// PROPOSED - NOT VALID FOR PRODUCTION YET
 		/// </summary>
 		public MonetaryAmount BaseSalary { get; set; } 
 
@@ -527,36 +525,19 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Only valid with a Quality Assurance credential. ("ceterms:QualityAssuranceCredential")
 		/// List of CTIDs for credentials, or assessments, or learning opportunities that are 'members' of this quality assurance credential (essentially approved by the owner of the QA credential)
+		/// PROPOSED - NOT VALID FOR PRODUCTION YET
 		/// </summary>
 		public List<string> HasETPLResource { get; set; } = new List<string>();
-		#endregion
-		//external classes
 
-		#region Outcome data - 21-02-19 two options in progress: embedded as follows or as a separate list of classes in the request object
+		#endregion
+		//
+
+		#region Outcome data 
 		/// <summary>
 		///  Resource containing summary/statistical employment outcome, earnings, and/or holders information.
 		///  For deeper information, include qdata:DataSetProfile.
 		/// </summary>
 		public List<AggregateDataProfile> AggregateData { get; set; } = new List<AggregateDataProfile>();
-
-		/// <summary>
-		///  Entity that describes earning and related statistical information for a given credential.
-		/// </summary>
-		[Obsolete]
-		public List<EarningsProfile> Earnings { get; set; }
-
-		/// <summary>
-		/// Entity that describes employment outcomes and related statistical information for a given credential.
-		/// </summary>
-		[Obsolete]
-		public List<EmploymentOutcomeProfile> EmploymentOutcome { get; set; }
-
-		/// <summary>
-		/// Entity describing aggregate credential holder earnings data.
-		/// List of CTIDs for a earnings profile in Request.EarningsProfile
-		/// </summary>
-		[Obsolete]
-		public List<HoldersProfile> Holders { get; set; }
 
 		#endregion
 		/// <summary>
@@ -658,15 +639,51 @@ namespace RA.Models.Input
 		public List<ProcessProfile> RevocationProcess { get; set; }
 		#endregion
 
-		
+		#region OBSOLETE
 
-		#region Alignments
 		/// <summary>
-		/// Item that covers all of the relevant concepts in the item being described as well as additional relevant concepts.
-		/// ceterms:broadAlignment
-		/// List of CTIDs. The referenced object must exist in the registry
+		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
+		/// ceterms:codedNotation
 		/// </summary>
-		public List<string> BroadAlignment { get; set; } = new List<string>();
+		[Obsolete]
+		public string CodedNotation { get; set; }
+		/*
+
+		/// <summary>
+		///  Entity that describes earning and related statistical information for a given credential.
+		/// </summary>
+		[Obsolete]
+		public List<EarningsProfile> Earnings { get; set; }
+
+		/// <summary>
+		/// Entity that describes employment outcomes and related statistical information for a given credential.
+		/// </summary>
+		[Obsolete]
+		public List<EmploymentOutcomeProfile> EmploymentOutcome { get; set; }
+
+		/// <summary>
+		/// Entity describing aggregate credential holder earnings data.
+		/// List of CTIDs for a earnings profile in Request.EarningsProfile
+		/// </summary>
+		[Obsolete]
+		public List<HoldersProfile> Holders { get; set; }
+		*/
+		#endregion
+		///// <summary>
+		///// List of CTIDs for a published pathway.
+		///// Blank nodes are not supported/relevent.
+		///// NOTE: the TargetPathway is an inverse property for a credential. That is, it will not be published with the credential, and is instead derived via a PathwayComponent
+		///// </summary>
+		//public List<string> TargetPathway { get; set; } = new List<string>();
+
+
+		#region Alignments - Not relevent for the Credential Registry Profile
+		// <summary>
+		// Item that covers all of the relevant concepts in the item being described as well as additional relevant concepts.
+		// ceterms:broadAlignment
+		// List of CTIDs. The referenced object must exist in the registry
+		// </summary>
+		//public List<string> BroadAlignment { get; set; } = new List<string>();
 		#endregion
 
 	}

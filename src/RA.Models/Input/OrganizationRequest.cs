@@ -122,6 +122,8 @@ namespace RA.Models.Input
 		/// ce-UUID (guid)
 		/// Required
 		/// </summary>
+		public string CTID { get; set; }
+		//original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
 		public string Ctid { get; set; }
 
 		/// <summary>
@@ -295,7 +297,7 @@ namespace RA.Models.Input
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		/// </summary>
-		public string LifecycleStatusType { get; set; }
+		public string LifeCycleStatusType { get; set; }
 
 		/// <summary>
 		/// Webpage or online document that defines or explains the nature of transfer value handled by the organization.
@@ -415,7 +417,7 @@ namespace RA.Models.Input
 		public List<OrganizationReference> SubOrganization { get; set; }
 
 		//pending
-		public List<AccreditAction> AccreditAction { get; set; } = new List<AccreditAction>();
+		public List<CredentialingAction> AccreditAction { get; set; } = new List<CredentialingAction>();
 
 	}
 }
