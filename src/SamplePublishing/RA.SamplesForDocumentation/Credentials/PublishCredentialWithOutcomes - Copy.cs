@@ -42,7 +42,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My Credential With Outcome data, using: Aggregate Data Profile",
 				Description = "This credential has outcomes data including all data provided for the DataProfile.",
-				CTID = myCTID,
+				Ctid = myCTID,
 				SubjectWebpage = "https://example.com/?t=credentialwhp",
 				CredentialType = "ceterms:Certification",
 				InLanguage = new List<string>() { "en-US" },
@@ -83,7 +83,7 @@ namespace RA.SamplesForDocumentation
 				EndpointType = "credential",
 				RequestType = requestType,
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.Credential.CTID.ToLower(),   //added here for logging
+				CTID = myRequest.Credential.Ctid.ToLower(),   //added here for logging
 				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};

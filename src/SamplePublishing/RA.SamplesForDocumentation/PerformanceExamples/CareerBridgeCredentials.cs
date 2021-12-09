@@ -45,7 +45,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new Credential()
 			{
 				Name = "A+/MCP Certification Training",
-				Ctid = credCtid,
+				CTID = credCtid,
 				Description = "Structured as a shorter alternative to the computer networking systems technician program, students prepare for employment as computer systems technicians. Instruction includes A+, CCNA, the Cisco Networking Academy, MCP (Microsoft Certified Professional) Windows operating systems, and one of two electives: Fundamentals of UNIX or Career Advancement Strategies. Students are encouraged to obtain industry certifications before graduating, including Cisco Networking Academy, CompTIA A+ (two tests), Microsoft Certified Professional (one test).",
 				SubjectWebpage = "https://batestech.edu/",
 				CredentialType = "Certificate",
@@ -179,7 +179,7 @@ namespace RA.SamplesForDocumentation
 				EndpointType = "credential",
 				RequestType = requestType,
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.Credential.Ctid.ToLower(),   //added here for logging
+				CTID = myRequest.Credential.CTID.ToLower(),   //added here for logging
 				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};
@@ -218,7 +218,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new Credential()
 			{
 				Name = "A+/MCP Certification Training",
-				Ctid = credCtid,
+				CTID = credCtid,
 				Description = "Structured as a shorter alternative to the computer networking systems technician program, students prepare for employment as computer systems technicians. Instruction includes A+, CCNA, the Cisco Networking Academy, MCP (Microsoft Certified Professional) Windows operating systems, and one of two electives: Fundamentals of UNIX or Career Advancement Strategies. Students are encouraged to obtain industry certifications before graduating, including Cisco Networking Academy, CompTIA A+ (two tests), Microsoft Certified Professional (one test).",
 				SubjectWebpage = "https://batestech.edu/",
 				CredentialType = "Certificate",
@@ -296,9 +296,6 @@ namespace RA.SamplesForDocumentation
 				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
-			//add holders profile to the request
-			//NEW
-			myRequest.Credential.Holders.Add( hp );
 
 			//create a literal to hold data to use with ARC
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
@@ -309,14 +306,14 @@ namespace RA.SamplesForDocumentation
 				EndpointType = "credential",
 				RequestType = requestType,
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.Credential.Ctid.ToLower(),   //added here for logging
+				CTID = myRequest.Credential.CTID.ToLower(),   //added here for logging
 				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};
 
 			bool isValid = new SampleServices().PublishRequest( req );
 
-			LoggingHelper.WriteLogFile( 2, string.Format( "CareerBridge_red_{0}_payload.json", myRequest.Credential.Ctid ), req.FormattedPayload, "", false );
+			LoggingHelper.WriteLogFile( 2, string.Format( "CareerBridge_red_{0}_payload.json", myRequest.Credential.CTID ), req.FormattedPayload, "", false );
 
 		}
 
@@ -349,7 +346,7 @@ namespace RA.SamplesForDocumentation
 				DataProvider = myData.OwnedBy[ 0 ],
 				//RelevantDataSetFor = hpctid //this will be derived by the API
 			};
-			relevantDataSet.About = new List<EntityReference>() { new EntityReference() { CTID = myData.Ctid } };
+			relevantDataSet.About = new List<EntityReference>() { new EntityReference() { CTID = myData.CTID } };
 			//
 			//DataSetTimeFrame referenced from a DataSetProfile (DataAttributes)
 			DataSetTimeFrame dstp2018 = new DataSetTimeFrame()
@@ -459,7 +456,7 @@ namespace RA.SamplesForDocumentation
 				DataProvider = myData.OwnedBy[ 0 ],
 				//RelevantDataSetFor = hpctid //this will be derived by the API
 			};
-			relevantDataSet.About = new List<EntityReference>() { new EntityReference() { CTID = myData.Ctid } };
+			relevantDataSet.About = new List<EntityReference>() { new EntityReference() { CTID = myData.CTID } };
 			//
 			//DataSetTimeFrame referenced from a DataSetProfile (DataAttributes)
 			DataSetTimeFrame dstp = new DataSetTimeFrame()

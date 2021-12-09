@@ -44,7 +44,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new Credential()
 			{
 				Name = "MEDICAL LABORATORY TECHNOLOGY - ASSOCIATE OF APPLIED SCIENCE",
-				Ctid = credCtid,
+				CTID = credCtid,
 				Description = "Associate Degree : A program that prepares individuals, under the supervision of clinical laboratory scientists/medical technologists, to perform routine medical laboratory procedures and tests and to apply preset strategies to record and analyze data.  Includes instruction in general laboratory procedures and skills; laboratory mathematics; medical computer applications; interpersonal and communications skills; and the basic principles of hematology, medical microbiology, immunohematology, immunology, clinical chemistry, and urinalysis.",
 				SubjectWebpage = "http://www.coffeyville.edu/",
 				CredentialType = "AssociateDegree",
@@ -135,14 +135,14 @@ namespace RA.SamplesForDocumentation
 				EndpointType = "credential",
 				RequestType = requestType,
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.Credential.Ctid.ToLower(),   //added here for logging
+				CTID = myRequest.Credential.CTID.ToLower(),   //added here for logging
 				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};
 
 			bool isValid = new SampleServices().PublishRequest( req );
 
-			//LoggingHelper.WriteLogFile( 2, string.Format( "coffeyfille_{0}_payload.json", myRequest.Credential.Ctid ), req.FormattedPayload, "", false );
+			//LoggingHelper.WriteLogFile( 2, string.Format( "coffeyfille_{0}_payload.json", myRequest.Credential.CTID ), req.FormattedPayload, "", false );
 
 		}
 

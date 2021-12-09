@@ -37,7 +37,7 @@ namespace RA.SamplesForDocumentation.Credentials
 			{
 				Name = "My Credential Name",
 				Description = "This is some text that describes my credential.",
-				Ctid = myCredCTID,
+				CTID = myCredCTID,
 				SubjectWebpage = "https:/example.org/credential/1234",
 				CredentialType = "ceterms: Certificate",
 				InLanguage = new List<string>() { "en-US" },

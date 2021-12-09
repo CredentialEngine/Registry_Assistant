@@ -43,7 +43,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My Certification Name",
 				Description = "This is some text that describes my credential.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "http://example.com/credential/1234",
 				CredentialType = "ceterms:Certification",
 				InLanguage = new List<string>() { "en-US" },
@@ -201,7 +201,7 @@ namespace RA.SamplesForDocumentation
 				EndpointType = "credential",
 				RequestType = requestType,
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.Credential.Ctid.ToLower(),   //added here for logging
+				CTID = myRequest.Credential.CTID.ToLower(),   //added here for logging
 				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};
@@ -254,7 +254,7 @@ namespace RA.SamplesForDocumentation
 				//provide valid concept from schema 
 				CredentialType = "BachelorDegree",
 				//*** the source data must assign a CTID and use for all transactions
-				Ctid = input.Ctid,
+				CTID = input.CTID,
 				DateEffective = input.DateEffective,
 				Image = input.ImageUrl,
 				Subject = input.Subject,

@@ -37,7 +37,7 @@ namespace RA.SamplesForDocumentation.Credentials
 			{
 				Name = "My Quality Assurance Credential with ETPL resources",
 				Description = "This is some text that describes my quality assurance credential particularly related to the list of credential that are the state ETPL list.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "http://example.com/?t=qacredential",
 				CredentialType = "ceterms:QualityAssuranceCredential",
 				InLanguage = new List<string>() { "en-US" },
@@ -73,7 +73,7 @@ namespace RA.SamplesForDocumentation.Credentials
 				EndpointType = "credential",
 				RequestType = doingPublish ? "publish" : "format",
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.Credential.Ctid.ToLower(),   //added here for logging
+				CTID = myRequest.Credential.CTID.ToLower(),   //added here for logging
 				Identifier = "testing",     //useful for logging, might use the ctid
 				InputPayload = payload
 			};

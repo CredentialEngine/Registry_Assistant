@@ -30,7 +30,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My Learning Opportunity Name",
 				Description = "This is some text that describes my learning opportunity.",
-				Ctid = myLoppCTID,
+				CTID = myLoppCTID,
 				SubjectWebpage = "https://example.org/t=learningopportunity1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				LearningMethodType = new List<string>() { "learnMethod:Lecture", "learnMethod:Laboratory" },

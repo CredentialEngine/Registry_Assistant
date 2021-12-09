@@ -30,7 +30,7 @@ namespace RA.SamplesForDocumentation.Assessments
 			{
 				Name = "My Assessment Name",
 				Description = "This is some required text that describes my Assessment.",
-				Ctid = myCredCTID,
+				CTID = myCredCTID,
 				SubjectWebpage = "https:/example.org/Assessment/1234",
 				InLanguage = new List<string>() { "en-US" },
 				Keyword = new List<string>() { "Assessments", "Technical Information" },

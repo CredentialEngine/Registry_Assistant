@@ -31,7 +31,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My Organization Name",
 				Description = "This is some text that describes my organization.",
-				Ctid = myOrgCTID,
+				CTID = myOrgCTID,
 				SubjectWebpage = "http://example.com",
 				Type = "ceterms:CredentialOrganization",
 				Keyword = new List<string>() { "Credentials", "Technical Training", "Credential Registry Consulting" },
@@ -138,7 +138,7 @@ namespace RA.SamplesForDocumentation
 				Description = input.Description,
 				Type = input.OrganizationType,
 				//*** the source data must assign a CTID and use for all transactions
-				Ctid = input.Ctid,
+				CTID = input.CTID,
 				Image = input.ImageUrl,
 				Keyword = input.Keywords
 			};
@@ -233,7 +233,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My Organization Name",
 				Description = "This is some text that describes my organization.",
-				Ctid = myOrgCTID,
+				CTID = myOrgCTID,
 				SubjectWebpage = "http://example.com",
 				Type = "ceterms:CredentialOrganization",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },

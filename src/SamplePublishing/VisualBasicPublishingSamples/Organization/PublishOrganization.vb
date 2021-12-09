@@ -21,7 +21,7 @@ Public Class PublishOrganization
 		Dim myData = New APIRequestOrganization() With {
 				.Name = "My Organization Name",
 				.Description = "This is some text that describes my organization.",
-				.Ctid = myOrgCTID,
+				.CTID = myOrgCTID,
 				.SubjectWebpage = "http://example.com",
 				.Type = "ceterms:CredentialOrganization",
 				.Keyword = New List(Of String)() From {
@@ -112,7 +112,7 @@ Public Class PublishOrganization
 				.Name = input.Name,
 				.Description = input.Description,
 				.Type = input.OrganizationType,
-				.Ctid = input.Ctid,
+				.CTID = input.Ctid,
 				.SubjectWebpage = input.SubjectWebpage,
 				.Image = input.ImageUrl,
 				.Keyword = input.Keywords

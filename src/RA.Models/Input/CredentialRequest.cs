@@ -177,8 +177,7 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string CTID { get; set; }
-		//original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
-		public string Ctid { get; set; }
+
 
 		/// <summary>
 		/// SubjectWebpage URL
@@ -330,12 +329,6 @@ namespace RA.Models.Input
 		public List<JurisdictionAssertion> RevokedIn { get; set; } = new List<JurisdictionAssertion>();
 
 		#endregion
-		/// <summary>
-		/// Action related to the credential
-		/// This may end up being a list of CTIDs?
-		/// PROPOSED - NOT VALID FOR PRODUCTION YET
-		/// </summary>
-		public List<CredentialingAction> RelatedAction { get; set; } = new List<CredentialingAction>();
 
 		#region Costs, duration, assistance
 		/// <summary>

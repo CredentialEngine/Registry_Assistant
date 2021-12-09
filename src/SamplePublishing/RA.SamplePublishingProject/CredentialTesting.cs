@@ -80,7 +80,7 @@ namespace RA.SamplePublishingProject
 			{ 
 				Name="My internal credential",
 				Description="Description of my credential",
-				Ctid="ce-" + Guid.NewGuid().ToString().ToLower(),
+				CTID="ce-" + Guid.NewGuid().ToString().ToLower(),
 				CredentialType = "BachelorDegree",
 				SubjectWebpage ="https://example.com?type=thisTest", 
 				Keyword = new System.Collections.Generic.List<string>() { "Engineering","Mechanical Engineering","Bachelor"}

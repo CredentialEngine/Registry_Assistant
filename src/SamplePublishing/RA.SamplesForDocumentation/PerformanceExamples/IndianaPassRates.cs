@@ -175,7 +175,7 @@ namespace RA.SamplesForDocumentation.PerformanceExamples
 
 			bool isValid = new SampleServices().PublishRequest( req );
 
-			//LoggingHelper.WriteLogFile( 2, string.Format( "coffeyfille_{0}_payload.json", myRequest.Credential.Ctid ), req.FormattedPayload, "", false );
+			//LoggingHelper.WriteLogFile( 2, string.Format( "coffeyfille_{0}_payload.json", myRequest.Credential.CTID ), req.FormattedPayload, "", false );
 
 		}
 
@@ -355,7 +355,7 @@ namespace RA.SamplesForDocumentation.PerformanceExamples
 
 			bool isValid = new SampleServices().PublishRequest( req );
 
-			//LoggingHelper.WriteLogFile( 2, string.Format( "coffeyfille_{0}_payload.json", myRequest.Credential.Ctid ), req.FormattedPayload, "", false );
+			//LoggingHelper.WriteLogFile( 2, string.Format( "coffeyfille_{0}_payload.json", myRequest.Credential.CTID ), req.FormattedPayload, "", false );
 
 		}
 

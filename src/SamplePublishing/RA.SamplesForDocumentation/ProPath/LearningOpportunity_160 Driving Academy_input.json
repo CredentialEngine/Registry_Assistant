@@ -3,7 +3,7 @@
 		"Name": "160 Driving Academy",
 		"Description": "Truck Driver Training School - CDL",
 		"SubjectWebpage": "https://160drivingacademy.com/",
-		"Ctid": "ce-f8885b28-134d-4188-8c86-063aadff14ea",
+		"CTID": "ce-f8885b28-134d-4188-8c86-063aadff14ea",
 		"OwnedBy": [
 			{
 				"Type": "CredentialOrganization",

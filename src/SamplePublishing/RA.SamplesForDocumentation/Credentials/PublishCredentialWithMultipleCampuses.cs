@@ -40,7 +40,7 @@ namespace RA.SamplesForDocumentation.Credentials
 			{
 				Name = "Bachelor Degree from multiple locations",
 				Description = "This same degree is offered at multiple locations. View the AlternativeConditions in the Requires condition profile.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "http://example.com/?t=credentialwAlternativeConditions",
 				CredentialType = "ceterms:BachelorDegree",
 				InLanguage = new List<string>() { "en-US" },
@@ -185,8 +185,8 @@ namespace RA.SamplesForDocumentation.Credentials
 				EndpointType = "credential",
 				RequestType = requestType,
 				OrganizationApiKey = apiKey,
-				CTID = myRequest.Credential.Ctid.ToLower(),   //added here for logging
-				Identifier = myRequest.Credential.Ctid.ToLower(),     //useful for logging, might use the ctid
+				CTID = myRequest.Credential.CTID.ToLower(),   //added here for logging
+				Identifier = myRequest.Credential.CTID.ToLower(),     //useful for logging, might use the ctid
 				InputPayload = payload
 			};
 

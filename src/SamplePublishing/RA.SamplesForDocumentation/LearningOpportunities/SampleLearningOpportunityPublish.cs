@@ -39,7 +39,7 @@ namespace RA.SamplesForDocumentation.LearningOpportunities
 			{
 				Name = "My LearningOpportunity Name",
 				Description = "This is some required text that describes my LearningOpportunity.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "https:/example.org/LearningOpportunity/1234",
 				InLanguage = new List<string>() { "en-US" },
 				Keyword = new List<string>() { "LearningOpportunitys", "Technical Information" },

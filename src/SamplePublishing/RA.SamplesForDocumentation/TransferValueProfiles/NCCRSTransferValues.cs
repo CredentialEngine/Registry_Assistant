@@ -160,7 +160,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "National College Credit Recommendation Service - NCCRS",
 				Description = "In 1973, the Board of Regents of the University of the State of New York initiated a pilot study to assess the potential of a college credit advisory service. This project was a direct outcome of recommendations made by the Commission on Non-Traditional Study, a two-year venture supported by the Carnegie Corporation, to provide a national perspective on the future of higher education, including recognizing and granting credit for postsecondary learning undertaken in noncollegiate settings. The Commission called for a system to establish college credit equivalencies for courses offered by government, industry, and other noncollegiate sponsors.",
-				Ctid = myOrgCTID,
+				CTID = myOrgCTID,
 				SubjectWebpage = "http://www.nationalccrs.org/",
 				Type = "ceterms:QACredentialOrganization",
 				Email = new List<string>() { " nccrs@nysed.gov" }

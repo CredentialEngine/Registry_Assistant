@@ -36,7 +36,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My Assessment Name",
 				Description = "This is some text that describes my assessment.",
-				Ctid = myCTID,
+				CTID = myCTID,
 				SubjectWebpage = "http://www.credreg.net/assessment/1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				AssessmentMethodType = new List<string>() { "assessMethod:Exam", "assessMethod:Performance" },

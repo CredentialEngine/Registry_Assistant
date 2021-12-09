@@ -58,7 +58,6 @@
     <Compile Include="ConceptSchemes\PublishConceptSchemes.cs" />
     <Compile Include="ConditionManifests\PublishConditionManifest.cs" />
     <Compile Include="CostManifests\PublishCostManifest.cs" />
-    <Compile Include="Credentials\obsolete\PublishCredentialWithOutcomeProfiles.cs" />
     <Compile Include="Credentials\SampleCredentialPublish.cs" />
     <Compile Include="Credentials\PublishCredentialWithMultipleCampuses.cs" />
     <Compile Include="Credentials\PublishCredentialWithOutcomes.cs" />
@@ -121,6 +120,8 @@
       <Name>RA.Models</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Credentials\obsolete\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
