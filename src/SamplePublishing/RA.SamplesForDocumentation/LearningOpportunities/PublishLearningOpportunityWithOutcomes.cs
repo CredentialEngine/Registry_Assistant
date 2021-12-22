@@ -51,6 +51,26 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
+			myData.AvailableAt = new List<Place>()
+			{
+				new Place()
+				{
+					Address1="21193 Malta Road",
+					City="Malta", AddressRegion = "Illinois", PostalCode="60150", Country="USA",
+					Identifier = new List<IdentifierValue>()
+					{
+						new IdentifierValue()
+						{
+						IdentifierTypeName="LWIA", IdentifierValueCode="5"
+						},
+						new IdentifierValue()
+						{
+						IdentifierTypeName="EDR", IdentifierValueCode="Northeast Region"
+						}
+					}
+				}
+			};
+
 			//
 			//format an AggregateDataProfile
 			myData.AggregateData = new List<AggregateDataProfile>() { FormatAggregateDataProfile( organizationIdentifierFromAccountsSite ) };
