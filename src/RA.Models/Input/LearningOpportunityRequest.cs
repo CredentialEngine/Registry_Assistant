@@ -11,9 +11,17 @@ namespace RA.Models.Input
 		}
 
 		public LearningOpportunity LearningOpportunity { get; set; }
-		//public List<BlankNode> BlankNodes = new List<BlankNode>();
 	}
-
+	public class LearningProgramRequest : LearningOpportunityRequest
+	{
+	}
+	/// <summary>
+	/// A course will have all of the properties of LearningOpportunityProfile, except:
+	/// - ceterms:instructionalProgramType 
+	/// </summary>
+	public class CourseRequest : LearningOpportunityRequest
+	{
+	}
 	public class LearningOpportunity
 	{
 		public LearningOpportunity()
@@ -91,7 +99,8 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string CTID { get; set; }
-
+		//original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
+		public string Ctid { get; set; }
 
 
 		#region at least one of
@@ -110,6 +119,10 @@ namespace RA.Models.Input
 		#region at least one of the following
 		public List<string> AvailableOnlineAt { get; set; } //URL
 		public List<string> AvailabilityListing { get; set; } //URL
+
+		/// <summary>
+		/// Physical location where the credential, assessment, or learning opportunity can be pursued.
+		/// </summary>
 		public List<Place> AvailableAt { get; set; }
 		#endregion
 
@@ -134,7 +147,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Types of methods used to conduct the learning opportunity; select from an existing enumeration of such types.
 		/// Applied, Gaming, Laboratory, Lecture, Prerecorded, SelfPaced, Seminar, WorkBased
-		/// <see cref="https://credreg.net/ctdl/terms/LearningMethod"/>
+		/// <see href="https://credreg.net/ctdl/terms/LearningMethod"></see>
 		/// </summary>
 		public List<string> LearningMethodType { get; set; }
 
@@ -153,7 +166,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Type of means by which a learning opportunity or assessment is delivered to credential seekers and by which they interact; select from an existing enumeration of such types.
 		/// deliveryType:BlendedDelivery deliveryType:InPerson deliveryType:OnlineOnly
-		/// <see cref="https://credreg.net/ctdl/terms/Delivery"/>
+		/// <see href="https://credreg.net/ctdl/terms/Delivery"></see>
 		/// </summary>
 		public List<string> DeliveryType { get; set; }
 
@@ -179,20 +192,20 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Type of method used to conduct an assessment; select from an existing enumeration of such types.
 		/// assessMethod:Artifact, assessMethod:Exam, assessMethod:Performance
-		/// <see cref="https://credreg.net/ctdl/terms/AssessmentMethod"/>
+		/// <see href="https://credreg.net/ctdl/terms/AssessmentMethod"></see>
 		/// </summary>
 		public List<string> AssessmentMethodType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
 		/// audience:Citizen audience:CurrentMilitary audience:CurrentMilitaryDependent audience:CurrentMilitarySpouse audience:CurrentStudent audience:FormerMilitary audience:FormerMilitaryDependent audience:FormerMilitarySpouse audience:FormerStudent audience:FullTime audience:Member audience:NonCitizen audience:NonMember audience:NonResident audience:PartTime audience:PrivateEmployee audience:PublicEmployee audience:Resident
-		/// <see cref="https://credreg.net/ctdl/terms/Audience"/>
+		/// <see href="https://credreg.net/ctdl/terms/Audience"></see>
 		/// </summary>
 		public List<string> AudienceType { get; set; }
 		/// <summary>
 		/// Type of level indicating a point in a progression through an educational or training context, for which the credential is intended; select from an existing enumeration of such types.
 		/// audLevel:AdvancedLevel audLevel:AssociatesDegreeLevel audLevel:BachelorsDegreeLevel audLevel:BeginnerLevel audLevel:DoctoralDegreeLevel audLevel:GraduateLevel audLevel:IntermediateLevel audLevel:LowerDivisionLevel audLevel:MastersDegreeLevel audLevel:PostSecondaryLevel audLevel:ProfessionalLevel audLevel:SecondaryLevel audLevel:UndergraduateLevel audLevel:UpperDivisionLevel
-		/// <see cref="https://credreg.net/ctdl/terms/AudienceLevel"/>
+		/// <see href="https://credreg.net/ctdl/terms/AudienceLevel"></see>
 		/// </summary>
 		public List<string> AudienceLevelType { get; set; } = new List<string>();
 
@@ -200,7 +213,6 @@ namespace RA.Models.Input
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
 		/// ceterms:codedNotation
 		/// </summary>
-		[Obsolete]
 		public string CodedNotation { get; set; }
 
 		/// <summary>
@@ -226,6 +238,9 @@ namespace RA.Models.Input
 		/// </summary>
 		public string DateEffective { get; set; }
 
+		/// <summary>
+		/// Estimated cost of a credential, learning opportunity or assessment.
+		/// </summary>
 		public List<CostProfile> EstimatedCost { get; set; }
 
 		/// <summary>
@@ -250,7 +265,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// <see href="https://purl.org/ctdl/terms/identifier"></see>
 		/// ceterms:identifier
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
@@ -267,7 +282,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Jurisdiction Profile
 		/// Geo-political information about applicable geographic areas and their exceptions.
-		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"></see>
 		/// </summary>
 		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 
@@ -442,9 +457,15 @@ namespace RA.Models.Input
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 		//public List<string> TargetPathway { get; set; } = new List<string>();
 
+		/// <summary>
+		/// School Courses for the Exchange of Data code for a course.
+		/// It is preferable to record the whole 12 character alphanumeric code, however it is also valid to record just the five digit subject code + course number.
+		/// Minimum of 5 characters and maximum of 14 characters for now. 
+		/// COURSE ONLY
+		/// </summary>
+		public string SCED { get; set; }
 
 		/// <summary>
-		/// PLANNED NOT IMPLEMENTED
 		/// Type of official status of the TransferProfile; select from an enumeration of such types.
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
@@ -452,12 +473,10 @@ namespace RA.Models.Input
 		public string LifeCycleStatusType { get; set; }
 
 		/// <summary>
-		///  FUTURE
 		///  Resource containing summary/statistical employment outcome, earnings, and/or holders information.
 		///  For deeper information, include qdata:DataSetProfile.
 		/// </summary>
 		public List<AggregateDataProfile> AggregateData { get; set; } = new List<AggregateDataProfile>();
-
 
 
 	}
