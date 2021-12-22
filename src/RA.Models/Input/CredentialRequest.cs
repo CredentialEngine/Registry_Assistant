@@ -48,7 +48,7 @@ namespace RA.Models.Input
 
 	/// <summary>
 	/// PROTOTYPE - NOT ALLOWED IN PRODUCTION
-	/// Allow publishing up to 10 credentials at a time. 
+	/// Allow publishing up to 50 credentials at a time. 
 	/// Only used by the endpoint: bulkPublish
 	/// </summary>
 	public class BulkCredentialRequest : BaseRequest
@@ -134,7 +134,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// The credential type as defined in CTDL
-		/// <see cref="https://credreg.net/page/typeslist"/>
+		/// <see href="https://credreg.net/page/typeslist"/>
 		/// NOTE: The following types are 'top level' types that may not be published:
 		///		Credential, Degree, Diploma
 		/// Only the sub-types under the latter may be used in publishing
@@ -177,7 +177,8 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string CTID { get; set; }
-
+		//original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
+		public string Ctid { get; set; }
 
 		/// <summary>
 		/// SubjectWebpage URL
@@ -200,20 +201,20 @@ namespace RA.Models.Input
 		/// <summary>
 		/// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
 		/// audience:Citizen audience:CurrentMilitary audience:CurrentMilitaryDependent audience:CurrentMilitarySpouse audience:CurrentStudent audience:FormerMilitary audience:FormerMilitaryDependent audience:FormerMilitarySpouse audience:FormerStudent audience:FullTime audience:Member audience:NonCitizen audience:NonMember audience:NonResident audience:PartTime audience:PrivateEmployee audience:PublicEmployee audience:Resident
-		/// <see cref="https://credreg.net/ctdl/terms/Audience"/>
+		/// <see href="https://credreg.net/ctdl/terms/Audience"></see>
 		/// </summary>
 		public List<string> AudienceType { get; set; }
 		/// <summary>
 		/// Type of level indicating a point in a progression through an educational or training context, for which the credential is intended; select from an existing enumeration of such types.
 		/// audLevel:AdvancedLevel audLevel:AssociatesDegreeLevel audLevel:BachelorsDegreeLevel audLevel:BeginnerLevel audLevel:DoctoralDegreeLevel audLevel:GraduateLevel audLevel:IntermediateLevel audLevel:LowerDivisionLevel audLevel:MastersDegreeLevel audLevel:PostSecondaryLevel audLevel:ProfessionalLevel audLevel:SecondaryLevel audLevel:UndergraduateLevel audLevel:UpperDivisionLevel
-		/// <see cref="https://credreg.net/ctdl/terms/AudienceLevel"/>
+		/// <see href="https://credreg.net/ctdl/terms/AudienceLevel"></see>
 		/// </summary>
 		public List<string> AudienceLevelType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Delivery type for the assessment for the credential.
 		/// deliveryType:BlendedDelivery deliveryType:InPerson deliveryType:OnlineOnly
-		/// <see cref="https://credreg.net/ctdl/terms/Delivery"/>
+		/// <see href="https://credreg.net/ctdl/terms/Delivery"></see>
 		/// </summary>
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
 		/// <summary>
@@ -329,6 +330,12 @@ namespace RA.Models.Input
 		public List<JurisdictionAssertion> RevokedIn { get; set; } = new List<JurisdictionAssertion>();
 
 		#endregion
+		/// <summary>
+		/// Action related to the credential
+		/// This may end up being a list of CTIDs?
+		/// PROPOSED - NOT VALID FOR PRODUCTION YET
+		/// </summary>
+		public List<CredentialingAction> RelatedAction { get; set; } = new List<CredentialingAction>();
 
 		#region Costs, duration, assistance
 		/// <summary>
@@ -364,7 +371,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// <see href="https://credreg.net/ctdl/terms/identifier">Identifier</see>
 		/// ceterms:identifier
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
@@ -384,7 +391,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Delivery type for the learning opportunity for the credential.
 		/// deliveryType:BlendedDelivery deliveryType:InPerson deliveryType:OnlineOnly
-		/// <see cref="https://credreg.net/ctdl/terms/Delivery"/>
+		/// <see href="https://credreg.net/ctdl/terms/Deliver">Deliver</see>
 		/// </summary>
 		public List<string> LearningDeliveryType { get; set; } = new List<string>();
 		public string ProcessStandards { get; set; }
@@ -505,11 +512,29 @@ namespace RA.Models.Input
 
 		#region Properties allowed only for degree types
 
+		/// <summary>
+		/// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
+		/// </summary>
 		public List<string> DegreeConcentration { get; set; }
+		/// <summary>
+		/// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
+		/// </summary>
 		public LanguageMapList DegreeConcentration_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// LanguageMapList for Primary field of study of a degree-seeking student.
+		/// </summary>
 		public List<string> DegreeMajor { get; set; }
+		/// <summary>
+		/// LanguageMapList for Primary field of study of a degree-seeking student.
+		/// </summary>
 		public LanguageMapList DegreeMajor_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// Optional, secondary field of study of a degree-seeking student.
+		/// </summary>
 		public List<string> DegreeMinor { get; set; }
+		/// <summary>
+		/// LanguageMapList for Optional, secondary field of study of a degree-seeking student.
+		/// </summary>
 		public LanguageMapList DegreeMinor_Map { get; set; } = new LanguageMapList();
 		#endregion
 
@@ -536,7 +561,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Jurisdiction Profile
 		/// Geo-political information about applicable geographic areas and their exceptions.
-		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile">JurisdictionProfile</see>
 		/// </summary>
 		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 
@@ -581,7 +606,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Credential that has its time or cost reduced by another credential, assessment or learning opportunity.
 		/// ceterms:advancedStandingFrom
-		/// <seealso cref="https://credreg.net/ctdl/terms/advancedStandingFrom"/>
+		/// <seealso href="https://credreg.net/ctdl/terms/advancedStandingFrom"></seealso>
 		/// </summary>
 		public List<Connections> AdvancedStandingFrom { get; set; }
 
@@ -589,35 +614,35 @@ namespace RA.Models.Input
 		/// This credential, assessment, or learning opportunity reduces the time or cost required to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// <para>A third-party credential agent claiming that its credential provides advanced standing for the credential of another credential agent should consider using ceterms:recommendedFor instead of ceterms:advancedStandingFor in the absence of an explicit and verifiable agreement on advanced standing between the agents of the two credentials.</para>
 		/// ceterms:isAdvancedStandingFor
-		/// <seealso cref="https://credreg.net/ctdl/terms/isAdvancedStandingFor"/>
+		/// <seealso href="https://credreg.net/ctdl/terms/isAdvancedStandingFor">isAdvancedStandingFor</seealso>
 		/// </summary>
 		public List<Connections> IsAdvancedStandingFor { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity provides preparation for the credential, assessment, or learning opportunity being referenced.
 		/// ceterms:isPreparationFor
-		/// <seealso cref="https://credreg.net/ctdl/terms/isPreparationFor"/>
+		/// <seealso href="https://credreg.net/ctdl/terms/isPreparationFor">isPreparationFor</seealso>
 		/// </summary>
 		public List<Connections> IsPreparationFor { get; set; }
 
 		/// <summary>
 		/// It is recommended to earn or complete this credential, assessment, or learning opportunity before attempting to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// ceterms:isRecommendedFor
-		/// <seealso cref="https://credreg.net/ctdl/terms/isRecommendedFor"/>
+		/// <seealso href="https://credreg.net/ctdl/terms/isRecommendedFor">isRecommendedFor</seealso>
 		/// </summary>
 		public List<Connections> IsRecommendedFor { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity must be earned or completed prior to attempting to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// ceterms:isRequiredFor
-		/// <seealso cref="https://credreg.net/ctdl/terms/isRequiredFor"/>
+		/// <seealso href="https://credreg.net/ctdl/terms/isRequiredFor"></seealso>
 		/// </summary>
 		public List<Connections> IsRequiredFor { get; set; }
 
 		/// <summary>
 		///  Another credential, learning opportunity or assessment that provides preparation for this credential, learning opportunity or assessment.
 		/// ceterms:preparationFrom
-		/// <seealso cref="https://credreg.net/ctdl/terms/preparationFrom"/>
+		/// <seealso href="https://credreg.net/ctdl/terms/preparationFrom"></seealso>
 		/// </summary>
 		public List<Connections> PreparationFrom { get; set; }
 		#endregion

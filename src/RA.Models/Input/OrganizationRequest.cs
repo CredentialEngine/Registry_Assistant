@@ -21,6 +21,19 @@ namespace RA.Models.Input
 		//public List<BlankNode> BlankNodes = new List<BlankNode>();
 	}
 
+	/// <summary>
+	/// Organization
+	/// Required:
+	/// - CTID
+	/// - Type
+	/// - Name
+	/// - Description
+	/// - SubjectWebpage
+	/// - AgentType
+	/// - AgentSectorType
+	/// - At least one of email or address
+	/// 
+	/// </summary>
 	public class Organization
 	{
 		public Organization()
@@ -123,7 +136,8 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string CTID { get; set; }
-
+		//original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
+		public string Ctid { get; set; }
 
 		/// <summary>
 		/// Organization subject web page
@@ -137,7 +151,7 @@ namespace RA.Models.Input
 		/// May provide with or without the orgType namespace
 		/// Required
 		/// Example: orgType:CertificationBody
-		/// <see cref="https://credreg.net/ctdl/terms/agentType"/>
+		/// <see href="https://credreg.net/ctdl/terms/agentType"></see>
 		/// </summary>
 		public List<string> AgentType { get; set; }
 
@@ -210,7 +224,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// <see href="https://purl.org/ctdl/terms/identifier"></see>
 		/// ceterms:identifier
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
@@ -414,6 +428,7 @@ namespace RA.Models.Input
 
 		public List<OrganizationReference> Department { get; set; }
 		public List<OrganizationReference> SubOrganization { get; set; }
+
 
 	}
 }
