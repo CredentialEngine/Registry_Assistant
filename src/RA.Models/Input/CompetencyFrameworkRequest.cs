@@ -23,6 +23,11 @@ namespace RA.Models.Input
         public CompetencyFrameworkGraph CompetencyFrameworkGraph { get; set; } 
 
     }
+	/// <summary>
+	/// Competency Framework
+	/// Required:
+	/// - CTID, Name, Description, InLanguage, Publisher
+	/// </summary>
     public class CompetencyFramework 
     {        
         public CompetencyFramework()
@@ -76,7 +81,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Concept Term
-		/// Definition:	en-US: A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
+		/// A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
 		/// List of URIs to concepts
 		/// </summary>
 		public List<string> conceptTerm { get; set; } = new List<string>();
@@ -118,7 +123,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Derived From
-		/// Definition:	en-US: A third party version of the entity being reference that has been modified in meaning through editing, extension or refinement.
+		/// A third party version of the entity being reference that has been modified in meaning through editing, extension or refinement.
 		/// List of URIs to frameworks
 		/// </summary>
 		public string derivedFrom { get; set; }
@@ -149,7 +154,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Identifier
-		/// Definition:	en-US: An alternative URI by which this competency framework or competency is identified.
+		/// An alternative URI by which this competency framework or competency is identified.
 		/// List of URIs 
 		/// </summary>
 		public List<string> identifier { get; set; } = new List<string>();
@@ -157,7 +162,7 @@ namespace RA.Models.Input
 		public List<string> altIdentifier { get; set; } = new List<string>();
 		/// <summary>
 		/// In Language
-		/// Definition:	en-US: The primary language used in or by this competency framework or competency.The primary language used in or by this competency framework or competency.
+		/// The primary language used in or by this competency framework or competency.The primary language used in or by this competency framework or competency.
 		/// This is the language the text is primarily written in, even if it makes use of other languages. For example, a competency for teaching spanish to english-speaking students would primarily be in english, because that is the language used to convey the material.
 		/// </summary>
 		public List<string> inLanguage { get; set; } = new List<string>();
@@ -199,6 +204,9 @@ namespace RA.Models.Input
 		/// Name of an agent responsible for making this entity available.
 		/// </summary>
 		public List<string> publisherName { get; set; } = new List<string>();
+		/// <summary>
+		/// Language map for publisher name
+		/// </summary>
 		public LanguageMapList publisherName_map { get; set; } = new LanguageMapList();
 		//
 
@@ -302,13 +310,13 @@ namespace RA.Models.Input
 
 	}
 
+	/// <summary>
+	/// CTDLASN Competency Class
+	/// </summary>
 	public class Competency 
     {
         //required": [ "@type", "@id", "ceasn:competencyText", "ceasn:inLanguage", "ceasn:isPartOf", "ceterms:ctid" ]
         
-        public Competency()
-        {
-        }
 		/// <summary>
 		/// Helper property for use with blank nodes
 		/// </summary>
@@ -320,33 +328,25 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CTID { get; set; }
 
-		/// <summary>
-		/// The text of the competency.
-		/// This property should be used to provide the actual text of the competency statement. To provide information about the competency other than the text itself, use the comment property.
-		/// </summary>
-		public string competencyText { get; set; } 
-		public LanguageMap competencyText_map { get; set; } = new LanguageMap();
-
-		public string competencyLabel { get; set; }
-		public LanguageMap competencyLabel_map { get; set; } = new LanguageMap();
-
 
 		/// <summary>
 		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
 		/// The abilityEmbodied property may referenced a defined ability in an ontology such as O*NET or an existing competency defined in a competency framework.
-		/// List of CTIDs for a competency
+		/// List of URIs (CTIDs recommended) for a competency
 		/// ceasn:abilityEmbodied
 		/// </summary>
 		public List<string> abilityEmbodied { get; set; } = new List<string>();
 		/// <summary>
 		/// A competency framework or competency from which this competency framework or competency is aligned.
 		/// An alignment is an assertion of some degree of equivalency between the subject and the object of the assertion.
+		/// List of CTIDs for a competency framework or competency
 		/// </summary>
 		public List<string> alignFrom { get; set; } = new List<string>();
 
 		/// <summary>
 		/// A competency framework or competency to which this competency framework or competency is aligned.
 		/// An alignment is an assertion of some degree of equivalency between the subject and the object of the assertion.
+		/// List of URIs (CTIDs recommended) for a competency framework or competency
 		/// </summary>
 		public List<string> alignTo { get; set; } = new List<string>();
 
@@ -365,131 +365,170 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Broad Alignment
 		/// The referenced competency covers all of the relevant concepts in this competency as well as relevant concepts not found in this competency.
+		/// List of URIs (CTIDs recommended) for a competency framework or competency
 		/// </summary>
 		public List<string> broadAlignment { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Coded Notation
-		/// Definition:	en-US: An alphanumeric notation or ID code as defined by the promulgating body to identify this competency.
+		/// An alphanumeric notation or ID code as defined by the promulgating body to identify this competency.
 		/// </summary>
 		public string codedNotation { get; set; }
 
 		/// <summary>
 		/// Comment
-		/// Definition:	en-US: Supplemental text provided by the promulgating body that clarifies the nature, scope or use of this competency.
+		/// Supplemental text provided by the promulgating body that clarifies the nature, scope or use of this competency.
 		/// </summary>
 		public List<string> comment { get; set; } = new List<string>();
+		/// <summary>
+		/// Language map list for comment
+		/// </summary>
 		public LanguageMapList comment_map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Competency Category
-		/// Definition:	en-US: The textual label identifying the category of the competency as designated by the promulgating body.
+		/// The textual label identifying the category of the competency as designated by the promulgating body.
 		/// </summary>
-		public string competencyCategory { get; set; } 
+		public string competencyCategory { get; set; }
+		/// <summary>
+		/// Language map for competencyCategory
+		/// </summary>
 		public LanguageMap competencyCategory_map { get; set; } = new LanguageMap();
+
+
+		/// <summary>
+		/// The text of the competency.
+		/// This property should be used to provide the actual text of the competency statement. To provide information about the competency other than the text itself, use the comment property.
+		/// </summary>
+		public string competencyText { get; set; }
+		/// <summary>
+		/// Language map for competencyText
+		/// </summary>
+		public LanguageMap competencyText_map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Short identifying phrase or name applied to a competency by the creator of the competency framework.
+		/// </summary>
+		public string competencyLabel { get; set; }
+		/// <summary>
+		/// Language map for competencyLabel
+		/// </summary>
+		public LanguageMap competencyLabel_map { get; set; } = new LanguageMap();
+
 
 		/// <summary>
 		/// Complexity Level
-		/// Definition:	en-US: The expected performance level of a learner or professional as defined by a competency.
+		/// The expected performance level of a learner or professional as defined by a competency.
+		/// ceasn:ProficiencyScale NOT IMPLEMENTED Expecting Concept
 		/// </summary>
 		public List<string> complexityLevel { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Comprised Of
-		/// Definition:	en-US: This competency includes, comprehends or encompasses, in whole or in part, the meaning, nature or importance of the referenced competency.
-		/// List of URIs
+		/// This competency includes, comprehends or encompasses, in whole or in part, the meaning, nature or importance of the referenced competency.
+		/// List of URIs (CTIDs recommended) for a competency framework or competency
 		/// </summary>
 		public List<string> comprisedOf { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Concept Keyword
-		/// Definition:	en-US: A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
+		/// A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
 		/// </summary>
 		public List<string> conceptKeyword { get; set; } = new List<string>();
+		/// <summary>
+		/// Language map list for ConceptKeyword
+		/// </summary>
 		public LanguageMapList conceptKeyword_maplist { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Concept Term
-		/// Definition:	en-US: A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
-		/// List of URIs to a concept
+		/// A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
+		/// List of URIs (CTIDs recommended) to a concept
 		/// </summary>
 		public List<string> conceptTerm { get; set; } = new List<string>();
 
 		/// <summary>
 		/// An entity primarily responsible for making this competency framework or competency.
 		/// The creator property is used with non-canonical statements created by a third party.
-		/// List of URIs to the creator
+		/// List of URIs (CTIDs recommended) to the creator
 		/// </summary>
 		public List<string> creator { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Cross-Subject Reference
-		/// Definition:	en-US: A relationship between this competency and a competency in a separate competency framework.
-		/// List of URIs to competencies
+		/// A relationship between this competency and a competency in a separate competency framework.
+		/// List of URIs (CTIDs recommended) to competencies
 		/// </summary>
 		public List<string> crossSubjectReference { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Date of creation of this competency framework or competency.
+		/// xsd:date
 		/// </summary>
 		public string dateCreated { get; set; }
 
 		/// <summary>
 		/// The date on which this framework or competency was most recently modified in some way.
+		/// xsd:dateTime
 		/// </summary>
 		public string dateModified { get; set; }
 
 		/// <summary>
 		/// Derived From
-		/// Definition:	en-US: A third party version of the entity being reference that has been modified in meaning through editing, extension or refinement.
-		/// List of URIs to competencies
+		/// A version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
+		/// Single URI (CTID recommended) to a competency
 		/// </summary>
 		public string derivedFrom { get; set; }
 
 		/// <summary>
 		/// Education Level Type
-		/// Definition:	en-US:A general statement describing the education or training context. Alternatively, a more specific statement of the location of the audience in terms of its progression through an education or training context.
+		/// A general statement describing the education or training context. Alternatively, a more specific statement of the location of the audience in terms of its progression through an education or training context.
 		/// Best practice is to use terms from the http://purl.org/ctdl/terms/AudienceLevel concept scheme.
-		/// List of URIs to concepts
+		/// List of URIs (CTIDs recommended) to concepts
 		/// </summary>
 		public List<string> educationLevelType { get; set; } = new List<string>();
-		/// <summary>
-		/// Resource being described includes, comprehends or encompass, in whole or in part, the meaning, nature or importance of the resource being referenced.
-		/// Range Includes: ceasn:Competency, ceasn:Concept
-		/// </summary>
-		public List<string> encompasses { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Exact Alignment
-		/// Definition:	en-US: The relevant concepts in this competency and the referenced competency are coextensive.
-		/// List of URIs to competencies
+		/// The relevant concepts in this competency and the referenced competency are coextensive.
+		/// List of URIs (CTIDs recommended) for a competency
 		/// </summary>
 		public List<string> exactAlignment { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Has Child
-		/// Definition:	en-US: The referenced competency is lower in some arbitrary hierarchy than this competency.List of URIs for child competencies under this competency
+		/// The referenced competency is lower in some arbitrary hierarchy than this competency.List of URIs for child competencies under this competency
 		/// Provide either a CTID for a competency that is include in the Competencies property, or the full URI formatted like the following:
 		/// "https://credentialengineregistry.org/resources/ce-b1e0eca2-7a19-49e9-8841-fa16ddf8396d"
-		/// List of URIs to competencies.
+		/// List of URIs (CTIDs recommended) for a competency
 		/// NOTE: or just provide the CTIDs, and the system will format the proper URI for the current environment.
 		/// </summary>
 		public List<string> hasChild { get; set; } = new List<string>();
 
 		/// <summary>
+		/// Concept in a ProgressionModel concept scheme
+		/// URI
+		/// </summary>
+		public List<string> hasProgressionLevel { get; set; } = new List<string>();
+
+		/// <summary>
 		/// Identifier
-		/// Definition:	en-US: An alternative URI by which this competency framework or competency is identified.
+		/// An alternative URI by which this competency framework or competency is identified.
 		/// List of URIs 
 		/// </summary>
 		public List<string> identifier { get; set; } = new List<string>();
 
-
+		/// <summary>
+		/// Competency deduced or arrive at by reasoning on the competency being described.
+		/// List of URIs (CTIDs recommended) to competencies
+		/// </summary>
+		public List<string> inferredCompetency { get; set; } = new List<string>();
 
 		//
 		/// <summary>
 		/// Is Child Of
-		/// Definition:	en-US: The referenced competency is higher in some arbitrary hierarchy than this competency.
-		/// List of URIs to competencies.
-		/// NOTE: or just provide the CTIDs, and the system will format the proper URI for the current environment.
+		/// The referenced competency is higher in some arbitrary hierarchy than this competency.
+		/// List of URIs (CTIDs recommended) to competenciesenvironment.
 		/// </summary>
 		public List<string> isChildOf { get; set; } = new List<string>();
 		/// <summary>
@@ -497,45 +536,114 @@ namespace RA.Models.Input
 		/// </summary>
 		public string isTopChildOf { get; set; }
 
+		/// <summary>
+		/// Competency framework that this competency is a part of.
+		/// </summary>
 		public string isPartOf { get; set; }
 		//public List<string> isPartOf { get; set; } = new List<string>();
+		/// <summary>
+		/// A related competency of which this competency is a version, edition, or adaptation.
+		/// List of URIs (CTIDs recommended) for a competency
+		/// </summary>
 		public string isVersionOf { get; set; }
 
-        public string listID { get; set; }
+		/// <summary>
+		/// An alphanumeric string indicating the relative position of a resource in an ordered list of resources such as "A", "B", or "a", "b", or "I", "II", or "1", "2".
+		/// </summary>
+		public string listID { get; set; }
 
+		/// <summary>
+		/// The text string denoting the subject of the competency framework or competency as designated by the promulgating agency.
+		/// </summary>
 		public List<string> localSubject { get; set; } = new List<string>();
+		/// <summary>
+		/// Language map list for local subject
+		/// </summary>
 		public LanguageMapList localSubject_maplist { get; set; } = new LanguageMapList();
 
-        public List<string> majorAlignment { get; set; } = new List<string>();
+		/// <summary>
+		/// Major overlap of relevant concepts between this competency and the referenced competency.
+		/// List of URIs (CTIDs recommended) for a competency
+		/// </summary>
+		public List<string> majorAlignment { get; set; } = new List<string>();
 
-        public List<string> minorAlignment { get; set; } = new List<string>();
+		/// <summary>
+		/// Minor overlap of relevant concepts between this competency and the referenced competency.
+		/// List of URIs (CTIDs recommended) for a competency
+		/// </summary>
+		public List<string> minorAlignment { get; set; } = new List<string>();
 
-        public List<string> narrowAlignment { get; set; } = new List<string>();
+		/// <summary>
+		/// This competency covers all of the relevant concepts in the referenced competency as well as relevant concepts not found in the referenced competency.
+		/// List of URIs (CTIDs recommended) for a competency
+		/// </summary>
+		public List<string> narrowAlignment { get; set; } = new List<string>();
 
-        public List<string> prerequisiteAlignment { get; set; } = new List<string>();
+		/// <summary>
+		/// The referenced resource is a prerequisite to this resource.
+		/// List of URIs (CTIDs recommended) for a competency
+		/// </summary>
+		public List<string> prerequisiteAlignment { get; set; } = new List<string>();
+
+
+		/// <summary>
+		/// Indicates whether correlators should or should not assign the competency during correlation.
+		/// </summary>
+		public bool? shouldIndex { get; set; }
 
 		/// <summary>
 		/// Body of information embodied either directly or indirectly in this resource.
-		/// List of CTIDs for a competency
+		/// List of URIs (CTIDs recommended) for a competency
 		/// ceasn:knowledgeEmbodied
 		/// </summary>
 		public List<string> knowledgeEmbodied { get; set; } = new List<string>();
 
 		/// <summary>
 		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
-		/// List of CTIDs for a competency
+		/// List of URIs (CTIDs recommended) for a competency
 		/// ceasn:skillEmbodied
 		/// </summary>
 		public List<string> skillEmbodied { get; set; } = new List<string>();
 
+		/// <summary>
+		/// Specifically defined piece of work embodied either directly or indirectly in this resource.
+		/// ceasn:taskEmbodied
+		/// </summary>
 		public List<string> taskEmbodied { get; set; } = new List<string>();
-		public List<string> hasSourceIdentifier { get; set; }
+
+		/// <summary>
+		/// An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
+		/// </summary>
 		public string weight { get; set; }
 
+		/// <summary>
+		/// HasSourceIdentifier
+		/// A collection of identifiers related to this resource.
+		/// URI for a SourceIdentifier
+		/// </summary>
+		public List<string> hasSourceIdentifier { get; set; }
 
-		public List<string> hasMaintenanceTask { get; set; } = new List<string>();
+		///// <summary>
+		///// HasMaintenanceTask
+		/////OBSOLETE See hasTask
+		///// Maintenance task related to this resource.
+		///// URI for a MaintenanceTask
+		///// </summary>
+		//public List<string> hasMaintenanceTask { get; set; } = new List<string>();
 
-		public List<string> hasTrainingTask { get; set; } = new List<string>();
+		///// <summary>
+		///// HasTrainingTask
+		/////OBSOLETE See hasTask
+		///// Maintenance task related to this resource.
+		///// URI for a TrainingTask
+		///// </summary>
+		//public List<string> HasTrainingTask { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Task related to this resource.
+		/// List of URIs (CTIDs recommended) for a Task
+		/// </summary>
+		public List<string> hasTask { get; set; } = new List<string>();
 
 		#region Occupations, Industries, and instructional programs
 		//=====================================================================
@@ -600,99 +708,116 @@ namespace RA.Models.Input
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
+
+
+
 		#endregion
 
-		//New 2021-09-30
+		//New 2021-09-30 - 
+
 
 		/// <summary>
-		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; select from an existing enumeration of such types.
+		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; 
+		/// List of URIs (CTIDs recommended) for Concept
 		/// </summary>
-		public List<string> EnvironmentalHazardType { get; set; }
+		public List<string> environmentalHazardType { get; set; }
 
-		//only for collection context
+		/// <summary>
+		/// The primary language used in or by this resource.
+		/// Collections only
+		/// </summary>
 		public List<string> inLanguage { get; set; }
 
-		/// <summary>
-		/// Collection to which this resource belongs.
-		/// </summary>
-		public string IsMemberOf { get; set; }
+		///// <summary>
+		///// Collection to which this resource belongs.
+		///// This is really an inverse property so would not be published with the competency
+		///// </summary>
+		//public string isMemberOf { get; set; }
 
 		/// <summary>
 		/// A legal document giving official permission to do something with this resource.
 		/// Collections only
 		/// </summary>
-		public string License { get; set; }
+		public string license { get; set; }
 
 		/// <summary>
 		/// Type of required or expected performance level for a resource; select from an existing enumeration of such types.
+		/// List of URIs (CTIDs recommended) for Concept
 		/// </summary>
-		public List<string> PerformanceLevelType { get; set; }
+		public List<string> performanceLevelType { get; set; }
 
 		/// <summary>
 		/// Type of physical activity required or expected in performance; select from an existing enumeration of such types.
+		/// List of URIs (CTIDs recommended) for Concept
 		/// </summary>
-		public List<string> PhysicalCapabilityType { get; set; }
+		public List<string> physicalCapabilityType { get; set; }
 
 		/// <summary>
 		/// Type of required or expected sensory capability; select from an existing enumeration of such types.
+		/// List of URIs (CTIDs recommended) for Concept
 		/// </summary>
-		public List<string> SensoryCapabilityType { get; set; }
+		public List<string> sensoryCapabilityType { get; set; }
+
 
 		/// <summary>
 		/// Human-readable information resource other than a competency framework from which this competency was generated or derived by humans or machines.
-		/// URI
+		/// List of URIs
 		/// </summary>
-		public string SourceDocumentation { get; set; }
+		public List<string> sourceDocumentation { get; set; }
 
 		/// <summary>
 		/// Aspects of the referenced Competency Framework provide some justification that the resource being described is useful.
+		/// List of URIs (CTIDs recommended) for a competency framework
 		/// </summary>
-		public string SubstantiatingCompetencyFramework { get; set; }
+		public List<string> substantiatingCompetencyFramework { get; set; }
 
 		/// <summary>
 		/// Aspects of the referenced Credential provide some justification that the resource being described is useful.
+		/// List of URIs (CTIDs recommended) for a Credential
 		/// </summary>
-		public string SubstantiatingCredential { get; set; }
+		public List<string> substantiatingCredential { get; set; }
 
 		/// <summary>
 		/// Aspects of the referenced Job provide some justification that the resource being described is useful.
 		/// </summary>
-		public string substantiatingJob { get; set; }
+		public List<string> substantiatingJob { get; set; }
 
 		/// <summary>
 		/// Aspects of the referenced Occupation provide some justification that the resource being described is useful.
+		/// List of URIs (CTIDs recommended) for an Occupation
 		/// </summary>
-		public string SubstantiatingOccupation { get; set; }
+		public List<string> substantiatingOccupation { get; set; }
 
 		/// <summary>
 		/// Aspects of the referenced Organization provide some justification that the resource being described is useful.
+		/// List of URIs (CTIDs recommended) for an Organization
 		/// </summary>
-		public string SubstantiatingOrganization { get; set; }
+		public List<string> substantiatingOrganization { get; set; }
 
 		/// <summary>
 		/// Aspects of the referenced resource provide some justification that the resource being described is useful.
+		/// List of URIs (CTIDs recommended) for a
 		/// </summary>
-		public string SubstantiatingResource { get; set; }
+		public List<string> substantiatingResource { get; set; }
 
 		/// <summary>
 		/// Referenced Task attests to some level of achievement/mastery of the competency being described.
+		/// List of URIs (CTIDs recommended) for a Task
 		/// </summary>
-		public string SubstantiatingTask { get; set; }
+		public List<string> substantiatingTask { get; set; }
 
 		/// <summary>
 		/// Referenced Workrole attests to some level of achievement/mastery of the competency being described.
+		/// List of URIs (CTIDs recommended) for a Work role
 		/// </summary>
-		public string SubstantiatingWorkrole { get; set; }
+		public List<string> substantiatingWorkrole { get; set; }
 
 		/// <summary>
 		/// Level of workforce demand for the resource.
+		/// List of URIs (CTIDs recommended) for a WorkforceDemandAction
 		/// </summary>
-		public string DemandLevel { get; set; }
+		public List<string> hasWorkforceDemand { get; set; }
 
-		/// <summary>
-		/// Task related to this resource.
-		/// </summary>
-		public string HasTask { get; set; }
 
 	}
 

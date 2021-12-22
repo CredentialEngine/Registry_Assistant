@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
+	/// <summary>
+	/// Request class for publishing a TransferIntermediary with TransferProfiles
+	/// </summary>
 	public class TransferIntermediaryRequest : BaseRequest
 	{
 		public TransferIntermediaryRequest()
@@ -13,7 +16,7 @@ namespace RA.Models.Input
 		}
 
 		/// <summary>
-		/// List of TransferValueProfiles to publish
+		/// TransferIntermediary
 		/// </summary>
 		public TransferIntermediary TransferIntermediary { get; set; } = new TransferIntermediary();
 
@@ -26,19 +29,23 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Transfer Intermediary
 	/// Surrogate resource to which other resources are mapped in order to indicate their common transferability.
+	/// Usage Note: Used when multiple resources such as courses are grouped together to indicate they have mutually agreed upon transfer value.
 	/// ceterms:TransferIntermediary
+	/// Required:
+	/// - name, intermediaryFor, CTID, and ownedBy
 	/// </summary>
 	public class TransferIntermediary
 	{
-		/*
-		 * URI: ceterms:TransferIntermediary
-Label: Transfer Intermediary
-Definition: Surrogate resource to which other resources are mapped in order to indicate their common transferability.
-Usage Note: Used when multiple resources such as courses are grouped together to indicate they have mutually agreed upon transfer value.
-Properties: ceterms:name, ceterms:description, ceterms:intermediaryFor, ceterms:codedNotation, ceterms:requires, ceterms:creditValue**
-		 */
-
+		/// <summary>
+		/// CTID
+		/// Required
+		/// </summary>
 		public string CTID { get; set; }
+
+		/// <summary>
+		/// Set of alpha-numeric symbols as defined by the body responsible for this resource that uniquely identifies this resource and supports its discovery and use. 
+		/// Not Required
+		/// </summary>
 		public string CodedNotation { get; set; }
 
 		/// <summary>
@@ -59,7 +66,7 @@ Properties: ceterms:name, ceterms:description, ceterms:intermediaryFor, ceterms:
 
 		/// <summary>
 		/// Transfer Value Profile Description 
-		/// Required
+		/// Not Required
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>
@@ -69,7 +76,7 @@ Properties: ceterms:name, ceterms:description, ceterms:intermediaryFor, ceterms:
 
 		/// <summary>
 		/// Name or title of the resource.
-		/// Required
+		/// Not Required
 		/// </summary>
 		public string SubjectWebpage { get; set; }
 
@@ -79,19 +86,31 @@ Properties: ceterms:name, ceterms:description, ceterms:intermediaryFor, ceterms:
 		/// Range: ceterms:TransferValueProfile
 		/// TBD: Provide the CTID for a transfer value that is already published to the registry. Or may be publishing all at once?
 		/// Probably handle like PathwaySet, where could refer to a TVP in the request.TransferValueProfiles or a published one. 
+		/// Required
 		/// </summary>
 		public List<string> IntermediaryFor { get; set; } = new List<string>();
 
 		/// <summary>
+		/// Organization that owns this resource
+		/// Required
+		/// </summary>
+		public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
+
+		/// <summary>
 		/// Requirement or set of requirements for this resource
+		/// Not Required
 		/// </summary>
 		public List<ConditionProfile> Requires { get; set; } = new List<ConditionProfile>();
-		/* TBD*/
+
 		/// <summary>
 		/// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
+		/// Not Required
 		/// https://credreg.net/ctdl/terms/subject
 		/// </summary>
 		public List<string> Subject { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 		
 	}

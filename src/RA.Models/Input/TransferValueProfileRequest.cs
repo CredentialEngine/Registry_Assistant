@@ -113,6 +113,13 @@ namespace RA.Models.Input
 
 
 		/// <summary>
+		/// Type of official status of the TransferProfile; select from an enumeration of such types.
+		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// </summary>
+		public string LifeCycleStatusType { get; set; }
+
+		/// <summary>
 		/// Date the validity or usefulness of the information in this resource begins.
 		/// </summary>
 		public string StartDate { get; set; }
@@ -158,6 +165,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<object> TransferValueFor { get; set; } = new List<object>();
 
+
+		/// <summary>
+		/// Experimenting
+		/// Not valid when publishing individual TVP.
+		/// </summary>
+		public string HasTransferIntermediary { get; set; }
 	}
 
 	

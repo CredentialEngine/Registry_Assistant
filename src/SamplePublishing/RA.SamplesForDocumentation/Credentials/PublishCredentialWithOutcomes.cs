@@ -53,12 +53,6 @@ namespace RA.SamplesForDocumentation
 				CTID = organizationIdentifierFromAccountsSite
 			} );
 			//
-			var aggregateProfile = new AggregateDataProfile()
-			{
-				Description = "Median Earnings of Program Graduates in Region upon entry",
-				MedianEarnings = 44439,
-				PostReceiptMonths = 0
-			};
 			//format an AggregateDataProfile
 			myData.AggregateData = new List<AggregateDataProfile>() { FormatAggregateDataProfile( organizationIdentifierFromAccountsSite ) };
 

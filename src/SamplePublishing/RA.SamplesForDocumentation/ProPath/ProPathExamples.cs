@@ -357,6 +357,13 @@ namespace RA.SamplesForDocumentation
 				{
 					Address1="5270 North Belt West",
 					City="Belleville", AddressRegion = "Illinois", PostalCode="62226", Country="USA",
+					Identifier = new List<IdentifierValue>()
+					{ 
+						new IdentifierValue()
+						{
+						IdentifierTypeName="LWIA", IdentifierValueCode="24"
+						}
+					},
 					ContactPoint = new List<ContactPoint>()
 					{
 						new ContactPoint()
@@ -369,6 +376,13 @@ namespace RA.SamplesForDocumentation
 				{
 					Address1="320 S Green Bay Rd",
 					City="Waukegan", AddressRegion = "Illinois", PostalCode="60085", Country="USA",
+					Identifier = new List<IdentifierValue>()
+					{
+						new IdentifierValue()
+						{
+						IdentifierTypeName="LWIA", IdentifierValueCode="7"
+						}
+					},
 					ContactPoint = new List<ContactPoint>()
 					{
 						new ContactPoint()

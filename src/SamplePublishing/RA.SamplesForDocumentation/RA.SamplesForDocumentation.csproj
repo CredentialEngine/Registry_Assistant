@@ -64,6 +64,7 @@
     <Compile Include="Credentials\PublishQACredentialWithETPL.cs" />
     <Compile Include="Employment\Jobs.cs" />
     <Compile Include="Employment\Occupations.cs" />
+    <Compile Include="LearningOpportunities\PublishLearningOpportunityWithOutcomes.cs" />
     <Compile Include="LearningOpportunities\SampleLearningOpportunityPublish.cs" />
     <Compile Include="PerformanceExamples\CareerBridgeCredentials.cs" />
     <Compile Include="PerformanceExamples\IndianaPassRates.cs" />

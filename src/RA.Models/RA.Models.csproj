@@ -65,6 +65,7 @@
     <Compile Include="Input\AssessmentRequest.cs" />
     <Compile Include="Input\BaseRequest.cs" />
     <Compile Include="Input\BaseRequestClass.cs" />
+    <Compile Include="Input\CollectionRequest.cs" />
     <Compile Include="Input\CompetencyFrameworkRequest.cs" />
     <Compile Include="Input\ConceptSchemeRequest.cs" />
     <Compile Include="Input\ConditionManifestRequest.cs" />

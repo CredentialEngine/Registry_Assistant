@@ -10,6 +10,12 @@ namespace RA.SamplePublishingProject
 	[TestClass]
 	public class Testing
 	{
+		[TestMethod]
+		public void LearningOpportunityWithOutcomeData()
+		{
+			new PublishLearningOpportunityWithOutcomes().LearningOpportunityWithOutcomeData( "publish" );
+		}
+
 		#region transfer value publishing
 		[TestMethod]
 		public void PublishNCCRSStuff()

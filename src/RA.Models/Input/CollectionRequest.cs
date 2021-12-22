@@ -6,13 +6,23 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
+	/// <summary>
+	/// Collection Request class
+	/// </summary>
 	public class CollectionRequest : BaseRequest
 	{
-
+		/// <summary>
+		/// Collection to publish
+		/// </summary>
 		public Collection Collection { get; set; }
+		//TBD -may just want a list of objects. 
+		//public List<Competency> Competencies { get; set; } = new List<Competency>();
 
-		public List<Competency> Competencies { get; set; } = new List<Competency>();
 	}
+
+	/// <summary>
+	/// Proposed option to publish a document already formatted as CTDL JSON-LD.
+	/// </summary>
 	public class CollectionGraphRequest : BaseRequest
 	{
 		public CollectionGraphRequest()
@@ -23,55 +33,100 @@ namespace RA.Models.Input
 		public JsonV2.GraphContainer CollectionGraph { get; set; }
 
 	}
+	
+	/// <summary>
+	/// Collection
+	/// </summary>
 	public class Collection
 	{
-		public string Type { get; set; } = "ceasn:Collection";
+		/// <summary>
+		/// Type for this class
+		/// </summary>
+		public string Type { get; set; } = "ceterms:Collection";
 
-
+		/// <summary>
+		/// CTDL unique identifier
+		/// </summary>
 		public string CTID { get; set; }
 
-		public string Author { get; set; }
-		//????????????
-		public List<string> Classification { get; set; }
+		#region Classification
+		/// <summary>
+		/// Category or classification of this resource.
+		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
+		/// URI to a concept(based on the ONet work activities example)
+		/// ceterms:classification
+		/// </summary>
+		public List<string> Classification { get; set; } = new List<string>();
 
 		/// <summary>
-		/// A word or phrase used by the promulgating agency to refine and differentiate individual resources contextually.
+		/// Additional Classification
+		/// List of concepts that don't exist in the registry. Will be published as blank nodes
 		/// </summary>
-		public List<string> ConceptKeyword { get; set; } = new List<string>();
-		public LanguageMapList ConceptKeyword_Map { get; set; }
-		/// <summary>
-		/// An entity primarily responsible for making this resource.
-		/// </summary>
-		public List<string> Creator { get; set; }
+		public List<CredentialAlignmentObject> AdditionalClassification { get; set; } = new List<CredentialAlignmentObject>();
+		#endregion
 
+		/// <summary>
+		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
+		/// ceterms:codedNotation
+		/// </summary>
+		public string CodedNotation { get; set; }
+
+
+		///// <summary>
+		///// Only allow date (yyyy-mm-dd), no time
+		///// xsd:date
+		///// </summary>
+		//public string DateCreated { get; set; }
 
 		/// <summary>
 		/// Only allow date (yyyy-mm-dd), no time
+		/// xsd:date
 		/// </summary>
-		public string DateCreated { get; set; }
-
-		public string DateModified { get; set; }
+		public string DateEffective { get; set; }
+		/// <summary>
+		/// Only allow date (yyyy-mm-dd), no time
+		/// xsd:date
+		/// </summary>
+		public string ExpirationDate { get; set; }
 
 		/// <summary>
 		/// A short description of this resource.
 		/// </summary>
 		public string Description { get; set; }
+		/// <summary>
+		/// Language map for Description
+		/// </summary>
 		public LanguageMap Description_Map { get; set; }
 
 		/// <summary>
 		/// Resource in a Collection.
+		/// REQUIRED
 		/// Current Range
 		/// ceasn:Competency ceterms:Task ceterms:WorkRole ceterms:Job ceterms:Course ceterms:LearningOpportunityProfile ceterms:LearningProgram
+		/// List of CTIDs (recommended) or URIs
 		/// </summary>
-		public List<string> HasMember { get; set; }
+		public List<string> HasMember { get; set; } = new List<string>();
+
+		///// <summary>
+		///// An alternative URI by which this competency framework or competency is identified.
+		///// xsd:anyURI
+		///// 21-10-31 - removed Identifier
+		///// </summary>
+		//public List<string> Identifier { get; set; }
 
 		/// <summary>
-		/// An alternative URI by which this competency framework or competency is identified.
+		/// The primary language used in or by this resource.
 		/// </summary>
-		public List<string> Identifier { get; set; }
-
-		//The primary language used in or by this resource.
 		public List<string> InLanguage { get; set; }
+
+		/// <summary>
+		/// A word or phrase used by the promulgating agency to refine and differentiate individual resources contextually.
+		/// </summary>
+		public List<string> Keyword { get; set; }
+		/// <summary>
+		/// Language map list for Keyword
+		/// </summary>
+		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// A legal document giving official permission to do something with this resource.
@@ -82,21 +137,25 @@ namespace RA.Models.Input
 		/// <summary>
 		/// The name or title of this resource.
 		/// </summary>
-		public string Name { get; set; } 
-
+		public string Name { get; set; }
+		/// <summary>
+		/// Language map for Name
+		/// </summary>
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
-		/// An agent responsible for making this resource available.
-		/// List of URIs
+		/// Organization that owns this resource
 		/// </summary>
-		public List<string> Publisher { get; set; }
+		public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
 
 		/// <summary>
-		/// Name of an agent responsible for making this resource available.
+		/// Subjects
 		/// </summary>
-		public List<string> PublisherName { get; set; } = new List<string>();
-		public LanguageMapList PublisherName_Map { get; set; }
+		public List<string> Subject { get; set; }
+		/// <summary>
+		/// Language map list for Subject
+		/// </summary>
+		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 
 		#region Occupations, Industries, and instructional programs
 		//=====================================================================

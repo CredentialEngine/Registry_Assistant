@@ -86,6 +86,9 @@ namespace RA.Models.Input
 		/// Provide the CTID or the full URI for the target environment. 
 		/// However, we recommend that a CTID be provided, and the API will format accordingly.
 		/// As a helper, this could be generated from all of the provided components
+		/// 
+		/// 
+		/// Per meeting on July 16, 2020 Stuart agreed that ceterms:Pathway will NOT have the property ceterms:hasPart.
 		/// </summary>
 		public List<string> HasPart { get; set; } = new List<string>();
 
@@ -198,7 +201,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
+		/// <see href="https://purl.org/ctdl/terms/identifier"/>
 		/// ceterms:identifier
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
@@ -251,7 +254,7 @@ namespace RA.Models.Input
 		/// Provide the CTID or the full URI for the target environment. 
 		/// ceterms:ComponentCondition
 		/// </summary>
-		public List<string> Preceeds { get; set; } = new List<string>();
+		public List<string> Precedes { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Resource(s) required as a prior condition to this resource.
@@ -260,6 +263,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> Prerequisite { get; set; } = new List<string>();
 
+		/// <summary>
+		/// Indicates the resource for which a pathway component or similar proxy resource is a stand-in.
+		/// URL
+		/// </summary>
+		public string ProxyFor { get; set; }
 
 		/// <summary>
 		/// URL to structured data representing the resource.
@@ -268,6 +276,12 @@ namespace RA.Models.Input
 		/// URL
 		/// </summary>
 		public string SourceData { get; set; }
+		/// <summary>
+		/// Where the source data is not in the registry, a 'blank node' can be provided. 
+		/// The blank node would most likely be of a type closely associated with the the type of pathway component. 
+		/// Examples: learningOpportunity/Course for a CourseComponent, AssessmentProfile for an AssessmentComponent, etc. 
+		/// </summary>
+		public List<EntityReference> SourceDataBNode { get; set; } = new List<EntityReference>();
 
 		/// <summary>
 		/// The webpage that describes this entity.

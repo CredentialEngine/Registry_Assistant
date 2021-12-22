@@ -90,6 +90,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Concept Term
 		/// A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual resources contextually.
+		/// skos:Concept
 		/// </summary>
 		public List<string> ConceptTerm { get; set; } = new List<string>();
 
@@ -101,16 +102,22 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Date Copyrighted
-		/// Date of a statement of copyright for this resource - the year only.
+		/// Date of a statement of copyright for this resource. Typically the year only, but a full date is allowed.
+		/// xsd:string
 		/// </summary>
 		public string DateCopyrighted { get; set; }
 
 		/// <summary>
 		/// Date Created
 		/// Date of creation of this resource.
+		/// xsd:date
 		/// </summary>
 		public string DateCreated { get; set; }
 
+		/// <summary>
+		/// The date on which this resource was most recently modified in some way.
+		/// xsd:dateTime
+		/// </summary>
 		public string DateModified { get; set; }
 
 		/// <summary>
@@ -124,24 +131,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-
 		/// <summary>
 		/// Top Concepts
 		/// Concept of the scheme at the top of a hierarchy of narrower concepts.
 		/// List of CTIDs (recommended) or actual registry URIs
 		/// </summary>
 		public List<string> HasTopConcept { get; set; } = new List<string>();
-
-		//public List<string> HistoryNote { get; set; } = new List<string>();
-		///// <summary>
-		///// Concept Scheme history? not included anymore? 
-		///// </summary>
-		//public string HistoryNote { get; set; }
-
-		///// <summary>
-		///// Alternately can provide a language map
-		///// </summary>
-		//public LanguageMap HistoryNote_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Language. Required unless defaultLanguage is provided
@@ -150,6 +145,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// A legal document giving official permission to do something with this resource.
+		/// xsd:anyURI
 		/// </summary>
 		public string License { get; set; }
 
@@ -180,11 +176,11 @@ namespace RA.Models.Input
 		/// An agent responsible for making this resource available.
 		/// This was originally defined as a single, and continuing to match CaSS.
 		/// </summary>
-		//public string Publisher { get; set; }
 		public OrganizationReference Publisher { get; set; } = new OrganizationReference();
 
 		/// <summary>
 		/// Information about rights held in and over this resource.
+		/// rdf:langString
 		/// </summary>
 		public string Rights { get; set; }
 		public LanguageMap Rights_Map { get; set; } = new LanguageMap();
@@ -199,20 +195,23 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Original Source of concept scheme
 		/// REQUIRED
+		/// xsd:anyURI
 		/// </summary>
 		public string Source { get; set; }
 
 		/// <summary>
 		///  Indicates the entity that supersedes this entity.
+		///  Must exist.
+		///  xsd:anyURI
 		/// </summary>
 		public string SupersededBy { get; set; }
 	}
 
+	/// <summary>
+	/// Concept class
+	/// </summary>
 	public class Concept  
 	{
-		[JsonProperty( "@context" )]
-		public string Context { get; set; }
-
 
 		//[JsonProperty( "@id" )]
 		//public string Id { get; set; }
@@ -224,21 +223,52 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CTID { get; set; }
 
+		/// <summary>
+		/// Alternative Label
+		/// Non-preferred label for the concept used to relate a concept synonym to the preferred label.
+		/// </summary>
 		public List<string> AltLabel { get; set; } = new List<string>();
 
+		/// <summary>
+		/// rdf:langString
+		/// </summary>
 		public LanguageMapList AltLabel_Map { get; set; } = new LanguageMapList();
+
+		/// <summary>
+		/// Concept that is broader in some way than this concept.
+		/// Concept URL (CTID)
+		/// </summary>
+		public string Broader { get; set; }
+
+		/// <summary>
+		/// Assertion indicates that the referenced concept is broader in some way than this concept.
+		/// List of Concept URLs(CTIDs)
+		/// </summary>
+		public List<string> BroadMatch { get; set; } = new List<string>();
+
+
+		/// <summary>
+		/// Text describing a significant change to the concept.
+		/// </summary>
 		public List<string> ChangeNote { get; set; } = new List<string>();
 		public LanguageMapList ChangeNote_Map { get; set; } = new LanguageMapList();
-		public string DateCreated { get; set; }
+
 
 		/// <summary>
-		///Last modified date for concept
+		/// Assertion indicates that two concepts are sufficiently similar that they can be used interchangeably.
+		/// List of Concept URLs(CTIDs)
 		/// </summary>
-		public string DateModified { get; set; }
+		public List<string> CloseMatch { get; set; } = new List<string>();
+		//public string DateCreated { get; set; }
+
+		///// <summary>
+		/////Last modified date for concept
+		///// </summary>
+		//public string DateModified { get; set; }
 
 
 		/// <summary>
-		/// Concetpt description 
+		/// Supplies a complete explanation of the intended meaning of a concept.
 		/// </summary>
 		public string Definition { get; set; }
 
@@ -247,14 +277,53 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Definition_Map { get; set; } = new LanguageMap();
 
+		/// <summary>
+		/// Indicates semantic similarity denoting an even higher degree of closeness than skos:closeMatch.
+		/// List of Concept URLs(CTIDs)
+		/// </summary>
+		public List<string> ExactMatch { get; set; } = new List<string>();
+
+
+		/// <summary>
+		///Label not intended for public presentation but to assist applications in disambiguating searcher intent - e.g., hidden labels can be used for common misspelling or a colloquial expression.
+		/// </summary>
 		public List<string> HiddenLabel { get; set; } = new List<string>();
 		public LanguageMapList HiddenLabel_Map { get; set; } = new LanguageMapList();
+		
+
+		/// <summary>
+		///	Concept scheme to which this concept belongs.
+		/// </summary>
 		public string InScheme { get; set; }
 
-		public string Notation { get; set; }
+		//public string Language { get; set; }
 
+
+		/// <summary>
+		/// Concept that is narrower in some way than this concept.
+		/// List of Concept URLs(CTIDs)
+		/// </summary>
+		public List<string> Narrower { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Assertion indicates that the referenced concept is narrower in some way than this concept.
+		/// List of Concept URLs(CTIDs)
+		/// </summary>
+		public List<string> NarrowMatch { get; set; } = new List<string>();
+
+
+		/// <summary>
+		/// Annotations to the concept for purposes of general documentation.
+		/// rdf:langString
+		/// </summary>
 		public List<string> Note { get; set; } = new List<string>();
 		public LanguageMapList Note_Map { get; set; } = new LanguageMapList();
+
+		/// <summary>
+		/// Alphanumeric notation or ID code as defined by the promulgating body to identify this resource.
+		/// </summary>
+		public string Notation { get; set; }
+		
 		/// <summary>
 		/// Concept 
 		/// Required
@@ -267,7 +336,15 @@ namespace RA.Models.Input
 		public LanguageMap PrefLabel_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
+		/// Assertion indicating an associative, non-hierarchical relationship between the two concepts where neither is broader nor narrower than the other.
+		/// List of Concept URLs(CTIDs)
+		/// </summary>
+		public List<string> Related { get; set; } = new List<string>();
+		
+		//public List<string> RelatedMatch { get; set; } = new List<string>();
+		/// <summary>
 		/// Indicates the entity that supersedes this entity.
+		/// URL
 		/// </summary>
 		public string SupersededBy { get; set; }
 
@@ -276,22 +353,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public string TopConceptOf { get; set; }
 
-		public string Language { get; set; }
 
-		public string Broader { get; set; }
-		public List<string> BroadMatch { get; set; } = new List<string>();
-		public List<string> CloseMatch { get; set; } = new List<string>();
-
-		public List<string> ExactMatch { get; set; } = new List<string>();
-
-		public List<string> Narrower { get; set; } = new List<string>();
-
-		public List<string> NarrowMatch { get; set; } = new List<string>();
-		public List<string> Related{ get; set; } = new List<string>();
-		//public List<string> RelatedMatch { get; set; } = new List<string>();
-
-		public List<string> Comment { get; set; } = new List<string>();
-		public LanguageMapList Comment_Map { get; set; } = new LanguageMapList();
 
 		public string CodeNEC { get; set; }
 		public string LegacyCodeNEC { get; set; }
