@@ -74,7 +74,6 @@ namespace RA.Models.Input
 			//
 			HasConditionManifest = new List<string>();
 			HasCostManifest = new List<string>();
-			VerificationServiceProfiles = new List<Input.VerificationServiceProfile>();
 			//
 			AdministrationProcess = new List<ProcessProfile>();
 			DevelopmentProcess = new List<ProcessProfile>();
@@ -136,8 +135,6 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string CTID { get; set; }
-		//original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
-		public string Ctid { get; set; }
 
 		/// <summary>
 		/// Organization subject web page
@@ -234,7 +231,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Image { get; set; }
 
+		/// <summary>
+		/// Keyword or key phrase describing relevant aspects of an entity.
+		/// </summary>
 		public List<string> Keyword { get; set; }
+		/// <summary>
+		/// Language map list for Keyword
+		/// </summary>
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
@@ -273,7 +276,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AvailabilityListing { get; set; }
 
-
+		/// <summary>
+		/// Department of the organization.
+		/// </summary>
+		public List<OrganizationReference> Department { get; set; }
 		/// <summary>
 		/// Founding Date - the year, year-month, or year-month-day the organization was founded. 
 		/// Maximum length of 20
@@ -286,12 +292,26 @@ namespace RA.Models.Input
 		public string FoundingDate { get; set; }
 
 		#region Concrete codes/identifiers
+		/// <summary>
+		/// Dun and Bradstreet DUNS number for identifying an organization or business person.
+		/// </summary>
 		public string Duns { get; set; }
+		/// <summary>
+		/// Federal Employer Identification Number (FEIN) identifying organizations, persons, states, government agencies, corporations, and companies.
+		/// </summary>
 		public string Fein { get; set; }
 
-
+		/// <summary>
+		/// Unique six digit identifier assigned to all U.S. institutions that have submitted data to the Integrated Postsecondary Education Data System (IPEDS).
+		/// </summary>
 		public string IpedsId { get; set; }
+		/// <summary>
+		/// OPE ID number (U.S. Office of Postsecondary Education Identification), sometimes referred to as the Federal School Code.
+		/// </summary>
 		public string OpeId { get; set; }
+		/// <summary>
+		/// A 20-digit, alpha-numeric code, based on the ISO 17442 standard, for identifying legal entities participating in financial transactions.
+		/// </summary>
 		public string LEICode { get; set; }
 		/// <summary>
 		/// ISIC Revision 4 Code
@@ -305,6 +325,36 @@ namespace RA.Models.Input
 
 		#endregion
 
+
+		/// <summary>
+		/// Reference to condition manifests
+		/// A condition manifest can never be a third party reference, so a url is expected
+		/// </summary>
+		public List<string> HasConditionManifest { get; set; }
+		/// <summary>
+		/// Reference to cost manifests
+		/// A cost manifest can never be a third party reference, so a url is expected
+		/// </summary>
+		public List<string> HasCostManifest { get; set; }
+
+		/// <summary>
+		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
+		/// </summary>
+		public List<FrameworkItem> IndustryType { get; set; }
+		/// <summary>
+		/// AlternativeIndustryType
+		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
+		/// Any industries added using this property will be added to or appended to the IndustryType output.
+		/// </summary>
+		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Jurisdiction Profile
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"></see>
+		/// </summary>
+		public List<Jurisdiction> Jurisdiction { get; set; }
+
 		/// <summary>
 		/// Type of official status of the TransferProfile; select from an enumeration of such types.
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
@@ -312,39 +362,40 @@ namespace RA.Models.Input
 		/// </summary>
 		public string LifeCycleStatusType { get; set; }
 
-		/// <summary>
-		/// Webpage or online document that defines or explains the nature of transfer value handled by the organization.
-		/// URI
-		/// </summary>
-		public string TransferValueStatement { get; set; }
-		/// <summary>
-		/// Description of the nature of transfer value handled by the organization.
-		/// </summary>
-		public string TransferValueStatementDescription { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap TransferValueStatementDescription_Map { get; set; } = new LanguageMap();
 
 		//
-		public List<Jurisdiction> Jurisdiction { get; set; }
-
+		/// <summary>
+		/// Webpage or online document that defines or explains the mission and goals of the organization.
+		/// URI
+		/// </summary>
 		public string MissionAndGoalsStatement { get; set; }
+		/// <summary>
+		/// Textual statement of the mission and goals of the organization.
+		/// </summary>
 		public string MissionAndGoalsStatementDescription { get; set; }
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap MissionAndGoalsStatementDescription_Map { get; set; } = new LanguageMap();
 
-		public List<FrameworkItem> IndustryType { get; set; }
-		//public List<string> AlternativeIndustryType { get; set; } = new List<string>();
-		//public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// North American Industry Classification System (NAICS) code of an organization or business person.
+		/// A list of NAICS codes
+		/// </summary>
 		public List<string> Naics { get; set; }
 
+		/// <summary>
+		/// Resource over which the organization or person claims legal title.
+		/// Could be any of Credential, Assessment, LearningOpportunity, Pathway,etc.
+		/// It is not necessary to include owns/offers when publishing an organization. It is considered a best practice to use the OwnedBy, OfferedBy properties of credential, etc to establish the relationships.
+		/// </summary>
+		public List<EntityReference> Owns { get; set; }
+		/// <summary>
+		/// Resource offered or conferred by the organization or person.
+		/// See Owns for best pratice recommendation
+		/// </summary>
+		public List<EntityReference> Offers { get; set; }
 
-		//NOTE: ContactPoint can only be entered with Address
-		//[Obsolete]
-		//public List<ContactPoint> ContactPoint { get; set; } = new List<ContactPoint>();
 
 		/// <summary>
 		/// A resource that unambiguously indicates the identity of the resource being described.
@@ -383,51 +434,94 @@ namespace RA.Models.Input
 
 		#endregion
 
-		/// <summary>
-		/// A credentialling organization must own or offer something
-		/// </summary>
-		public List<EntityReference> Owns { get; set; }
-		public List<EntityReference> Offers { get; set; }
 
 		#region Quality Assurance Performed
+		// Organization performs QA on these entities
+
 		/// <summary>
-		/// Organization performs QA on these entities
-		/// A QA organization must have QA on at least one document
-		/// The entities could be any of organization, credential, assessment, or learning opportunity
+		/// Credential, assessment, organization, or learning opportunity for which this organization provides official authorization or approval based on prescribed standards or criteria.
 		/// </summary>
 		public List<EntityReference> Accredits { get; set; }
+		/// <summary>
+		/// Credential, assessment, learning opportunity, or organization for which this organization pronounces favorable judgment.
+		/// </summary>
 		public List<EntityReference> Approves { get; set; }
+		/// <summary>
+		/// Resource that the agent recommends, endorses, indicates preference for, or otherwise provides a positive judgment.
+		/// </summary>
 		public List<EntityReference> Recognizes { get; set; }
+		/// <summary>
+		/// Credential, learning opportunity, assessment or organization that this quality assurance organization monitors, including enforcement of applicable legal requirements or standards.
+		/// </summary>
 		public List<EntityReference> Regulates { get; set; } = new List<EntityReference>();
+		/// <summary>
+		/// Credential type that has its validity extended by the organization or person.
+		/// </summary>
 		public List<EntityReference> Renews { get; set; }
+		/// <summary>
+		/// Credential type that can be invalidated or retracted by the awarding agent.
+		/// </summary>
 		public List<EntityReference> Revokes { get; set; }
 
 		#endregion
 
-		/// <summary>
-		/// Reference to condition manifests
-		/// A condition manifest can never be a third party reference, so a url is expected
-		/// </summary>
-		public List<string> HasConditionManifest { get; set; }
-		/// <summary>
-		/// Reference to cost manifests
-		/// A cost manifest can never be a third party reference, so a url is expected
-		/// </summary>
-		public List<string> HasCostManifest { get; set; }
 
-
+		#region -- Process Profiles --
+		/// <summary>
+		/// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
+		/// </summary>
 		public List<ProcessProfile> AdministrationProcess { get; set; }
+		/// <summary>
+		/// Entity describing the process by which a credential, or aspects of it, were created.
+		/// </summary>
 		public List<ProcessProfile> DevelopmentProcess { get; set; }
+		/// <summary>
+		/// Entity describing the process by which the credential is maintained including review and updating.
+		/// </summary>
 		public List<ProcessProfile> MaintenanceProcess { get; set; }
+		/// <summary>
+		/// Formal process for objecting to decisions of the organization regarding credentials, assessments or processes.
+		/// </summary>
 		public List<ProcessProfile> AppealProcess { get; set; }
+		/// <summary>
+		/// Process for handling complaints about a credential, or aspects of it including related learning opportunities and assessments.
+		/// </summary>
 		public List<ProcessProfile> ComplaintProcess { get; set; }
+		/// <summary>
+		/// Entity that describes the process by which the credential, or aspects of it, are reviewed.
+		/// </summary>
 		public List<ProcessProfile> ReviewProcess { get; set; }
+		/// <summary>
+		/// Entity describing the process by which the credential is revoked.
+		/// </summary>
 		public List<ProcessProfile> RevocationProcess { get; set; }
+		#endregion
 
-		public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; }
-
-		public List<OrganizationReference> Department { get; set; }
+		/// <summary>
+		/// Organization in a subordinate or lower position than a parent organization.
+		/// </summary>
 		public List<OrganizationReference> SubOrganization { get; set; }
+		/// <summary>
+		/// Webpage or online document that defines or explains the nature of transfer value handled by the organization.
+		/// URI
+		/// </summary>
+		public string TransferValueStatement { get; set; }
+		/// <summary>
+		/// Description of the nature of transfer value handled by the organization.
+		/// </summary>
+		public string TransferValueStatementDescription { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap TransferValueStatementDescription_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Entity describing the means by which someone can verify whether a credential has been attained.
+		/// </summary>
+		public List<VerificationServiceProfile> VerificationServiceProfile { get; set; } = new List<VerificationServiceProfile>();
+		//VerificationServiceProfiles was originally added uncorrectly as plural. The latter is incorrrect and is being maintained for legacy references. VerificationServiceProfile should be used, and is checked first
+		[Obsolete]
+		public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; } = new List<VerificationServiceProfile>();
 
 
 	}

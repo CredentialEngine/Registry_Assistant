@@ -15,6 +15,21 @@ namespace RA.SamplePublishingProject
 		{
 			new PublishLearningOpportunityWithOutcomes().LearningOpportunityWithOutcomeData( "publish" );
 		}
+		#region Collection publishing
+		[TestMethod]
+		public void PublishCollection()
+		{
+			new RA.SamplesForDocumentation.Collections.PublishCollection().Simple( "format" );
+
+		}
+
+
+		[TestMethod]
+		public void PublishCollectionMembers()
+		{
+			new RA.SamplesForDocumentation.Collections.PublishCollection().PublishWithCollectionMembers( "format" );
+		}
+		#endregion
 
 		#region transfer value publishing
 		[TestMethod]

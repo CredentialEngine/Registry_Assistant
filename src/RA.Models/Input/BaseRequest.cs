@@ -13,6 +13,11 @@
         public string PublishForOrganizationIdentifier { get; set; }
 
 		/// <summary>
+		/// Flag to indicate if the data being published is from a primary source (true) or a secondary source (false)
+		/// </summary>
+		public bool IsPrimarySourceRecord { get; set; } = true;
+
+		/// <summary>
 		/// Envelope Identifier
 		/// Optional property, used where the publishing entity wishes to store the identifier.
 		/// Contains registry envelope identifier for a document in the registy. It should be empty for a new document. 

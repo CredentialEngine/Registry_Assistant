@@ -72,9 +72,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Type { get; set; } = "LearningOpportunityProfile";
 
-
-
 		#region *** Required Properties ***
+		/// <summary>
+		/// Name or title of the resource.
+		/// Required
+		/// </summary>
 		public string Name { get; set; }
 		/// <summary>
 		/// Alternately can provide a language map
@@ -90,7 +92,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-		public string SubjectWebpage { get; set; } //URL
+		/// <summary>
+		/// Webpage that describes this entity.
+		/// URL
+		/// </summary>
+		public string SubjectWebpage { get; set; }
 
 		/// <summary>
 		/// Credential Identifier
@@ -99,9 +105,11 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string CTID { get; set; }
-		//original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
-		public string Ctid { get; set; }
-
+		/// <summary>
+		/// The primary language or languages of the entity, even if it makes use of other languages; e.g., a course offered in English to teach Spanish would have an inLanguage of English, while a credential in Quebec could have an inLanguage of both French and English.
+		/// List of language codes. ex: en, es
+		/// </summary>
+		public List<string> InLanguage { get; set; }
 
 		#region at least one of
 
@@ -117,11 +125,21 @@ namespace RA.Models.Input
 		#endregion
 
 		#region at least one of the following
-		public List<string> AvailableOnlineAt { get; set; } //URL
-		public List<string> AvailabilityListing { get; set; } //URL
+		/// <summary>
+		/// Online location where the credential, assessment, or learning opportunity can be pursued.
+		/// URL
+		/// </summary>
+		public List<string> AvailableOnlineAt { get; set; }
+
+		/// <summary>
+		/// Listing of online and/or physical locations where a credential can be pursued.
+		/// URL
+		/// </summary>
+		public List<string> AvailabilityListing { get; set; }
 
 		/// <summary>
 		/// Physical location where the credential, assessment, or learning opportunity can be pursued.
+		/// Place
 		/// </summary>
 		public List<Place> AvailableAt { get; set; }
 		#endregion
@@ -180,6 +198,12 @@ namespace RA.Models.Input
 		//=========== optional ================================
 
 		/// <summary>
+		///  Resource containing summary/statistical employment outcome, earnings, and/or holders information.
+		///  For deeper information, include qdata:DataSetProfile.
+		/// </summary>
+		public List<AggregateDataProfile> AggregateData { get; set; } = new List<AggregateDataProfile>();
+
+		/// <summary>
 		/// Assessment Method Description 
 		/// Description of the assessment methods for a resource.
 		/// </summary>
@@ -220,17 +244,16 @@ namespace RA.Models.Input
 		/// Set of costs maintained at an organizational or sub-organizational level, which apply to this learning opportunity.
 		/// </summary>
 		public List<string> CommonCosts { get; set; }
-		/// <summary>
-		/// List of CTIDs or full URLs for a ConditionManifest published by the owning organization.
-		/// Set constraints, prerequisites, entry conditions, or requirements that are shared across an organization, organizational subdivision, set of credentials, or category of entities and activities.
-		/// </summary>
-		public List<string> CommonConditions { get; set; }
+
 
 		/// <summary>
 		/// Detailed description of credit unit. 
 		/// Recommendation is to use CreditValue rather than this property.
 		/// </summary>
 		public string CreditUnitTypeDescription { get; set; }
+		/// <summary>
+		/// LanguageMap for CreditUnitTypeDescription
+		/// </summary>
 		public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
@@ -270,8 +293,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
-		//List of language codes. ex: en, es
-		public List<string> InLanguage { get; set; }
+
 
 		/// <summary>
 		/// Indicates another entity of which this entity is a component. That is of another Learning Opportunity
@@ -284,10 +306,24 @@ namespace RA.Models.Input
 		/// Geo-political information about applicable geographic areas and their exceptions.
 		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"></see>
 		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
+		public List<Jurisdiction> Jurisdiction { get; set; } 
 
+		/// <summary>
+		/// Keyword or key phrase describing relevant aspects of an entity.
+		/// </summary>
 		public List<string> Keyword { get; set; }
+		/// <summary>
+		/// Language map list for Keyword
+		/// </summary>
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+
+
+		/// <summary>
+		/// Type of official status of the TransferProfile; select from an enumeration of such types.
+		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// </summary>
+		public string LifeCycleStatusType { get; set; }
 
 		/// <summary>
 		/// Another source of information about the entity being described.
@@ -295,9 +331,14 @@ namespace RA.Models.Input
 		/// ceterms:sameAs
 		/// </summary>
 		public List<string> SameAs { get; set; } = new List<string>();
-		public List<string> Subject { get; set; }
+		/// <summary>
+		/// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
+		/// </summary>
+		public List<string> Subject { get; set; } = new List<string>();
+		/// <summary>
+		/// Language map list for Subject
+		/// </summary>
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
-
 
 
 		#region Occupations, Industries, and instructional programs
@@ -367,29 +408,97 @@ namespace RA.Models.Input
 		#endregion
 
 		//
+		#region Conditions and connections
+		//Connection Profiles are Condition Profiles but typically only a subject of the Condition Profile properties are used. 
+		/// <summary>
+		/// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
+		/// Set constraints, prerequisites, entry conditions, or requirements that are shared across an organization, organizational subdivision, set of credentials, or category of entities and activities.
+		/// </summary>
+		public List<string> CommonConditions { get; set; }
 
-
-		#region  Conditions and connections
+		/// <summary>
+		///  Credentials that must be pursued concurrently.
+		/// </summary>
 		public List<ConditionProfile> Corequisite { get; set; }
-		public List<ConditionProfile> Recommends { get; set; }
-		public List<ConditionProfile> Requires { get; set; }
+
+		/// <summary>
+		/// Prerequisites for entry into a credentialing program, a learning opportunity or an assessment including transcripts, records of previous experience, and lower-level learning opportunities.
+		/// </summary>
 		public List<ConditionProfile> EntryCondition { get; set; }
 
+		/// <summary>
+		/// Recommended resources for this resource.
+		/// </summary>
+		public List<ConditionProfile> Recommends { get; set; }
+
+		/// <summary>
+		///  Requirement or set of requirements for this resource.
+		/// </summary>
+		public List<ConditionProfile> Requires { get; set; }
+
+		// =========== connections ===========
+
+		/// <summary>
+		/// Credential that has its time or cost reduced by another credential, assessment or learning opportunity.
+		/// ceterms:advancedStandingFrom
+		/// <seealso href="https://credreg.net/ctdl/terms/advancedStandingFrom"></seealso>
+		/// </summary>
 		public List<Connections> AdvancedStandingFrom { get; set; }
+
+		/// <summary>
+		/// This credential, assessment, or learning opportunity reduces the time or cost required to earn or complete the referenced credential, assessment, or learning opportunity.
+		/// <para>A third-party credential agent claiming that its credential provides advanced standing for the credential of another credential agent should consider using ceterms:recommendedFor instead of ceterms:advancedStandingFor in the absence of an explicit and verifiable agreement on advanced standing between the agents of the two credentials.</para>
+		/// ceterms:isAdvancedStandingFor
+		/// <seealso href="https://credreg.net/ctdl/terms/isAdvancedStandingFor">isAdvancedStandingFor</seealso>
+		/// </summary>
 		public List<Connections> IsAdvancedStandingFor { get; set; }
-		public List<Connections> PreparationFrom { get; set; }
+
+		/// <summary>
+		/// This credential, assessment, or learning opportunity provides preparation for the credential, assessment, or learning opportunity being referenced.
+		/// ceterms:isPreparationFor
+		/// <seealso href="https://credreg.net/ctdl/terms/isPreparationFor">isPreparationFor</seealso>
+		/// </summary>
 		public List<Connections> IsPreparationFor { get; set; }
+
+		/// <summary>
+		/// It is recommended to earn or complete this credential, assessment, or learning opportunity before attempting to earn or complete the referenced credential, assessment, or learning opportunity.
+		/// ceterms:isRecommendedFor
+		/// <seealso href="https://credreg.net/ctdl/terms/isRecommendedFor">isRecommendedFor</seealso>
+		/// </summary>
 		public List<Connections> IsRecommendedFor { get; set; }
+
+		/// <summary>
+		/// This credential, assessment, or learning opportunity must be earned or completed prior to attempting to earn or complete the referenced credential, assessment, or learning opportunity.
+		/// ceterms:isRequiredFor
+		/// <seealso href="https://credreg.net/ctdl/terms/isRequiredFor"></seealso>
+		/// </summary>
 		public List<Connections> IsRequiredFor { get; set; }
+
+		/// <summary>
+		///  Another credential, learning opportunity or assessment that provides preparation for this credential, learning opportunity or assessment.
+		/// ceterms:preparationFrom
+		/// <seealso href="https://credreg.net/ctdl/terms/preparationFrom"></seealso>
+		/// </summary>
+		public List<Connections> PreparationFrom { get; set; }
 		#endregion
 
-
-
 		#region -- Quality Assurance BY --
+		/// <summary>
+		/// List of Organizations that accredit this credential
+		/// </summary>
 		public List<OrganizationReference> AccreditedBy { get; set; }
-		public List<OrganizationReference> ApprovedBy { get; set; }
 
+		/// <summary>
+		/// List of Organizations that approve this credential
+		/// </summary>
+		public List<OrganizationReference> ApprovedBy { get; set; }
+		/// <summary>
+		/// List of Organizations that recognize this credential
+		/// </summary>
 		public List<OrganizationReference> RecognizedBy { get; set; }
+		/// <summary>
+		/// List of Organizations that regulate this credential
+		/// </summary>
 		public List<OrganizationReference> RegulatedBy { get; set; }
 		#endregion
 
@@ -448,7 +557,6 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Learning object or resource that is used as part of an learning activity.
 		/// </summary>
-		public List<EntityReference> TargetLearningResource1 { get; set; } = new List<EntityReference>();
 		public List<string> TargetLearningResource { get; set; } = new List<string>();
 
 		/// <summary>
@@ -464,20 +572,5 @@ namespace RA.Models.Input
 		/// COURSE ONLY
 		/// </summary>
 		public string SCED { get; set; }
-
-		/// <summary>
-		/// Type of official status of the TransferProfile; select from an enumeration of such types.
-		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
-		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
-		/// </summary>
-		public string LifeCycleStatusType { get; set; }
-
-		/// <summary>
-		///  Resource containing summary/statistical employment outcome, earnings, and/or holders information.
-		///  For deeper information, include qdata:DataSetProfile.
-		/// </summary>
-		public List<AggregateDataProfile> AggregateData { get; set; } = new List<AggregateDataProfile>();
-
-
 	}
 }

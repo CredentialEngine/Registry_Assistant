@@ -82,11 +82,10 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Resource(s) for which this resource is an intermediary.
-		/// Required
+		/// Required. If a list the complete list of transfer value profiles is included with this transaction, then this property does not need to duplicate the information. 
 		/// Range: ceterms:TransferValueProfile
-		/// TBD: Provide the CTID for a transfer value that is already published to the registry. Or may be publishing all at once?
-		/// Probably handle like PathwaySet, where could refer to a TVP in the request.TransferValueProfiles or a published one. 
-		/// Required
+		/// Provide the CTID for a transfer value that is already published to the registry or is included the list of transfer value profiles with this request. 
+		/// NOTE: API will always take all transfer value profiles in the request list, 
 		/// </summary>
 		public List<string> IntermediaryFor { get; set; } = new List<string>();
 

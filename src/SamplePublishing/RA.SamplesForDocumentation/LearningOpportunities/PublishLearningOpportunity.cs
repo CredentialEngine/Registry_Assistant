@@ -87,7 +87,17 @@ namespace RA.SamplesForDocumentation
 					}
 				}
 			};
-
+			//duration for a program that is exactly 9 months
+			myData.EstimatedDuration = new List<DurationProfile>()
+			{
+				new DurationProfile()
+				{
+					ExactDuration = new DurationItem()
+					{
+						Months=9
+					}
+				}
+			};
 			//add costs
 			//Must be a valid CTDL cost type.
 			// Example: Tuition, Application, AggregateCost, RoomOrResidency

@@ -15,9 +15,27 @@ namespace RA.Models.Input
 		/// Collection to publish
 		/// </summary>
 		public Collection Collection { get; set; }
-		//TBD -may just want a list of objects. 
-		//public List<Competency> Competencies { get; set; } = new List<Competency>();
+		/// <summary>
+		/// Members can be any of:
+		/// "ceterms:AssessmentProfile",
+		/// "ceterms:CollectionMember",
+		/// "ceterms:Credential", //any of the valid credential subclasses
+		/// "ceasn:Competency",
+		/// "ceterms:Course",
+		/// "ceterms:Job",
+		/// "ceterms:LearningOpportunityProfile",
+		/// "ceterms:LearningProgram",
+		/// "ceterms:Occupation",
+		/// "ceterms:Task",
+		/// "ceterms:WorkRole",
+		/// </summary>
+		public List<object> Members { get; set; } = new List<object>();
 
+		/// <summary>
+		/// CollectionMember
+		/// Collection members will be published in the graph like Members, but have a separate input propery for better organization
+		/// </summary>
+		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
 	}
 
 	/// <summary>
@@ -27,10 +45,10 @@ namespace RA.Models.Input
 	{
 		public CollectionGraphRequest()
 		{
-			CollectionGraph = new JsonV2.GraphContainer();
+			CollectionGraph = new GraphInput();
 		}
 
-		public JsonV2.GraphContainer CollectionGraph { get; set; }
+		public GraphInput CollectionGraph { get; set; }
 
 	}
 	
@@ -54,6 +72,7 @@ namespace RA.Models.Input
 		/// Category or classification of this resource.
 		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
 		/// URI to a concept(based on the ONet work activities example)
+		/// Recommend using CTIDs
 		/// ceterms:classification
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
@@ -61,6 +80,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Additional Classification
 		/// List of concepts that don't exist in the registry. Will be published as blank nodes
+		/// OR should input be a list of Concepts?
 		/// </summary>
 		public List<CredentialAlignmentObject> AdditionalClassification { get; set; } = new List<CredentialAlignmentObject>();
 		#endregion
@@ -70,13 +90,6 @@ namespace RA.Models.Input
 		/// ceterms:codedNotation
 		/// </summary>
 		public string CodedNotation { get; set; }
-
-
-		///// <summary>
-		///// Only allow date (yyyy-mm-dd), no time
-		///// xsd:date
-		///// </summary>
-		//public string DateCreated { get; set; }
 
 		/// <summary>
 		/// Only allow date (yyyy-mm-dd), no time
@@ -101,6 +114,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Resource in a Collection.
 		/// REQUIRED
+		/// NEW - using object, as could be: CTID, URI, or CollectionMember, or credential classes, assessment, learning classes, 
 		/// Current Range
 		/// ceasn:Competency ceterms:Task ceterms:WorkRole ceterms:Job ceterms:Course ceterms:LearningOpportunityProfile ceterms:LearningProgram
 		/// List of CTIDs (recommended) or URIs
@@ -135,6 +149,20 @@ namespace RA.Models.Input
 		public string License { get; set; }
 
 		/// <summary>
+		/// Type of official status of the TransferProfile; select from an enumeration of such types.
+		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// </summary>
+		public string LifeCycleStatusType { get; set; } 
+
+		/// <summary>
+		/// Type of list
+		/// Current valid values:
+		/// listType:EligibleTrainingProviderList, listType:IndustryRecognizedLIst, listType:QualityList
+		/// </summary>
+		public List<string> ListType { get; set; }
+
+		/// <summary>
 		/// The name or title of this resource.
 		/// </summary>
 		public string Name { get; set; }
@@ -142,6 +170,11 @@ namespace RA.Models.Input
 		/// Language map for Name
 		/// </summary>
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Conditions for collection membership
+		/// </summary>
+		public List<ConditionProfile> MembershipCondition { get; set; } = new List<ConditionProfile>();
 
 		/// <summary>
 		/// Organization that owns this resource
@@ -156,6 +189,11 @@ namespace RA.Models.Input
 		/// Language map list for Subject
 		/// </summary>
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
+
+		/// <summary>
+		/// Webpage that describes this entity.
+		/// </summary>
+		public List<string> SubjectWebpage { get; set; } = new List<string>();
 
 		#region Occupations, Industries, and instructional programs
 		//=====================================================================
@@ -222,6 +260,58 @@ namespace RA.Models.Input
 		public List<string> CIP_Codes { get; set; } = new List<string>();
 		#endregion
 
+
+	}
+
+	/// <summary>
+	/// Collection Member (proposed)
+	/// The collection member will use a blank node format for the id.
+	/// Tip: we may use the CTID from the is proxy for in the blank node id
+	/// </summary>
+	public class CollectionMember
+	{
+		/// <summary>
+		/// Type for this class
+		/// </summary>
+		public string Type { get; set; } = "ceterms:CollectionMember";
+
+		/// <summary>
+		/// A short description of this resource.
+		/// </summary>
+		public string Description { get; set; }
+		/// <summary>
+		/// Language map for Description
+		/// </summary>
+		public LanguageMap Description_Map { get; set; }
+
+		/// <summary>
+		/// The name or title of this resource.
+		/// </summary>
+		public string Name { get; set; }
+		/// <summary>
+		/// Language map for Name
+		/// </summary>
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Indicates the resource for which this resource is a stand-in.
+		/// CTID/URI
+		/// OR could may use an object to support BNodes
+		/// </summary>
+		public string ProxyFor { get; set; }
+
+		/// <summary>
+		/// Start date of this resource
+		/// Only allow date (yyyy-mm-dd), no time
+		/// xsd:date
+		/// </summary>
+		public string StartDate { get; set; }
+		/// <summary>
+		/// Expiration date of this resource
+		/// Only allow date (yyyy-mm-dd), no time
+		/// xsd:date
+		/// </summary>
+		public string EndDate { get; set; }
 
 	}
 }

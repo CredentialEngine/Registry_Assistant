@@ -177,14 +177,17 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string CTID { get; set; }
-		//original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
-		public string Ctid { get; set; }
 
 		/// <summary>
-		/// SubjectWebpage URL
+		/// Webpage that describes this entity.
+		/// URL
 		/// </summary>
-		public string SubjectWebpage { get; set; } //URL
+		public string SubjectWebpage { get; set; }
 
+		/// <summary>
+		/// The primary language or languages of the entity, even if it makes use of other languages; e.g., a course offered in English to teach Spanish would have an inLanguage of English, while a credential in Quebec could have an inLanguage of both French and English.
+		/// List of language codes. ex: en, es
+		/// </summary>
 		public List<string> InLanguage { get; set; }
 		#endregion
 
@@ -193,7 +196,9 @@ namespace RA.Models.Input
 		/// List of Alternate Names for this credential
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
-
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
 		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 
 
@@ -230,12 +235,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<Place> AvailableAt { get; set; }
 
-
-		/// <summary>
-		/// ISIC Revision 4 Code
-		/// </summary>
-		public string ISICV4 { get; set; }
-
 		/// <summary>
 		/// Person or organization holding the rights in copyright to entities such as credentials, learning opportunities, assessments, competencies or concept schemes.
 		/// </summary>
@@ -258,6 +257,7 @@ namespace RA.Models.Input
 		/// Previously earned, completed, or attained resources may still be valid even if they are no longer offered.
 		/// </summary>
 		public string ExpirationDate { get; set; }
+
 
 		#region -- Quality Assurance BY --
 		/// <summary>
@@ -330,12 +330,7 @@ namespace RA.Models.Input
 		public List<JurisdictionAssertion> RevokedIn { get; set; } = new List<JurisdictionAssertion>();
 
 		#endregion
-		/// <summary>
-		/// Action related to the credential
-		/// This may end up being a list of CTIDs?
-		/// PROPOSED - NOT VALID FOR PRODUCTION YET
-		/// </summary>
-		public List<CredentialingAction> RelatedAction { get; set; } = new List<CredentialingAction>();
+
 
 		#region Costs, duration, assistance
 		/// <summary>
@@ -380,12 +375,28 @@ namespace RA.Models.Input
 		/// Image URL
 		/// </summary>
 		public string Image { get; set; }
+
+		/// <summary>
+		/// ISIC Revision 4 Code
+		/// </summary>
+		public string ISICV4 { get; set; }
 		/// <summary>
 		/// List of credentials where this credential is a part of.
 		/// </summary>
 		public List<EntityReference> IsPartOf { get; set; }
-
+		/// <summary>
+		/// Jurisdiction Profile
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile">JurisdictionProfile</see>
+		/// </summary>
+		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
+		/// <summary>
+		/// Keyword or key phrase describing relevant aspects of an entity.
+		/// </summary>
 		public List<string> Keyword { get; set; }
+		/// <summary>
+		/// Language map list for Keyword
+		/// </summary>
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
@@ -394,17 +405,27 @@ namespace RA.Models.Input
 		/// <see href="https://credreg.net/ctdl/terms/Deliver">Deliver</see>
 		/// </summary>
 		public List<string> LearningDeliveryType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Webpage or online document that describes the criteria, standards, and/or requirements used with a process.
+		/// </summary>
 		public string ProcessStandards { get; set; }
+		/// <summary>
+		/// Textual description of the criteria, standards, and/or requirements used with a process
+		/// </summary>
 		public string ProcessStandardsDescription { get; set; }
+		/// <summary>
+		/// Language map - Textual description of the criteria, standards, and/or requirements used with a process
+		/// </summary>
 		public LanguageMap ProcessStandardsDescription_Map { get; set; } = new LanguageMap();
 
-		//version related
-		//
-		/// <summary>
-		/// Latest version of the credential.
-		/// full URL OR CTID (recommended)
-		/// </summary>
-		public string LatestVersion { get; set; }
+		#region Version related properties
+        //
+        /// <summary>
+        /// Latest version of the credential.
+        /// full URL OR CTID (recommended)
+        /// </summary>
+        public string LatestVersion { get; set; }
 		/// <summary>
 		/// Version of the resource that immediately precedes this version.
 		/// full URL OR CTID (recommended)
@@ -424,15 +445,39 @@ namespace RA.Models.Input
 		/// Resource that this resource replaces.
 		/// full URL OR CTID (recommended)
 		/// </summary>
-		public string Supersedes { get; set; } 
-											  
+		public string Supersedes { get; set; }
+		#endregion
+
+
+
+		/// <summary>
+		/// Frequency with which the credential needs to be renewed.
+		/// A single DurationItem, using Years, Months, etc. or a combination.
+		/// Alternately the actual ISO8601 format may be provided (using Duration_ISO8601)
+		/// </summary>
+		public DurationItem RenewalFrequency { get; set; } //= new DurationItem();
+
+		/// <summary>
+		/// Revocation Profile
+		/// Entity describing conditions and methods by which a credential can be removed from a holder.
+		/// </summary>
+		public List<RevocationProfile> Revocation { get; set; } = new List<RevocationProfile>();
+
 		/// <summary>
 		/// Another source of information about the entity being described.
 		/// HINT: If the SameAs target is a resource in the Credential Registry, just the CTID needs to be provided. 
 		/// ceterms:sameAs
 		/// </summary>
 		public List<string> SameAs { get; set; } = new List<string>();
-		public List<string> Subject { get; set; }
+
+
+		/// <summary>
+		/// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
+		/// </summary>
+		public List<string> Subject { get; set; } = new List<string>();
+		/// <summary>
+		/// Language map list for Subject
+		/// </summary>
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 
 
@@ -503,12 +548,7 @@ namespace RA.Models.Input
 		#endregion
 		//
 		//Navy
-		/// <summary>
-		/// HasRating
-		/// Rating related to this resource.
-		/// URI to a Rating
-		/// </summary>
-		public List<string> HasRating { get; set; } = new List<string>();
+
 
 		#region Properties allowed only for degree types
 
@@ -558,25 +598,7 @@ namespace RA.Models.Input
 		public List<AggregateDataProfile> AggregateData { get; set; } = new List<AggregateDataProfile>();
 
 		#endregion
-		/// <summary>
-		/// Jurisdiction Profile
-		/// Geo-political information about applicable geographic areas and their exceptions.
-		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile">JurisdictionProfile</see>
-		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 
-		/// <summary>
-		/// Frequency with which the credential needs to be renewed.
-		/// A single DurationItem, using Years, Months, etc. or a combination.
-		/// Alternately the actual ISO8601 format may be provided (using Duration_ISO8601)
-		/// </summary>
-		public DurationItem RenewalFrequency { get; set; } //= new DurationItem();
-
-		/// <summary>
-		/// Revocation Profile
-		/// Entity describing conditions and methods by which a credential can be removed from a holder.
-		/// </summary>
-		public List<RevocationProfile> Revocation { get; set; } = new List<RevocationProfile>();
 
 		/// <summary>
 		/// VersionIdentifier
@@ -595,8 +617,17 @@ namespace RA.Models.Input
 		/// Requirement or set of requirements for this resource
 		/// </summary>
 		public List<ConditionProfile> Requires { get; set; }
+		/// <summary>
+		/// Recommended resources for this resource.
+		/// </summary>
 		public List<ConditionProfile> Recommends { get; set; }
+		/// <summary>
+		///  Credentials that must be pursued concurrently.
+		/// </summary>
 		public List<ConditionProfile> Corequisite { get; set; }
+		/// <summary>
+		/// Entity describing the constraints, prerequisites, entry conditions, or requirements necessary to maintenance and renewal of an awarded credential.
+		/// </summary>
 		public List<ConditionProfile> Renewal { get; set; }
 		#endregion
 
@@ -648,14 +679,43 @@ namespace RA.Models.Input
 		#endregion
 
 		#region -- Process Profiles --
+		/// <summary>
+		/// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
+		/// </summary>
 		public List<ProcessProfile> AdministrationProcess { get; set; }
+		/// <summary>
+		/// Entity describing the process by which a credential, or aspects of it, were created.
+		/// </summary>
 		public List<ProcessProfile> DevelopmentProcess { get; set; }
+		/// <summary>
+		/// Entity describing the process by which the credential is maintained including review and updating.
+		/// </summary>
 		public List<ProcessProfile> MaintenanceProcess { get; set; }
+		/// <summary>
+		/// Formal process for objecting to decisions of the organization regarding credentials, assessments or processes.
+		/// </summary>
 		public List<ProcessProfile> AppealProcess { get; set; }
+		/// <summary>
+		/// Process for handling complaints about a credential, or aspects of it including related learning opportunities and assessments.
+		/// </summary>
 		public List<ProcessProfile> ComplaintProcess { get; set; }
+		/// <summary>
+		/// Entity that describes the process by which the credential, or aspects of it, are reviewed.
+		/// </summary>
 		public List<ProcessProfile> ReviewProcess { get; set; }
+		/// <summary>
+		/// Entity describing the process by which the credential is revoked.
+		/// </summary>
 		public List<ProcessProfile> RevocationProcess { get; set; }
 		#endregion
+
+		/// <summary>
+		/// HasRating - Navy
+		/// Rating related to this resource.
+		/// URI to a Rating
+		/// </summary>
+		public List<string> HasRating { get; set; } = new List<string>();
+
 
 		#region OBSOLETE
 

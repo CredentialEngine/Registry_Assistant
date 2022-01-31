@@ -113,6 +113,22 @@ namespace RA.SamplesForDocumentation
 					}
 				}
 			};
+
+			//duration for a range from 8 to 12 weeks
+			myData.EstimatedDuration = new List<DurationProfile>()
+			{
+				new DurationProfile()
+				{
+					MinimumDuration = new DurationItem()
+                    {
+						Weeks=8
+                    }, 
+					MaximumDuration = new DurationItem()
+                    {
+						Weeks=12
+                    }
+				}
+			};
 			//====================	COSTS	====================
 			//Must be a valid CTDL cost type.
 			// Example: Tuition, Application, AggregateCost, RoomOrResidency

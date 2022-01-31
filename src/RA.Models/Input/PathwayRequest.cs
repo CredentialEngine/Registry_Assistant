@@ -112,38 +112,74 @@ namespace RA.Models.Input
 
 
 		#endregion
-		public List<string> Keyword { get; set; } = new List<string>();
+		/// <summary>
+		/// Keyword or key phrase describing relevant aspects of an entity.
+		/// </summary>
+		public List<string> Keyword { get; set; }
+		/// <summary>
+		/// Language map list for Keyword
+		/// </summary>
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
+		/// <summary>
+		/// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
+		/// </summary>
 		public List<string> Subject { get; set; } = new List<string>();
+		/// <summary>
+		/// Language map list for Subject
+		/// </summary>
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 
-		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+		#region Occupations, and Industries
+		/// <summary>
+		/// OccupationType
+		/// Type of occupation; select from an existing enumeration of such types.
+		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
+		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
+		/// </summary>
+		public List<FrameworkItem> OccupationType { get; set; }
+		/// <summary>
+		/// AlternativeOccupationType
+		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
+		/// Any occupations added using this property will be added to or appended to the OccupationType output.
+		/// </summary>
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
-
 		/// <summary>
 		/// List of valid O*Net codes. See:
 		/// https://www.onetonline.org/find/
-		/// The API will validate and format the O*Net codes as Occupations
+		/// The API will validate and format the ONet codes as Occupations
 		/// </summary>
 		public List<string> ONET_Codes { get; set; } = new List<string>();
 
-		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+		//=============================================================================
+		/// <summary>
+		/// IndustryType
+		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
+		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
+		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
+		/// </summary>
+		public List<FrameworkItem> IndustryType { get; set; }
+		/// <summary>
+		/// AlternativeIndustryType
+		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
+		/// Any industries added using this property will be added to or appended to the IndustryType output.
+		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
-
+		//public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid NAICS codes. These will be mapped to industry type
 		/// See:
 		/// https://www.naics.com/search/
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
-	}
+        #endregion
+    }
 
-	/// <summary>
-	/// History
-	/// 21-01-06 remove CodedNotation
-	/// </summary>
-	public class PathwayComponent 
+    /// <summary>
+    /// History
+    /// 21-01-06 remove CodedNotation
+    /// </summary>
+    public class PathwayComponent 
 	{
 		/// <summary>
 		/// Type of PathwayComponent. 

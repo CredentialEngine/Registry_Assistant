@@ -38,7 +38,7 @@ namespace RA.Models.Input
 
 	}
 	/// <summary>
-	/// The plain graph doesn't include language maps
+	/// Graph Class
 	/// </summary>
 	public class GraphInput
 	{

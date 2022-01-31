@@ -131,7 +131,7 @@ Public Class PublishCredential
 				.EndpointType = "credential",
 				.RequestType = requestType,
 				.OrganizationApiKey = apiKey,
-				.CTID = myRequest.Credential.Ctid.ToLower(),
+				.CTID = myRequest.Credential.CTID.ToLower(),
 				.Identifier = "testing",
 				.InputPayload = payload
 			}
