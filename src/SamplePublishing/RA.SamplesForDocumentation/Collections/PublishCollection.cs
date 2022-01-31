@@ -101,7 +101,7 @@ namespace RA.SamplesForDocumentation.Collections
 				//ensure you have added your organization account CTID to the app.config
 			}//
 			 //Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-de4b127d-8234-4f80-9df8-98ba2aae1eff";// "ce-" + Guid.NewGuid().ToString();
+			var myCTID = "ce-3bc3d4a3-c2de-4c16-8d7b-caca771b12f4";// "ce-" + Guid.NewGuid().ToString();
 
 			var myData = new APIRequestEntity()
 			{

@@ -19,15 +19,16 @@ namespace RA.SamplePublishingProject
 		[TestMethod]
 		public void PublishCollection()
 		{
-			new RA.SamplesForDocumentation.Collections.PublishCollection().Simple( "format" );
+			new RA.SamplesForDocumentation.Collections.PublishCollection().Simple( "publish" );
 
+			//PublishCollectionMembers();
 		}
 
 
 		[TestMethod]
 		public void PublishCollectionMembers()
 		{
-			new RA.SamplesForDocumentation.Collections.PublishCollection().PublishWithCollectionMembers( "format" );
+			new RA.SamplesForDocumentation.Collections.PublishCollection().PublishWithCollectionMembers( "publish" );
 		}
 		#endregion
 
