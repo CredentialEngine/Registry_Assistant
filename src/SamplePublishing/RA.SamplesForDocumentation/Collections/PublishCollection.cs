@@ -12,12 +12,15 @@ using APIRequest = RA.Models.Input.CollectionRequest;
 
 namespace RA.SamplesForDocumentation.Collections
 {
+	/// <summary>
+	/// Code samples for publishing collections
+	/// </summary>
     public class PublishCollection
     {
 		/// <summary>
 		/// Simple example just using HasMember and URIs
 		/// </summary>
-		/// <param name="requestType"></param>
+		/// <param name="requestType">Format or Publish</param>
 		/// <returns></returns>
 		public bool Simple( string requestType = "format" )
 		{
@@ -38,8 +41,8 @@ namespace RA.SamplesForDocumentation.Collections
 
 			var myData = new APIRequestEntity()
 			{
-				Name = "A sample collection for TBD ...",
-				Description = "Some purpose for this collection",
+				Name = "A sample collection of credentials.",
+				Description = "This collection uses the HasMember property to list members of this collection using the CTIDs of a published credentials.",
 				CTID = myCTID,
 				InLanguage = new List<string>() { "en-US" },
 			};
@@ -66,7 +69,7 @@ namespace RA.SamplesForDocumentation.Collections
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 
-			//Serialize the learningOpportunity request object
+			//Serialize the request object
 			//Preferably, use method that will exclude null/empty properties
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 			//call the Assistant API
@@ -86,6 +89,15 @@ namespace RA.SamplesForDocumentation.Collections
 
 		}
 
+		/// <summary>
+		/// Code sample showing a MemberCondition and using the CollectionMember class to provide additional information about members of this collection including:
+		/// - Name
+		/// - Optional start and end dates (for membership in this collection)
+		/// 
+		/// <see cref="https://sandbox.credentialengineregistry.org/graph/ce-3bc3d4a3-c2de-4c16-8d7b-caca771b12f4"/>
+		/// </summary>
+		/// <param name="requestType">Format or Publish</param>
+		/// <returns></returns>
 		public bool PublishWithCollectionMembers( string requestType = "format" )
 		{
 
@@ -105,8 +117,8 @@ namespace RA.SamplesForDocumentation.Collections
 
 			var myData = new APIRequestEntity()
 			{
-				Name = "A sample collection for TBD ...",
-				Description = "Some purpose for this collection",
+				Name = "A sample collection of credentials using CollectionMembers.",
+				Description = "This collection uses the CollectionMembers property (part of the CollectionRequest object) to list members of this collection. A CollectionMember has additional properties to describe the member such as the (optional) start date and end date, as well as a name and description. The CollectionMember uses teh ProxyFor proper to 'point' to a publshed resource. Typically just a CTID is used for this property. The API will create a property credential registry URI based on the current publishing environment.",
 				CTID = myCTID,
 				InLanguage = new List<string>() { "en-US" },
 			};
@@ -118,7 +130,17 @@ namespace RA.SamplesForDocumentation.Collections
 
 			//in this case, HasMember is empty - a mix can be used however.
 			myData.HasMember = new List<string>();
-		
+			//add membership conditions
+			myData.MembershipCondition.Add( new ConditionProfile()
+			{
+				Description= "Text describing the requirements for a resource to be a member of this collection",
+				Condition = new List<string>()
+                {
+					"Requirement one",
+					"Requirement two",
+					"Requirement three",
+				}
+			} );
 
 			//This holds the learningOpportunity and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
@@ -128,6 +150,7 @@ namespace RA.SamplesForDocumentation.Collections
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//add collection members that have additional information about members
+			//CollectionMembers is a property of the Request object, not the Collection. Upon publish, blank nodes will be added to the graph, and the Ids of the blank nodes will be added to the HasMembers property. 
 			myRequest.CollectionMembers.Add( new CollectionMember()
 			{
 				Name = "Associate’s Degree A.A Indigenous Leadership",
@@ -152,9 +175,24 @@ namespace RA.SamplesForDocumentation.Collections
 				StartDate = "2020-01-01",
 				EndDate = "2023-12-31"
 			} );
+			myRequest.CollectionMembers.Add( new CollectionMember()
+			{
+				Name = "Associate’s Degree A.A.S. Business Management",
+				Description = "An optional description.",
+				ProxyFor = "ce-299285e8-ea72-4dc0-ab55-aeb2ddd0eed8",//a published object
+				StartDate = "2020-01-01",
+				EndDate = "2023-12-31"
+			} );
+			myRequest.CollectionMembers.Add( new CollectionMember()
+			{
+				Name = "Associate’s Degree A.A. Liberal Education, STEM Emphasis",
+				Description = "An optional description.",
+				ProxyFor = "ce-8596a5af-9bc3-43ac-bd6f-7055e3ab4393",//a published object
+				StartDate = "2020-01-01",
+				EndDate = "2023-12-31"
+			} );
 
-
-			//Serialize the learningOpportunity request object
+			//Serialize the request object
 			//Preferably, use method that will exclude null/empty properties
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 			//call the Assistant API
