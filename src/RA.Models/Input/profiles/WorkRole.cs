@@ -62,7 +62,14 @@ namespace RA.Models.Input
 		/// URI to a concept(based on the ONet work activities example)
 		/// ceterms:classification
 		/// </summary>
-		public List<CredentialAlignmentObject> Classification { get; set; } = new List<CredentialAlignmentObject>();
+		public List<string> Classification { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Additional Classification
+		/// List of concepts that don't exist in the registry. Will be published as blank nodes
+		/// </summary>
+		public List<CredentialAlignmentObject> AdditionalClassification { get; set; } = new List<CredentialAlignmentObject>();
+
 
 		/// <summary>
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
@@ -77,6 +84,24 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> Comment { get; set; } = new List<string>();
 		public LanguageMapList Comment_map { get; set; } = new LanguageMapList();
+
+		/// <summary>
+		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; 
+		/// There is not a controlled concept scheme for this concept
+		/// </summary>
+		public List<string> EnvironmentalHazardType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Type of required or expected human performance level; select from an existing enumeration of such types.
+		/// There is not a controlled concept scheme for this concept
+		/// </summary>
+		public List<string> PerformanceLevelType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Type of physical activity required or expected in performance; select from an existing enumeration of such types.
+		/// There is not a controlled concept scheme for this concept
+		/// </summary>
+		public List<string> PhysicalCapabilityType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Task related to this resource.

@@ -192,7 +192,7 @@ namespace RA.Models.Input
 		/// ceterms:CredentialComponent 	
 		/// ceterms:ExtracurricularComponent 	
 		/// ceterms:JobComponent 	
-		/// ceterms:selectioncomponent
+		/// ceterms:selectioncomponent  2022-01-31 - OBSOLETE
 		/// ceterms:WorkExperienceComponent
 		/// </summary>
 		public string PathwayComponentType { get; set; }

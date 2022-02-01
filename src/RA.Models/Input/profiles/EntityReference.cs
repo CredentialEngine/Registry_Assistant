@@ -45,11 +45,52 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Name { get; set; }
 
+		/// <summary>
+		/// the input classes don't use ceterms, etc. Ensure that each controller sets the default type.
+		/// This could be an issue with lists of objects like for TVP and collections.
+		/// </summary>
+		public bool IsAssessmentType
+		{
+			get
+			{
+				if ( Type == "ceterms:AssessmentProfile"
+					|| Type == "AssessmentProfile"
+					)
+					return true;
+				else
+					return false;
+			}
+		}
+		public bool IsCompetencyType
+		{
+			get
+			{
+				if ( Type == "ceasn:Competency"
+					|| Type == "Competency"
+					)
+					return true;
+				else
+					return false;
+			}
+		}
+		//public bool IsCredentialType
+		//{
+		//	get
+		//	{
+				
+		//		if ( Type == "ceasn:Competency"
+		//			|| Type == "Competency"
+		//			)
+		//			return true;
+		//		else
+		//			return false;
+		//	}
+		//}
 		public bool IsLearningOpportunityType
 		{
 			get 
 			{
-				if ( Type == "LearningOpportunity"
+				if ( Type == "ceterms:LearningOpportunityProfile"
 					|| Type == "LearningOpportunityProfile"
 					|| Type == "Course"
 					|| Type == "LearningProgram"
@@ -59,12 +100,49 @@ namespace RA.Models.Input
 					return false;
 			}
 		}
-		public bool IsAssessmentType
+
+		public bool IsJobType
 		{
 			get
 			{
-				if ( Type == "Assessment"
-					|| Type == "AssessmentProfile"
+				if ( Type == "Job"
+					|| Type == "ceterms:Job"
+					)
+					return true;
+				else
+					return false;
+			}
+		}
+		public bool IsOccupationType
+		{
+			get
+			{
+				if ( Type == "Occupation"
+					|| Type == "ceterms:Occupation"
+					)
+					return true;
+				else
+					return false;
+			}
+		}
+		public bool IsTaskType
+		{
+			get
+			{
+				if ( Type == "Task"
+					|| Type == "ceterms:Task"
+					)
+					return true;
+				else
+					return false;
+			}
+		}
+		public bool IsWorkRoleType
+		{
+			get
+			{
+				if ( Type == "WorkRole"
+					|| Type == "ceterms:WorkRole"
 					)
 					return true;
 				else

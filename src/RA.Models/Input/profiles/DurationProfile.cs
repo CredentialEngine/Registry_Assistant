@@ -51,7 +51,7 @@ namespace RA.Models.Input
 		///	P2Y		- two years
 		///	P10M	- 10 months
 		///	PT10H	- 10 hours
-		/// <seealso cref="https://en.wikipedia.org/wiki/ISO_8601#Durations"/>
+		/// <seealso href="https://en.wikipedia.org/wiki/ISO_8601#Durations">ISO_8601 Durations</seealso>
 		/// </summary>
 		public string Duration_ISO8601 { get; set; }
 		public int Years { get; set; }

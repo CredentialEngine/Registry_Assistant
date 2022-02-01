@@ -153,14 +153,15 @@ namespace RA.Models.Input
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		/// </summary>
-		public string LifeCycleStatusType { get; set; } 
+		public string LifeCycleStatusType { get; set; }
 
 		/// <summary>
-		/// Type of list
+		/// Type of collection, list, set, or other grouping of resources; select from an existing enumeration of such types.
+		/// ConceptScheme: CollectionCategory 
 		/// Current valid values:
-		/// listType:EligibleTrainingProviderList, listType:IndustryRecognizedLIst, listType:QualityList
+		/// collectionCategory:ETPL, collectionCategory:GIBill, collectionCategory:IndustryRecognized, collectionCategory:Quality, collectionCategory:Perkins
 		/// </summary>
-		public List<string> ListType { get; set; }
+		public List<string> CollectionType { get; set; }
 
 		/// <summary>
 		/// The name or title of this resource.

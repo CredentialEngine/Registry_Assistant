@@ -51,7 +51,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Jurisdiction Profile
 		/// Geo-political information about applicable geographic areas and their exceptions.
-		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
 		/// </summary>
 		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 

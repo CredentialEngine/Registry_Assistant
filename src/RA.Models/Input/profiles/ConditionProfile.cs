@@ -19,7 +19,6 @@ namespace RA.Models.Input
         {
             EstimatedCost = new List<CostProfile>();
 
-            //SubjectWebpage = new List<string>();
             AudienceLevelType = new List<string>();
             AudienceType = new List<string>();
             Condition = new List<string>();

@@ -12,13 +12,24 @@ namespace RA.Models.Input.profiles
 	public class WorkforceDemandAction : CredentialingAction
 	{
 
+		/// <summary>
+		/// Globally unique Credential Transparency Identifier (CTID)
+		/// </summary>
 		public string CTID { get; set; }
 
+		/// <summary>
+		/// Geographic or political region in which the credential is formally applicable or an organization has authority to act.
+		/// ceterms:JurisdictionProfile
+		/// </summary>
 		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 
-		public List<string> Result { get; set; }
+		/// <summary>
+		/// Outcome produced in the action.
+		/// ceterms:CredentialAlignmentObject
+		/// </summary>
+		public List<CredentialAlignmentObject> Result { get; set; } = new List<CredentialAlignmentObject>();
 
-		public List<string> Subject { get; set; }
+		//public List<string> Subject { get; set; }
 
 	}
 }

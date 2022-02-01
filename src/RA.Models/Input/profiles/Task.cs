@@ -51,7 +51,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// AbilityEmbodied
 		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
-		/// URI to a competency
+		/// URI to any of:
+		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
 		/// ceasn:abilityEmbodied
 		/// </summary>
 		public List<string> AbilityEmbodied { get; set; } = new List<string>();
@@ -62,8 +63,14 @@ namespace RA.Models.Input
 		/// URI to a concept(based on the ONet work activities example)
 		/// ceterms:classification
 		/// </summary>
-		//public List<string> Classification { get; set; } = new List<string>();
-		public List<Concept> Classification { get; set; } = new List<Concept>();
+		public List<string> Classification { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Additional Classification
+		/// List of concepts that don't exist in the registry. Will be published as blank nodes
+		/// </summary>
+		public List<CredentialAlignmentObject> AdditionalClassification { get; set; } = new List<CredentialAlignmentObject>();
+
 		/// <summary>
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
 		/// ceterms:codedNotation
@@ -77,6 +84,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> Comment { get; set; } = new List<string>();
 		public LanguageMapList Comment_map { get; set; } = new LanguageMapList();
+
+
+		/// <summary>
+		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; 
+		/// select from an existing enumeration of such types.
+		/// </summary>
+		public List<string> EnvironmentalHazardType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// The referenced resource is lower in some arbitrary hierarchy than this resource.
@@ -102,7 +116,8 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Body of information embodied either directly or indirectly in this resource.
-		/// List of CTIDs for a competency
+		/// URI to any of:
+		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
 		/// ceasn:knowledgeEmbodied
 		/// </summary>
 		public List<string> KnowledgeEmbodied { get; set; } = new List<string>();
@@ -119,7 +134,8 @@ namespace RA.Models.Input
 
 		/// <summary>
 		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
-		/// List of CTIDs for a competency
+		/// URI to any of:
+		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
 		/// ceasn:skillEmbodied
 		/// </summary>
 		public List<string> SkillEmbodied { get; set; } = new List<string>();

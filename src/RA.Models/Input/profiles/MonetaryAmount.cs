@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
+	/// <summary>
+	/// Monetary value or range.
+	/// </summary>
 	public class MonetaryAmount
 	{
 		/// <summary>
@@ -28,7 +31,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public decimal MaxValue { get; set; }
 
+		/// <summary>
+		/// Description of this record
+		/// </summary>
 		public string Description { get; set; }
+		/// <summary>
+		/// Language map for description
+		/// </summary>
 		public LanguageMap Description_Map { get; set; }
 
 		/// <summary>

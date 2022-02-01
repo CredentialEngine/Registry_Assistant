@@ -11,8 +11,9 @@ namespace RA.Models.Input.profiles.QData
 	/// Particular characteristics or properties of a data set and its records.
 	/// Required:
 	/// - CTID
+	/// - About
 	/// qdata:DataSetProfile
-	/// <see cref="https://credreg.net/qdata/terms/DataSetProfile"/>
+	/// <see href="https://credreg.net/qdata/terms/DataSetProfile"/>
 	/// </summary>
 	public class DataSetProfile
 	{
@@ -21,16 +22,30 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public string CTID { get; set; }
 
+		/// CTID/URI
+		/// <summary>
+		/// Subject matter of the resource.
+		/// Means to point to a credential where data is published by a third party.
+		/// REQUIRED when dataSetProfile published separately.
+		/// CTID/URI
+		/// schema:about
+		/// </summary>
+		public List<EntityReference> About { get; set; } = new List<EntityReference>();
+
 		/// <summary>
 		/// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
-		/// <see cref="https://credreg.net/ctdl/terms/administrationProcess"/>
+		/// <see href="https://credreg.net/ctdl/terms/administrationProcess"/>
 		/// </summary>
 		public List<ProcessProfile> AdministrationProcess { get; set; } = new List<ProcessProfile>();
 
 		/// <summary>
-		/// Description - NOT Required 
+		/// Description
+		/// NOT Required 
 		/// </summary>
 		public string Description { get; set; }
+		/// <summary>
+		/// LanguageMap for Description
+		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
 		#region Instruction program and helpers
@@ -52,11 +67,18 @@ namespace RA.Models.Input.profiles.QData
 		/// <summary>
 		/// Jurisdiction Profile
 		/// Geo-political information about applicable geographic areas and their exceptions.
-		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
+		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
 		/// </summary>
 		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 
+		/// <summary>
+		/// Name of dataset profile
+		/// Not required
+		/// </summary>
 		public string Name { get; set; }
+		/// <summary>
+		///  LanguageMap for Name
+		/// </summary>
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
@@ -71,12 +93,6 @@ namespace RA.Models.Input.profiles.QData
 		[Obsolete]
 		public List<string> RelevantDataSetFor { get; set; } = new List<string>();
 
-		/// <summary>
-		/// NEW
-		/// Means to point to a credential where data is published by a third party.
-		/// schema:about
-		/// </summary>
-		public List<EntityReference> About { get; set; } = new List<EntityReference>();
 
 		/// <summary>
 		/// Authoritative source of an entity's information.
@@ -86,6 +102,7 @@ namespace RA.Models.Input.profiles.QData
 
 		/// <summary>
 		/// Credentialing organization or a third party providing the data.
+		/// Required when publishing the DataSetProfile directly.
 		/// </summary>
 		public OrganizationReference  DataProvider { get; set; } = new OrganizationReference();
 

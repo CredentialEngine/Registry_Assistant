@@ -90,11 +90,12 @@ namespace RA.SamplesForDocumentation.Collections
 		}
 
 		/// <summary>
-		/// Code sample showing a MemberCondition and using the CollectionMember class to provide additional information about members of this collection including:
+		/// Code sample including a MemberCondition, CollectionType, and LifeCycleStatusType. 
+		/// As well uses the CollectionMember class to provide additional information about members of this collection including:
 		/// - Name
 		/// - Optional start and end dates (for membership in this collection)
 		/// 
-		/// <see cref="https://sandbox.credentialengineregistry.org/graph/ce-3bc3d4a3-c2de-4c16-8d7b-caca771b12f4"/>
+		/// <see href="https://sandbox.credentialengineregistry.org/graph/ce-3bc3d4a3-c2de-4c16-8d7b-caca771b12f4"/>
 		/// </summary>
 		/// <param name="requestType">Format or Publish</param>
 		/// <returns></returns>
@@ -127,6 +128,10 @@ namespace RA.SamplesForDocumentation.Collections
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
+			//list type
+			myData.CollectionType = new List<string>() { "ETPL" };
+			//lifeCycleStatus
+			myData.LifeCycleStatusType = "Active";
 
 			//in this case, HasMember is empty - a mix can be used however.
 			myData.HasMember = new List<string>();

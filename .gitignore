@@ -255,3 +255,4 @@ paket-files/
 /src/SamplePublishing/SourceModels
 /src/LocalInfo.txt
 /src/RA.Models/Input/@History.txt
+/src/RA.Models/Input/profiles/OpenSalt.cs

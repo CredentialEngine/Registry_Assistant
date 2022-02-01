@@ -24,22 +24,21 @@ namespace RA.Models.Input
 			ceterms:RenewAction
 			ceterms:RevokeAction
 			ceterms:RightsAction
-			21-09-07 perhaps also:
-				ceterms:WorkforceDemandAction
+			21-09-07 ceterms:WorkforceDemandAction
 				the latter does have additional properties
 		 */
 		/// <summary>
 		/// Action type
 		/// Required
 		/// </summary>
-		public string Type { get; set; } 
+		public string Type { get; set; }
 
 
 		/// <summary>
 		/// Action Status
 		/// Types of current status of an action.
 		/// Available statuses include ActiveActionStatus, CompletedActionStatus, FailedActionStatus, PotentialActionStatus.
-		/// <see cref="https://credreg.net/ctdl/terms/ActionStatus"/>
+		/// <see href="https://credreg.net/ctdl/terms/ActionStatus">ActionStatus</see>
 		/// </summary>
 		public string ActionStatusType { get; set; }
 
@@ -91,22 +90,27 @@ namespace RA.Models.Input
 		public List<OrganizationReference> Participant { get; set; } = new List<OrganizationReference>();
 
 		/// <summary>
-		/// Resulting Award
+		/// Resulting Award			DO NOT USE
 		/// Awarded credential resulting from an action.
 		/// Domain: RenewAction, AccreditAction
-		/// Range: ceterms:CredentialAssertion - Representation of a credential awarded to a person.
+		/// Range: ceterms:CredentialAssertion 
+		///				- Representation of a credential awarded to a person.
 		/// ???		https://www.imsglobal.org/sites/default/files/Badges/OBv2p0Final/index.html#Assertion
-		/// SO A URI???
+		/// NO Properties defined as yet 
 		/// </summary>
 		public string ResultingAward { get; set; }
 
 		/// <summary>
 		/// Date this action starts.
+		/// Full date is required
+		/// xsd:date
 		/// </summary>
 		public string StartDate { get; set; }
 
 		/// <summary>
 		/// Date this action ends.
+		/// Full date is required
+		/// xsd:date
 		/// </summary>
 		public string EndDate { get; set; }
 

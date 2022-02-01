@@ -9,6 +9,8 @@ namespace RA.Models.Input.profiles.QData
 	/// <summary>
 	/// DataSet Time Frame
 	/// Time frame including earnings and employment start and end dates of the data set.
+	/// Required:
+	/// - StartDate (otherwise doesn't make sense)
 	/// https://credreg.net/qdata/terms/DataSetTimeFrame
 	/// </summary>
 	public class DataSetTimeFrame

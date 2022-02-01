@@ -238,7 +238,7 @@ namespace RA.SamplesForDocumentation
 		public bool PublishRequest( AssistantRequestHelper request )
 		{
 			string serviceUri = GetAppKeyValue( "registryAssistantApi" );
-			if (System.DateTime.Now.Day==10)
+			if (System.DateTime.Now.Day==01)
 			{
 				//serviceUri = "https://localhost:44312/";
 			}

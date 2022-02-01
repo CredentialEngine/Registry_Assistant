@@ -16,23 +16,23 @@ namespace RA.Models.Input
 	public class FrameworkItem
 	{
 		/// <summary>
-		/// URL for framework
+		/// Could be a registry URL or external, typically expect a framework URL.
+		/// URL
 		/// </summary>
 		public string Framework { get; set; }
+
 		/// <summary>
-		/// Formal name of the framework
+		/// Formal name of the framework.
 		/// </summary>
 		public string FrameworkName { get; set; }
-        public LanguageMap FrameworkName_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		/// Name of the framework - using LanguageMap
+		/// </summary>
+		public LanguageMap FrameworkName_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
-		/// Experimental
-		/// Allow a list of codes for a known framework and API will validate and format as a CredentialAlignmentObject
-		/// Current supported frameworks: NAICS and O*Net
-		/// How to designate the framework
+		/// Set of alpha-numeric symbols as defined by the body responsible for this resource that uniquely identifies this resource and supports its discovery and use.
 		/// </summary>
-		public List<string> FrameworkCodeNotationList { get; set; } = new List<string>();
-
 		public string CodedNotation { get; set; }
 
 		/// <summary>
@@ -40,13 +40,19 @@ namespace RA.Models.Input
 		/// targetNodeName
 		/// </summary>
 		public string Name { get; set; }
-        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		/// Alternately provide name using LanguageMap
+		/// </summary>
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 		/// <summary>
 		/// Description of the framework item
 		/// targetNodeDescription
 		/// </summary>
 		public string Description { get; set; }
-        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		/// Alternately provide description using LanguageMap
+		/// </summary>
+		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// URI for the FrameworkItem
@@ -54,8 +60,7 @@ namespace RA.Models.Input
 		public string TargetNode { get; set; }
 
 		/// <summary>
-		/// Weight
-		/// An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
+		/// Measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
 		/// </summary>
 		public decimal Weight { get; set; }
 	}
