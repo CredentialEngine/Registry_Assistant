@@ -25,24 +25,40 @@ namespace RA.SamplesForDocumentation
 		///			In the context of requirements, this points to the entity or entities that are required 
 		///			for the credential, assessment, or learning opportunity that is using this Condition Profile. 
 		///			In other contexts, these properties connect their target to the entity using this Condition Profile.
+		///		<see href="https://credreg.net/ctdl/terms/ConditionProfile">ConditionProfile</see>
 		/// </summary>
 		/// <returns></returns>
 		public ConditionProfile PopulateRequires()
 		{
-			/*
-			 * 
-			 * 
-			 * Submission Of
-					Artifact to be submitted such as a transcript, portfolio, or an affidavit.
-			 * 
-			 */
 			var output = new ConditionProfile()
 			{
 				Description = "To earn this credential the following conditions must be met, and the target learning opportunity must be completed.",
 				SubjectWebpage = "https://example.org/mypage",
-				Condition = new List<string>() { "Complete High School", "Have a drivers licence." }
+				Condition = new List<string>() { "Complete High School", "Have a drivers licence." },
+				AudienceType = new List<string>() { "Citizen", "audience:NonResident" },
+				AudienceLevelType = new List<string>() { "BeginnerLevel", "audLevel:IntermediateLevel" },
+				Experience="A little life experience is preferred.",
+				MinimumAge =18,
+				YearsOfExperience=3,
+
 			};
 
+			//CreditValue. see: https://credreg.net/ctdl/terms/creditValue
+			//CreditValue is of type ValueProfile (https://credreg.net/ctdl/terms/ValueProfile)
+			output.CreditValue = new List<ValueProfile>()
+			{
+				new ValueProfile()
+				{
+					//CreditUnitType- The type of credit associated with the credit awarded or required.
+					//			ConceptScheme: ceterms:CreditUnit (https://credreg.net/ctdl/terms/CreditUnit#CreditUnit)
+					//			Concepts: provide with the namespace (creditUnit:SemesterHour) or just the text (SemesterHour). examples
+					//			creditUnit:ClockHour, creditUnit:ContactHour, creditUnit:DegreeCredit
+					CreditUnitType = new List<string>() {"SemesterHour"},
+					Value=10
+				}
+			};
+
+			//Submission Of - Artifact to be submitted such as a transcript, portfolio, or an affidavit.
 			output.SubmissionOf = new List<string>() { "https://example.com/howtoapply", "https://example.com/usefulinfo" };
 			//Name, label, or description of an artifact to be submitted such as a transcript, portfolio, or an affidavit.
 			output.SubmissionOfDescription = "As a companion to SubmissionOf, or where is no online resource, provide useful information.";
@@ -78,15 +94,6 @@ namespace RA.SamplesForDocumentation
 				}
 			};
 
-			//credit Value
-			output.CreditValue = new List<ValueProfile>()
-			{
-				new ValueProfile()
-				{
-					CreditUnitType = new List<string>() {"SemesterHour"},
-					Value=10
-				}
-			};
 
 
 			return output;
