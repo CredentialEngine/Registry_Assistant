@@ -80,6 +80,8 @@ namespace RA.SamplesForDocumentation
 
 			//==================== CONDITION PROFILE ====================
 			// add a requires Condition profile with conditions and a required learning opportunity. 
+			// See the code sample for a ConditionProfile for more detailed information
+			//	https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/SamplePublishing/RA.SamplesForDocumentation/SupportingData/ConditionProfiles.cs
 			/*Scenario: 
 				- The learning opportunity will be published to the credential registry
 				- The credential must be published before the learning opportunity
@@ -111,7 +113,33 @@ namespace RA.SamplesForDocumentation
 							 CodedNotation="Learning 101"
 						}
 					}
+				},
+				//a condition profile that indicate the required credit hours, using the CreditValue property and a credit type of SemesterHours
+				new ConditionProfile()
+				{
+					Description = "To earn this credential the following conditions must be met.",
+					//credit Value
+					CreditValue = new List<ValueProfile>()
+					{
+						new ValueProfile()
+						{
+							//CreditUnitType- The type of credit associated with the credit awarded or required.
+							// - ConceptScheme: ceterms:CreditUnit (https://credreg.net/ctdl/terms/CreditUnit#CreditUnit)
+							// - Concepts: provide with the namespace (creditUnit:SemesterHour) or just the text (SemesterHour). examples
+							// - creditUnit:ClockHour, creditUnit:ContactHour, creditUnit:DegreeCredit
+							CreditUnitType = new List<string>() {"SemesterHour"},
+							Value=10
+						}
+					}
 				}
+			};
+			//common conditions
+			//An organization may publish common condition information such as pre-requisties using a ConditionManifest.
+			//Each credential can then reference these common conditions using the CommonCondition property rather than having to repeat the information.
+			//This propery is a list of CTIDs (recommended) for each published ConditionManifest or the actual credential registry URIs 
+			myData.CommonConditions = new List<string>()
+			{
+				"ce-82a854b6-1e17-4cd4-845d-0b9b6df2fb5c"
 			};
 
 			//duration for a range from 8 to 12 weeks
@@ -154,6 +182,12 @@ namespace RA.SamplesForDocumentation
 				 }
 			} );
 
+			//common costs
+			//An organization may publish common cost information such as Tuition costs using a CostManifest. Each credential can then reference these common costs using the CommonCost property rather than having to repeat the information. This propery is a list of CTIDs (recommended) for each published costManifest or the actual credential registry URIs 
+			myData.CommonCosts = new List<string>()
+			{
+				"ce-a37b5ac4-6a15-4cf1-9f06-8132e18e95eb", "ce-975b466b-ed8e-46c7-8629-2f2dc74153a2"
+			};
 			//====================	OCCUPATIONS ====================
 			PopulateOccupations( myData );
 			//====================	INDUSTRIES	====================
@@ -266,7 +300,6 @@ namespace RA.SamplesForDocumentation
 				Name = input.Name,
 				Description = input.Description,
 				InLanguage = new List<string>() { "en-US" },
-				CodedNotation = input.CodedNotation,
 				//provide valid concept from schema 
 				CredentialType = "BachelorDegree",
 				//*** the source data must assign a CTID and use for all transactions

@@ -7,7 +7,6 @@ namespace RA.SamplesForDocumentation.SampleModels
 		public string CredentialType { get; set; }
 		public string AvailabilityListing { get; set; }
 		public string AvailableOnlineAt { get; set; }
-		public string CodedNotation { get; set; }
 		public string ImageUrl { get; set; }
 		public string LatestVersionUrl { get; set; }
 		public string PreviousVersion { get; set; }

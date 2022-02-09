@@ -118,9 +118,6 @@ namespace RA.Models.Input
 		//20-09-30 being replaced by ValueProfile
 		//21-04-04 had started with singles now allowing a List 
 		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
-		//this will be removed by 21-08-31
-		//[Obsolete]
-		//public ValueProfile CreditValueOLD { get; set; } = new ValueProfile();
 		 
 		//
 		public string CreditUnitTypeDescription { get; set; }
