@@ -72,6 +72,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\RA.Models\RA.Models.csproj">
+      <Project>{3f55c8eb-5ccd-4eaf-ac31-691ee2681c85}</Project>
+      <Name>RA.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Utilities\Utilities.csproj">
       <Project>{5af99218-bbd8-48c4-bbde-eff5f35b4e05}</Project>
       <Name>Utilities</Name>

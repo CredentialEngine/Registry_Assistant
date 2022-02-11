@@ -2,6 +2,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using RA.Models.Input;
 using RA.SamplesForDocumentation;
 
 using RA.SamplesForDocumentation.Credentials;
@@ -89,6 +90,70 @@ namespace RA.SamplePublishingProject
 
 			//using simple post
 			new PublishCredential().PublishFromInputClass( input ) ;
+		}
+
+		[TestMethod]
+		public void CredentialSingleDelete()
+		{
+			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
+			var community = "";
+			var apiKey = SampleServices.GetMyApiKey();
+			if ( string.IsNullOrWhiteSpace( apiKey ) )
+			{
+				//ensure you have added your apiKey to the app.config
+			}
+
+			// This is the CTID of the organization that owns the data being deleted
+			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
+			{
+				//ensure you have added your organization account CTID to the app.config
+			}//
+			var owningOrgCTID = "ce-a4041983-b1ae-4ad4-a43d-284a5b4b2d73";
+			var ctidToDelete = "ce-7051cdf9-43b6-4e5b-8444-37cfeb64fdfe";
+			//
+			DeleteRequest dr = new DeleteRequest()
+			{
+				CTID = ctidToDelete.ToLower(),
+				PublishForOrganizationIdentifier = owningOrgCTID.ToLower(),
+				Community = community
+			};
+			string message = "";
+			new SampleServices().DeleteRequest( dr, apiKey, "credential", ref message, community );
+		}
+
+		/// <summary>
+		/// Request to delete a list of credentials
+		/// NOT IMPLEMENTED COMING SOON
+		/// </summary>
+		[TestMethod]
+		public void CredentialMultipleDelete()
+		{
+			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
+			var community = "";
+			var apiKey = SampleServices.GetMyApiKey();
+			if ( string.IsNullOrWhiteSpace( apiKey ) )
+			{
+				//ensure you have added your apiKey to the app.config
+			}
+
+			// This is the CTID of the organization that owns the data being deleted
+			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
+			{
+				//ensure you have added your organization account CTID to the app.config
+			}//
+			var owningOrgCTID = "ce-a4041983-b1ae-4ad4-a43d-284a5b4b2d73";
+			//
+			DeleteRequest dr = new DeleteRequest()
+			{
+				CTIDList = new System.Collections.Generic.List<string>()
+				{
+					"ce-7051cdf9-43b6-4e5b-8444-37cfeb64fdfe", "", ""
+				},
+				PublishForOrganizationIdentifier = owningOrgCTID.ToLower(),
+				Community = community
+			};
+			string message = "";
+			new SampleServices().DeleteRequest( dr, apiKey, "credential", ref message, community );
 		}
 	}
 }

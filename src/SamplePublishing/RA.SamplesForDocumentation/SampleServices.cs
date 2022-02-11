@@ -283,7 +283,7 @@ namespace RA.SamplesForDocumentation
 						}
 					}
 
-					LoggingHelper.DoTrace( 6, "Publisher.PostRequest: doing PostAsync to: " + request.EndpointUrl );
+					LoggingHelper.DoTrace( 6, "SampleServices.PostRequest: doing PostAsync to: " + request.EndpointUrl );
 					var task = client.PostAsync( request.EndpointUrl, new StringContent( request.InputPayload, Encoding.UTF8, "application/json" ) );
 					//increase timeout for debugging
 					//client.Timeout = new TimeSpan( 0, 30, 0 );
@@ -294,7 +294,7 @@ namespace RA.SamplesForDocumentation
 
 					if ( result.IsSuccessStatusCode == false )
 					{
-						LoggingHelper.DoTrace( 6, "Publisher.PostRequest: result.IsSuccessStatusCode == false" );
+						LoggingHelper.DoTrace( 6, "SampleServices.PostRequest: result.IsSuccessStatusCode == false" );
 						response = JsonConvert.DeserializeObject<RAResponse>( responseContents );
 						//logging???
 						//string queryString = GetRequestContext();
@@ -408,6 +408,86 @@ namespace RA.SamplesForDocumentation
 
 		}
 
+
+		public bool DeleteRequest( DeleteRequest request, string apiKey, string requestType, ref string message, string community = "" )
+		{
+			RAResponse raResponse = new RAResponse();
+			string serviceUri = SampleServices.GetAppKeyValue( "registryAssistantApi" );
+			if ( System.DateTime.Now.Day == 01 )
+			{
+				//serviceUri = "https://localhost:44312/";
+			}
+			string endpointUrl = serviceUri + string.Format( "{0}/delete", requestType );
+
+			//format the payload
+			string postBody = JsonConvert.SerializeObject( request, SampleServices.GetJsonSettings() );
+			try
+			{
+				using ( var client = new HttpClient() )
+				{
+					client.DefaultRequestHeaders.
+						Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+
+					if ( !string.IsNullOrWhiteSpace( apiKey ) )
+					{
+						client.DefaultRequestHeaders.Add( "Authorization", "ApiToken " + apiKey );
+					}
+					else
+					{
+						message= "Error - an apiKey was not found for the owning organization. The owning organization must be approved in the Credential Engine Accounts site before being able to delete data.";
+						return false;
+					}
+
+					HttpRequestMessage hrm = new HttpRequestMessage
+					{
+						Content = new StringContent( postBody, Encoding.UTF8, "application/json" ),
+						Method = HttpMethod.Delete,
+						RequestUri = new Uri( endpointUrl )
+					};
+					var task = client.SendAsync( hrm );
+					task.Wait();
+					var result = task.Result;
+					string response = JsonConvert.SerializeObject( result );
+					var contents = task.Result.Content.ReadAsStringAsync().Result;
+					//
+					if ( result.IsSuccessStatusCode == false )
+					{
+						//logging???
+						//response = contents.Result;
+						LoggingHelper.LogError( "RegistryServices.DeleteRequest Failed\n\r" + response + "\n\rError: " + JsonConvert.SerializeObject( contents ) );
+
+						RegistryResponseContent contentsJson = JsonConvert.DeserializeObject<RegistryResponseContent>( contents );
+						message = string.Join( "<br/>", contentsJson.Errors.ToArray() );
+					}
+					else
+					{
+						raResponse = JsonConvert.DeserializeObject<RAResponse>( contents );
+						//
+						if ( raResponse.Successful )
+						{
+							LoggingHelper.DoTrace( 5, string.Format( "DeleteRequest sucessful for requestType:{0}.  CTID: {1}, dataOwnerCtid: {2} ", requestType, request.CTID, request.PublishForOrganizationIdentifier ) );
+						}
+						else
+						{
+							LoggingHelper.DoTrace( 5, thisClassName + " DeleteRequest FAILED. result: " + response );
+							//message = string.Join("", raResponse.Messages );
+							message = string.Join( ",", raResponse.Messages.ToArray() );
+							return false;
+						}
+
+					}
+					return result.IsSuccessStatusCode;
+				}
+			}
+			catch ( Exception exc )
+			{
+				LoggingHelper.LogError( exc, string.Format( "DeleteRequest. RequestType:{0}, CTID: {1}", requestType, request.CTID ) );
+				message = LoggingHelper.FormatExceptions( exc );
+
+				return false;
+
+			}
+		}
 
 		#endregion
 
