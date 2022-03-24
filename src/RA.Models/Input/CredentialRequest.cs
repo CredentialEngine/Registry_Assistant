@@ -23,27 +23,6 @@ namespace RA.Models.Input
 		/// Credential Input Class
 		/// </summary>
 		public Credential Credential { get; set; }
-
-		/*
-		/// <summary>
-		/// Entity describing aggregate credential holder earnings data.
-		/// </summary>
-		[Obsolete]
-		public List<EarningsProfile> EarningsProfile { get; set; } = new List<EarningsProfile>();
-
-		/// <summary>
-		/// Entity that describes employment outcomes and related statistical information for a given credential.
-		/// </summary>
-		[Obsolete]
-		public List<EmploymentOutcomeProfile> EmploymentOutcome { get; set; } = new List<EmploymentOutcomeProfile>();
-
-
-		/// <summary>
-		/// Entity describing the count and related statistical information of holders of a given credential.
-		/// </summary>
-		[Obsolete]
-		public List<HoldersProfile> HoldersProfile { get; set; } = new List<HoldersProfile>();
-		*/
 	}
 
 	/// <summary>
@@ -66,8 +45,11 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Credential input class
 	/// </summary>
-	public class Credential
+	public class Credential : BaseRequestClass
 	{
+		/// <summary>
+		/// constructor
+		/// </summary>
 		public Credential()
 		{
 			Type = "Credential";
@@ -716,15 +698,21 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> HasRating { get; set; } = new List<string>();
 
+		/// <summary>
+		/// Action related to the credential
+		/// This may end up being a list of CTIDs?
+		/// PROPOSED - NOT VALID FOR PRODUCTION YET
+		/// </summary>
+		public List<CredentialingAction> RelatedAction { get; set; } = new List<CredentialingAction>();
 
 		#region OBSOLETE
-
+		/*
 		/// <summary>
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
 		/// ceterms:codedNotation
 		/// </summary>
 		[Obsolete]
-		public string CodedNotation { get; set; }
+		public string CodedNotation { get; set; }*/
 		/*
 
 		/// <summary>

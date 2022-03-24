@@ -18,7 +18,7 @@ namespace RA.Models.Input
 	/// History
 	/// 2021-05-31 CodedNotation is no longer part of the AssessmentProfile class. The property will be left in the input class until later this year and then removed. If provided, the data will be moved to the Identifier property and a warning will be returned. 
 	/// </summary>
-	public class Assessment
+	public class Assessment : BaseRequestClass
 	{
 		public Assessment()
 		{
@@ -343,9 +343,11 @@ namespace RA.Models.Input
 		public LanguageMap LearningMethodDescription_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
-		/// Type of official status of the TransferProfile; select from an enumeration of such types.
+		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// Required
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
 		/// </summary>
 		public string LifeCycleStatusType { get; set; }
 

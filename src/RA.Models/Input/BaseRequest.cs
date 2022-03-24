@@ -14,8 +14,13 @@
 
 		/// <summary>
 		/// Flag to indicate if the data being published is from a primary source (true) or a secondary source (false)
+		/// There would be a risk where if not provided, defaults to false
 		/// </summary>
 		public bool IsPrimarySourceRecord { get; set; } = true;
+		/// <summary>
+		/// 
+		/// </summary>
+		public string ResourcePublishType { get; set; } = "primary";
 
 		/// <summary>
 		/// Envelope Identifier

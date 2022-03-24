@@ -32,7 +32,7 @@ namespace RA.Models.Input
 		{
 			ConceptScheme = new SkosConceptScheme();
 		}
-		public string Ctid { get; set; }
+		public string CTID { get; set; }
 
 		//separate ConceptScheme and concepts
 		public SkosConceptScheme ConceptScheme { get; set; } = new SkosConceptScheme();
@@ -62,7 +62,7 @@ namespace RA.Models.Input
 		/// CTID - identifier for Concept Scheme. 
 		/// This will have to be extracted from the id
 		/// </summary>
-		public string Ctid { get; set; }
+		public string CTID { get; set; }
 
 		//public List<LanguageItem> ChangeNote { get; set; } = new List<LanguageItem>();
 		public object ChangeNote { get; set; } 

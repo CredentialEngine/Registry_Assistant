@@ -34,7 +34,7 @@ namespace RA.Models.Input
 	/// - At least one of email or address
 	/// 
 	/// </summary>
-	public class Organization
+	public class Organization : BaseRequestClass
 	{
 		public Organization()
 		{
@@ -356,9 +356,11 @@ namespace RA.Models.Input
 		public List<Jurisdiction> Jurisdiction { get; set; }
 
 		/// <summary>
-		/// Type of official status of the TransferProfile; select from an enumeration of such types.
+		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// Required
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
 		/// </summary>
 		public string LifeCycleStatusType { get; set; }
 
@@ -523,6 +525,8 @@ namespace RA.Models.Input
 		[Obsolete]
 		public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; } = new List<VerificationServiceProfile>();
 
+		//pending
+		public List<CredentialingAction> AccreditAction { get; set; } = new List<CredentialingAction>();
 
 	}
 }

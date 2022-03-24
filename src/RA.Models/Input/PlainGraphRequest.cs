@@ -22,7 +22,7 @@ namespace RA.Models.Input
 			HasLanguageMaps = true;
 		}
 
-		//*** shouldn't use this!!!	
+		//*** shouldn't use this!!!	- just for tracing/output files
 		public string CTID { get; set; } = "";
 
 		/// <summary>

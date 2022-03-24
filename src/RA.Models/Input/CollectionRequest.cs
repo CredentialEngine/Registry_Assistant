@@ -64,6 +64,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// CTDL unique identifier
+		/// Required
 		/// </summary>
 		public string CTID { get; set; }
 
@@ -104,6 +105,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// A short description of this resource.
+		/// Required
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>
@@ -113,20 +115,15 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Resource in a Collection.
-		/// REQUIRED
+		/// REQUIRED - or must at least one of Request.Members, or Request.CollectionMembers must have contents.
+		/// List of URIs
 		/// NEW - using object, as could be: CTID, URI, or CollectionMember, or credential classes, assessment, learning classes, 
 		/// Current Range
-		/// ceasn:Competency ceterms:Task ceterms:WorkRole ceterms:Job ceterms:Course ceterms:LearningOpportunityProfile ceterms:LearningProgram
+		/// ceasn:Competency, any credential type, ceterms:AssessmentProfile, ceterms:Task ceterms:WorkRole ceterms:Job ceterms:Course ceterms:LearningOpportunityProfile ceterms:LearningProgram
 		/// List of CTIDs (recommended) or URIs
 		/// </summary>
 		public List<string> HasMember { get; set; } = new List<string>();
 
-		///// <summary>
-		///// An alternative URI by which this competency framework or competency is identified.
-		///// xsd:anyURI
-		///// 21-10-31 - removed Identifier
-		///// </summary>
-		//public List<string> Identifier { get; set; }
 
 		/// <summary>
 		/// The primary language used in or by this resource.
@@ -149,14 +146,17 @@ namespace RA.Models.Input
 		public string License { get; set; }
 
 		/// <summary>
-		/// Type of official status of the TransferProfile; select from an enumeration of such types.
+		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// Required
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
 		/// </summary>
 		public string LifeCycleStatusType { get; set; }
 
 		/// <summary>
 		/// Type of collection, list, set, or other grouping of resources; select from an existing enumeration of such types.
+		/// Optional
 		/// ConceptScheme: CollectionCategory 
 		/// Current valid values:
 		/// collectionCategory:ETPL, collectionCategory:GIBill, collectionCategory:IndustryRecognized, collectionCategory:Quality, collectionCategory:Perkins
@@ -165,6 +165,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// The name or title of this resource.
+		/// Required
 		/// </summary>
 		public string Name { get; set; }
 		/// <summary>
@@ -194,7 +195,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Webpage that describes this entity.
 		/// </summary>
-		public List<string> SubjectWebpage { get; set; } = new List<string>();
+		public string SubjectWebpage { get; set; }
+		//public List<string> SubjectWebpage { get; set; } = new List<string>();
 
 		#region Occupations, Industries, and instructional programs
 		//=====================================================================
@@ -278,6 +280,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// A short description of this resource.
+		/// Optional
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>
@@ -287,6 +290,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// The name or title of this resource.
+		/// Optional
 		/// </summary>
 		public string Name { get; set; }
 		/// <summary>
@@ -303,12 +307,14 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Start date of this resource
+		/// Require startDate or endDate
 		/// Only allow date (yyyy-mm-dd), no time
 		/// xsd:date
 		/// </summary>
 		public string StartDate { get; set; }
 		/// <summary>
-		/// Expiration date of this resource
+		/// End date of this resource
+		/// Require startDate or endDate
 		/// Only allow date (yyyy-mm-dd), no time
 		/// xsd:date
 		/// </summary>

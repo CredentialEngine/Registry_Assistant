@@ -4,9 +4,14 @@ using Newtonsoft.Json;
 namespace RA.Models.Input
 {
 
-
+	/// <summary>
+	/// Concept Scheme Publishing Request
+	/// </summary>
 	public class ConceptSchemeRequest : BaseRequest
 	{
+		/// <summary>
+		/// constructor
+		/// </summary>
 		public ConceptSchemeRequest()
 		{
 			ConceptScheme = new ConceptScheme();
@@ -30,13 +35,27 @@ namespace RA.Models.Input
 		/// </summary>
 		public bool GenerateIsTopChild { get; set; } = false;
 
+		/// <summary>
+		/// ConceptScheme
+		/// Required
+		/// </summary>
 		public ConceptScheme ConceptScheme { get; set; } = new ConceptScheme();
 
+		/// <summary>
+		/// Concepts for ConceptScheme
+		/// Required
+		/// </summary>
 		public List<Concept> Concepts { get; set; } = new List<Concept>();
 	}
 
+	/// <summary>
+	/// Concept Scheme Publishing Request from a graph
+	/// </summary>
 	public class ConceptSchemeGraphRequest : GraphContentRequest
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public ConceptSchemeGraphRequest()
 		{
 			GraphInput = new GraphInput();
@@ -85,6 +104,9 @@ namespace RA.Models.Input
 		/// A word or phrase used by the promulgating agency to refine and differentiate individual resources contextually.
 		/// </summary>
 		public List<string> ConceptKeyword { get; set; } = new List<string>();
+		/// <summary>
+		/// Concept Keywords via LanguageMapList
+		/// </summary>
 		public LanguageMapList ConceptKeyword_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>

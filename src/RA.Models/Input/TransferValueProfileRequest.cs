@@ -113,9 +113,11 @@ namespace RA.Models.Input
 
 
 		/// <summary>
-		/// Type of official status of the TransferProfile; select from an enumeration of such types.
+		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// Required
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
 		/// </summary>
 		public string LifeCycleStatusType { get; set; }
 
@@ -129,15 +131,6 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string EndDate { get; set; }
-
-		///// <summary>
-		///// FUTURE
-		///// Type of official status of the TransferProfile; select from an enumeration of such types.
-		///// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
-		///// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
-		///// </summary>
-		//public string LifeCycleStatusType { get; set; }
-
 
 		/// <summary>
 		///  Resource that provides the transfer value described by this resource, according to the entity providing this resource.

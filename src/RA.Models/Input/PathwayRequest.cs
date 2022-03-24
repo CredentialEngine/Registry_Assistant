@@ -293,6 +293,11 @@ namespace RA.Models.Input
 		public List<string> Precedes { get; set; } = new List<string>();
 
 		/// <summary>
+		/// Component is preceded by the referenced components
+		/// </summary>
+		public List<string> PrecededBy { get; set; }
+
+		/// <summary>
 		/// Resource(s) required as a prior condition to this resource.
 		/// Provide the CTID or the full URI for the target environment. 
 		/// ceterms:ComponentCondition

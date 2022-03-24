@@ -22,7 +22,7 @@ namespace RA.Models.Input
 	public class CourseRequest : LearningOpportunityRequest
 	{
 	}
-	public class LearningOpportunity
+	public class LearningOpportunity : BaseRequestClass
 	{
 		public LearningOpportunity()
 		{
@@ -105,6 +105,7 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string CTID { get; set; }
+
 		/// <summary>
 		/// The primary language or languages of the entity, even if it makes use of other languages; e.g., a course offered in English to teach Spanish would have an inLanguage of English, while a credential in Quebec could have an inLanguage of both French and English.
 		/// List of language codes. ex: en, es
@@ -319,9 +320,11 @@ namespace RA.Models.Input
 
 
 		/// <summary>
-		/// Type of official status of the TransferProfile; select from an enumeration of such types.
+		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// Required
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
 		/// </summary>
 		public string LifeCycleStatusType { get; set; }
 
@@ -572,5 +575,16 @@ namespace RA.Models.Input
 		/// COURSE ONLY
 		/// </summary>
 		public string SCED { get; set; }
+
+
+
+		/// <summary>
+		/// PENDING
+		///  Indicates an offering and typical schedule.
+		///  NOTE: Only use this property when it is necessary and useful to provide data about specific offerings of a learning opportunity or assessment, such as particular combinations of schedule, location, and delivery.
+		///  IN DEVELOPMENT ONLY
+		/// </summary>
+		public List<ScheduledOffering> HasOffering { get; set; } = new List<ScheduledOffering>();
+
 	}
 }
