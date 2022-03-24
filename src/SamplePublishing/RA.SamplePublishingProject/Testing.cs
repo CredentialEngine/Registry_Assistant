@@ -30,6 +30,13 @@ namespace RA.SamplePublishingProject
 		{
 			new RA.SamplesForDocumentation.Collections.PublishCollection().PublishWithCollectionMembers( "publish" );
 		}
+
+		[TestMethod]
+		public void PublishLikeAFramework()
+		{
+			new RA.SamplesForDocumentation.Collections.PublishCollection().PublishLikeAFrameworkWithCompetencies( "publish" );
+		}
+		//
 		#endregion
 
 		#region transfer value publishing

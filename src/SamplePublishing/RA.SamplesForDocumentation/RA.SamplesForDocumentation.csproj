@@ -99,6 +99,7 @@
     <Compile Include="TransferValueProfiles\NCCRSTransferValues.cs" />
     <Compile Include="TransferValueProfiles\PublishTransferValueProfile.cs" />
     <Compile Include="TransferValueProfiles\PublishTransferValueProfileList.cs" />
+    <Compile Include="TransferValueProfiles\PublishTransferIntermediary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Credentials\files\Credential_PublishDetailedRecord_API_Input.json" />

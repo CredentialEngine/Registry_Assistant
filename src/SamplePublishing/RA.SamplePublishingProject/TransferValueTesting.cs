@@ -11,6 +11,14 @@ namespace RA.SamplePublishingProject
 	public class TransferValueTesting
 	{
 		[TestMethod]
+		public void TransferIntermediaryPublish()
+		{
+			//using simple post
+			new PublishTransferIntermediary().PublishOne();
+		}
+
+
+		[TestMethod]
 		public void TestPublishTransferValue()
 		{
 			//using simple post
@@ -21,7 +29,7 @@ namespace RA.SamplePublishingProject
 		public void TestPublishTransferValue2()
 		{
 			//using better post with details
-			new PublishTransferValueProfile().PublishSimpleRecord(false);
+			new PublishTransferValueProfile().PublishTVPSameAsRecord(false);
 		}
 
 		/// <summary>

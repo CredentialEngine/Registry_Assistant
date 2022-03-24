@@ -55,6 +55,12 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
+			//Specify available delivery types
+			myData.LearningDeliveryType = new List<string>() 
+			{ 
+				"deliveryType:InPerson", 
+				"deliveryType:OnlineOnly" 
+			};
 
 			//==================== QUALITY ASSURANCE RECEIVED ====================
 

@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using APIRequest = RA.Models.Input.CollectionRequest;
+using APIRequestEntity = RA.Models.Input.Collection;
 using Newtonsoft.Json;
 
 using RA.Models.Input;
-using RA.Models;
-using APIRequestEntity = RA.Models.Input.Collection;
-using APIRequest = RA.Models.Input.CollectionRequest;
 
 namespace RA.SamplesForDocumentation.Collections
 {
-	/// <summary>
-	/// Code samples for publishing collections
-	/// </summary>
+    /// <summary>
+    /// Code samples for publishing collections
+    /// </summary>
     public class PublishCollection
     {
 		/// <summary>
@@ -45,6 +42,7 @@ namespace RA.SamplesForDocumentation.Collections
 				Description = "This collection uses the HasMember property to list members of this collection using the CTIDs of a published credentials.",
 				CTID = myCTID,
 				InLanguage = new List<string>() { "en-US" },
+
 			};
 			//typically the ownedBy is the same as the CTID for the data owner
 			myData.OwnedBy.Add( new OrganizationReference()
@@ -61,7 +59,7 @@ namespace RA.SamplesForDocumentation.Collections
 			};
 
 
-			//This holds the learningOpportunity and the identifier (CTID) for the owning organization
+			//This holds the main entity and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
 			{
 				Collection = myData,
@@ -70,7 +68,6 @@ namespace RA.SamplesForDocumentation.Collections
 			};
 
 			//Serialize the request object
-			//Preferably, use method that will exclude null/empty properties
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 			//call the Assistant API
 			SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
@@ -217,5 +214,87 @@ namespace RA.SamplesForDocumentation.Collections
 
 		}
 
+		#region publish like a framework
+		public bool PublishLikeAFrameworkWithCompetencies( string requestType = "format" )
+		{
+			//Holds the result of the publish action
+			var result = "";
+			//assign the api key - acquired from organization account of the organization doing the publishing
+			var apiKey = SampleServices.GetMyApiKey();
+			if ( string.IsNullOrWhiteSpace( apiKey ) )
+			{
+				//ensure you have added your apiKey to the app.config
+			}
+			// This is the CTID of the organization that owns the data being published
+			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
+
+			//Assign a CTID for the entity being published and keep track of it
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+
+			//A simple CompetencyFramework object - see github for full class definition
+			var myData = new APIRequestEntity()
+			{
+				Name = "My Sample Collection",
+				Description = "This is some text that describes my Collection.",
+				CTID = myCTID,
+				Keyword = new List<string>() { "Testing", "Prototype"},
+				 
+				ONET_Codes= new List<string>() { "19-4090", "21-1090" },
+				OwnedBy = new List<OrganizationReference>() 
+				{ 
+					new OrganizationReference() 
+					{
+						Type="Organization",
+						CTID = organizationIdentifierFromAccountsSite
+					} 
+				}
+			};
+
+			//This holds the data and the identifier (CTID) for the owning organization
+			var myRequest = new APIRequest()
+			{
+				Collection = myData,
+				DefaultLanguage = "en-us",
+				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
+			};
+			//add competencies
+			//example of a flat framework
+			myRequest.Members.Add( MapCompetency( myCTID, "Looks both ways before crossing street" ) );
+			myRequest.Members.Add( MapCompetency( myCTID, "Looks before leaping" ) );
+			myRequest.Members.Add( MapCompetency( myCTID, "Deals with the faults of others as gently as their own" ) );
+			myRequest.Members.Add( MapCompetency( myCTID, "Knows what he/she knows and does not know what he/she does not know " ) );
+
+			//Serialize the request object
+			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
+			//call the Assistant API
+			SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
+			{
+				EndpointType = "collection",
+				RequestType = requestType,
+				OrganizationApiKey = apiKey,
+				CTID = myRequest.Collection.CTID.ToLower(),   //added here for logging
+				Identifier = "testing",     //useful for logging, might use the ctid
+				InputPayload = payload
+			};
+
+			//Serialize the request object
+			return new SampleServices().PublishRequest( req );
+
+		}
+		public static Competency MapCompetency( string frameworkCTID, string competency )
+		{
+			Competency output = new Competency()
+			{
+				competencyText_map = new LanguageMap( competency ),
+				CTID = "ce-" + Guid.NewGuid().ToString().ToLower(),
+				isPartOf = frameworkCTID
+			};
+			//add keywords
+			//output.conceptKeyword_maplist = new LanguageMapList( new List<string>() { "concept 1", "concept 2", "concept 3" } );
+			//output.conceptKeyword_maplist.Add( "fr", new List<string>() { "le concept un", "la concept deux", "les concept thois" } );
+			return output;
+		}
+
+		#endregion
 	}
 }
