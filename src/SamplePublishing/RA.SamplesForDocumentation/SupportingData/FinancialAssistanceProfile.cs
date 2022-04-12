@@ -18,12 +18,18 @@ namespace RA.SamplesForDocumentation
 		public static void PopulateSimpleFinancialAssistanceProfile( Credential request )
 		{
 			request.FinancialAssistance = new List<FinancialAssistanceProfile>();
-
+			//WIOA
+			request.FinancialAssistance.Add( new FinancialAssistanceProfile()
+			{
+				Name = "WIOA Related Funding",
+				Description = "Description of funding",
+				FinancialAssistanceType = new List<string>() { "WIOA" }
+			} );
 			request.FinancialAssistance.Add( new FinancialAssistanceProfile()
 			{
 				Name = "Funding for veterans",
 				Description = "description of funding",
-				SubjectWebpage = "http://example.com",
+				SubjectWebpage = "https://example.com/optional",
 				FinancialAssistanceType = new List<string>() { "Military", "Veteran" }
 			} );
 			request.FinancialAssistance.Add( new FinancialAssistanceProfile()
