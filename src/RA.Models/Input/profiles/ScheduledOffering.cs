@@ -13,6 +13,7 @@ namespace RA.Models.Input
 	/// </summary>
 	public class ScheduledOffering
 	{
+		public string CTID { get; set; }
 
 		public string Name { get; set; }
 		/// <summary>

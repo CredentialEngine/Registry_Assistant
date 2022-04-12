@@ -16,6 +16,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Framework, scheme, type, or other organizing principle of this identifier.
 		/// URI
+		/// TBD - this doesn't have to be resolvalbe!
 		/// </summary>
 		public string IdentifierType { get; set; }
 
@@ -23,7 +24,10 @@ namespace RA.Models.Input
 		/// Formal name or acronym of the framework, scheme, type, or other organizing principle of this identifier, such as ISBN or ISSN.
 		/// </summary>
 		public string IdentifierTypeName { get; set; }
-		//or provide a language map
+
+		/// <summary>
+		/// Language map for IdentifierTypeName
+		/// </summary>
 		public LanguageMap IdentifierTypeName_Map { get; set; } = new LanguageMap();
 
 		/// <summary>

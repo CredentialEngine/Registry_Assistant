@@ -49,6 +49,14 @@ namespace RA.SamplesForDocumentation
 					}
 				}
 			};
+			//2021-10-31 lifeCycleStatusType was added. 
+			// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
+			// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+			// Required
+			// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+			// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
+			myData.LifeCycleStatusType = "Active";
+
 			//add one of ownedBy or offeredBy, or both
 			myData.OwnedBy.Add( new OrganizationReference()
 			{
