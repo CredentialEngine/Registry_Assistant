@@ -30,6 +30,13 @@ namespace RA.SamplePublishingProject
 			new PublishCredential().PublishDetailedRecord( "publish" );
 		}
 		[TestMethod]
+		public void CredentialWithMultipleLanguages()
+		{
+			//using simple post
+			new CredentialWithMultipleLanguages().PublishDetailedRecord( "publish" );
+		}
+		//
+		[TestMethod]
 		public void CredentialWithOutcomeData()
 		{
 			//using simple post

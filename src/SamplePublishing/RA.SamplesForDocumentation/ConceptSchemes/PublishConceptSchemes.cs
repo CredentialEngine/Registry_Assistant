@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -34,7 +35,8 @@ namespace RA.SamplesForDocumentation
 				 Name = "My Concept Scheme Name",
 				Description = "This is some text that describes my Concept Scheme.",
 				CTID = myCTID,
-				Publisher = new OrganizationReference() { CTID = organizationIdentifierFromAccountsSite }
+				Publisher = new List<OrganizationReference>() 
+					{ new OrganizationReference() { CTID = organizationIdentifierFromAccountsSite } }
 			};
 
 			//This holds the data and the identifier (CTID) for the owning organization

@@ -59,6 +59,7 @@
     <Compile Include="ConceptSchemes\PublishConceptSchemes.cs" />
     <Compile Include="ConditionManifests\PublishConditionManifest.cs" />
     <Compile Include="CostManifests\PublishCostManifest.cs" />
+    <Compile Include="Credentials\CredentialWithMultipleLanguages.cs" />
     <Compile Include="Credentials\DeleteCredential.cs" />
     <Compile Include="Credentials\SampleCredentialPublish.cs" />
     <Compile Include="Credentials\PublishCredentialWithMultipleCampuses.cs" />
