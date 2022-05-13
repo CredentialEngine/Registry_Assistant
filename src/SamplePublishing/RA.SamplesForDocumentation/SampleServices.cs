@@ -282,11 +282,12 @@ namespace RA.SamplesForDocumentation
 							return false;
 						}
 					}
+					//increase timeout for debugging
+					client.Timeout = new TimeSpan( 0, 30, 0 );
 
 					LoggingHelper.DoTrace( 6, "SampleServices.PostRequest: doing PostAsync to: " + request.EndpointUrl );
 					var task = client.PostAsync( request.EndpointUrl, new StringContent( request.InputPayload, Encoding.UTF8, "application/json" ) );
-					//increase timeout for debugging
-					//client.Timeout = new TimeSpan( 0, 30, 0 );
+					
 
 					task.Wait();
 					var result = task.Result;

@@ -51,6 +51,11 @@ namespace RA.Models.Input
 		public string Name { get; set; }
 
 		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
 		/// Subject webpage of the entity (required)
 		/// This should be for the referenced entity. 
 		/// For example, if the reference is for an organization, the subject webpage should be on the organization site.
@@ -63,6 +68,11 @@ namespace RA.Models.Input
 		/// For example, for an organization, the description should be about the organization specifically not, how the organization is related to, or interacts with the refering entity. 
 		/// </summary>
 		public string Description { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
 		/// <summary>
 		/// Social Media URL links
 		/// For example, Facebook, LinkedIn
@@ -87,14 +97,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> Email { get; set; } = new List<string>();
 
-
+		/// <summary>
+		/// check if has the necessary properties
+		/// </summary>
+		/// <returns></returns>
 		public bool HasNecessaryProperties()
 		{
 			//skip social media for now
 			//	|| ( SocialMedia == null || SocialMedia.Count == 0 )
 			//				|| string.IsNullOrWhiteSpace( Description )
 			if ( string.IsNullOrWhiteSpace( Type )
-				|| string.IsNullOrWhiteSpace( Name )
+				|| (string.IsNullOrWhiteSpace( Name ) && Name_Map?.Count == 0)
 				|| string.IsNullOrWhiteSpace( SubjectWebpage )
 				)
 				return false;

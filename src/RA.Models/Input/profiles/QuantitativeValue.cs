@@ -50,7 +50,7 @@ namespace RA.Models.Input
 		/// Do not use if providing any of: Value, Minimum or Maximum value.
 		/// qdata:percentage
 		/// </summary>
-		public decimal Percentage { get; set; }
+		public decimal? Percentage { get; set; }
 
 		/// <summary>
 		/// Optional description of the value, using either a string value or as a language map

@@ -347,6 +347,10 @@ namespace RA.Models.Input
 		/// Any industries added using this property will be added to or appended to the IndustryType output.
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+		/// <summary>
+		/// Language map list for AlternativeIndustryType
+		/// </summary>
+		public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Jurisdiction Profile
@@ -358,7 +362,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
-		/// Required 
+		/// Required
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
 		/// </summary>
@@ -524,9 +528,6 @@ namespace RA.Models.Input
 		//VerificationServiceProfiles was originally added uncorrectly as plural. The latter is incorrrect and is being maintained for legacy references. VerificationServiceProfile should be used, and is checked first
 		[Obsolete]
 		public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; } = new List<VerificationServiceProfile>();
-
-		//pending
-		public List<CredentialingAction> AccreditAction { get; set; } = new List<CredentialingAction>();
 
 	}
 }

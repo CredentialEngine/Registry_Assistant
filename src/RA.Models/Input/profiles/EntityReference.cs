@@ -192,6 +192,10 @@ namespace RA.Models.Input
 		public string Name { get; set; }
 
 		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		/// <summary>
 		/// If the entity described below does exist in the registry, use this SameAs property to relate the two. 
 		/// Provide a CTID(recommended) or a URI to the thing in the credential registry.
 		/// </summary>
@@ -210,6 +214,10 @@ namespace RA.Models.Input
 		/// For example, for an organization, the description should be about the organization specifically not, how the organization is related to, or interacts with the refering entity. 
 		/// </summary>
 		public string Description { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
 
 		#region Assessment/Lopp related properties
@@ -380,7 +388,7 @@ namespace RA.Models.Input
 		public bool HasNecessaryProperties()
 		{
 			//	|| string.IsNullOrWhiteSpace( Description )
-			if ( string.IsNullOrWhiteSpace( Name )
+			if ( (string.IsNullOrWhiteSpace( Name ) || Name_Map?.Count == 0)
 				|| string.IsNullOrWhiteSpace( Type )
 				|| string.IsNullOrWhiteSpace( SubjectWebpage )
 				)
@@ -392,8 +400,8 @@ namespace RA.Models.Input
 		{
 			if ( string.IsNullOrWhiteSpace( Id )
 				&& string.IsNullOrWhiteSpace( CTID )
-				&& string.IsNullOrWhiteSpace( Name )
-				&& string.IsNullOrWhiteSpace( Description )
+				&& ( string.IsNullOrWhiteSpace( Name ) || Name_Map?.Count == 0 )
+				&& ( string.IsNullOrWhiteSpace( Description ) || Description_Map?.Count == 0 )
 				&& string.IsNullOrWhiteSpace( SubjectWebpage )
 				)
 				return true;

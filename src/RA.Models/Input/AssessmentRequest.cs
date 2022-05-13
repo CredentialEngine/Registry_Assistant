@@ -365,7 +365,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap ProcessStandardsDescription_Map { get; set; } = new LanguageMap();
 
-	
+
 		#region Occupations, Industries, and instructional programs
 		//=====================================================================
 		//List of occupations from a published framework, that is with a web URL
@@ -383,6 +383,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
 		/// <summary>
+		/// Language map list for AlternativeOccupationType
+		/// </summary>
+		public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
 		/// List of valid O*Net codes. See:
 		/// https://www.onetonline.org/find/
 		/// The API will validate and format the ONet codes as Occupations
@@ -397,13 +401,17 @@ namespace RA.Models.Input
 		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
 		/// </summary>
 		public List<FrameworkItem> IndustryType { get; set; }
+
 		/// <summary>
 		/// AlternativeIndustryType
 		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
 		/// Any industries added using this property will be added to or appended to the IndustryType output.
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
-		//public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// Language map list for AlternativeIndustryType
+		/// </summary>
+		public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid NAICS codes. These will be mapped to industry type
 		/// See:
@@ -424,7 +432,10 @@ namespace RA.Models.Input
 		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
 		/// </summary>
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
-
+		/// <summary>
+		/// Language map list for AlternativeInstructionalProgramType
+		/// </summary>
+		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid Classification of Instructional Program codes. See:
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
@@ -432,7 +443,7 @@ namespace RA.Models.Input
 		public List<string> CIP_Codes { get; set; } = new List<string>();
 		#endregion
 
-	
+
 		/// <summary>
 		/// Another source of information about the entity being described.
 		/// HINT: If the SameAs target is a resource in the Credential Registry, just the CTID needs to be provided. 

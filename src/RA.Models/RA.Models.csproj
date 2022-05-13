@@ -113,6 +113,7 @@
     <Compile Include="Input\profiles\ValueProfile.cs" />
     <Compile Include="Input\profiles\VerificationServiceProfile.cs" />
     <Compile Include="Input\profiles\WorkRole.cs" />
+    <Compile Include="Input\ProgressionModelRequest.cs" />
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />
     <Compile Include="Input\TransferIntermediaryRequest.cs" />
     <Compile Include="Input\TransferValueProfileRequest.cs" />

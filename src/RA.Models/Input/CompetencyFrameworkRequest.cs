@@ -654,14 +654,17 @@ namespace RA.Models.Input
 		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
 		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
 		/// </summary>
-		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+		public List<FrameworkItem> OccupationType { get; set; }
 		/// <summary>
 		/// AlternativeOccupationType
 		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
 		/// Any occupations added using this property will be added to or appended to the OccupationType output.
 		/// </summary>
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
-
+		/// <summary>
+		/// Language map list for AlternativeOccupationType
+		/// </summary>
+		public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid O*Net codes. See:
 		/// https://www.onetonline.org/find/
@@ -676,7 +679,7 @@ namespace RA.Models.Input
 		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
 		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
 		/// </summary>
-		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+		public List<FrameworkItem> IndustryType { get; set; }
 
 		/// <summary>
 		/// AlternativeIndustryType
@@ -685,10 +688,16 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
 		/// <summary>
-		/// List of valid NAICS codes. See:
+		/// Language map list for AlternativeIndustryType
+		/// </summary>
+		public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// List of valid NAICS codes. These will be mapped to industry type
+		/// See:
 		/// https://www.naics.com/search/
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
+
 		//=============================================================================
 		/// <summary>
 		/// InstructionalProgramType
@@ -702,15 +711,15 @@ namespace RA.Models.Input
 		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
 		/// </summary>
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
-
+		/// <summary>
+		/// Language map list for AlternativeInstructionalProgramType
+		/// </summary>
+		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid Classification of Instructional Program codes. See:
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
-
-
-
 		#endregion
 
 		//New 2021-09-30 - 

@@ -117,6 +117,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// The credential type as defined in CTDL
 		/// <see href="https://credreg.net/page/typeslist"/>
+		/// Required
 		/// NOTE: The following types are 'top level' types that may not be published:
 		///		Credential, Degree, Diploma
 		/// Only the sub-types under the latter may be used in publishing
@@ -144,11 +145,13 @@ namespace RA.Models.Input
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 		/// <summary>
 		/// Organization that owns this credential
+		/// Required
 		/// </summary>
 		public List<OrganizationReference> OwnedBy { get; set; }
 
 		/// <summary>
 		/// The status type of this credential. 
+		/// Required
 		/// The default is Active. 
 		/// </summary>
 		public string CredentialStatusType { get; set; }
@@ -162,12 +165,14 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Webpage that describes this entity.
+		/// Required
 		/// URL
 		/// </summary>
 		public string SubjectWebpage { get; set; }
 
 		/// <summary>
 		/// The primary language or languages of the entity, even if it makes use of other languages; e.g., a course offered in English to teach Spanish would have an inLanguage of English, while a credential in Quebec could have an inLanguage of both French and English.
+		/// Required
 		/// List of language codes. ex: en, es
 		/// </summary>
 		public List<string> InLanguage { get; set; }
@@ -479,7 +484,10 @@ namespace RA.Models.Input
 		/// Any occupations added using this property will be added to or appended to the OccupationType output.
 		/// </summary>
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
-
+		/// <summary>
+		/// Language map list for AlternativeOccupationType
+		/// </summary>
+		public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid O*Net codes. See:
 		/// https://www.onetonline.org/find/
@@ -503,6 +511,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
 		/// <summary>
+		/// Language map list for AlternativeIndustryType
+		/// </summary>
+		public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
 		/// List of valid NAICS codes. See:
 		/// https://www.naics.com/search/
 		/// </summary>
@@ -521,7 +533,10 @@ namespace RA.Models.Input
 		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
 		/// </summary>
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
-
+		/// <summary>
+		/// Language map list for AlternativeInstructionalProgramType
+		/// </summary>
+		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid Classification of Instructional Program codes. See:
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
@@ -697,13 +712,6 @@ namespace RA.Models.Input
 		/// URI to a Rating
 		/// </summary>
 		public List<string> HasRating { get; set; } = new List<string>();
-
-		/// <summary>
-		/// Action related to the credential
-		/// This may end up being a list of CTIDs?
-		/// PROPOSED - NOT VALID FOR PRODUCTION YET
-		/// </summary>
-		public List<CredentialingAction> RelatedAction { get; set; } = new List<CredentialingAction>();
 
 		#region OBSOLETE
 		/*

@@ -93,7 +93,7 @@ namespace RA.Models.Input
 		public List<string> HasPart { get; set; } = new List<string>();
 
 		/// <summary>
-		/// URL to a concept scheme
+		/// URL to a Progression Model
 		/// </summary>
 		public string HasProgressionModel { get; set; }
 

@@ -94,6 +94,11 @@ namespace RA.Models.Input
 	public class ConceptScheme 
 	{
 		/// <summary>
+		/// Helper property for use with blank nodes
+		/// </summary>
+		public string Type { get; set; } = "ConceptScheme";
+
+		/// <summary>
 		/// CTID - identifier for Concept Scheme. 
 		/// REQUIRED
 		/// </summary>
@@ -191,14 +196,14 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Name of an agent responsible for making this resource available.
 		/// </summary>
-		public string PublisherName { get; set; }
-		public LanguageMap PublisherName_Map { get; set; } = new LanguageMap();
+		public List<string> PublisherName { get; set; } = new List<string>();
+		public LanguageMapList PublisherName_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// An agent responsible for making this resource available.
 		/// This was originally defined as a single, and continuing to match CaSS.
 		/// </summary>
-		public OrganizationReference Publisher { get; set; } = new OrganizationReference();
+		public List<OrganizationReference> Publisher { get; set; } = new List<OrganizationReference>();
 
 		/// <summary>
 		/// Information about rights held in and over this resource.

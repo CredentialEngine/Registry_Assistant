@@ -38,6 +38,40 @@ namespace RA.Models.Input
 		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
 	}
 
+	public class CollectionUpdateRequest : BaseRequest
+	{
+		/// <summary>
+		/// Collection to update
+		/// TODO - would we want to allow updating the collection as well?
+		/// </summary>
+		public string CollectionCTID { get; set; }
+		/// <summary>
+		/// Members can be any of:
+		/// "ceterms:AssessmentProfile",
+		/// "ceterms:CollectionMember",
+		/// "ceterms:Credential", //any of the valid credential subclasses
+		/// "ceasn:Competency",
+		/// "ceterms:Course",
+		/// "ceterms:Job",
+		/// "ceterms:LearningOpportunityProfile",
+		/// "ceterms:LearningProgram",
+		/// "ceterms:Occupation",
+		/// "ceterms:Task",
+		/// "ceterms:WorkRole",
+		/// </summary>
+		public List<object> Members { get; set; } = new List<object>();
+
+		/// <summary>
+		/// CollectionMember
+		/// Collection members will be published in the graph like Members, but have a separate input propery for better organization
+		/// </summary>
+		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
+
+		/// <summary>
+		/// List of members to remove from a collection
+		/// </summary>
+		public List<string> RemoveMembers { get; set; } = new List<string>();
+	}
 	/// <summary>
 	/// Proposed option to publish a document already formatted as CTDL JSON-LD.
 	/// </summary>
@@ -207,14 +241,17 @@ namespace RA.Models.Input
 		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
 		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
 		/// </summary>
-		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+		public List<FrameworkItem> OccupationType { get; set; }
 		/// <summary>
 		/// AlternativeOccupationType
 		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
 		/// Any occupations added using this property will be added to or appended to the OccupationType output.
 		/// </summary>
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
-
+		/// <summary>
+		/// Language map list for AlternativeOccupationType
+		/// </summary>
+		public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid O*Net codes. See:
 		/// https://www.onetonline.org/find/
@@ -229,7 +266,7 @@ namespace RA.Models.Input
 		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
 		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
 		/// </summary>
-		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+		public List<FrameworkItem> IndustryType { get; set; }
 
 		/// <summary>
 		/// AlternativeIndustryType
@@ -238,10 +275,16 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
 		/// <summary>
-		/// List of valid NAICS codes. See:
+		/// Language map list for AlternativeIndustryType
+		/// </summary>
+		public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// List of valid NAICS codes. These will be mapped to industry type
+		/// See:
 		/// https://www.naics.com/search/
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
+
 		//=============================================================================
 		/// <summary>
 		/// InstructionalProgramType
@@ -255,7 +298,10 @@ namespace RA.Models.Input
 		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
 		/// </summary>
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
-
+		/// <summary>
+		/// Language map list for AlternativeInstructionalProgramType
+		/// </summary>
+		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid Classification of Instructional Program codes. See:
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
@@ -277,6 +323,13 @@ namespace RA.Models.Input
 		/// Type for this class
 		/// </summary>
 		public string Type { get; set; } = "ceterms:CollectionMember";
+
+		/// <summary>
+		/// CTID for a collection. 
+		/// This property is only used in publishing of documents like learning opportunities. It will be ignored in the context of publishing a collection.
+		/// </summary>
+		public string CollectionCTID { get; set; }
+
 
 		/// <summary>
 		/// A short description of this resource.
