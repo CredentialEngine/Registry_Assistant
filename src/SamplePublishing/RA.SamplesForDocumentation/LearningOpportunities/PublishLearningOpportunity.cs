@@ -31,6 +31,7 @@ namespace RA.SamplesForDocumentation
 				Name = "My Learning Opportunity Name",
 				Description = "This is some text that describes my learning opportunity.",
 				CTID = myLoppCTID,
+				LifeCycleStatusType="Active",
 				SubjectWebpage = "https://example.org/t=learningopportunity1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				LearningMethodType = new List<string>() { "learnMethod:Lecture", "learnMethod:Laboratory" },
@@ -53,6 +54,18 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
+			//
+			myData.AvailableAt = new List<Place>()
+			{
+				new Place()
+				{
+					Address1="One University Plaza",
+					City="Springfield",
+					PostalCode="62703",
+					AddressRegion="IL",
+					Country="United States"
+				}
+			};
 			//
 			//A learning opportunity *must* be connected to a credential in order to be published.
 			//The connection can be made using a Required condition profile in the Credential or using a RequiredFor from the learning opportunity

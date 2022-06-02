@@ -42,6 +42,7 @@ namespace RA.SamplesForDocumentation
 				Name = "Truck Driving Training With Outcome data, using: Aggregate Data Profile",
 				Description = "The Kishwaukee College 160-hour truck driver training program puts well-trained drivers on the road. The training combines classroom presentation with hands-on experience that leads to a Class A Commercial drivers license. The course will provide you with the basic skills to become a safe, professional truck driver. Upon successful completion, you will be able to secure an entry-level position in the trucking industry.",
 				CTID = myCTID,
+				LifeCycleStatusType = "Active",
 				SubjectWebpage = "https://kish.edu/academics/programs/truck-driver-training.php",
 				AvailableOnlineAt = new List<string>() { "https://kish.edu/academics/programs/truck-driver-training.php" },
 				InLanguage = new List<string>() { "en-US" },

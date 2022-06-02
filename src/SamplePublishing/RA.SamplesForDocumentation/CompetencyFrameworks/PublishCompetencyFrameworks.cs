@@ -34,6 +34,7 @@ namespace RA.SamplesForDocumentation
 				name = "My Competency Framework Name",
 				description = "This is some text that describes my Competency Framework.",
 				CTID = myCTID,
+				publicationStatusType="Published",
 				publisher = new List<string>() { organizationIdentifierFromAccountsSite }
 			};
 

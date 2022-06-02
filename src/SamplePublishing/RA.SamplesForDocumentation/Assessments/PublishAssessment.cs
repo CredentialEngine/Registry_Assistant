@@ -49,7 +49,6 @@ namespace RA.SamplesForDocumentation
 					}
 				}
 			};
-			//2021-10-31 lifeCycleStatusType was added. 
 			// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
 			// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
 			// Required
@@ -66,6 +65,18 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
+			//
+			myData.AvailableAt = new List<Place>()
+			{
+				new Place()
+				{
+					Address1="One University Plaza",
+					City="Springfield",
+					PostalCode="62703",
+					AddressRegion="IL",
+					Country="United States"
+				}
+			};
 			//Add organization that is not in the credential registry
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{

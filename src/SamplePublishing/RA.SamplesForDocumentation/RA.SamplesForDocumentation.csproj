@@ -103,6 +103,8 @@
     <Compile Include="TransferValueProfiles\PublishTransferIntermediary.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Credentials\files\CredentialWithMultipleLanguages_Api_input.json" />
+    <None Include="Credentials\files\CredentialWithMultipleLanguages_Api_output.json" />
     <None Include="Credentials\files\Credential_PublishDetailedRecord_API_Input.json" />
     <None Include="Credentials\files\Credential_PublishDetailedRecord_API_output.json" />
     <None Include="Credentials\files\Credential_WithOutcomeData_Credential_API_Input.json" />

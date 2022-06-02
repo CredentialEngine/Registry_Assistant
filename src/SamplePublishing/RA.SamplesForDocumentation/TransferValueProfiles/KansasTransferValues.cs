@@ -44,6 +44,7 @@ namespace RA.SamplesForDocumentation.TransferValueProfiles
 				Name = "Kansas Credit for Prior Learning Task Force",
 				Description = "Desc TBD for Kansas Credit for Prior Learning Task Force",
 				CTID = myCTID,
+				LifeCycleStatusType = "Active",
 				SubjectWebpage = "https://military.kansasregents.org/MAP/course_info/001902/25",
 				//StartDate = "2018-12-01",
 				//EndDate = "2023-11-30"

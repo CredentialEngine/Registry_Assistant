@@ -83,6 +83,7 @@ namespace RA.SamplesForDocumentation
 				Name = "My Transfer Value Profile Name",
 				Description = "This is some text that describes my transfer value profile.",
 				CTID = myCTID,
+				LifeCycleStatusType="Active",
 				SubjectWebpage = "http://example.com/transferValueProfile/tvp1"
 			};
 			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.
@@ -140,6 +141,7 @@ namespace RA.SamplesForDocumentation
 				Name = "My Transfer Value Profile Number Two ",
 				Description = "This is some text that describes my transfer value profile number 2.",
 				CTID = myCTID,
+				LifeCycleStatusType = "Active",
 				SubjectWebpage = "http://example.com/transferValueProfile/tvp2"
 			};
 			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.
@@ -216,6 +218,7 @@ namespace RA.SamplesForDocumentation
 				Name = "Environmental Challenges And Solutions",
 				Description = "To provide knowledge of the scope and severity of environmental illnesses.",
 				CTID = "ce-489406de-1c64-40bd-af31-f7a502b8b850",
+				LifeCycleStatusType = "Active",
 				SubjectWebpage = "https://stagingweb.acenet.edu/national-guide/Pages/Course.aspx?org=Huntington%20College%20of%20Health%20Sciences&cid=ffb1a50b-82c4-ea11-a812-000d3a33232a"
 			};
 			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.

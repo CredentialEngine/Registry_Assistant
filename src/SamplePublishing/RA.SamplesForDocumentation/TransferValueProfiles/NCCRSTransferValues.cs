@@ -36,6 +36,7 @@ namespace RA.SamplesForDocumentation
 				Name = "Advanced Legal Issues in Fraud Investigation and Defense",
 				Description = "In the upper division baccalaureate degree category OR in the graduate degree category, 1 semester hour in Insurance, Insurance Law or Business Law (5/10) (5/15 revalidation) (6/20 revalidation). NOTE: Courses 513, 514, and 515 or 516 constitute 3 semester hours in Insurance Fraud. NOTE: Courses 510, 512, 515 or 516 constitute 3 semester hours in Insurance Fraud.",
 				CTID = myCTID,
+				LifeCycleStatusType = "Active",
 				SubjectWebpage = "http://www.nationalccrs.org/american-educational-institute/advanced-legal-issues-fraud",
 				StartDate = "2004-05"		//ensure can handle a partial date
 			};

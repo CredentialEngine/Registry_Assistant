@@ -35,6 +35,7 @@ namespace RA.SamplesForDocumentation
 				 Name = "My Concept Scheme Name",
 				Description = "This is some text that describes my Concept Scheme.",
 				CTID = myCTID,
+				PublicationStatusType = "Published",
 				Publisher = new List<OrganizationReference>() 
 					{ new OrganizationReference() { CTID = organizationIdentifierFromAccountsSite } }
 			};

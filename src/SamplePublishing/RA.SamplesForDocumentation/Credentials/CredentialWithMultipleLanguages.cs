@@ -45,6 +45,7 @@ namespace RA.SamplesForDocumentation
 				CTID = myCTID,
 				SubjectWebpage = "https://www.bachelorstudies.com/Bachelor-of-Science-in-Accounting/Saudi-Arabia/Dar-Al-Hekma-University/",
 				CredentialType = "ceterms:BachelorDegree",
+				CredentialStatusType = "Active",
 				InLanguage = languages,
 			};
 			//typically the ownedBy is the same as the CTID for the data owner
@@ -78,7 +79,18 @@ namespace RA.SamplesForDocumentation
 				Name_Map = FormatLanguages( languages, new List<string>() { "بعض هيئات الاعتماد" , "Some Accreditation Body" } ),
 				SubjectWebpage = "https://www.cswe.org/"
 			} );
-
+			//TBD on addresses
+			myData.AvailableAt = new List<Place>()
+			{
+				new Place()
+				{
+					Address1="One University Plaza",
+					City="Springfield",
+					PostalCode="62703",
+					AddressRegion="IL",
+					Country="United States"
+				}
+			};
 			//==================== CONDITION PROFILE ====================
 			// add a requires Condition profile with conditions and a required learning opportunity. 
 			// See the code sample for a ConditionProfile for more detailed information

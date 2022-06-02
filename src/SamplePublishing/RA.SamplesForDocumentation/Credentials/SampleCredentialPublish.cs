@@ -39,7 +39,8 @@ namespace RA.SamplesForDocumentation.Credentials
 				Description = "This is some text that describes my credential.",
 				CTID = myCredCTID,
 				SubjectWebpage = "https:/example.org/credential/1234",
-				CredentialType = "ceterms: Certificate",
+				CredentialType = "ceterms:Certificate",
+				CredentialStatusType = "Active",
 				InLanguage = new List<string>() { "en-US" },
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				Naics = new List<string>() { "333922", "333923", "333924" },
@@ -66,6 +67,18 @@ namespace RA.SamplesForDocumentation.Credentials
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
+			//
+			myData.AvailableAt = new List<Place>()
+			{
+				new Place()
+				{
+					Address1="One University Plaza",
+					City="Springfield",
+					PostalCode="62703",
+					AddressRegion="IL",
+					Country="United States"
+				}
+			};
 			//This holds the Assessment and the identifier (CTID) for the owning organization
 			var myRequest = new CredentialRequest()
 			{

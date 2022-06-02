@@ -31,12 +31,14 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "My Organization Name",
 				Description = "This is some text that describes my organization.",
+				LifeCycleStatusType = "Active",
 				CTID = myOrgCTID,
 				SubjectWebpage = "http://example.com",
 				Type = "ceterms:CredentialOrganization",
 				Keyword = new List<string>() { "Credentials", "Technical Training", "Credential Registry Consulting" },
 				Email = new List<string>() { "info@myOrg.com" }
 			};
+			//
 			//required-concept from AgentSector: https://credreg.net/ctdl/terms/agentSectorType#AgentSector
 			myData.AgentSectorType = "PrivateNonProfit";
 			//required-One or more concepts from OrganizationType: https://credreg.net/ctdl/terms/agentType#OrganizationType

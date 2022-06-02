@@ -45,6 +45,7 @@ namespace RA.SamplesForDocumentation
 				CTID = myCTID,
 				SubjectWebpage = "https://example.com/?t=credentialwhp",
 				CredentialType = "ceterms:Certification",
+				CredentialStatusType = "Active",
 				InLanguage = new List<string>() { "en-US" },
 			};
 			//typically the ownedBy is the same as the CTID for the data owner
@@ -52,6 +53,18 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
+			//
+			myData.AvailableAt = new List<Place>()
+			{
+				new Place()
+				{
+					Address1="One University Plaza",
+					City="Springfield",
+					PostalCode="62703",
+					AddressRegion="IL",
+					Country="United States"
+				}
+			};
 			//
 			//format an AggregateDataProfile
 			myData.AggregateData = new List<AggregateDataProfile>() { FormatAggregateDataProfile( organizationIdentifierFromAccountsSite ) };

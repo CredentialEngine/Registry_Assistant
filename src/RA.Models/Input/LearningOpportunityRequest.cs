@@ -197,6 +197,19 @@ namespace RA.Models.Input
 		#endregion
 
 		//=========== optional ================================
+		/// <summary>
+		/// One or more collections of which this resource is member.
+		/// The owner of the collection must be the same as the publisher of this resource. 
+		/// Actions
+		/// if this resource includes at least one of DateEffective or ExpirationDate, then a CollectionMember will be added to the collection, otherwise just the URI will be added to Collection.HasMember.
+		/// </summary>
+		public List<string> IsMemberOfCollection { get; set; } = new List<string>();
+		/// <summary>
+		/// List of collection members for a collection where this learning opportunity is to be added.
+		/// The CollectionCTID is required. 
+		/// The ProxyFor property should be empty or contain the same CTID as this learning opportunity.
+		/// </summary>
+		public List<CollectionMember> CollectionMember { get; set; } = new List<CollectionMember>();
 
 		/// <summary>
 		///  Resource containing summary/statistical employment outcome, earnings, and/or holders information.
@@ -360,7 +373,10 @@ namespace RA.Models.Input
 		/// Any occupations added using this property will be added to or appended to the OccupationType output.
 		/// </summary>
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
-
+		/// <summary>
+		/// Language map list for AlternativeOccupationType
+		/// </summary>
+		public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid O*Net codes. See:
 		/// https://www.onetonline.org/find/
@@ -384,7 +400,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
 		/// <summary>
-		/// List of valid NAICS codes. See:
+		/// Language map list for AlternativeIndustryType
+		/// </summary>
+		public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// List of valid NAICS codes. These will be mapped to industry type
+		/// See:
 		/// https://www.naics.com/search/
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
@@ -402,7 +423,10 @@ namespace RA.Models.Input
 		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
 		/// </summary>
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
-
+		/// <summary>
+		/// Language map list for AlternativeInstructionalProgramType
+		/// </summary>
+		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
 		/// <summary>
 		/// List of valid Classification of Instructional Program codes. See:
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
@@ -578,13 +602,6 @@ namespace RA.Models.Input
 
 
 
-		/// <summary>
-		/// PENDING
-		///  Indicates an offering and typical schedule.
-		///  NOTE: Only use this property when it is necessary and useful to provide data about specific offerings of a learning opportunity or assessment, such as particular combinations of schedule, location, and delivery.
-		///  IN DEVELOPMENT ONLY
-		/// </summary>
-		public List<ScheduledOffering> HasOffering { get; set; } = new List<ScheduledOffering>();
 
 	}
 }

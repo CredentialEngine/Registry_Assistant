@@ -40,6 +40,7 @@ namespace RA.SamplesForDocumentation.Credentials
 				CTID = myCTID,
 				SubjectWebpage = "http://example.com/?t=qacredential",
 				CredentialType = "ceterms:QualityAssuranceCredential",
+				CredentialStatusType = "Active",
 				InLanguage = new List<string>() { "en-US" },
 				Keyword = new List<string>() { "ETPL", "QualityAssurance" }
 			};

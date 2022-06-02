@@ -36,6 +36,7 @@ namespace RA.SamplesForDocumentation
 				Name = "Business, Introduction to",
 				Description = "IWU, USF, IUSB: Ancilla course will transfer as undistributed credit.",
 				CTID = myCTID,
+				LifeCycleStatusType = "Active",
 				SubjectWebpage = "https://transferin.net/transfer-resources/transfer-databases/core-transfer-library",
 			};
 			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.

@@ -46,6 +46,7 @@ namespace RA.SamplesForDocumentation
 				CTID = myCTID,
 				SubjectWebpage = "http://example.com/credential/1234",
 				CredentialType = "ceterms:Certification",
+				CredentialStatusType = "Active",
 				InLanguage = new List<string>() { "en-US" },
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				Naics = new List<string>() { "333922", "333923", "333924" }
@@ -77,7 +78,17 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "https://www.cswe.org/",
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
 			} );
-
+			myData.AvailableAt = new List<Place>()
+			{
+				new Place()
+				{
+					Address1="1101 S. Yakima",
+					City="Tacoma",
+					PostalCode="98405",
+					AddressRegion="WA",
+					Country="United States"
+				}
+			};
 			//==================== JURISDICTION and Recognized In (specialized jurisdiction) ====================
 
 			myData.Jurisdiction.Add( Jurisdictions.SampleJurisdiction() );

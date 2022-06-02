@@ -43,6 +43,7 @@ namespace RA.SamplesForDocumentation.Credentials
 				CTID = myCTID,
 				SubjectWebpage = "http://example.com/?t=credentialwAlternativeConditions",
 				CredentialType = "ceterms:BachelorDegree",
+				CredentialStatusType="Active",
 				InLanguage = new List<string>() { "en-US" },
 				Keyword = new List<string>() { "General Management", "Office Management", "etc." },
 			};
