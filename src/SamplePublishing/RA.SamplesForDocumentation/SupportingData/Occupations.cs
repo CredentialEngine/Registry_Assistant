@@ -44,7 +44,15 @@ namespace RA.SamplesForDocumentation
 				CodedNotation = "15-1152.00",
 				Description = "Plan, implement, upgrade, or monitor security measures for the protection of computer networks and information. May ensure appropriate security controls are in place that will safeguard digital files and vital electronic infrastructure. May respond to computer security breaches and viruses."
 			} );
-
+			//or if want to just reference the Job family
+			request.OccupationType.Add( new FrameworkItem()
+			{
+				Framework = "https://www.onetonline.org/",
+				FrameworkName = "Standard Occupational Classification",
+				Name = "Construction and Extraction",
+				TargetNode = "https://www.onetonline.org/find/family?f=47",
+				CodedNotation = "47"
+			} );
 
 			//Occupations not in a known framework
 			//Occupations that are not in a framework can still be published using a list of strings.
