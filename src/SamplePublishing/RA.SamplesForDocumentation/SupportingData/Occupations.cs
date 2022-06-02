@@ -28,7 +28,7 @@ namespace RA.SamplesForDocumentation
 			//occupations from a framework like ONet - where the information is stored locally and can be included in publishing
 			request.OccupationType.Add( new FrameworkItem()
 			{
-				Framework = "https://www.onetonline.org/",
+				Framework = "https://www.onetcenter.org/taxonomy.html",
 				FrameworkName = "Standard Occupational Classification",
 				Name = "Information Security Analysts",
 				TargetNode = "https://www.onetonline.org/link/summary/15-1122.00",
@@ -37,7 +37,7 @@ namespace RA.SamplesForDocumentation
 			} );
 			request.OccupationType.Add( new FrameworkItem()
 			{
-				Framework = "https://www.onetonline.org/",
+				Framework = "https://www.onetcenter.org/taxonomy.html",
 				FrameworkName = "Standard Occupational Classification",
 				Name = "Computer Network Support Specialists",
 				TargetNode = "https://www.onetonline.org/link/summary/15-1152.00",
@@ -47,7 +47,7 @@ namespace RA.SamplesForDocumentation
 			//or if want to just reference the Job family
 			request.OccupationType.Add( new FrameworkItem()
 			{
-				Framework = "https://www.onetonline.org/",
+				Framework = "https://www.onetcenter.org/taxonomy.html",
 				FrameworkName = "Standard Occupational Classification",
 				Name = "Construction and Extraction",
 				TargetNode = "https://www.onetonline.org/find/family?f=47",

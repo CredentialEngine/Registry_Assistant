@@ -414,7 +414,7 @@ namespace RA.SamplesForDocumentation
 				//occupations from a framework like ONet - where the information is stored locally and can be included in publishing
 				new FrameworkItem()
 				{
-					Framework = "https://www.onetonline.org/",
+					Framework = "https://www.onetcenter.org/taxonomy.html",
 					FrameworkName = "Standard Occupational Classification",
 					Name = "Information Security Analysts",
 					TargetNode = "https://www.onetonline.org/link/summary/15-1122.00",
@@ -423,7 +423,7 @@ namespace RA.SamplesForDocumentation
 				},
 				new FrameworkItem()
 				{
-					Framework = "https://www.onetonline.org/",
+					Framework = "https://www.onetcenter.org/taxonomy.html",
 					FrameworkName = "Standard Occupational Classification",
 					Name = "Computer Network Support Specialists",
 					TargetNode = "https://www.onetonline.org/link/summary/15-1152.00",
