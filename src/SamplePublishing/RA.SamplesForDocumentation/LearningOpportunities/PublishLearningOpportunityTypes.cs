@@ -13,6 +13,7 @@ namespace RA.SamplesForDocumentation
 	{
 		/// <summary>
 		/// The Learning Opportunity, Course and Learning Program all use the same input request class. 
+		/// Oct/2021 Currently the only difference is that SCED is only valid for a Course
 		/// There is a separate endpoint for learningopportunity: 
 		///		/assistant/learningopportunity/publish
 		/// </summary>
@@ -212,6 +213,8 @@ namespace RA.SamplesForDocumentation
 					}
 				}
 			};
+			//School Courses for the Exchange of Data
+			myData.SCED = "100-101";
 			//add one of ownedBy or offeredBy, or both
 			myData.OwnedBy.Add( new OrganizationReference()
 			{
