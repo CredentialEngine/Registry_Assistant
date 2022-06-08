@@ -68,14 +68,13 @@
     <Compile Include="Employment\Jobs.cs" />
     <Compile Include="Employment\Occupations.cs" />
     <Compile Include="LearningOpportunities\PublishLearningOpportunityWithOutcomes.cs" />
-    <Compile Include="LearningOpportunities\SampleLearningOpportunityPublish.cs" />
     <Compile Include="PerformanceExamples\CareerBridgeCredentials.cs" />
     <Compile Include="PerformanceExamples\IndianaPassRates.cs" />
     <Compile Include="PerformanceExamples\KansasExamples.cs" />
     <Compile Include="PerformanceExamples\WIOAExamples.cs" />
     <Compile Include="ProPath\ProPathExamples.cs" />
     <Compile Include="Credentials\PublishCredential.cs" />
-    <Compile Include="LearningOpportunities\PublishLearningOpportunity.cs" />
+    <Compile Include="LearningOpportunities\PublishLearningOpportunityTypes.cs" />
     <Compile Include="LoggingHelper.cs" />
     <Compile Include="Organizations\PublishOrganization.cs" />
     <Compile Include="Pathways\PublishPathway.cs" />
