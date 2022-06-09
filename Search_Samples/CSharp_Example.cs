@@ -27,7 +27,7 @@ public class ExampleQuery
 		public int TotalResults { get; set; }
 
 		//Only if you request description set data
-		public List<RelatedItemsWrapper> RelatedItemsMap { get; set; }
+		public List<JObject> RelatedItemsMap { get; set; }
 		public List<JObject> RelatedItems { get; set; }
 	}
 
