@@ -14,12 +14,20 @@ namespace RA.SamplesForDocumentation.Collections
     /// </summary>
     public class PublishCollection
     {
-		/// <summary>
-		/// Simple example just using HasMember and URIs
-		/// </summary>
-		/// <param name="requestType">Format or Publish</param>
-		/// <returns></returns>
-		public bool Simple( string requestType = "format" )
+		List<string> testCollectionCredentials = new List<string>()
+			{
+				"ce-db250674-0dc5-4f1b-af90-a86992b6e741",
+				"ce-db91447a-23da-4949-a71a-4203031d9032",
+				"ce-474a55b1-0806-4f5d-ae27-d3ca79b20e29",
+				"ce-34d50921-dff5-4613-9dcf-f9732bbfe88a",
+				"ce-34d50921-dff5-4613-9dcf-f9732bbfe88a", //yes a duplicate to test that a duplicate will be recognized and ignored
+			};
+	/// <summary>
+	/// Simple example just using HasMember and URIs
+	/// </summary>
+	/// <param name="requestType">Format or Publish</param>
+	/// <returns></returns>
+	public bool Simple( string requestType = "format" )
 		{
 
 			// Assign the api key - acquired from organization account of the organization doing the publishing
@@ -38,7 +46,7 @@ namespace RA.SamplesForDocumentation.Collections
 
 			var myData = new APIRequestEntity()
 			{
-				Name = "A sample collection of credentials.",
+				Name = "A sample collection of credentials - College Of DuPage.",
 				Description = "This collection uses the HasMember property to list members of this collection using the CTIDs of a published credentials.",
 				CTID = myCTID,
 				InLanguage = new List<string>() { "en-US" },
@@ -51,13 +59,8 @@ namespace RA.SamplesForDocumentation.Collections
 			} );
 
 			//a few members to start with
-			myData.HasMember = new List<string>()
-			{
-				"ce-08cc45f3-6384-4605-a009-784293be4359",
-				"ce-37c98f6d-1afc-48a9-8b84-4816c47f1d7f",
-				"ce-a7c102d3-2f45-48f7-aa22-9718941d0996"
-			};
-
+			myData.HasMember = testCollectionCredentials;
+			//myData.HasMember.Add( "ce-34d50921-dff5-4613-9dcf-f9732bbfe88a" ); //test a duplicate that should be skipped.
 
 			//This holds the main entity and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
@@ -81,7 +84,10 @@ namespace RA.SamplesForDocumentation.Collections
 			};
 
 			var result = new SampleServices().PublishRequest( req );
+			if ( req.Messages.Count > 0 )
+			{
 
+			}
 			return result;
 
 		}
@@ -157,7 +163,7 @@ namespace RA.SamplesForDocumentation.Collections
 			{
 				Name = "Associate’s Degree A.A Indigenous Leadership",
 				Description = "An optional description.",
-				ProxyFor = "ce-08cc45f3-6384-4605-a009-784293be4359",//a published object
+				ProxyFor = testCollectionCredentials[0],//a published object
 				StartDate = "2020-01-01",
 				EndDate = "2023-12-31"
 			} );
@@ -165,7 +171,7 @@ namespace RA.SamplesForDocumentation.Collections
 			{
 				Name = "Associate’s Degree A.A. Early Childhood Education",
 				Description = "An optional description.",
-				ProxyFor = "ce-37c98f6d-1afc-48a9-8b84-4816c47f1d7f",//a published object
+				ProxyFor = testCollectionCredentials[1],	//a published object
 				StartDate = "2020-01-01",
 				EndDate = "2023-12-31"
 			} );
@@ -173,7 +179,7 @@ namespace RA.SamplesForDocumentation.Collections
 			{
 				Name = "Associate’s Degree A.A. Liberal Education",
 				Description = "An optional description.",
-				ProxyFor = "ce-a7c102d3-2f45-48f7-aa22-9718941d0996",//a published object
+				ProxyFor = testCollectionCredentials[2],    //a published object
 				StartDate = "2020-01-01",
 				EndDate = "2023-12-31"
 			} );
@@ -181,7 +187,7 @@ namespace RA.SamplesForDocumentation.Collections
 			{
 				Name = "Associate’s Degree A.A.S. Business Management",
 				Description = "An optional description.",
-				ProxyFor = "ce-299285e8-ea72-4dc0-ab55-aeb2ddd0eed8",//a published object
+				ProxyFor = testCollectionCredentials[3],    //a published object
 				StartDate = "2020-01-01",
 				EndDate = "2023-12-31"
 			} );
@@ -189,7 +195,7 @@ namespace RA.SamplesForDocumentation.Collections
 			{
 				Name = "Associate’s Degree A.A. Liberal Education, STEM Emphasis",
 				Description = "An optional description.",
-				ProxyFor = "ce-8596a5af-9bc3-43ac-bd6f-7055e3ab4393",//a published object
+				ProxyFor = testCollectionCredentials[4],    //this is a duplicate CTID and should be rejected
 				StartDate = "2020-01-01",
 				EndDate = "2023-12-31"
 			} );
@@ -209,7 +215,10 @@ namespace RA.SamplesForDocumentation.Collections
 			};
 
 			var result = new SampleServices().PublishRequest( req );
+			if (req.Messages.Count > 0)
+            {
 
+            }
 			return result;
 
 		}

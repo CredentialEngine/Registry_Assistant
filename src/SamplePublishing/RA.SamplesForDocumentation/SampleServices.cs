@@ -238,7 +238,7 @@ namespace RA.SamplesForDocumentation
 		public bool PublishRequest( AssistantRequestHelper request )
 		{
 			string serviceUri = GetAppKeyValue( "registryAssistantApi" );
-			if (System.DateTime.Now.Day==01)
+			if (System.DateTime.Now.Day==02)
 			{
 				//serviceUri = "https://localhost:44312/";
 			}
@@ -326,7 +326,7 @@ namespace RA.SamplesForDocumentation
 								//may have some warnings to display
 								request.Messages.AddRange( response.Messages );
 
-								var publishedUrl = response.GraphUrl;
+								request.RegistryUrl = response.GraphUrl;
 							}
 							else
 							{
@@ -367,7 +367,7 @@ namespace RA.SamplesForDocumentation
 									{
 										request.FormattedPayload = lresponse.Payload;
 									}
-									return false;
+									//return false;
 								}
 							}
 						}
@@ -577,7 +577,7 @@ namespace RA.SamplesForDocumentation
 			public string EnvelopeIdentifier { get; set; }
 
 			public string FormattedPayload { get; set; }
-
+			public string RegistryUrl { get; set; }
 			//public string Status { get; set; }
 			public List<string> Messages { get; set; }
 			//public RAResponse response { get; set; }
