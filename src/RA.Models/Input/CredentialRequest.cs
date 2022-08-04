@@ -108,6 +108,7 @@ namespace RA.Models.Input
 		}
 		/// <summary>
 		/// Helper property for use with blank nodes
+		/// This is a 'broad' type. CredentialType is still required.
 		/// </summary>
 		public string Type { get; set; } = "Credential";
 
@@ -119,7 +120,7 @@ namespace RA.Models.Input
 		/// <see href="https://credreg.net/page/typeslist"/>
 		/// Required
 		/// NOTE: The following types are 'top level' types that may not be published:
-		///		Credential, Degree, Diploma
+		///		Credential, Degree
 		/// Only the sub-types under the latter may be used in publishing
 		/// </summary>
 		public string CredentialType { get; set; }
@@ -367,6 +368,13 @@ namespace RA.Models.Input
 		/// ISIC Revision 4 Code
 		/// </summary>
 		public string ISICV4 { get; set; }
+
+		/// <summary>
+		/// Is Non-Credit
+		/// Resource carries or confers no official academic credit towards a program or a credential.
+		/// </summary>
+		public bool? IsNonCredit { get; set; }
+
 		/// <summary>
 		/// List of credentials where this credential is a part of.
 		/// </summary>
@@ -712,6 +720,13 @@ namespace RA.Models.Input
 		/// URI to a Rating
 		/// </summary>
 		public List<string> HasRating { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Action related to the credential
+		/// This may end up being a list of CTIDs?
+		/// PROPOSED - NOT VALID FOR PRODUCTION YET
+		/// </summary>
+		public List<CredentialingAction> RelatedAction { get; set; } = new List<CredentialingAction>();
 
 		#region OBSOLETE
 		/*

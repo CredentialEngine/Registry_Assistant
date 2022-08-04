@@ -350,7 +350,21 @@ namespace RA.Models.Input
 		/// Alphanumeric notation or ID code as defined by the promulgating body to identify this resource.
 		/// </summary>
 		public string Notation { get; set; }
-		
+
+		/// <summary>
+		/// Resource that logically comes after this resource.
+		/// This property indicates a simple or suggested ordering of resources; if a required ordering is intended, use ceterms:prerequisite instead.
+		/// Provide the CTID or the full URI for the target environment. 
+		/// ceterms:ComponentCondition
+		/// </summary>
+		public List<string> Precedes { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Component is preceded by the referenced components
+		/// </summary>
+		public List<string> PrecededBy { get; set; }
+
+
 		/// <summary>
 		/// Concept 
 		/// Required

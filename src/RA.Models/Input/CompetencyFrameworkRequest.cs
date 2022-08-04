@@ -184,6 +184,9 @@ namespace RA.Models.Input
 		/// The name or title of this competency framework.
 		/// </summary>
 		public string name { get; set; } 
+		/// <summary>
+		/// Language map for name
+		/// </summary>
 		public LanguageMap name_map { get; set; } = new LanguageMap();
 
 		/// <summary>

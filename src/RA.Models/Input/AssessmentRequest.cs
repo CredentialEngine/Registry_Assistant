@@ -312,6 +312,12 @@ namespace RA.Models.Input
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
 		/// <summary>
+		/// Is Non-Credit
+		/// Resource carries or confers no official academic credit towards a program or a credential.
+		/// </summary>
+		public bool? IsNonCredit { get; set; }
+
+		/// <summary>
 		/// Whether or not the assessment is supervised or monitored by an agent.
 		/// </summary>
 		public bool? IsProctored { get; set; }

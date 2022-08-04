@@ -8,6 +8,9 @@ namespace RA.Models.Input
 	/// </summary>
 	public class OrganizationRequest : BaseRequest
 	{
+		/// <summary>
+		/// constructor
+		/// </summary>
 		public OrganizationRequest()
 		{
 			Organization = new Organization();
@@ -36,9 +39,12 @@ namespace RA.Models.Input
 	/// </summary>
 	public class Organization : BaseRequestClass
 	{
+		/// <summary>
+		/// Constructor
+		/// </summary>
 		public Organization()
 		{
-
+			Type = "CredentialOrganization";
 			AgentType = new List<string>();
 
 			//AgentSectorType = new List<string>();
@@ -507,6 +513,18 @@ namespace RA.Models.Input
 		/// Organization in a subordinate or lower position than a parent organization.
 		/// </summary>
 		public List<OrganizationReference> SubOrganization { get; set; }
+
+		/// <summary>
+		///  Resource that replaces this resource.
+		///  full URL OR CTID (recommended)
+		/// </summary>
+		public string SupersededBy { get; set; }
+		/// <summary>
+		/// Resource that this resource replaces.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string Supersedes { get; set; }
+
 		/// <summary>
 		/// Webpage or online document that defines or explains the nature of transfer value handled by the organization.
 		/// URI
@@ -528,6 +546,9 @@ namespace RA.Models.Input
 		//VerificationServiceProfiles was originally added uncorrectly as plural. The latter is incorrrect and is being maintained for legacy references. VerificationServiceProfile should be used, and is checked first
 		[Obsolete]
 		public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; } = new List<VerificationServiceProfile>();
+
+		//pending
+		public List<CredentialingAction> AccreditAction { get; set; } = new List<CredentialingAction>();
 
 	}
 }

@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
+	/// <summary>
+	/// Pathway Publishing Request class
+	/// </summary>
 	public class PathwayRequest : BaseRequest
 	{
+		/// <summary>
+		/// constuctor
+		/// </summary>
 		public PathwayRequest()
 		{
 		}
@@ -93,7 +99,7 @@ namespace RA.Models.Input
 		public List<string> HasPart { get; set; } = new List<string>();
 
 		/// <summary>
-		/// URL to a Progression Model
+		/// CTID/URL to a Progression Model
 		/// </summary>
 		public string HasProgressionModel { get; set; }
 
@@ -172,8 +178,30 @@ namespace RA.Models.Input
 		/// https://www.naics.com/search/
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
-        #endregion
-    }
+		//=============================================================================
+		/// <summary>
+		/// InstructionalProgramType
+		/// Type of instructional program; select from an existing enumeration of such types.
+		/// </summary>
+		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
+
+		/// <summary>
+		/// AlternativeInstructionalProgramType
+		/// Programs that are not found in a formal framework can be still added using AlternativeInstructionalProgramType. 
+		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
+		/// </summary>
+		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
+		/// <summary>
+		/// Language map list for AlternativeInstructionalProgramType
+		/// </summary>
+		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// List of valid Classification of Instructional Program codes. See:
+		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
+		/// </summary>
+		public List<string> CIP_Codes { get; set; } = new List<string>();
+		#endregion
+	}
 
     /// <summary>
     /// History
@@ -297,32 +325,36 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> PrecededBy { get; set; }
 
-		/// <summary>
-		/// Resource(s) required as a prior condition to this resource.
-		/// Provide the CTID or the full URI for the target environment. 
-		/// ceterms:ComponentCondition
-		/// </summary>
-		public List<string> Prerequisite { get; set; } = new List<string>();
+		///// <summary>
+		///// Resource(s) required as a prior condition to this resource.
+		///// Provide the CTID or the full URI for the target environment. 
+		///// ceterms:ComponentCondition
+		///// </summary>
+		//[Obsolete]		//June 30, 2022
+		//public List<string> Prerequisite { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Indicates the resource for which a pathway component or similar proxy resource is a stand-in.
-		/// URL
-		/// </summary>
-		public string ProxyFor { get; set; }
+        /// <summary>
+        /// Indicates the resource for which a pathway component or similar proxy resource is a stand-in.
+		/// This property is slated to completely replace SourceData in late 2022
+        /// URL
+        /// </summary>
+        public string ProxyFor { get; set; }
 
-		/// <summary>
-		/// URL to structured data representing the resource.
-		/// The preferred data serialization is JSON-LD or some other serialization of RDF.
-		/// Must this be a registry URI. The user can just provide a CTID.
-		/// URL
-		/// </summary>
+        /// <summary>
+        /// URL to structured data representing the resource.
+        /// The preferred data serialization is JSON-LD or some other serialization of RDF.
+        /// If this is a registry URI, the user can just provide a CTID.
+		/// NOTE THIS WILL LIKELY BE COMPLETELY REPLACED BY ProxyFor
+        /// URL
+        /// </summary>
+        [Obsolete] //early warning
 		public string SourceData { get; set; }
 		/// <summary>
 		/// Where the source data is not in the registry, a 'blank node' can be provided. 
 		/// The blank node would most likely be of a type closely associated with the the type of pathway component. 
 		/// Examples: learningOpportunity/Course for a CourseComponent, AssessmentProfile for an AssessmentComponent, etc. 
 		/// </summary>
-		public List<EntityReference> SourceDataBNode { get; set; } = new List<EntityReference>();
+		public List<EntityReference> ProxyForBNode { get; set; } = new List<EntityReference>();
 
 		/// <summary>
 		/// The webpage that describes this entity.
@@ -427,6 +459,9 @@ namespace RA.Models.Input
 		#endregion
 	}
 
+	/// <summary>
+	/// Component Condition
+	/// </summary>
 	public class ComponentCondition
 	{
 
@@ -439,6 +474,7 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
 
 		/// <summary>
 		/// ComponentCondition Name
@@ -462,6 +498,86 @@ namespace RA.Models.Input
 		/// LIst of CTIDs (recommended) or fully qualified registry URL
 		/// </summary>
 		public List<string> TargetComponent { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Resource(s) that describes what must be done to complete a PathwayComponent, or part thereof, as determined by the issuer of the Pathway.
+		/// ceterms:ComponentCondition
+		/// </summary>
+		public List<ComponentCondition> HasCondition { get; set; } = new List<ComponentCondition>();
+
+		/// <summary>
+		/// Referenced resource defines a single constraint.
+		/// URI or CTID??
+		/// ceterms:hasConstraint
+		///  Range: ceterms:Constraint
+		/// </summary>
+		public List<Constraint> HasConstraint { get; set; } = new List<Constraint>();
+
+		/// <summary>
+		/// Type that denotes a logical operation such as "AND", "OR", "NOT"; select from an existing enumeration of such types.
+		/// ceterms:logicalOperator
+		/// Range: ceterms:Concept (Select from a controlled vocabulary: ceterms:logicalOperator)
+		/// </summary>
+		public string LogicalOperator { get; set; }
 	}
+
+	/// <summary>
+	/// Resource that identifies the parameters defining a limitation or restriction applicable to candidate pathway components.
+	/// </summary>
+	public class Constraint
+	{
+		/// <summary>
+		/// Constraint Name
+		/// Optional
+		/// </summary>
+		public string Name { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Constraint Description 
+		/// Optional
+		/// </summary>
+		public string Description { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		/// Type of symbol that denotes an operator in a constraint expression such as "gteq" (greater than or equal to), "eq" (equal to), "lt" (less than), "isAllOf" (is all of), "isAnyOf" (is any of); 
+		/// select from an existing enumeration of such types.
+		/// ceterms:Concept (Select from a controlled vocabulary-ceterms:Comparator)
+		/// </summary>
+		public string Comparator { get; set; }
+
+		/// <summary>
+		/// Left hand parameter of a constraint.
+		/// Range: rdf:Property, skos:Concept (Select from a controlled vocabulary)
+		/// </summary>
+		public string LeftSource { get; set; }
+
+		/// <summary>
+		/// Action performed on the left constraint; select from an existing enumeration of such types.
+		/// 
+		/// Range: ceterms:Concept (Select from a controlled vocabulary-ceterms:ArrayOperation)
+		/// </summary>
+		public string LeftAction { get; set; }
+
+		/// <summary>
+		/// Right hand parameter of a constraint.
+		/// Range: rdf:Property, skos:Concept (Select from a controlled vocabulary)
+		/// </summary>
+		public string RightSource { get; set; }
+
+		/// <summary>
+		/// Action performed on the right constraint; select from an existing enumeration of such types.
+		/// 
+		/// Range: ceterms:Concept (Select from a controlled vocabulary-ceterms:ArrayOperation)
+		/// </summary>
+		public string RightAction{ get; set; }
+	}
+
 
 }

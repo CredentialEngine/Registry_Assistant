@@ -16,41 +16,55 @@ namespace RA.Models.Input
 		/// </summary>
 		public ProgressionModelRequest()
 		{
-			ProgressionModel = new ConceptScheme();
+			ProgressionModel = new ProgressionModel();
 		}
 
 		/// <summary>
-		/// ConceptScheme
+		/// ProgressionModel
 		/// Required
 		/// </summary>
-		public ConceptScheme ProgressionModel { get; set; } = new ConceptScheme();
+		public ProgressionModel ProgressionModel { get; set; } = new ProgressionModel();
 
 		/// <summary>
-		/// Concepts for ConceptScheme
+		/// ProgressionLevels for ProgressionModel
 		/// Required
 		/// </summary>
-		public List<Concept> ProgressionLevels { get; set; } = new List<Concept>();
+		public List<Concept> ProgressionLevel { get; set; } = new List<Concept>();
 	
 	}
 
-	///// <summary>
-	///// Progression Model
-	///// Currently identical to a ConceptScheme
-	///// </summary>
-	//public class ProgressionModel : ConceptScheme
-	//{
-	//	public ProgressionModel()
-	//	{
-	//		Type = "ProgressionModel";
-	//		ConceptTerm = null;
-	//		HasTopConcept = null;
-	//	}
+    /// <summary>
+    /// Progression Model
+    /// Currently identical to a ConceptScheme
+    /// </summary>
+    public class ProgressionModel : ConceptScheme
+    {
+		/// <summary>
+		/// constructor
+		/// </summary>
+        public ProgressionModel()
+        {
+            Type = "ProgressionModel";
+            ConceptTerm = null;
+        }
 
-	//}
-	///// <summary>
-	///// ProgressionLevel currently the same as the Concept class
-	///// </summary>
-	//public class ProgressionLevel: Concept
+    }
+
+
+ //   /// <summary>
+ //   /// ProgressionLevel currently the same as the Concept class
+ //   /// </summary>
+ //   public class ProgressionLevel : Concept
 	//{
+	//	/// <summary>
+	//	///	Concept scheme to which this concept belongs.
+	//	/// </summary>
+	//	[Obsolete( "Not supported in this class.", true )]
+	//	private new string InScheme { get; set; }
+
+	//	/// <summary>
+	//	/// Progression Model to which this Progression Level belongs.
+	//	/// </summary>
+	//	public string InProgressionModel { get; set; }
 	//}
 }

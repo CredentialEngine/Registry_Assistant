@@ -152,7 +152,7 @@ namespace RA.Models.Input
 		/// Provide credit information in a ValueProfile value
 		/// A credit-related value.
 		/// 21-07-19 - updating Creditvalue to also allow a list. It is defined as an object. The API will accept either a ValueProfile object or List of ValueProfiles
-		/// 12-08-18 - Changing permantly to the List, as only existing use was from the publisher (and the latter is updated to use the list)
+		/// 21-08-18 - Changing permantly to the List, as only existing use was from the publisher (and the latter is updated to use the list)
 		/// </summary>
 		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 		//public object CreditValue { get; set; }   
@@ -194,22 +194,36 @@ namespace RA.Models.Input
 		/// </summary>
 		public string DeliveryTypeDescription { get; set; }
 		public LanguageMap DeliveryTypeDescription_Map { get; set; } = new LanguageMap();
-		#endregion
+        #endregion
 
-		//=========== optional ================================
-		/// <summary>
-		/// One or more collections of which this resource is member.
-		/// The owner of the collection must be the same as the publisher of this resource. 
-		/// Actions
-		/// if this resource includes at least one of DateEffective or ExpirationDate, then a CollectionMember will be added to the collection, otherwise just the URI will be added to Collection.HasMember.
-		/// </summary>
-		public List<string> IsMemberOfCollection { get; set; } = new List<string>();
+        //=========== optional ================================
+
+        #region Proposed collection helpers
+        /// <summary>
+        /// One or more collections of which this resource is to be a member.
+        /// The owner of the collection must be the same as the publisher of this resource. 
+        /// Actions
+        /// Proposed: 
+		///		if this resource includes at least one of DateEffective or ExpirationDate, then a CollectionMember will be added to the collection, otherwise just the URI will be added to Collection.HasMember.
+		///	Response:
+		///		NO, it is believed that we cannot arbitrarily take action based on the dates
+        /// </summary>
+        public List<string> IsMemberOfCollection { get; set; } = new List<string>();
 		/// <summary>
 		/// List of collection members for a collection where this learning opportunity is to be added.
 		/// The CollectionCTID is required. 
-		/// The ProxyFor property should be empty or contain the same CTID as this learning opportunity.
+		/// The ProxyFor property should be empty or contain the same CTID as this resource.
+		///		- actually it will just be ignored
+		///	TODO - can we get away with just one property?
 		/// </summary>
-		public List<CollectionMember> CollectionMember { get; set; } = new List<CollectionMember>();
+		public List<CollectionMember> IsCollectionMemberOfCollection { get; set; } = new List<CollectionMember>();
+
+		/// <summary>
+		/// List of Collections from which to remove the current resource
+		/// </summary>
+		public List<string> RemoveCollectionMember{ get; set; } = new List<string>();
+
+		#endregion
 
 		/// <summary>
 		///  Resource containing summary/statistical employment outcome, earnings, and/or holders information.
@@ -301,13 +315,23 @@ namespace RA.Models.Input
 		public List<EntityReference> HasPart { get; set; }
 
 		/// <summary>
+		/// Indicates a resource that acts as a stand-in for the resource. 
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string HasProxy { get; set; }
+
+		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
 		/// <see href="https://purl.org/ctdl/terms/identifier"></see>
 		/// ceterms:identifier
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
-
+		/// <summary>
+		/// Is Non-Credit
+		/// Resource carries or confers no official academic credit towards a program or a credential.
+		/// </summary>
+		public bool? IsNonCredit { get; set; }
 
 		/// <summary>
 		/// Indicates another entity of which this entity is a component. That is of another Learning Opportunity
@@ -572,6 +596,18 @@ namespace RA.Models.Input
 		public List<JurisdictionAssertion> RevokedIn { get; set; } = new List<JurisdictionAssertion>();
 
 		#endregion
+
+		/// <summary>
+		///  Resource that replaces this resource.
+		///  full URL OR CTID (recommended)
+		/// </summary>
+		public string SupersededBy { get; set; }
+		/// <summary>
+		/// Resource that this resource replaces.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string Supersedes { get; set; }
+
 		/// <summary>
 		/// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.
 		/// </summary>
@@ -602,6 +638,13 @@ namespace RA.Models.Input
 
 
 
+		/// <summary>
+		/// PENDING
+		///  Indicates an offering and typical schedule.
+		///  NOTE: Only use this property when it is necessary and useful to provide data about specific offerings of a learning opportunity or assessment, such as particular combinations of schedule, location, and delivery.
+		///  IN DEVELOPMENT ONLY
+		/// </summary>
+		public List<ScheduledOffering> HasOffering { get; set; } = new List<ScheduledOffering>();
 
 	}
 }

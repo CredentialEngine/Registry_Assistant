@@ -86,6 +86,7 @@
     <Compile Include="Input\profiles\ConditionProfile.cs" />
     <Compile Include="Input\profiles\CostProfile.cs" />
     <Compile Include="Input\profiles\CredentialAlignmentObject.cs" />
+    <Compile Include="Input\profiles\CredentialingAction.cs" />
     <Compile Include="Input\profiles\DurationProfile.cs" />
     <Compile Include="Input\profiles\EarningsProfile.cs" />
     <Compile Include="Input\profiles\EmploymentOutcomeProfile.cs" />
@@ -109,9 +110,11 @@
     <Compile Include="Input\profiles\QData\SubjectProfile.cs" />
     <Compile Include="Input\profiles\QuantitativeValue.cs" />
     <Compile Include="Input\profiles\RevocationProfile.cs" />
+    <Compile Include="Input\profiles\ScheduledOffering.cs" />
     <Compile Include="Input\profiles\Task.cs" />
     <Compile Include="Input\profiles\ValueProfile.cs" />
     <Compile Include="Input\profiles\VerificationServiceProfile.cs" />
+    <Compile Include="Input\profiles\WorkforceDemandAction.cs" />
     <Compile Include="Input\profiles\WorkRole.cs" />
     <Compile Include="Input\ProgressionModelRequest.cs" />
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />

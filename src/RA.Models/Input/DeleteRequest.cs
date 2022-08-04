@@ -19,8 +19,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> CTIDList { get; set; } = new List<string>();
 		/// <summary>
-		/// Identifier for Organization which Owns the data being deleted
-		/// 2017-12-13 - this will be the CTID for the owning org.
+		/// CTID for the Organization which Owns the data being deleted
 		/// </summary>
 		public string PublishForOrganizationIdentifier { get; set; }
 
@@ -30,4 +29,24 @@ namespace RA.Models.Input
 		public string Community { get; set; }
 	}
 
+	/// <summary>
+	/// Request class for a Cease request
+	/// </summary>
+	public class CeaseRequest
+	{
+		/// <summary>
+		/// CTID of document to be deleted
+		/// </summary>
+		public string CTID { get; set; }
+
+		/// <summary>
+		/// CTID for the Organization which Owns the data being deleted
+		/// </summary>
+		public string PublishForOrganizationIdentifier { get; set; }
+
+		/// <summary>
+		/// Leave blank for default
+		/// </summary>
+		public string Community { get; set; }
+	}
 }

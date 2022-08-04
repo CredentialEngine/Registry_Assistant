@@ -38,6 +38,7 @@ namespace RA.Models.Input
 		/// Street Address1
 		/// </summary>
 		public string Address1 { get; set; }
+		public LanguageMap Address_Map { get; set; } = new LanguageMap();
 		/// <summary>
 		/// Street Address2 - this will be appended to Address1 on publish to the registry
 		/// </summary>
@@ -47,7 +48,7 @@ namespace RA.Models.Input
 		/// Post office box number for post office addresses.
 		/// </summary>
 		public string PostOfficeBoxNumber { get; set; }
-
+		//public LanguageMap PostOfficeBoxNumber_Map { get; set; } = new LanguageMap();
 		/// <summary>
 		/// Town, city, or village in which a particular location is situtated.
 		/// Published to ceterms:addressLocality
@@ -60,17 +61,25 @@ namespace RA.Models.Input
 		/// </summary>
         public string AddressRegion { get; set; }
         public LanguageMap AddressRegion_Map { get; set; } = new LanguageMap();
+		///// <summary>
+		///// Named area or division within a region, such as a county in the U.S. or Canada.
+		///// 20-11-06 PROPOSED NOT OFFICIAL AT THIS TIME
+		///// 21-03-01 Identifier has been added, and so this may no longer be relevant?
+		///// </summary>
+		//public string SubRegion { get; set; }
+		//public LanguageMap SubRegion_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Postal Code
 		/// </summary>
 		public string PostalCode { get; set; }
+		//public LanguageMap PostalCode_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Country
 		/// </summary>
 		public string Country { get; set; }
-        //public LanguageMap Country_Map { get; set; } = new LanguageMap();
+        public LanguageMap Country_Map { get; set; } = new LanguageMap();
 
         public double Latitude { get; set; }
 
@@ -102,12 +111,13 @@ namespace RA.Models.Input
 		/// Name of the Contact Point 
 		/// </summary>
 		public string Name { get; set; }
-
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 		/// <summary>
 		/// Specification of the type of contact
 		/// Example: Registration
 		/// </summary>
 		public string ContactType { get; set; }
+		public LanguageMap ContactType_Map { get; set; } = new LanguageMap();
 		//
 		public List<string> FaxNumber { get; set; }
 		/// <summary>

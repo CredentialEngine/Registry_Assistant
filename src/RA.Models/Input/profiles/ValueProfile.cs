@@ -30,6 +30,9 @@ namespace RA.Models.Input
 		/// Optional description of the value, using either a string value or as a language map
 		/// </summary>
 		public string Description { get; set; }
+		/// <summary>
+		/// Alternately use a language map
+		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
 
