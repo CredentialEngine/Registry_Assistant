@@ -372,7 +372,7 @@ namespace RA.Models.Input
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
 		/// </summary>
-		public string LifeCycleStatusType { get; set; }
+		public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
 
 
 		//

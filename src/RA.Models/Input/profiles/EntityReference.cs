@@ -388,7 +388,7 @@ namespace RA.Models.Input
 		public bool HasNecessaryProperties()
 		{
 			//	|| string.IsNullOrWhiteSpace( Description )
-			if ( (string.IsNullOrWhiteSpace( Name ) || Name_Map?.Count == 0)
+			if ( (string.IsNullOrWhiteSpace( Name ) || ( Name_Map == null || Name_Map?.Count == 0) )
 				|| string.IsNullOrWhiteSpace( Type )
 				|| string.IsNullOrWhiteSpace( SubjectWebpage )
 				)
@@ -400,8 +400,8 @@ namespace RA.Models.Input
 		{
 			if ( string.IsNullOrWhiteSpace( Id )
 				&& string.IsNullOrWhiteSpace( CTID )
-				&& ( string.IsNullOrWhiteSpace( Name ) || Name_Map?.Count == 0 )
-				&& ( string.IsNullOrWhiteSpace( Description ) || Description_Map?.Count == 0 )
+				&& ( string.IsNullOrWhiteSpace( Name ) || ( Name_Map == null || Name_Map?.Count == 0 ) )
+				&& ( string.IsNullOrWhiteSpace( Description ) || ( Description_Map== null || Description_Map.Count == 0) )
 				&& string.IsNullOrWhiteSpace( SubjectWebpage )
 				)
 				return true;

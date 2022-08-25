@@ -20,7 +20,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Generate HasTopChild
 		/// if true, the HasTopChild property is not included in the input document. The HasTopChild property in the JSON document will be generated from the Concept list.
-		/// Should only be used where the structure is flat. That is there are no concepts have child concepts. SO that is: all concepts are top childs.
+		/// Should only be used where the structure is flat. That is there are no concepts that have child concepts. SO that is: all concepts are top childs.
 		/// Note: in some cases IsTopChild was provided and not HasTopChild. In this case: GenerateHasTopChild=true, and GenerateIsTopChild=false
 		/// </summary>
 		public bool GenerateHasTopChild { get; set; } = false;

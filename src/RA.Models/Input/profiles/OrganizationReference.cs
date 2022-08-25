@@ -107,7 +107,7 @@ namespace RA.Models.Input
 			//	|| ( SocialMedia == null || SocialMedia.Count == 0 )
 			//				|| string.IsNullOrWhiteSpace( Description )
 			if ( string.IsNullOrWhiteSpace( Type )
-				|| (string.IsNullOrWhiteSpace( Name ) && Name_Map?.Count == 0)
+				|| (string.IsNullOrWhiteSpace( Name ) && ( Name_Map == null || Name_Map.Count == 0))
 				|| string.IsNullOrWhiteSpace( SubjectWebpage )
 				)
 				return false;
