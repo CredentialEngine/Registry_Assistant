@@ -326,6 +326,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// CTID for a collection. 
+		/// PROPOISED - NOT IMPLEMENTED
 		/// This property is only used in publishing of documents like learning opportunities. It will be ignored in the context of publishing a collection.
 		/// </summary>
 		public string CollectionCTID { get; set; }

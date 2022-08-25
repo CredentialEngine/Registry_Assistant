@@ -556,27 +556,32 @@ namespace RA.Models.Input
 		/// Left hand parameter of a constraint.
 		/// Range: rdf:Property, skos:Concept (Select from a controlled vocabulary)
 		/// </summary>
-		public string LeftSource { get; set; }
+		public List<string> LeftSource { get; set; }
 
 		/// <summary>
-		/// Action performed on the left constraint; select from an existing enumeration of such types.
+		/// Action performed on the left constraint; 
+		/// Required if LeftSource has multiple values.
 		/// 
 		/// Range: ceterms:Concept (Select from a controlled vocabulary-ceterms:ArrayOperation)
 		/// </summary>
 		public string LeftAction { get; set; }
 
+
 		/// <summary>
 		/// Right hand parameter of a constraint.
 		/// Range: rdf:Property, skos:Concept (Select from a controlled vocabulary)
 		/// </summary>
-		public string RightSource { get; set; }
+		public List<string> RightSource { get; set; }
 
 		/// <summary>
-		/// Action performed on the right constraint; select from an existing enumeration of such types.
+		/// Action performed on the right constraint; 
+		/// Required if RightSource has multiple values.
 		/// 
 		/// Range: ceterms:Concept (Select from a controlled vocabulary-ceterms:ArrayOperation)
 		/// </summary>
 		public string RightAction{ get; set; }
+
+
 	}
 
 

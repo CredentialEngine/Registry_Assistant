@@ -18,6 +18,10 @@ namespace RA.Models.Input
 		public List<CriterionLevel> CriterionLevel { get; set; } = new List<CriterionLevel>();
 	}
 
+	/// <summary>
+	/// A rubric is typically an evaluation tool or set of guidelines used to promote the consistent application of learning expectations, learning objectives, or learning standards in the classroom, or to measure their attainment against a consistent set of criteria. In instructional settings, rubrics clearly define academic expectations for students and help to ensure consistency in the evaluation of academic work from student to student, assignment to assignment, or course to course. Rubrics are also used as scoring instruments to determine grades or the degree to which learning standards have been demonstrated or attained by students.
+	/// <see cref="http://standards.asn.desire2learn.com/rubric.html"/>
+	/// </summary>
 	public class Rubric
 	{
 		public Rubric()
