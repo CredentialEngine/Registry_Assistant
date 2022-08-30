@@ -210,14 +210,16 @@ namespace RA.Models.Input
 		/// <see href="https://credreg.net/ctdl/terms/Delivery"></see>
 		/// </summary>
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// AvailableOnlineAt URL
 		/// </summary>
-		public string AvailableOnlineAt { get; set; }
+		public List<string> AvailableOnlineAt { get; set; } = new List<string>();
 		/// <summary>
 		/// AvailabilityListing URL
 		/// </summary>
-		public string AvailabilityListing { get; set; }
+		public List<string> AvailabilityListing { get; set; } = new List<string>();
+
 		/// <summary>
 		/// List of Addresses for this credential, using Place
 		/// </summary>
@@ -233,6 +235,13 @@ namespace RA.Models.Input
 		/// NOTE: Acronyns should not be used here. Use AlternateName for providing acronyms.
 		/// </summary>
 		public string CredentialId { get; set; }
+
+		/// <summary>
+		/// Provide credit information in a ValueProfile value
+		/// A credit-related value.
+		/// 22-08-30 - NEW
+		/// </summary>
+		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 
 		/// <summary>
 		/// Effective date of the content of this profile
