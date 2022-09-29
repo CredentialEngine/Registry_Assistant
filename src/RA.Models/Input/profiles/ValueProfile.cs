@@ -14,7 +14,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// The level of credit associated with the credit awarded or required.
 		/// Concept
-		/// Scheme?
+		/// ConceptScheme: <see cref="https://credreg.net/ctdl/terms/AudienceLevel"/>
 		/// </summary>
 		public List<string> CreditLevelType { get; set; } = new List<string>();
 
@@ -43,8 +43,13 @@ namespace RA.Models.Input
 		/// qdata:percentage
 		/// </summary>
 		public decimal Percentage { get; set; }
-
+		/// <summary>
+		/// Optional subjects that are relevent for this Value Profile
+		/// </summary>
 		public List<string> Subject { get; set; } = new List<string>();
+		/// <summary>
+		/// Alternately use a language map list
+		/// </summary>
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>

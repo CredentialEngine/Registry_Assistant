@@ -251,6 +251,17 @@ namespace RA.Models.Input
 		public string CTID { get; set; }
 
 		/// <summary>
+		/// Concept 
+		/// Required
+		/// </summary>
+		public string PrefLabel { get; set; }
+
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap PrefLabel_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
 		/// Alternative Label
 		/// Non-preferred label for the concept used to relate a concept synonym to the preferred label.
 		/// </summary>
@@ -338,6 +349,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> NarrowMatch { get; set; } = new List<string>();
 
+		/// <summary>
+		/// Alphanumeric notation or ID code as defined by the promulgating body to identify this resource.
+		/// </summary>
+		public string Notation { get; set; }
 
 		/// <summary>
 		/// Annotations to the concept for purposes of general documentation.
@@ -345,11 +360,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> Note { get; set; } = new List<string>();
 		public LanguageMapList Note_Map { get; set; } = new LanguageMapList();
-
-		/// <summary>
-		/// Alphanumeric notation or ID code as defined by the promulgating body to identify this resource.
-		/// </summary>
-		public string Notation { get; set; }
 
 		/// <summary>
 		/// Resource that logically comes after this resource.
@@ -365,16 +375,6 @@ namespace RA.Models.Input
 		public List<string> PrecededBy { get; set; }
 
 
-		/// <summary>
-		/// Concept 
-		/// Required
-		/// </summary>
-		public string PrefLabel { get; set; }
-
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap PrefLabel_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Assertion indicating an associative, non-hierarchical relationship between the two concepts where neither is broader nor narrower than the other.

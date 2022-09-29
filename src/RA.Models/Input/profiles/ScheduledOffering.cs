@@ -38,6 +38,18 @@ namespace RA.Models.Input
 		public List<AggregateDataProfile> AggregateData { get; set; } = new List<AggregateDataProfile>();
 
 		/// <summary>
+		/// Online location where the credential, assessment, or learning opportunity can be pursued.
+		/// URL
+		/// </summary>
+		public List<string> AvailableOnlineAt { get; set; }
+
+		/// <summary>
+		/// Listing of online and/or physical locations where a credential can be pursued.
+		/// URL
+		/// </summary>
+		public List<string> AvailabilityListing { get; set; }
+
+		/// <summary>
 		/// Physical location where the credential, assessment, or learning opportunity can be pursued.
 		/// </summary>
 		public List<Place> AvailableAt { get; set; } = new List<Place>();
@@ -70,6 +82,12 @@ namespace RA.Models.Input
 		/// Estimated time it will take to complete a credential, learning opportunity or assessment.
 		/// </summary>
 		public List<DurationProfile> EstimatedDuration { get; set; } = new List<DurationProfile>();
+
+		/// <summary>
+		/// Type of frequency at which a resource is offered; select from an existing enumeration of such types.
+		/// ConceptScheme: ceterms:ScheduleFrequency
+		/// </summary>
+		public List<string> OfferFrequencyType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Type of frequency with which events typically occur; select from an existing enumeration of such types.

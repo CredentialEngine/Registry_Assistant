@@ -316,7 +316,7 @@ namespace RA.SamplesForDocumentation
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
 			} );
 
-			//This holds the Course and the identifier (CTID) for the owning organization
+			//This holds the resource being published and the identifier (CTID) for the owning organization
 			var myRequest = new LearningOpportunityRequest()
 			{
 				LearningOpportunity = myData,

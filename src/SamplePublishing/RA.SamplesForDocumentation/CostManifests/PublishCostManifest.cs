@@ -52,7 +52,7 @@ namespace RA.SamplesForDocumentation
 			} );
 			myData.EstimatedCost.Add( cp );
 
-			//This holds the assessment and the identifier (CTID) for the owning organization
+			//This holds the resource being published and the identifier (CTID) for the owning organization
 			var myRequest = new CostManifestRequest()
 			{
 				CostManifest = myData,

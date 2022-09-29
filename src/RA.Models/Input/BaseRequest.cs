@@ -28,12 +28,12 @@
 		/// <summary>
 		/// Leave blank for default
 		/// </summary>
-		public string Community { get; set; }
+		public string Community { get; set; } = "";
 
-		/// <summary>
-		/// Where valid, set to true to publish this resource to the public registry as well as the selected community
-		/// </summary>
-		public bool CommunityPlusPublic { get; set; }
+		///// <summary>
+		///// Where valid, set to true to publish this resource to the public registry as well as the selected community
+		///// </summary>
+		//public bool CommunityPlusPublic { get; set; }
 	}
 
 }

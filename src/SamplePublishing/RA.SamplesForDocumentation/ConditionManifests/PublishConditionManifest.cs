@@ -31,7 +31,7 @@ namespace RA.SamplesForDocumentation
 				Description = "This is some text that describes my assessment.",
 				CTID = myCTID,
 				SubjectWebpage = "http://example.com?t=subjectwebpage",
-				//if this ID/CTID is not known, use a third party reference
+				//Provide the CTID of the related organization
 				ConditionManifestOf = new OrganizationReference()
 				{
 					CTID = organizationIdentifierFromAccountsSite
@@ -39,15 +39,15 @@ namespace RA.SamplesForDocumentation
 			};
 
 			myData.Requires = new List<ConditionProfile>()
+			{
+				new ConditionProfile()
 				{
-					new ConditionProfile()
-					{
-						Name = "My Requirements",
-						Condition = new List<string>() { "Condition One", "Condition Two", "Condition Three" }
-					}
-				};
+					Description = "Requirements for our institutions",
+					Condition = new List<string>() { "Condition One", "Condition Two", "Condition Three" }
+				}
+			};
 
-			//This holds the assessment and the identifier (CTID) for the owning organization
+			//This holds the resource being published and the identifier (CTID) for the owning organization
 			var myRequest = new ConditionManifestRequest()
 			{
 				ConditionManifest = myData,

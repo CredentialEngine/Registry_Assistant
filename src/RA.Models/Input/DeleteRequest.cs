@@ -30,7 +30,7 @@ namespace RA.Models.Input
 	}
 
 	/// <summary>
-	/// Request class for a Cease request
+	/// Request class for a Deactive/Cease request
 	/// </summary>
 	public class CeaseRequest
 	{
@@ -43,6 +43,12 @@ namespace RA.Models.Input
 		/// CTID for the Organization which Owns the data being deleted
 		/// </summary>
 		public string PublishForOrganizationIdentifier { get; set; }
+
+		/// <summary>
+		/// New status for the resource.
+		/// If blank, the resources will be set to deactivated/ceased
+		/// </summary>
+		public string NewStatus { get; set; }
 
 		/// <summary>
 		/// Leave blank for default

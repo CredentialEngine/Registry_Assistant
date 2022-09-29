@@ -181,6 +181,14 @@ namespace RA.Models.Input
 		#endregion
 
 		//=========== optional ================================
+		/// <summary>
+		/// List of Alternate Names for this assessment
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Example assessment or assessment item.

@@ -194,21 +194,29 @@ namespace RA.Models.Input
 		/// </summary>
 		public string DeliveryTypeDescription { get; set; }
 		public LanguageMap DeliveryTypeDescription_Map { get; set; } = new LanguageMap();
-        #endregion
+		#endregion
 
-        //=========== optional ================================
+		//=========== optional ================================
+		/// <summary>
+		/// List of Alternate Names for this credential
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 
-        #region Proposed collection helpers
-        /// <summary>
-        /// One or more collections of which this resource is to be a member.
-        /// The owner of the collection must be the same as the publisher of this resource. 
-        /// Actions
-        /// Proposed: 
+		#region Proposed collection helpers
+		/// <summary>
+		/// One or more collections of which this resource is to be a member.
+		/// The owner of the collection must be the same as the publisher of this resource. 
+		/// Actions
+		/// Proposed: 
 		///		if this resource includes at least one of DateEffective or ExpirationDate, then a CollectionMember will be added to the collection, otherwise just the URI will be added to Collection.HasMember.
 		///	Response:
 		///		NO, it is believed that we cannot arbitrarily take action based on the dates
-        /// </summary>
-        public List<string> IsMemberOfCollection { get; set; } = new List<string>();
+		/// </summary>
+		public List<string> IsMemberOfCollection { get; set; } = new List<string>();
 		/// <summary>
 		/// List of collection members for a collection where this learning opportunity is to be added.
 		/// The CollectionCTID is required. 
@@ -364,6 +372,12 @@ namespace RA.Models.Input
 		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
 		/// </summary>
 		public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
+
+		/// <summary>
+		/// Resource that is required as a prior condition to this resource.
+		/// Only allowed for a course on a course
+		/// </summary>
+		public List<EntityReference> Prerequisite { get; set; } = new List<EntityReference>();
 
 		/// <summary>
 		/// Another source of information about the entity being described.
