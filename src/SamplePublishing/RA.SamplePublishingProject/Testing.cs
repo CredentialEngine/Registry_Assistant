@@ -93,5 +93,16 @@ namespace RA.SamplePublishingProject
 		}
 		#endregion
 
+
+		#region ScheduledOffering publishing
+		[TestMethod]
+		public void PublishScheduledOffering()
+		{
+			new RA.SamplesForDocumentation.PublishScheduledOffering().Publish( "format" );
+
+		}
+
+		#endregion
+
 	}
 }

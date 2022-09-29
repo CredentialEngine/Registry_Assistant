@@ -257,7 +257,7 @@ namespace RA.SamplesForDocumentation
 			}//
 
 			 //Assign a CTID for the entity being published and keep track of it
-			var myLoppCTID = "ce-f8885b28-134d-4188-8c86-063aadff14ea";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-f8885b28-134d-4188-8c86-063aadff14ea";// "ce-" + Guid.NewGuid().ToString().ToLower();
 			//typically would have been stored prior to retrieving for publishing
 
 			//Populate the learning opportunity object
@@ -265,7 +265,7 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = "160 Driving Academy",
 				Description = "Truck Driver Training School - CDL",
-				CTID = myLoppCTID,
+				CTID = myCTID,
 				SubjectWebpage = "https://160drivingacademy.com/",
 				LearningMethodType = new List<string>() { "learnMethod:Applied" },
 				DeliveryType = new List<string>() { "InPerson","OnlineOnly"}

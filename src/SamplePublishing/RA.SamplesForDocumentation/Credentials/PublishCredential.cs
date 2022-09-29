@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 using RA.Models.Input;
 using YourCredential = RA.SamplesForDocumentation.SampleModels.Credential;
-using APIRequestCredential = RA.Models.Input.Credential;
+using APIRequestResource = RA.Models.Input.Credential;
 using APIRequest = RA.Models.Input.CredentialRequest;
 
 namespace RA.SamplesForDocumentation
@@ -39,7 +39,7 @@ namespace RA.SamplesForDocumentation
 			var myCTID = "ce-5a33409a-f3db-42f3-8a3c-b00c7bb393af"; //"ce-" + Guid.NewGuid().ToString();
 
 			//A simple credential object - see below for sample class definition
-			var myData = new Credential()
+			var myData = new APIRequestResource()
 			{
 				Name = "My Certification Name",
 				Description = "This is some text that describes my credential.",
@@ -93,6 +93,9 @@ namespace RA.SamplesForDocumentation
 
 			myData.AvailableOnlineAt.Add( "https://example.org?availableOnline=here" );
 
+			//include valid concepts, with or without the namespace
+			myData.AudienceType = new List<string>() { " audience:PublicEmployee", "Resident" };
+			myData.AudienceLevelType = new List<string>() { "audLevel:BeginnerLevel", "IntermediateLevel" };
 			//==================== JURISDICTION and Recognized In (specialized jurisdiction) ====================
 
 			myData.Jurisdiction.Add( Jurisdictions.SampleJurisdiction() );
@@ -163,6 +166,7 @@ namespace RA.SamplesForDocumentation
 				"ce-82a854b6-1e17-4cd4-845d-0b9b6df2fb5c"
 			};
 			//22-08-30 Added the property CreditValue directly on a credential
+			//			NOTE: PENDING ADDITION TO CTDL
 			myData.CreditValue = new List<ValueProfile>()
 			{
 				new ValueProfile()
@@ -328,7 +332,7 @@ namespace RA.SamplesForDocumentation
 			// This is the CTID of the organization that owns the data being published
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
-			var myData = new APIRequestCredential
+			var myData = new APIRequestResource
 			{
 				Name = input.Name,
 				Description = input.Description,

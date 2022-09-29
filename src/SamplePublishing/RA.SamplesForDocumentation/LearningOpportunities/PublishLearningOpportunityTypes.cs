@@ -28,16 +28,16 @@ namespace RA.SamplesForDocumentation
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myLoppCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 			//typically would have been stored prior to retrieving for publishing
-			//DataService.SaveLearningOpportunityCTID( myLoppCTID );
+			//DataService.SaveLearningOpportunityCTID( myCTID );
 
 			//Populate the learning opportunity object
 			var myData = new LearningOpportunity()
 			{
 				Name = "My Learning Opportunity Name",
 				Description = "This is some text that describes my learning opportunity.",
-				CTID = myLoppCTID,
+				CTID = myCTID,
 				LifeCycleStatusType="Active",
 				SubjectWebpage = "https://example.org/t=learningopportunity1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
@@ -183,22 +183,31 @@ namespace RA.SamplesForDocumentation
 		{
 			//Holds the result of the publish action
 			var result = "";
-			//assign the api key - acquired from organization account of the organization doing the publishing
+			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
+			if ( string.IsNullOrWhiteSpace( apiKey ) )
+			{
+				//ensure you have added your apiKey to the app.config
+			}
+
 			// This is the CTID of the organization that owns the data being published
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
+			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
+			{
+				//ensure you have added your organization account CTID to the app.config
+			}//
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myLoppCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 			//typically would have been stored prior to retrieving for publishing
-			//DataService.SaveLearningOpportunityCTID( myLoppCTID );
+			//DataService.SaveLearningOpportunityCTID( myCTID );
 
 			//Populate the learning opportunity/Course object
 			var myData = new LearningOpportunity()
 			{
 				Name = "My Course Name",
 				Description = "This is some text that describes my Course.",
-				CTID = myLoppCTID,
+				CTID = myCTID,
 				LifeCycleStatusType = "Active",
 				SubjectWebpage = "https://example.org/t=course1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
@@ -353,16 +362,16 @@ namespace RA.SamplesForDocumentation
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myLoppCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 			//typically would have been stored prior to retrieving for publishing
-			//DataService.SaveLearningOpportunityCTID( myLoppCTID );
+			//DataService.SaveLearningOpportunityCTID( myCTID );
 
 			//Populate the learning opportunity/Learning Program object
 			var myData = new LearningOpportunity()
 			{
 				Name = "My Learning Program Name",
 				Description = "This is some text that describes my Learning Program.",
-				CTID = myLoppCTID,
+				CTID = myCTID,
 				LifeCycleStatusType = "Active",
 				SubjectWebpage = "https://example.org/t=LearningProgram1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },

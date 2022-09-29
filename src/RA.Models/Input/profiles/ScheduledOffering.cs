@@ -86,18 +86,21 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Type of frequency at which a resource is offered; select from an existing enumeration of such types.
 		/// ConceptScheme: ceterms:ScheduleFrequency
+		/// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly
 		/// </summary>
 		public List<string> OfferFrequencyType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Type of frequency with which events typically occur; select from an existing enumeration of such types.
 		/// ConceptScheme: ceterms:ScheduleFrequency
+		/// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly
 		/// </summary>
 		public List<string> ScheduleFrequencyType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Type of time at which events typically occur; select from an existing enumeration of such types.
 		/// ConceptScheme: ceterms:ScheduleTiming
+		/// scheduleTiming:Daytime scheduleTiming:Evening scheduleTiming:Weekdays scheduleTiming:Weekends
 		/// </summary>
 		public List<string> ScheduleTimingType { get; set; } = new List<string>();
 
