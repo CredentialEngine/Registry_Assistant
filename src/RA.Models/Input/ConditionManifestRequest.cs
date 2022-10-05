@@ -25,7 +25,7 @@ namespace RA.Models.Input
             Requires = new List<ConditionProfile>();
             RenewedConditions = new List<ConditionProfile>();
             RecommendedConditions = new List<ConditionProfile>();
-			CorequisiteConditions = new List<ConditionProfile>();
+			Corequisite = new List<ConditionProfile>();
 		}
 		/// <summary>
 		/// Required
@@ -84,6 +84,11 @@ namespace RA.Models.Input
         /// </summary>
         /// See: <a href="http://purl.org/ctdl/terms/corequisite">corequisite</a>
         /// <remarks>Includes dual (double) degrees that cannot be earned independently of each other.</remarks>
-        public List<ConditionProfile> CorequisiteConditions { get; set; }
-	}
+        public List<ConditionProfile> Corequisite { get; set; }
+
+        /// <summary>
+        ///  Resource that must be completed prior to, or pursued at the same time as, this resource.
+        /// </summary>
+        public List<ConditionProfile> CoPrerequisite { get; set; } = new List<ConditionProfile>();
+    }
 }

@@ -182,7 +182,7 @@ namespace RA.Models.Input
 
 		//=========== optional ================================
 		/// <summary>
-		/// List of Alternate Names for this assessment
+		/// List of Alternate Names for this credential
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
 		/// <summary>
@@ -513,7 +513,7 @@ namespace RA.Models.Input
 		public List<string> CommonConditions { get; set; }
 
 		/// <summary>
-		///  Credentials that must be pursued concurrently.
+		///  Resources that must be pursued concurrently.
 		/// </summary>
 		public List<ConditionProfile> Corequisite { get; set; }
 
@@ -531,6 +531,10 @@ namespace RA.Models.Input
 		///  Requirement or set of requirements for this resource.
 		/// </summary>
 		public List<ConditionProfile> Requires { get; set; }
+		/// <summary>
+		///  Resource that must be completed prior to, or pursued at the same time as, this resource.
+		/// </summary>
+		public List<ConditionProfile> CoPrerequisite { get; set; } = new List<ConditionProfile>();
 
 		// =========== connections ===========
 

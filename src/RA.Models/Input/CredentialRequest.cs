@@ -210,16 +210,16 @@ namespace RA.Models.Input
 		/// <see href="https://credreg.net/ctdl/terms/Delivery"></see>
 		/// </summary>
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
-
 		/// <summary>
 		/// AvailableOnlineAt URL
+		/// 22-08-30 Changed to an object to allow handling of a single or a list
 		/// </summary>
-		public List<string> AvailableOnlineAt { get; set; } = new List<string>();
+		public object AvailableOnlineAt { get; set; } 
 		/// <summary>
 		/// AvailabilityListing URL
+		/// 22-08-30 Changed to an object to allow handling of a single or a list
 		/// </summary>
-		public List<string> AvailabilityListing { get; set; } = new List<string>();
-
+		public object AvailabilityListing { get; set; } 
 		/// <summary>
 		/// List of Addresses for this credential, using Place
 		/// </summary>
@@ -636,9 +636,15 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<ConditionProfile> Recommends { get; set; }
 		/// <summary>
-		///  Credentials that must be pursued concurrently.
+		///  Resources that must be pursued concurrently.
 		/// </summary>
 		public List<ConditionProfile> Corequisite { get; set; }
+
+		/// <summary>
+		///  Resource that must be completed prior to, or pursued at the same time as, this resource.
+		/// </summary>
+		public List<ConditionProfile> CoPrerequisite { get; set; } = new List<ConditionProfile>();
+
 		/// <summary>
 		/// Entity describing the constraints, prerequisites, entry conditions, or requirements necessary to maintenance and renewal of an awarded credential.
 		/// </summary>
