@@ -18,14 +18,21 @@ namespace RA.SamplesForDocumentation
 		///		/assistant/learningopportunity/publish
 		/// </summary>
 		/// <returns></returns>
-		public string PublishLearningOpportunity()
+		public string PublishLearningOpportunity( string requestType = "format" )
 		{
 			//Holds the result of the publish action
 			var result = "";
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
-			// This is the CTID of the organization that owns the data being published
+			if ( string.IsNullOrWhiteSpace( apiKey ) )
+			{
+				//ensure you have added your apiKey to the app.config
+			}
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
+			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
+			{
+				//ensure you have added your organization account CTID to the app.config
+			}//
 
 			//Assign a CTID for the entity being published and keep track of it
 			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
@@ -47,7 +54,7 @@ namespace RA.SamplesForDocumentation
 				{
 					new ConditionProfile()
 					{
-						Name = "My Requirements",
+						Description = "My Requirements",
 						Condition = new List<string>() { "Condition One", "Condition Two", "Condition Three" }
 					}
 				}
@@ -147,7 +154,7 @@ namespace RA.SamplesForDocumentation
 			//Add organization that is not in the credential registry
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{
-				Type = "CredentialOrganization",
+				Type = "ceterms:QACredentialOrganization",
 				Name = "Council on Social Work Education (CSWE)",
 				SubjectWebpage = "https://www.cswe.org/",
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
@@ -179,7 +186,7 @@ namespace RA.SamplesForDocumentation
 		///		/assistant/course/publish
 		/// </summary>
 		/// <returns></returns>
-		public string PublishCourse()
+		public string PublishCourse( string requestType = "format" )
 		{
 			//Holds the result of the publish action
 			var result = "";
@@ -198,7 +205,7 @@ namespace RA.SamplesForDocumentation
 			}//
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-aaa5d617-f00d-4e94-89af-ad77e9f26389";// "ce-" + Guid.NewGuid().ToString().ToLower();
 			//typically would have been stored prior to retrieving for publishing
 			//DataService.SaveLearningOpportunityCTID( myCTID );
 
@@ -212,12 +219,12 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "https://example.org/t=course1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				LearningMethodType = new List<string>() { "learnMethod:Lecture", "learnMethod:Laboratory" },
-				DeliveryType = new List<string>() { "BlendedLearning" },
+				DeliveryType = new List<string>() { "BlendedDelivery" },
 				Requires = new List<ConditionProfile>()
 				{
 					new ConditionProfile()
 					{
-						Name = "My Requirements",
+						Description = "My Requirements",
 						Condition = new List<string>() { "Condition One", "Condition Two", "Condition Three" }
 					}
 				}
@@ -246,7 +253,6 @@ namespace RA.SamplesForDocumentation
 				}
 			};
 			//
-			//A Course *must* be connected to a credential in order to be published.
 			//The connection can be made using a Required condition profile in the Credential or using a RequiredFor from the Course
 
 			myData.IsRequiredFor = new List<Connections>()
@@ -319,7 +325,7 @@ namespace RA.SamplesForDocumentation
 			//Add organization that is not in the credential registry
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{
-				Type = "CredentialOrganization",
+				Type = "ceterms:QACredentialOrganization", //should not be a requirement?
 				Name = "Council on Social Work Education (CSWE)",
 				SubjectWebpage = "https://www.cswe.org/",
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
@@ -338,11 +344,21 @@ namespace RA.SamplesForDocumentation
 			//Preferably, use method that will exclude null/empty properties
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 
-			//call the Assistant API - using the **course** endpoint
-			result = new SampleServices().SimplePost( "course", "publish", payload, apiKey );
+			//call the Assistant API
+			SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
+			{
+				EndpointType = "course",
+				RequestType = requestType,
+				OrganizationApiKey = apiKey,
+				CTID = myRequest.LearningOpportunity.CTID.ToLower(),   //added here for logging
+				Identifier = "testing",     //useful for logging, might use the ctid
+				InputPayload = payload
+			};
 
+			bool isValid = new SampleServices().PublishRequest( req );
 			//Return the result
-			return result;
+			return req.FormattedPayload;
+
 		}
 
 
@@ -352,14 +368,21 @@ namespace RA.SamplesForDocumentation
 		///		/assistant/LearningProgram/publish
 		/// </summary>
 		/// <returns></returns>
-		public string PublishLearningProgram()
+		public string PublishLearningProgram( string requestType = "format" )
 		{
 			//Holds the result of the publish action
 			var result = "";
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
-			// This is the CTID of the organization that owns the data being published
+			if ( string.IsNullOrWhiteSpace( apiKey ) )
+			{
+				//ensure you have added your apiKey to the app.config
+			}
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
+			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
+			{
+				//ensure you have added your organization account CTID to the app.config
+			}//
 
 			//Assign a CTID for the entity being published and keep track of it
 			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
@@ -381,7 +404,7 @@ namespace RA.SamplesForDocumentation
 				{
 					new ConditionProfile()
 					{
-						Name = "My Requirements",
+						Description = "My Requirements",
 						Condition = new List<string>() { "Condition One", "Condition Two", "Condition Three" }
 					}
 				}
@@ -481,7 +504,7 @@ namespace RA.SamplesForDocumentation
 			//Add organization that is not in the credential registry
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{
-				Type = "CredentialOrganization",
+				Type = "ceterms:QACredentialOrganization",
 				Name = "Council on Social Work Education (CSWE)",
 				SubjectWebpage = "https://www.cswe.org/",
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
@@ -499,12 +522,21 @@ namespace RA.SamplesForDocumentation
 			//var payload = JsonConvert.SerializeObject( myRequest );
 			//Preferably, use method that will exclude null/empty properties
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
+			//call the Assistant API
+			SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
+			{
+				EndpointType = "learningProgram",
+				RequestType = requestType,
+				OrganizationApiKey = apiKey,
+				CTID = myRequest.LearningOpportunity.CTID.ToLower(),   //added here for logging
+				Identifier = "testing",     //useful for logging, might use the ctid
+				InputPayload = payload
+			};
 
-			//call the Assistant API - using the **Learning Program** endpoint
-			result = new SampleServices().SimplePost( "LearningProgram", "publish", payload, apiKey );
-
+			bool isValid = new SampleServices().PublishRequest( req );
 			//Return the result
-			return result;
+			return req.FormattedPayload;
+
 		}
 
 	};

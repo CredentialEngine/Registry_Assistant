@@ -10,11 +10,18 @@ namespace RA.SamplePublishingProject
 	[TestClass]
 	public class Testing
 	{
-		[TestMethod]
+        #region Lopp types
+        [TestMethod]
 		public void LearningOpportunityWithOutcomeData()
 		{
 			new PublishLearningOpportunityWithOutcomes().LearningOpportunityWithOutcomeData( "publish" );
 		}
+		[TestMethod]
+		public void PublishCourse()
+		{
+			new PublishLearningOpportunityTypes().PublishCourse( "publish" );
+		}
+		#endregion
 		#region Collection publishing
 		[TestMethod]
 		public void PublishCollection()

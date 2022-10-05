@@ -62,7 +62,20 @@ namespace RA.SamplesForDocumentation
 				}
 			};
 			myData.Address.Add( mainAddress );
-
+			//an organization can have multiple addresses, like for many campuses
+			myData.Address.Add( new Place()
+            {
+				Name="Evansville Campus",
+				Address1 = "2501 N. First Avenue", City ="Evansville", AddressRegion="Indiana", PostalCode="47710"
+            } );
+			myData.Address.Add( new Place()
+			{
+				Name = "Madison Campus",
+				Address1 = "590 Ivy Tech Drive",
+				City = "Madison",
+				AddressRegion = "Indiana",
+				PostalCode = "47250"
+			} );
 			//Add a tech support contact point without an address, including a phone number and email
 			var techSupport = new Place()
 			{

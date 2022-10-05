@@ -47,8 +47,8 @@ namespace RA.SamplesForDocumentation
 				DefaultLanguage = "en-us",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
-			//add competencies
-			//example of a flat framework
+			//add concepts
+			//example of a flat concept scheme
 			myRequest.Concepts.Add( MapConcept( myCTID, "Beginner Level" ) );
 			myRequest.Concepts.Add( MapConcept( myCTID, "Medium Level" ) );
 			myRequest.Concepts.Add( MapConcept( myCTID, "Advanced Level" ) );
