@@ -72,6 +72,7 @@
     <Compile Include="PerformanceExamples\IndianaPassRates.cs" />
     <Compile Include="PerformanceExamples\KansasExamples.cs" />
     <Compile Include="PerformanceExamples\WIOAExamples.cs" />
+    <Compile Include="ProgressionModels\PublishProgressionModels.cs" />
     <Compile Include="ProPath\ProPathExamples.cs" />
     <Compile Include="Credentials\PublishCredential.cs" />
     <Compile Include="LearningOpportunities\PublishLearningOpportunityTypes.cs" />
