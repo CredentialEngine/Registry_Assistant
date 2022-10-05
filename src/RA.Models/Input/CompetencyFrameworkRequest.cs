@@ -724,7 +724,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
 		#endregion
+		//new 2022-09
 
+		/// <summary>
+		/// The publication status of the of this competency.
+		/// </summary>
+		public string publicationStatusType { get; set; }
 		//New 2021-09-30 - 
 
 
