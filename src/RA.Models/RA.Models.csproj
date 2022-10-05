@@ -101,7 +101,6 @@
     <Compile Include="Input\profiles\MonetaryAmount.cs" />
     <Compile Include="Input\profiles\Occupation.cs" />
     <Compile Include="Input\profiles\OrganizationReference.cs" />
-    <Compile Include="Input\profiles\PathwayComponents.cs" />
     <Compile Include="Input\profiles\Place.cs" />
     <Compile Include="Input\profiles\ProcessProfile.cs" />
     <Compile Include="Input\profiles\QData\DataProfile.cs" />
@@ -117,6 +116,7 @@
     <Compile Include="Input\profiles\WorkforceDemandAction.cs" />
     <Compile Include="Input\profiles\WorkRole.cs" />
     <Compile Include="Input\ProgressionModelRequest.cs" />
+    <Compile Include="Input\ScheduledOfferingRequest.cs" />
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />
     <Compile Include="Input\TransferIntermediaryRequest.cs" />
     <Compile Include="Input\TransferValueProfileRequest.cs" />

@@ -112,6 +112,15 @@ namespace RA.Models.Input
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
+		//[JsonProperty( "dcterms:Language" )]
+		public List<string> Language { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Numeric value representing the resource's position in a list (array) of resources.
+		/// </summary>
+		//[JsonProperty( "asn:sequence" )]
+		public int Sequence { get; set; }
+
 		/// <summary>
 		/// A name given to the resource.
 		/// </summary>
