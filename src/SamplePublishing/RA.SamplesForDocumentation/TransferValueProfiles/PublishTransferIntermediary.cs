@@ -11,7 +11,14 @@ namespace RA.SamplesForDocumentation
 {
     public class PublishTransferIntermediary
     {
-		public bool PublishOne()
+		static string thisClassName = "PublishTransferIntermediary";
+		#region TransferIntermediary with transfer value objects
+		/// <summary>
+		/// Publish a Transfer Intermediary with a list of transfer values included
+		/// If the publish request includes all of the applicable transfer value profiles, then the TransferIntermediary.IntermediaryFor does NOT have to be included.
+		/// </summary>
+		/// <returns></returns>
+		public bool PublishWithRelatedTransferValues()
 		{
 			string requestType = "publish";
 			// Assign the api key - acquired from organization account of the organization doing the publishing
@@ -77,9 +84,15 @@ namespace RA.SamplesForDocumentation
 				InputPayload = payload
 			};
 
-			return new SampleServices().PublishRequest( req );
+            var isvalid = new SampleServices().PublishRequest( req );
+			if (req.Messages.Count > 0)
+            {
+				string status = string.Join( ",", req.Messages.ToArray() );
+				LoggingHelper.DoTrace( 5, thisClassName + " Publish request had some error messages: " + status );
+			}
+            return isvalid;
 
-		}
+        }
 		/// <summary>
 		/// uses transferValueFrom and TransferValueFor
 		/// </summary>
@@ -156,7 +169,7 @@ namespace RA.SamplesForDocumentation
 		{
 			// Assign a CTID for the entity being published and keep track of it
 			//NOTE: afer being generated, this value be saved and used for successive tests or duplicates will occur.
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-e909559d-925c-4f12-a579-a05f8935eaea";// "ce-" + Guid.NewGuid().ToString().ToLower();
 			//from previous test
 			//
 			var myData = new TransferValueProfile()
@@ -194,7 +207,14 @@ namespace RA.SamplesForDocumentation
 				Description = "Description of the learning opportunity",
 				SubjectWebpage = "https://example.com/anotherlOPP",
 				LearningMethodDescription = "A useful description of the learning method",
-				AssessmentMethodDescription = "How the learning opportunity is assessed."
+				AssessmentMethodDescription = "How the learning opportunity is assessed.",
+				OwnedBy = new List<OrganizationReference>()
+				{
+					new OrganizationReference()
+					{
+						Type="Organization", Name="ACME Publications", SubjectWebpage="https://example.org?t=acme"
+					}
+				}
 
 			} );
 
@@ -208,7 +228,14 @@ namespace RA.SamplesForDocumentation
 				Description = "Description of the assessment",
 				SubjectWebpage = "https://example.com/targetAssessment",
 				LearningMethodDescription = "A useful description of the learning method",
-				AssessmentMethodDescription = "How the assessment is conducted."
+				AssessmentMethodDescription = "How the assessment is conducted.",
+				OwnedBy = new List<OrganizationReference>()
+				{
+					new OrganizationReference()
+					{
+						Type="Organization", Name="ACME Publications", SubjectWebpage="https://example.org?t=acme"
+					}
+				}
 			} );
 
 
@@ -239,13 +266,16 @@ namespace RA.SamplesForDocumentation
 				Name = "Environmental Challenges And Solutions",
 				Description = "To provide knowledge of the scope and severity of environmental illnesses.",
 				CTID = "ce-489406de-1c64-40bd-af31-f7a502b8b850",
-				SubjectWebpage = "https://stagingweb.acenet.edu/national-guide/Pages/Course.aspx?org=Huntington%20College%20of%20Health%20Sciences&cid=ffb1a50b-82c4-ea11-a812-000d3a33232a"
+				SubjectWebpage = "https://hunter-undergraduate.catalog.cuny.edu/departments/GEOG-HTR/overview"
 			};
 			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.
 			// The ownedBY CTID is typically the same as the CTID for the data owner.
+			//then 
+			var huntingtonCollegeCTID = "ce-9c1c2d37-e525-43a3-9cea-97f076b2fe38";
+			//this might require a third party relationship?
 			myData.OwnedBy.Add( new OrganizationReference()
 			{
-				CTID = owningOrganizationCtid
+				CTID = huntingtonCollegeCTID
 			} );
 			myData.StartDate = "1994-09-01";
 			myData.EndDate = "2001-06-30";
@@ -268,7 +298,7 @@ namespace RA.SamplesForDocumentation
 				Type = "LearningOpportunityProfile",
 				Name = "Environmental Challenges And Solutions",
 				Description = "To provide knowledge of the scope and severity of environmental illnesses.",
-				SubjectWebpage = "https://stagingweb.acenet.edu/national-guide/Pages/Course.aspx?org=Huntington%20College%20of%20Health%20Sciences&cid=ffb1a50b-82c4-ea11-a812-000d3a33232a",
+				SubjectWebpage = "https://hunter-undergraduate.catalog.cuny.edu/departments/GEOG-HTR/overview",
 				DateEffective = "1994-09-01",
 				ExpirationDate = "2001-06-30",
 				EstimatedDuration = new List<DurationProfile>()
@@ -281,7 +311,7 @@ namespace RA.SamplesForDocumentation
 				Type = "CredentialOrganization",
 				Name = "Huntington College of Health Sciences",
 				Description = "To provide knowledge of the scope and severity of environmental illnesses.",
-				SubjectWebpage = "https://stagingweb.acenet.edu/national-guide/Pages/Course.aspx?org=Huntington%20College%20of%20Health%20Sciences&cid=ffb1a50b-82c4-ea11-a812-000d3a33232a"
+				SubjectWebpage = "https://hunter-undergraduate.catalog.cuny.edu/departments/GEOG-HTR/overview"
 			} };
 			learningOpportunity.Teaches = new List<CredentialAlignmentObject>()
 			{
@@ -302,5 +332,87 @@ namespace RA.SamplesForDocumentation
 
 			return myData;
 		}
+		#endregion
+
+
+		#region TransferIntermediary with URIs to transfer value profiles
+		/// <summary>
+		/// Publish a Transfer Intermediary with a list of transfer values CTIDs in TransferIntermediary.IntermediaryFor
+		/// </summary>
+		/// <returns></returns>
+		public bool PublishWithIntermediaryFor()
+		{
+			string requestType = "publish";
+			// Assign the api key - acquired from organization account of the organization doing the publishing
+			var apiKey = SampleServices.GetMyApiKey();
+			if ( string.IsNullOrWhiteSpace( apiKey ) )
+			{
+				//ensure you have added your apiKey to the app.config
+			}
+			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
+			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
+			{
+				//ensure you have added your organization account CTID to the app.config
+			}
+			// Assign a CTID for the entity being published and keep track of it
+			var myCTID = "ce-8391465c-38e1-4a76-a729-18601cf37285";// "ce-" + Guid.NewGuid().ToString().ToLower();
+
+			//===================================================================================
+			var myData = new APIRequestEntity()
+			{
+				Name = "A Transfer Intermediary for ....",
+				Description = "A useful description is coming soon. .",
+				CodedNotation = "someCode:101",
+				CTID = myCTID,
+				Subject = new List<string>() { "Finance", "Accounting", "Bookkeeping" },
+				SubjectWebpage = "https://example.org?t=ti22"
+			};
+			myData.OwnedBy.Add( new OrganizationReference()
+			{
+				//ACE
+				CTID = "ce-9c1c2d37-e525-43a3-9cea-97f076b2fe38"// organizationIdentifierFromAccountsSite
+			} );
+			myData.CreditValue = new List<ValueProfile>()
+			{
+				new ValueProfile()
+				{
+					Value=3,
+					CreditUnitType = new List<string>() {"DegreeCredit"},
+					CreditLevelType = new List<string>() {"LowerDivisionLevel"}
+				}
+			};
+			//add list of transferValuesProfile CTIDs
+			myData.IntermediaryFor = new List<string>() { "ce-9ed831ea-773c-4ec4-bf4a-efca819b96aa", "ce-180d4be2-d22d-4795-8acb-de4c219b7c8b", "ce-de49e230-f92d-4377-8e25-8aea6c72776b", "ce-07a645c7-1f5b-4a23-9733-13d9dcf4290e" };
+			//This holds the main entity and the identifier (CTID) for the owning organization
+			var myRequest = new APIRequest()
+			{
+				TransferIntermediary = myData,
+				DefaultLanguage = "en-us",
+				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
+			};
+
+			// Serialize the request object
+			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
+			//call the Assistant API
+			SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
+			{
+				EndpointType = "TransferIntermediary",
+				RequestType = requestType,
+				OrganizationApiKey = apiKey,
+				CTID = myRequest.TransferIntermediary.CTID.ToLower(),   //added here for logging
+				Identifier = "testing",     //useful for logging, might use the ctid
+				InputPayload = payload
+			};
+			var isvalid = new SampleServices().PublishRequest( req );
+			if ( req.Messages.Count > 0 )
+			{
+				string status = string.Join( ",", req.Messages.ToArray() );
+				LoggingHelper.DoTrace( 5, thisClassName + " Publish request had some error messages: " + status );
+			}
+			return isvalid;
+
+		}
+		#endregion
+
 	}
 }

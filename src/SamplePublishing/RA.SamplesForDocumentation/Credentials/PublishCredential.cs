@@ -89,9 +89,12 @@ namespace RA.SamplesForDocumentation
 					Country="United States"
 				}
 			};
-			myData.AvailabilityListing.Add( "https://example.org?availableListing=here");
-
-			myData.AvailableOnlineAt.Add( "https://example.org?availableOnline=here" );
+			//AvailabilityListing and are defined as objects to accommodate partners who initially used the API when these were defined as a single string. These will be published as lists
+			//partners can define these properties as lists
+			var list = new List<string>() { "https://example.org?availableListing=here" };
+			myData.AvailabilityListing = list;
+			list = new List<string>() { "https://example.org?availableOnline=here" };
+			myData.AvailableOnlineAt= list;
 
 			//include valid concepts, with or without the namespace
 			myData.AudienceType = new List<string>() { " audience:PublicEmployee", "Resident" };

@@ -14,7 +14,10 @@ namespace RA.SamplePublishingProject
 		public void TransferIntermediaryPublish()
 		{
 			//using simple post
-			new PublishTransferIntermediary().PublishOne();
+			new PublishTransferIntermediary().PublishWithRelatedTransferValues();
+
+			//just with IntermediaryFor
+			//new PublishTransferIntermediary().PublishWithIntermediaryFor();
 		}
 
 
