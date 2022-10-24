@@ -22,7 +22,7 @@ namespace RA.SamplePublishingProject
 		public void TransferIntermediaryBulkPublish()
 		{
 			//using simple post
-			new PublishTransferIntermediary().BulkPublishWithRelatedTransferValues();
+			new TransferIntermediaryBulkPublish().PublishWithRelatedTransferValues();
 
 			//just with IntermediaryFor
 			//new PublishTransferIntermediary().PublishWithIntermediaryFor();

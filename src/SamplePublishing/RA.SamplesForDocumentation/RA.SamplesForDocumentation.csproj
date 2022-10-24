@@ -102,6 +102,7 @@
     <Compile Include="TransferValueProfiles\PublishTransferValueProfile.cs" />
     <Compile Include="TransferValueProfiles\PublishTransferValueProfileList.cs" />
     <Compile Include="TransferValueProfiles\PublishTransferIntermediary.cs" />
+    <Compile Include="TransferValueProfiles\TransferIntermediaryBulkPublish.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Credentials\files\CredentialWithMultipleLanguages_Api_input.json" />
