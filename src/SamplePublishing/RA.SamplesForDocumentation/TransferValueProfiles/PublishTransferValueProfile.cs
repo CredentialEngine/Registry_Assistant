@@ -94,17 +94,17 @@ namespace RA.SamplesForDocumentation
 				}
 			};
 
-			//==============	transfer value from ===================================================
-			//Resource that provides the transfer value described by this resource, according to the entity providing this resource.
-			//A list of entity references. If the CTID is known, then just provide it.
-			//myData.TransferValueFrom.Add( new EntityReference()
-			//{
-			//	CTID = "ce-476c1aca-6cd9-4dbe-ba91-16960bfb19ac"
-			//} );
-			//If not provided as much information as is available
-			//see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
-			//NOTE: you must provide owned by or offered by with TransferValueFrom or TransferValueFor
-			var transferValueFrom = new LearningOpportunity()
+            //==============	transfer value from ===================================================
+            //Resource that provides the transfer value described by this resource, according to the entity providing this resource.
+            //A list of entity references. If the CTID is known, then just provide it.
+            myData.TransferValueFrom.Add( new EntityReference()
+            {
+                CTID = "ce-476c1aca-6cd9-4dbe-ba91-16960bfb19ac"
+            } );
+            //If not provided as much information as is available
+            //see: https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/RA.Models/Input/profiles/EntityReference.cs
+            //NOTE: you must provide owned by or offered by with TransferValueFrom or TransferValueFor
+            var transferValueFrom = new LearningOpportunity()
 			{
 				Type = "LearningOpportunityProfile",
 				Name = "name of the learning opportunity",
@@ -230,7 +230,8 @@ namespace RA.SamplesForDocumentation
 				Description = "Description of the learning opportunity",
 				SubjectWebpage = "https://example.com/anotherlOPP",
 				LearningMethodDescription = "A useful description of the learning method",
-				AssessmentMethodDescription = "How the learning opportunity is assessed."
+				AssessmentMethodDescription = "How the learning opportunity is assessed.",
+				SameAs= new List<string>() { "ce-6b839fea-b62b-4d65-a9f7-1461cccb61f4" }		//same as a learning opportunity in the registry
 			};
 			var ownedBy = new OrganizationReference()
 			{
@@ -284,7 +285,11 @@ namespace RA.SamplesForDocumentation
 
 			return req.FormattedPayload;
 		}
-
+		/// <summary>
+		/// Format a learning opportunity for use in a transfer value.
+		/// Resources of this type are not in the registry
+		/// </summary>
+		/// <returns></returns>
 		private LearningOpportunity AddTransferFromLearningOpportunity()
 		{
 			var myLopp = new LearningOpportunity()
