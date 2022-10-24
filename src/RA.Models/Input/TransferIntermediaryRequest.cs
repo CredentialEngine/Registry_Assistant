@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RA.Models.Input
 {
 	/// <summary>
-	/// Request class for publishing a TransferIntermediary with TransferProfiles
+	/// Request class for publishing a TransferIntermediary with just IntermediaryFor.
 	/// </summary>
 	public class TransferIntermediaryRequest : BaseRequest
 	{
@@ -19,6 +19,27 @@ namespace RA.Models.Input
 		/// TransferIntermediary
 		/// </summary>
 		public TransferIntermediary TransferIntermediary { get; set; } = new TransferIntermediary();
+	}
+
+	/// <summary>
+	/// A request only used by the Transfer Intermediary bulk publish request. 
+	/// </summary>
+	public class TransferIntermediaryBulkRequest : BaseRequest
+	{
+		public TransferIntermediaryBulkRequest()
+		{
+		}
+
+		/// <summary>
+		/// TransferIntermediary
+		/// </summary>
+		public TransferIntermediary TransferIntermediary { get; set; } = new TransferIntermediary();
+
+		/// <summary>
+		/// Do not publish the transfer intermediary if any transfer value profiles fail.
+		/// The partner can provide the prefered action. If only one transfer value fails, the preference may be to rerun using TransferIntermediary.IntermediaryFor to hold the CTIDs for all published transver values, and then just include the one transfer value that failed
+		/// </summary>
+		public bool SkipPublishIfAnyTransferProfilesFail { get; set; }
 
 		/// <summary>
 		/// List of TransferValueProfiles to published with the TransferIntermediary
@@ -73,12 +94,15 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// List of Alternate Names for this credential
+        /// </summary>
+        public List<string> AlternateName { get; set; } = new List<string>();
+        /// <summary>
+        /// LanguageMap for AlternateName
+        /// </summary>
+        public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 
-		/// <summary>
-		/// Name or title of the resource.
-		/// Not Required
-		/// </summary>
-		public string SubjectWebpage { get; set; }
 
 		/// <summary>
 		/// Resource(s) for which this resource is an intermediary.
@@ -101,12 +125,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<ConditionProfile> Requires { get; set; } = new List<ConditionProfile>();
 
-		/// <summary>
-		/// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
-		/// Not Required
-		/// https://credreg.net/ctdl/terms/subject
-		/// </summary>
-		public List<string> Subject { get; set; }
+        /// <summary>
+        /// Name or title of the resource.
+        /// Not Required
+        /// </summary>
+        public string SubjectWebpage { get; set; }
+
+        /// <summary>
+        /// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
+        /// Not Required
+        /// https://credreg.net/ctdl/terms/subject
+        /// </summary>
+        public List<string> Subject { get; set; }
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>

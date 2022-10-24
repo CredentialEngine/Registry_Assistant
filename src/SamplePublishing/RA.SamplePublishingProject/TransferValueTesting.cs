@@ -10,16 +10,25 @@ namespace RA.SamplePublishingProject
 	[TestClass]
 	public class TransferValueTesting
 	{
+		#region TransferIntermediary
 		[TestMethod]
 		public void TransferIntermediaryPublish()
 		{
+			//just with IntermediaryFor
+			new PublishTransferIntermediary().PublishWithIntermediaryFor();
+		}
+
+		[TestMethod]
+		public void TransferIntermediaryBulkPublish()
+		{
 			//using simple post
-			new PublishTransferIntermediary().PublishWithRelatedTransferValues();
+			new PublishTransferIntermediary().BulkPublishWithRelatedTransferValues();
 
 			//just with IntermediaryFor
 			//new PublishTransferIntermediary().PublishWithIntermediaryFor();
 		}
 
+		#endregion
 
 		[TestMethod]
 		public void TestPublishTransferValue()

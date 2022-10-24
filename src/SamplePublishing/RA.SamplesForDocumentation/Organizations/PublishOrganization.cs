@@ -64,6 +64,14 @@ namespace RA.SamplesForDocumentation
 			myData.Address.Add( mainAddress );
 			//an organization can have multiple addresses, like for many campuses
 			myData.Address.Add( new Place()
+			{
+				Name = "Main Campus",
+				Address1 = "200 Daniels Way",
+				City = "Bloomington",
+				AddressRegion = "Indiana",
+				PostalCode = "47704"
+			} );
+			myData.Address.Add( new Place()
             {
 				Name="Evansville Campus",
 				Address1 = "2501 N. First Avenue", City ="Evansville", AddressRegion="Indiana", PostalCode="47710"
