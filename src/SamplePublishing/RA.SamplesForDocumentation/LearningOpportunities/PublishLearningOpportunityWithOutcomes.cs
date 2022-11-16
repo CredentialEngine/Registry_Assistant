@@ -80,7 +80,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new APIRequest()
 			{
 				LearningOpportunity = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 

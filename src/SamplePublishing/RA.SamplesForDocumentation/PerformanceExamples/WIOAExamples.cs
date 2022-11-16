@@ -152,7 +152,7 @@ namespace RA.SamplesForDocumentation.PerformanceExamples
 			var myRequest = new APIRequest()
 			{
 				DataSetProfile = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 

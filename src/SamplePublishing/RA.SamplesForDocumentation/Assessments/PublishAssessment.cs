@@ -125,7 +125,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new AssessmentRequest()
 			{
 				Assessment = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 

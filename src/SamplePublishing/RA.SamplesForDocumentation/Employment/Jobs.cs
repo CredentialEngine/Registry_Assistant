@@ -94,7 +94,7 @@ namespace RA.SamplesForDocumentation.Employment
 			var myRequest = new APIRequest()
 			{
 				Job = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 
@@ -168,7 +168,7 @@ namespace RA.SamplesForDocumentation.Employment
 			var myRequest = new JobListRequest()
 			{
 				HasLanguageMaps = false,//set to false if input is a list of 'plain' Jobs (versus already format as JSON-LD)
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//list of Jobs

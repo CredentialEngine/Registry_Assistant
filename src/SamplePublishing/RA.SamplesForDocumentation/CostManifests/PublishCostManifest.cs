@@ -56,7 +56,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new CostManifestRequest()
 			{
 				CostManifest = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 

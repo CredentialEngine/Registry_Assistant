@@ -62,7 +62,7 @@ namespace RA.SamplesForDocumentation.Credentials
 			var myRequest = new APIRequest()
 			{
 				Credential = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//Serialize the credential request object

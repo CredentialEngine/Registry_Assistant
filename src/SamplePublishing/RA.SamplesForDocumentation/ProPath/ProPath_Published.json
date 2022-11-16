@@ -7,16 +7,16 @@
 			"@id": "https://sandbox.credentialengineregistry.org/resources/ce-8a871edc-9fbc-43bd-b671-afe33f26059e",
 			"ceterms:ctid": "ce-8a871edc-9fbc-43bd-b671-afe33f26059e",
 			"ceterms:name": {
-				"en-us": "160 Driving Academy"
+				"en-US": "160 Driving Academy"
 			},
 			"ceterms:description": {
-				"en-us": "Truck Driver Training School - CDL"
+				"en-US": "Truck Driver Training School - CDL"
 			},
 			"ceterms:aggregateData": [
 				{
 					"@type": "ceterms:AggregateDataProfile",
 					"ceterms:description": {
-						"en-us": "Aggregate Data Profile for credential 160 Driving Academy"
+						"en-US": "Aggregate Data Profile for credential 160 Driving Academy"
 					},
 					"qdata:relevantDataSet": [
 						"https://sandbox.credentialengineregistry.org/resources/ce-50cd9512-4fce-4a97-b507-3cdc4a17488e"
@@ -25,7 +25,7 @@
 			],
 			"ceterms:subjectWebpage": "http://160DrivingAcademy.com",
 			"ceterms:inLanguage": [
-				"en-us"
+				"en-US"
 			],
 			"ceterms:occupationType": [
 				{
@@ -33,14 +33,14 @@
 					"ceterms:codedNotation": "53-3032.00",
 					"ceterms:framework": "https://www.onetcenter.org/taxonomy.html",
 					"ceterms:frameworkName": {
-						"en-us": "Standard Occupational Classification"
+						"en-US": "Standard Occupational Classification"
 					},
 					"ceterms:targetNodeDescription": {
-						"en-us": "Drive a tractor-trailer combination or a truck with a capacity of at least 26,000 pounds Gross Vehicle Weight (GVW). May be required to unload truck. Requires commercial drivers' license."
+						"en-US": "Drive a tractor-trailer combination or a truck with a capacity of at least 26,000 pounds Gross Vehicle Weight (GVW). May be required to unload truck. Requires commercial drivers' license."
 					},
 					"ceterms:targetNode": "https://www.onetonline.org/link/summary/53-3032.00",
 					"ceterms:targetNodeName": {
-						"en-us": "Heavy and Tractor-Trailer Truck Drivers"
+						"en-US": "Heavy and Tractor-Trailer Truck Drivers"
 					}
 				}
 			],
@@ -48,7 +48,7 @@
 				{
 					"@type": "ceterms:ConditionProfile",
 					"ceterms:description": {
-						"en-us": "Truck Driver Training School - CDL"
+						"en-US": "Truck Driver Training School - CDL"
 					},
 					"ceterms:targetLearningOpportunity": [
 						"https://sandbox.credentialengineregistry.org/resources/ce-c78a3f3e-b644-4179-93d6-0bc4bf2f9814"
@@ -59,7 +59,7 @@
 				"@type": "ceterms:CredentialAlignmentObject",
 				"ceterms:framework": "https://credreg.net/ctdl/terms/CredentialStatus",
 				"ceterms:frameworkName": {
-					"en-us": "CredentialStatus"
+					"en-US": "CredentialStatus"
 				},
 				"ceterms:targetNode": "credentialStat:Active",
 				"ceterms:targetNodeName": {
@@ -78,17 +78,17 @@
 			"@id": "https://sandbox.credentialengineregistry.org/resources/ce-50cd9512-4fce-4a97-b507-3cdc4a17488e",
 			"ceterms:ctid": "ce-50cd9512-4fce-4a97-b507-3cdc4a17488e",
 			"ceterms:name": {
-				"en-us": "Dataset profile for holdersprofile"
+				"en-US": "Dataset profile for holdersprofile"
 			},
 			"ceterms:description": {
-				"en-us": "Data Set Profile for credential 160 Driving Academy"
+				"en-US": "Data Set Profile for credential 160 Driving Academy"
 			},
 			"qdata:dataProvider": "https://sandbox.credentialengineregistry.org/resources/ce-eca0b54d-05d3-4ef8-ba63-f6af26483ae4",
 			"qdata:dataSetTimePeriod": [
 				{
 					"@type": "qdata:DataSetTimeFrame",
 					"ceterms:description": {
-						"en-us": "Data Set Time Frame for credential 160 Driving Academy"
+						"en-US": "Data Set Time Frame for credential 160 Driving Academy"
 					},
 					"ceterms:startDate": "1990-01-02",
 					"ceterms:endDate": "2021-03-24",
@@ -96,14 +96,14 @@
 						{
 							"@type": "qdata:DataProfile",
 							"ceterms:description": {
-								"en-us": "Data Profile for credential 160 Driving Academy"
+								"en-US": "Data Profile for credential 160 Driving Academy"
 							},
 							"qdata:holdersInSet": [
 								{
 									"@type": "schema:QuantitativeValue",
 									"schema:value": 1003.0,
 									"schema:description": {
-										"en-us": "Successful Completers"
+										"en-US": "Successful Completers"
 									}
 								}
 							],
@@ -112,7 +112,7 @@
 									"@type": "schema:QuantitativeValue",
 									"schema:value": 1003.0,
 									"schema:description": {
-										"en-us": "All Completers"
+										"en-US": "All Completers"
 									}
 								}
 							],
@@ -121,7 +121,7 @@
 									"@type": "schema:QuantitativeValue",
 									"schema:value": 1282.0,
 									"schema:description": {
-										"en-us": "Total Enrollment (Including Currently Enrolled)"
+										"en-US": "Total Enrollment (Including Currently Enrolled)"
 									}
 								}
 							],
@@ -130,7 +130,7 @@
 									"@type": "schema:QuantitativeValue",
 									"schema:value": 874.0,
 									"schema:description": {
-										"en-us": "Completed Successfully and Exited WIOA"
+										"en-US": "Completed Successfully and Exited WIOA"
 									}
 								}
 							]
@@ -138,13 +138,13 @@
 						{
 							"@type": "qdata:DataProfile",
 							"ceterms:description": {
-								"en-us": "Training unrelated employment"
+								"en-US": "Training unrelated employment"
 							},
 							"qdata:unrelatedEmployment": [
 								{
 									"@type": "schema:QuantitativeValue",
 									"schema:description": {
-										"en-us": "Hired for a Non-Training Related Job"
+										"en-US": "Hired for a Non-Training Related Job"
 									}
 								}
 							]
@@ -152,7 +152,7 @@
 						{
 							"@type": "qdata:DataProfile",
 							"ceterms:description": {
-								"en-us": "Training related employment"
+								"en-US": "Training related employment"
 							},
 							"qdata:earningsAmount": [
 								{
@@ -160,7 +160,7 @@
 									"schema:currency": "USD",
 									"schema:value": 19.24,
 									"schema:description": {
-										"en-us": "Average Wage"
+										"en-US": "Average Wage"
 									}
 								}
 							],
@@ -169,7 +169,7 @@
 									"@type": "schema:QuantitativeValue",
 									"schema:value": 542.0,
 									"schema:description": {
-										"en-us": "Hired for a Training-Related Job"
+										"en-US": "Hired for a Training-Related Job"
 									}
 								}
 							]
@@ -180,7 +180,7 @@
 							"@type": "ceterms:CredentialAlignmentObject",
 							"ceterms:framework": "https://credreg.net/qdata/terms/DataSourceCoverage",
 							"ceterms:frameworkName": {
-								"en-us": "DataSourceCoverage"
+								"en-US": "DataSourceCoverage"
 							},
 							"ceterms:targetNode": "sourceCoverage:Global",
 							"ceterms:targetNodeName": {

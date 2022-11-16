@@ -158,12 +158,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<object> TransferValueFor { get; set; } = new List<object>();
 
-
 		/// <summary>
-		/// Experimenting
-		/// Not valid when publishing individual TVP.
+		///  Resource that replaces this resource.
+		///  full URL OR CTID (recommended)
 		/// </summary>
-		public string HasTransferIntermediary { get; set; }
+		public string SupersededBy { get; set; }
+		/// <summary>
+		/// Resource that this resource replaces.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string Supersedes { get; set; }
+
 	}
 
 	

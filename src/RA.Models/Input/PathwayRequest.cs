@@ -253,6 +253,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
 		/// Provide the CTID or the full URI for the target environment. 
+		/// NOTE: This would include all target components from related component conditions. The API will populate HasChild with the latter componentCondition.Target Components if not already present.
 		/// ceterms:PathwayComponent
 		/// </summary>
 		public List<string> HasChild { get; set; } = new List<string>();
@@ -274,6 +275,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// The referenced resource is higher in some arbitrary hierarchy than this resource.
 		/// Provide the CTID or the full URI for the target environment. 
+		/// This is an inverse property to HasChild. It is not necessary to provide both properties. 
 		/// ceterms:PathwayComponent
 		/// </summary>
 		public List<string> IsChildOf { get; set; } = new List<string>();
@@ -288,8 +290,7 @@ namespace RA.Models.Input
 		public List<string> IsDestinationComponentOf { get; set; } = new List<string>();
 
 		/// <summary>
-		/// This property identifies the Pathways of which it is a part. 
-		/// 
+		/// This property identifies the Pathways of which it is a part. 		/// 
 		/// Provide the CTID or the full URI for the target environment. 
 		/// Note if this is left empty (recommended) the API will assign the current Pathway
 		/// </summary>

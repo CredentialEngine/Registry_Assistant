@@ -63,7 +63,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new TransferIntermediaryBulkRequest()
 			{
 				TransferIntermediary = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 

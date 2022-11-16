@@ -1,4 +1,6 @@
-﻿namespace RA.Models.Input
+﻿using System.Collections.Generic;
+
+namespace RA.Models.Input
 {
 	public class BaseRequest 
     {
@@ -27,13 +29,19 @@
 
 		/// <summary>
 		/// Leave blank for default
+		/// Formerly known as Community
 		/// </summary>
-		public string Community { get; set; } = "";
+		public string Registry { get; set; } = "";
 
-		///// <summary>
-		///// Where valid, set to true to publish this resource to the public registry as well as the selected community
-		///// </summary>
-		//public bool CommunityPlusPublic { get; set; }
+		
+		/// <summary>
+		/// Future use
+		/// Allow publishing of custom concepts etc. The property type would be required, as well as an Id. 
+		/// The Id would be a Guid (TBD). The related property would have the same indentifier is say CreditLevelType
+		/// 
+		/// Allowed (So far)
+		/// </summary>
+		public List<object> ReferenceObject { get; set; } = new List<object>();
 	}
 
 }

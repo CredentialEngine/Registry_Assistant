@@ -83,7 +83,7 @@ namespace RA.SamplesForDocumentation.Credentials
 			var myRequest = new CredentialRequest()
 			{
 				Credential = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 

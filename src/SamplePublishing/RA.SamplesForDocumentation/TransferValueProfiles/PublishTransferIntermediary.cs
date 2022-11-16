@@ -72,7 +72,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new APIRequest()
 			{
 				TransferIntermediary = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 

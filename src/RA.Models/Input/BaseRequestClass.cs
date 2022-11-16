@@ -27,14 +27,5 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<CredentialAlignmentObject> ExternalAudienceLevelType { get; set; } = new List<CredentialAlignmentObject>();
 
-
-
-		///// <summary>
-		///// Legacy format for CTID
-		///// original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
-		///// </summary>
-		//public string Ctid { get; set; }
-
-
 	}
 }

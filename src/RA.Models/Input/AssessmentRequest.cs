@@ -182,7 +182,7 @@ namespace RA.Models.Input
 
 		//=========== optional ================================
 		/// <summary>
-		/// List of Alternate Names for this credential
+		/// List of Alternate Names for this assessment
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
 		/// <summary>

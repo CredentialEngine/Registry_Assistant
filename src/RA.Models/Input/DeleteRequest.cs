@@ -25,8 +25,9 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Leave blank for default
+		/// Formerly known as Community
 		/// </summary>
-		public string Community { get; set; }
+		public string Registry { get; set; }
 	}
 
 	/// <summary>
@@ -52,7 +53,8 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Leave blank for default
+		/// Formerly known as Community
 		/// </summary>
-		public string Community { get; set; }
+		public string Registry { get; set; }
 	}
 }

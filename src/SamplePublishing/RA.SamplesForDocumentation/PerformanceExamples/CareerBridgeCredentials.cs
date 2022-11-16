@@ -165,7 +165,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new APIRequest()
 			{
 				Credential = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 
@@ -293,7 +293,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new APIRequest()
 			{
 				Credential = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 

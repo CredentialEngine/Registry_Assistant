@@ -66,7 +66,7 @@ namespace RA.SamplesForDocumentation.Collections
 			var myRequest = new APIRequest()
 			{
 				Collection = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 
@@ -154,7 +154,7 @@ namespace RA.SamplesForDocumentation.Collections
 			var myRequest = new APIRequest()
 			{
 				Collection = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//add collection members that have additional information about members
@@ -263,7 +263,7 @@ namespace RA.SamplesForDocumentation.Collections
 			var myRequest = new APIRequest()
 			{
 				Collection = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//add competencies

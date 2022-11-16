@@ -44,7 +44,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new ConceptSchemeRequest()
 			{
 				ConceptScheme = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//add concepts

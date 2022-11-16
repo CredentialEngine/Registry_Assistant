@@ -44,7 +44,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new CompetencyFrameworkRequest()
 			{
 				CompetencyFramework = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//competencies
@@ -134,7 +134,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new CompetencyFrameworkRequest()
 			{
 				CompetencyFramework = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//competencies

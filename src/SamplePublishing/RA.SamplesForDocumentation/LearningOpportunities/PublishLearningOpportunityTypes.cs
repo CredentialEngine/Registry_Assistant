@@ -164,7 +164,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new LearningOpportunityRequest()
 			{
 				LearningOpportunity = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 
@@ -335,7 +335,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new LearningOpportunityRequest()
 			{
 				LearningOpportunity = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 
@@ -514,7 +514,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new LearningOpportunityRequest()
 			{
 				LearningOpportunity = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 

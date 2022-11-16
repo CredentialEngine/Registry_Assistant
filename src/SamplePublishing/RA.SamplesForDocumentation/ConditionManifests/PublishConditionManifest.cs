@@ -51,7 +51,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new ConditionManifestRequest()
 			{
 				ConditionManifest = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 

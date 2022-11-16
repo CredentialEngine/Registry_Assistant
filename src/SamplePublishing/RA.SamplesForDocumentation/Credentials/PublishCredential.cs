@@ -95,6 +95,12 @@ namespace RA.SamplesForDocumentation
 			myData.AvailabilityListing = list;
 			list = new List<string>() { "https://example.org?availableOnline=here" };
 			myData.AvailableOnlineAt= list;
+			//optional identifier(s)
+			myData.Identifier.Add( new IdentifierValue()
+			{
+				IdentifierTypeName = "Some Course Code",
+				IdentifierValueCode = "0276"        //Alphanumeric string identifier of the identifier type
+			} );
 
 			//include valid concepts, with or without the namespace
 			myData.AudienceType = new List<string>() { " audience:PublicEmployee", "Resident" };
@@ -276,7 +282,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new APIRequest()
 			{
 				Credential = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 
@@ -409,7 +415,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new APIRequest()
 			{
 				Credential = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//Serialize the credential request object

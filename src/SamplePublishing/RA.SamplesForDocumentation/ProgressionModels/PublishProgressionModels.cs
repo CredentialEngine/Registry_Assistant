@@ -44,7 +44,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new ProgressionModelRequest()
 			{
 				ProgressionModel = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//add levels
@@ -104,7 +104,7 @@ namespace RA.SamplesForDocumentation
 			var myRequest = new ProgressionModelRequest()
 			{
 				ProgressionModel = myData,
-				DefaultLanguage = "en-us",
+				DefaultLanguage = "en-US",
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//add levels

@@ -30,11 +30,12 @@ namespace RA.Models.Input
 	{
 		/// <summary>
 		/// List of Occupations
+		/// Using data type of object to allow handling plain requests or those with language maps
 		/// </summary>
 		public List<object> OccupationList { get; set; } = new List<object>();
 		/// <summary>
 		/// HasLanguageMaps
-		/// If false, will format input using the plain Task classes otherwise the JSON-LD class
+		/// If false, will format input using the plain Occupation classes otherwise the JSON-LD class
 		/// </summary>
 		public bool HasLanguageMaps { get; set; }
 	}
@@ -63,11 +64,12 @@ namespace RA.Models.Input
 	{
 		/// <summary>
 		/// List of Jobs
+		/// /// Using data type of object to allow handling plain requests or those with language maps
 		/// </summary>
 		public List<object> JobList { get; set; } = new List<object>();
 		/// <summary>
 		/// HasLanguageMaps
-		/// If false, will format input using the plain Task classes otherwise the JSON-LD class
+		/// If false, will format input using the plain Job classes otherwise the JSON-LD class
 		/// </summary>
 		public bool HasLanguageMaps { get; set; }
 	}
@@ -134,7 +136,7 @@ namespace RA.Models.Input
 		public List<object> WorkRoleList { get; set; } = new List<object>();
 		/// <summary>
 		/// HasLanguageMaps
-		/// If false, will format input using the plain Task classes otherwise the JSON-LD class
+		/// If false, will format input using the plain Work Role classes otherwise the JSON-LD class
 		/// </summary>
 		public bool HasLanguageMaps { get; set; }
 	}
