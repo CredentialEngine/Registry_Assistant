@@ -120,7 +120,17 @@ namespace RA.SamplesForDocumentation
 					}
 				}
 			};
-
+			//duration the assessment is exactly 2 hours. This example uses the ISO8601 format
+			myData.EstimatedDuration = new List<DurationProfile>()
+			{
+				new DurationProfile()
+				{
+					ExactDuration = new DurationItem()
+					{
+						Duration_ISO8601="PT2H"
+					}
+				}
+			};
 			//This holds the assessment and the identifier (CTID) for the owning organization
 			var myRequest = new AssessmentRequest()
 			{

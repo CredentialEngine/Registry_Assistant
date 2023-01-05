@@ -68,6 +68,31 @@ namespace RA.SamplesForDocumentation
 				"ce-de49e230-f92d-4377-8e25-8aea6c72776b",
 				"ce-07a645c7-1f5b-4a23-9733-13d9dcf4290e"
 			};
+			//
+			myData.Requires = new List<ConditionProfile>()
+			{
+				new ConditionProfile()
+				{
+					Description="Outcomes for this transfer intermediary",
+					SubjectWebpage="https://example.org/usefulpageForCompetencies",
+					TargetCompetency = new List<CredentialAlignmentObject>()
+					{
+						//just the CTID for a competency in the registry???????
+						new CredentialAlignmentObject()
+						{
+							CTID="ce-07a645c7-1f5b-4a23-9733-13d9dcf4290e"
+						},
+						new CredentialAlignmentObject()
+						{
+							TargetNode="https://example.org/optionalCompetencyURL",
+							TargetNodeName="Outcome item",
+							TargetNodeDescription="Description of this outcome item",
+							FrameworkName="Optional name of this framework",
+							Framework="https://example.org/optionalCompetencyFrameworkURL"
+						}
+					}
+				}
+			};
 			//This holds the main entity and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
 			{
