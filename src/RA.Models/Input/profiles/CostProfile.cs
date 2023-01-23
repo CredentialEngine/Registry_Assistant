@@ -50,8 +50,10 @@ namespace RA.Models.Input
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
-		/// A currency code, for ex USD
+		/// A currency (ISO_4217) code, for example USD
+		/// Currency in which the monetary amount is expressed in 3-letter ISO 4217 format such as "USD".
 		/// Optional
+		/// https://en.wikipedia.org/wiki/ISO_4217#List_of_ISO_4217_currency_codes
 		/// </summary>
 		public string Currency { get; set; }
 
