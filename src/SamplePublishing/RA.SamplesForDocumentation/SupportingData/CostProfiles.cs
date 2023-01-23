@@ -18,6 +18,7 @@ namespace RA.SamplesForDocumentation
 		/// - CostDetails URL
 		/// Recommended
 		/// - Currency
+		///   - For list of valid ISO 4217 currency codes, see: https://en.wikipedia.org/wiki/ISO_4217#List_of_ISO_4217_currency_codes
 		/// - CostProfileItem 
 		///   - helper for Direct Cost Type 
 		///   Must be a valid CTDL cost type.<see cref="https://credreg.net/ctdl/terms#CostType"/>
