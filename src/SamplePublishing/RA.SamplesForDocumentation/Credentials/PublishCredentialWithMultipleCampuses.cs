@@ -134,7 +134,7 @@ namespace RA.SamplesForDocumentation.Credentials
 			{
 				new ConditionProfile()
 				{
-					Description = "To earn this credential the following conditions must be met, and the one of the programs referenced in the AlternativeCondition must be completed.",
+					Description = "To earn this credential the following conditions must be met, and then one of the programs referenced in the AlternativeCondition must be completed.",
 					Condition = new List<string>() { "Complete High School", "Have a drivers licence." },
 					AlternativeCondition = alternativeConditions
 				}

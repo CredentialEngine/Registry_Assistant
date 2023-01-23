@@ -26,7 +26,7 @@ namespace RA.SamplesForDocumentation
 		///   - price, AudienceType, ResidencyType
 		/// </summary>
 		/// <returns></returns>
-		public CostProfile PopulateCostProfile()
+		public static CostProfile PopulateCostProfile()
 		{
 			var output = new CostProfile()
 			{
@@ -71,7 +71,7 @@ namespace RA.SamplesForDocumentation
 			return output;
 		}
 
-		public List<CostProfile> PopulateFullCostProfile()
+		public static List<CostProfile> PopulateFullCostProfile()
 		{
 			var output = new List<CostProfile>();
 			//instate cost profile

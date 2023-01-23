@@ -57,9 +57,10 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Organization that asserts this condition
-		/// This should be single, but as CTDL defines as multi-value, need to handle a List
+		/// This should be single, but as CTDL defines as multi-value, need to handle a List of OrganizationReference
 		/// </summary>
-		public object AssertedBy { get; set; } = new object();
+		public List<OrganizationReference> AssertedBy { get; set; } 
+		//public object AssertedBy { get; set; } = new object();
 
 		/// <summary>
 		///  Webpage that describes this condition
@@ -155,6 +156,7 @@ namespace RA.Models.Input
 		public decimal YearsOfExperience { get; set; }
 		/// <summary>
 		/// Measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
+		/// Best practice is to assign a decimal value weight between 0 and 1 that indicates the strength of the assertion, with 0 being weakest and 1 being strongest.
 		/// </summary>
 		public decimal Weight { get; set; }
 	

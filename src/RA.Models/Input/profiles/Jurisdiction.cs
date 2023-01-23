@@ -10,6 +10,10 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Jurisdiction Profile
 	/// Geo-political information about applicable geographic areas and their exceptions.
+	/// A Jurisdiction Profile must have at least one of the following: 
+	///		A global jurisdiction of true</a>, 
+	///		or just a description, 
+	///		or a <a href="https://credreg.net/ctdl/terms/mainJurisdiction" target="credreg">main Jurisdiction</a> with possible exceptions (<a href="https://credreg.net/ctdl/terms/jurisdictionException" target="credreg">jurisdiction exception</a>).
 	/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
 	/// </summary>
 	public class Jurisdiction
@@ -21,8 +25,9 @@ namespace RA.Models.Input
 		{
 			JurisdictionException = new List<RAPlace>();
 		}
+
 		/// <summary>
-		/// Whether or not the credential is useful, applicable or recognized everywhere.
+		/// Whether or not the resource is useful, applicable or recognized everywhere.
 		/// </summary>
 		public bool? GlobalJurisdiction { get; set; }
 		/// <summary>
@@ -33,11 +38,13 @@ namespace RA.Models.Input
 		/// <summary>
 		/// TBD - does it make sense to offer providing the full GeoCoordinates.
 		/// Will be useful where the request can be populated programatically.
+		///  <see cref="https://credreg.net/ctdl/terms/mainJurisdiction"/>
 		/// </summary>
 		public RAPlace MainJurisdiction { get; set; } = new RAPlace();
 
 		/// <summary>
-		/// Geographic or political region in which the credential is not formally recognized or an organization has no authority to act .
+		/// Geographic or political region in which the credential is not formally recognized or an organization has no authority to act.
+		/// <see cref="https://credreg.net/ctdl/terms/jurisdictionException"/>
 		/// </summary>
 		public List<RAPlace> JurisdictionException { get; set; }
 	}
@@ -55,79 +62,28 @@ namespace RA.Models.Input
 	}
 
 	/// <summary>
-	/// Organization makes an assertion for specific jurisdiction(s). 
+	/// Geographic Coordinates
+	/// Geographic coordinates of a place or event including latitude and longitude as well as other locational information.
+	/// Not currently used.
 	/// </summary>
-	//[Obsolete]
-	//public class JurisdictionAssertedInProfile
-	//{
-	//	public JurisdictionAssertedInProfile()
-	//	{
-	//		AssertedBy = new OrganizationReference();
-	//		Jurisdiction = new Jurisdiction();
-	//	}
-	//	public Jurisdiction Jurisdiction { get; set; }
-	//	/// <summary>
-	//	/// Organization that asserts this condition
-	//	/// Required
-	//	/// </summary>
-	//	public OrganizationReference AssertedBy { get; set; }
-
-	//	//assertion types
-	//	//at least one assertion must be selected
-
-	//	/// <summary>
-	//	/// Organization asserts the related resource is accredited in the referenced jurisdiction
-	//	/// </summary>
-	//	public bool AssertsAccreditedIn { get; set; }
-	//	public bool AssertsApprovedIn { get; set; }
-	//	public bool AssertsOfferedIn { get; set; }
-	//	public bool AssertsRecognizedIn { get; set; }
-	//	public bool AssertsRegulatedIn { get; set; }
-	//	public bool AssertsRenewedIn { get; set; }
-	//	public bool AssertsRevokedIn { get; set; }
-
-	//}
-
 	public class GeoCoordinates
 	{
 		public GeoCoordinates()
 		{
 			Name = "";
-			//ToponymName = "";
-			Region = "";
-			Country = "";
-			//	Address = null;
-			//	Bounds = null;
-
 		}
 
-		public int GeoNamesId { get; set; } //ID used by GeoNames.org
 		public string Name { get; set; }
-		public bool IsException { get; set; }
 
-		//public string ToponymName { get; set; }
-		public string Region { get; set; }
-		public string Country { get; set; }
 		public double Latitude { get; set; }
 		public double Longitude { get; set; }
-
-		//public PostalAddress Address { get; set; }
 
 		/// <summary>
 		/// ceterms:geoURI
 		/// Entity that describes the longitude, latitude and other location details of a place.
 		/// </summary>
-		public string GeoUri { get; set; }
+		public string GeoURI { get; set; }
 
-		//public BoundingBox Bounds { get; set; }
 	}
 
-	public class BoundingBox
-	{
-		public bool? IsDefined { get { return !(North == 0 && South == 0 && East == 0 && West == 0); } }
-		public decimal North { get; set; }
-		public decimal South { get; set; }
-		public decimal East { get; set; }
-		public decimal West { get; set; }
-	}
 }
