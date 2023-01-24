@@ -68,6 +68,24 @@ namespace RA.Models.Input
 		public string Name { get; set; }
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
+
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
+		/// <summary>
+		/// Faculty-to-Student Ratio
+		/// Ratio of the number of teaching faculty to the number of students.
+		/// The expression of the ratio should feature the number of faculty first, followed by the number of students, e.g., "1:10" to mean "one faculty per ten students".
+		/// qdata:facultyToStudentRatio
+		/// </summary>
+		public string FacultyToStudentRatio { get; set; }
+
 		/// <summary>
 		///  Number of credentials awarded.
 		///  ceterms:numberAwarded
