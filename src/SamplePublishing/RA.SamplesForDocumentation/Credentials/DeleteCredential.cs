@@ -35,7 +35,7 @@ namespace RA.SamplesForDocumentation.Credentials
 			{
 				CTID = ctidToDelete.ToLower(),
 				PublishForOrganizationIdentifier = owningOrganization.ToLower(),
-				Community = community
+				Registry = community
 			};
 			string message = "";
 			new SampleServices().DeleteRequest( dr, apiKey, "credential", ref message, community );

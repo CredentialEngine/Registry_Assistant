@@ -122,7 +122,7 @@ namespace RA.SamplePublishingProject
 			{
 				CTID = ctidToDelete.ToLower(),
 				PublishForOrganizationIdentifier = owningOrgCTID.ToLower(),
-				Community = community
+				Registry = community
 			};
 			string message = "";
 			new SampleServices().DeleteRequest( dr, apiKey, "credential", ref message, community );
@@ -157,7 +157,7 @@ namespace RA.SamplePublishingProject
 					"ce-7051cdf9-43b6-4e5b-8444-37cfeb64fdfe", "", ""
 				},
 				PublishForOrganizationIdentifier = owningOrgCTID.ToLower(),
-				Community = community
+				Registry = community
 			};
 			string message = "";
 			new SampleServices().DeleteRequest( dr, apiKey, "credential", ref message, community );

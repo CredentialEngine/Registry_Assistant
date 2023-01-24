@@ -122,9 +122,15 @@ namespace RA.SamplesForDocumentation.Collections
 			var myData = new APIRequestEntity()
 			{
 				Name = "A sample collection of credentials using CollectionMembers.",
+				AlternateName = new List<string>() { "alternate Dos", "Alternate Deux" },
 				Description = "This collection uses the CollectionMembers property (part of the CollectionRequest object) to list members of this collection. A CollectionMember has additional properties to describe the member such as the (optional) start date and end date, as well as a name and description. The CollectionMember uses teh ProxyFor proper to 'point' to a publshed resource. Typically just a CTID is used for this property. The API will create a property credential registry URI based on the current publishing environment.",
 				CTID = myCTID,
+				SubjectWebpage="https://example.org?t=collectionSWP",
+				DateEffective="2017-12-07",
+				ExpirationDate="2035-12-31",
 				InLanguage = new List<string>() { "en-US" },
+				Subject = new List<string>() { "testing publishing", "complete testing" },
+				Keyword = new List<string>() { "testing publishing", "complete testing" },
 			};
 			//typically the ownedBy is the same as the CTID for the data owner
 			myData.OwnedBy.Add( new OrganizationReference()
@@ -135,7 +141,7 @@ namespace RA.SamplesForDocumentation.Collections
 			myData.CollectionType = new List<string>() { "ETPL" };
 			//lifeCycleStatus
 			myData.LifeCycleStatusType = "Active";
-
+			myData.License = "https://example.com/t=license";
 			//in this case, HasMember is empty - a mix can be used however.
 			myData.HasMember = new List<string>();
 			//add membership conditions
@@ -149,6 +155,21 @@ namespace RA.SamplesForDocumentation.Collections
 					"Requirement three",
 				}
 			} );
+
+			List<string> alternateTypes = new List<string>();
+			List<string> codes = new List<string>();
+			//====================	OCCUPATIONS ====================
+			myData.OccupationType = OccupationsHelper.PopulateOccupations( ref alternateTypes, ref codes );
+			myData.AlternativeOccupationType = alternateTypes;
+			myData.ONET_Codes = codes;
+			//====================	INDUSTRIES	====================
+			myData.IndustryType = Industries.PopulateIndustries( ref alternateTypes, ref codes );
+			myData.AlternativeIndustryType = alternateTypes;
+			myData.NaicsList = codes;
+			//====================	INSTRUCTIONAL PROGRAMS	====================
+			myData.InstructionalProgramType = InstructionalPrograms.PopulatePrograms( ref alternateTypes, ref codes);
+			myData.AlternativeInstructionalProgramType = alternateTypes;
+			myData.CIP_Codes = codes;
 
 			//This holds the learningOpportunity and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()

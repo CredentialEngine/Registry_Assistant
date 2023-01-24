@@ -19,9 +19,9 @@ namespace RA.SamplesForDocumentation
 		/// - List of CIP codes
 		/// </summary>
 		/// <param name="request"></param>
-		public static void PopulatePrograms( Credential request )
+		public static List<FrameworkItem> PopulatePrograms(ref List<string> AlternativeTypes, ref List<string> Codes )
 		{
-			request.InstructionalProgramType = new List<FrameworkItem>
+			var InstructionalProgramType = new List<FrameworkItem>
 			{
 				//Using existing frameworks such as CIP
 				//programs from a framework like Classification of Instructional Program - where the information is stored locally and can be included in publishing
@@ -46,13 +46,15 @@ namespace RA.SamplesForDocumentation
 			};
 
 
-			//Instructional Programs not in a known framework
-			//Instructional Programs that are not in a framework can still be published using a list of strings.
-			request.AlternativeInstructionalProgramType = new List<string>() { "Cybersecurity 101", "Forensic Science 120", "Forensic Anthropology 400" };
+            //Instructional Programs not in a known framework
+            //Instructional Programs that are not in a framework can still be published using a list of strings.
+            AlternativeTypes = new List<string>() { "Cybersecurity 101", "Forensic Science 120", "Forensic Anthropology 400" };
 
-			//CIP code helper - ALternately provided a list of CIP codes. 
-			//The Assistant API will validate the codes and format the output including the framework name and URL, the name, description, and code
-			request.CIP_Codes = new List<string>() { "31.0504", "31.0505", "31.0599", "31.9999" };
+            //CIP code helper - ALternately provided a list of CIP codes. 
+            //The Assistant API will validate the codes and format the output including the framework name and URL, the name, description, and code
+            Codes = new List<string>() { "31.0504", "31.0505", "31.0599", "31.9999" };
+
+            return InstructionalProgramType;
 		}
 	}
 }

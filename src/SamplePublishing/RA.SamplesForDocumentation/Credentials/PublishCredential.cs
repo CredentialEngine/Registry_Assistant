@@ -174,20 +174,7 @@ namespace RA.SamplesForDocumentation
 			{
 				"ce-82a854b6-1e17-4cd4-845d-0b9b6df2fb5c"
 			};
-			//22-08-30 Added the property CreditValue directly on a credential
-			//			NOTE: PENDING ADDITION TO CTDL
-			myData.CreditValue = new List<ValueProfile>()
-			{
-				new ValueProfile()
-				{
-					//CreditUnitType- The type of credit associated with the credit awarded or required.
-					// - ConceptScheme: ceterms:CreditUnit (https://credreg.net/ctdl/terms/CreditUnit#CreditUnit)
-					// - Concepts: provide with the namespace (creditUnit:SemesterHour) or just the text (SemesterHour). examples
-					// - creditUnit:ClockHour, creditUnit:ContactHour, creditUnit:DegreeCredit
-					CreditUnitType = new List<string>() {"DegreeCredit"},
-					Value=60
-				}
-			};
+
 			//duration for a range from 8 to 12 weeks
 			myData.EstimatedDuration = new List<DurationProfile>()
 			{

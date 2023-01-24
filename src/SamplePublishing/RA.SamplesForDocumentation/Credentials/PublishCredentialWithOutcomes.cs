@@ -153,15 +153,19 @@ namespace RA.SamplesForDocumentation
 			var relevantDataSet = new DataSetProfile()
 			{
 				Name = "Dataset profile for AggregateDataProfileprofile",
-				Description="A helpful description of this dataset profile.",
+				AlternateName = new List<string>() { "alternate Dos", "Alternate Deux" },
+				Description = "A helpful description of this dataset profile.",
 				CTID = datasetProfileCtid,
 				DataProvider = new OrganizationReference() { CTID = owningOrganizationCTID }
 			};
+			relevantDataSet.Jurisdiction = Jurisdictions.SampleJurisdictions();
 
 			//DataSetTimeFrame referenced from a DataSetProfile (DataAttributes)
 			DataSetTimeFrame dstp = new DataSetTimeFrame()
 			{
-				Description = "AggregateDataProfile Profile DataSetTimeFrame",
+				Name = "Optional name for time frame",
+				AlternateName = new List<string>() {"alternate Dos", "Alternate Deux" },
+				Description = "Description of a DataSetTimeFrame",
 				DataSourceCoverageType = new List<string>() { "Global" },
 				StartDate = "2017-01-11",
 				EndDate = "2019-03-20"
@@ -178,6 +182,8 @@ namespace RA.SamplesForDocumentation
 				WorkTimeThreshold= "Statement of earnings thresholds used in determining whether a sufficient level of workforce attachment has been achieved to qualify as employed during the chosen employment and earnings time period."
 
 			};
+			dataProfile.EarningsThreshold = "earnings threshold used in determining whether a sufficient level of workforce attachment has been achieved to qualify as employed during the time period of the data set";
+			dataProfile.FacultyToStudentRatio = "1:21";
 			#region 
 			dataProfile.DataAvailable.Add( SampleServices.AddQuantitativeValue( 15, "Data Available spring" ) );
 			dataProfile.DataAvailable.Add( SampleServices.AddQuantitativeValue( 45, "Data Available fall" ) );
@@ -207,7 +213,10 @@ namespace RA.SamplesForDocumentation
 			dataProfile.RegionalEarningsDistribution.Add( SampleServices.AddQuantitativeValue( 44000, "Reference to an entity describing median earnings as well as earnings at various percentiles for holders or subjects in the region." ) );
 			dataProfile.RegionalEmploymentRate.Add( SampleServices.AddQuantitativeValue( 44000, "Reference to an entity describing median earnings as well as earnings at various percentiles for holders or subjects in the region." ) );
 			dataProfile.RelatedEmployment.Add( SampleServices.AddQuantitativeValue( 321, "Number of people employed in the area of work (e.g., industry, occupation) in which the credential provided preparation." ) );
+
 			dataProfile.SubjectsInSet.Add( SampleServices.AddQuantitativeValue( 235, "Total credential holders and non-holders in the final data collection and reporting." ) );
+			dataProfile.SubjectExcluded.Add( SampleServices.AddQuantitativeValue( 13, "Category of subject excluded from the data." ) );
+			//
 			dataProfile.SufficientEmploymentCriteria.Add( SampleServices.AddQuantitativeValue( 55, "Number of holders that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set" ) );
 			dataProfile.UnrelatedEmployment.Add( SampleServices.AddQuantitativeValue( 55, "Number of people employed outside the area of work (e.g., industry, occupation) in which the credential provided preparation." ) );
 
