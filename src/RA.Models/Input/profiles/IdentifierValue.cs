@@ -16,7 +16,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Framework, scheme, type, or other organizing principle of this identifier.
 		/// URI
-		/// TBD - this doesn't have to be resolvable!
+		/// NOTE - this doesn't have to be resolvable!
+		/// Optional
 		/// </summary>
 		public string IdentifierType { get; set; }
 

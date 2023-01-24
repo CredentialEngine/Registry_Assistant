@@ -32,7 +32,19 @@ namespace RA.Models.Input
 		public List<PathwayComponent> PathwayComponents { get; set; } = new List<PathwayComponent>();
 
 	}//
+	/// <summary>
+	/// Proposed option to publish a document already formatted as CTDL JSON-LD.
+	/// </summary>
+	public class PathwayGraphRequest : BaseRequest
+	{
+		public PathwayGraphRequest()
+		{
+			PathwayGraph = new GraphInput();
+		}
 
+		public GraphInput PathwayGraph { get; set; }
+
+	}
 	/// <summary>
 	/// Resource composed of a structured set of PathwayComponents defining points along a route to fulfillment of a goal or objective.
 	/// </summary>
@@ -64,6 +76,15 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// The webpage that describes this entity.
@@ -308,6 +329,15 @@ namespace RA.Models.Input
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
+		/// <summary>
 		/// Points associated with this resource, or points possible.
 		/// </summary>
 		public QuantitativeValue PointValue { get; set; } = new QuantitativeValue();
@@ -520,6 +550,16 @@ namespace RA.Models.Input
 		/// Range: ceterms:Concept (Select from a controlled vocabulary: ceterms:logicalOperator)
 		/// </summary>
 		public string LogicalOperator { get; set; }
+
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
 	}
 
 	/// <summary>
@@ -582,6 +622,15 @@ namespace RA.Models.Input
 		/// </summary>
 		public string RightAction{ get; set; }
 
+
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 
 	}
 

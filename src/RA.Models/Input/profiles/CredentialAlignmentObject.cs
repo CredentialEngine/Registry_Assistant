@@ -10,10 +10,13 @@ namespace RA.Models.Input
     /// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
     /// </summary>
     public class CredentialAlignmentObject
-	{
+    {
+        public string Type { get; set; } = "ceterms:CredentialAlignmentObject";
         /// <summary>
         /// If the target exists in the registry, just provide the CTID. 
         /// When present and valid, the rest of the properties will be ignored. 
+        /// What should be published? Just the URL, or the CAO with the actual resource from the registry?
+        /// Can there be embelisment?
         /// </summary>
         public string CTID { get; set; }
 
@@ -63,5 +66,7 @@ namespace RA.Models.Input
         /// Measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
         /// </summary>
         public decimal Weight { get; set; }
-	}
+    }
+
+
 }

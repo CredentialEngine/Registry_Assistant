@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
-    /// <summary>
-    /// CostProfile class
-    /// 2018-09-02 Where LanguageMap alternates are available, only enter one (string or language map). The system will check the string version first. 
-    /// </summary>
-    public class CostProfile 
+	/// <summary>
+	/// CostProfile class
+	/// 2018-09-02 Where LanguageMap alternates are available, only enter one (string or language map). The system will check the string version first. 
+	/// </summary>
+	public class CostProfile
 	{
-        /// <summary>
-        /// Inialize lists
-        /// </summary>
-        public CostProfile()
-        {
-            Jurisdiction = new List<Jurisdiction>();
-            CostItems = new List<CostProfileItem>();
+		/// <summary>
+		/// Inialize lists
+		/// </summary>
+		public CostProfile()
+		{
+			Jurisdiction = new List<Jurisdiction>();
+			CostItems = new List<CostProfileItem>();
 			Condition = new List<string>();
 		}
 
@@ -37,7 +37,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		public LanguageMap Description_Map { get; set; } = null;
 
 		/// <summary>
 		/// Name for this cost profile
@@ -47,7 +47,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		public LanguageMap Name_Map { get; set; } = null;
 
 		/// <summary>
 		/// A currency (ISO_4217) code, for example USD
@@ -89,7 +89,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately use a LanguageMapList for the conditions
 		/// </summary>
-        public LanguageMapList Condition_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList Condition_Map { get; set; } = null;
 
 		/// <summary>
 		/// List of jurisdictions
@@ -98,7 +98,15 @@ namespace RA.Models.Input
 		public List<Jurisdiction> Jurisdiction { get; set; }
 
 
-    }
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+	}
 
 	/// <summary>
 	/// Cost item class
@@ -158,11 +166,11 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately use a LanguageMap for PaymentPattern.
 		/// </summary>
-        public LanguageMap PaymentPattern_Map { get; set; } = new LanguageMap();
-        /// <summary>
-        /// Price for this cost - optional
-        /// </summary>
-        public decimal Price { get; set; }
+		public LanguageMap PaymentPattern_Map { get; set; } = null;
+		/// <summary>
+		/// Price for this cost - optional
+		/// </summary>
+		public decimal Price { get; set; }
 
 	}
 

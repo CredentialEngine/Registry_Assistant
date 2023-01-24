@@ -47,6 +47,15 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
 
 		/// <summary>
 		/// AbilityEmbodied
@@ -223,7 +232,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Subject Webpage
 		/// URL
-		/// Required
+		/// Optional
 		/// ceterms:subjectWebpage
 		/// </summary>
 		public string SubjectWebpage { get; set; } //URL

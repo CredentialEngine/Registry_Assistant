@@ -50,6 +50,15 @@ namespace RA.Models.Input
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
         public string SubjectWebpage { get; set; } //URL
 
+        /// <summary>
+        /// List of Alternate Names for this resource
+        /// </summary>
+        public List<string> AlternateName { get; set; } = new List<string>();
+        /// <summary>
+        /// LanguageMap for AlternateName
+        /// </summary>
+        public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
 
         /// <summary>
         /// Organization that owns this ConditionManifest

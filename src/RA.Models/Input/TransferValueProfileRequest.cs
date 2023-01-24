@@ -169,7 +169,21 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Supersedes { get; set; }
 
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
+		///// <summary>
+		///// Experimenting
+		///// Not valid when publishing individual TVP.
+		///// </summary>
+		//public string HasTransferIntermediary { get; set; }
 	}
 
-	
+
 }

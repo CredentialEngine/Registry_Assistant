@@ -35,6 +35,15 @@ namespace RA.Models.Input
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
+		/// <summary>
 		/// Street Address1
 		/// </summary>
 		public string Address1 { get; set; }
@@ -105,6 +114,7 @@ namespace RA.Models.Input
 		{
 			PhoneNumbers = new List<string>();
 			Emails = new List<string>();
+			FaxNumber = new List<string>();
 			SocialMediaPages = new List<string>();
 		}
 		/// <summary>

@@ -240,6 +240,11 @@ namespace RA.Models.Input
 		public List<AggregateDataProfile> AggregateData { get; set; } = new List<AggregateDataProfile>();
 
 		/// <summary>
+		///  Competency evaluated through the learning opportunity.		  
+		/// </summary>
+		public List<CredentialAlignmentObject> Assesses { get; set; } = new List<CredentialAlignmentObject>();
+
+		/// <summary>
 		/// Assessment Method Description 
 		/// Description of the assessment methods for a resource.
 		/// </summary>
@@ -664,5 +669,20 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<ScheduledOffering> HasOffering { get; set; } = new List<ScheduledOffering>();
 
-	}
+
+
+		#region Properties allowed only for learning programs
+		//these will be ignored for all other types
+		/// <summary>
+		/// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
+		/// TODO: enable more detail by using a blank node in ReferenceObject. The latter would be a CredentialAlignmentObject. The Id would be a Guid in DegreeConcentration. Alternately a fully formed blank node id (	  _:(GUID)	)
+		/// </summary>
+		public List<string> DegreeConcentration { get; set; }
+		/// <summary>
+		/// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
+		/// </summary>
+		public LanguageMapList DegreeConcentration_Map { get; set; } = new LanguageMapList();
+        #endregion
+
+    }
 }

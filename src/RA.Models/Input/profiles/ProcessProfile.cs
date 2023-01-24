@@ -19,7 +19,6 @@ namespace RA.Models.Input
 			TargetCredential = new List<EntityReference>();
 			TargetAssessment = new List<EntityReference>();
 			TargetLearningOpportunity = new List<EntityReference>();
-			//Region = new List<GeoCoordinates>();
 		}
 		/// <summary>
 		/// Process Profile Description
@@ -41,7 +40,6 @@ namespace RA.Models.Input
 		/// Webpage that describes this entity.
 		/// </summary>
 		public string SubjectWebpage { get; set; }
-		//public List<CredentialAlignmentObject> ExternalInputType { get; set; }
 
 		/// <summary>
 		/// Types of external stakeholders that provide input to an entity's processes or resources; select from an existing enumeration of such types.
@@ -140,7 +138,6 @@ namespace RA.Models.Input
 		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
 		/// </summary>
 		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
-		//public List<GeoCoordinates> Region { get; set; }
 
 		/// <summary>
 		/// Data Collection Method Type

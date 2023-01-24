@@ -77,6 +77,16 @@ namespace RA.Models.Input
 		/// Organization(s) that offer this resource
 		/// </summary>
 		public List<OrganizationReference> OfferedBy { get; set; } = new List<OrganizationReference>();
+
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
 	} //
 
 

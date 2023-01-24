@@ -16,7 +16,7 @@ namespace RA.Models.Input
 		/// Concept
 		/// ConceptScheme: <see cref="https://credreg.net/ctdl/terms/AudienceLevel"/>
 		/// </summary>
-		public List<string> CreditLevelType { get; set; } = new List<string>();
+		public List<string> CreditLevelType { get; set; } = null;
 
 		/// <summary>
 		/// Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. For example:
@@ -24,7 +24,7 @@ namespace RA.Models.Input
 		/// If this object is a monetary purpose, the UnitText would typically be the related currency for the value (example: "USD")
 		/// ConceptScheme: <see cref="https://credreg.net/ctdl/terms/CreditUnit"/>
 		/// </summary>
-		public List<string> CreditUnitType { get; set; } = new List<string>();
+		public List<string> CreditUnitType { get; set; } = null;
 
 		/// <summary>
 		/// Optional description of the value, using either a string value or as a language map
@@ -33,7 +33,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately use a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		public LanguageMap Description_Map { get; set; } = null;
 
 
 		/// <summary>
@@ -46,11 +46,11 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Optional subjects that are relevent for this Value Profile
 		/// </summary>
-		public List<string> Subject { get; set; } = new List<string>();
+		public List<string> Subject { get; set; } = null;
 		/// <summary>
 		/// Alternately use a language map list
 		/// </summary>
-		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList Subject_Map { get; set; } = null;
 
 		/// <summary>
 		/// A single value for this purpose. 

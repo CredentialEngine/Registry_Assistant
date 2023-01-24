@@ -544,9 +544,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<VerificationServiceProfile> VerificationServiceProfile { get; set; } = new List<VerificationServiceProfile>();
 
-		//VerificationServiceProfiles was originally added uncorrectly as plural. The latter is incorrrect and is being maintained for legacy references. VerificationServiceProfile should be used, and is checked first
-		//[Obsolete]
-		//public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; } = new List<VerificationServiceProfile>();
 
 		//pending
 		public List<CredentialingAction> AccreditAction { get; set; } = new List<CredentialingAction>();

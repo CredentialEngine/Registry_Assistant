@@ -156,8 +156,7 @@ namespace RA.Models.Input
 
 		#region *** Recommended Benchmark ***
 		/// <summary>
-		///  Competency evaluated through the assessment.
-		///  
+		///  Competency evaluated through the assessment.  
 		/// </summary>
 		public List<CredentialAlignmentObject> Assesses { get; set; }
 
@@ -266,8 +265,6 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Provide credit information in a ValueProfile value
 		/// A credit-related value.
-		/// 21-07-19 - updating Creditvalue to also allow a list. It is defined as an object. The API will accept either a ValueProfile object or List of ValueProfiles
-		/// 21-08-18 - Changing permantly to the List, as only existing use was from the publisher (and the latter is updated to use the list)
 		/// </summary>
 		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 

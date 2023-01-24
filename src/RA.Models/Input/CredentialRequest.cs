@@ -234,12 +234,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CredentialId { get; set; }
 
-		/// <summary>
-		/// Provide credit information in a ValueProfile value
-		/// A credit-related value.
-		/// 22-08-30 - NEW
-		/// </summary>
-		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 
 		/// <summary>
 		/// Effective date of the content of this profile

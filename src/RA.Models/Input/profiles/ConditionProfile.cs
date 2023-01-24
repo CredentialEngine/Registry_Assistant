@@ -60,7 +60,6 @@ namespace RA.Models.Input
 		/// This should be single, but as CTDL defines as multi-value, need to handle a List of OrganizationReference
 		/// </summary>
 		public List<OrganizationReference> AssertedBy { get; set; } 
-		//public object AssertedBy { get; set; } = new object();
 
 		/// <summary>
 		///  Webpage that describes this condition

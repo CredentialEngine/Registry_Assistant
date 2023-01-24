@@ -33,15 +33,5 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Registry { get; set; } = "";
 
-		
-		/// <summary>
-		/// Future use
-		/// Allow publishing of custom concepts etc. The property type would be required, as well as an Id. 
-		/// The Id would be a Guid (TBD). The related property would have the same indentifier is say CreditLevelType
-		/// 
-		/// Allowed (So far)
-		/// </summary>
-		public List<object> ReferenceObject { get; set; } = new List<object>();
-	}
 
 }

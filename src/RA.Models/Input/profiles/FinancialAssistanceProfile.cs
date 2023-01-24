@@ -39,5 +39,16 @@ namespace RA.Models.Input
 		/// Recommended
 		/// </summary>
 		public List<QuantitativeValue> FinancialAssistanceValue { get; set; } = new List<QuantitativeValue>();
+
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
+
 	}
 }

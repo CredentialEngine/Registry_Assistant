@@ -16,6 +16,7 @@ namespace RA.Models.Input
 		/// External Audience Type
 		/// List of concepts that don't exist in the registry. Will be published as blank nodes
 		/// OR should input be a list of Concepts?
+		/// This would be replaced by ReferenceConcepts, no these are defined as CAO !!!!
 		/// </summary>
 		public List<CredentialAlignmentObject> ExternalAudienceType { get; set; } = new List<CredentialAlignmentObject>();
 

@@ -82,6 +82,15 @@ namespace RA.Models.Input.profiles.QData
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
+		/// <summary>
 		/// Relevant Data Set For
 		/// Data set for the entity being referenced.
 		/// REQUIRED when dataSetProfile published separately.

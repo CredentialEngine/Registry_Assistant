@@ -42,6 +42,15 @@ namespace RA.Models.Input.profiles.QData
 		public string Name { get; set; }
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
 		public string StartDate { get; set; }
 		public string EndDate { get; set; }
 	}

@@ -14,7 +14,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Collection to publish
 		/// </summary>
-		public Collection Collection { get; set; }
+		public Collection Collection { get; set; } = new Collection();
 		/// <summary>
 		/// Members can be any of:
 		/// "ceterms:AssessmentProfile",
@@ -38,40 +38,6 @@ namespace RA.Models.Input
 		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
 	}
 
-	public class CollectionUpdateRequest : BaseRequest
-	{
-		/// <summary>
-		/// Collection to update
-		/// TODO - would we want to allow updating the collection as well?
-		/// </summary>
-		public string CollectionCTID { get; set; }
-		/// <summary>
-		/// Members can be any of:
-		/// "ceterms:AssessmentProfile",
-		/// "ceterms:CollectionMember",
-		/// "ceterms:Credential", //any of the valid credential subclasses
-		/// "ceasn:Competency",
-		/// "ceterms:Course",
-		/// "ceterms:Job",
-		/// "ceterms:LearningOpportunityProfile",
-		/// "ceterms:LearningProgram",
-		/// "ceterms:Occupation",
-		/// "ceterms:Task",
-		/// "ceterms:WorkRole",
-		/// </summary>
-		public List<object> Members { get; set; } = new List<object>();
-
-		/// <summary>
-		/// CollectionMember
-		/// Collection members will be published in the graph like Members, but have a separate input propery for better organization
-		/// </summary>
-		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
-
-		/// <summary>
-		/// List of members to remove from a collection
-		/// </summary>
-		public List<string> RemoveMembers { get; set; } = new List<string>();
-	}
 	/// <summary>
 	/// Proposed option to publish a document already formatted as CTDL JSON-LD.
 	/// </summary>
@@ -114,7 +80,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Category or classification of this resource.
 		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-		/// URI to a concept(based on the ONet work activities example)
+		/// URI to a concept(based on the O*Net work activities example). 
+		/// OR can use blank nodes where the blank node Id would be in this list
 		/// Recommend using CTIDs
 		/// ceterms:classification
 		/// </summary>
@@ -159,8 +126,6 @@ namespace RA.Models.Input
 		/// Resource in a Collection.
 		/// REQUIRED - or must at least one of Request.Members, or Request.CollectionMembers must have contents.
 		/// List of URIs
-		/// NEW - using object, as could be: CTID, URI, or CollectionMember, or credential classes, assessment, learning classes, 
-		/// Current Range
 		/// ceasn:Competency, any credential type, ceterms:AssessmentProfile, ceterms:Task ceterms:WorkRole ceterms:Job ceterms:Course ceterms:LearningOpportunityProfile ceterms:LearningProgram
 		/// List of CTIDs (recommended) or URIs
 		/// </summary>
@@ -238,7 +203,6 @@ namespace RA.Models.Input
 		/// Webpage that describes this entity.
 		/// </summary>
 		public string SubjectWebpage { get; set; }
-		//public List<string> SubjectWebpage { get; set; } = new List<string>();
 
 		#region Occupations, Industries, and instructional programs
 		//=====================================================================
@@ -381,6 +345,15 @@ namespace RA.Models.Input
 		/// xsd:date
 		/// </summary>
 		public string EndDate { get; set; }
+
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 
 	}
 }

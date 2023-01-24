@@ -240,12 +240,10 @@ namespace RA.Models.Input
 	public class Concept  
 	{
 
-		//[JsonProperty( "@id" )]
-		//public string Id { get; set; }
-
 		/// <summary>
 		/// CTID - identifier for concept. 
 		/// Format: ce-UUID (lowercase)
+		/// Required
 		/// example: ce-a044dbd5-12ec-4747-97bd-a8311eb0a042
 		/// </summary>
 		public string CTID { get; set; }
@@ -268,7 +266,7 @@ namespace RA.Models.Input
 		public List<string> AltLabel { get; set; } = new List<string>();
 
 		/// <summary>
-		/// rdf:langString
+		///  Alternative Label language map
 		/// </summary>
 		public LanguageMapList AltLabel_Map { get; set; } = new LanguageMapList();
 
@@ -284,26 +282,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> BroadMatch { get; set; } = new List<string>();
 
-
 		/// <summary>
 		/// Text describing a significant change to the concept.
 		/// </summary>
 		public List<string> ChangeNote { get; set; } = new List<string>();
 		public LanguageMapList ChangeNote_Map { get; set; } = new LanguageMapList();
 
-
 		/// <summary>
 		/// Assertion indicates that two concepts are sufficiently similar that they can be used interchangeably.
 		/// List of Concept URLs(CTIDs)
 		/// </summary>
 		public List<string> CloseMatch { get; set; } = new List<string>();
-		//public string DateCreated { get; set; }
-
-		///// <summary>
-		/////Last modified date for concept
-		///// </summary>
-		//public string DateModified { get; set; }
-
 
 		/// <summary>
 		/// Supplies a complete explanation of the intended meaning of a concept.
@@ -334,9 +323,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public string InScheme { get; set; }
 
-		//public string Language { get; set; }
-
-
 		/// <summary>
 		/// Concept that is narrower in some way than this concept.
 		/// List of Concept URLs(CTIDs)
@@ -356,9 +342,11 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Annotations to the concept for purposes of general documentation.
-		/// rdf:langString
 		/// </summary>
 		public List<string> Note { get; set; } = new List<string>();
+		/// <summary>
+		/// Annotations to the concept for purposes of general documentation - language map list.
+		/// </summary>
 		public LanguageMapList Note_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
@@ -374,15 +362,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> PrecededBy { get; set; }
 
-
-
 		/// <summary>
 		/// Assertion indicating an associative, non-hierarchical relationship between the two concepts where neither is broader nor narrower than the other.
 		/// List of Concept URLs(CTIDs)
 		/// </summary>
 		public List<string> Related { get; set; } = new List<string>();
-		
-		//public List<string> RelatedMatch { get; set; } = new List<string>();
+
+		public string SubjectWebpage { get; set; }
 		/// <summary>
 		/// Indicates the entity that supersedes this entity.
 		/// URL
@@ -394,17 +380,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public string TopConceptOf { get; set; }
 
-
-
-		public string CodeNEC { get; set; }
-		public string LegacyCodeNEC { get; set; }
-		public List<string> SourceCareerFieldCode { get; set; } = new List<string>();
 	}
 
-	//public class MilitaryConcept : Concept
-	//{
-	//	public string CodeNEC { get; set; }
-	//	public string LegacyCodeNEC { get; set; }
-	//	public string SourceCareerFieldCode { get; set; }
-	//}
 }
