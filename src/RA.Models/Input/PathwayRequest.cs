@@ -246,7 +246,23 @@ namespace RA.Models.Input
 		/// </summary>
 		public string PathwayComponentType { get; set; }
 
+
+
+		/// <summary>
+		/// PathwayComponent Name
+		/// Required
+		/// </summary>
+		public string Name { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
 		#region Common Properties
+		/// <summary>
+		/// CTID
+		/// Required
+		/// </summary>
 		public string CTID { get; set; }
 
 		/// <summary>
@@ -317,16 +333,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> IsPartOf { get; set; } = new List<string>();
 
-
-
-		/// <summary>
-		/// PathwayComponent Name
-		/// </summary>
-		public string Name { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// List of Alternate Names for this resource

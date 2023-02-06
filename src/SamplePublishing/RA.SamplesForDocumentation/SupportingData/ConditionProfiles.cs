@@ -127,10 +127,12 @@ namespace RA.SamplesForDocumentation
 			//same idea for assessments and credentials
 			output.TargetAssessment = new List<EntityReference>();
 			output.TargetCredential = new List<EntityReference>();
+
 			//target competencies are Credential Alignment Objects
+			//- add an entry for each relevent competency 
 			output.TargetCompetency = new List<CredentialAlignmentObject>()
 			{
-				//just the CTID for a competency in the registry
+				//just the CTID for a competency in the registry (a
 				new CredentialAlignmentObject()
 				{
 					CTID="ce-07a645c7-1f5b-4a23-9733-13d9dcf4290e"
@@ -146,12 +148,22 @@ namespace RA.SamplesForDocumentation
 				}
 			};
 
-			//Alternative Condition
-			//Constraints, prerequisites, entry conditions, or requirements in a context where more than one alternative condition or path has been defined and from which any one path fulfills the parent condition.
+            //***** Feb. 03, 2023 *****
+            //NEW helper property
+            //This property was added to simplify referencing competencies that may have been entered in an external system such as CaSS.
+            //Rather than populating the TargetCompetency list, just provide the CTID for a competency framework in the registry. 
+            //The API will:
+            //	- validate that a provided CTID is for a framework that exists in the registry
+            //	- if valid, the API will extract all competencies from the framwork and format a credential alignment object for each one
+            //	- TargetCompetency will be populated with the latter list and published with the ConditionProfile
+            output.TargetCompetencyFramework = new List<string>() { "ce-fa61f374-c455-4f76-8795-d2d16ba40549" };
 
-			//when use the description would probably provide some direction such as
-			//			"...one of the programs referenced in the AlternativeCondition must be completed."
-			output.AlternativeCondition = GetAlternativeConditions();
+            //Alternative Condition
+            //Constraints, prerequisites, entry conditions, or requirements in a context where more than one alternative condition or path has been defined and from which any one path fulfills the parent condition.
+
+            //when use the description would probably provide some direction such as
+            //			"...one of the programs referenced in the AlternativeCondition must be completed."
+            output.AlternativeCondition = GetAlternativeConditions();
 			return output;
 		}
 

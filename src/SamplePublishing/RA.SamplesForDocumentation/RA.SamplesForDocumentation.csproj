@@ -90,6 +90,7 @@
     <Compile Include="ScheduledOffering\PublishSimple.cs" />
     <Compile Include="SupportingData\ConditionProfiles.cs" />
     <Compile Include="SupportingData\CostProfiles.cs" />
+    <Compile Include="SupportingData\DurationProfiles.cs" />
     <Compile Include="SupportingData\FinancialAssistanceProfile.cs" />
     <Compile Include="SupportingData\Industries.cs" />
     <Compile Include="SupportingData\InstructionalProgram_CIP.cs" />

@@ -318,7 +318,6 @@ namespace RA.Models.Input
 	/// </summary>
 	public class Competency 
     {
-        //required": [ "@type", "@id", "ceasn:competencyText", "ceasn:inLanguage", "ceasn:isPartOf", "ceterms:ctid" ]
         
 		/// <summary>
 		/// Helper property for use with blank nodes
