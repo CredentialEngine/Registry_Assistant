@@ -143,7 +143,14 @@ namespace RA.SamplesForDocumentation
 					TargetNodeDescription="Description of this outcome item",
 					FrameworkName="Optional name of this framework",
 					Framework="https://example.org/optionalCompetencyFrameworkURL"
-				}
+				},
+				new CredentialAlignmentObject()
+				{
+					Framework= "https://sandbox.credentialengineregistry.org/resources/ce-fa61f374-c455-4f76-8795-d2d16ba40549",
+					TargetNode= "https://sandbox.credentialengineregistry.org/resources/ce-93dbdedb-c455-4b03-9b3a-0b0edc3f43a7",
+					FrameworkName= "Financial Accounting - CORE OUTCOMES",
+					TargetNodeName= "Identify and demonstrate the effects of transactions and economic events on the financial statements in corporations and other business entities"
+				},
 			};
 
 			//Alternative Condition
