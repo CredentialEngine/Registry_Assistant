@@ -146,6 +146,7 @@ namespace RA.SamplesForDocumentation
 					FrameworkName="Optional name of this framework",
 					Framework="https://example.org/optionalCompetencyFrameworkURL"
 				},
+				//example for a competency in the credential registry
 				new CredentialAlignmentObject()
 				{
 					Framework= "https://sandbox.credentialengineregistry.org/resources/ce-fa61f374-c455-4f76-8795-d2d16ba40549",
