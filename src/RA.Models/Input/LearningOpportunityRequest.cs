@@ -52,12 +52,12 @@ namespace RA.Models.Input
 
 			Teaches = new List<CredentialAlignmentObject>();
 
-			AdvancedStandingFrom = new List<Connections>();
-			IsAdvancedStandingFor = new List<Connections>();
-			PreparationFrom = new List<Connections>();
-			IsPreparationFor = new List<Connections>();
-			IsRecommendedFor = new List<Connections>();
-			IsRequiredFor = new List<Connections>();
+			AdvancedStandingFrom = new List<ConnectionProfile>();
+			IsAdvancedStandingFor = new List<ConnectionProfile>();
+			PreparationFrom = new List<ConnectionProfile>();
+			IsPreparationFor = new List<ConnectionProfile>();
+			IsRecommendedFor = new List<ConnectionProfile>();
+			IsRequiredFor = new List<ConnectionProfile>();
 			InLanguage = new List<string>();
 			AvailableAt = new List<Place>();
 			CommonConditions = new List<string>();
@@ -400,16 +400,37 @@ namespace RA.Models.Input
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 
 
-		#region Occupations, Industries, and instructional programs
-		//=====================================================================
-		//List of occupations from a published framework, that is with a web URL
-		/// <summary>
-		/// OccupationType
-		/// Type of occupation; select from an existing enumeration of such types.
-		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
-		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
-		/// </summary>
-		public List<FrameworkItem> OccupationType { get; set; }
+
+        /// <summary>
+        /// Type of frequency at which a resource is offered; select from an existing enumeration of such types.
+        /// ConceptScheme: ceterms:ScheduleFrequency
+        /// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly
+        /// </summary>
+        public List<string> OfferFrequencyType { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Type of frequency with which events typically occur; select from an existing enumeration of such types.
+        /// ConceptScheme: ceterms:ScheduleFrequency
+        /// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly
+        /// </summary>
+        public List<string> ScheduleFrequencyType { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Type of time at which events typically occur; select from an existing enumeration of such types.
+        /// ConceptScheme: ceterms:ScheduleTiming
+        /// scheduleTiming:Daytime scheduleTiming:Evening scheduleTiming:Weekdays scheduleTiming:Weekends
+        /// </summary>
+        public List<string> ScheduleTimingType { get; set; } = new List<string>();
+        #region Occupations, Industries, and instructional programs
+        //=====================================================================
+        //List of occupations from a published framework, that is with a web URL
+        /// <summary>
+        /// OccupationType
+        /// Type of occupation; select from an existing enumeration of such types.
+        ///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
+        ///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
+        /// </summary>
+        public List<FrameworkItem> OccupationType { get; set; }
 		/// <summary>
 		/// AlternativeOccupationType
 		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
@@ -517,7 +538,7 @@ namespace RA.Models.Input
 		/// ceterms:advancedStandingFrom
 		/// <seealso href="https://credreg.net/ctdl/terms/advancedStandingFrom"></seealso>
 		/// </summary>
-		public List<Connections> AdvancedStandingFrom { get; set; }
+		public List<ConnectionProfile> AdvancedStandingFrom { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity reduces the time or cost required to earn or complete the referenced credential, assessment, or learning opportunity.
@@ -525,35 +546,35 @@ namespace RA.Models.Input
 		/// ceterms:isAdvancedStandingFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isAdvancedStandingFor">isAdvancedStandingFor</seealso>
 		/// </summary>
-		public List<Connections> IsAdvancedStandingFor { get; set; }
+		public List<ConnectionProfile> IsAdvancedStandingFor { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity provides preparation for the credential, assessment, or learning opportunity being referenced.
 		/// ceterms:isPreparationFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isPreparationFor">isPreparationFor</seealso>
 		/// </summary>
-		public List<Connections> IsPreparationFor { get; set; }
+		public List<ConnectionProfile> IsPreparationFor { get; set; }
 
 		/// <summary>
 		/// It is recommended to earn or complete this credential, assessment, or learning opportunity before attempting to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// ceterms:isRecommendedFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isRecommendedFor">isRecommendedFor</seealso>
 		/// </summary>
-		public List<Connections> IsRecommendedFor { get; set; }
+		public List<ConnectionProfile> IsRecommendedFor { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity must be earned or completed prior to attempting to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// ceterms:isRequiredFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isRequiredFor"></seealso>
 		/// </summary>
-		public List<Connections> IsRequiredFor { get; set; }
+		public List<ConnectionProfile> IsRequiredFor { get; set; }
 
 		/// <summary>
 		///  Another credential, learning opportunity or assessment that provides preparation for this credential, learning opportunity or assessment.
 		/// ceterms:preparationFrom
 		/// <seealso href="https://credreg.net/ctdl/terms/preparationFrom"></seealso>
 		/// </summary>
-		public List<Connections> PreparationFrom { get; set; }
+		public List<ConnectionProfile> PreparationFrom { get; set; }
 		#endregion
 
 		#region -- Quality Assurance BY --
@@ -635,10 +656,7 @@ namespace RA.Models.Input
 		/// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.
 		/// </summary>
 		public List<EntityReference> TargetAssessment { get; set; }
-		/// <summary>
-		/// Learning opportunity that is the focus of a condition, process or another learning opportunity.
-		/// </summary>
-		public List<EntityReference> TargetLearningOpportunity { get; set; }
+
 
 		/// <summary>
 		/// Learning object or resource that is used as part of an learning activity.
@@ -659,17 +677,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public string SCED { get; set; }
 
-
-
-		/// <summary>
-		/// PENDING
-		///  Indicates an offering and typical schedule.
-		///  NOTE: Only use this property when it is necessary and useful to provide data about specific offerings of a learning opportunity or assessment, such as particular combinations of schedule, location, and delivery.
-		///  IN DEVELOPMENT ONLY
-		/// </summary>
-		public List<ScheduledOffering> HasOffering { get; set; } = new List<ScheduledOffering>();
-
-
+        /// <summary>
+        ///  Indicates an offering and typical schedule.
+        ///  NOTE: Only use this property when it is necessary and useful to provide data about specific offerings of a learning opportunity or assessment, such as particular combinations of schedule, location, and delivery.
+        /// </summary>
+        public List<string> HasOffering { get; set; } = new List<string>();
 
 		#region Properties allowed only for learning programs
 		//these will be ignored for all other types

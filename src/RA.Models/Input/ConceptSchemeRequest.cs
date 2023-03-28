@@ -216,15 +216,14 @@ namespace RA.Models.Input
 		///  An agent owning or managing rights over this resource.
 		///  Use OrganizationReference for flexibility
 		/// </summary>
-		public OrganizationReference RightsHolder { get; set; } = new OrganizationReference();
+		public List<OrganizationReference> RightsHolder { get; set; } = new List<OrganizationReference>();
 
 
 		/// <summary>
 		/// Original Source of concept scheme
-		/// REQUIRED
 		/// xsd:anyURI
 		/// </summary>
-		public string Source { get; set; }
+		public List<string> Source { get; set; }
 
 		/// <summary>
 		///  Indicates the entity that supersedes this entity.

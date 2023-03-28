@@ -6,47 +6,43 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
-	/// <summary>
-	/// Credentialing Action
-	/// One of:
-	/// ceterms:AccreditAction ceterms:AdvancedStandingAction ceterms:ApproveAction ceterms:CredentialingAction ceterms:OfferAction ceterms:RecognizeAction ceterms:RegulateAction ceterms:RenewAction ceterms:RevokeAction ceterms:RightsAction
-	/// </summary>
-	public class CredentialingAction
+    /// <summary>
+    /// Credentialing Action
+    /// One of:
+    /// ceterms:AccreditAction 
+    /// ceterms:AdvancedStandingAction 
+    /// ceterms:ApproveAction 
+    /// ceterms:CredentialingAction 
+    /// ceterms:OfferAction 
+    /// ceterms:RecognizeAction 
+    /// ceterms:RegulateAction 
+    /// ceterms:RenewAction 
+    /// ceterms:RevokeAction 
+	/// ceterms:RightsAction
+    /// ceterms:WorkforceDemandAction
+    /// </summary>
+    public class CredentialingAction
 	{
-		/* One of
-			ceterms:AccreditAction
-			ceterms:AdvancedStandingAction
-			ceterms:ApproveAction
-			ceterms:CredentialingAction
-			ceterms:OfferAction
-			ceterms:RecognizeAction
-			ceterms:RegulateAction
-			ceterms:RenewAction
-			ceterms:RevokeAction
-			ceterms:RightsAction
-			21-09-07 ceterms:WorkforceDemandAction
-				the latter does have additional properties
-		 */
-		/// <summary>
-		/// Action type
-		/// Required
-		/// </summary>
-		public string Type { get; set; }
-
 
 		/// <summary>
 		/// Action Status
 		/// Types of current status of an action.
-		/// Available statuses include ActiveActionStatus, CompletedActionStatus, FailedActionStatus, PotentialActionStatus.
+		/// REQUIRED
+		/// Available statuses include:
+		///		ActiveActionStatus, 
+		///		CompletedActionStatus, 
+		///		FailedActionStatus, 
+		///		PotentialActionStatus.
 		/// <see href="https://credreg.net/ctdl/terms/ActionStatus">ActionStatus</see>
 		/// </summary>
 		public string ActionStatusType { get; set; }
 
 		/// <summary>
 		/// Acting Agent
+		/// REQUIRED
 		/// Provide the CTID for a participant in the Credential Registry or provide minimum data where not in the registry.
 		/// </summary>
-		public OrganizationReference ActingAgent { get; set; } = new OrganizationReference();
+		public List<OrganizationReference> ActingAgent { get; set; } 
 
 		/// <summary>
 		/// Accredit Action Description
@@ -90,17 +86,6 @@ namespace RA.Models.Input
 		public List<OrganizationReference> Participant { get; set; } = new List<OrganizationReference>();
 
 		/// <summary>
-		/// Resulting Award			DO NOT USE
-		/// Awarded credential resulting from an action.
-		/// Domain: RenewAction, AccreditAction
-		/// Range: ceterms:CredentialAssertion 
-		///				- Representation of a credential awarded to a person.
-		/// ???		https://www.imsglobal.org/sites/default/files/Badges/OBv2p0Final/index.html#Assertion
-		/// NO Properties defined as yet 
-		/// </summary>
-		public string ResultingAward { get; set; }
-
-		/// <summary>
 		/// Date this action starts.
 		/// Full date is required
 		/// xsd:date
@@ -114,5 +99,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public string EndDate { get; set; }
 
-	}
+
+        /// <summary>
+        /// Jurisdiction Profile
+		/// ONLY valid for WorkforceDemandAction
+        /// Geo-political information about applicable geographic areas and their exceptions.
+        /// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"></see>
+        /// </summary>
+        public List<Jurisdiction> Jurisdiction { get; set; }
+    }
 }

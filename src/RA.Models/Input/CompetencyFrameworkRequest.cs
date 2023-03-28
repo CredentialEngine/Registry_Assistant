@@ -125,8 +125,9 @@ namespace RA.Models.Input
 		/// Derived From
 		/// A third party version of the entity being reference that has been modified in meaning through editing, extension or refinement.
 		/// List of URIs to frameworks
+		/// 2023-03-22 The datatype was changed to a list. The API will still handle a single string.
 		/// </summary>
-		public string derivedFrom { get; set; }
+		public List<string> derivedFrom { get; set; }
 
 		/// <summary>
 		/// A short description of this competency framework.
@@ -224,13 +225,14 @@ namespace RA.Models.Input
 		/// </summary>
 		public string rights { get; set; }
 		public LanguageMap rights_map { get; set; } = new LanguageMap();
-		//public List<string> rights { get; set; } = new List<string>();
+        //public List<string> rights { get; set; } = new List<string>();
 
-		/// <summary>
-		/// An agent owning or managing rights over this competency framework.
-		/// URL
-		/// </summary>
-		public string rightsHolder { get; set; }
+        /// <summary>
+        /// An agent owning or managing rights over this competency framework.
+        /// List of URLs
+        /// 2023-03-22 The datatype was changed to a list. The API will still handle a single string.
+        /// </summary>
+        public List<string> rightsHolder { get; set; }
 
 		/// <summary>
 		///  The original competency framework which this competency framework is based on or derived from.
@@ -475,12 +477,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public string dateModified { get; set; }
 
-		/// <summary>
-		/// Derived From
-		/// A version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
-		/// Single URI (CTID recommended) to a competency
-		/// </summary>
-		public string derivedFrom { get; set; }
+        /// <summary>
+        /// Derived From
+        /// A version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
+        /// List of URIs (CTIDs recommended) to a competency
+        /// 2023-03-22 The datatype was changed to a list. The API will still handle a single string.
+        /// </summary>
+        public List<string> derivedFrom { get; set; }
 
 		/// <summary>
 		/// Education Level Type

@@ -113,7 +113,7 @@ namespace RA.Models.Input
 		public List<DataSetProfile> RelevantDataSet { get; set; } = new List<DataSetProfile>();
 
 		/// <summary>
-		/// Typically the DataSetProfile information will be published with the credential. 
+		/// Typically the DataSetProfile information will be published with the credential/learning opp, etc.
 		/// In the future there could be use cases where a reference to an existing dataSetProfile will be published with the credential.
 		/// </summary>
 		public List<string> RelevantDataSetList { get; set; }

@@ -93,8 +93,10 @@ namespace RA.Models.Input
 				if ( Type == "ceterms:LearningOpportunityProfile"
 					|| Type == "LearningOpportunityProfile"
 					|| Type == "Course"
-					|| Type == "LearningProgram"
-					)
+                    || Type == "ceterms:Course"
+                    || Type == "LearningProgram"
+                    || Type == "ceterms:LearningProgram"
+                    )
 					return true;
 				else
 					return false;

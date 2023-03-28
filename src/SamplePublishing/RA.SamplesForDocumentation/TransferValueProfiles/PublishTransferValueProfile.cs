@@ -120,10 +120,12 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "https://myOrganization.com",
 				Description = "While optional, a description is helpful."
 			};
-			transferValueFrom.OwnedBy = new List<OrganizationReference>();
-			transferValueFrom.OwnedBy.Add( ownedBy );
+            transferValueFrom.OwnedBy = new List<OrganizationReference>
+            {
+                ownedBy
+            };
 
-			myData.TransferValueFrom.Add( transferValueFrom );
+            myData.TransferValueFrom.Add( transferValueFrom );
 			myData.TransferValueFrom.Add( AddTransferFromLearningOpportunity() );
 
 			//===================================================================================

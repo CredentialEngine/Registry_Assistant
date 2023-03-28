@@ -232,7 +232,7 @@ namespace RA.SamplesForDocumentation
 			//Connections between credentials can be published using properties such as
 			//- isPreparationFor, PreparationFrom, isAdvancedStandingFor, AdvancedStandingFrom, IsRequiredFor, and IsRecommendedFor. 
 			//example of a connection to a credential for which the current credential will prepare a student.
-			var isPreparationFor = new Connections
+			var isPreparationFor = new ConnectionProfile
 			{
 				Description = "This certification will prepare a student for the target credential",
 				TargetCredential = new List<EntityReference>()
@@ -250,7 +250,7 @@ namespace RA.SamplesForDocumentation
 			myData.IsPreparationFor.Add( isPreparationFor );
 
 			//add credential that prepares for this credential. 
-			var preparationFrom = new Connections
+			var preparationFrom = new ConnectionProfile
 			{
 				Description = "This credential will prepare a student for this credential",
 				TargetCredential = new List<EntityReference>()

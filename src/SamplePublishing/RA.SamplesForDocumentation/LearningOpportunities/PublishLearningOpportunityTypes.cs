@@ -84,9 +84,9 @@ namespace RA.SamplesForDocumentation
 			//A learning opportunity *must* be connected to a credential in order to be published.
 			//The connection can be made using a Required condition profile in the Credential or using a RequiredFor from the learning opportunity
 
-			myData.IsRequiredFor = new List<Connections>()
+			myData.IsRequiredFor = new List<ConnectionProfile>()
 			{
-				new Connections()
+				new ConnectionProfile()
 				{
 					Description="This learning opportunity is required for the 'Acme Credential'.",
 					TargetCredential = new List<EntityReference>()
@@ -99,7 +99,7 @@ namespace RA.SamplesForDocumentation
 					}
 				},
 				//if the credential is not in the registry (often where the owner is not the same as the owner of the learning opportunity), or the publisher doesn't have the CTID, a full EntityReference can be provided. 
-				new Connections()
+				new ConnectionProfile()
 				{
 					Description="This learning opportunity is required for the 'Third Party Credential'.",
 					TargetCredential = new List<EntityReference>()
@@ -255,9 +255,9 @@ namespace RA.SamplesForDocumentation
 			//
 			//The connection can be made using a Required condition profile in the Credential or using a RequiredFor from the Course
 
-			myData.IsRequiredFor = new List<Connections>()
+			myData.IsRequiredFor = new List<ConnectionProfile>()
 			{
-				new Connections()
+				new ConnectionProfile()
 				{
 					Description="This Course is required for the 'Acme Credential'.",
 					TargetCredential = new List<EntityReference>()
@@ -270,7 +270,7 @@ namespace RA.SamplesForDocumentation
 					}
 				},
 				//if the credential is not in the registry (often where the owner is not the same as the owner of the Course), or the publisher doesn't have the CTID, a full EntityReference can be provided. 
-				new Connections()
+				new ConnectionProfile()
 				{
 					Description="This Course is required for the 'Third Party Credential'.",
 					TargetCredential = new List<EntityReference>()
@@ -434,9 +434,9 @@ namespace RA.SamplesForDocumentation
 			//A Learning Program *must* be connected to a credential in order to be published.
 			//The connection can be made using a Required condition profile in the Credential or using a RequiredFor from the Learning Program
 
-			myData.IsRequiredFor = new List<Connections>()
+			myData.IsRequiredFor = new List<ConnectionProfile>()
 			{
-				new Connections()
+				new ConnectionProfile()
 				{
 					Description="This Learning Program is required for the 'Acme Credential'.",
 					TargetCredential = new List<EntityReference>()
@@ -449,7 +449,7 @@ namespace RA.SamplesForDocumentation
 					}
 				},
 				//if the credential is not in the registry (often where the owner is not the same as the owner of the Learning Program), or the publisher doesn't have the CTID, a full EntityReference can be provided. 
-				new Connections()
+				new ConnectionProfile()
 				{
 					Description="This Learning Program is required for the 'Third Party Credential'.",
 					TargetCredential = new List<EntityReference>()

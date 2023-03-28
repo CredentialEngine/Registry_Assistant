@@ -60,12 +60,12 @@ namespace RA.Models.Input
 
 			AvailableAt = new List<Place>();
 
-			AdvancedStandingFrom = new List<Connections>();
-			IsAdvancedStandingFor = new List<Connections>();
-			PreparationFrom = new List<Connections>();
-			IsPreparationFor = new List<Connections>();
-			IsRecommendedFor = new List<Connections>();
-			IsRequiredFor = new List<Connections>();
+			AdvancedStandingFrom = new List<ConnectionProfile>();
+			IsAdvancedStandingFor = new List<ConnectionProfile>();
+			PreparationFrom = new List<ConnectionProfile>();
+			IsPreparationFor = new List<ConnectionProfile>();
+			IsRecommendedFor = new List<ConnectionProfile>();
+			IsRequiredFor = new List<ConnectionProfile>();
 
 			ExternalResearch = new List<string>();
 			InLanguage = new List<string>();
@@ -265,6 +265,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Provide credit information in a ValueProfile value
 		/// A credit-related value.
+		/// 21-07-19 - updating Creditvalue to also allow a list. It is defined as an object. The API will accept either a ValueProfile object or List of ValueProfiles
+		/// 21-08-18 - Changing permantly to the List, as only existing use was from the publisher (and the latter is updated to use the list)
 		/// </summary>
 		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 
@@ -308,13 +310,20 @@ namespace RA.Models.Input
 		/// Whether or not two or more participants are required to complete the assessment activity.
 		/// </summary>
 		public bool? HasGroupParticipation { get; set; }
-		//
-		/// <summary>
-		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
-		/// ceterms:identifier
-		/// </summary>
-		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+        //
+
+        /// <summary>
+        ///  Indicates an offering and typical schedule.
+        ///  NOTE: Only use this property when it is necessary and useful to provide data about specific offerings of a learning opportunity or assessment, such as particular combinations of schedule, location, and delivery.
+        /// </summary>
+        public List<string> HasOffering { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+        /// <see cref="https://purl.org/ctdl/terms/identifier"/>
+        /// ceterms:identifier
+        /// </summary>
+        public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
 		/// <summary>
 		/// Is Non-Credit
@@ -500,14 +509,33 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 
+        /// <summary>
+        /// Type of frequency at which a resource is offered; select from an existing enumeration of such types.
+        /// ConceptScheme: ceterms:ScheduleFrequency
+        /// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly
+        /// </summary>
+        public List<string> OfferFrequencyType { get; set; } = new List<string>();
 
-		#region Conditions and connections
-		//Connection Profiles are Condition Profiles but typically only a subject of the Condition Profile properties are used. 
-		/// <summary>
-		/// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
-		/// Set constraints, prerequisites, entry conditions, or requirements that are shared across an organization, organizational subdivision, set of credentials, or category of entities and activities.
-		/// </summary>
-		public List<string> CommonConditions { get; set; }
+        /// <summary>
+        /// Type of frequency with which events typically occur; select from an existing enumeration of such types.
+        /// ConceptScheme: ceterms:ScheduleFrequency
+        /// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly
+        /// </summary>
+        public List<string> ScheduleFrequencyType { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Type of time at which events typically occur; select from an existing enumeration of such types.
+        /// ConceptScheme: ceterms:ScheduleTiming
+        /// scheduleTiming:Daytime scheduleTiming:Evening scheduleTiming:Weekdays scheduleTiming:Weekends
+        /// </summary>
+        public List<string> ScheduleTimingType { get; set; } = new List<string>();
+        #region Conditions and connections
+        //Connection Profiles are Condition Profiles but typically only a subject of the Condition Profile properties are used. 
+        /// <summary>
+        /// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
+        /// Set constraints, prerequisites, entry conditions, or requirements that are shared across an organization, organizational subdivision, set of credentials, or category of entities and activities.
+        /// </summary>
+        public List<string> CommonConditions { get; set; }
 
 		/// <summary>
 		///  Resources that must be pursued concurrently.
@@ -540,7 +568,7 @@ namespace RA.Models.Input
 		/// ceterms:advancedStandingFrom
 		/// <seealso href="https://credreg.net/ctdl/terms/advancedStandingFrom"></seealso>
 		/// </summary>
-		public List<Connections> AdvancedStandingFrom { get; set; }
+		public List<ConnectionProfile> AdvancedStandingFrom { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity reduces the time or cost required to earn or complete the referenced credential, assessment, or learning opportunity.
@@ -548,35 +576,35 @@ namespace RA.Models.Input
 		/// ceterms:isAdvancedStandingFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isAdvancedStandingFor">isAdvancedStandingFor</seealso>
 		/// </summary>
-		public List<Connections> IsAdvancedStandingFor { get; set; }
+		public List<ConnectionProfile> IsAdvancedStandingFor { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity provides preparation for the credential, assessment, or learning opportunity being referenced.
 		/// ceterms:isPreparationFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isPreparationFor">isPreparationFor</seealso>
 		/// </summary>
-		public List<Connections> IsPreparationFor { get; set; }
+		public List<ConnectionProfile> IsPreparationFor { get; set; }
 
 		/// <summary>
 		/// It is recommended to earn or complete this credential, assessment, or learning opportunity before attempting to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// ceterms:isRecommendedFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isRecommendedFor">isRecommendedFor</seealso>
 		/// </summary>
-		public List<Connections> IsRecommendedFor { get; set; }
+		public List<ConnectionProfile> IsRecommendedFor { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity must be earned or completed prior to attempting to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// ceterms:isRequiredFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isRequiredFor"></seealso>
 		/// </summary>
-		public List<Connections> IsRequiredFor { get; set; }
+		public List<ConnectionProfile> IsRequiredFor { get; set; }
 
 		/// <summary>
 		///  Another credential, learning opportunity or assessment that provides preparation for this credential, learning opportunity or assessment.
 		/// ceterms:preparationFrom
 		/// <seealso href="https://credreg.net/ctdl/terms/preparationFrom"></seealso>
 		/// </summary>
-		public List<Connections> PreparationFrom { get; set; }
+		public List<ConnectionProfile> PreparationFrom { get; set; }
 		#endregion
 
 		#region -- Quality Assurance BY --

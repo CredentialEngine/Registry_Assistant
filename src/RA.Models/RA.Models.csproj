@@ -120,6 +120,7 @@
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />
     <Compile Include="Input\TransferIntermediaryRequest.cs" />
     <Compile Include="Input\TransferValueProfileRequest.cs" />
+    <Compile Include="Input\VerificationServiceProfileRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryAssistantResponse.cs" />
     <Compile Include="RequestHelper.cs" />

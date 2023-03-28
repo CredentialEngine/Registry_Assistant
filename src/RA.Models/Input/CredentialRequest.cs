@@ -87,12 +87,12 @@ namespace RA.Models.Input
 			HasPart = new List<EntityReference>();
 			IsPartOf = new List<EntityReference>();
 
-			AdvancedStandingFrom = new List<Connections>();
-			IsAdvancedStandingFor = new List<Connections>();
-			PreparationFrom = new List<Connections>();
-			IsPreparationFor = new List<Connections>();
-			IsRecommendedFor = new List<Connections>();
-			IsRequiredFor = new List<Connections>();
+			AdvancedStandingFrom = new List<ConnectionProfile>();
+			IsAdvancedStandingFor = new List<ConnectionProfile>();
+			PreparationFrom = new List<ConnectionProfile>();
+			IsPreparationFor = new List<ConnectionProfile>();
+			IsRecommendedFor = new List<ConnectionProfile>();
+			IsRequiredFor = new List<ConnectionProfile>();
 			InLanguage = new List<string>();
 			AvailableAt = new List<Place>();
 			Renewal = new List<ConditionProfile>();
@@ -210,18 +210,18 @@ namespace RA.Models.Input
 		/// <see href="https://credreg.net/ctdl/terms/Delivery"></see>
 		/// </summary>
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
-		/// <summary>
-		/// AvailableOnlineAt URL
-		/// </summary>
-		public List<string> AvailableOnlineAt { get; set; } = new List<string>();
-		/// <summary>
-		/// AvailabilityListing URL
-		/// </summary>
-		public List<string> AvailabilityListing { get; set; } = new List<string>();
-		/// <summary>
-		/// List of Addresses for this credential, using Place
-		/// </summary>
-		public List<Place> AvailableAt { get; set; }
+        /// <summary>
+        /// AvailableOnlineAt URL
+        /// </summary>
+        public List<string> AvailableOnlineAt { get; set; } = new List<string>();
+        /// <summary>
+        /// AvailabilityListing URL
+        /// </summary>
+        public List<string> AvailabilityListing { get; set; } = new List<string>();
+        /// <summary>
+        /// List of Addresses for this credential, using Place
+        /// </summary>
+        public List<Place> AvailableAt { get; set; }
 
 		/// <summary>
 		/// Person or organization holding the rights in copyright to entities such as credentials, learning opportunities, assessments, competencies or concept schemes.
@@ -234,6 +234,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CredentialId { get; set; }
 
+		///// <summary>
+		///// Provide credit information in a ValueProfile value
+		///// A credit-related value.
+		///// 22-08-30 - NEW ==> actually not approved yet
+		///// </summary>
+		//public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 
 		/// <summary>
 		/// Effective date of the content of this profile
@@ -560,6 +566,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
+		/// TODO: enable more detail by using a blank node in ReferenceObject. The latter would be a CredentialAlignmentObject. The Id would be a Guid in DegreeConcentration. Alternately a fully formed blank node id (	  _:(GUID)	)
 		/// </summary>
 		public List<string> DegreeConcentration { get; set; }
 		/// <summary>
@@ -614,11 +621,20 @@ namespace RA.Models.Input
 		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
 
 
-		#region -- Condition Profiles --
-		/// <summary>
-		/// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
-		/// </summary>
-		public List<string> CommonConditions { get; set; }
+        /// <summary>
+        /// Uses Verification Service
+		/// Reference to a service that is used to verify this Credential.
+		/// Range: ceterms:VerificationServiceProfile
+		/// List of CTIDs that reference a VerificationServiceProfile in the registry
+        /// </summary>
+        public List<string> UsesVerificationService { get; set; } = new List<string>();
+
+
+        #region -- Condition Profiles --
+        /// <summary>
+        /// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
+        /// </summary>
+        public List<string> CommonConditions { get; set; }
 		/// <summary>
 		/// Requirement or set of requirements for this resource
 		/// </summary>
@@ -651,7 +667,7 @@ namespace RA.Models.Input
 		/// ceterms:advancedStandingFrom
 		/// <seealso href="https://credreg.net/ctdl/terms/advancedStandingFrom"></seealso>
 		/// </summary>
-		public List<Connections> AdvancedStandingFrom { get; set; }
+		public List<ConnectionProfile> AdvancedStandingFrom { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity reduces the time or cost required to earn or complete the referenced credential, assessment, or learning opportunity.
@@ -659,35 +675,35 @@ namespace RA.Models.Input
 		/// ceterms:isAdvancedStandingFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isAdvancedStandingFor">isAdvancedStandingFor</seealso>
 		/// </summary>
-		public List<Connections> IsAdvancedStandingFor { get; set; }
+		public List<ConnectionProfile> IsAdvancedStandingFor { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity provides preparation for the credential, assessment, or learning opportunity being referenced.
 		/// ceterms:isPreparationFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isPreparationFor">isPreparationFor</seealso>
 		/// </summary>
-		public List<Connections> IsPreparationFor { get; set; }
+		public List<ConnectionProfile> IsPreparationFor { get; set; }
 
 		/// <summary>
 		/// It is recommended to earn or complete this credential, assessment, or learning opportunity before attempting to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// ceterms:isRecommendedFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isRecommendedFor">isRecommendedFor</seealso>
 		/// </summary>
-		public List<Connections> IsRecommendedFor { get; set; }
+		public List<ConnectionProfile> IsRecommendedFor { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity must be earned or completed prior to attempting to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// ceterms:isRequiredFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isRequiredFor"></seealso>
 		/// </summary>
-		public List<Connections> IsRequiredFor { get; set; }
+		public List<ConnectionProfile> IsRequiredFor { get; set; }
 
 		/// <summary>
 		///  Another credential, learning opportunity or assessment that provides preparation for this credential, learning opportunity or assessment.
 		/// ceterms:preparationFrom
 		/// <seealso href="https://credreg.net/ctdl/terms/preparationFrom"></seealso>
 		/// </summary>
-		public List<Connections> PreparationFrom { get; set; }
+		public List<ConnectionProfile> PreparationFrom { get; set; }
 		#endregion
 
 		#region -- Process Profiles --

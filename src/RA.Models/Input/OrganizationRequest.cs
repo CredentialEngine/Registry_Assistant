@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+
+using System;
 using System.Collections.Generic;
 
 namespace RA.Models.Input
@@ -541,12 +543,82 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Entity describing the means by which someone can verify whether a credential has been attained.
+		/// TODO on whether we will enable publishing these with an organization?
 		/// </summary>
+		[Obsolete]
 		public List<VerificationServiceProfile> VerificationServiceProfile { get; set; } = new List<VerificationServiceProfile>();
+		/// <summary>
+		/// LIst of CTIDS for existing Verification Service profiles
+		/// </summary>
+        public List<string> HasVerificationService{ get; set; } = new List<string>(); 
+
+        //VerificationServiceProfiles was originally added uncorrectly as plural. The latter is incorrrect and is being maintained for legacy references. VerificationServiceProfile should be used, and is checked first
+        //[Obsolete]
+        //public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; } = new List<VerificationServiceProfile>();
+
+        //pending
 
 
-		//pending
-		public List<CredentialingAction> AccreditAction { get; set; } = new List<CredentialingAction>();
 
-	}
+        #region CredentialingActions
+        /// <summary>
+        /// Action by an independent, neutral, and authoritative agent that certifies an entity as meeting a prescribed set of standards.
+		/// CredentialingAction
+        /// </summary>
+        public List<CredentialingAction> AccreditAction { get; set; }
+
+        /// <summary>
+        /// Claim by an agent asserting that the object credential of the action provides advanced standing for a credential under the asserting agent's authority.
+		/// CredentialingAction
+        /// </summary>
+        public List<CredentialingAction> AdvancedStandingAction { get; set; }
+        /// <summary>
+        /// Claim by an agent asserting that the object credential of the action provides advanced standing for a credential under the asserting agent's authority.
+        /// CredentialingAction
+        /// </summary>
+        public List<CredentialingAction> ApproveAction { get; set; }
+
+        /// <summary>
+        ///  Action by an authoritative agent offering access to a entity such as a credential, learning opportunity or assessment.
+        /// CredentialingAction
+        /// </summary>
+        public List<CredentialingAction> OfferAction { get; set; }
+
+        /// <summary>
+        /// Action by an independent, neutral, and authoritative agent acknowledging the validity of a resource.
+        /// CredentialingAction
+        /// </summary>
+        public List<CredentialingAction> RecognizeAction { get; set; }
+
+        /// <summary>
+        /// Action by an independent, neutral, and authoritative agent enforcing the legal requirements of a resource.
+        /// CredentialingAction
+        /// </summary>
+        public List<CredentialingAction> RegulateAction { get; set; }
+
+        /// <summary>
+        /// Action by an agent renewing an existing credential assertion.
+        /// CredentialingAction
+        /// </summary>
+        public List<CredentialingAction> RenewAction { get; set; }
+
+        /// <summary>
+        /// Action by an agent removing an awarded credential (credential assertion) from the credential holder based on violations or failure of the holder to renew.
+        /// CredentialingAction
+        /// </summary>
+        public List<CredentialingAction> RevokeAction { get; set; }
+
+        /// <summary>
+        ///Action asserting legal rights by an agent to possess, defend, transfer, license, and grant conditional access to a credential, learning opportunity, or assessment.
+        /// CredentialingAction
+        /// </summary>
+        public List<CredentialingAction> RightsAction { get; set; }
+
+        /// <summary>
+        /// Action taken by an agent asserting that the resource being described has a workforce demand level worthy of note.
+        /// CredentialingAction
+        /// </summary>
+        public List<CredentialingAction> WorkforceDemandAction { get; set; }
+        #endregion
+    }
 }

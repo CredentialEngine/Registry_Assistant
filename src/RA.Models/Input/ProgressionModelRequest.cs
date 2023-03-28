@@ -280,17 +280,15 @@ skos:topConceptOf
 		public LanguageMapList Note_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
-		/// Resource that logically comes after this resource.
-		/// This property indicates a simple or suggested ordering of resources; if a required ordering is intended, use ceterms:prerequisite instead.
-		/// Provide the CTID or the full URI for the target environment. 
-		/// ceterms:ComponentCondition
+		/// Progression Level that logically comes after this level.
+		/// Provide the CTID or the full URI for the target pathway component. 
 		/// </summary>
-		public List<string> Precedes { get; set; } = new List<string>();
+		public string Precedes { get; set; }
 
-		/// <summary>
-		/// Component is preceded by the referenced components
-		/// </summary>
-		public List<string> PrecededBy { get; set; }
+        /// <summary>
+        /// Progression Level is preceded by the referenced components
+        /// </summary>
+        public string PrecededBy { get; set; }
 
 		/// <summary>
 		/// URI to the Progression Model
