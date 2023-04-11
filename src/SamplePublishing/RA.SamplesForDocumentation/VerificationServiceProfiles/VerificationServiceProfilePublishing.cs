@@ -54,28 +54,11 @@ namespace RA.SamplesForDocumentation
             {
                 new OrganizationReference() { Type="Organization", CTID= organizationIdentifierFromAccountsSite }
             };
-            //list of target credentials
-            //these will have to have been published to the registry
-            //likely will be removed
-            output.TargetCredential = new List<EntityReference>()
+            //VerifiedClaimType: Type of claim provided through a verification service; select from an existing enumeration of such types.
+            output.VerifiedClaimType = new List<string>()
             {
-                new EntityReference()
-                {
-                    Type="Certification",
-                    CTID= "ce-969da20e-c127-4175-93f3-0722027ca7fc",
-                },
-                new EntityReference()
-                {
-                    Type="Certification",
-                    CTID= "ce-652f6f2c-4fff-45d0-9b2f-44a5bb61f927",
-                },
-                new EntityReference()
-                {
-                    Type="Certification",
-                    CTID= "ce-c7619be1-e35d-4e9e-b921-9d463f9dc15f",
-                }
+                "claimType:BadgeClaim", "claimType:TranscriptClaim"
             };
-
             //
 
             //add costs
@@ -105,8 +88,29 @@ namespace RA.SamplesForDocumentation
             } );
 
 
+            //list of target credentials
+            //these will have to have been published to the registry
+            //OBSOLETE: LIKELY WILL BE REMOVED
+            output.TargetCredential = new List<EntityReference>()
+            {
+                new EntityReference()
+                {
+                    Type="Certification",
+                    CTID= "ce-969da20e-c127-4175-93f3-0722027ca7fc",
+                },
+                new EntityReference()
+                {
+                    Type="Certification",
+                    CTID= "ce-652f6f2c-4fff-45d0-9b2f-44a5bb61f927",
+                },
+                new EntityReference()
+                {
+                    Type="Certification",
+                    CTID= "ce-c7619be1-e35d-4e9e-b921-9d463f9dc15f",
+                }
+            };
 
-            //This holds the Scheduled Offering and the identifier (CTID) for the owning organization
+            //This holds the Verification Service Profile and the identifier (CTID) for the offering organization
             var myRequest = new APIRequest()
             {
                 VerificationServiceProfile = output,

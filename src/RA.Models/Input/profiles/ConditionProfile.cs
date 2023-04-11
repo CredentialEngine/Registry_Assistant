@@ -60,7 +60,7 @@ namespace RA.Models.Input
 		/// Organization that asserts this condition
 		/// This should be single, but as CTDL defines as multi-value, need to handle a List
 		/// </summary>
-		public object AssertedBy { get; set; } = null;
+		public List<string> AssertedBy { get; set; } = null;
 
 		/// <summary>
 		///  Webpage that describes this condition
@@ -208,14 +208,14 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMapList AlternateName_Map { get; set; } = null;
 
-		#region Helpers
-		/// <summary>
-		/// Target Competency Framework - Helper property
-		/// A list of CTIDs (TBD if better to leave as single). 
-		/// API will look up framework, get all competencies and add as TargetCompetencies for this condition. 
-		/// NOTE: will likely only allow for a "Requires" condition profile
-		/// </summary>
-		public List<string> TargetCompetencyFramework { get; set; }
+        #region Helpers
+        /// <summary>
+        /// Target Competency Framework - Helper property
+        /// A list of CTIDs (TBD if better to leave as single). 
+        /// API will look up framework, get all competencies and add to TargetCompetency for this condition. 
+        /// NOTE: will likely only allow for a "Requires" condition profile
+        /// </summary>
+        public List<string> TargetCompetencyFramework { get; set; }
 
 
         #endregion

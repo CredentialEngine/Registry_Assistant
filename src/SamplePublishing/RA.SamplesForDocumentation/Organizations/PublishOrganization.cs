@@ -9,6 +9,7 @@ using RA.Models.Input;
 using YourOrganization = RA.SamplesForDocumentation.SampleModels.Organization;
 using APIRequestOrganization = RA.Models.Input.Organization;
 using APIRequest = RA.Models.Input.OrganizationRequest;
+using RA.SamplesForDocumentation.SupportingData;
 
 namespace RA.SamplesForDocumentation
 {
@@ -19,17 +20,26 @@ namespace RA.SamplesForDocumentation
 
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
-			// This is the CTID of the organization that owns the data being published
-			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
-			//Assign a CTID for the entity being published and keep track of it
-			//this must be permantently stored in partner system and used with all future updates. 
-			var myOrgCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
-			DataService.SaveOrganizationCTID( myOrgCTID );
+            if ( string.IsNullOrWhiteSpace( apiKey ) )
+            {
+                //ensure you have added your apiKey to the app.config
+            }
+            // This is the CTID of the organization that owns the data being published
+            var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
+            if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
+            {
+                //ensure you have added your organization account CTID to the app.config
+            }
+			//
+             //Assign a CTID for the entity being published and keep track of it
+             //this must be permantently stored in partner system and used with all future updates. 
+            var myOrgCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			//
 
 			//A simple organization object - see below for sample class definition
 			var myData = new Organization()
 			{
-				Name = "My Organization Name",
+				Name = "My API Example Organization Name",
 				Description = "This is some text that describes my organization.",
 				LifeCycleStatusType = "Active",
 				CTID = myOrgCTID,
@@ -122,8 +132,10 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "https://www.cswe.org/",
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
 			} );
+			myData.AdministrationProcess.Add(ProcessProfiles.GetAdministrativeProcessProfile( myOrgCTID ));
+            myData.DevelopmentProcess.Add( ProcessProfiles.GetDevelopementProcessProfile() );
 
-
+            myData.VerificationServiceProfile.Add( FormatVerificationServiceProfile( myOrgCTID ) );
 			//This holds the organization and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
 			{
@@ -140,7 +152,51 @@ namespace RA.SamplesForDocumentation
 			result = new SampleServices().SimplePost( "organization", "publish", payload, apiKey );
 			//Return the result
 			return result;
-		}
+        }
+        /// <summary>
+        /// Publish using data from an input class (populated from local data stores)
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public VerificationServiceProfile FormatVerificationServiceProfile( string orgCTID )
+        {
+			VerificationServiceProfile output = new VerificationServiceProfile()
+			{
+				Description = "Sample verification profile",
+				DateEffective="2020-01-01",
+                HolderMustAuthorize=true,
+				SubjectWebpage= "https://example.com/ourVerificationSite",
+                VerificationDirectory = new List<string>() { "https://example.com/ourVerificationDirectory" },
+				VerificationService = new List<string>() { "https://example.com/ourActualVerificationServices" },
+				VerificationMethodDescription = "A summary of our verification methods."
+			};
+			//offeredBy will be required once standalone
+			output.OfferedBy = new List<OrganizationReference>()
+			{
+				new OrganizationReference() { Type="Organization", CTID= orgCTID }
+			};
+			//list of target credentials
+			//these will have to have been published to the registry
+			output.TargetCredential = new List<EntityReference>()
+			{
+				new EntityReference()
+				{
+					Type="Certification",
+					CTID= "ce-969da20e-c127-4175-93f3-0722027ca7fc",
+				},
+				new EntityReference()
+                {
+                    Type="Certification",
+                    CTID= "ce-652f6f2c-4fff-45d0-9b2f-44a5bb61f927",
+                },
+				new EntityReference()
+                {
+                    Type="Certification",
+                    CTID= "ce-c7619be1-e35d-4e9e-b921-9d463f9dc15f",
+                }
+            };
+			return output;
+        }
 		/// <summary>
 		/// Publish using data from an input class (populated from local data stores)
 		/// </summary>
@@ -242,7 +298,7 @@ namespace RA.SamplesForDocumentation
 			//Holds the result of the publish action
 			var result = "";
 
-			//assign the api key - this is the API key for the third party organization
+			//assign the api key - this is the API key for the third party organization (not the data owner)
 			var apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 
 			//this is the CTID of the organization that owns the data being published

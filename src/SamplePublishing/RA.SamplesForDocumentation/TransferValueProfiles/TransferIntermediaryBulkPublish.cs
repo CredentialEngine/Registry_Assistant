@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using APIRequest = RA.Models.Input.TransferIntermediaryRequest;
-using APIRequestEntity = RA.Models.Input.TransferIntermediary;
 using Newtonsoft.Json;
 
 using RA.Models.Input;
+using APIRequestEntity = RA.Models.Input.TransferIntermediary;
 
 namespace RA.SamplesForDocumentation
 {
-    public class TransferIntermediaryBulkPublish
+	public class TransferIntermediaryBulkPublish
     {
 		static string thisClassName = "TransferIntermediaryBulkPublish";
 

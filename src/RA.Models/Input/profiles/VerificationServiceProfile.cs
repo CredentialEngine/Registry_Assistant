@@ -31,7 +31,7 @@ namespace RA.Models.Input
 
         /// <summary>
         /// Description of this profile
-        /// Requried
+        /// Required
         /// </summary>
         public string Description { get; set; }
         public LanguageMap Description_Map { get; set; } = new LanguageMap();

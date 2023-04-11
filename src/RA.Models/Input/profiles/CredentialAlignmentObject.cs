@@ -12,13 +12,7 @@ namespace RA.Models.Input
     public class CredentialAlignmentObject
     {
         public string Type { get; set; } = "ceterms:CredentialAlignmentObject";
-        /// <summary>
-        /// If the target exists in the registry, just provide the CTID. 
-        /// When present and valid, the rest of the properties will be ignored. 
-        /// What should be published? Just the URL, or the CAO with the actual resource from the registry?
-        /// Can there be embelisment?
-        /// </summary>
-        public string CTID { get; set; }
+
 
         /// <summary>
         /// Set of alpha-numeric symbols as defined by the body responsible for this resource that uniquely identifies this resource and supports its discovery and use.

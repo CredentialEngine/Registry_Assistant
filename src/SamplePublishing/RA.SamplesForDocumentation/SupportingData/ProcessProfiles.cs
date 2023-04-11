@@ -10,7 +10,7 @@ namespace RA.SamplesForDocumentation.SupportingData
 {
     public class ProcessProfiles
     {
-        public  List<ProcessProfile> GetProcessProfileList()
+        public static List<ProcessProfile> GetProcessProfileList()
         {
             var output = new List<ProcessProfile>();
             output.Add( GetProcessProfile() );
@@ -18,7 +18,7 @@ namespace RA.SamplesForDocumentation.SupportingData
             return output;
         }
 
-        public ProcessProfile GetProcessProfile()
+        public static ProcessProfile GetProcessProfile()
         {
             var output = new ProcessProfile()
             {
@@ -32,7 +32,7 @@ namespace RA.SamplesForDocumentation.SupportingData
             return output;
         }
 
-        public ProcessProfile GetAdministrativeProcessProfile( string processingAgentCTID)
+        public static ProcessProfile GetAdministrativeProcessProfile( string processingAgentCTID)
         {
             var output = new ProcessProfile()
             {
@@ -59,7 +59,7 @@ namespace RA.SamplesForDocumentation.SupportingData
             output.ProcessStandardsDescription = "Textual description of the criteria, standards, and/or requirements used with a process";
             return output;
         }
-        public ProcessProfile GetDevelopementProcessProfile()
+        public static ProcessProfile GetDevelopementProcessProfile()
         {
             var output = new ProcessProfile()
             {
