@@ -135,7 +135,15 @@ namespace RA.SamplesForDocumentation
 			myData.AdministrationProcess.Add(ProcessProfiles.GetAdministrativeProcessProfile( myOrgCTID ));
             myData.DevelopmentProcess.Add( ProcessProfiles.GetDevelopementProcessProfile() );
 
+            /*
+             * 2023-03-31 VerificationServiceProfile is now obsolete. A VerificationServiceProfile is published separately with a CTID. 
             myData.VerificationServiceProfile.Add( FormatVerificationServiceProfile( myOrgCTID ) );
+			*/
+            //Organization will now use HasVerificationService as a list of CTIDs for published VerificationServiceProfiles
+            myData.HasVerificationService = new List<string>()
+			{
+                "ce-73bb7406-5282-414c-b7e8-aefaad4a64fe", "ce-51595ce1-6e4a-4dac-bd44-2c076c7698a4"
+            };
 			//This holds the organization and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()
 			{
