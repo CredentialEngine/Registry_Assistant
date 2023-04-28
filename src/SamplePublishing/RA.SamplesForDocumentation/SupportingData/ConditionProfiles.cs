@@ -132,29 +132,38 @@ namespace RA.SamplesForDocumentation
 			//- add an entry for each relevent competency 
 			output.TargetCompetency = new List<CredentialAlignmentObject>()
 			{
-				//just the CTID for a competency in the registry (a
-				new CredentialAlignmentObject()
-				{
-					CTID="ce-07a645c7-1f5b-4a23-9733-13d9dcf4290e"
-				},
 				//if not in the registry, include at least the TargetNodeName
 				new CredentialAlignmentObject()
 				{
-					TargetNode="https://example.org/optionalCompetencyURL",
 					TargetNodeName="Outcome item",
-					TargetNodeDescription="Description of this outcome item",
-					FrameworkName="Optional name of this framework",
-					Framework="https://example.org/optionalCompetencyFrameworkURL"
+					TargetNodeDescription="Description of this outcome item"
 				},
-				//example for a competency in the credential registry
+				//if not in the registry, include framework information, even if just in a PDF
+				new CredentialAlignmentObject()
+                {
+                    TargetNodeName="Outcome item",
+                    TargetNodeDescription="Description of this outcome item",
+                    FrameworkName="Optional name of this framework",
+                    Framework="https://example.org/somepdf"
+                },
+
+				//example for a competency in the credential registry.
+				//NOTE: only the CTID needs to be supplied. The API will format the proper URL for the target environment.
 				new CredentialAlignmentObject()
 				{
-					Framework= "https://sandbox.credentialengineregistry.org/resources/ce-fa61f374-c455-4f76-8795-d2d16ba40549",
-					TargetNode= "https://sandbox.credentialengineregistry.org/resources/ce-93dbdedb-c455-4b03-9b3a-0b0edc3f43a7",
+					Framework= "ce-fa61f374-c455-4f76-8795-d2d16ba40549",
+					TargetNode= "ce-93dbdedb-c455-4b03-9b3a-0b0edc3f43a7",
 					FrameworkName= "Financial Accounting - CORE OUTCOMES",
 					TargetNodeName= "Identify and demonstrate the effects of transactions and economic events on the financial statements in corporations and other business entities"
 				},
-			};
+
+				//coming SOON just the CTID for a competency in the registry (so parnter doesn't have to look up other data).
+				//	The API will take care of validating that the competency exists, and formats the framework and competency information
+                 new CredentialAlignmentObject()
+                {
+                    TargetNode= "ce-93dbdedb-c455-4b03-9b3a-0b0edc3f43a7",
+                },
+            };
 
             //***** Feb. 03, 2023 *****
             //NEW helper property
