@@ -258,3 +258,5 @@ paket-files/
 /src/RA.Models/Input/profiles/OpenSalt.cs
 /src/SamplePublishing/RA.SamplesForDocumentation/Employment/WorkRoles.cs
 /src/SamplePublishing/RA.SamplesForDocumentation/Employment/Tasks.cs
+/src/RA.Models/Input/CredentialImportRequest.cs
+/src/RA.Models/Input/profiles/ConditionProfileHelper.cs

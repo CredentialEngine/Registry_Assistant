@@ -6,37 +6,45 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
-	/// <summary>
-	/// Collection Request class
-	/// </summary>
-	public class CollectionRequest : BaseRequest
+    /// <summary>
+    /// Collection Request class
+    /// Collection is required. 
+    /// Collection.HasMember can be a list of CTIDs for all members. 
+    /// Include CollectionMembers or Members, but not both.
+    /// </summary>
+    public class CollectionRequest : BaseRequest
 	{
 		/// <summary>
 		/// Collection to publish
 		/// </summary>
 		public Collection Collection { get; set; } = new Collection();
-		/// <summary>
-		/// Members can be any of:
-		/// "ceterms:AssessmentProfile",
-		/// "ceterms:CollectionMember",
-		/// "ceterms:Credential", //any of the valid credential subclasses
-		/// "ceasn:Competency",
-		/// "ceterms:Course",
-		/// "ceterms:Job",
-		/// "ceterms:LearningOpportunityProfile",
-		/// "ceterms:LearningProgram",
-		/// "ceterms:Occupation",
-		/// "ceterms:Task",
-		/// "ceterms:WorkRole",
-		/// </summary>
-		public List<object> Members { get; set; } = new List<object>();
 
-		/// <summary>
-		/// CollectionMember
-		/// Collection members will be published in the graph like Members, but have a separate input propery for better organization
-		/// </summary>
-		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
-	}
+
+        /// <summary>
+        /// CollectionMember
+        /// Collection members will be published in the graph like Members, but have a separate input propery for better organization
+        /// </summary>
+        public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
+
+        /// <summary>
+        /// Members can be any of:
+        /// "ceterms:AssessmentProfile",
+        /// "ceterms:Credential", //any of the valid credential subclasses
+        /// "ceasn:Competency",
+        /// "ceterms:Course",
+        /// "ceterms:Job",
+        /// "ceterms:LearningOpportunityProfile",
+        /// "ceterms:LearningProgram",
+        /// "ceterms:Occupation",
+        /// "ceterms:Task",
+        /// "ceterms:WorkRole",
+        /// Members must all be the same type. This rule (TBD) includes learning opportunity types. So all courses, or all learning programs, etc. 
+        /// </summary>
+        public List<object> Members { get; set; } = new List<object>();
+
+
+    }
+
 
 	/// <summary>
 	/// Proposed option to publish a document already formatted as CTDL JSON-LD.
@@ -122,15 +130,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; }
 
-		/// <summary>
-		/// Resource in a Collection.
-		/// REQUIRED - or must at least one of Request.Members, or Request.CollectionMembers must have contents.
-		/// List of URIs
-		/// ceasn:Competency, any credential type, ceterms:AssessmentProfile, ceterms:Task ceterms:WorkRole ceterms:Job ceterms:Course ceterms:LearningOpportunityProfile ceterms:LearningProgram
-		/// List of CTIDs (recommended) or URIs
-		/// </summary>
-		public List<string> HasMember { get; set; } = new List<string>();
-
+        /// <summary>
+        /// Resource in a Collection.
+        /// REQUIRED 
+		///		- or must have at least one of this property: HasMember, 
+		///		- or Request.CollectionMembers must have contents.
+		///		- or Request.Competencies must have contents
+        /// These are for resources that already exist in the registry
+        /// ceasn:Competency, any credential type, ceterms:AssessmentProfile, ceterms:Task ceterms:WorkRole ceterms:Job ceterms:Course ceterms:LearningOpportunityProfile ceterms:LearningProgram
+        /// List of CTIDs (recommended) or URIs
+        /// </summary>
+        public List<string> HasMember { get; set; } = new List<string>();
 
 		/// <summary>
 		/// The primary language used in or by this resource.
@@ -295,14 +305,6 @@ namespace RA.Models.Input
 		/// Type for this class
 		/// </summary>
 		public string Type { get; set; } = "ceterms:CollectionMember";
-
-		/// <summary>
-		/// CTID for a collection. 
-		/// PROPOSED - NOT IMPLEMENTED
-		/// This property is only used in publishing of documents like learning opportunities. It will be ignored in the context of publishing a collection.
-		/// </summary>
-		public string CollectionCTID { get; set; }
-
 
 		/// <summary>
 		/// A short description of this resource.

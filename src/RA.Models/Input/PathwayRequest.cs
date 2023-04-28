@@ -142,11 +142,11 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Keyword or key phrase describing relevant aspects of an entity.
 		/// </summary>
-		public List<string> Keyword { get; set; }
-		/// <summary>
-		/// Language map list for Keyword
-		/// </summary>
-		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+		public List<string> Keyword { get; set; } = new List<string>();
+        /// <summary>
+        /// Language map list for Keyword
+        /// </summary>
+        public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
@@ -227,6 +227,7 @@ namespace RA.Models.Input
     /// <summary>
     /// History
     /// 21-01-06 remove CodedNotation
+	/// 23-04-30 Add CodedNotation for competencyComponent only
     /// </summary>
     public class PathwayComponent 
 	{
@@ -360,19 +361,19 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Component is preceded by the referenced components
 		/// </summary>
-		public List<string> PrecededBy { get; set; }
+		public List<string> PrecededBy { get; set; } = new List<string>();
 
-		///// <summary>
-		///// Resource(s) required as a prior condition to this resource.
-		///// Provide the CTID or the full URI for the target environment. 
-		///// ceterms:ComponentCondition
-		///// </summary>
-		//[Obsolete]		//June 30, 2022
-		//public List<string> Prerequisite { get; set; } = new List<string>();
+        ///// <summary>
+        ///// Resource(s) required as a prior condition to this resource.
+        ///// Provide the CTID or the full URI for the target environment. 
+        ///// ceterms:ComponentCondition
+        ///// </summary>
+        //[Obsolete]		//June 30, 2022
+        //public List<string> Prerequisite { get; set; } = new List<string>();
 
         /// <summary>
         /// Indicates the resource for which a pathway component or similar proxy resource is a stand-in.
-		/// This property is slated to completely replace SourceData in late 2022
+        /// This property is slated to completely replace SourceData in late 2022
         /// URL
         /// </summary>
         public string ProxyFor { get; set; }
@@ -412,17 +413,28 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap ComponentCategory_Map { get; set; } = new LanguageMap();
-		#endregion
+        #endregion
 
 
-		#region CourseComponent
-		/// <summary>
-		/// CreditValue
-		/// A credit-related value.
-		/// Used by: 
-		/// ceterms:CourseComponent only 
-		/// </summary>
-		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
+        #region CompetencyComponent
+        /// <summary>
+        ///  Set of alpha-numeric symbols as defined by the body responsible for this resource that uniquely identifies this resource and supports its discovery and use.
+        /// Used by: 
+        /// ceterms:CompetencyComponent only
+        /// </summary>
+        public string CodedNotation { get; set; }
+
+        #endregion
+
+
+        #region CourseComponent
+        /// <summary>
+        /// CreditValue
+        /// A credit-related value.
+        /// Used by: 
+        /// ceterms:CourseComponent only 
+        /// </summary>
+        public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 
 		/// <summary>
 		/// ProgramTerm
@@ -603,30 +615,30 @@ namespace RA.Models.Input
 		/// Left hand parameter of a constraint.
 		/// Range: rdf:Property, skos:Concept (Select from a controlled vocabulary)
 		/// </summary>
-		public List<string> LeftSource { get; set; }
+		public List<string> LeftSource { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Action performed on the left constraint; 
-		/// Required if LeftSource has multiple values.
-		/// 
-		/// Range: ceterms:Concept (Select from a controlled vocabulary-ceterms:ArrayOperation)
-		/// </summary>
-		public string LeftAction { get; set; }
+        /// <summary>
+        /// Action performed on the left constraint; 
+        /// Required if LeftSource has multiple values.
+        /// 
+        /// Range: ceterms:Concept (Select from a controlled vocabulary-ceterms:ArrayOperation)
+        /// </summary>
+        public string LeftAction { get; set; }
 
 
 		/// <summary>
 		/// Right hand parameter of a constraint.
 		/// Range: rdf:Property, skos:Concept (Select from a controlled vocabulary)
 		/// </summary>
-		public List<string> RightSource { get; set; }
+		public List<string> RightSource { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Action performed on the right constraint; 
-		/// Required if RightSource has multiple values.
-		/// 
-		/// Range: ceterms:Concept (Select from a controlled vocabulary-ceterms:ArrayOperation)
-		/// </summary>
-		public string RightAction{ get; set; }
+        /// <summary>
+        /// Action performed on the right constraint; 
+        /// Required if RightSource has multiple values.
+        /// 
+        /// Range: ceterms:Concept (Select from a controlled vocabulary-ceterms:ArrayOperation)
+        /// </summary>
+        public string RightAction{ get; set; }
 
 
 		/// <summary>

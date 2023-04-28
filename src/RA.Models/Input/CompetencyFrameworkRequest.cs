@@ -41,7 +41,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// A unique URI for this framework. 
-		/// If not entered, a credential registry URI will be generated using the CTID.
+		/// If not entered (RECOMMENDED), a credential registry URI will be generated using the CTID.
 		/// </summary>
 		public string CtdlId { get; set; }
 
@@ -545,12 +545,18 @@ namespace RA.Models.Input
 		/// Competency framework that this competency is a part of.
 		/// </summary>
 		public string isPartOf { get; set; }
-		//public List<string> isPartOf { get; set; } = new List<string>();
-		/// <summary>
-		/// A related competency of which this competency is a version, edition, or adaptation.
-		/// List of URIs (CTIDs recommended) for a competency
-		/// </summary>
-		public string isVersionOf { get; set; }
+
+        /// <summary>
+        /// Collection to which this resource belongs.
+		/// Only used where part of a Collection
+        /// </summary>
+        public List<string> isMemberOf { get; set; }
+
+        /// <summary>
+        /// A related competency of which this competency is a version, edition, or adaptation.
+        /// List of URIs (CTIDs recommended) for a competency
+        /// </summary>
+        public string isVersionOf { get; set; }
 
 		/// <summary>
 		/// An alphanumeric string indicating the relative position of a resource in an ordered list of resources such as "A", "B", or "a", "b", or "I", "II", or "1", "2".

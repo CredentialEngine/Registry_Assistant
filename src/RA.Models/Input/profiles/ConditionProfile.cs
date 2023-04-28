@@ -11,7 +11,7 @@ namespace RA.Models.Input
 	/// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
 	/// </summary>
 	public class ConditionProfile
-	{
+    {
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -60,7 +60,7 @@ namespace RA.Models.Input
 		/// Organization that asserts this condition
 		/// This should be single, but as CTDL defines as multi-value, need to handle a List
 		/// </summary>
-		public List<string> AssertedBy { get; set; } = null;
+		public List<OrganizationReference> AssertedBy { get; set; } = null;
 
 		/// <summary>
 		///  Webpage that describes this condition
@@ -208,14 +208,14 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMapList AlternateName_Map { get; set; } = null;
 
-        #region Helpers
-        /// <summary>
-        /// Target Competency Framework - Helper property
-        /// A list of CTIDs (TBD if better to leave as single). 
-        /// API will look up framework, get all competencies and add to TargetCompetency for this condition. 
-        /// NOTE: will likely only allow for a "Requires" condition profile
-        /// </summary>
-        public List<string> TargetCompetencyFramework { get; set; }
+		#region Helpers
+		/// <summary>
+		/// Target Competency Framework - Helper property
+		/// A list of CTIDs (TBD if better to leave as single). 
+		/// API will look up framework, get all competencies and add as TargetCompetencies for this condition. 
+		/// NOTE: will likely only allow for a "Requires" condition profile
+		/// </summary>
+		public List<string> TargetCompetencyFramework { get; set; }
 
 
         #endregion
@@ -259,11 +259,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = null;
 
-        /// <summary>
-        /// Organization that asserts this condition
-        /// This should be single, but as CTDL defines as multi-value, need to handle a List
-        /// </summary>
-        public OrganizationReference AssertedBy { get; set; }
+		/// <summary>
+		/// Organization that owns this credential
+		/// </summary>
+		public OrganizationReference AssertedBy { get; set; }
 
 		/// <summary>
 		/// Measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
@@ -302,7 +301,7 @@ namespace RA.Models.Input
 		public List<EntityReference> TargetLearningOpportunity { get; set; }
 
 	}
-    //retain in order to not mess up previous use
+	//retain in order to not mess up previous use
     public class Connections : ConnectionProfile
     {
 

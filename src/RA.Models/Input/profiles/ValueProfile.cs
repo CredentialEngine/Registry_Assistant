@@ -35,7 +35,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = null;
 
-
 		/// <summary>
 		/// A percentage for this purpose. 
 		/// Best practice is to treat the value of this property as a verbatim percentage; for example, a value of 1.5 should be interpreted as 1.5%
