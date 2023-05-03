@@ -36,8 +36,9 @@ namespace RA.SamplesForDocumentation
 
 			//Assign a CTID for the entity being published and keep track of it
 			var myCTID = "ce-cef8a76d-f168-0513-8fac-0b8dc60ef853"; //"ce-" + Guid.NewGuid().ToString();
-																	//set up language helper
-			var languages = new List<string>() { "ar-SA", "en" };
+																	
+			//set up language helper
+			var languages = new List<string>() { "ar-SA", "en-US" };
 
 			//A simple credential object - see below for sample class definition
 			var myData = new Credential()
@@ -53,25 +54,25 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
-			//add name languages
-			myData.Name_Map = new LanguageMap();
-			myData.Name_Map.Add( "ar-SA", "بكالوريوس العلوم في المحاسبة" );
-			myData.Name_Map.Add( "en", "Bachelor of Science in Accounting" );
-			//add desc languages
-			myData.Description_Map = new LanguageMap();
-			myData.Description_Map.Add( "ar-SA", "المحاسبة من أكثر الدرجات تنوعًا في مجال الأعمال. يقدم برنامج المحاسبة في دار الحكمة برنامجًا أكاديميًا شاملاً وصارمًا في الدراسات المحاسبية. سيحصل الطلاب على فهم متعمق للجوانب التقنية والنظرية للمحاسبة ، بما في ذلك التدقيق والضرائب والإدارة المالية وعلوم الإدارة والاقتصاد والتسويق. سيقوم البرنامج بإعداد الطلاب لمجموعة متنوعة من فرص العمل في العديد من قطاعات الاقتصاد. أيضًا ، يمكن أن يساعد الطلاب على تلبية متطلبات التعيين المهني ، بما في ذلك المحاسب المحترف المعتمد (CPA) ، والمحاسب الإداري المعتمد (CMA) والمحلل المالي المعتمد (CFA). \n\n يتزايد الطلب على المحاسبين في المملكة العربية السعودية بسبب تطبيق المعايير الدولية لإعداد التقارير المالية (IFRS) للمؤسسات الصغيرة و" );
-			myData.Description_Map.Add( "en", "The Bachelor of Science in Accounting is considered one of the most versatile degrees in business. The Accounting program at Dar Al-Hekma offers a thorough and rigorous academic program in accounting studies. Students will get an in-depth understanding of the technical and theoretical aspects of accounting, including auditing, taxation, financial management, management science, economics, and marketing. The program will prepare students for a variety of job opportunities in numerous sectors of the economy. Also, it can help students meet professional designation requirements, including the Chartered Professional Accountant (CPA), the Certified Management Accountant (CMA) and the Chartered Financial Analyst (CFA). \n\nAccountants are in high demand in Saudi Arabia, due to the implementation of the International Financial Reporting Standards (IFRS) for small and medium enterprises (SMEs)." );
+            //add name languages
+            myData.Name_Map = new LanguageMap
+            {
+                { "ar-SA", "بكالوريوس العلوم في المحاسبة" },
+                { "en-US", "Bachelor of Science in Accounting" }
+            };
 
-			//add keywords
+            //add desc languages
+            myData.Description_Map = new LanguageMap();
+			myData.Description_Map.Add( "ar-SA", "المحاسبة من أكثر الدرجات تنوعًا في مجال الأعمال. يقدم برنامج المحاسبة في دار الحكمة برنامجًا أكاديميًا شاملاً وصارمًا في الدراسات المحاسبية. سيحصل الطلاب على فهم متعمق للجوانب التقنية والنظرية للمحاسبة ، بما في ذلك التدقيق والضرائب والإدارة المالية وعلوم الإدارة والاقتصاد والتسويق. سيقوم البرنامج بإعداد الطلاب لمجموعة متنوعة من فرص العمل في العديد من قطاعات الاقتصاد. أيضًا ، يمكن أن يساعد الطلاب على تلبية متطلبات التعيين المهني ، بما في ذلك المحاسب المحترف المعتمد (CPA) ، والمحاسب الإداري المعتمد (CMA) والمحلل المالي المعتمد (CFA). \n\n يتزايد الطلب على المحاسبين في المملكة العربية السعودية بسبب تطبيق المعايير الدولية لإعداد التقارير المالية (IFRS) للمؤسسات الصغيرة و" );
+			myData.Description_Map.Add( "en-US", "The Bachelor of Science in Accounting is considered one of the most versatile degrees in business. The Accounting program at Dar Al-Hekma offers a thorough and rigorous academic program in accounting studies. Students will get an in-depth understanding of the technical and theoretical aspects of accounting, including auditing, taxation, financial management, management science, economics, and marketing. The program will prepare students for a variety of job opportunities in numerous sectors of the economy. Also, it can help students meet professional designation requirements, including the Chartered Professional Accountant (CPA), the Certified Management Accountant (CMA) and the Chartered Financial Analyst (CFA). \n\nAccountants are in high demand in Saudi Arabia, due to the implementation of the International Financial Reporting Standards (IFRS) for small and medium enterprises (SMEs)." );
+
+			//add keywords. In this case if a language is not provided, a default language is used. 
 			myData.Keyword_Map = new LanguageMapList( new List<string>() { "Accounting", "Taxation", "financial management" } );
+			//now add a list in a new language
 			myData.Keyword_Map.Add( "ar-SA", new List<string>() { "محاسبة", "تحصيل الضرائب", "ادارة مالية" } );
+
             //==================== QUALITY ASSURANCE RECEIVED ====================
 
-            //CTID for accreditation
-   //         myData.AccreditedBy.Add( new OrganizationReference()
-			//{
-			//	CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
-			//} );
 			//Add organization that is NOT in the credential registry
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{
@@ -274,6 +275,13 @@ namespace RA.SamplesForDocumentation
 
 			return output;
 		}
+		/// <summary>
+		/// Format a list of text values using a matching list of language codes. 
+		/// For test purposes, the two lists must have the same number of members. 
+		/// </summary>
+		/// <param name="languageCodes"></param>
+		/// <param name="text"></param>
+		/// <returns></returns>
 		public LanguageMap FormatLanguages(List<string> languageCodes, List<string> text)
         {
 			var output = new LanguageMap();
