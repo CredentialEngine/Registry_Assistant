@@ -112,12 +112,22 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> InLanguage { get; set; }
 
-		#region at least one of
 
-		/// <summary>
-		/// Organization that owns this resource
-		/// </summary>
-		public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
+        /// <summary>
+        /// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
+        /// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+        /// Required
+        /// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+        /// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
+        /// </summary>
+        public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
+
+        #region at least one of
+
+        /// <summary>
+        /// Organization that owns this resource
+        /// </summary>
+        public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
 		//OR
 		/// <summary>
 		/// Organization(s) that offer this resource
@@ -333,12 +343,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public string HasProxy { get; set; }
 
-		/// <summary>
-		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-		/// <see href="https://purl.org/ctdl/terms/identifier"></see>
-		/// ceterms:identifier
-		/// </summary>
-		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
+        /// <summary>
+        /// Reference to a relevant support service.
+		/// List of CTIDs that reference one or more published support services
+        /// </summary>
+        public List<string> HasSupportService { get; set; }
+
+        /// <summary>
+        /// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+        /// <see href="https://purl.org/ctdl/terms/identifier"></see>
+        /// ceterms:identifier
+        /// </summary>
+        public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
 		/// <summary>
 		/// Is Non-Credit
@@ -368,15 +385,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
-
-		/// <summary>
-		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
-		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
-		/// Required
-		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
-		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
-		/// </summary>
-		public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
 
 		/// <summary>
 		/// Resource that is required as a prior condition to this resource.

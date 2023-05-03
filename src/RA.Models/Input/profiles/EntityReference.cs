@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 namespace RA.Models.Input
 {
 
@@ -28,34 +30,42 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CTID { get; set; }
 
-		//if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would typically be required
+        //if there is no available Id/CTID, enter the following, where Type, Name, Description, and subjectwebpage would typically be required
 
-		/// <summary>
-		/// the type of the entity must be provided if the Id was not provided. examples
-		/// ceterms:AssessmentProfile
-		/// ceterms:LearningOpportunityProfile
-		/// ceterms:ConditionManifest
-		/// ceterms:CostManifest
-		/// or the many credential subclasses!!
-		/// </summary>
-		public string Type { get; set; }
+        /// <summary>
+        /// the type of the entity must be provided if the Id was not provided. examples
+        /// ceterms:AssessmentProfile
+        /// ceterms:LearningOpportunityProfile
+        /// ceterms:ConditionManifest
+        /// ceterms:CostManifest
+        /// or the many credential subclasses!!
+        /// </summary>
+        public string Type { get; set; }
 
-		/// <summary>
-		/// Name of the entity (required)
-		/// </summary>
-		public string Name { get; set; }
+        /// <summary>
+        /// Type  of CTDL object
+        /// </summary>
+        [JsonProperty( "@type" )]
+        public string CdtlType { get; set; }
 
-		/// <summary>
-		/// the input classes don't use ceterms, etc. Ensure that each controller sets the default type.
-		/// This could be an issue with lists of objects like for TVP and collections.
-		/// </summary>
-		public bool IsAssessmentType
+        /// <summary>
+        /// Name of the entity (required)
+        /// </summary>
+        public string Name { get; set; }
+        public string PrefLabel { get; set; }
+        public string CompetencyText { get; set; }
+        
+        /// <summary>
+        /// the input classes don't use ceterms, etc. Ensure that each controller sets the default type.
+        /// This could be an issue with lists of objects like for TVP and collections.
+        /// </summary>
+        public bool IsAssessmentType
 		{
 			get
 			{
-				if ( Type == "ceterms:AssessmentProfile"
-					|| Type == "AssessmentProfile"
-					)
+				if ( Type == "ceterms:AssessmentProfile" || Type == "AssessmentProfile"
+					|| CdtlType == "ceterms:AssessmentProfile" || CdtlType == "AssessmentProfile"
+                    )
 					return true;
 				else
 					return false;
@@ -65,9 +75,9 @@ namespace RA.Models.Input
 		{
 			get
 			{
-				if ( Type == "ceasn:Competency"
-					|| Type == "Competency"
-					)
+				if ( Type == "ceasn:Competency" || Type == "Competency"
+					|| CdtlType == "ceasn:Competency" || CdtlType == "Competency"
+                    )
 					return true;
 				else
 					return false;

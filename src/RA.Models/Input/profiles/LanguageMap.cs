@@ -16,7 +16,7 @@ namespace RA.Models.Input
 		/// <param name="text"></param>
 		public LanguageMap( string text )
         {
-            this.Add( "en-us", text );
+            this.Add( "en-US", text );
         }
 		/// <summary>
 		/// Add a language map using a passed language code and string
@@ -30,7 +30,7 @@ namespace RA.Models.Input
 
         public override string ToString()
         {
-            return ToString( "en-us" );
+            return ToString( "en-US" );
         }
         public string ToString( string languageCode )
         {
@@ -72,7 +72,7 @@ namespace RA.Models.Input
         public LanguageMapList() { }
         public LanguageMapList( List<string> items )
         {
-            this.Add( "en-us", items );
+            this.Add( "en-US", items );
         }
         public LanguageMapList( string languageCode, List<string> items )
         {
@@ -81,7 +81,7 @@ namespace RA.Models.Input
 
         public List<string> ToList()
         {
-            return ToList( "en-us" );
+            return ToList( "en-US" );
         }
         public List<string> ToList( string languageCode )
         {
