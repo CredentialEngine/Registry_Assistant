@@ -39,6 +39,8 @@ namespace RA.SamplesForDocumentation
 			var myCTID = "ce-5a33409a-f3db-42f3-8a3c-b00c7bb393af"; //"ce-" + Guid.NewGuid().ToString();
 
 			//A simple credential object - see below for sample class definition
+			//For a complete list of all credential types, see: 
+			//	https://credreg.net/page/typeslist#ceterms_Credential 
 			var myData = new APIRequestResource()
 			{
 				Name = "My Certification Name",
