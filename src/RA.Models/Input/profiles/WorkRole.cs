@@ -118,13 +118,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> HasTask { get; set; } = new List<string>();
 
+        /// <summary>
+        /// Reference to a relevant support service.
+        /// List of CTIDs that reference one or more published support services
+        /// </summary>
+        public List<string> HasSupportService { get; set; }
 
-		/// <summary>
-		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
-		/// ceterms:identifier
-		/// </summary>
-		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+        /// <summary>
+        /// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+        /// <see cref="https://purl.org/ctdl/terms/identifier"/>
+        /// ceterms:identifier
+        /// </summary>
+        public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
 		/// <summary>
 		/// Body of information embodied either directly or indirectly in this resource.

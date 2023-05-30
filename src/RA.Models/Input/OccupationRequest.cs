@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace RA.Models.Input
 {
 	/// <summary>
@@ -72,7 +71,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public Task Task { get; set; } = new Task();
 
-
 	}
 	/// <summary>
 	/// Request class for publishing a list of Tasks
@@ -99,7 +97,6 @@ namespace RA.Models.Input
 		/// Collection of tasks and competencies that embody a particular function in one or more jobs.
 		/// </summary>
 		public WorkRole WorkRole { get; set; } = new WorkRole();
-
 
 	}
 

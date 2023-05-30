@@ -77,8 +77,46 @@ namespace RA.SamplesForDocumentation
 					Country="United States"
 				}
 			};
-			//Add organization that is not in the credential registry
-			myData.AccreditedBy.Add( new OrganizationReference()
+
+            //								Assesses competencies
+            //	Where an assessment assesses one or more competencies, they can be published in the Assesses property
+            //	List<CredentialAlignmentObject> Assesses
+            //  Ideally, the competencies would be part of a competency framework that could be published to the registry.
+            //  If the competencies are 'free floating' they can be published just using the name and an optional description
+            myData.Assesses = new List<CredentialAlignmentObject>()
+            {
+                new CredentialAlignmentObject()
+                {
+                    TargetNodeName="Identify characteristics of major food-borne pathogens, foods involved in outbreaks, and methods of"
+                },
+                new CredentialAlignmentObject()
+                {
+                    TargetNodeName="Describe food service management safety and sanitation program procedures"
+                },
+                new CredentialAlignmentObject()
+                {
+                    TargetNodeName="Identify good personal hygiene and health procedures and report symptoms of illness",
+                    TargetNodeDescription = "An important description providing more details about this competency"
+                }
+            };
+            //if the competencies are from a published framework, additional properties can be included
+            myData.Assesses.Add( new CredentialAlignmentObject()
+            {
+                Framework = "https://credentialengineregistry.org/resources/ce-86971432-c365-4a9a-a67c-393a7d719e68",
+                TargetNode = "https://credentialengineregistry.org/resources/ce-216f6de3-a749-4d9b-bc5f-dc1a14764f7d",
+                FrameworkName = "WorkKeys Graphic Literacy",
+                TargetNodeName = "Characteristics of Items"
+            } );
+
+            //A competency framework can contain many competencies. If an assessment assesses all competencies in a framework, the helper property: AssessesCompetencyFramework may be used for efficiency. Rather than listing 10, 50, 500 competencies, only the CTID for the competency framework needs to be provided. The API will validate the framework, then fetch all competencies in the framework and populate the Assesses property.
+            //NOTE: The framework must have already been published to the credential registry. 
+            myData.AssessesCompetencyFramework = new List<string>()
+           {
+                "ce-6fdd56d3-0214-4a67-b0c4-bb4c16ce9a13"
+            };
+
+            //Add organization that is not in the credential registry
+            myData.AccreditedBy.Add( new OrganizationReference()
 			{
 				Type = "CredentialOrganization",
 				Name = "Council on Social Work Education (CSWE)",

@@ -100,12 +100,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> EnvironmentalHazardType { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Occupation related to this resource.
-		/// CTID for an existing Occupation
-		/// ceterms:hasOccupation
-		/// </summary>
-		public List<string> HasOccupation { get; set; } = new List<string>();
+        /// <summary>
+        /// Reference to a relevant support service.
+        /// List of CTIDs that reference one or more published support services
+        /// </summary>
+        public List<string> HasSupportService { get; set; }
+
+        /// <summary>
+        /// Occupation related to this resource.
+        /// CTID for an existing Occupation
+        /// ceterms:hasOccupation
+        /// </summary>
+        public List<string> HasOccupation { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Task related to this resource.

@@ -212,11 +212,12 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public List<QuantitativeValue> SubjectsInSet { get; set; } = new List<QuantitativeValue>();
 
-		/// <summary>
-		/// Number of holders that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set (employmentDefinition).
-		/// qdata:sufficientEmploymentCriteria
-		/// </summary>
-		public List<QuantitativeValue> SufficientEmploymentCriteria { get; set; } = new List<QuantitativeValue>();
+
+        /// <summary>
+        /// Number of holders that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set (employmentDefinition).
+        /// qdata:sufficientEmploymentCriteria
+        /// </summary>
+        public List<QuantitativeValue> SufficientEmploymentCriteria { get; set; } = new List<QuantitativeValue>();
 
 		/// <summary>
 		/// Number of people employed outside the area of work (e.g., industry, occupation) in which the credential provided preparation.
@@ -234,5 +235,27 @@ namespace RA.Models.Input.profiles.QData
 		public List<QuantitativeValue> TotalWIOACompleters { get; set; } = new List<QuantitativeValue>();
 		public List<QuantitativeValue> TotalWIOAParticipants { get; set; } = new List<QuantitativeValue>();
 		public List<QuantitativeValue> TotalWIOAExiters { get; set; } = new List<QuantitativeValue>();
-	}
+
+        #region Obsolete
+        /*
+		
+        /// <summary>
+        /// Type of subject included or excluded from the data set.
+        /// qdata:subjectType
+        /// skos:Concept
+		/// ConceptScheme: qdata:SubjectCategory
+        /// <see href="https://credreg.net/qdata/terms/SubjectCategory"/>
+        /// subjectCategory:AssessmentCompleter subjectCategory:CredentialHolder subjectCategory:CredentialSeeker subjectCategory:Enrollee subjectCategory:FinancialAidRecipient subjectCategory:Graduate subjectCategory:HigherLevelCredential subjectCategory:InFurtherEducation subjectCategory:InsufficientDataAvailable subjectCategory:PostCredentialEarnings subjectCategory:PreCredentialEarnings
+        /// </summary>
+        public string SubjectType { get; set; }
+
+        /// <summary>
+        /// Quantitative values and percentages for a subject category (SubjectType) in the data set.
+        /// </summary>
+        public List<QuantitativeValue> SubjectValue{ get; set; } = new List<QuantitativeValue>();
+
+		*/
+        #endregion
+
+    }
 }

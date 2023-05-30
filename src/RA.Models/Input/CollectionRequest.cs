@@ -45,7 +45,6 @@ namespace RA.Models.Input
 
     }
 
-
 	/// <summary>
 	/// Proposed option to publish a document already formatted as CTDL JSON-LD.
 	/// </summary>
@@ -142,10 +141,16 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> HasMember { get; set; } = new List<string>();
 
-		/// <summary>
-		/// The primary language used in or by this resource.
-		/// </summary>
-		public List<string> InLanguage { get; set; }
+        /// <summary>
+        /// Reference to a relevant support service.
+        /// List of CTIDs that reference one or more published support services
+        /// </summary>
+        public List<string> HasSupportService { get; set; }
+
+        /// <summary>
+        /// The primary language used in or by this resource.
+        /// </summary>
+        public List<string> InLanguage { get; set; }
 
 		/// <summary>
 		/// A word or phrase used by the promulgating agency to refine and differentiate individual resources contextually.

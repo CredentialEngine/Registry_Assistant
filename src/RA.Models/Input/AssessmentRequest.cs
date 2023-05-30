@@ -160,12 +160,21 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<CredentialAlignmentObject> Assesses { get; set; }
 
-		/// <summary>
-		/// Type of method used to conduct an assessment; select from an existing enumeration of such types.
-		/// assessMethod:Artifact, assessMethod:Exam, assessMethod:Performance
-		/// <see cref="https://credreg.net/ctdl/terms/AssessmentMethod"/>
-		/// </summary>
-		public List<string> AssessmentMethodType { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Assesses Competency Framework - Helper property
+        /// A list of CTIDs for frameworks, where this resource assesses all competencies in a framework.
+        /// API will look up framework, get all competencies and add as Assesses for this resource. 
+		/// Only provide Assesses or AssessesCompetencyFramework, but not both (will result in an error).
+        /// </summary>
+        public List<string> AssessesCompetencyFramework { get; set; }
+
+        /// <summary>
+        /// Type of method used to conduct an assessment; select from an existing enumeration of such types.
+        /// assessMethod:Artifact, assessMethod:Exam, assessMethod:Performance
+        /// <see cref="https://credreg.net/ctdl/terms/AssessmentMethod"/>
+        /// </summary>
+        public List<string> AssessmentMethodType { get; set; } = new List<string>();
 		/// <summary>
 		/// Type of means by which a learning opportunity or assessment is delivered to credential seekers and by which they interact; select from an existing enumeration of such types.
 		/// deliveryType:BlendedDelivery deliveryType:InPerson deliveryType:OnlineOnly
@@ -315,8 +324,16 @@ namespace RA.Models.Input
         /// <summary>
         ///  Indicates an offering and typical schedule.
         ///  NOTE: Only use this property when it is necessary and useful to provide data about specific offerings of a learning opportunity or assessment, such as particular combinations of schedule, location, and delivery.
+		///  List of CTIDs for published resources
         /// </summary>
         public List<string> HasOffering { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Reference to a relevant support service available for this resource.
+		/// List of CTIDs for published resources
+        /// </summary>
+        public List<string> HasSupportService { get; set; } = new List<string>();
+        //
 
         /// <summary>
         /// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.

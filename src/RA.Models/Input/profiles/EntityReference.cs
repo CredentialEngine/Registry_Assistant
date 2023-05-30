@@ -412,8 +412,8 @@ namespace RA.Models.Input
 		{
 			if ( string.IsNullOrWhiteSpace( Id )
 				&& string.IsNullOrWhiteSpace( CTID )
-				&& ( string.IsNullOrWhiteSpace( Name ) || ( Name_Map == null || Name_Map?.Count == 0 ) )
-				&& ( string.IsNullOrWhiteSpace( Description ) || ( Description_Map== null || Description_Map.Count == 0) )
+				&& ( string.IsNullOrWhiteSpace( Name ) && ( Name_Map == null || Name_Map?.Count == 0 ) )
+				&& ( string.IsNullOrWhiteSpace( Description ) && ( Description_Map == null || Description_Map.Count == 0 ) )
 				&& string.IsNullOrWhiteSpace( SubjectWebpage )
 				)
 				return true;

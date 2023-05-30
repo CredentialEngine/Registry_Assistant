@@ -134,6 +134,7 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
 		/// <summary>
 		/// Credential description 
 		/// Required
@@ -359,12 +360,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<EntityReference> HasPart { get; set; }
 
-		/// <summary>
-		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-		/// <see href="https://credreg.net/ctdl/terms/identifier">Identifier</see>
-		/// ceterms:identifier
-		/// </summary>
-		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+        /// <summary>
+        /// Reference to a relevant support service available for this resource.
+        /// List of CTIDs for published resources
+        /// </summary>
+        public List<string> HasSupportService { get; set; } = new List<string>();
+        //
+
+        /// <summary>
+        /// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+        /// <see href="https://credreg.net/ctdl/terms/identifier">Identifier</see>
+        /// ceterms:identifier
+        /// </summary>
+        public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
 		/// <summary>
 		/// Image URL

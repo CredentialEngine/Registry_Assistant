@@ -46,7 +46,7 @@ namespace RA.SamplesForDocumentation
 				Description = "This is some text that describes my learning opportunity.",
 				CTID = myCTID,
 				LifeCycleStatusType="Active",
-				SubjectWebpage = "https://example.org/t=learningopportunity1234",
+				SubjectWebpage = "https://example.org/?t=learningopportunity1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				LearningMethodType = new List<string>() { "learnMethod:Lecture", "learnMethod:Laboratory" },
 				DeliveryType = new List<string>() { "BlendedLearning" },
@@ -80,11 +80,50 @@ namespace RA.SamplesForDocumentation
 					Country="United States"
 				}
 			};
-			//
-			//A learning opportunity *must* be connected to a credential in order to be published.
-			//The connection can be made using a Required condition profile in the Credential or using a RequiredFor from the learning opportunity
 
-			myData.IsRequiredFor = new List<ConnectionProfile>()
+            //								Teaches competencies
+            //	Where a learning opportunity teaches one or more competencies, they can be published in the Teaches property
+			//	List<CredentialAlignmentObject> Teaches
+			//  Ideally, the competencies would be part of a competency framework that could be published to the registry.
+			//  If the competencies are 'free floating' they can be published just using the name and an optional description
+            myData.Teaches = new List<CredentialAlignmentObject>()
+            {
+                new CredentialAlignmentObject()
+                {
+                    TargetNodeName="Upon successful completion of this course, the student will be able to recognize causes and effects of chemically induced illness"
+                },
+                new CredentialAlignmentObject()
+                {
+                    TargetNodeName="And understand the role proper nutrition plays in avoiding and/or mitigating the damage these chemicals cause"
+                },
+                new CredentialAlignmentObject()
+                {
+                    TargetNodeName="Know how to find alternative solutions to chemicals",
+					TargetNodeDescription = "An important description providing more details about this competency"
+                }
+            };
+			//if the competencies are from a published framework, additional properties can be included
+			myData.Teaches.Add( new CredentialAlignmentObject()
+			{
+                Framework= "https://credentialengineregistry.org/resources/ce-6fdd56d3-0214-4a67-b0c4-bb4c16ce9a13",
+				TargetNode= "https://credentialengineregistry.org/resources/ce-a3246950-f245-4da5-9fa1-ee697db66d7f",
+				FrameworkName ="SNHU Competency Framework",
+				TargetNodeName = "Balance competing priorities in making decisions for your team that support organizational goals",
+				CodedNotation="balance101"
+			} );
+
+            //A competency framework can contain many competencies. If a learning opportunity teaches all competencies in a framework, the helper property: TeachesCompetencyFramework may be used for efficiency. Rather than listing 10, 50, 500 competencies, only the CTID for the competency framework needs to be provided. The API will validate the framework, then fetch all competencies in the framework and populate the Teaches property.
+            //NOTE: The framework must have already been published to the credential registry. 
+            myData.TeachesCompetencyFramework = new List<string>()
+			{
+                "ce-6fdd56d3-0214-4a67-b0c4-bb4c16ce9a13"
+            };
+
+            //
+            //A learning opportunity is usually connected to a credential. It is useful to provide the relationships where possible
+            //The connection can be made using a Required condition profile in the Credential or using a RequiredFor from the learning opportunity
+
+            myData.IsRequiredFor = new List<ConnectionProfile>()
 			{
 				new ConnectionProfile()
 				{
@@ -216,7 +255,7 @@ namespace RA.SamplesForDocumentation
 				Description = "This is some text that describes my Course.",
 				CTID = myCTID,
 				LifeCycleStatusType = "Active",
-				SubjectWebpage = "https://example.org/t=course1234",
+				SubjectWebpage = "https://example.org/?t=course1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				LearningMethodType = new List<string>() { "learnMethod:Lecture", "learnMethod:Laboratory" },
 				DeliveryType = new List<string>() { "BlendedDelivery" },
@@ -396,7 +435,7 @@ namespace RA.SamplesForDocumentation
 				Description = "This is some text that describes my Learning Program.",
 				CTID = myCTID,
 				LifeCycleStatusType = "Active",
-				SubjectWebpage = "https://example.org/t=LearningProgram1234",
+				SubjectWebpage = "https://example.org/?t=LearningProgram1234",
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
 				LearningMethodType = new List<string>() { "learnMethod:Lecture", "learnMethod:Laboratory" },
 				DeliveryType = new List<string>() { "BlendedLearning" },

@@ -77,52 +77,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// List of Alternate Names for this resource
-		/// </summary>
-		public List<string> AlternateName { get; set; } = new List<string>();
-		/// <summary>
-		/// LanguageMap for AlternateName
-		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 
-		/// <summary>
-		/// The webpage that describes this entity.
-		/// URL
-		/// </summary>
-		public string SubjectWebpage { get; set; }
-
-		/// <summary>
-		/// This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
-		/// Provide the CTID or the full URI for the target environment. 
-		/// It would be a burden to have a user provide a blank node Id.
-		/// However, we could recommend that a CTID is provided, and just convert.
-		/// </summary>
-		public List<string> HasChild { get; set; } = new List<string>();
-
-		/// <summary>
-		/// Goal or destination node of the pathway. 
-		/// Provide the CTID or the full URI for the target environment. 
-		/// URI for a ceterms:PathwayComponent
-		/// Multipicity: Many
-		/// </summary>
-		public List<string> HasDestinationComponent { get; set; } = new List<string>();
-
-		/// <summary>
-		/// This property identifies all the PathwayComponents in a Pathway
-		/// Provide the CTID or the full URI for the target environment. 
-		/// However, we recommend that a CTID be provided, and the API will format accordingly.
-		/// As a helper, this could be generated from all of the provided components
-		/// 
-		/// 
-		/// Per meeting on July 16, 2020 Stuart agreed that ceterms:Pathway will NOT have the property ceterms:hasPart.
-		/// </summary>
-		public List<string> HasPart { get; set; } = new List<string>();
-
-		/// <summary>
-		/// CTID/URL to a Progression Model
-		/// </summary>
-		public string HasProgressionModel { get; set; }
 
 		#region at least one of
 
@@ -135,14 +90,55 @@ namespace RA.Models.Input
 		/// Organization(s) that offer this resource
 		/// </summary>
 		public List<OrganizationReference> OfferedBy { get; set; }
-		#endregion
+        #endregion
 
 
-		#endregion
-		/// <summary>
-		/// Keyword or key phrase describing relevant aspects of an entity.
-		/// </summary>
-		public List<string> Keyword { get; set; } = new List<string>();
+        #endregion
+
+        #region RECOMMENDED
+
+        /// <summary>
+        /// Goal or destination node of the pathway. 
+        /// If there are any pathway components, then a destination component is required.
+        /// Provide the CTID or the full URI for the target environment. 
+        /// URI for a ceterms:PathwayComponent
+        /// SINGLE at this time. Using a definition as a list for potential future uses.
+        /// </summary>
+        public List<string> HasDestinationComponent { get; set; } = new List<string>();
+
+        /// <summary>
+        /// This property identifies a child pathway(s) or pathwayComponent(s) in the downward path.
+		/// Generally do not have to use hasChild if using hasDestinationCompoment.
+        /// Provide the CTID (preferred) or the full URI for the target environment. 
+        /// </summary>
+        public List<string> HasChild { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Reference to a progression model used.
+		/// CTID/URL
+        /// </summary>
+        public string HasProgressionModel { get; set; }
+
+        /// <summary>
+        /// Reference to a relevant support service.
+        /// List of CTIDs that reference one or more published support services
+        /// </summary>
+        public List<string> HasSupportService { get; set; }
+
+        /// <summary>
+        /// The webpage that describes this entity.
+        /// 23-05-01 No longer required.
+        /// URL
+        /// </summary>
+        public string SubjectWebpage { get; set; }
+
+		//Also OccupationType, and IndustryType - see below
+        #endregion
+
+        /// <summary>
+        /// Keyword or key phrase describing relevant aspects of an entity.
+        /// </summary>
+        public List<string> Keyword { get; set; } = new List<string>();
         /// <summary>
         /// Language map list for Keyword
         /// </summary>
@@ -221,8 +217,29 @@ namespace RA.Models.Input
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
-		#endregion
-	}
+        #endregion
+
+        /// <summary>
+        /// This property identifies all the PathwayComponents in a Pathway
+        /// Provide the CTID or the full URI for the target environment. 
+        /// However, we recommend that a CTID be provided, and the API will format accordingly.
+        /// As a helper, this could be generated from all of the provided components
+        /// 
+        /// 
+        /// Per meeting on July 16, 2020 Stuart agreed that ceterms:Pathway will NOT have the property ceterms:hasPart.
+        /// </summary>
+        public List<string> HasPart { get; set; } = new List<string>();
+
+        /// <summary>
+        /// List of Alternate Names for this resource
+        /// </summary>
+        public List<string> AlternateName { get; set; } = new List<string>();
+        /// <summary>
+        /// LanguageMap for AlternateName
+        /// </summary>
+        public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+
+    }
 
     /// <summary>
     /// History
@@ -231,56 +248,84 @@ namespace RA.Models.Input
     /// </summary>
     public class PathwayComponent 
 	{
-		/// <summary>
-		/// Type of PathwayComponent. 
-		/// Valid values (with or without ceterms:) :
-		/// ceterms:AssessmentComponent	
-		/// ceterms:BasicComponent	
-		/// ceterms:CocurricularComponent	
-		/// ceterms:CompetencyComponent	
-		/// ceterms:CourseComponent 	
-		/// ceterms:CredentialComponent 	
-		/// ceterms:ExtracurricularComponent 	
-		/// ceterms:JobComponent 	
-		/// ceterms:selectioncomponent  2022-01-31 - OBSOLETE
-		/// ceterms:WorkExperienceComponent
-		/// </summary>
-		public string PathwayComponentType { get; set; }
+        #region REQUIRED Properties
+        /// <summary>
+        /// Type of PathwayComponent. 
+        /// Valid values (with or without ceterms:) :
+        /// ceterms:AssessmentComponent	
+        /// ceterms:BasicComponent	
+        /// ceterms:CocurricularComponent	
+        /// ceterms:CompetencyComponent	
+        /// ceterms:CourseComponent 	
+        /// ceterms:CredentialComponent 	
+        /// ceterms:ExtracurricularComponent 	
+        /// ceterms:JobComponent 	
+        /// ceterms:selectioncomponent  2022-01-31 - OBSOLETE
+        /// ceterms:WorkExperienceComponent
+        /// </summary>
+        public string PathwayComponentType { get; set; }
 
+        /// <summary>
+        /// CTID
+        /// Required
+        /// </summary>
+        public string CTID { get; set; }
 
-
-		/// <summary>
-		/// PathwayComponent Name
-		/// Required
-		/// </summary>
-		public string Name { get; set; }
+        /// <summary>
+        /// PathwayComponent Name
+        /// Required
+        /// </summary>
+        public string Name { get; set; }
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
-		#region Common Properties
-		/// <summary>
-		/// CTID
-		/// Required
-		/// </summary>
-		public string CTID { get; set; }
-
-		/// <summary>
-		/// Label identifying the category to further distinguish one component from another as designated by the promulgating body.
-		/// Examples may include "Required", "Core", "General Education", "Elective", etc.
-		/// </summary>
-		public List<string> ComponentDesignation { get; set; } = new List<string>();
+        /// <summary>
+        /// Type of credential such as badge, certification, bachelor degree.
+        /// The credential type as defined in CTDL. 
+        /// REQUIRED for ceterms:CredentialComponent only
+        /// </summary>
+        public string CredentialType { get; set; }
 
 
-		/// <summary>
-		/// PathwayComponent Description 
-		/// </summary>
-		public string Description { get; set; }
+        #endregion
+
+        #region RECOMMENDED Properties
+
+
+        /// <summary>
+        /// PathwayComponent Description 
+        /// </summary>
+        public string Description { get; set; }
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+
+        /// <summary>
+        /// This property identifies the Pathways of which it is a part. 		
+        /// Provide the CTID or the full URI for the target environment. 
+        /// NOTE if this is left empty (recommended) the API will assign the current Pathway
+        /// </summary>
+        public List<string> IsPartOf { get; set; } = new List<string>();
+
+        /// <summary>
+        /// The webpage that describes this entity.
+        /// URL
+        /// </summary>
+        public string SubjectWebpage { get; set; }
+        #endregion
+
+        #region Common Properties
+
+        /// <summary>
+        /// Label identifying the category to further distinguish one component from another as designated by the promulgating body.
+        /// Examples may include "Required", "Core", "General Education", "Elective", etc.
+        /// </summary>
+        public List<string> ComponentDesignation { get; set; } = new List<string>();
+
 
 		/// <summary>
 		/// Resource(s) that describes what must be done to complete a PathwayComponent, or part thereof, as determined by the issuer of the Pathway.
@@ -327,13 +372,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> IsDestinationComponentOf { get; set; } = new List<string>();
 
-		/// <summary>
-		/// This property identifies the Pathways of which it is a part. 		/// 
-		/// Provide the CTID or the full URI for the target environment. 
-		/// Note if this is left empty (recommended) the API will assign the current Pathway
-		/// </summary>
-		public List<string> IsPartOf { get; set; } = new List<string>();
-
 
 		/// <summary>
 		/// List of Alternate Names for this resource
@@ -363,13 +401,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> PrecededBy { get; set; } = new List<string>();
 
-        ///// <summary>
-        ///// Resource(s) required as a prior condition to this resource.
-        ///// Provide the CTID or the full URI for the target environment. 
-        ///// ceterms:ComponentCondition
-        ///// </summary>
-        //[Obsolete]		//June 30, 2022
-        //public List<string> Prerequisite { get; set; } = new List<string>();
 
         /// <summary>
         /// Indicates the resource for which a pathway component or similar proxy resource is a stand-in.
@@ -379,26 +410,14 @@ namespace RA.Models.Input
         public string ProxyFor { get; set; }
 
         /// <summary>
-        /// URL to structured data representing the resource.
-        /// The preferred data serialization is JSON-LD or some other serialization of RDF.
-        /// If this is a registry URI, the user can just provide a CTID.
-		/// NOTE THIS WILL LIKELY BE COMPLETELY REPLACED BY ProxyFor
-        /// URL
+        /// Where the source data is not in the registry, a 'blank node' can be provided. 
+        /// The blank node would most likely be of a type closely associated with the the type of pathway component. 
+        /// Examples: learningOpportunity/Course for a CourseComponent, AssessmentProfile for an AssessmentComponent, etc. 
+		/// NOT IMPLEMENTED, COMING SOON.
         /// </summary>
-        [Obsolete] //early warning
-		public string SourceData { get; set; }
-		/// <summary>
-		/// Where the source data is not in the registry, a 'blank node' can be provided. 
-		/// The blank node would most likely be of a type closely associated with the the type of pathway component. 
-		/// Examples: learningOpportunity/Course for a CourseComponent, AssessmentProfile for an AssessmentComponent, etc. 
-		/// </summary>
-		public List<EntityReference> ProxyForBNode { get; set; } = new List<EntityReference>();
+        public List<EntityReference> ProxyForBNode { get; set; } = new List<EntityReference>();
 
-		/// <summary>
-		/// The webpage that describes this entity.
-		/// URL
-		/// </summary>
-		public string SubjectWebpage { get; set; }
+
 		#endregion
 
 		#region BasicComponent,	CocurricularComponent, ExtracurricularComponent 
@@ -450,16 +469,6 @@ namespace RA.Models.Input
 
 		#endregion
 
-		#region CredentialComponent
-		/// <summary>
-		/// Type of credential such as badge, certification, bachelor degree.
-		/// The credential type as defined in CTDL. 
-		/// Used by: 
-		/// ceterms:CredentialComponent only
-		/// </summary>
-		public string CredentialType { get; set; }
-
-		#endregion
 
 
 		#region JobComponent only - OccupationType and Industry type
@@ -505,13 +514,35 @@ namespace RA.Models.Input
 		/// https://www.naics.com/search/
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
-		#endregion
-	}
+        #endregion
 
-	/// <summary>
-	/// Component Condition
-	/// </summary>
-	public class ComponentCondition
+        #region OBSOLETE
+        ///// <summary>
+        ///// Resource(s) required as a prior condition to this resource.
+        ///// Provide the CTID or the full URI for the target environment. 
+        ///// ceterms:ComponentCondition
+        ///// </summary>
+        //[Obsolete]		//June 30, 2022
+        //public List<string> Prerequisite { get; set; } = new List<string>();
+
+        /// <summary>
+        /// URL to structured data representing the resource.
+        /// The preferred data serialization is JSON-LD or some other serialization of RDF.
+        /// If this is a registry URI, the user can just provide a CTID.
+        /// NOTE THIS WILL LIKELY BE COMPLETELY REPLACED BY ProxyFor
+        /// URL
+        /// </summary>
+        [Obsolete] //early warning
+        public string SourceData { get; set; }
+
+        #endregion
+
+    }
+
+    /// <summary>
+    /// Component Condition
+    /// </summary>
+    public class ComponentCondition
 	{
 
 		/// <summary>
@@ -554,13 +585,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<ComponentCondition> HasCondition { get; set; } = new List<ComponentCondition>();
 
-		/// <summary>
-		/// Referenced resource defines a single constraint.
-		/// URI or CTID??
-		/// ceterms:hasConstraint
-		///  Range: ceterms:Constraint
-		/// </summary>
-		public List<Constraint> HasConstraint { get; set; } = new List<Constraint>();
+        /// <summary>
+        /// Number of hasConstraint objects that must be fulfilled in order to satisfy the ComponentCondition.
+        /// </summary>
+        public int RequiredConstraints { get; set; }
+
+        /// <summary>
+        /// Referenced resource defines a single constraint.
+        /// URI or CTID??
+        /// ceterms:hasConstraint
+        ///  Range: ceterms:Constraint
+        /// </summary>
+        public List<Constraint> HasConstraint { get; set; } = new List<Constraint>();
 
 		/// <summary>
 		/// Type that denotes a logical operation such as "AND", "OR", "NOT"; select from an existing enumeration of such types.
@@ -579,6 +615,7 @@ namespace RA.Models.Input
 		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 
 	}
+
 
 	/// <summary>
 	/// Resource that identifies the parameters defining a limitation or restriction applicable to candidate pathway components.

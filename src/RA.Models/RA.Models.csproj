@@ -118,6 +118,7 @@
     <Compile Include="Input\ProgressionModelRequest.cs" />
     <Compile Include="Input\ScheduledOfferingRequest.cs" />
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />
+    <Compile Include="Input\SupportServiceRequest.cs" />
     <Compile Include="Input\TransferIntermediaryRequest.cs" />
     <Compile Include="Input\TransferValueProfileRequest.cs" />
     <Compile Include="Input\VerificationServiceProfileRequest.cs" />

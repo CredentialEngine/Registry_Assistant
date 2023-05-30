@@ -13,7 +13,6 @@ namespace RA.Models.Input
     {
         public string Type { get; set; } = "ceterms:CredentialAlignmentObject";
 
-
         /// <summary>
         /// Set of alpha-numeric symbols as defined by the body responsible for this resource that uniquely identifies this resource and supports its discovery and use.
         /// </summary>

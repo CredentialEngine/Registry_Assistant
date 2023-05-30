@@ -43,12 +43,12 @@ namespace RA.SamplesForDocumentation
 				Name = "My Scheduled Offering Name",
 				Description = "This is some text that describes my Scheduled Offering.",
 				CTID = myCTID,
-				SubjectWebpage = "https://example.org/t=APIRequestResource1234",
+				SubjectWebpage = "https://example.org/?t=APIRequestResource1234",
 				DeliveryType = new List<string>() { "BlendedDelivery" },
-				AvailabilityListing = new List<string>() { "https://example.org/t=whereIsAvailable" },
-				AvailableOnlineAt = new List<string>() { "https://example.org/t=whereIsAvailableOnline" },
-				DeliveryTypeDescription= "Optional description of the delivery type."
-			};
+				AvailabilityListing = new List<string>() { "https://example.org/?t=whereIsAvailable" },
+				AvailableOnlineAt = new List<string>() { "https://example.org/?t=whereIsAvailableOnline" },
+				DeliveryTypeDescription= "Optional description of the delivery type.",
+            };
 			//add offeredBy
 			myData.OfferedBy.Add( new OrganizationReference()
 			{

@@ -13,9 +13,20 @@ namespace RA.Models.Input
 		}
 		public Rubric Rubric { get; set; } = new Rubric();
 
+		/// <summary>
+		/// Rubric Criteria for this Rubric
+		/// </summary>
 		public List<RubricCriterion> RubricCriterion { get; set; } = new List<RubricCriterion>();
-		public List<CriterionCategory> CriterionCategory { get; set; } = new List<CriterionCategory>();
-		public List<CriterionLevel> CriterionLevel { get; set; } = new List<CriterionLevel>();
+
+        /// <summary>
+        /// Criterion Category for this Rubric
+        /// </summary>
+        public List<CriterionCategory> CriterionCategory { get; set; } = new List<CriterionCategory>();
+
+        /// <summary>
+        /// Criterion Level for this Rubric
+        /// </summary>
+        public List<CriterionLevel> CriterionLevel { get; set; } = new List<CriterionLevel>();
 	}
 
 	/// <summary>
@@ -33,11 +44,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CTID { get; set; }
 
-		/// <summary>
-		/// An account of the resource.
-		/// </summary>
-		//[JsonProperty( "dcterms:description" )]
-		public string Description { get; set; }
+        /// <summary>
+        /// A name given to the resource.
+        /// </summary>
+        public string Title { get; set; }
+        public LanguageMap Title_Map { get; set; } = new LanguageMap();
+
+        /// <summary>
+        /// An account of the resource.
+        /// </summary>
+        //[JsonProperty( "dcterms:description" )]
+        public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
 		//????these are URIs - could imply RubricCriterion is to be a top level class
@@ -48,12 +65,13 @@ namespace RA.Models.Input
 		//[JsonProperty( "asn:hasCriterion" )]
 		public List<string> HasCriterion { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Has Criterion Category
-		/// Resource referenced by the Rubric that defines categories for clustering logical sets of RubricCriterion.
-		/// </summary>
-		//[JsonProperty( "asn:hasCriterionCategory" )]
-		public List<string> HasCriterionCategory { get; set; } = new List<string>();
+        /// <summary>
+        /// Has Criterion Category
+        /// Resource referenced by the Rubric that defines categories for clustering logical sets of RubricCriterion.
+        /// ?LIst of URIs? or concepts? Oh, just CriterionCategory. So the latter have CTIDs.
+        /// </summary>
+        //[JsonProperty( "asn:hasCriterionCategory" )]
+        public List<string> HasCriterionCategory { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Reference to a progression model used.
@@ -72,6 +90,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// An unambiguous reference to the resource within a given context.
 		/// Recommended practice is to identify the resource by means of a string conforming to an identification system. Examples include International Standard Book Number (ISBN), Digital Object Identifier (DOI), and Uniform Resource Name (URN). Persistent identifiers should be provided as HTTP URIs.
+		/// TODO - should this be codedNotation, or of type IdentifierValue?
 		/// </summary>
 		//[JsonProperty( "dcterms:identifier" )]
 		public string Identifier { get; set; }
@@ -82,19 +101,15 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Original resource on which this resource is based or derived from.
 		/// </summary>
-		//[JsonProperty( "dcterms:source" )]  //??? 
 		public string Source { get; set; }  //URI
 
-		/// <summary>
-		/// A name given to the resource.
-		/// </summary>
-		//[JsonProperty( "dcterms:title" )]
-		public string Title { get; set; }
-		public LanguageMap Title_Map { get; set; } = new LanguageMap();
+
 
 	}
-
-	public class RubricCriterion
+    /// <summary>
+    /// RubricCriterian defines a principle or standard to be met that demonstrates quality in performance of a task or obtaining an objective.
+    /// </summary>
+    public class RubricCriterion
 	{
 		public RubricCriterion()
 		{
@@ -149,7 +164,10 @@ namespace RA.Models.Input
 
 	}
 
-	public class CriterionCategory
+    /// <summary>
+    /// Resource that defines categories for clustering logical sets of RubricCriterion.
+    /// </summary>
+    public class CriterionCategory
 	{
 		public CriterionCategory()
 		{
@@ -185,13 +203,17 @@ namespace RA.Models.Input
 		/// <summary>
 		/// RubricCriterian referenced defines a principle or standard to be met that demonstrates quality in performance of a task or obtaining an objective.
 		/// List of RubricCriterian
+		/// LIKELY REQUIRED??
 		/// </summary>
 		//[JsonProperty( "asn:hasCriterion" )]
 		public List<string> HasCriterion { get; set; } = new List<string>();
 
 	}
 
-	public class CriterionLevel
+    /// <summary>
+    /// Resource description of a level of performance based on a RubricCriterion.
+    /// </summary>
+    public class CriterionLevel
 	{
 		public CriterionLevel()
 		{

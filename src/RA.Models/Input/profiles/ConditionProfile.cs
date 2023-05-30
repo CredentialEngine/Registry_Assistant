@@ -11,7 +11,7 @@ namespace RA.Models.Input
 	/// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
 	/// </summary>
 	public class ConditionProfile
-    {
+	{
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -60,7 +60,7 @@ namespace RA.Models.Input
 		/// Organization that asserts this condition
 		/// This should be single, but as CTDL defines as multi-value, need to handle a List
 		/// </summary>
-		public List<OrganizationReference> AssertedBy { get; set; } = null;
+		public List<string> AssertedBy { get; set; } = null;
 
 		/// <summary>
 		///  Webpage that describes this condition
@@ -187,6 +187,7 @@ namespace RA.Models.Input
 		/// Credential that is a focus or target of the condition, process or verification service.
 		/// </summary>
 		public List<EntityReference> TargetCredential { get; set; }
+
 		/// <summary>
 		/// Learning opportunity that is the focus of a condition, process or another learning opportunity.
 		/// </summary>
@@ -198,6 +199,20 @@ namespace RA.Models.Input
 		/// targetCompetency is typically a competency required for the parent of this condition profile
 		/// </summary>
 		public List<CredentialAlignmentObject> TargetCompetency { get; set; }
+
+        /// <summary>
+        /// Occupation that is the focus of a condition, process or another learning opportunity.
+        /// Only valid for 
+        ///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
+        /// </summary>
+        public List<EntityReference> TargetJob { get; set; }
+
+        /// <summary>
+        /// Occupation that is the focus of a condition, process or another learning opportunity.
+        /// Only valid for 
+        ///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
+        /// </summary>
+        public List<EntityReference> TargetOccupation { get; set; }
 
         /// <summary>
         /// List of Alternate Names for this resource
@@ -216,7 +231,6 @@ namespace RA.Models.Input
 		/// NOTE: will likely only allow for a "Requires" condition profile
 		/// </summary>
 		public List<string> TargetCompetencyFramework { get; set; }
-
 
         #endregion
     }
@@ -300,7 +314,22 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<EntityReference> TargetLearningOpportunity { get; set; }
 
-	}
+
+        /// <summary>
+        /// Occupation that is the focus of a condition, process or another learning opportunity.
+        /// Only valid for 
+        ///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
+        /// </summary>
+        public List<EntityReference> TargetJob{ get; set; }
+
+        /// <summary>
+        /// Occupation that is the focus of a condition, process or another learning opportunity.
+        /// Only valid for 
+        ///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
+        /// </summary>
+        public List<EntityReference> TargetOccupation { get; set; } 
+
+    }
 	//retain in order to not mess up previous use
     public class Connections : ConnectionProfile
     {

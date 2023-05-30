@@ -170,15 +170,24 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Competency that the learning opportunity is intended to teach.
+		/// List of CredentialAlignmentObjects where TargetNodeName is the only required property. 
 		/// </summary>
 		public List<CredentialAlignmentObject> Teaches { get; set; }
 
-		/// <summary>
-		/// Types of methods used to conduct the learning opportunity; select from an existing enumeration of such types.
-		/// Applied, Gaming, Laboratory, Lecture, Prerecorded, SelfPaced, Seminar, WorkBased
-		/// <see href="https://credreg.net/ctdl/terms/LearningMethod"></see>
-		/// </summary>
-		public List<string> LearningMethodType { get; set; }
+        /// <summary>
+        /// Teaches Competency Framework - Helper property
+        /// A list of CTIDs for frameworks, where this resource teaches all competencies in a framework.
+        /// API will look up framework, get all competencies and add as Teaches for this resource. 
+        /// Only provide Teaches or TeachesCompetencyFramework, but not both (will result in an error).
+        /// </summary>
+        public List<string> TeachesCompetencyFramework { get; set; }
+
+        /// <summary>
+        /// Types of methods used to conduct the learning opportunity; 
+        /// Concepts: Applied, Gaming, Laboratory, Lecture, Prerecorded, SelfPaced, Seminar, WorkBased
+        /// ConceptScheme: <see href="https://credreg.net/ctdl/terms/LearningMethod">LearningMethod</see>
+        /// </summary>
+        public List<string> LearningMethodType { get; set; }
 
 
 		/// <summary>
@@ -332,17 +341,22 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 
-		/// <summary>
-		///  Indicates a separately identifiable and independently useful component of the entity.
-		/// </summary>
-		public List<EntityReference> HasPart { get; set; }
+        /// <summary>
+        ///  Indicates an offering and typical schedule.
+        ///  NOTE: Only use this property when it is necessary and useful to provide data about specific offerings of a learning opportunity or assessment, such as particular combinations of schedule, location, and delivery.
+        /// </summary>
+        public List<string> HasOffering { get; set; } = new List<string>();
+
+        /// <summary>
+        ///  Indicates a separately identifiable and independently useful component of the entity.
+        /// </summary>
+        public List<EntityReference> HasPart { get; set; }
 
 		/// <summary>
 		/// Indicates a resource that acts as a stand-in for the resource. 
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public string HasProxy { get; set; }
-
 
         /// <summary>
         /// Reference to a relevant support service.
@@ -685,11 +699,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public string SCED { get; set; }
 
-        /// <summary>
-        ///  Indicates an offering and typical schedule.
-        ///  NOTE: Only use this property when it is necessary and useful to provide data about specific offerings of a learning opportunity or assessment, such as particular combinations of schedule, location, and delivery.
-        /// </summary>
-        public List<string> HasOffering { get; set; } = new List<string>();
 
 		#region Properties allowed only for learning programs
 		//these will be ignored for all other types

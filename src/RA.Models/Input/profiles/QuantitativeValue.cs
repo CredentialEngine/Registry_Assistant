@@ -21,9 +21,12 @@ namespace RA.Models.Input
 	public class QuantitativeValue
 	{
 		/// <summary>
-		/// Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. For example:
-		/// creditUnit:DegreeCredit or ContinuingEducationUnit
-		/// <see cref="https://credreg.net/ctdl/terms/creditUnitType"/> 
+		/// The unit for the context of this profile.
+		/// For credit: 
+		///		Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. 
+		///		For example:
+		///		creditUnit:DegreeCredit or ContinuingEducationUnit
+		///		<see cref="https://credreg.net/ctdl/terms/creditUnitType"/> 
 		/// If this object is a monetary purpose, the UnitText would typically be the related currency for the value (example: "USD")
 		/// </summary>
 		public string UnitText { get; set; }

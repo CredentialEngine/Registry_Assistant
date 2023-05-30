@@ -54,12 +54,13 @@ namespace RA.Models.Input
 		/// <seealso href="https://en.wikipedia.org/wiki/ISO_8601#Durations">ISO_8601 Durations</seealso>
 		/// </summary>
 		public string Duration_ISO8601 { get; set; }
-		public int Years { get; set; }
-		public int Months { get; set; }
-		public int Weeks { get; set; }
-		public int Days { get; set; }
-		public int Hours { get; set; }
-		public int Minutes { get; set; }
+		//TODO - technically a decimal can be used. So P2.5Y instead of P2Y6M. Or more precise: P4.38Y.
+		public decimal Years { get; set; }
+		public decimal Months { get; set; }
+		public decimal Weeks { get; set; }
+		public decimal Days { get; set; }
+		public decimal Hours { get; set; }
+		public decimal Minutes { get; set; }
 
 	}
 }

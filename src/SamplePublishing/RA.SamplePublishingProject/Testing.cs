@@ -109,7 +109,17 @@ namespace RA.SamplePublishingProject
 
 		}
 
-		#endregion
+        #endregion
 
-	}
+        #region SupportService publishing
+        [TestMethod]
+        public void PublishSupportService()
+        {
+            new RA.SamplesForDocumentation.PublishSupportService().Publish( "format" );
+
+        }
+
+        #endregion
+
+    }
 }
