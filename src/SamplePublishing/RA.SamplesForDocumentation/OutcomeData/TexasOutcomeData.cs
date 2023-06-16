@@ -91,7 +91,6 @@ namespace RA.SamplesForDocumentation.OutcomeData
                         var valueInput = "";
                         var percentInput = "";
                         //cannot guarantee the order of the columns
-                        var subjectValues = new List<QuantitativeValue>();
                         var subjectValue1 = new QuantitativeValue();
                         var subjectValue2 = new QuantitativeValue();
                         var subjectValue3 = new QuantitativeValue();
