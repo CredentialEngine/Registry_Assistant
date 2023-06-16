@@ -3,7 +3,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using RA.SamplesForDocumentation;
-using RA.SamplesForDocumentation.PerformanceExamples;
+using RA.SamplesForDocumentation.OutcomeData;
 
 namespace RA.SamplePublishingProject
 {
@@ -26,5 +26,13 @@ namespace RA.SamplePublishingProject
 			new WIOAExamples().Example1( "publish" );
 
 		}
-	}
+
+        [TestMethod]
+        public void PublishExample()
+        {
+            //
+            new TexasOutcomeData().Prototype( "publish" );
+
+        }
+    }
 }

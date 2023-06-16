@@ -1,0 +1,305 @@
+﻿{
+	"Credential": {
+		"Type": "Credential",
+		"CredentialType": "ceterms:BachelorDegree",
+		"Name": "B.S. in Nursing (Pre-Licensure)",
+		"Description": "The Bachelor of Science in Nursing (B.S.N.) degree program offers a creative curriculum for meeting the current and future health needs of society. The curriculum prepares a generalist in professional nursing and serves as a basis for graduate study.\n\nThe B.S.N. degree program is offered at several Indiana University campuses. All campuses share similar admission standards, program outcomes, and courses. Admission and transfer policies are set by individual campuses and course sequencing may vary.",
+		"OwnedBy": [
+			{
+				"Type": "CredentialOrganization",
+				"CTID": "ce-55183524-eefd-487d-bbec-985b8b509386"
+			}
+		],
+		"CredentialStatusType": "Active",
+		"CTID": "ce-2f7bc05c-2f9c-4119-9507-2f64d1a71b7b",
+		"SubjectWebpage": "https://healthscience.iusb.edu/nursing/index.html",
+		"InLanguage": [
+			"en"
+		],
+		"AudienceLevelType": [
+			"BachelorsDegreeLevel"
+		],
+		"AvailableAt": [
+			{
+				"Name": "Indiana University South Bend",
+				"Address1": "1700 Mishawaka Avenue",
+				"City": "South Bend",
+				"AddressRegion": "Indiana",
+				"PostalCode": "46634-7111",
+				"Country": "United States",
+				"Latitude": 41.6652955,
+				"Longitude": -86.2220432
+			}
+		],
+		"DateEffective": "8/4/1971",
+		"AccreditedBy": [
+			{
+				"Type": "QACredentialOrganization",
+				"Name": "Commission on Collegiate Nursing Education (CCNE)",
+				"SubjectWebpage": "http://ccneaccreditation.org"
+			}
+		],
+		"OfferedBy": [
+			{
+				"Type": "CredentialOrganization",
+				"CTID": "ce-55183524-eefd-487d-bbec-985b8b509386"
+			}
+		],
+		"EstimatedCost": [
+			{
+				"CostDetails": "https://administration.iusb.edu/bursar/tuition-and-fees/2020-2021.html",
+				"Description": "Once you register, IU reserves specific class space for you and commits resources to provide instruction you have selected. By registering, you assume the responsibility for paying course fees or properly withdrawing from classes when you decide not to attend. Your registration is not cancelled for nonpayment of fees.",
+				"Name": "Cost Profile",
+				"Currency": "US Dollar",
+				"CostItems": [
+					{
+						"DirectCostType": "costType:Tuition",
+						"Price": 3533.68
+					},
+					{
+						"DirectCostType": "costType:Tuition",
+						"Price": 9963.19
+					},
+					{
+						"DirectCostType": "costType:ProgramSpecificFee",
+						"Price": 97.12
+					}
+				]
+			}
+		],
+		"Image": "https://assets.iu.edu/brand/2.x/trident-large.png",
+		"LearningDeliveryType": [
+			"InPerson",
+			"OnlineOnly"
+		],
+		"OccupationType": [
+			{
+				"Framework": "https://www.bls.gov/soc/",
+				"FrameworkName": "Standard Occupational Classification",
+				"CodedNotation": "29-1141.00",
+				"Name": "Registered Nurses",
+				"Description": "Assess patient health problems and needs, develop and implement nursing care plans, and maintain medical records. Administer nursing care to ill, injured, convalescent, or disabled patients. May advise patients on health maintenance and disease prevention or provide case management. Licensing or registration required.",
+				"TargetNode": "https://www.onetonline.org/link/summary/29-1141.00"
+			},
+			{
+				"Framework": "https://www.bls.gov/soc/",
+				"FrameworkName": "Standard Occupational Classification",
+				"CodedNotation": "29-1141.01",
+				"Name": "Acute Care Nurses",
+				"Description": "Provide advanced nursing care for patients with acute conditions such as heart attacks, respiratory distress syndrome, or shock. May care for pre- and post-operative patients or perform advanced, invasive diagnostic or therapeutic procedures.",
+				"TargetNode": "https://www.onetonline.org/link/summary/29-1141.01"
+			},
+			{
+				"Framework": "https://www.bls.gov/soc/",
+				"FrameworkName": "Standard Occupational Classification",
+				"CodedNotation": "29-1141.03",
+				"Name": "Critical Care Nurses",
+				"Description": "Provide advanced nursing care for patients in critical or coronary care units.",
+				"TargetNode": "https://www.onetonline.org/link/summary/29-1141.03"
+			}
+		],
+		"InstructionalProgramType": [
+			{
+				"FrameworkName": "Classification of Instructional Programs",
+				"CodedNotation": "51.3801",
+				"Name": "Registered Nursing/Registered Nurse",
+				"Description": "A program that generally prepares individuals in the knowledge, techniques and procedures for promoting health, providing care for sick, disabled, infirmed, or other individuals or groups.  Includes instruction in the administration of medication and treatments, assisting a physician during treatments and examinations, Referring patients to physicians and other health care specialists, and planning education for health maintenance.",
+				"TargetNode": "https://nces.ed.gov/ipeds/cipcode/cipdetail.aspx?y=56&cip=51.3801"
+			}
+		],
+		"AggregateData": [
+			{
+				"Description": "Indiana University South Bend credential for B.S. in Nursing (Pre-Licensure)  Data Profile",
+				"RelevantDataSet": [
+					{
+						"CTID": "ce-ed36f74a-2845-4b37-9209-27d987422037",
+						"Description": "The National Council Licensure Examination-Registered Nurse (NCLEX-RN) is developed by the National Council of State Boards of Nursing, Inc. (NCSBN) and is used by all 50 states as a requirement for licensure.  The national pass rate on the NCLEX-RN for first-time exam takers who graduated from baccalaureate pre-licensure programs was 90.3 percent for 2020.",
+						"Name": "Indiana BSN Pass Rates",
+						"DataProvider": {},
+						"DataSetTimePeriod": [
+							{
+								"DataAttributes": [
+									{
+										"HoldersInSet": [
+											{
+												"Value": 50.0,
+												"Description": "Students that passed NCLEX Exam."
+											}
+										],
+										"PassRate": [
+											{
+												"Percentage": 98.0,
+												"Description": "Pass rate for 2018"
+											}
+										],
+										"SubjectsInSet": [
+											{
+												"Value": 51.0,
+												"Description": "NCLEX Test takers"
+											}
+										]
+									}
+								],
+								"Description": "Pass Rates are updated annually.",
+								"StartDate": "2018-1-1",
+								"EndDate": "2018-12-31"
+							},
+							{
+								"DataAttributes": [
+									{
+										"HoldersInSet": [
+											{
+												"Value": 55.0,
+												"Description": "Students that passed NCLEX Exam."
+											}
+										],
+										"PassRate": [
+											{
+												"Percentage": 94.8,
+												"Description": "Pass rate for 2019"
+											}
+										],
+										"SubjectsInSet": [
+											{
+												"Value": 58.0,
+												"Description": "NCLEX Test takers"
+											}
+										]
+									}
+								],
+								"Description": "Pass Rates are updated annually.",
+								"StartDate": "2019-1-1",
+								"EndDate": "2019-12-31"
+							},
+							{
+								"DataAttributes": [
+									{
+										"HoldersInSet": [
+											{
+												"Value": 51.0,
+												"Description": "Students that passed NCLEX Exam."
+											}
+										],
+										"PassRate": [
+											{
+												"Percentage": 100.0,
+												"Description": "Pass rate for 2020"
+											}
+										],
+										"SubjectsInSet": [
+											{
+												"Value": 51.0,
+												"Description": "NCLEX Test takers"
+											}
+										]
+									}
+								],
+								"Description": "Pass Rates are updated annually.",
+								"StartDate": "2020-1-1",
+								"EndDate": "2020-12-31"
+							}
+						]
+					}
+				]
+			}
+		],
+		"RenewalFrequency": {},
+		"Requires": [
+			{
+				"Name": "B.S. in Nursing (Pre-Licensure)",
+				"Description": "The Indiana University South Bend nursing program requires two years of prerequisite general education and basic science courses with an additional two years of clinical nursing curriculum. Students are first admitted to the University as pre-nursing students. Once the prerequisite courses are completed, students apply to the BSN program. Students are admitted to nursing twice a year in the fall and spring semesters. Application for Fall admission is available until April 1st. Application for Spring admission is available until November 1st.\n\nApplication and Admission Requirements\n\nCumulative grade point average of no less than 2.50 on a 4.0 scale.\nScience GPA of no less than 2.70 on a 4.0 scale. Although a 2.70 Science GPA is the minimum required for application, admission is competitive and a higher Science GPA may be required in a given application pool.\nAdmission essay\nCompletion of all program prerequisite courses.",
+				"AssertedBy": {
+					"Address": [],
+					"AvailabilityListing": [],
+					"CTID": "ce-55183524-eefd-487d-bbec-985b8b509386",
+					"Email": [],
+					"Type": "CredentialOrganization"
+				}
+			},
+			{
+				"Name": "B.S. in Nursing (Pre-Licensure) Required competencies",
+				"Description": "Required competencies for this credential.",
+				"AssertedBy": {
+					"Address": [],
+					"AvailabilityListing": [],
+					"CTID": "ce-55183524-eefd-487d-bbec-985b8b509386",
+					"Email": [],
+					"Type": "CredentialOrganization"
+				},
+				"TargetCompetency": [
+					{
+						"Framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+						"FrameworkName": "B.S. in Nursing",
+						"TargetNode": "https://sandbox.credentialengineregistry.org/resources/ce-0010a777-0609-4df8-9c06-03a5e826b543",
+						"TargetNodeName": "A competent care provider who is prepared to practice to the full capacity of the professional nurse role in diverse health care environments."
+					},
+					{
+						"Framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+						"FrameworkName": "B.S. in Nursing",
+						"TargetNode": "https://sandbox.credentialengineregistry.org/resources/ce-76ce9994-e8af-472a-9362-9682c1f22a2f",
+						"TargetNodeName": "A critical thinker who demonstrates intellectual engagement and uses evidence as a basis for clinical reasoning and decision making."
+					},
+					{
+						"Framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+						"FrameworkName": "B.S. in Nursing",
+						"TargetNode": "https://sandbox.credentialengineregistry.org/resources/ce-3b0bdde9-9c5e-4991-a378-bdbcf3451e04",
+						"TargetNodeName": "A culturally sensitive individual who provides holistic individual, family, community, and population-centered nursing care."
+					},
+					{
+						"Framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+						"FrameworkName": "B.S. in Nursing",
+						"TargetNode": "https://sandbox.credentialengineregistry.org/resources/ce-e282bd08-63dd-4cd4-a9ac-2cc58d361c21",
+						"TargetNodeName": "A knowledgeable care coordinator who facilitates access to resources across the continuum of health care environments in order to meet the evolving health care needs of individuals, families, communities, and populations."
+					},
+					{
+						"Framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+						"FrameworkName": "B.S. in Nursing",
+						"TargetNode": "https://sandbox.credentialengineregistry.org/resources/ce-e45e7279-4d83-47c0-a486-ee018363e4c1",
+						"TargetNodeName": "An accountable leader and manager who applies principles of systems and organizational processes and who balances resources to promote quality care and patient safety."
+					},
+					{
+						"Framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+						"FrameworkName": "B.S. in Nursing",
+						"TargetNode": "https://sandbox.credentialengineregistry.org/resources/ce-bfa16ff3-daa4-486d-add8-971c7bc831d8",
+						"TargetNodeName": "An effective communicator who collaborates with interprofessional team members, patients, and their support systems for improved health outcomes."
+					},
+					{
+						"Framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+						"FrameworkName": "B.S. in Nursing",
+						"TargetNode": "https://sandbox.credentialengineregistry.org/resources/ce-ee9b31a3-55f7-40b8-bcff-923cbf10c585",
+						"TargetNodeName": "An individual who embodies the professional identity of the nurse and who translates the inherent values of the nursing profession into the ethical and legal practice of nursing."
+					},
+					{
+						"Framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+						"FrameworkName": "B.S. in Nursing",
+						"TargetNode": "https://sandbox.credentialengineregistry.org/resources/ce-44b4644c-65d0-4cad-901b-c8088804a15e",
+						"TargetNodeName": "An individual who embraces and employs innovations in information management and technology in the delivery of quality patient care."
+					},
+					{
+						"Framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+						"FrameworkName": "B.S. in Nursing",
+						"TargetNode": "https://sandbox.credentialengineregistry.org/resources/ce-4afb8178-fd44-4960-8a16-64997a2e151c",
+						"TargetNodeName": "An individual who understands and considers the impact of health care policy, finance, and regulatory environments on care delivery."
+					}
+				]
+			},
+			{
+				"Name": "Credit Hours",
+				"Description": "Credit hour requirements to earn this degree.",
+				"AssertedBy": {
+					"Address": [],
+					"AvailabilityListing": [],
+					"CTID": "ce-55183524-eefd-487d-bbec-985b8b509386",
+					"Email": [],
+					"Type": "CredentialOrganization"
+				},
+				"CreditValue": {
+					"Description": "Semester Hours",
+					"Value": 120.00
+				}
+			}
+		]
+	},
+	"DefaultLanguage": "en-US",
+	"PublishForOrganizationIdentifier": "ce-55183524-eefd-487d-bbec-985b8b509386"
+}

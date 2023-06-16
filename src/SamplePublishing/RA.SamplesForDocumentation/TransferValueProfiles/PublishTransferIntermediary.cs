@@ -80,7 +80,7 @@ namespace RA.SamplesForDocumentation
 						//just the CTID for a competency in the registry???????
 						new CredentialAlignmentObject()
 						{
-							CTID="ce-07a645c7-1f5b-4a23-9733-13d9dcf4290e"
+                            TargetNode="ce-07a645c7-1f5b-4a23-9733-13d9dcf4290e"
 						},
 						new CredentialAlignmentObject()
 						{

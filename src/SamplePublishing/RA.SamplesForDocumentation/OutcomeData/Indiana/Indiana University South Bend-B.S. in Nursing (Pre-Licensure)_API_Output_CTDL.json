@@ -1,0 +1,544 @@
+﻿{
+	"@context": "https://credreg.net/ctdl/schema/context/json",
+	"@id": "https://sandbox.credentialengineregistry.org/graph/ce-2f7bc05c-2f9c-4119-9507-2f64d1a71b7b",
+	"@graph": [
+		{
+			"@type": "ceterms:BachelorDegree",
+			"@id": "https://sandbox.credentialengineregistry.org/resources/ce-2f7bc05c-2f9c-4119-9507-2f64d1a71b7b",
+			"ceterms:ctid": "ce-2f7bc05c-2f9c-4119-9507-2f64d1a71b7b",
+			"ceterms:name": {
+				"en-US": "B.S. in Nursing (Pre-Licensure)"
+			},
+			"ceterms:description": {
+				"en-US": "The Bachelor of Science in Nursing (B.S.N.) degree program offers a creative curriculum for meeting the current and future health needs of society. The curriculum prepares a generalist in professional nursing and serves as a basis for graduate study.\n\nThe B.S.N. degree program is offered at several Indiana University campuses. All campuses share similar admission standards, program outcomes, and courses. Admission and transfer policies are set by individual campuses and course sequencing may vary."
+			},
+			"ceterms:aggregateData": [
+				{
+					"@type": "ceterms:AggregateDataProfile",
+					"ceterms:description": {
+						"en-US": "Indiana University South Bend credential for B.S. in Nursing (Pre-Licensure)  Data Profile"
+					},
+					"qdata:relevantDataSet": [
+						"https://sandbox.credentialengineregistry.org/resources/ce-ed36f74a-2845-4b37-9209-27d987422037"
+					]
+				}
+			],
+			"ceterms:dateEffective": "1971-08-04",
+			"ceterms:image": "https://assets.iu.edu/brand/2.x/trident-large.png",
+			"ceterms:subjectWebpage": "https://healthscience.iusb.edu/nursing/index.html",
+			"ceterms:inLanguage": [
+				"en"
+			],
+			"ceterms:occupationType": [
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:codedNotation": "29-1141.00",
+					"ceterms:framework": "https://www.bls.gov/soc/",
+					"ceterms:frameworkName": {
+						"en-US": "Standard Occupational Classification"
+					},
+					"ceterms:targetNodeDescription": {
+						"en-US": "Assess patient health problems and needs, develop and implement nursing care plans, and maintain medical records. Administer nursing care to ill, injured, convalescent, or disabled patients. May advise patients on health maintenance and disease prevention or provide case management. Licensing or registration required."
+					},
+					"ceterms:targetNode": "https://www.onetonline.org/link/summary/29-1141.00",
+					"ceterms:targetNodeName": {
+						"en-US": "Registered Nurses"
+					}
+				},
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:codedNotation": "29-1141.01",
+					"ceterms:framework": "https://www.bls.gov/soc/",
+					"ceterms:frameworkName": {
+						"en-US": "Standard Occupational Classification"
+					},
+					"ceterms:targetNodeDescription": {
+						"en-US": "Provide advanced nursing care for patients with acute conditions such as heart attacks, respiratory distress syndrome, or shock. May care for pre- and post-operative patients or perform advanced, invasive diagnostic or therapeutic procedures."
+					},
+					"ceterms:targetNode": "https://www.onetonline.org/link/summary/29-1141.01",
+					"ceterms:targetNodeName": {
+						"en-US": "Acute Care Nurses"
+					}
+				},
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:codedNotation": "29-1141.03",
+					"ceterms:framework": "https://www.bls.gov/soc/",
+					"ceterms:frameworkName": {
+						"en-US": "Standard Occupational Classification"
+					},
+					"ceterms:targetNodeDescription": {
+						"en-US": "Provide advanced nursing care for patients in critical or coronary care units."
+					},
+					"ceterms:targetNode": "https://www.onetonline.org/link/summary/29-1141.03",
+					"ceterms:targetNodeName": {
+						"en-US": "Critical Care Nurses"
+					}
+				}
+			],
+			"ceterms:instructionalProgramType": [
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:codedNotation": "51.3801",
+					"ceterms:framework": "https://nces.ed.gov/ipeds/cipcode/Default.aspx?y=55",
+					"ceterms:frameworkName": {
+						"en-US": "Classification of Instructional Programs"
+					},
+					"ceterms:targetNodeDescription": {
+						"en-US": "A program that generally prepares individuals in the knowledge, techniques and procedures for promoting health, providing care for sick, disabled, infirmed, or other individuals or groups.  Includes instruction in the administration of medication and treatments, assisting a physician during treatments and examinations, Referring patients to physicians and other health care specialists, and planning education for health maintenance."
+					},
+					"ceterms:targetNode": "https://nces.ed.gov/ipeds/cipcode/cipdetail.aspx?y=56&cip=51.3801",
+					"ceterms:targetNodeName": {
+						"en-US": "Registered Nursing/Registered Nurse"
+					}
+				}
+			],
+			"ceterms:audienceLevelType": [
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:framework": "https://credreg.net/ctdl/terms/AudienceLevel",
+					"ceterms:frameworkName": {
+						"en-US": "AudienceLevel"
+					},
+					"ceterms:targetNode": "audLevel:BachelorsDegreeLevel",
+					"ceterms:targetNodeName": {
+						"en-US": "Bachelors Degree Level"
+					}
+				}
+			],
+			"ceterms:learningDeliveryType": [
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:framework": "https://credreg.net/ctdl/terms/Delivery",
+					"ceterms:frameworkName": {
+						"en-US": "Delivery"
+					},
+					"ceterms:targetNode": "deliveryType:InPerson",
+					"ceterms:targetNodeName": {
+						"en-US": "In-Person Only"
+					}
+				},
+				{
+					"@type": "ceterms:CredentialAlignmentObject",
+					"ceterms:framework": "https://credreg.net/ctdl/terms/Delivery",
+					"ceterms:frameworkName": {
+						"en-US": "Delivery"
+					},
+					"ceterms:targetNode": "deliveryType:OnlineOnly",
+					"ceterms:targetNodeName": {
+						"en-US": "Online Only"
+					}
+				}
+			],
+			"ceterms:estimatedCost": [
+				{
+					"@type": "ceterms:CostProfile",
+					"ceterms:costDetails": "https://administration.iusb.edu/bursar/tuition-and-fees/2020-2021.html",
+					"ceterms:currency": "US Dollar",
+					"ceterms:description": {
+						"en-US": "Once you register, IU reserves specific class space for you and commits resources to provide instruction you have selected. By registering, you assume the responsibility for paying course fees or properly withdrawing from classes when you decide not to attend. Your registration is not cancelled for nonpayment of fees."
+					},
+					"ceterms:name": {
+						"en-US": "Cost Profile"
+					},
+					"ceterms:directCostType": {
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:framework": "https://credreg.net/ctdl/terms/CostType",
+						"ceterms:frameworkName": {
+							"en-US": "CostType"
+						},
+						"ceterms:targetNode": "costType:Tuition",
+						"ceterms:targetNodeName": {
+							"en-US": "Tuition"
+						}
+					},
+					"ceterms:price": 3533.68
+				},
+				{
+					"@type": "ceterms:CostProfile",
+					"ceterms:costDetails": "https://administration.iusb.edu/bursar/tuition-and-fees/2020-2021.html",
+					"ceterms:currency": "US Dollar",
+					"ceterms:description": {
+						"en-US": "Once you register, IU reserves specific class space for you and commits resources to provide instruction you have selected. By registering, you assume the responsibility for paying course fees or properly withdrawing from classes when you decide not to attend. Your registration is not cancelled for nonpayment of fees."
+					},
+					"ceterms:name": {
+						"en-US": "Cost Profile"
+					},
+					"ceterms:directCostType": {
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:framework": "https://credreg.net/ctdl/terms/CostType",
+						"ceterms:frameworkName": {
+							"en-US": "CostType"
+						},
+						"ceterms:targetNode": "costType:Tuition",
+						"ceterms:targetNodeName": {
+							"en-US": "Tuition"
+						}
+					},
+					"ceterms:price": 9963.19
+				},
+				{
+					"@type": "ceterms:CostProfile",
+					"ceterms:costDetails": "https://administration.iusb.edu/bursar/tuition-and-fees/2020-2021.html",
+					"ceterms:currency": "US Dollar",
+					"ceterms:description": {
+						"en-US": "Once you register, IU reserves specific class space for you and commits resources to provide instruction you have selected. By registering, you assume the responsibility for paying course fees or properly withdrawing from classes when you decide not to attend. Your registration is not cancelled for nonpayment of fees."
+					},
+					"ceterms:name": {
+						"en-US": "Cost Profile"
+					},
+					"ceterms:directCostType": {
+						"@type": "ceterms:CredentialAlignmentObject",
+						"ceterms:framework": "https://credreg.net/ctdl/terms/CostType",
+						"ceterms:frameworkName": {
+							"en-US": "CostType"
+						},
+						"ceterms:targetNode": "costType:ProgramSpecificFee",
+						"ceterms:targetNodeName": {
+							"en-US": "Program Specific Fee"
+						}
+					},
+					"ceterms:price": 97.12
+				}
+			],
+			"ceterms:requires": [
+				{
+					"@type": "ceterms:ConditionProfile",
+					"ceterms:name": {
+						"en-US": "B.S. in Nursing (Pre-Licensure)"
+					},
+					"ceterms:description": {
+						"en-US": "The Indiana University South Bend nursing program requires two years of prerequisite general education and basic science courses with an additional two years of clinical nursing curriculum. Students are first admitted to the University as pre-nursing students. Once the prerequisite courses are completed, students apply to the BSN program. Students are admitted to nursing twice a year in the fall and spring semesters. Application for Fall admission is available until April 1st. Application for Spring admission is available until November 1st.\n\nApplication and Admission Requirements\n\nCumulative grade point average of no less than 2.50 on a 4.0 scale.\nScience GPA of no less than 2.70 on a 4.0 scale. Although a 2.70 Science GPA is the minimum required for application, admission is competitive and a higher Science GPA may be required in a given application pool.\nAdmission essay\nCompletion of all program prerequisite courses."
+					},
+					"ceterms:assertedBy": [
+						"https://sandbox.credentialengineregistry.org/resources/ce-55183524-eefd-487d-bbec-985b8b509386"
+					]
+				},
+				{
+					"@type": "ceterms:ConditionProfile",
+					"ceterms:name": {
+						"en-US": "B.S. in Nursing (Pre-Licensure) Required competencies"
+					},
+					"ceterms:description": {
+						"en-US": "Required competencies for this credential."
+					},
+					"ceterms:assertedBy": [
+						"https://sandbox.credentialengineregistry.org/resources/ce-55183524-eefd-487d-bbec-985b8b509386"
+					],
+					"ceterms:targetCompetency": [
+						{
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+							"ceterms:frameworkName": {
+								"en-US": "B.S. in Nursing"
+							},
+							"ceterms:targetNode": "https://sandbox.credentialengineregistry.org/resources/ce-0010a777-0609-4df8-9c06-03a5e826b543",
+							"ceterms:targetNodeName": {
+								"en-US": "A competent care provider who is prepared to practice to the full capacity of the professional nurse role in diverse health care environments."
+							}
+						},
+						{
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+							"ceterms:frameworkName": {
+								"en-US": "B.S. in Nursing"
+							},
+							"ceterms:targetNode": "https://sandbox.credentialengineregistry.org/resources/ce-76ce9994-e8af-472a-9362-9682c1f22a2f",
+							"ceterms:targetNodeName": {
+								"en-US": "A critical thinker who demonstrates intellectual engagement and uses evidence as a basis for clinical reasoning and decision making."
+							}
+						},
+						{
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+							"ceterms:frameworkName": {
+								"en-US": "B.S. in Nursing"
+							},
+							"ceterms:targetNode": "https://sandbox.credentialengineregistry.org/resources/ce-3b0bdde9-9c5e-4991-a378-bdbcf3451e04",
+							"ceterms:targetNodeName": {
+								"en-US": "A culturally sensitive individual who provides holistic individual, family, community, and population-centered nursing care."
+							}
+						},
+						{
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+							"ceterms:frameworkName": {
+								"en-US": "B.S. in Nursing"
+							},
+							"ceterms:targetNode": "https://sandbox.credentialengineregistry.org/resources/ce-e282bd08-63dd-4cd4-a9ac-2cc58d361c21",
+							"ceterms:targetNodeName": {
+								"en-US": "A knowledgeable care coordinator who facilitates access to resources across the continuum of health care environments in order to meet the evolving health care needs of individuals, families, communities, and populations."
+							}
+						},
+						{
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+							"ceterms:frameworkName": {
+								"en-US": "B.S. in Nursing"
+							},
+							"ceterms:targetNode": "https://sandbox.credentialengineregistry.org/resources/ce-e45e7279-4d83-47c0-a486-ee018363e4c1",
+							"ceterms:targetNodeName": {
+								"en-US": "An accountable leader and manager who applies principles of systems and organizational processes and who balances resources to promote quality care and patient safety."
+							}
+						},
+						{
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+							"ceterms:frameworkName": {
+								"en-US": "B.S. in Nursing"
+							},
+							"ceterms:targetNode": "https://sandbox.credentialengineregistry.org/resources/ce-bfa16ff3-daa4-486d-add8-971c7bc831d8",
+							"ceterms:targetNodeName": {
+								"en-US": "An effective communicator who collaborates with interprofessional team members, patients, and their support systems for improved health outcomes."
+							}
+						},
+						{
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+							"ceterms:frameworkName": {
+								"en-US": "B.S. in Nursing"
+							},
+							"ceterms:targetNode": "https://sandbox.credentialengineregistry.org/resources/ce-ee9b31a3-55f7-40b8-bcff-923cbf10c585",
+							"ceterms:targetNodeName": {
+								"en-US": "An individual who embodies the professional identity of the nurse and who translates the inherent values of the nursing profession into the ethical and legal practice of nursing."
+							}
+						},
+						{
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+							"ceterms:frameworkName": {
+								"en-US": "B.S. in Nursing"
+							},
+							"ceterms:targetNode": "https://sandbox.credentialengineregistry.org/resources/ce-44b4644c-65d0-4cad-901b-c8088804a15e",
+							"ceterms:targetNodeName": {
+								"en-US": "An individual who embraces and employs innovations in information management and technology in the delivery of quality patient care."
+							}
+						},
+						{
+							"@type": "ceterms:CredentialAlignmentObject",
+							"ceterms:framework": "https://sandbox.credentialengineregistry.org/resources/ce-c4911333-c9d8-486d-aa71-82097e11d418",
+							"ceterms:frameworkName": {
+								"en-US": "B.S. in Nursing"
+							},
+							"ceterms:targetNode": "https://sandbox.credentialengineregistry.org/resources/ce-4afb8178-fd44-4960-8a16-64997a2e151c",
+							"ceterms:targetNodeName": {
+								"en-US": "An individual who understands and considers the impact of health care policy, finance, and regulatory environments on care delivery."
+							}
+						}
+					]
+				},
+				{
+					"@type": "ceterms:ConditionProfile",
+					"ceterms:name": {
+						"en-US": "Credit Hours"
+					},
+					"ceterms:description": {
+						"en-US": "Credit hour requirements to earn this degree."
+					},
+					"ceterms:assertedBy": [
+						"https://sandbox.credentialengineregistry.org/resources/ce-55183524-eefd-487d-bbec-985b8b509386"
+					],
+					"ceterms:creditValue": [
+						{
+							"@type": "schema:ValueProfile",
+							"schema:description": {
+								"en-US": "Semester Hours"
+							},
+							"schema:value": 120.00
+						}
+					]
+				}
+			],
+			"ceterms:credentialStatusType": {
+				"@type": "ceterms:CredentialAlignmentObject",
+				"ceterms:framework": "https://credreg.net/ctdl/terms/CredentialStatus",
+				"ceterms:frameworkName": {
+					"en-US": "CredentialStatus"
+				},
+				"ceterms:targetNode": "credentialStat:Active",
+				"ceterms:targetNodeName": {
+					"en-US": "Active"
+				}
+			},
+			"ceterms:availableAt": [
+				{
+					"@type": "ceterms:Place",
+					"ceterms:name": {
+						"en-US": "Indiana University South Bend"
+					},
+					"ceterms:streetAddress": {
+						"en-US": "1700 Mishawaka Avenue"
+					},
+					"ceterms:addressLocality": {
+						"en-US": "South Bend"
+					},
+					"ceterms:addressRegion": {
+						"en-US": "Indiana"
+					},
+					"ceterms:postalCode": "46634-7111",
+					"ceterms:addressCountry": {
+						"en-US": "United States"
+					},
+					"ceterms:latitude": 41.6652955,
+					"ceterms:longitude": -86.2220432
+				}
+			],
+			"ceterms:ownedBy": [
+				"https://sandbox.credentialengineregistry.org/resources/ce-55183524-eefd-487d-bbec-985b8b509386"
+			],
+			"ceterms:accreditedBy": [
+				"_:04ac8348-cf15-4e38-bdd1-4c089250fd11"
+			],
+			"ceterms:offeredBy": [
+				"https://sandbox.credentialengineregistry.org/resources/ce-55183524-eefd-487d-bbec-985b8b509386"
+			]
+		},
+		{
+			"@type": "qdata:DataSetProfile",
+			"@id": "https://sandbox.credentialengineregistry.org/resources/ce-ed36f74a-2845-4b37-9209-27d987422037",
+			"ceterms:ctid": "ce-ed36f74a-2845-4b37-9209-27d987422037",
+			"ceterms:name": {
+				"en-US": "Indiana BSN Pass Rates"
+			},
+			"ceterms:description": {
+				"en-US": "The National Council Licensure Examination-Registered Nurse (NCLEX-RN) is developed by the National Council of State Boards of Nursing, Inc. (NCSBN) and is used by all 50 states as a requirement for licensure.  The national pass rate on the NCLEX-RN for first-time exam takers who graduated from baccalaureate pre-licensure programs was 90.3 percent for 2020."
+			},
+			"qdata:dataSetTimePeriod": [
+				{
+					"@type": "qdata:DataSetTimeFrame",
+					"ceterms:description": {
+						"en-US": "Pass Rates are updated annually."
+					},
+					"ceterms:startDate": "2018-01-01",
+					"ceterms:endDate": "2018-12-31",
+					"qdata:dataAttributes": [
+						{
+							"@type": "qdata:DataProfile",
+							"@id": "_:b12da99b-1b07-47de-87a5-8f2d1464e806",
+							"qdata:holdersInSet": [
+								{
+									"@type": "schema:QuantitativeValue",
+									"schema:value": 50.0,
+									"schema:description": {
+										"en-US": "Students that passed NCLEX Exam."
+									}
+								}
+							],
+							"qdata:passRate": [
+								{
+									"@type": "schema:QuantitativeValue",
+									"qdata:percentage": 98.0,
+									"schema:description": {
+										"en-US": "Pass rate for 2018"
+									}
+								}
+							],
+							"qdata:subjectsInSet": [
+								{
+									"@type": "schema:QuantitativeValue",
+									"schema:value": 51.0,
+									"schema:description": {
+										"en-US": "NCLEX Test takers"
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"@type": "qdata:DataSetTimeFrame",
+					"ceterms:description": {
+						"en-US": "Pass Rates are updated annually."
+					},
+					"ceterms:startDate": "2019-01-01",
+					"ceterms:endDate": "2019-12-31",
+					"qdata:dataAttributes": [
+						{
+							"@type": "qdata:DataProfile",
+							"@id": "_:61e82f38-0e04-450e-a317-346892c1dd95",
+							"qdata:holdersInSet": [
+								{
+									"@type": "schema:QuantitativeValue",
+									"schema:value": 55.0,
+									"schema:description": {
+										"en-US": "Students that passed NCLEX Exam."
+									}
+								}
+							],
+							"qdata:passRate": [
+								{
+									"@type": "schema:QuantitativeValue",
+									"qdata:percentage": 94.8,
+									"schema:description": {
+										"en-US": "Pass rate for 2019"
+									}
+								}
+							],
+							"qdata:subjectsInSet": [
+								{
+									"@type": "schema:QuantitativeValue",
+									"schema:value": 58.0,
+									"schema:description": {
+										"en-US": "NCLEX Test takers"
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"@type": "qdata:DataSetTimeFrame",
+					"ceterms:description": {
+						"en-US": "Pass Rates are updated annually."
+					},
+					"ceterms:startDate": "2020-01-01",
+					"ceterms:endDate": "2020-12-31",
+					"qdata:dataAttributes": [
+						{
+							"@type": "qdata:DataProfile",
+							"@id": "_:655ef344-1a53-47aa-ba1b-3bfae840ef4e",
+							"qdata:holdersInSet": [
+								{
+									"@type": "schema:QuantitativeValue",
+									"schema:value": 51.0,
+									"schema:description": {
+										"en-US": "Students that passed NCLEX Exam."
+									}
+								}
+							],
+							"qdata:passRate": [
+								{
+									"@type": "schema:QuantitativeValue",
+									"qdata:percentage": 100.0,
+									"schema:description": {
+										"en-US": "Pass rate for 2020"
+									}
+								}
+							],
+							"qdata:subjectsInSet": [
+								{
+									"@type": "schema:QuantitativeValue",
+									"schema:value": 51.0,
+									"schema:description": {
+										"en-US": "NCLEX Test takers"
+									}
+								}
+							]
+						}
+					]
+				}
+			],
+			"qdata:relevantDataSetFor": [
+				"https://sandbox.credentialengineregistry.org/graph/ce-2f7bc05c-2f9c-4119-9507-2f64d1a71b7b"
+			]
+		},
+		{
+			"@id": "_:04ac8348-cf15-4e38-bdd1-4c089250fd11",
+			"@type": "ceterms:QACredentialOrganization",
+			"ceterms:name": {
+				"en-US": "Commission on Collegiate Nursing Education (CCNE)"
+			},
+			"ceterms:subjectWebpage": "http://ccneaccreditation.org"
+		}
+	]
+}
