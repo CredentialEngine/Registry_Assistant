@@ -20,7 +20,7 @@ namespace RA.SamplePublishingProject
 		}
 
 		[TestMethod]
-		public void PublishExample()
+		public void WIOAPublishExample()
 		{
 			//
 			new WIOAExamples().Example1( "publish" );
@@ -28,7 +28,7 @@ namespace RA.SamplePublishingProject
 		}
 
         [TestMethod]
-        public void PublishExample()
+        public void TexasPublishExample()
         {
             //
             new TexasOutcomeData().Prototype( "publish" );
