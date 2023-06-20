@@ -244,10 +244,10 @@ namespace RA.Models.Input
         /// <summary>
         /// Types of support services offered by an agent; select from an existing enumeration of such types.
         /// SupportService?
-        /// <see href="https://credreg.net/ctdl/terms/SupportServiceType"></see>
+        /// <see href="https://credreg.net/ctdl/terms/SupportServiceCategory"></see>
         /// ConceptScheme: <see href="https://credreg.net/ctdl/terms/SupportServiceCategory"></see>
         /// </summary>
-        public List<string> SupportServiceType { get; set; }
+        public List<string> SupportServiceCategory { get; set; }
 
     }
 }

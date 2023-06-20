@@ -80,7 +80,7 @@ namespace RA.SamplesForDocumentation
             //Type of frequency at which a resource is offered
             myData.AccomodationType = new List<string>() { "AccessibleParking", "AccessibleRestroom", "PhysicalAccessibility" };
             //Type of frequency with which events typically occur
-            myData.SupportServiceType = new List<string>() { "Weekly" };
+            myData.SupportServiceCategory = new List<string>() { "Weekly" };
 
             //add costs
             //Must be a valid CTDL cost type.
