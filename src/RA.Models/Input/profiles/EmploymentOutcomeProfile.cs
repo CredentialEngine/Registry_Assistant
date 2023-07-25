@@ -47,7 +47,7 @@ namespace RA.Models.Input
 		/// ceterms:jurisdiction
 		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
 		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
+		public List<JurisdictionProfile> Jurisdiction { get; set; } = new List<JurisdictionProfile>();
 
 		public string Name { get; set; }
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();

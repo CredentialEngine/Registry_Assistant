@@ -106,6 +106,6 @@ namespace RA.Models.Input
         /// Geo-political information about applicable geographic areas and their exceptions.
         /// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"></see>
         /// </summary>
-        public List<Jurisdiction> Jurisdiction { get; set; }
+        public List<JurisdictionProfile> Jurisdiction { get; set; }
     }
 }

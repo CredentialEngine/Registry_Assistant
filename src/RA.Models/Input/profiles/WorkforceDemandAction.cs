@@ -17,11 +17,6 @@ namespace RA.Models.Input.profiles
 		/// </summary>
 		public string CTID { get; set; }
 
-		/// <summary>
-		/// Geographic or political region in which the credential is formally applicable or an organization has authority to act.
-		/// ceterms:JurisdictionProfile
-		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
 
 		/// <summary>
 		/// Outcome produced in the action.

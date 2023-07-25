@@ -15,7 +15,7 @@ namespace RA.Models.Input
         public VerificationServiceProfile()
         {
             EstimatedCost = new List<CostProfile>();
-            Jurisdiction = new List<Jurisdiction>();
+            Jurisdiction = new List<JurisdictionProfile>();
             OfferedBy = new List<Input.OrganizationReference>();
             TargetCredential = new List<EntityReference>();
             VerificationDirectory = new List<string>();
@@ -96,7 +96,7 @@ namespace RA.Models.Input
         /// <summary>
         /// Geographic or political region in which the credential is formally applicable or an organization has authority to act.
         /// </summary>
-        public List<Jurisdiction> Jurisdiction { get; set; }
+        public List<JurisdictionProfile> Jurisdiction { get; set; }
         /// <summary>
         /// List of Organizations that offer this entity in a specific Jurisdiction. 
         /// </summary>
