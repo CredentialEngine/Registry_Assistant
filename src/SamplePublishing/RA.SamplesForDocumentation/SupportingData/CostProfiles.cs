@@ -48,10 +48,10 @@ namespace RA.SamplesForDocumentation
 					 }
 				 }
 			};
-			output.Jurisdiction = new List<Jurisdiction>()
+			output.Jurisdiction = new List<JurisdictionProfile>()
 			{
 				//example of a jurisdiction is for the United States, except Oregon
-				new Jurisdiction()
+				new JurisdictionProfile()
 				{
 					GlobalJurisdiction=false,
 					 Description="Description of the Jurisdiction. This could be used if the finer details are not available.",

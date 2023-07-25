@@ -199,8 +199,18 @@ namespace RA.SamplesForDocumentation
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
 			} );
 
-			//This holds the learning opportunity and the identifier (CTID) for the owning organization
-			var myRequest = new LearningOpportunityRequest()
+            //NEW for use with registered apprenticeships
+            //	Add organization that is not in the credential registry
+            //	NOTE: an open item is defining any rules as to when this can be used. One example could be the requirement for learning types like learnMethod:WorkBased
+            myData.RegisteredBy.Add( new OrganizationReference()
+            {
+                Type = "ceterms:QACredentialOrganization",
+                Name = "United States Department of Labor, Employment and Training Administration, Office of Apprenticeship",
+                SubjectWebpage = "https://www.dol.gov/agencies/eta/apprenticeship"
+            } );
+
+            //This holds the learning opportunity and the identifier (CTID) for the owning organization
+            var myRequest = new LearningOpportunityRequest()
 			{
 				LearningOpportunity = myData,
 				DefaultLanguage = "en-US",

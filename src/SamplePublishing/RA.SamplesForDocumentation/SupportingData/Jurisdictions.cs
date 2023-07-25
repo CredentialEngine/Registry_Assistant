@@ -12,16 +12,16 @@ namespace RA.SamplesForDocumentation
 {
 	public class Jurisdictions
 	{
-		public static List<Jurisdiction> SampleJurisdictions()
+		public static List<JurisdictionProfile> SampleJurisdictions()
 		{
-			var output = new List<Jurisdiction>();
+			var output = new List<JurisdictionProfile>();
 			output.Add( SampleJurisdiction());
 			return output;
 		}
 		
-		public static Jurisdiction SampleJurisdiction()
+		public static JurisdictionProfile SampleJurisdiction()
 		{
-			Jurisdiction entity = new Jurisdiction()
+			var entity = new JurisdictionProfile()
 			{
 				Description = "Description of Jurisdiction",
 				GlobalJurisdiction = false

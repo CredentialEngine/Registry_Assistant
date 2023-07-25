@@ -62,6 +62,16 @@ namespace RA.SamplesForDocumentation
             {
                 CTID = organizationIdentifierFromAccountsSite
             } );
+
+            //HasSpecificService
+            //Add list of specific support services that are related to the current support service or could be considered like members of a collection.
+            //Using HasSpecificService can be useful for "grouping" together support services. Then a resource like a learning opportunity can just refer to the "top level" support service rather than all available support services.
+            myData.HasSpecificService = new List<string>() { "ce-d0740c95-336d-46ca-a9ee-06d080a948e7", "ce-a3a8162d-1f1b-4a71-bcb3-0d2697eab952" };
+
+            //IsSpecificServiceOf.
+            //Use this property to reference a support service that includes this support service (the inverse of HasSpecificService). Typically only one of HasSpecificService or IsSpecificServiceOf would be used unless there is a hierarchical structure like may be seen in say a competency framework. 
+            myData.IsSpecificServiceOf = new List<string>() { "ce-b64e0c4e-01a3-45a0-bc6b-d2b62b979bbe" };
+
             //
             myData.AvailableAt = new List<Place>()
             {
@@ -76,11 +86,14 @@ namespace RA.SamplesForDocumentation
             };
             //
 
+            //AccommodationType- Type of modification to facilitate equal access for people to a physical location, resource, or service.
             //include valid concepts, with or without the namespace
-            //Type of frequency at which a resource is offered
-            myData.AccomodationType = new List<string>() { "AccessibleParking", "AccessibleRestroom", "PhysicalAccessibility" };
-            //Type of frequency with which events typically occur
-            myData.SupportServiceCategory = new List<string>() { "Weekly" };
+            //These must be valid concepts in the Accommodation('https://credreg.net/ctdl/terms/Accommodation') concept scheme
+            myData.AccommodationType = new List<string>() { "AccessibleParking", "AccessibleRestroom", "PhysicalAccessibility" };
+            //SupportServiceType - Types of support services offered by an agent; select from an existing enumeration of such types.
+            //include valid concepts, with or without the namespace
+            //These must be valid concepts in the SupportServiceCategory ('https://credreg.net/ctdl/terms/SupportServiceCategory') concept scheme
+            myData.SupportServiceType = new List<string>() { "Mentoring", "Academic Advising" };
 
             //add costs
             //Must be a valid CTDL cost type.
