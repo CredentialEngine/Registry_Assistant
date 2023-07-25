@@ -53,7 +53,7 @@ namespace RA.Models.Input
 		/// Geo-political information about applicable geographic areas and their exceptions.
 		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
 		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
+		public List<JurisdictionProfile> Jurisdiction { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
 		///  Lower interquartile earnings.
@@ -65,6 +65,9 @@ namespace RA.Models.Input
 		/// </summary>
 		public int MedianEarnings { get; set; }
 
+		/// <summary>
+		/// Optional name for this profile
+		/// </summary>
 		public string Name { get; set; }
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 

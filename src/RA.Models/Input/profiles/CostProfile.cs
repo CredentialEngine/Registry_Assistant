@@ -17,7 +17,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public CostProfile()
 		{
-			Jurisdiction = new List<Jurisdiction>();
+			Jurisdiction = new List<JurisdictionProfile>();
 			CostItems = new List<CostProfileItem>();
 			Condition = new List<string>();
 		}
@@ -95,7 +95,7 @@ namespace RA.Models.Input
 		/// List of jurisdictions
 		/// Optional
 		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; }
+		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
 
 		/// <summary>
@@ -170,7 +170,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Price for this cost - optional
 		/// </summary>
-		public decimal Price { get; set; }
+		public decimal? Price { get; set; }
 
 	}
 

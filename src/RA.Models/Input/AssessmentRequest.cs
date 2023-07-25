@@ -31,7 +31,7 @@ namespace RA.Models.Input
 
 			AvailabilityListing = new List<string>();
 			AvailableOnlineAt = new List<string>();
-			Jurisdiction = new List<Input.Jurisdiction>();
+			Jurisdiction = new List<Input.JurisdictionProfile>();
 			//JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
 			DeliveryType = new List<string>();
 
@@ -358,7 +358,7 @@ namespace RA.Models.Input
 		/// Geo-political information about applicable geographic areas and their exceptions.
 		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"></see>
 		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; }
+		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
 		/// <summary>
 		/// Keyword or key phrase describing relevant aspects of an entity.

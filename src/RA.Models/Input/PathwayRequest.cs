@@ -437,6 +437,7 @@ namespace RA.Models.Input
 
         #region CompetencyComponent
         /// <summary>
+		/// //23-05-26 no longer available. Use Identifier
         ///  Set of alpha-numeric symbols as defined by the body responsible for this resource that uniquely identifies this resource and supports its discovery and use.
         /// Used by: 
         /// ceterms:CompetencyComponent only
@@ -528,11 +529,9 @@ namespace RA.Models.Input
         /// <summary>
         /// URL to structured data representing the resource.
         /// The preferred data serialization is JSON-LD or some other serialization of RDF.
-        /// If this is a registry URI, the user can just provide a CTID.
-        /// NOTE THIS WILL LIKELY BE COMPLETELY REPLACED BY ProxyFor
+        /// (ie some other kind of data about the thing in the registry)
         /// URL
         /// </summary>
-        [Obsolete] //early warning
         public string SourceData { get; set; }
 
         #endregion

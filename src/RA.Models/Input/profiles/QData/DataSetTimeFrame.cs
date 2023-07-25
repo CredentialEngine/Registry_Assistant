@@ -6,20 +6,41 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input.profiles.QData
 {
-	/// <summary>
-	/// DataSet Time Frame
-	/// Time frame including earnings and employment start and end dates of the data set.
-	/// Required:
-	/// - StartDate (otherwise doesn't make sense)
-	/// https://credreg.net/qdata/terms/DataSetTimeFrame
-	/// </summary>
-	public class DataSetTimeFrame
+    /// <summary>
+    /// DataSet Time Frame
+    /// Time frame including earnings and employment start and end dates of the data set.
+    /// Required:
+    /// - StartDate (otherwise doesn't make sense)
+    /// - DataAttributes (or doesn't make sense)
+    /// https://credreg.net/qdata/terms/DataSetTimeFrame
+    /// </summary>
+    public class DataSetTimeFrame
 	{
-		/// <summary>
-		/// Attributes of the data set.
-		/// qdata:DataProfile
-		/// </summary>
-		public List<DataProfile> DataAttributes { get; set; } = new List<DataProfile>();
+
+        /// <summary>
+        /// Description of profile
+        /// RECOMMENDED - or should it be Required?
+        /// </summary>
+        public string Description { get; set; }
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+        /// <summary>
+        /// Start date for the profile
+        /// REQUIRED
+        /// </summary>
+        public string StartDate { get; set; }
+        /// <summary>
+        /// End date for the profile
+        /// REQUIRED
+        /// </summary>
+        public string EndDate { get; set; }
+
+        /// <summary>
+        /// Attributes of the data set.
+		/// HIGHLY RECOMMENDED or REQUIRED?
+        /// qdata:DataProfile
+        /// </summary>
+        public List<DataProfile> DataAttributes { get; set; } = new List<DataProfile>();
 
 		/// <summary>
 		/// Data Source Coverage Type
@@ -35,23 +56,24 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public List<string> DataSourceCoverageType { get; set; } = new List<string>();
 
-		//NOT required
-		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-		public string Name { get; set; }
+        /// <summary>
+        /// Name of profile
+        /// OPTIONAL
+        /// </summary>
+        public string Name { get; set; }
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// List of Alternate Names for this resource
-		/// </summary>
-		public List<string> AlternateName { get; set; } = new List<string>();
+        /// <summary>
+        /// List of Alternate Names for this resource
+        /// OPTIONAL
+        /// </summary>
+        public List<string> AlternateName { get; set; } = new List<string>();
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
 		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 
-		public string StartDate { get; set; }
-		public string EndDate { get; set; }
+
 	}
 }

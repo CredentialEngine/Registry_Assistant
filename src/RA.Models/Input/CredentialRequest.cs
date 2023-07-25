@@ -213,16 +213,18 @@ namespace RA.Models.Input
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
         /// <summary>
         /// AvailableOnlineAt URL
+        /// 22-08-30 Changed to an object to allow handling of a single or a list
         /// </summary>
-        public List<string> AvailableOnlineAt { get; set; } = new List<string>();
+        public List<string> AvailableOnlineAt { get; set; }
         /// <summary>
         /// AvailabilityListing URL
+        /// 22-08-30 Changed to an object to allow handling of a single or a list
         /// </summary>
-        public List<string> AvailabilityListing { get; set; } = new List<string>();
-        /// <summary>
-        /// List of Addresses for this credential, using Place
-        /// </summary>
-        public List<Place> AvailableAt { get; set; }
+        public List<string> AvailabilityListing { get; set; } 
+		/// <summary>
+		/// List of Addresses for this credential, using Place
+		/// </summary>
+		public List<Place> AvailableAt { get; set; }
 
 		/// <summary>
 		/// Person or organization holding the rights in copyright to entities such as credentials, learning opportunities, assessments, competencies or concept schemes.
@@ -399,7 +401,7 @@ namespace RA.Models.Input
 		/// Geo-political information about applicable geographic areas and their exceptions.
 		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile">JurisdictionProfile</see>
 		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
+		public List<JurisdictionProfile> Jurisdiction { get; set; } = new List<JurisdictionProfile>();
 		/// <summary>
 		/// Keyword or key phrase describing relevant aspects of an entity.
 		/// </summary>
@@ -712,13 +714,14 @@ namespace RA.Models.Input
 		/// <seealso href="https://credreg.net/ctdl/terms/preparationFrom"></seealso>
 		/// </summary>
 		public List<ConnectionProfile> PreparationFrom { get; set; }
-		#endregion
+        #endregion
 
-		#region -- Process Profiles --
-		/// <summary>
-		/// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
-		/// </summary>
-		public List<ProcessProfile> AdministrationProcess { get; set; }
+        #region -- Process Profiles --
+        /// <summary>
+        /// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
+        /// ceterms:administrationProcess
+        /// </summary>
+        public List<ProcessProfile> AdministrationProcess { get; set; }
 		/// <summary>
 		/// Entity describing the process by which a credential, or aspects of it, were created.
 		/// </summary>
@@ -760,34 +763,8 @@ namespace RA.Models.Input
 		public List<CredentialingAction> RelatedAction { get; set; } = new List<CredentialingAction>();
 
 		#region OBSOLETE
-		/*
-		/// <summary>
-		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
-		/// ceterms:codedNotation
-		/// </summary>
-		[Obsolete]
-		public string CodedNotation { get; set; }*/
-		/*
 
-		/// <summary>
-		///  Entity that describes earning and related statistical information for a given credential.
-		/// </summary>
-		[Obsolete]
-		public List<EarningsProfile> Earnings { get; set; }
 
-		/// <summary>
-		/// Entity that describes employment outcomes and related statistical information for a given credential.
-		/// </summary>
-		[Obsolete]
-		public List<EmploymentOutcomeProfile> EmploymentOutcome { get; set; }
-
-		/// <summary>
-		/// Entity describing aggregate credential holder earnings data.
-		/// List of CTIDs for a earnings profile in Request.EarningsProfile
-		/// </summary>
-		[Obsolete]
-		public List<HoldersProfile> Holders { get; set; }
-		*/
 		#endregion
 		///// <summary>
 		///// List of CTIDs for a published pathway.

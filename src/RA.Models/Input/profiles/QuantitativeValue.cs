@@ -35,17 +35,17 @@ namespace RA.Models.Input
 		/// A single value for this purpose. 
 		/// Do not use if providing a percentage, or minimum and maximum value.
 		/// </summary>
-		public decimal Value { get; set; }
+		public decimal? Value { get; set; }
 
 		/// <summary>
 		/// Minimum value for this purpose. If provided, a maximum value must also be provided
 		/// </summary>
-		public decimal MinValue { get; set; }
+		public decimal? MinValue { get; set; }
 
 		/// <summary>
 		/// Maximum value for this purpose.
 		/// </summary>
-		public decimal MaxValue { get; set; }
+		public decimal? MaxValue { get; set; }
 
 		/// <summary>
 		/// A percentage for this purpose. 

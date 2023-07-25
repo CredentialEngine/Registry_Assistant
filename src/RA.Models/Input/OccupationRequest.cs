@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using MJ=RA.Models.JsonV2;
 namespace RA.Models.Input
 {
 	/// <summary>
@@ -16,12 +15,6 @@ namespace RA.Models.Input
 		/// Profession, trade, or career field that may involve training and/or a formal qualification.
 		/// </summary>
 		public Occupation Occupation { get; set; } = new Occupation();
-
-		/// <summary>
-		/// Occupation already formatted as JSON-LD
-		/// ONLY USED WITH PUBLISH LIST
-		/// </summary>
-		public MJ.Occupation FormattedOccupation { get; set; } = new MJ.Occupation();
 	}
 	/// <summary>
 	/// Request class for publishing a list of Occupations
@@ -50,12 +43,6 @@ namespace RA.Models.Input
 		/// Specific activity, typically related to performing a function or achieving a goal.
 		/// </summary>
 		public Task Task { get; set; } = new Task();
-
-		/// <summary>
-		/// Task already formatted as JSON-LD
-		/// ONLY USED WITH PUBLISH LIST
-		/// </summary>
-		public MJ.Task FormattedTask { get; set; } = new MJ.Task();
 
 	}
 	/// <summary>

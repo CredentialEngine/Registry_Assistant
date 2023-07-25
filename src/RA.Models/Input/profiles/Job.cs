@@ -60,19 +60,20 @@ namespace RA.Models.Input
 		/// <summary>
 		/// AbilityEmbodied
 		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
-		/// URI to any of:
+		/// CTID/URI to any of:
 		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
 		/// ceasn:abilityEmbodied
 		/// </summary>
 		public List<string> AbilityEmbodied { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Category or classification of this resource.
-		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-		/// URI to a concept(based on the ONet work activities example)
-		/// ceterms:classification
-		/// </summary>
-		public List<string> Classification { get; set; } = new List<string>();
+        /// <summary>
+        /// Category or classification of this resource.
+        /// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
+        /// URI to a concept(based on the ONet work activities example)
+        /// skos:Concept
+        /// or Blank nodes!
+        /// </summary>
+        public List<string> Classification { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Additional Classification
@@ -94,12 +95,6 @@ namespace RA.Models.Input
 		public List<string> Comment { get; set; } = new List<string>();
 		public LanguageMapList Comment_map { get; set; } = new LanguageMapList();
 
-		/// <summary>
-		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; 
-		/// select from an existing enumeration of such types.
-		/// </summary>
-		public List<string> EnvironmentalHazardType { get; set; } = new List<string>();
-
         /// <summary>
         /// Reference to a relevant support service.
         /// List of CTIDs that reference one or more published support services
@@ -109,21 +104,24 @@ namespace RA.Models.Input
         /// <summary>
         /// Occupation related to this resource.
         /// CTID for an existing Occupation
+		/// NEW - handle blank nodes
         /// ceterms:hasOccupation
         /// </summary>
         public List<string> HasOccupation { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Task related to this resource.
-		/// CTID for an existing Task
-		/// <see cref="https://credreg.net/ctdl/terms/hasTask"/>
-		/// ceterms:hasTask
-		/// </summary>
-		public List<string> HasTask { get; set; } = new List<string>();
+        /// <summary>
+        /// Task related to this resource.
+        /// CTID for an existing Task
+        /// NEW - handle blank nodes
+        /// <see cref="https://credreg.net/ctdl/terms/hasTask"/>
+        /// ceterms:hasTask
+        /// </summary>
+        public List<string> HasTask { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Work Role related to this resource.
 		/// CTID for an existing WorkRole
+		/// NEW - handle blank nodes
 		/// ceterms:hasWorkRole
 		/// </summary>
 		public List<string> HasWorkRole { get; set; } = new List<string>();
@@ -135,15 +133,22 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
-		#region Industry type and helpers
-		/// <summary>
-		/// IndustryType
-		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
-		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
-		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
-		/// ceterms:industryType
-		/// </summary>
-		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+        ///// <summary>
+        ///// Is Member Of
+        ///// Collection to which this resource belongs.
+        ///// Inverse property that cannot be used here. 
+        ///// </summary>
+        //public List<string> IsMemberOf { get; set; } = new List<string>();
+
+        #region Industry type and helpers
+        /// <summary>
+        /// IndustryType
+        /// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
+        /// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
+        /// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
+        /// ceterms:industryType
+        /// </summary>
+        public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
 		/// <summary>
 		/// AlternativeIndustryType
 		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
@@ -164,7 +169,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Body of information embodied either directly or indirectly in this resource.
-		/// URI to any of:
+		/// CTID/URI to any of:
 		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
 		/// ceasn:knowledgeEmbodied
 		/// </summary>
@@ -214,10 +219,42 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<OrganizationReference> OfferedBy { get; set; }
 
-		/// <summary>
-		/// Requirement or set of requirements for this resource
-		/// </summary>
-		public List<ConditionProfile> Requires { get; set; }
+        //Free floating Concepts 
+
+        /// <summary>
+        /// Environmental Hazard Type
+        /// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; 
+        /// select from an existing enumeration of such types.
+        /// skos:Concept
+        /// Blank nodes!
+        /// </summary>
+        public List<string> EnvironmentalHazardType { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Type of required or expected human performance level; select from an existing enumeration of such types.
+        /// skos:Concept
+        /// Blank nodes!
+        /// </summary>
+        public List<string> PerformanceLevelType { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Type of physical activity required or expected in performance; select from an existing enumeration of such types.
+        /// skos:Concept
+        /// Blank nodes!
+        /// </summary>
+        public List<string> PhysicalCapabilityType { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Type of required or expected sensory capability; select from an existing enumeration of such types.
+        /// skos:Concept
+        /// Blank nodes!
+        /// </summary>
+        public List<string> SensoryCapabilityType { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Requirement or set of requirements for this resource
+        /// </summary>
+        public List<ConditionProfile> Requires { get; set; }
 
 		/// <summary>
 		/// Another source of information about the entity being described.
@@ -229,7 +266,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
-		/// URI to any of:
+		/// CTID/URI to any of:
 		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
 		/// ceasn:abilityEmbodied
 		/// </summary>

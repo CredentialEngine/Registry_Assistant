@@ -17,7 +17,6 @@ namespace RA.Models.Input.profiles
 		/// </summary>
 		public string CTID { get; set; }
 
-
 		/// <summary>
 		/// Outcome produced in the action.
 		/// ceterms:CredentialAlignmentObject

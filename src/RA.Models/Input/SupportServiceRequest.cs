@@ -84,6 +84,11 @@ namespace RA.Models.Input
         /// </summary>
         public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
 
+        /// <summary>
+        /// Webpage that describes this entity.
+        /// URL
+        /// </summary>
+        public string SubjectWebpage { get; set; }
         #endregion
 
         #region  RECOMMENDED
@@ -101,11 +106,6 @@ namespace RA.Models.Input
         /// </summary>
         public List<CostProfile> EstimatedCost { get; set; }
 
-        /// <summary>
-        /// Webpage that describes this entity.
-        /// URL
-        /// </summary>
-        public string SubjectWebpage { get; set; }
 
         #endregion
 
@@ -114,12 +114,12 @@ namespace RA.Models.Input
 
         /// <summary>
         /// Type of modification to facilitate equal access for people to a physical location, resource, or service.
-        /// Accomodation?
-        /// <see href="https://credreg.net/ctdl/terms/AccomodationType"></see>
-        /// ConceptScheme: ceterms:Accomodation
-        /// <see href="https://credreg.net/ctdl/terms/Accomodation"></see>
+        /// Accommodation?
+        /// <see href="https://credreg.net/ctdl/terms/AccommodationType"></see>
+        /// ConceptScheme: ceterms:Accommodation
+        /// <see href="https://credreg.net/ctdl/terms/Accommodation"></see>
         /// </summary>
-        public List<string> AccomodationType { get; set; }
+        public List<string> AccommodationType { get; set; }
 
         /// <summary>
         /// List of Alternate Names for this learning opportunity
@@ -186,6 +186,17 @@ namespace RA.Models.Input
         /// </summary>
         public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
+        /// <summary>
+        /// Reference to a relevant support service related to this support service.
+        /// List of CTIDs for published resources
+        /// </summary>
+        public List<string> HasSpecificService { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Reference to support services that this support service is part of or related to.
+        /// List of CTIDs for published resources
+        /// </summary>
+        public List<string> IsSpecificServiceOf { get; set; } = new List<string>();
 
         /// <summary>
         /// Keyword or key phrase describing relevant aspects of an entity.
@@ -232,7 +243,7 @@ namespace RA.Models.Input
         /// <summary>
         /// Qualifying requirements for receiving a support service.
         /// </summary>
-        public List<ConditionProfile> SupportServiceConditon { get; set; }
+        public List<ConditionProfile> SupportServiceCondition { get; set; }
 
         /// <summary>
         /// Resource to which this support service is applicable.
@@ -244,10 +255,10 @@ namespace RA.Models.Input
         /// <summary>
         /// Types of support services offered by an agent; select from an existing enumeration of such types.
         /// SupportService?
-        /// <see href="https://credreg.net/ctdl/terms/SupportServiceCategory"></see>
+        /// <see href="https://credreg.net/ctdl/terms/SupportServiceType"></see>
         /// ConceptScheme: <see href="https://credreg.net/ctdl/terms/SupportServiceCategory"></see>
         /// </summary>
-        public List<string> SupportServiceCategory { get; set; }
+        public List<string> SupportServiceType { get; set; }
 
     }
 }

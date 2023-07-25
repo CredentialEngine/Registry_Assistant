@@ -19,22 +19,23 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Value of a monetary amount or a quantitative value.
 		/// </summary>
-		public decimal Value { get; set; }
+		public decimal? Value { get; set; }
 
 		/// <summary>
 		/// Lower value of some characteristic or property.
 		/// </summary>
-		public decimal MinValue { get; set; }
+		public decimal? MinValue { get; set; }
 
 		/// <summary>
 		/// Upper value of some characteristic or property.
 		/// </summary>
-		public decimal MaxValue { get; set; }
+		public decimal? MaxValue { get; set; }
 
 		/// <summary>
 		/// Description of this record
 		/// </summary>
 		public string Description { get; set; }
+
 		/// <summary>
 		/// Language map for description
 		/// </summary>
@@ -60,27 +61,27 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Median salary value.
 		/// </summary>
-		public decimal Median { get; set; }
+		public decimal? Median { get; set; }
 
 		/// <summary>
 		/// 10th percentile salary value.
 		/// </summary>
-		public decimal Percentile10 { get; set; }
+		public decimal? Percentile10 { get; set; }
 
 		/// <summary>
 		/// 25th percentile salary value.
 		/// </summary>
-		public decimal Percentile25 { get; set; }
+		public decimal? Percentile25 { get; set; }
 
 		/// <summary>
 		/// 75th percentile salary value.
 		/// </summary>
-		public decimal Percentile75 { get; set; }
+		public decimal? Percentile75 { get; set; }
 
 		/// <summary>
 		/// 90th percentile salary value.
 		/// </summary>
-		public decimal Percentile90 { get; set; }
+		public decimal? Percentile90 { get; set; }
 
 	}
 }

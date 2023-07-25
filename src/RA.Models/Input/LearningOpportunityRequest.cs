@@ -388,7 +388,7 @@ namespace RA.Models.Input
 		/// Geo-political information about applicable geographic areas and their exceptions.
 		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"></see>
 		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; } 
+		public List<JurisdictionProfile> Jurisdiction { get; set; } 
 
 		/// <summary>
 		/// Keyword or key phrase describing relevant aspects of an entity.
@@ -406,12 +406,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<EntityReference> Prerequisite { get; set; } = new List<EntityReference>();
 
-		/// <summary>
-		/// Another source of information about the entity being described.
-		/// HINT: If the SameAs target is a resource in the Credential Registry, just the CTID needs to be provided. 
-		/// ceterms:sameAs
-		/// </summary>
-		public List<string> SameAs { get; set; } = new List<string>();
+        /// <summary>
+        /// Organization(s) that register this resource. 
+		/// Typically used for Registered Apprenticeships
+        /// </summary>
+        public List<OrganizationReference> RegisteredBy { get; set; } = new List<Input.OrganizationReference>();
+
+        /// <summary>
+        /// Another source of information about the entity being described.
+        /// HINT: If the SameAs target is a resource in the Credential Registry, just the CTID needs to be provided. 
+        /// ceterms:sameAs
+        /// </summary>
+        public List<string> SameAs { get; set; } = new List<string>();
 		/// <summary>
 		/// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
 		/// </summary>

@@ -60,7 +60,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// AbilityEmbodied
 		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
-		/// URI to any of:
+		/// CTID/URI to any of:
 		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
 		/// ceasn:abilityEmbodied
 		/// </summary>
@@ -123,13 +123,20 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
-		/// <summary>
-		/// Body of information embodied either directly or indirectly in this resource.
-		/// URI to any of:
-		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
-		/// ceasn:knowledgeEmbodied
-		/// </summary>
-		public List<string> KnowledgeEmbodied { get; set; } = new List<string>();
+        ///// <summary>
+        ///// Is Member Of
+        ///// Collection to which this resource belongs.
+        ///// Inverse property that cannot be used here. 
+        ///// </summary>
+        //public List<string> IsMemberOf { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Body of information embodied either directly or indirectly in this resource.
+        /// CTID/URI to any of:
+        /// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
+        /// ceasn:knowledgeEmbodied
+        /// </summary>
+        public List<string> KnowledgeEmbodied { get; set; } = new List<string>();
 
 		/// <summary>
 		/// An alphanumeric string found in the source framework indicating the relative position of a competency in an ordered list of competencies such as "A", "B", or "a", "b", or "I", "II", or "1", "2".
@@ -143,7 +150,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
-		/// URI to any of:
+		/// CTID/URI to any of:
 		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
 		/// ceasn:skillEmbodied
 		/// </summary>

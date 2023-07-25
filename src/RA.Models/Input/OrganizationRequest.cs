@@ -58,7 +58,7 @@ namespace RA.Models.Input
 			SameAs = new List<string>();
 			AvailabilityListing = new List<string>();
 			ServiceType = new List<string>();
-			Jurisdiction = new List<Input.Jurisdiction>();
+			Jurisdiction = new List<Input.JurisdictionProfile>();
 			Address = new List<Place>();
 			AlternateName = new List<string>();
 			//ContactPoint = new List<ContactPoint>();
@@ -365,7 +365,7 @@ namespace RA.Models.Input
 		/// Geo-political information about applicable geographic areas and their exceptions.
 		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"></see>
 		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; }
+		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
 		/// <summary>
 		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.

@@ -60,7 +60,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// AbilityEmbodied
 		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
-		/// URI to any of:
+		/// CTID/URI to any of:
 		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
 		/// ceasn:abilityEmbodied
 		/// </summary>
@@ -158,7 +158,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Body of information embodied either directly or indirectly in this resource.
-		/// URI to any of:
+		/// CTID/URI to any of:
 		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
 		/// ceasn:knowledgeEmbodied
 		/// </summary>
@@ -218,7 +218,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
-		/// URI to any of:
+		/// CTID/URI to any of:
 		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
 		/// ceasn:skillEmbodied
 		/// </summary>

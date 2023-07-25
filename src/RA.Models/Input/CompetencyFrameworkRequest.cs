@@ -160,7 +160,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> identifier { get; set; } = new List<string>();
 
-		public List<string> altIdentifier { get; set; } = new List<string>();
 		/// <summary>
 		/// In Language
 		/// The primary language used in or by this competency framework or competency.The primary language used in or by this competency framework or competency.
@@ -354,17 +353,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> alignTo { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Alternative Coded Notation
-		/// An alphanumeric notation or ID code identifying this competency in common use among end-users.
-		/// </summary>
-		public List<string> altCodedNotation { get; set; } = new List<string>();
+        /// <summary>
+        /// Alternative Coded Notation
+        /// An alphanumeric notation or ID code identifying this competency in common use among end-users.
+        /// ceasn:altCodedNotation
+        /// </summary>
+        public List<string> altCodedNotation { get; set; } = new List<string>();
 
 		/// <summary>
-		/// A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
+		/// A person or organization chiefly responsible for the intellectual or artistic content of this competency.
 		/// List of Names
 		/// </summary>
-		public List<string> author { get; set; } = new List<string>();
+		public string author { get; set; } 
 
 		/// <summary>
 		/// Broad Alignment
@@ -398,7 +398,6 @@ namespace RA.Models.Input
 		/// Language map for competencyCategory
 		/// </summary>
 		public LanguageMap competencyCategory_map { get; set; } = new LanguageMap();
-
 
 		/// <summary>
 		/// The text of the competency.
@@ -451,12 +450,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> conceptTerm { get; set; } = new List<string>();
 
-		/// <summary>
-		/// An entity primarily responsible for making this competency framework or competency.
-		/// The creator property is used with non-canonical statements created by a third party.
-		/// List of URIs (CTIDs recommended) to the creator
-		/// </summary>
-		public List<string> creator { get; set; } = new List<string>();
+        /// <summary>
+        /// An entity primarily responsible for making this competency framework or competency.
+        /// The creator property is used with non-canonical statements created by a third party.
+        /// List of URIs (CTIDs recommended) to the creator
+        /// ceasn:creator
+        /// </summary>
+        public List<string> creator { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Cross-Subject Reference
@@ -514,7 +514,7 @@ namespace RA.Models.Input
 		/// Concept in a ProgressionModel concept scheme
 		/// URI
 		/// </summary>
-		public List<string> hasProgressionLevel { get; set; } = new List<string>();
+		public string hasProgressionLevel { get; set; }
 
 		/// <summary>
 		/// Identifier
@@ -533,7 +533,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Is Child Of
 		/// The referenced competency is higher in some arbitrary hierarchy than this competency.
-		/// List of URIs (CTIDs recommended) to competenciesenvironment.
+		/// List of URIs (CTIDs recommended) to competencies.
 		/// </summary>
 		public List<string> isChildOf { get; set; } = new List<string>();
 		/// <summary>
@@ -550,7 +550,7 @@ namespace RA.Models.Input
         /// Collection to which this resource belongs.
 		/// Only used where part of a Collection
         /// </summary>
-        public List<string> isMemberOf { get; set; }
+        public List<string> isMemberOf { get; set; } = new List<string>();
 
         /// <summary>
         /// A related competency of which this competency is a version, edition, or adaptation.
@@ -558,10 +558,22 @@ namespace RA.Models.Input
         /// </summary>
         public string isVersionOf { get; set; }
 
-		/// <summary>
-		/// An alphanumeric string indicating the relative position of a resource in an ordered list of resources such as "A", "B", or "a", "b", or "I", "II", or "1", "2".
-		/// </summary>
-		public string listID { get; set; }
+        public List<string> keyword { get; set; } = new List<string>();
+        /// <summary>
+        /// Language map list for keyword
+        /// </summary>
+        public LanguageMapList keyword_map { get; set; } = new LanguageMapList();
+
+        /// <summary>
+        /// A legal document giving official permission to do something with this resource.
+        /// Collections only
+        /// </summary>
+        public string license { get; set; }
+
+        /// <summary>
+        /// An alphanumeric string indicating the relative position of a resource in an ordered list of resources such as "A", "B", or "a", "b", or "I", "II", or "1", "2".
+        /// </summary>
+        public string listID { get; set; }
 
 		/// <summary>
 		/// The text string denoting the subject of the competency framework or competency as designated by the promulgating agency.
@@ -745,13 +757,13 @@ namespace RA.Models.Input
 		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; 
 		/// List of URIs (CTIDs recommended) for Concept
 		/// </summary>
-		public List<string> environmentalHazardType { get; set; }
+		public List<string> environmentalHazardType { get; set; } = new List<string>();
 
-		/// <summary>
-		/// The primary language used in or by this resource.
-		/// Collections only
-		/// </summary>
-		public List<string> inLanguage { get; set; }
+        /// <summary>
+        /// The primary language used in or by this resource.
+        /// Collections only
+        /// </summary>
+        public List<string> inLanguage { get; set; } = new List<string>();	
 
 		///// <summary>
 		///// Collection to which this resource belongs.
@@ -759,92 +771,87 @@ namespace RA.Models.Input
 		///// </summary>
 		//public string isMemberOf { get; set; }
 
-		/// <summary>
-		/// A legal document giving official permission to do something with this resource.
-		/// Collections only
-		/// </summary>
-		public string license { get; set; }
 
 		/// <summary>
 		/// Type of required or expected performance level for a resource; select from an existing enumeration of such types.
 		/// List of URIs (CTIDs recommended) for Concept
 		/// </summary>
-		public List<string> performanceLevelType { get; set; }
+		public List<string> performanceLevelType { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Type of physical activity required or expected in performance; select from an existing enumeration of such types.
-		/// List of URIs (CTIDs recommended) for Concept
-		/// </summary>
-		public List<string> physicalCapabilityType { get; set; }
+        /// <summary>
+        /// Type of physical activity required or expected in performance; select from an existing enumeration of such types.
+        /// List of URIs (CTIDs recommended) for Concept
+        /// </summary>
+        public List<string> physicalCapabilityType { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Type of required or expected sensory capability; select from an existing enumeration of such types.
-		/// List of URIs (CTIDs recommended) for Concept
-		/// </summary>
-		public List<string> sensoryCapabilityType { get; set; }
-
-
-		/// <summary>
-		/// Human-readable information resource other than a competency framework from which this competency was generated or derived by humans or machines.
-		/// List of URIs
-		/// </summary>
-		public List<string> sourceDocumentation { get; set; }
-
-		/// <summary>
-		/// Aspects of the referenced Competency Framework provide some justification that the resource being described is useful.
-		/// List of URIs (CTIDs recommended) for a competency framework
-		/// </summary>
-		public List<string> substantiatingCompetencyFramework { get; set; }
-
-		/// <summary>
-		/// Aspects of the referenced Credential provide some justification that the resource being described is useful.
-		/// List of URIs (CTIDs recommended) for a Credential
-		/// </summary>
-		public List<string> substantiatingCredential { get; set; }
-
-		/// <summary>
-		/// Aspects of the referenced Job provide some justification that the resource being described is useful.
-		/// </summary>
-		public List<string> substantiatingJob { get; set; }
-
-		/// <summary>
-		/// Aspects of the referenced Occupation provide some justification that the resource being described is useful.
-		/// List of URIs (CTIDs recommended) for an Occupation
-		/// </summary>
-		public List<string> substantiatingOccupation { get; set; }
-
-		/// <summary>
-		/// Aspects of the referenced Organization provide some justification that the resource being described is useful.
-		/// List of URIs (CTIDs recommended) for an Organization
-		/// </summary>
-		public List<string> substantiatingOrganization { get; set; }
-
-		/// <summary>
-		/// Aspects of the referenced resource provide some justification that the resource being described is useful.
-		/// List of URIs (CTIDs recommended) for a
-		/// </summary>
-		public List<string> substantiatingResource { get; set; }
-
-		/// <summary>
-		/// Referenced Task attests to some level of achievement/mastery of the competency being described.
-		/// List of URIs (CTIDs recommended) for a Task
-		/// </summary>
-		public List<string> substantiatingTask { get; set; }
-
-		/// <summary>
-		/// Referenced Workrole attests to some level of achievement/mastery of the competency being described.
-		/// List of URIs (CTIDs recommended) for a Work role
-		/// </summary>
-		public List<string> substantiatingWorkrole { get; set; }
-
-		/// <summary>
-		/// Level of workforce demand for the resource.
-		/// List of URIs (CTIDs recommended) for a WorkforceDemandAction
-		/// </summary>
-		public List<string> hasWorkforceDemand { get; set; }
+        /// <summary>
+        /// Type of required or expected sensory capability; select from an existing enumeration of such types.
+        /// List of URIs (CTIDs recommended) for Concept
+        /// </summary>
+        public List<string> sensoryCapabilityType { get; set; } = new List<string>();
 
 
-	}
+        /// <summary>
+        /// Human-readable information resource other than a competency framework from which this competency was generated or derived by humans or machines.
+        /// List of URIs
+        /// </summary>
+        public List<string> sourceDocumentation { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Aspects of the referenced Competency Framework provide some justification that the resource being described is useful.
+        /// List of URIs (CTIDs recommended) for a competency framework
+        /// </summary>
+        public List<string> substantiatingCompetencyFramework { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Aspects of the referenced Credential provide some justification that the resource being described is useful.
+        /// List of URIs (CTIDs recommended) for a Credential
+        /// </summary>
+        public List<string> substantiatingCredential { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Aspects of the referenced Job provide some justification that the resource being described is useful.
+        /// </summary>
+        public List<string> substantiatingJob { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Aspects of the referenced Occupation provide some justification that the resource being described is useful.
+        /// List of URIs (CTIDs recommended) for an Occupation
+        /// </summary>
+        public List<string> substantiatingOccupation { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Aspects of the referenced Organization provide some justification that the resource being described is useful.
+        /// List of URIs (CTIDs recommended) for an Organization
+        /// </summary>
+        public List<string> substantiatingOrganization { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Aspects of the referenced resource provide some justification that the resource being described is useful.
+        /// List of URIs (CTIDs recommended) for a
+        /// </summary>
+        public List<string> substantiatingResource { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Referenced Task attests to some level of achievement/mastery of the competency being described.
+        /// List of URIs (CTIDs recommended) for a Task
+        /// </summary>
+        public List<string> substantiatingTask { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Referenced Workrole attests to some level of achievement/mastery of the competency being described.
+        /// List of URIs (CTIDs recommended) for a Work role
+        /// </summary>
+        public List<string> substantiatingWorkrole { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Level of workforce demand for the resource.
+        /// List of URIs (CTIDs recommended) for a WorkforceDemandAction
+        /// </summary>
+        public List<string> hasWorkforceDemand { get; set; } = new List<string>();
+
+
+    }
 
 
 }

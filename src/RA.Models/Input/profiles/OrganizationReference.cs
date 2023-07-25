@@ -80,13 +80,20 @@ namespace RA.Models.Input
 		public List<string> SocialMedia { get; set; } //URL
 
 
-		//additional optional information - why not everything!
-		/// <summary>
-		/// List of Places
-		/// In this context - an organization reference, partial addresses are allowed. 
-		/// This means a street address and/or a postal would not be required, just say city, region, and country
-		/// </summary>
-		public List<Place> Address { get; set; } = new List<Place>();
+        /// <summary>
+        /// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+        /// <see cref="https://purl.org/ctdl/terms/identifier"/>
+        /// ceterms:identifier
+        /// </summary>
+        public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
+        //additional optional information - why not everything!
+        /// <summary>
+        /// List of Places
+        /// In this context - an organization reference, partial addresses are allowed. 
+        /// This means a street address and/or a postal would not be required, just say city, region, and country
+        /// </summary>
+        public List<Place> Address { get; set; } = new List<Place>();
 		/// <summary>
 		/// Listing of online and/or physical locations
 		/// List of URLs

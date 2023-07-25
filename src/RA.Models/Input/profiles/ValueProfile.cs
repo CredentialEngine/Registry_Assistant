@@ -36,12 +36,21 @@ namespace RA.Models.Input
 		public LanguageMap Description_Map { get; set; } = null;
 
 		/// <summary>
+		/// Minimum value for this purpose. If provided, a maximum value must also be provided
+		/// </summary>
+		public decimal? MinValue { get; set; }
+		/// <summary>
+		/// Maximum value for this purpose.
+		/// </summary>
+		public decimal? MaxValue { get; set; }
+
+		/// <summary>
 		/// A percentage for this purpose. 
 		/// Best practice is to treat the value of this property as a verbatim percentage; for example, a value of 1.5 should be interpreted as 1.5%
 		/// Do not use if providing any of value, minimum and maximum value.
 		/// qdata:percentage
 		/// </summary>
-		public decimal Percentage { get; set; }
+		public decimal? Percentage { get; set; }
 		/// <summary>
 		/// Optional subjects that are relevent for this Value Profile
 		/// </summary>
@@ -55,15 +64,6 @@ namespace RA.Models.Input
 		/// A single value for this purpose. 
 		/// Do not use if providing a minimum and maximum value.
 		/// </summary>
-		public decimal Value { get; set; }
-
-		/// <summary>
-		/// Minimum value for this purpose. If provided, a maximum value must also be provided
-		/// </summary>
-		public decimal MinValue { get; set; }
-		/// <summary>
-		/// Maximum value for this purpose.
-		/// </summary>
-		public decimal MaxValue { get; set; }
+		public decimal? Value { get; set; }
 	}
 }

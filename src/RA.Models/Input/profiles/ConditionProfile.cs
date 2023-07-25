@@ -32,7 +32,7 @@ namespace RA.Models.Input
 			TargetLearningOpportunity = new List<EntityReference>();
 			TargetCompetency = new List<CredentialAlignmentObject>();
 
-			ResidentOf = new List<Input.Jurisdiction>();
+			ResidentOf = new List<Input.JurisdictionProfile>();
 		}
 
 
@@ -173,11 +173,11 @@ namespace RA.Models.Input
 		/// Geo-political information about applicable geographic areas and their exceptions.
 		/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
 		/// </summary>
-		public List<Jurisdiction> Jurisdiction { get; set; } = new List<Jurisdiction>();
+		public List<JurisdictionProfile> Jurisdiction { get; set; } = new List<JurisdictionProfile>();
 		/// <summary>
 		/// Geographic or political region of which a person must be a legal resident or citizen in order to be eligible for the resource.
 		/// </summary>
-		public List<Jurisdiction> ResidentOf { get; set; }
+		public List<JurisdictionProfile> ResidentOf { get; set; }
 
 		/// <summary>
 		/// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.

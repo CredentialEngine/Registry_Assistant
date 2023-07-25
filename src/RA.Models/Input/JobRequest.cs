@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using MJ = RA.Models.JsonV2;
-
 namespace RA.Models.Input
 {
 
@@ -19,12 +17,6 @@ namespace RA.Models.Input
         /// </summary>
         public Job Job { get; set; } = new Job();
 
-
-        /// <summary>
-        /// Job already formatted as JSON-LD
-        /// ONLY USED WITH PUBLISH LIST
-        /// </summary>
-        public MJ.Job FormattedJob { get; set; } = new MJ.Job();
     }
 
     /// <summary>
