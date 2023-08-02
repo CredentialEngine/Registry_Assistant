@@ -6,6 +6,7 @@ using APIRequestEntity = RA.Models.Input.Collection;
 using Newtonsoft.Json;
 
 using RA.Models.Input;
+using System.Linq;
 
 namespace RA.SamplesForDocumentation.Collections
 {
@@ -160,16 +161,22 @@ namespace RA.SamplesForDocumentation.Collections
 			List<string> codes = new List<string>();
 			//====================	OCCUPATIONS ====================
 			myData.OccupationType = OccupationsHelper.PopulateOccupations( ref alternateTypes, ref codes );
-			myData.AlternativeOccupationType = alternateTypes;
-			myData.ONET_Codes = codes;
+			if (alternateTypes != null && alternateTypes.Any())
+				myData.AlternativeOccupationType = alternateTypes;
+            if (codes != null && codes.Any())
+                myData.ONET_Codes = codes;
 			//====================	INDUSTRIES	====================
 			myData.IndustryType = Industries.PopulateIndustries( ref alternateTypes, ref codes );
-			myData.AlternativeIndustryType = alternateTypes;
-			myData.NaicsList = codes;
+            if (alternateTypes != null && alternateTypes.Any())
+                myData.AlternativeIndustryType = alternateTypes;
+            if (codes != null && codes.Any())
+                myData.NaicsList = codes;
 			//====================	INSTRUCTIONAL PROGRAMS	====================
 			myData.InstructionalProgramType = InstructionalPrograms.PopulatePrograms( ref alternateTypes, ref codes);
-			myData.AlternativeInstructionalProgramType = alternateTypes;
-			myData.CIP_Codes = codes;
+            if (alternateTypes != null && alternateTypes.Any())
+                myData.AlternativeInstructionalProgramType = alternateTypes;
+            if (codes != null && codes.Any())
+                myData.CIP_Codes = codes;
 
 			//This holds the learningOpportunity and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()

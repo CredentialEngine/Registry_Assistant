@@ -10,16 +10,17 @@ namespace RA.SamplesForDocumentation
 {
 	public class InstructionalPrograms
 	{
-		/// <summary>
-		/// Example for populating Instructional Programs (example CIP) for a Credential Request. 
-		/// The same approach would be used for other classes that support Instructional Programs such as Assessments and LearningOpportunities. 
-		/// Possible Input Types
-		/// - List of frameworks
-		/// - list of program names
-		/// - List of CIP codes
-		/// </summary>
-		/// <param name="request"></param>
-		public static List<FrameworkItem> PopulatePrograms(ref List<string> AlternativeTypes, ref List<string> Codes )
+        /// <summary>
+        /// Example for populating Instructional Programs (example CIP)
+        /// The same approach would be used for all classes that support Instructional Programs such as Assessments and LearningOpportunities. 
+        /// Possible Input Types
+        /// - List of frameworks
+        /// - list of program names
+        /// - List of CIP codes
+        /// </summary>
+        /// <param name="AlternativeTypes">If applicable, will return a list of programs (name only) for use with request.AlternativeInstructionalProgramType</param>
+        /// <param name="CIP_Codes">If applicable, will return a list of CIP codes for use with request.CIP_Codes</param>
+        public static List<FrameworkItem> PopulatePrograms(ref List<string> AlternativeTypes, ref List<string> CIP_Codes )
 		{
 			var InstructionalProgramType = new List<FrameworkItem>
 			{
@@ -52,7 +53,7 @@ namespace RA.SamplesForDocumentation
 
             //CIP code helper - ALternately provided a list of CIP codes. 
             //The Assistant API will validate the codes and format the output including the framework name and URL, the name, description, and code
-            Codes = new List<string>() { "31.0504", "31.0505", "31.0599", "31.9999" };
+            CIP_Codes = new List<string>() { "31.0504", "31.0505", "31.0599", "31.9999" };
 
             return InstructionalProgramType;
 		}

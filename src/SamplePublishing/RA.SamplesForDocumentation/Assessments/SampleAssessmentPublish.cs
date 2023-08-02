@@ -54,10 +54,33 @@ namespace RA.SamplesForDocumentation.Assessments
 				CTID = organizationIdentifierFromAccountsSite
 			} );
 
-			//
-			//A assessment *must* be connected to a credential in order to be published.
-			//The connection can be made using a Required condition profile in the Credential or using a RequiredFor Connection from the assessment
-			myData.IsRequiredFor = new List<ConnectionProfile>()
+            //add occupationType, IndustryType, InstructionalProgram
+            List<string> alternateTypes = new List<string>();
+            List<string> codes = new List<string>();
+            //====================	OCCUPATIONS ====================
+            myData.OccupationType = OccupationsHelper.PopulateOccupations( ref alternateTypes, ref codes );
+            if (alternateTypes != null && alternateTypes.Count > 0)
+                myData.AlternativeOccupationType = alternateTypes;
+            if (codes != null && codes.Count > 0)
+                myData.ONET_Codes = codes;
+            //====================	INDUSTRIES	====================
+            myData.IndustryType = Industries.PopulateIndustries( ref alternateTypes, ref codes );
+            if (alternateTypes != null && alternateTypes.Count > 0)
+                myData.AlternativeIndustryType = alternateTypes;
+            if (codes != null && codes.Count > 0)
+                myData.NaicsList = codes;
+            //====================	INSTRUCTIONAL PROGRAMS	====================
+            myData.InstructionalProgramType = InstructionalPrograms.PopulatePrograms( ref alternateTypes, ref codes );
+            if (alternateTypes != null && alternateTypes.Count > 0)
+                myData.AlternativeInstructionalProgramType = alternateTypes;
+            if (codes != null && codes.Count > 0)
+                myData.CIP_Codes = codes;
+
+
+            //
+            //A assessment *must* be connected to a credential in order to be published.
+            //The connection can be made using a Required condition profile in the Credential or using a RequiredFor Connection from the assessment
+            myData.IsRequiredFor = new List<ConnectionProfile>()
 			{
 				new ConnectionProfile()
 				{

@@ -164,12 +164,34 @@ namespace RA.SamplesForDocumentation
 					}
 				}
 			};
-			//add costs
-			//Must be a valid CTDL cost type.
-			// Example: Tuition, Application, AggregateCost, RoomOrResidency
-			//see: https://credreg.net/ctdl/terms#CostType
-			//Description and CostDetails are required properties
-			myData.EstimatedCost.Add( new CostProfile()
+			//add occupationType, IndustryType, InstructionalProgram
+            List<string> alternateTypes = new List<string>();
+            List<string> codes = new List<string>();
+            //====================	OCCUPATIONS ====================
+            myData.OccupationType = OccupationsHelper.PopulateOccupations( ref alternateTypes, ref codes );
+            if (alternateTypes != null && alternateTypes.Count > 0)
+                myData.AlternativeOccupationType = alternateTypes;
+            if (codes != null && codes.Count > 0)
+                myData.ONET_Codes = codes;
+            //====================	INDUSTRIES	====================
+            myData.IndustryType = Industries.PopulateIndustries( ref alternateTypes, ref codes );
+            if (alternateTypes != null && alternateTypes.Count > 0)
+                myData.AlternativeIndustryType = alternateTypes;
+            if (codes != null && codes.Count > 0)
+                myData.NaicsList = codes;
+            //====================	INSTRUCTIONAL PROGRAMS	====================
+            myData.InstructionalProgramType = InstructionalPrograms.PopulatePrograms( ref alternateTypes, ref codes );
+            if (alternateTypes != null && alternateTypes.Count > 0)
+                myData.AlternativeInstructionalProgramType = alternateTypes;
+            if (codes != null && codes.Count > 0)
+                myData.CIP_Codes = codes;
+
+            //add costs
+            //Must be a valid CTDL cost type.
+            // Example: Tuition, Application, AggregateCost, RoomOrResidency
+            //see: https://credreg.net/ctdl/terms#CostType
+            //Description and CostDetails are required properties
+            myData.EstimatedCost.Add( new CostProfile()
 			{
 				Description = "A required description of the cost profile",
 				CostDetails = "https://example.com/t=loppCostProfile",

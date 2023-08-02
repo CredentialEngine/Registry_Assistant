@@ -11,18 +11,18 @@ namespace RA.SamplesForDocumentation
 	public class OccupationsHelper
 	{
 
-		/// <summary>
-		/// Example for populating Occupations for a Credential Request. 
-		/// The same approach would be used for other classes that support Occupations such as Assessments and LearningOpportunities. 
-		/// Possible Input Types
-		/// - List of frameworks
-		/// - list of occupation names
-		/// - List of SOC codes
-		/// </summary>
-		/// <param name="AlternativeTypes"></param>
-		/// <param name="Codes"></param>
-		/// <returns></returns>
-		public static List<FrameworkItem> PopulateOccupations( ref List<string> AlternativeTypes, ref List<string> Codes )
+        /// <summary>
+        /// Example for populating Occupations for a Credential Request. 
+        /// The same approach would be used for other classes that support Occupations such as Assessments and LearningOpportunities. 
+        /// Possible Input Types
+        /// - List of frameworks
+        /// - list of occupation names
+        /// - List of SOC codes
+        /// </summary>
+        /// <param name="AlternativeTypes">If applicable, will return a list of occupations (name only) for use with request.AlternativeInstructionalProgramType</param>
+        /// <param name="ONET_Codes">If applicable, will return a list of SOC codes for use with request.ONET_Codes</param>
+        /// <returns></returns>
+        public static List<FrameworkItem> PopulateOccupations( ref List<string> AlternativeTypes, ref List<string> ONET_Codes )
 		{
 			var OccupationType = new List<FrameworkItem>();
 
@@ -63,7 +63,7 @@ namespace RA.SamplesForDocumentation
             //O*Net helper - ALternately provided a list of O*Net codes. 
             //The Assistant API will validate the codes and format the output including the framework name and URL, the occupation, description, and code
             //request.ONET_Codes 
-            Codes = new List<string>() { "13-2099.01", "13-2052.00", "13-2061.00", "13-2051.00" };
+            ONET_Codes = new List<string>() { "13-2099.01", "13-2052.00", "13-2061.00", "13-2051.00" };
 			return OccupationType;
 		}
 

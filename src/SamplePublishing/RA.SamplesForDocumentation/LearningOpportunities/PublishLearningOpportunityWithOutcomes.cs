@@ -71,10 +71,20 @@ namespace RA.SamplesForDocumentation
 					}
 				}
 			};
+            //add InstructionalProgram
+            List<string> alternateTypes = new List<string>();
+            List<string> codes = new List<string>();
 
-			//
-			//format an AggregateDataProfile
-			myData.AggregateData = new List<AggregateDataProfile>() { FormatAggregateDataProfile( organizationIdentifierFromAccountsSite ) };
+            //====================	INSTRUCTIONAL PROGRAMS	====================
+            myData.InstructionalProgramType = InstructionalPrograms.PopulatePrograms( ref alternateTypes, ref codes );
+            if (alternateTypes != null && alternateTypes.Count > 0)
+                myData.AlternativeInstructionalProgramType = alternateTypes;
+            if (codes != null && codes.Count > 0)
+                myData.CIP_Codes = codes;
+
+            //
+            //format an AggregateDataProfile
+            myData.AggregateData = new List<AggregateDataProfile>() { FormatAggregateDataProfile( organizationIdentifierFromAccountsSite ) };
 
 			//This holds the learningOpportunity and the identifier (CTID) for the owning organization
 			var myRequest = new APIRequest()

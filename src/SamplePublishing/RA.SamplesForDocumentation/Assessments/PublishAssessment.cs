@@ -169,8 +169,31 @@ namespace RA.SamplesForDocumentation
 					}
 				}
 			};
-			//This holds the assessment and the identifier (CTID) for the owning organization
-			var myRequest = new AssessmentRequest()
+            //add occupationType, IndustryType, InstructionalProgram
+            List<string> alternateTypes = new List<string>();
+            List<string> codes = new List<string>();
+            //====================	OCCUPATIONS ====================
+            myData.OccupationType = OccupationsHelper.PopulateOccupations( ref alternateTypes, ref codes );
+            if (alternateTypes != null && alternateTypes.Count > 0)
+                myData.AlternativeOccupationType = alternateTypes;
+            if (codes != null && codes.Count > 0)
+                myData.ONET_Codes = codes;
+            //====================	INDUSTRIES	====================
+            myData.IndustryType = Industries.PopulateIndustries( ref alternateTypes, ref codes );
+            if (alternateTypes != null && alternateTypes.Count > 0)
+                myData.AlternativeIndustryType = alternateTypes;
+            if (codes != null && codes.Count > 0)
+                myData.NaicsList = codes;
+            //====================	INSTRUCTIONAL PROGRAMS	====================
+            myData.InstructionalProgramType = InstructionalPrograms.PopulatePrograms( ref alternateTypes, ref codes );
+            if (alternateTypes != null && alternateTypes.Count > 0)
+                myData.AlternativeInstructionalProgramType = alternateTypes;
+            if (codes != null && codes.Count > 0)
+                myData.CIP_Codes = codes;
+
+
+            //This holds the assessment and the identifier (CTID) for the owning organization
+            var myRequest = new AssessmentRequest()
 			{
 				Assessment = myData,
 				DefaultLanguage = "en-US",

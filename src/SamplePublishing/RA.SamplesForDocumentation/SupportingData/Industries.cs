@@ -54,7 +54,13 @@ namespace RA.SamplesForDocumentation
 			request.Naics = new List<string>() { "9271", "927110", "9281", "928110" };
 		}
 
-		public static List<FrameworkItem> PopulateIndustries( ref List<string> AlternativeTypes, ref List<string> Codes )
+        /// <summary>
+        /// Example of populating a request for industry type
+        /// </summary>
+        /// <param name="AlternativeTypes"></param>
+        /// <param name="NaicsList">If applicable, will return a list of NaicsList codes for use with request.NaicsList</param>
+        /// <returns></returns>
+        public static List<FrameworkItem> PopulateIndustries( ref List<string> AlternativeTypes, ref List<string> NaicsList )
 		{
 			var IndustryType = new List<FrameworkItem>
 			{
@@ -87,7 +93,7 @@ namespace RA.SamplesForDocumentation
 
             //NAICS helper - ALternately provided a list of NAICS codes. 
             //The Assistant API will validate the codes and format the output including the framework name and URL, the name, description, and code
-            Codes = new List<string>() { "9271", "927110", "9281", "928110" };
+            NaicsList = new List<string>() { "9271", "927110", "9281", "928110" };
 			return IndustryType;
 		}
 
