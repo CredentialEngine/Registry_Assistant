@@ -15,7 +15,6 @@ namespace RA.Models.JsonV2
         {
 			Type = "ceterms:LearningOpportunityProfile";
 			InLanguage = new List<string>();
-            //Keyword = new List<string>();
 
 			AudienceLevelType = new List<CredentialAlignmentObject>();
             AudienceType = new List<CredentialAlignmentObject>();
