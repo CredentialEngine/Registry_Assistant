@@ -58,7 +58,7 @@ namespace RA.Models.Input
         /// <summary>
         /// Measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
         /// </summary>
-        public decimal Weight { get; set; }
+        public decimal? Weight { get; set; }
     }
 
 

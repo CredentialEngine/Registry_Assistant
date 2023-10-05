@@ -56,7 +56,6 @@ namespace RA.Models.Input
 		/// Number of months usually range between 3 months (one quarter) to ten years.
 		/// </summary>
 		public int PostReceiptMonths { get; set; }
-		//public decimal Region { get; set; }
 
 		/// <summary>
 		/// Authoritative source of an entity's information.
