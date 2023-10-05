@@ -71,7 +71,7 @@ namespace RA.SamplesForDocumentation
 				IdentifierValueCode = "0276"        //Alphanumeric string identifier of the entity
 			} );
 			//============== TransferValue ================================
-			//Required. Provide a transfer value amount using Value and UnitText. ex. DegreeCredit This is a concept scheme and so has a strict vocabulary. 
+			//Required. Provide a transfer value amount using Value and CreditUnitType. ex. DegreeCredit This is a concept scheme and so has a strict vocabulary. 
 			myData.TransferValue = new List<ValueProfile>()
 			{
 				new ValueProfile()

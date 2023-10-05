@@ -292,8 +292,12 @@ namespace RA.SamplesForDocumentation
 				Name = "Sophia Learning, LLC",
 				SubjectWebpage = "https://www.sophia.org/"
 			};
-			transferValueFrom.OwnedBy = new List<OrganizationReference>();
-			transferValueFrom.OwnedBy.Add( ownedBy );
+			transferValueFrom.OwnedBy = new List<OrganizationReference>
+			{
+				ownedBy
+			};
+			//
+			transferValueFrom.Teaches = AssignPrinciplesFinanceCompetencies();
 			//
 			transferValueFrom.EstimatedDuration = new List<DurationProfile>()
 			{
@@ -334,8 +338,7 @@ namespace RA.SamplesForDocumentation
 				"Working capital management",
 				"Dividends and dividend policy"
 			};
-			//
-			transferValueFrom.Teaches = AssignPrinciplesFinanceCompetencies();
+
 
 			myData.TransferValueFrom.Add( transferValueFrom );
 

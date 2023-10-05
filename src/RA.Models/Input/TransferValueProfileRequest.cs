@@ -61,7 +61,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		public LanguageMap Name_Map { get; set; } = null;
 		/// <summary>
 		/// Transfer Value Profile Description 
 		/// Required
@@ -70,7 +70,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		public LanguageMap Description_Map { get; set; } = null;
 
 		/// <summary>
 		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
@@ -142,6 +142,7 @@ namespace RA.Models.Input
 		///  - Job  - TBD
 		///  - Occupation  - TBD
 		///  2021-05-10 An additional type will be a EntityReference. Actually any of the latter with a type and CTID
+		///  2023-08-23 mparsons - this will be much easier to start using just URIs, and ReferenceObjects for blank nodes
 		/// </summary>
 		public List<object> TransferValueFrom { get; set; } = new List<object>();
 
@@ -176,7 +177,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternateName_Map { get; set; } = null;
 
 		///// <summary>
 		///// Experimenting

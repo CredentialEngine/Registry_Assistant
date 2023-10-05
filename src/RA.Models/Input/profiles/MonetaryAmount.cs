@@ -45,6 +45,12 @@ namespace RA.Models.Input
 		/// Word or phrase indicating the unit of measure - mostly if the use of Currency is not sufficient
 		/// </summary>
 		public string UnitText { get; set; }
+
+		/// <summary>
+		/// Type of suppression, masking, or other modification made to the data to protect the identities of its subjects.
+		/// concept from: qdata:DataWithholdingCategory
+		/// </summary>
+		public string DataWithholdingType { get; set; }
 	}
 
 	/// <summary>
@@ -83,5 +89,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public decimal? Percentile90 { get; set; }
 
+		/// <summary>
+		/// Type of suppression, masking, or other modification made to the data to protect the identities of its subjects.
+		/// concept from: qdata:DataWithholdingCategory
+		/// </summary>
+		public string DataWithholdingType { get; set; }
 	}
 }

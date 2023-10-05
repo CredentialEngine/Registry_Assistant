@@ -21,7 +21,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. For example:
 		/// creditUnit:DegreeCredit or ContinuingEducationUnit 
-		/// If this object is a monetary purpose, the UnitText would typically be the related currency for the value (example: "USD")
+		/// Currently, if this object is a monetary purpose, the UnitText would typically be the related currency for the value (example: "USD").
+		///			BUT there is no unitText property yet! So as a fall back, a currency value should be referenced in the descr.
 		/// ConceptScheme: <see cref="https://credreg.net/ctdl/terms/CreditUnit"/>
 		/// </summary>
 		public List<string> CreditUnitType { get; set; } = null;

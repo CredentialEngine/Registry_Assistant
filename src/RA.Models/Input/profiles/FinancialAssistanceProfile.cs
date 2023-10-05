@@ -27,7 +27,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
-		public string SubjectWebpage { get; set; }
+
 		/// <summary>
 		/// The financial assistance type is a list of one or more concepts from the ceterms:FinancialAssistance concept scheme. 
 		/// <see cref="https://credreg.net/ctdl/terms/financialAssistanceType"/>
@@ -39,6 +39,11 @@ namespace RA.Models.Input
 		/// Recommended
 		/// </summary>
 		public List<QuantitativeValue> FinancialAssistanceValue { get; set; } = new List<QuantitativeValue>();
+
+		/// <summary>
+		/// Optional
+		/// </summary>
+		public string SubjectWebpage { get; set; }
 
 		/// <summary>
 		/// List of Alternate Names for this resource

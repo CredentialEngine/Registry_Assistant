@@ -77,13 +77,22 @@ namespace RA.SamplesForDocumentation
 					Country="United States"
 				}
 			};
-
-            //								Assesses competencies
-            //	Where an assessment assesses one or more competencies, they can be published in the Assesses property
-            //	List<CredentialAlignmentObject> Assesses
-            //  Ideally, the competencies would be part of a competency framework that could be published to the registry.
-            //  If the competencies are 'free floating' they can be published just using the name and an optional description
-            myData.Assesses = new List<CredentialAlignmentObject>()
+			myData.Identifier.Add( new IdentifierValue()
+			{
+				IdentifierTypeName = "Some Identifer For Resource",
+				IdentifierValueCode = "Catalog: xyz1234 "        //Alphanumeric string identifier of the entity
+			} );
+			myData.VersionIdentifier.Add( new IdentifierValue()
+			{
+				IdentifierTypeName = "MyVersion",
+				IdentifierValueCode = "2023-09-01"        //Alphanumeric string identifier of the entity
+			} );
+			//								Assesses competencies
+			//	Where an assessment assesses one or more competencies, they can be published in the Assesses property
+			//	List<CredentialAlignmentObject> Assesses
+			//  Ideally, the competencies would be part of a competency framework that could be published to the registry.
+			//  If the competencies are 'free floating' they can be published just using the name and an optional description
+			myData.Assesses = new List<CredentialAlignmentObject>()
             {
                 new CredentialAlignmentObject()
                 {

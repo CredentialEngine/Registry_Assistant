@@ -61,5 +61,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Type of suppression, masking, or other modification made to the data to protect the identities of its subjects.
+		/// concept from: qdata:DataWithholdingCategory
+		/// </summary>
+		public string DataWithholdingType { get; set; }
 	}
 }

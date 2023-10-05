@@ -64,7 +64,16 @@ namespace RA.SamplesForDocumentation
 				"deliveryType:InPerson", 
 				"deliveryType:OnlineOnly" 
 			};
-
+			myData.Identifier.Add( new IdentifierValue()
+			{
+				IdentifierTypeName = "Some Identifer For Credential",
+				IdentifierValueCode = "Catalog: xyz1234 "        //Alphanumeric string identifier of the entity
+			} );
+			myData.VersionIdentifier.Add( new IdentifierValue()
+			{
+				IdentifierTypeName = "MyVersion",
+				IdentifierValueCode = "2023-09-01"        //Alphanumeric string identifier of the entity
+			} );
 			//==================== QUALITY ASSURANCE RECEIVED ====================
 
 			//CTID for Higher learning commission.
@@ -334,27 +343,34 @@ namespace RA.SamplesForDocumentation
 			{
 				Name = input.Name,
 				Description = input.Description,
-				InLanguage = new List<string>() { "en-US" },
-				//provide valid concept from schema 
-				CredentialType = "BachelorDegree",
-				//*** the source data must assign a CTID and use for all transactions
-				CTID = input.CTID,
-				DateEffective = input.DateEffective,
-				Image = input.ImageUrl,
-				Subject = input.Subject,
+				CredentialStatusType = input.CredentialStatusType,
+				CredentialType = input.Type,
+                InLanguage = new List<string>() { input.InLanguage },
+
+                //*** the source data must assign a CTID and use for all transactions
+                CTID = input.CTID,
 				Keyword = input.Keyword
 			};
 
-			//typically the ownedBy is the same as the CTID for the data owner
-			myData.OwnedBy.Add( new OrganizationReference()
+            myData.ONET_Codes = input.OccupationCodes;
+
+            //typically the ownedBy is the same as the CTID for the data owner
+            myData.OwnedBy.Add( new OrganizationReference()
 			{
-				CTID = organizationIdentifierFromAccountsSite
-			} );
+				CTID = input.OwningOrganization.CTID
+            } );
 
-			//==================== Quality Assurance Received ====================
+            //add offeredBy
+            myData.OfferedBy.Add( new OrganizationReference()
+            {
+				//where a unique identifier like a Guid is being used, transform and prefix with "ce-"
+                CTID = "ce-" + input.OwningOrganization.Guid.ToString()
+            } );
 
-			//CTID for Higher learning commission.
-			myData.AccreditedBy.Add( new OrganizationReference()
+            //==================== Quality Assurance Received ====================
+
+            //CTID for Higher learning commission.
+            myData.AccreditedBy.Add( new OrganizationReference()
 			{
 				CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
 			} );

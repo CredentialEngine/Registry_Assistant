@@ -81,7 +81,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		public LanguageMap Name_Map { get; set; } = null;
 		/// <summary>
 		/// Description 
 		/// Required
@@ -90,7 +90,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		public LanguageMap Description_Map { get; set; } = null;
 
 		/// <summary>
 		/// Webpage that describes this entity.
@@ -199,7 +199,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap LearningMethodDescription_Map { get; set; } = new LanguageMap();
+		public LanguageMap LearningMethodDescription_Map { get; set; } = null;
 
 		/// <summary>
 		/// Type of means by which a learning opportunity or assessment is delivered to credential seekers and by which they interact; select from an existing enumeration of such types.
@@ -212,7 +212,7 @@ namespace RA.Models.Input
 		/// Detailed description of the delivery type of an assessment or learning opportunity.
 		/// </summary>
 		public string DeliveryTypeDescription { get; set; }
-		public LanguageMap DeliveryTypeDescription_Map { get; set; } = new LanguageMap();
+		public LanguageMap DeliveryTypeDescription_Map { get; set; } = null;
 		#endregion
 
 		//=========== optional ================================
@@ -223,7 +223,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternateName_Map { get; set; } = null;
 
 		#region Proposed collection helpers
 		/// <summary>
@@ -271,7 +271,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap AssessmentMethodDescription_Map { get; set; } = new LanguageMap();
+		public LanguageMap AssessmentMethodDescription_Map { get; set; } = null;
 
 		/// <summary>
 		/// Type of method used to conduct an assessment; select from an existing enumeration of such types.
@@ -314,7 +314,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// LanguageMap for CreditUnitTypeDescription
 		/// </summary>
-		public LanguageMap CreditUnitTypeDescription_Map { get; set; } = new LanguageMap();
+		public LanguageMap CreditUnitTypeDescription_Map { get; set; } = null;
 
 		/// <summary>
 		/// Start Date of the Learning opportunity
@@ -397,7 +397,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Language map list for Keyword
 		/// </summary>
-		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList Keyword_Map { get; set; } = null;
 
 
 		/// <summary>
@@ -425,7 +425,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Language map list for Subject
 		/// </summary>
-		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList Subject_Map { get; set; } = null;
 
 
 
@@ -468,7 +468,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Language map list for AlternativeOccupationType
 		/// </summary>
-		public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternativeOccupationType_Map { get; set; } = null;
 		/// <summary>
 		/// List of valid O*Net codes. See:
 		/// https://www.onetonline.org/find/
@@ -494,7 +494,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Language map list for AlternativeIndustryType
 		/// </summary>
-		public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternativeIndustryType_Map { get; set; } = null;
 		/// <summary>
 		/// List of valid NAICS codes. These will be mapped to industry type
 		/// See:
@@ -518,7 +518,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Language map list for AlternativeInstructionalProgramType
 		/// </summary>
-		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = null;
 		/// <summary>
 		/// List of valid Classification of Instructional Program codes. See:
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
@@ -685,9 +685,14 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<EntityReference> TargetAssessment { get; set; }
 
+		/// <summary>
+		/// Learning opportunity that is the focus of a condition, process or another learning opportunity.
+		/// </summary>
+		public List<EntityReference> TargetLearningOpportunity { get; set; }
 
 		/// <summary>
 		/// Learning object or resource that is used as part of an learning activity.
+		/// URI
 		/// </summary>
 		public List<string> TargetLearningResource { get; set; } = new List<string>();
 
@@ -716,7 +721,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
 		/// </summary>
-		public LanguageMapList DegreeConcentration_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList DegreeConcentration_Map { get; set; } = null;
         #endregion
 
     }

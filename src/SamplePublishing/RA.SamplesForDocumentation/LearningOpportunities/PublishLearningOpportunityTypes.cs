@@ -80,13 +80,22 @@ namespace RA.SamplesForDocumentation
 					Country="United States"
 				}
 			};
-
-            //								Teaches competencies
-            //	Where a learning opportunity teaches one or more competencies, they can be published in the Teaches property
+			myData.Identifier.Add( new IdentifierValue()
+			{
+				IdentifierTypeName = "Some Identifer For Resource",
+				IdentifierValueCode = "Catalog: xyz1234 "        //Alphanumeric string identifier of the entity
+			} );
+			myData.VersionIdentifier.Add( new IdentifierValue()
+			{
+				IdentifierTypeName = "MyVersion",
+				IdentifierValueCode = "2023-09-01"        //Alphanumeric string identifier of the entity
+			} );
+			//								Teaches competencies
+			//	Where a learning opportunity teaches one or more competencies, they can be published in the Teaches property
 			//	List<CredentialAlignmentObject> Teaches
 			//  Ideally, the competencies would be part of a competency framework that could be published to the registry.
 			//  If the competencies are 'free floating' they can be published just using the name and an optional description
-            myData.Teaches = new List<CredentialAlignmentObject>()
+			myData.Teaches = new List<CredentialAlignmentObject>()
             {
                 new CredentialAlignmentObject()
                 {

@@ -39,11 +39,15 @@ namespace RA.SamplesForDocumentation
 				Name = "Associate Degree: Biotechnology Pathway",
 				Description = "This is some text that describes my pathway.",
 				CTID = myCTID,
+				LifeCycleStatusType = "Active",
 				SubjectWebpage = "https://example.org/pathway/1234",
 				//add CTID for Destination component
 				HasDestinationComponent = new List<string>() { "ce-5e7fcaaf-74e2-47be-a4a9-2bed98f282d7" },
 				HasChild = new List<string>() { "ce-5e7fcaaf-74e2-47be-a4a9-2bed98f282d7" },
-				Keyword = new List<string>() { "High School", "Chemistry" }
+				Keyword = new List<string>() { "High School", "Chemistry" },
+				PreviousVersion = "https://sandbox.credentialengineregistry.org/resources/ce-276a16e8-69d6-447f-9904-71c393d7a88d",
+				LatestVersion = "https://sandbox.credentialengineregistry.org/resources/ce-a7e72ad1-4220-4ca1-8028-cdb2fec245a0",
+				NextVersion = "https://sandbox.credentialengineregistry.org/resources/ce-330c41fb-f8d6-49ca-a97f-18e1bf6c1eb0",
 			};
 			// OwnedBy, etc. are organization references. As a convenience just the CTID is necessary.
 			// The ownedBY CTID is typically the same as the CTID for the data owner.
@@ -51,7 +55,11 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = "ce-a588a18b-2616-4c74-bdcd-6507c0693d0e"	//sandbox org
 			} );
-
+			myData.VersionIdentifier.Add( new IdentifierValue()
+			{
+				IdentifierTypeName = "MyVersion",
+				IdentifierValueCode = "2023-09-01"        //Alphanumeric string identifier of the entity
+			} );
 			//list of pathway components to publish
 			List<PathwayComponent> pathwayComponents = new List<PathwayComponent>();
 			//add the destination component (uses the same CTID as for HasDestinationComponent

@@ -200,14 +200,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Source { get; set; }
 
-		/// <summary>
-		/// List of Alternate Names for this resource
-		/// </summary>
-		public List<string> AlternateName { get; set; } = new List<string>();
-		/// <summary>
-		/// LanguageMap for AlternateName
-		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 	}
 
 

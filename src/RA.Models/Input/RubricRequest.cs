@@ -11,55 +11,71 @@ namespace RA.Models.Input
 		public RubricRequest()
 		{
 		}
+		/// <summary>
+		/// A structured and systematic evaluation tool used to assess performance, quality, and/or criteria.
+		/// </summary>
 		public Rubric Rubric { get; set; } = new Rubric();
 
 		/// <summary>
-		/// Rubric Criteria for this Rubric
+		/// Resource providing explicit criteria for ensuring specific and measurable evaluation.
 		/// </summary>
 		public List<RubricCriterion> RubricCriterion { get; set; } = new List<RubricCriterion>();
 
-        /// <summary>
-        /// Criterion Category for this Rubric
-        /// </summary>
-        public List<CriterionCategory> CriterionCategory { get; set; } = new List<CriterionCategory>();
+		/// <summary>
+		/// Level or quality indicator used with Rubric Criteria.
+		/// </summary>
+		public List<RubricLevel> RubricLevel { get; set; } = new List<RubricLevel>();
 
-        /// <summary>
-        /// Criterion Level for this Rubric
-        /// </summary>
-        public List<CriterionLevel> CriterionLevel { get; set; } = new List<CriterionLevel>();
+		/// <summary>
+		/// Criterion Category for this Rubric
+		/// Replaced by ceasn:hasCriterionCategory - points to a concept
+		/// </summary>
+		[Obsolete]
+		public List<CriterionCategory> CriterionCategory { get; set; } = new List<CriterionCategory>();
+
+		/// <summary>
+		/// An individual component or specific element within a criterion that defines a particular aspect or standard for evaluation.
+		/// </summary>
+		public List<CriterionLevel> CriterionLevel { get; set; } = new List<CriterionLevel>();
 	}
 
 	/// <summary>
+	/// A structured and systematic evaluation tool used to assess performance, quality, and/or criteria.
 	/// A rubric is typically an evaluation tool or set of guidelines used to promote the consistent application of learning expectations, learning objectives, or learning standards in the classroom, or to measure their attainment against a consistent set of criteria. In instructional settings, rubrics clearly define academic expectations for students and help to ensure consistency in the evaluation of academic work from student to student, assignment to assignment, or course to course. Rubrics are also used as scoring instruments to determine grades or the degree to which learning standards have been demonstrated or attained by students.
 	/// <see cref="http://standards.asn.desire2learn.com/rubric.html"/>
 	/// </summary>
 	public class Rubric
 	{
-        /*
+		/*
 		
 
 	ceterms:administrationProcess	x
 	ceasn:altCodedNotation		x
-	ceterms:alternateName		x
+	ceterms:alternateName		x			??
 	ceterms:audienceLevelType	x	
 	ceterms:audienceType		x
 	ceterms:classification      x
 	ceasn:codedNotation			x
+	ceasn:conceptKeyword
 	ceasn:creator               x
 	ceterms:ctid				x
 	ceasn:dateCopyrighted       x
 	ceasn:dateCreated           x
-	ceterms:dateEffective       x   
+	ceterms:dateEffective       x		remove
 	ceasn:dateModified          x
 	ceasn:dateValidFrom         x
 	ceasn:dateValidUntil        x
-	DELIVERY FORMAT
+	ceterms:deliveryType
 	ceterms:description			x
 	ceasn:derivedFrom			x
-	ceasn:educationLevelType		TBD - may just use audienceLevel
-	ceterms:expirationDate      x
+	ceasn:educationLevelType		Use audienceLevel
+	ceterms:expirationDate      x	remove
+	ceasn:evaluatorType
 
-	ceterms:targetOccupation
+	ceasn:hasCriterionCategorySe
+	ceasn:hasRubricCriterion
+	ceasn:hasRubricLevel
+
 	asn:hasProgressionLevel     x   TBD on multiplicity
 	asn:hasProgressionModel     x   TBD on multiplicity
 	ceasn:hasScope              x
@@ -72,6 +88,8 @@ namespace RA.Models.Input
 	ceterms:keyword				x
 	ceterms:latestVersion		x
 	ceasn:license               x
+	ceterms:lifecycleStatusType
+
 	ceterms:name				x
 	ceterms:nextVersion			x
 	ceterms:occupationType		x
@@ -83,11 +101,12 @@ namespace RA.Models.Input
 	ceasn:rights                x
 	ceterms:subject             x
 	ceterms:subjectWebpage		x
+	ceterms:targetOccupation
 	ceterms:versionIdentifier   x
 
 
 		*/
-        public Rubric()
+		public Rubric()
 		{
 		}
 		/// <summary>
@@ -236,7 +255,8 @@ namespace RA.Models.Input
         /// List of CTIDs/URIs to a RubricCriterion
         /// </summary>
         public List<string> HasCriterionList { get; set; } = new List<string>();
-        public List<RubricCriterion> HasCriterion { get; set; } = new List<RubricCriterion>();
+
+        public List<RubricCriterion> HasRubricCriterion { get; set; } = new List<RubricCriterion>();
 
         /// <summary>
         /// Has Criterion Category
@@ -438,11 +458,72 @@ namespace RA.Models.Input
         /// </summary>
         public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
     }
-    /// <summary>
-    /// RubricCriterian defines a principle or standard to be met that demonstrates quality in performance of a task or obtaining an objective.
-    /// </summary>
-    public class RubricCriterion
+	public class RubricLevel
 	{
+		/*
+ceasn:codedNotation
+ceasn:description
+asn:hasProgressionLevel
+ceasn:listID
+ceasn:name
+
+
+		*/
+		public RubricLevel()
+		{
+		}
+
+		#region base properties
+		/// <summary>
+		/// CTID
+		/// Required
+		/// </summary>
+		public string CTID { get; set; }
+
+		/// <summary>
+		/// A name given to the resource.
+		/// </summary>
+		public string Name { get; set; }
+		/// <summary>
+		/// Language map for Name
+		/// </summary>
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		public string Description { get; set; }
+		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+
+		#endregion
+		public string CodedNotation { get; set; }
+		/// <summary>
+		/// Resource description of a level of performance based on a RubricCriterion.
+		/// List of CriterionLevel
+		/// </summary>
+		public List<CriterionLevel> HasCriterionItem { get; set; } = new List<CriterionLevel>();
+		public string ListID { get; set; }
+	}
+
+	/// <summary>
+	/// RubricCriterian defines a principle or standard to be met that demonstrates quality in performance of a task or obtaining an objective.
+	/// </summary>
+	public class RubricCriterion
+	{
+		/*
+		 * ceasn:codedNotation	
+		 * ceterms:ctid
+		 * ceasn:description
+		 * asn:hasProgressionLevel
+		 * ceasn:listID
+		 * ceasn:name
+			ceterms:targetCompetency
+			ceterms:targetTask
+			ceasn:weight
+			ceasn:hasCriterionLevel
+
+
+		 * 
+		 * 
+		 */
 		public RubricCriterion()
 		{
 		}
@@ -483,16 +564,17 @@ namespace RA.Models.Input
 		/// Resource description of a level of performance based on a RubricCriterion.
 		/// List of CriterionLevel
 		/// </summary>
-		public List<CriterionLevel> HasLevel { get; set; } = new List<CriterionLevel>();
+		public List<CriterionLevel> HasCriterionItem { get; set; } = new List<CriterionLevel>();
 		#endregion`
 
 
 	}
 
-    /// <summary>
-    /// Resource that defines categories for clustering logical sets of RubricCriterion.
-    /// </summary>
-    public class CriterionCategory
+	/// <summary>
+	/// Resource that defines categories for clustering logical sets of RubricCriterion.
+	/// </summary>
+	[Obsolete]
+	public class CriterionCategory
 	{
 		public CriterionCategory()
 		{
@@ -540,6 +622,24 @@ namespace RA.Models.Input
     /// </summary>
     public class CriterionLevel
 	{
+		/*
+			ceasn:codedNotation
+			ceasn:benchmarkLabel
+			ceasn:benchmarkText
+			ceasn:feedback
+			ceasn:hasCriterionLevel
+			asn:hasProgressionLevel
+			ceasn:isBinaryEvaluation
+			ceasn:listID
+			qdata:maxPercentage
+			schema:maxValue
+			qdata:minPercentage
+			schema:minValue
+			qdata:percentage
+			schema:value
+
+
+		 */
 		public CriterionLevel()
 		{
 		}
@@ -569,7 +669,7 @@ namespace RA.Models.Input
 		/// Points to be awarded for achieving this level for a RubricCriterion.
 		/// </summary>
 		//[JsonProperty( "asn:score" )]
-		public decimal Score { get; set; }
+		public decimal? Score { get; set; }
 
 		/// <summary>
 		/// Numeric value representing the resource's position in a list (array) of resources.
