@@ -17,7 +17,7 @@ namespace RA.Models.JsonV2
 		}
 
 		/// <summary>
-		/// Need a custom mapping to @type based on input value
+		/// Learning Opportunity Class type
 		/// </summary>
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
@@ -112,20 +112,20 @@ namespace RA.Models.JsonV2
 		public LanguageMapList AlternateName { get; set; }
 
 		/// <summary>
-		/// Physical location where the credential, assessment, or learning opportunity can be pursued.
+		/// Physical location where the learning opportunity can be pursued.
 		/// Place
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:availableAt" )]
 		public List<Place> AvailableAt { get; set; }
 
 		/// <summary>
-		/// Listing of online and/or physical locations where a credential can be pursued.
+		/// Listing of online and/or physical locations where a resource can be pursued.
 		/// URL
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:availabilityListing" )]
 		public List<string> AvailabilityListing { get; set; } //URL
 		/// <summary>
-		/// Online location where the credential, assessment, or learning opportunity can be pursued.
+		/// Online location where the learning opportunity can be pursued.
 		/// URL
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:availableOnlineAt" )] //URL
@@ -140,13 +140,9 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:learningMethodType" )]
 		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:accreditedBy" )]
-		public List<string> AccreditedBy { get; set; }
-
-		[JsonProperty( PropertyName = "ceterms:approvedBy" )]
-		public List<string> ApprovedBy { get; set; }
-
-		//Assesses
+		/// <summary>
+		///  Competency evaluated through the learning opportunity.		  
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:assesses" )]
 		public List<CredentialAlignmentObject> Assesses { get; set; }
 
@@ -182,7 +178,7 @@ namespace RA.Models.JsonV2
 		public List<DurationProfile> EstimatedDuration { get; set; }
 
 		/// <summary>
-		/// Estimated cost of a credential, learning opportunity or assessment.
+		/// Estimated cost of a learning opportunity.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:estimatedCost" )]
 		public List<CostProfile> EstimatedCost { get; set; }
@@ -235,7 +231,6 @@ namespace RA.Models.JsonV2
 		/// Offering of a Learning Opportunity or Assessment with a schedule associated with a specified location or modality.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasOffering" )]
-		//public List<ScheduledOffering> HasOffering { get; set; }
 		public List<string> HasOffering { get; set; }
 
 		/// <summary>
@@ -271,23 +266,48 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:offeredBy" )]
 		public List<string> OfferedBy { get; set; }
 
+		#region -- Quality Assurance BY --
+		/// <summary>
+		/// List of Organizations that accredit this resource
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:accreditedBy" )]
+		public List<string> AccreditedBy { get; set; }
+
+		/// <summary>
+		/// List of Organizations that approve this resource
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:approvedBy" )]
+		public List<string> ApprovedBy { get; set; }
+
+		/// <summary>
+		/// List of Organizations that recognize this resource
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:recognizedBy" )]
 		public List<string> RecognizedBy { get; set; }
 
+		/// <summary>
+		/// List of Organizations that regulate this resource
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:regulatedBy" )]
 		public List<string> RegulatedBy { get; set; }
 
 		/// <summary>
-		/// Agent that offers the resource.
+		/// Agent with whom an apprenticeship is registered.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:registeredBy" )]
 		public List<string> RegisteredBy { get; set; }
+		#endregion
 
-		#region Ins
-
+		#region Quality Assurance IN - Jurisdiction based Quality Assurance  (INs)
+		/// <summary>
+		/// List of Organizations that accredit this learning opportunity in a specific Jurisdiction. 
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:accreditedIn" )]
 		public List<JurisdictionProfile> AccreditedIn { get; set; }
 
+		/// <summary>
+		/// List of Organizations that approve this learning opportunity in a specific Jurisdiction. 
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:approvedIn" )]
 		public List<JurisdictionProfile> ApprovedIn { get; set; }
 
@@ -297,12 +317,21 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:offeredIn" )]
 		public List<JurisdictionProfile> OfferedIn { get; set; }
 
+		/// <summary>
+		/// List of Organizations that recognize this learning opportunity in a specific Jurisdiction. 
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:recognizedIn" )]
 		public List<JurisdictionProfile> RecognizedIn { get; set; }
 
+		/// <summary>
+		/// List of Organizations that regulate this learning opportunity in a specific Jurisdiction. 
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:regulatedIn" )]
 		public List<JurisdictionProfile> RegulatedIn { get; set; }
 
+		/// <summary>
+		/// List of Organizations that revoke this learning opportunity in a specific Jurisdiction. 
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:revokedIn" )]
 		public List<JurisdictionProfile> RevokedIn { get; set; }
 
