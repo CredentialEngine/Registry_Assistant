@@ -19,7 +19,7 @@ namespace RA.Models.JsonV2
 		public string CtdlId { get; set; }
 
 		[JsonProperty( "ceterms:ctid" )]
-		public string Ctid { get; set; }
+		public string CTID { get; set; }
 
 
 		[JsonProperty( PropertyName = "ceterms:name" )]
@@ -85,7 +85,10 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:relevantDataSet" )]
 		public List<string> RelevantDataSet { get; set; }
-		//public List<DataSetProfile> RelevantDataSet { get; set; }
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; } 
+		//[JsonProperty( PropertyName = "qdata:relevantDataSet" )]
+		//public List<DataSetProfile> RelevantDataSets { get; set; }
 
 	}
 }

@@ -12,7 +12,7 @@ namespace RA.Models.JsonV2
 	/// History
 	/// 21-01-13 Added DevelopementProcess
 	/// </summary>
-	public class TransferValueProfile
+	public class TransferValueProfile : BaseResourceDocument
 	{
 		public TransferValueProfile()
 		{
@@ -35,11 +35,18 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; }
+
 		/// <summary>
 		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:derivedFrom" )]
 		public List<string> DerivedFrom { get; set; }
+		//
+
+		[JsonProperty( PropertyName = "ceterms:administrationProcess" )]
+		public List<ProcessProfile> AdministrationProcess { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
 		public List<ProcessProfile> DevelopmentProcess { get; set; }
@@ -62,9 +69,9 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:endDate" )]
 		public string EndDate { get; set; }
 
-		/// <summary>
-		/// May be replace by Identifier
-		/// </summary>
+		///// <summary>
+		///// May be replace by Identifier
+		///// </summary>
 		//[JsonProperty( PropertyName = "ceterms:codedNotation" )]
 		//public string CodedNotation { get; set; }
 
@@ -73,7 +80,7 @@ namespace RA.Models.JsonV2
 		/// Definition:	Alphanumeric Identifier value.
 		/// List of URIs 
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:identifierValue" )]
+		[JsonProperty( PropertyName = "ceterms:identifier" )]
 		public List<IdentifierValue> Identifier { get; set; }
 
 
@@ -85,28 +92,43 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Type of official status of the TransferProfile; select from an enumeration of such types.
-		/// TBD: string or URI to a concept
+		/// The default is Active. 
+		/// ConceptScheme: ceterms:LifeCycleStatus
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:lifecycleStatusType" )]
-		public CredentialAlignmentObject LifecycleStatusType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]
+		public CredentialAlignmentObject LifeCycleStatusType { get; set; }
 
 
 		[JsonProperty( PropertyName = "ceterms:transferValue" )]
 		public List<ValueProfile> TransferValue { get; set; } = null;
 		//public List<QuantitativeValue> TransferValue { get; set; } = null;
 
+		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
+		public string SupersededBy { get; set; } //URL
 
+		[JsonProperty( PropertyName = "ceterms:supersedes" )]
+		public string Supersedes { get; set; } //URL
+
+		/// <summary>
+		///  Resource that accepts the transfer value described by this resource, according to the entity providing this resource.
+		///  URI to blank node or registry URI
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:transferValueFor" )]
 		public List<string> TransferValueFor { get; set; }
 
+		/// <summary>
+		///  Resource that provides the transfer value described by this resource, according to the entity providing this resource.
+		///  URI to blank node or registry URI
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:transferValueFrom" )]
 		public List<string> TransferValueFrom { get; set; }
 
 		/// <summary>
-		/// 
+		/// Proposed
+		/// 22-10-07 - apparantly not implemented
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:transferValueType" )]
-		public string TransferValueType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:hasTransferIntermediary" )]
+		public string HasTransferIntermediary { get; set; }
 
 		/*
 		 * 

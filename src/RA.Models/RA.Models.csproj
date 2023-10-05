@@ -127,7 +127,7 @@
     <Compile Include="Input\VerificationServiceProfileRequest.cs" />
     <Compile Include="Input\WorkRoleRequest.cs" />
     <Compile Include="JsonV2\Agent.cs" />
-    <Compile Include="JsonV2\AssessmentBlankNode.cs" />
+    <Compile Include="JsonV2\AggregateDataProfile.cs" />
     <Compile Include="JsonV2\AssessmentProfile.cs" />
     <Compile Include="JsonV2\BlankNode.cs" />
     <Compile Include="JsonV2\Competency.cs" />

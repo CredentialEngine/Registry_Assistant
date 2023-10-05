@@ -25,6 +25,9 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; }
+
 		/// <summary>
 		/// Comment
 		/// Definition:	en-US: Supplemental text provided by the promulgating body that clarifies the nature, scope or use of this competency.
@@ -64,7 +67,7 @@ namespace RA.Models.JsonV2
 
 
 	}
-	public class BaseTask
+	public class BaseTask : BaseResourceDocument
 	{
 		/// <summary>
 		///  type
@@ -86,44 +89,45 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
 
-		/// <summary>
-		/// Name
-		/// </summary>
-		//[JsonProperty( PropertyName = "ceterms:name" )]
-		//public LanguageMap Name { get; set; }
-
-		///// <summary>
-		///// Description
-		///// </summary>
-		//[JsonProperty( PropertyName = "ceterms:description" )]
-		//public LanguageMap Description { get; set; }
-
-
-		/// <summary>
-		/// AbilityEmbodied
-		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
-		/// ceasn:abilityEmbodied
-		/// </summary>
-		[JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
+        /// <summary>
+        /// AbilityEmbodied
+        /// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
+        /// CTID/URI to any of:
+        /// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
+        /// ceasn:abilityEmbodied
+        /// </summary>
+        [JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
 		public List<string> AbilityEmbodied { get; set; }
 
 		/// <summary>
 		/// Category or classification of this resource.
 		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-		/// URI to a competency
+		/// URI to a concept
 		/// ceterms:classification
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:classification" )]
 		public List<string> Classification { get; set; }
-		//public List<CredentialAlignmentObject> Classification { get; set; }
 
 		/// <summary>
-		/// Comment
-		/// Definition:	en-US: Supplemental text provided by the promulgating body that clarifies the nature, scope or use of this competency.
-		/// ceasn:comment
+		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
+		/// ceterms:codedNotation
 		/// </summary>
-		//[JsonProperty( PropertyName = "ceasn:comment" )]
-		//public LanguageMapList Comment { get; set; }
+		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
+		public string CodedNotation { get; set; }
+
+
+		[JsonProperty( PropertyName = "ceterms:environmentalHazardType" )]
+		public List<string> EnvironmentalHazardType { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:performanceLevelType" )]
+		public List<string> PerformanceLevelType { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:physicalCapabilityType" )]
+		public List<string> PhysicalCapabilityType { get; set; }
+
+
+		[JsonProperty( PropertyName = "ceterms:sensoryCapabilityType" )]
+		public List<string> SensoryCapabilityType { get; set; }
 
 		/// <summary>
 		/// The referenced resource is lower in some arbitrary hierarchy than this resource.

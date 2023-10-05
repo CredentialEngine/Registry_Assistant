@@ -11,7 +11,7 @@ namespace RA.Models.JsonV2
 	/// <summary>
 	/// Collection of tasks and competencies that embody a particular function in one or more jobs.
 	/// </summary>
-	public class WorkRole
+	public class WorkRole : BaseResourceDocument
 	{
 		/// <summary>
 		///  type
@@ -45,23 +45,35 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; }
 
-		/// <summary>
-		/// AbilityEmbodied
-		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
-		/// ceasn:abilityEmbodied
-		/// </summary>
-		[JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
+        /// <summary>
+        /// AbilityEmbodied
+        /// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
+        /// CTID/URI to any of:
+        /// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
+        /// ceasn:abilityEmbodied
+        /// </summary>
+        [JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
 		public List<string> AbilityEmbodied { get; set; }
 
 		/// <summary>
 		/// Category or classification of this resource.
 		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-		/// URI to a competency
+		/// URI to a concept
 		/// ceterms:classification
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:classification" )]
-		public List<CredentialAlignmentObject> Classification { get; set; }
+		public List<string> Classification { get; set; }
+		//public List<CredentialAlignmentObject> Classification { get; set; }
+
+		/// <summary>
+		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
+		/// ceterms:codedNotation
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
+		public string CodedNotation { get; set; }
 
 		/// <summary>
 		/// Comment
@@ -71,10 +83,19 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceasn:comment" )]
 		public LanguageMapList Comment { get; set; } = new LanguageMapList();
 
-		/// <summary>
-		/// Task related to this resource.
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:hasTask" )]
+		[JsonProperty( PropertyName = "ceterms:environmentalHazardType" )]
+		public List<string> EnvironmentalHazardType { get; set; }
+
+        /// <summary>
+        /// Reference to a relevant support service available for this resource.
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:hasSupportService" )]
+        public List<string> HasSupportService { get; set; }
+
+        /// <summary>
+        /// Task related to this resource.
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:hasTask" )]
 		public List<string> HasTask { get; set; }
 
 		/// <summary>
@@ -92,10 +113,21 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceasn:knowledgeEmbodied" )]
 		public List<string> KnowledgeEmbodied { get; set; }
 
-		/// <summary>
-		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
-		/// </summary>
-		[JsonProperty( PropertyName = "ceasn:skillEmbodied" )]
+
+		[JsonProperty( PropertyName = "ceterms:performanceLevelType" )]
+		public List<string> PerformanceLevelType { get; set; }
+
+
+		[JsonProperty( PropertyName = "ceterms:physicalCapabilityType" )]
+		public List<string> PhysicalCapabilityType { get; set; }
+        //
+        [JsonProperty( PropertyName = "ceterms:sensoryCapabilityType" )]
+        public List<string> SensoryCapabilityType { get; set; }
+
+        /// <summary>
+        ///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
+        /// </summary>
+        [JsonProperty( PropertyName = "ceasn:skillEmbodied" )]
 		public List<string> SkillEmbodied { get; set; }
 
 		/// <summary>

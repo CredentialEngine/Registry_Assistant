@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
-	public class CostManifest : JsonLDDocument
+	public class CostManifest : BaseResourceDocument
 	{
 		[JsonIgnore]
 		public static string classType = "ceterms:CostManifest";
@@ -26,7 +26,7 @@ namespace RA.Models.JsonV2
 		public string CtdlId { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
-		public string Ctid { get; set; }
+		public string CTID { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; }
@@ -48,5 +48,8 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:estimatedCost" )]
 		public List<CostProfile> EstimatedCost { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; } 
 	}
 }

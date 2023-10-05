@@ -22,7 +22,6 @@ namespace RA.Models.JsonV2
             //AudienceLevel = new List<string>();
             //Condition = new List<string>();
 			//SubmissionOf = new List<string>();
-			CreditUnitType = new CredentialAlignmentObject();
             //ApplicableAudienceType = new List<string>();
             AlternativeCondition = new List<ConditionProfile>();
             TargetAssessment = new List<string>();
@@ -48,8 +47,12 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
 		public string SubjectWebpage { get; set; }
 
-		//TODO - alter from enumeration
-		[JsonProperty( PropertyName = "ceterms:audienceLevelType" )]
+        [JsonProperty( PropertyName = "ceterms:alternateName" )]
+        public LanguageMapList AlternateName { get; set; } 
+
+
+        //TODO - alter from enumeration
+        [JsonProperty( PropertyName = "ceterms:audienceLevelType" )]
         public List<CredentialAlignmentObject> AudienceLevelType { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:audienceType" )]
@@ -78,16 +81,16 @@ namespace RA.Models.JsonV2
 		public List<string> AssertedBy { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:experience" )]
-        public string Experience { get; set; }
+        public LanguageMap Experience { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:minimumAge" )]
         public int MinimumAge { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:yearsOfExperience" )]
-        public decimal YearsOfExperience { get; set; }
+        public decimal? YearsOfExperience { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:weight" )]
-        public decimal Weight { get; set; }
+        public decimal? Weight { get; set; }
 		//20-10-31 CreditValue is now of type ValueProfile
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
 		public List<ValueProfile> CreditValue { get; set; } = null;
@@ -96,22 +99,25 @@ namespace RA.Models.JsonV2
   //      public LanguageMap CreditHourType { get; set; }
 
   //      [JsonProperty( PropertyName = "ceterms:creditHourValue" )]
-  //      public decimal CreditHourValue { get; set; }
+  //      public decimal? CreditHourValue { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:creditUnitType" )]
-        public CredentialAlignmentObject CreditUnitType { get; set; } //Used for publishing
+        //[JsonProperty( PropertyName = "ceterms:creditUnitType" )]
+        //public CredentialAlignmentObject CreditUnitType { get; set; } //Used for publishing
 
         [JsonProperty( PropertyName = "ceterms:creditUnitTypeDescription" )]
         public LanguageMap CreditUnitTypeDescription { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:creditUnitValue" )]
-        public decimal CreditUnitValue { get; set; }
+        //[JsonProperty( PropertyName = "ceterms:creditUnitValue" )]
+        //public decimal? CreditUnitValue { get; set; }
 
 
 		[JsonProperty( PropertyName = "ceterms:targetCompetency" )]
 		public List<CredentialAlignmentObject> TargetCompetency { get; set; }
 
 		//external classes =====================================
+		[JsonProperty( PropertyName = "ceterms:commonCosts" )]
+		public List<string> CommonCosts { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:estimatedCost" )]
         public List<CostProfile> EstimatedCost { get; set; }
 
@@ -129,6 +135,12 @@ namespace RA.Models.JsonV2
 
         [JsonProperty( PropertyName = "ceterms:targetLearningOpportunity" )]
         public List<string> TargetLearningOpportunity { get; set; }
+        //
+        [JsonProperty( PropertyName = "ceterms:targetJob" )]
+        public List<string> TargetJob { get; set; }
+
+        [JsonProperty( PropertyName = "ceterms:targetOccupation" )]
+        public List<string> TargetOccupation { get; set; }
 
         [JsonProperty( PropertyName = "ceterms:alternativeCondition" )]
         public List<ConditionProfile> AlternativeCondition { get; set; }

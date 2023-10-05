@@ -23,7 +23,7 @@ namespace RA.Models.JsonV2
 		/// Unique identifier
 		/// </summary>
 		[JsonProperty( "ceterms:ctid" )]
-		public string Ctid { get; set; }
+		public string CTID { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; }
@@ -79,5 +79,8 @@ namespace RA.Models.JsonV2
 		public List<string> RelevantDataSet { get; set; }
 		//public List<DataSetProfile> RelevantDataSet { get; set; }
 
+
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; }
 	}
 }

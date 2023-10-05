@@ -12,7 +12,7 @@ namespace RA.Models.JsonV2
 	{
 		public ValueProfile()
 		{
-			Type = "schema:ValueProfile";
+			Type = "ceterms:ValueProfile";
 		}
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
@@ -24,18 +24,24 @@ namespace RA.Models.JsonV2
 		/// If this object is a monetary purpose, the UnitText would typically be the related currency for the value (example: "USD")
 		/// </summary>
 		[JsonProperty( "ceterms:creditUnitType" )]
-		public List<CredentialAlignmentObject> CreditUnitType { get; set; }
+		public List<CredentialAlignmentObject> CreditUnitTypeOLD { get; set; }
 
+		[JsonIgnore]
+		[JsonProperty( "ceterms:creditUnitTypeNew" )]
+		public object CreditUnitType { get; set; }
 
 		/// <summary>
 		/// The level of credit associated with the credit awarded or required.
 		/// Concept
-		/// Scheme?
+		/// CoceptScheme - assumes audienceLevel, as no means to provide altenatives
 		/// </summary>
 		[JsonProperty( "ceterms:creditLevelType" )]
-		public List<CredentialAlignmentObject> CreditLevelType { get; set; }
+		public List<CredentialAlignmentObject> CreditLevelTypeOLD { get; set; }
 
-	
+		[JsonIgnore]
+		[JsonProperty( "ceterms:creditLevelTypeNew" )]
+		public object CreditLevelType { get; set; }
+
 		/// <summary>
 		/// Optional description of the value, using either a string value or as a language map
 		/// </summary>
@@ -46,13 +52,13 @@ namespace RA.Models.JsonV2
 		/// Minimum value for this purpose.
 		/// </summary>
 		[JsonProperty( "schema:minValue" )]
-		public decimal MinValue { get; set; }
+		public decimal? MinValue { get; set; }
 
 		/// <summary>
 		/// Maximum value for this purpose.
 		/// </summary>
 		[JsonProperty( "schema:maxValue" )]
-		public decimal MaxValue { get; set; }
+		public decimal? MaxValue { get; set; }
 
 		/// <summary>
 		/// A percentage for this purpose. 
@@ -60,7 +66,7 @@ namespace RA.Models.JsonV2
 		/// qdata:percentage
 		/// </summary>
 		[JsonProperty( "qdata:percentage" )]
-		public decimal Percentage { get; set; }
+		public decimal? Percentage { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:subject" )]
 		public List<CredentialAlignmentObject> Subject { get; set; }
@@ -69,6 +75,6 @@ namespace RA.Models.JsonV2
 		/// A single value for this purpose. 
 		/// </summary>
 		[JsonProperty( "schema:value" )]
-		public decimal Value { get; set; }
+		public decimal? Value { get; set; }
 	}
 }

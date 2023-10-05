@@ -8,18 +8,24 @@ using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
-	public class JsonLDDocument 
-	{   
-		public JsonLDDocument()
+	/// <summary>
+	/// Base resource document
+	/// </summary>
+	public class BaseResourceDocument
+	{
+		/// <summary>
+		/// constructor
+		/// </summary>
+		public BaseResourceDocument()
 		{
 			Context = "https://credreg.net/ctdl/schema/context/json";
 		}
-        [JsonIgnore]
-        [JsonProperty( "@context" )]
+		[JsonIgnore]
+		[JsonProperty( "@context" )]
 		public string Context { get; set; }
 		//public Dictionary<string, object> Context { get; set; }
 
-		//[JsonProperty( "ceterms:dateModified" )]
-		//public string LastUpdated { get; set; } = null;
+		[JsonProperty( "schema:datePublished" )]
+		public string DatePublished { get; set; } = null;
 	}
 }

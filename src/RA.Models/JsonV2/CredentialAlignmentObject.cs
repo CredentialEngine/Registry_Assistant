@@ -14,6 +14,9 @@ namespace RA.Models.JsonV2
 	/// </summary>
 	public class CredentialAlignmentObject
     {
+        /// <summary>
+        /// constructor
+        /// </summary>
         public CredentialAlignmentObject()
         {
             Type = "ceterms:CredentialAlignmentObject";
@@ -31,6 +34,11 @@ namespace RA.Models.JsonV2
         [JsonProperty( "@type" )]
         public string Type { get; set; }
 
+        /// <summary>
+        /// An identifier for use with blank nodes, to minimize duplicates
+        /// </summary>
+        [JsonProperty( "@id" )]
+        public string BNodeId { get; set; }
 
         /// <summary>
         /// Alignment Date
@@ -52,7 +60,7 @@ namespace RA.Models.JsonV2
         /// </summary>
         [JsonProperty( PropertyName = "ceterms:codedNotation" )]
         public string CodedNotation { get; set; }
-		//public List<string> CodedNotation { get; set; }
+
 		/// <summary>
 		/// Framework URL
 		/// The framework to which the resource being described is aligned.Must be a valid URL.
@@ -95,7 +103,7 @@ namespace RA.Models.JsonV2
         /// An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
         /// </summary>
         [JsonProperty( PropertyName = "ceterms:weight" )]
-        public decimal Weight { get; set; }
+        public decimal? Weight { get; set; }
 
         //have to handle weight and alignmentdate 
     }

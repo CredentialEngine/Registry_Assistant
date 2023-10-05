@@ -12,6 +12,8 @@ namespace RA.Models.JsonV2
 		public QuantitativeValue()
 		{
 			Type = "schema:QuantitativeValue";
+			Value = null;
+			Percentage = null;
 		}
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
@@ -20,20 +22,20 @@ namespace RA.Models.JsonV2
 		public CredentialAlignmentObject UnitText { get; set; }
 
 		[JsonProperty( "schema:value" )]
-		public decimal Value { get; set; }
+		public decimal? Value { get; set; }
 
 
 		/// <summary>
 		/// Minimum value for this purpose.
 		/// </summary>
 		[JsonProperty( "schema:minValue" )]
-		public decimal MinValue { get; set; }
+		public decimal? MinValue { get; set; }
 
 		/// <summary>
 		/// Maximum value for this purpose.
 		/// </summary>
 		[JsonProperty( "schema:maxValue" )]
-		public decimal MaxValue { get; set; }
+		public decimal? MaxValue { get; set; }
 
 		/// <summary>
 		/// A percentage for this purpose. 
@@ -42,9 +44,16 @@ namespace RA.Models.JsonV2
 		/// qdata:percentage
 		/// </summary>
 		[JsonProperty( "qdata:percentage" )]
-		public decimal Percentage { get; set; }
+		public decimal? Percentage { get; set; }
 
 		[JsonProperty( "schema:description" )]
 		public LanguageMap Description { get; set; }
+
+		/// <summary>
+		/// Type of suppression, masking, or other modification made to the data to protect the identities of its subjects.
+		/// URI to a concept from qdata:DataWithholdingCategory
+		/// </summary>
+		[JsonProperty( "qdata:dataWithholdingType" )]
+		public string DataWithholdingType { get; set; }
 	}
 }

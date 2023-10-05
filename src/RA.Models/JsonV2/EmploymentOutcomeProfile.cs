@@ -19,11 +19,14 @@ namespace RA.Models.JsonV2
 		public string CtdlId { get; set; }
 
 		[JsonProperty( "ceterms:ctid" )]
-		public string Ctid { get; set; }
+		public string CTID { get; set; }
 
 
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; } 
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
@@ -40,7 +43,8 @@ namespace RA.Models.JsonV2
 		///  ceterms:jobsObtained
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:jobsObtained" )]
-		public int JobsObtained { get; set; }
+		public List<QuantitativeValue> JobsObtained { get; set; }
+		//public int JobsObtained { get; set; }
 
 		/// <summary>
 		/// Jurisdiction Profile
@@ -64,8 +68,10 @@ namespace RA.Models.JsonV2
 		/// qdata:DataSetProfile
 		/// TODO - this may change to URIs
 		/// </summary>
+		//[JsonProperty( PropertyName = "qdata:relevantDataSet" )]
+		//public List<DataSetProfile> RelevantDataSet { get; set; }
+
 		[JsonProperty( PropertyName = "qdata:relevantDataSet" )]
 		public List<string> RelevantDataSet { get; set; }
-		//public List<DataSetProfile> RelevantDataSet { get; set; }
 	}
 }

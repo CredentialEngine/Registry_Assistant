@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 namespace RA.Models.JsonV2
 {
-	public class PathwaySet : JsonLDDocument
+	public class PathwaySet : BaseResourceDocument
 	{
 		public PathwaySet()
 		{
@@ -29,6 +29,9 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; }
 
 		[JsonProperty( PropertyName = "ceasn:hasPathway" )]
 		public List<string> HasPathway{ get; set; }

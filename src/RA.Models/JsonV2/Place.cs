@@ -51,13 +51,22 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( "ceterms:addressCountry" )]
 		public LanguageMap Country { get; set; }
+		/// <summary>
+		/// Identifier
+		/// Definition:	Alphanumeric Identifier value.
+		/// List of URIs 
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:identifier" )]
+		public List<IdentifierValue> Identifier { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:latitude" )]
-		public double Latitude { get; set; }
+		public double? Latitude { get; set; } = null;
 
 		[JsonProperty( PropertyName = "ceterms:longitude" )]
-		public double Longitude { get; set; }
+		public double? Longitude { get; set; } = null;
 
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; } 
 
 		[JsonProperty( "ceterms:targetContactPoint" )]
 		public List<ContactPoint> ContactPoint { get; set; }
