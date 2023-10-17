@@ -101,6 +101,15 @@ namespace RA.SamplePublishingProject
 		#endregion
 
 
+		#region Rubric publishing
+		[TestMethod]
+		public void PublishRubric()
+		{
+			new RA.SamplesForDocumentation.PublishRubric().Publish( "publish" );
+
+		}
+
+		#endregion
 		#region ScheduledOffering publishing
 		[TestMethod]
 		public void PublishScheduledOffering()

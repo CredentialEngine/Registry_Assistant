@@ -71,6 +71,7 @@
     <Compile Include="Input\ConceptSchemeRequest.cs" />
     <Compile Include="Input\ConditionManifestRequest.cs" />
     <Compile Include="Input\CostManifestRequest.cs" />
+    <Compile Include="Input\CredentialingActionRequest.cs" />
     <Compile Include="Input\CredentialRequest.cs" />
     <Compile Include="Input\CtdlAttributes.cs" />
     <Compile Include="Input\DataSetProfileRequest.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Input\profiles\WorkforceDemandAction.cs" />
     <Compile Include="Input\profiles\WorkRole.cs" />
     <Compile Include="Input\ProgressionModelRequest.cs" />
+    <Compile Include="Input\RubricRequest.cs" />
     <Compile Include="Input\ScheduledOfferingRequest.cs" />
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />
     <Compile Include="Input\SupportServiceRequest.cs" />
@@ -140,6 +142,7 @@
     <Compile Include="JsonV2\CostProfile.cs" />
     <Compile Include="JsonV2\Credential.cs" />
     <Compile Include="JsonV2\CredentialAlignmentObject.cs" />
+    <Compile Include="JsonV2\CredentialingAction.cs" />
     <Compile Include="JsonV2\DurationProfile.cs" />
     <Compile Include="JsonV2\EarningsProfile.cs" />
     <Compile Include="JsonV2\EmploymentOutcomeProfile.cs" />

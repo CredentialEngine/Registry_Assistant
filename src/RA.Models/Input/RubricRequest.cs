@@ -26,12 +26,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<RubricLevel> RubricLevel { get; set; } = new List<RubricLevel>();
 
-		/// <summary>
-		/// Criterion Category for this Rubric
-		/// Replaced by ceasn:hasCriterionCategory - points to a concept
-		/// </summary>
-		[Obsolete]
-		public List<CriterionCategory> CriterionCategory { get; set; } = new List<CriterionCategory>();
+		///// <summary>
+		///// Criterion Category for this Rubric
+		///// Replaced by ceasn:hasCriterionCategory - points to a concept
+		///// </summary>
+		//[Obsolete]
+		//public List<CriterionCategory> CriterionCategory { get; set; } = new List<CriterionCategory>();
 
 		/// <summary>
 		/// An individual component or specific element within a criterion that defines a particular aspect or standard for evaluation.
@@ -46,69 +46,11 @@ namespace RA.Models.Input
 	/// </summary>
 	public class Rubric
 	{
-		/*
-		
-
-	ceterms:administrationProcess	x
-	ceasn:altCodedNotation		x
-	ceterms:alternateName		x			??
-	ceterms:audienceLevelType	x	
-	ceterms:audienceType		x
-	ceterms:classification      x
-	ceasn:codedNotation			x
-	ceasn:conceptKeyword
-	ceasn:creator               x
-	ceterms:ctid				x
-	ceasn:dateCopyrighted       x
-	ceasn:dateCreated           x
-	ceterms:dateEffective       x		remove
-	ceasn:dateModified          x
-	ceasn:dateValidFrom         x
-	ceasn:dateValidUntil        x
-	ceterms:deliveryType
-	ceterms:description			x
-	ceasn:derivedFrom			x
-	ceasn:educationLevelType		Use audienceLevel
-	ceterms:expirationDate      x	remove
-	ceasn:evaluatorType
-
-	ceasn:hasCriterionCategorySe
-	ceasn:hasRubricCriterion
-	ceasn:hasRubricLevel
-
-	asn:hasProgressionLevel     x   TBD on multiplicity
-	asn:hasProgressionModel     x   TBD on multiplicity
-	ceasn:hasScope              x
-	ceterms:identifier			x
-
-	ceterms:inLanguage			x
-
-	ceterms:industryType		x
-	ceterms:instructionalProgramType	x
-	ceterms:keyword				x
-	ceterms:latestVersion		x
-	ceasn:license               x
-	ceterms:lifecycleStatusType
-
-	ceterms:name				x
-	ceterms:nextVersion			x
-	ceterms:occupationType		x
-	ceterms:offeredIn			x
-	ceterms:previousVersion		x
-	ceasn:publicationStatusType x
-	ceasn:publisher             x
-	ceasn:publisherName         x
-	ceasn:rights                x
-	ceterms:subject             x
-	ceterms:subjectWebpage		x
-	ceterms:targetOccupation
-	ceterms:versionIdentifier   x
-
-
-		*/
 		public Rubric()
 		{
 		}
+
+		#region required
 		/// <summary>
 		/// CTID
 		/// Required
@@ -117,22 +59,45 @@ namespace RA.Models.Input
 
         /// <summary>
         /// A name given to the resource.
+		/// Required
         /// </summary>
         public string Name { get; set; }
         public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
-        /// <summary>
-        /// An account of the resource.
-        /// </summary>
-        //[JsonProperty( "dcterms:description" )]
-        public string Description { get; set; }
+		/// <summary>
+		/// An account of the resource.
+		/// Required
+		/// </summary>
+		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-        /// <summary>
-        /// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
-        /// ceterms:administrationProcess
-        /// </summary>
-        public List<ProcessProfile> AdministrationProcess { get; set; }
+		/// <summary>
+		/// The primary language used in or by this resource.
+		/// Required
+		/// </summary>
+		public List<string> InLanguage { get; set; } = new List<string>();
+
+		/// <summary>
+		/// An agent responsible for making this entity available.
+		/// Also referred to as the promulgating agency of the entity.
+		/// List of URIs, for example to a ceterms:CredentialOrganization
+		/// Or provide a list of CTIDs and the Assistant API will format the proper URL for the environment.
+		/// Required
+		/// </summary>
+		public List<string> Publisher { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Webpage that describes this entity.
+		/// Required
+		/// </summary>
+		public string SubjectWebpage { get; set; }  //URI
+
+		#endregion
+		/// <summary>
+		/// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
+		/// ceterms:administrationProcess
+		/// </summary>
+		public List<ProcessProfile> AdministrationProcess { get; set; }
 
         /// <summary>
         /// Alternative Coded Notation
@@ -141,21 +106,12 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> AltCodedNotation { get; set; } = new List<string>();
 
-        /// <summary>
-        /// List of Alternate Names for this learning opportunity
-        /// </summary>
-        public List<string> AlternateName { get; set; } = new List<string>();
-        /// <summary>
-        /// LanguageMap for AlternateName
-        /// </summary>
-        public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
-
-        /// <summary>
-        /// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
-        /// <see href="https://credreg.net/ctdl/terms/Audience"></see>
-		/// ceterms:audienceType
-        /// </summary>
-        public List<string> AudienceType { get; set; }
+		/// <summary>
+		/// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
+		/// <see href="https://credreg.net/ctdl/terms/Audience"></see>
+		/// ceterms:Audience
+		/// </summary>
+		public List<string> AudienceType { get; set; }
 
         /// <summary>
         /// Type of level indicating a point in a progression through an educational or training context, for which the resource is intended; select from an existing enumeration of such types.
@@ -164,23 +120,32 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> AudienceLevelType { get; set; } = new List<string>();
 
-        #region Classification
-        /// <summary>
-        /// Category or classification of this resource.
-        /// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-        /// URI to a concept(based on the O*Net work activities example). 
-        /// OR can use blank nodes where the blank node Id would be in this list
-        /// Recommend using CTIDs
-        /// ceterms:classification
-        /// </summary>
-        public List<string> Classification { get; set; } = new List<string>();
+		public List<string> DeliveryType { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Additional Classification
-        /// List of concepts that don't exist in the registry. Will be published as blank nodes
-        /// OR should input be a list of Concepts?
-        /// </summary>
-        public List<CredentialAlignmentObject> AdditionalClassification { get; set; } = new List<CredentialAlignmentObject>();
+		/// <summary>
+		/// A general statement describing the education or training context. Alternatively, a more specific statement of the location of the audience in terms of its progression through an education or training context.
+		/// ConceptScheme: ceterms:AudienceLevel
+		/// </summary>
+		public List<string> EducationLevelType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Type of evaluator; select from an existing enumeration of such types.
+		/// ConceptScheme: ceasn:EvaluatorCategory
+		/// </summary>
+		public List<string> EvaluatorType { get; set; } = new List<string>();
+
+		#region Classification
+		/// <summary>
+		/// Category or classification of this resource.
+		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
+		/// URI to a concept(based on the O*Net work activities example). 
+		/// OR can use blank nodes where the blank node Id would be in this list
+		/// Recommend using CTIDs
+		/// ceterms:classification
+		/// </summary>
+		public List<string> Classification { get; set; } = new List<string>();
+
+
         #endregion
 
         /// <summary>
@@ -216,22 +181,23 @@ namespace RA.Models.Input
         /// </summary>
         public string DateModified { get; set; }
 
-        /// <summary>
-        /// Effective date of this resource's content.
-        /// Only allowing date (yyyy-mm-dd), no time. 
-        /// xsd:date
-        /// </summary>
-        public string DateEffective { get; set; }
+        ///// <summary>
+        ///// Effective date of this resource's content.
+        ///// Only allowing date (yyyy-mm-dd), no time. 
+        ///// xsd:date
+        ///// </summary>
+        //public string DateEffective { get; set; }
 
         /// <summary>
         /// xsd:dateTime
         /// </summary>
         public string DateValidFrom { get; set; }
 
-        /// <summary>
-        /// xsd:dateTime
-        /// </summary>
-        public string DateValidUntil { get; set; }
+		/// <summary>
+		/// DateValidUntil
+		/// xsd:dateTime
+		/// </summary>
+		public string DateValidUntil { get; set; }
 
         /// <summary>
         /// Derived From
@@ -241,29 +207,31 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> DerivedFrom { get; set; }
 
-        /// <summary>
-        /// Date beyond which the resource is no longer offered or available.
-        /// Only allowing date (yyyy-mm-dd), no time. 
-        /// xsd:date
-        /// ceterms:expirationDate
-        /// </summary>
-        public string ExpirationDate { get; set; }
+        ///// <summary>
+        ///// Date beyond which the resource is no longer offered or available.
+        ///// Only allowing date (yyyy-mm-dd), no time. 
+        ///// xsd:date
+        ///// ceterms:expirationDate
+        ///// </summary>
+        //public string ExpirationDate { get; set; }
 
         //????these are URIs/CTIDs? - could imply RubricCriterion is to be a top level class NO CTID yet
         /// <summary>
         /// RubricCriterian referenced defines a principle or standard to be met that demonstrates quality in performance of a task or obtaining an objective.
         /// List of CTIDs/URIs to a RubricCriterion
         /// </summary>
-        public List<string> HasCriterionList { get; set; } = new List<string>();
+        public List<string> HasRubricCriterion { get; set; } = new List<string>();
 
-        public List<RubricCriterion> HasRubricCriterion { get; set; } = new List<RubricCriterion>();
+		/// <summary>
+		/// List of blank node identifiers that refer to an entry in request.RubricLevel
+		/// </summary>
+		public List<string> HasRubricLevel { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Has Criterion Category
-        /// Resource referenced by the Rubric that defines categories for clustering logical sets of RubricCriterion.
-        /// ?LIst of URIs? or concepts? Oh, just CriterionCategory. So the latter have CTIDs.
-        /// </summary>
-        public List<string> HasCriterionCategory { get; set; } = new List<string>();
+		/// <summary>
+		///  Indicates the Concept Scheme for clustering logical sets of Rubric Criteria.
+		///  URI to concept scheme or blank node
+		/// </summary>
+		public string HasCriterionCategorySet { get; set; } 
 
 		/// <summary>
 		/// Reference to a progression model used.
@@ -277,48 +245,55 @@ namespace RA.Models.Input
         /// </summary>
         public string HasProgressionLevel { get; set; }
 
-        /// <summary>
-        /// Description of what the rubric's creator intended to assess or evaluate.
-        /// asn:hasScope
-        /// </summary>
-        public string HasScope { get; set; }
+		/// <summary>
+		/// Description of what the rubric's creator intended to assess or evaluate.
+		/// asn:hasScope
+		/// </summary>
+		public string HasScope { get; set; }
 		public LanguageMap HasScope_Map { get; set; } = new LanguageMap();
 
-        /// <summary>
-        /// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-        /// <see href="https://credreg.net/ctdl/terms/identifier">Identifier</see>
-        /// ceterms:identifier
-        /// </summary>
-        public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+		/// <summary>
+		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// <see href="https://credreg.net/ctdl/terms/identifier">Identifier</see>
+		/// ceterms:identifier
+		/// </summary>
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
-        public List<string> InLanguage { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Keyword or key phrase describing relevant aspects of an entity.
-        /// </summary>
-        public List<string> Keyword { get; set; }
-        /// <summary>
-        /// Language map list for Keyword
-        /// </summary>
-        public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+		/// <summary>
+		/// Keyword or key phrase describing relevant aspects of an entity.
+		/// </summary>
+		public List<string> ConceptKeyword { get; set; }
+		/// <summary>
+		/// Language map list for Keyword
+		/// </summary>
+		public LanguageMapList ConceptKeyword_Map { get; set; } = new LanguageMapList();
 
-        //
-        /// <summary>
-        /// Latest version of the resource.
-        /// full URL OR CTID (recommended)
-        /// </summary>
-        public string LatestVersion { get; set; }
+		/// <summary>
+		/// Latest version of the resource.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string LatestVersion { get; set; }
 
         /// <summary>
         /// A legal document giving official permission to do something with this resource.
         /// </summary>
         public string License { get; set; }
 
-        /// <summary>
-        /// Version of the resource that immediately follows this version.
-        /// full URL OR CTID (recommended)
-        /// </summary>
-        public string NextVersion { get; set; }
+		/// <summary>
+		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
+		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// Recommended
+		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
+		/// </summary>
+		public string LifeCycleStatusType { get; set; }
+
+		/// <summary>
+		/// Version of the resource that immediately follows this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string NextVersion { get; set; }
 
         /// <summary>
         /// Previous version of the resource.
@@ -337,15 +312,6 @@ namespace RA.Models.Input
         public string PublicationStatusType { get; set; }
 
         /// <summary>
-        /// An agent responsible for making this entity available.
-        /// Also referred to as the promulgating agency of the entity.
-        /// List of URIs, for example to a ceterms:CredentialOrganization
-        /// Or provide a list of CTIDs and the Assistant API will format the proper URL for the environment.
-        /// Required
-        /// </summary>
-        public List<string> Publisher { get; set; } = new List<string>();
-
-        /// <summary>
         /// Name of an agent responsible for making this entity available.
         /// </summary>
         public List<string> PublisherName { get; set; } = new List<string>();
@@ -360,11 +326,6 @@ namespace RA.Models.Input
         /// </summary>
         public string Rights { get; set; }
         public LanguageMap Rights_Map { get; set; } = new LanguageMap();
-
-        /// <summary>
-        /// Original resource on which this resource is based or derived from.
-        /// </summary>
-        public string Source { get; set; }  //URI
 
         /// <summary>
         /// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
@@ -449,23 +410,30 @@ namespace RA.Models.Input
         /// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
         /// </summary>
         public List<string> CIP_Codes { get; set; } = new List<string>();
-        #endregion
+		#endregion
 
-        /// <summary>
-        /// VersionIdentifier
-        /// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
-        /// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
-        /// </summary>
-        public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
+		/// <summary>
+		/// Occupation that is the focus or target of this resource.
+		/// List of CTIDs, URIs or blank nodes
+		/// </summary>
+		public List<string> TargetOccupation { get; set; } = new List<string>();
+
+		/// <summary>
+		/// VersionIdentifier
+		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
+		/// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
+		/// </summary>
+		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
     }
 	public class RubricLevel
 	{
 		/*
-ceasn:codedNotation
-ceasn:description
-asn:hasProgressionLevel
+asn:hasProgressionLevel		 * 
+d	ceasn:codedNotation
+d	ceasn:description
+ceasn:hasCriterionLevel
 ceasn:listID
-ceasn:name
+d	ceasn:name
 
 
 		*/
@@ -473,12 +441,15 @@ ceasn:name
 		{
 		}
 
-		#region base properties
 		/// <summary>
-		/// CTID
-		/// Required
+		/// The identifier for a Rubric level.
+		/// Must be a valid blank node identifier: _:UUID
+		/// example:		_:9c09016c-907e-46ab-8d63-c1cda5474836
+		/// Classes with the property hasRubricLevel would a list of strings (this bnode identifier)
 		/// </summary>
-		public string CTID { get; set; }
+		public string Id { get; set; }
+
+		#region base properties
 
 		/// <summary>
 		/// A name given to the resource.
@@ -496,10 +467,17 @@ ceasn:name
 		#endregion
 		public string CodedNotation { get; set; }
 		/// <summary>
-		/// Resource description of a level of performance based on a RubricCriterion.
+		/// Criterion Level for this resource.
 		/// List of CriterionLevel
+		/// </summary>	
+		public List<string> HasCriterionLevel { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Reference to a progression level used.
+		/// TBD - string, or list
 		/// </summary>
-		public List<CriterionLevel> HasCriterionItem { get; set; } = new List<CriterionLevel>();
+		public List<string> HasProgressionLevel { get; set; } = new List<string>();
+
 		public string ListID { get; set; }
 	}
 
@@ -509,17 +487,17 @@ ceasn:name
 	public class RubricCriterion
 	{
 		/*
-		 * ceasn:codedNotation	
-		 * ceterms:ctid
-		 * ceasn:description
-		 * asn:hasProgressionLevel
-		 * ceasn:listID
-		 * ceasn:name
-			ceterms:targetCompetency
-			ceterms:targetTask
-			ceasn:weight
-			ceasn:hasCriterionLevel
-
+		x	asn:hasProgressionLevel
+		x	ceasn:codedNotation	
+		x	ceasn:description
+		x	ceasn:hasCriterionCategory		concept with no concept scheme
+		x	ceasn:hasCriterionLevel			=> ceasn:CriterionLevel
+		x	ceasn:listID
+		x	ceasn:name
+		x	ceasn:weight
+		x	ceterms:ctid
+		x	ceterms:targetCompetency
+		x	ceterms:targetTask
 
 		 * 
 		 * 
@@ -529,8 +507,13 @@ ceasn:name
 		}
 
 		#region Base properties
+		public string CTID { get; set; }
 
-		//public string CTID { get; set; }
+		/// <summary>
+		/// A name given to the resource.
+		/// </summary>
+		public string Name { get; set; }
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// An account of the resource.
@@ -538,38 +521,56 @@ ceasn:name
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-		public List<string> Language { get; set; } = new List<string>();
+		//public List<string> Language { get; set; } = new List<string>();
+
+		public string CodedNotation { get; set; }
 
 		/// <summary>
-		/// Numeric value representing the resource's position in a list (array) of resources.
+		/// Concept in a ProgressionModel concept scheme
+		/// URI
 		/// </summary>
-		public int Sequence { get; set; }
+		public List<string> HasProgressionLevel { get; set; } = new List<string>();
 
 		/// <summary>
-		/// A name given to the resource.
+		/// An alphanumeric string indicating the relative position of a resource in an ordered list of resources such as "A", "B", or "a", "b", or "I", "II", or "1", "2".
 		/// </summary>
-		public string Title { get; set; }
-		public LanguageMap Title_Map { get; set; } = new LanguageMap();
+		public string ListID { get; set; }
+
+		public decimal? Weight { get; set; }
 		#endregion
 
 		#region relationship properties
 
 		/// <summary>
-		/// Reference to the Rubric to which the RubricCriteria being described belongs.
-		/// /// List of Rubric URIs
+		/// Indicates a Concept for clustering logical sets of Rubric Criteria.
+		/// No specific concept scheme
 		/// </summary>
-		public List<string> CriterionFor { get; set; } = new List<string>();
+		public List<string> HasCriterionCategory { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Resource description of a level of performance based on a RubricCriterion.
 		/// List of CriterionLevel
 		/// </summary>
-		public List<CriterionLevel> HasCriterionItem { get; set; } = new List<CriterionLevel>();
+		public List<string> HasCriterionLevel { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Task that is the focus or target of this resource.
+		/// CTID for an existing Task
+		/// </summary>
+		public List<string> TargetTask { get; set; } = new List<string>();
+
+		/// <summary>
+		/// A competency relevant to the condition being described.
+		/// targetCompetency is typically a competency required for the parent of this condition profile
+		/// TODO - the range for targetCompetency is a credentialAlignmentObject or Compentency. Need to handle the latter.
+		/// Does that mean CAO should be a blank node?
+		/// </summary>
+		public List<CredentialAlignmentObject> TargetCompetency { get; set; }
 		#endregion`
 
 
 	}
-
+	/*
 	/// <summary>
 	/// Resource that defines categories for clustering logical sets of RubricCriterion.
 	/// </summary>
@@ -616,76 +617,87 @@ ceasn:name
 		public List<string> HasCriterion { get; set; } = new List<string>();
 
 	}
-
+	*/
     /// <summary>
     /// Resource description of a level of performance based on a RubricCriterion.
     /// </summary>
     public class CriterionLevel
 	{
 		/*
-			ceasn:codedNotation
-			ceasn:benchmarkLabel
-			ceasn:benchmarkText
-			ceasn:feedback
-			ceasn:hasCriterionLevel
-			asn:hasProgressionLevel
-			ceasn:isBinaryEvaluation
-			ceasn:listID
-			qdata:maxPercentage
-			schema:maxValue
-			qdata:minPercentage
-			schema:minValue
-			qdata:percentage
-			schema:value
+			ceasn:codedNotation			x
+			ceasn:benchmarkLabel		x
+			ceasn:benchmarkText			x
+			ceasn:feedback				x
+			ceasn:hasCriterionLevel		x
+			asn:hasProgressionLevel		x
+			ceasn:isBinaryEvaluation	x
+			ceasn:listID			x
+			qdata:maxPercentage	x
+			schema:maxValue		x
+			qdata:minPercentage	x
+			schema:minValue		x
+			qdata:percentage	x	
+			schema:value		x
 
 
 		 */
 		public CriterionLevel()
 		{
 		}
-
-		#region base properties
+		/// <summary>
+		/// Identifier for this CriterionLevel.
+		/// Use a unique identifier typically using the blank node format of "_:" + UUID.
+		/// Where a class has the property: HasCriterionLevel, it will have a list of these type of identifiers.
+		/// </summary>
+		public string Id { get; set; }
 
 		/// <summary>
-		/// Description of a level of achievement in performance of a task defined by the RubricCriterion.
+		/// Label for the level achieved as defined by the Rubric Criterion.
 		/// </summary>
-		public string Benchmark { get; set; }
-		public LanguageMap Benchmark_Map { get; set; } = new LanguageMap();
-
-
-		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
-
-		public List<string> Language { get; set; } = new List<string>();
+		public string BenchmarkLabel { get; set; }
+		public LanguageMap BenchmarkLabel_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
-		/// Qualitative description of the degree of achievement used for a column header in a tabular rubric.
+		/// Description of the level achieved as defined by the Rubric Criterion.
 		/// </summary>
-		//[JsonProperty( "asn:qualityLabel" )]
-		public string QualityLabel { get; set; }
-		public LanguageMap QualityLabel_Map { get; set; } = new LanguageMap();
+		public string BenchmarkText { get; set; }
+		public LanguageMap BenchmarkText_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// An alphanumeric notation or ID code as defined by the promulgating body to identify this resource.
+		/// </summary>
+		public string CodedNotation { get; set; }
+		public string ListID { get; set; }
+		/// <summary>
+		/// Predefined feedback text for the benefit of the subject being evaluated.
+		/// </summary>
+		public string Feedback { get; set; }
+		public LanguageMap Feedback_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Indicates whether the criterion level is evaluated as having been met or not.
+		/// </summary>
+		public bool? IsBinaryEvaluation { get; set; }
 
 		/// <summary>
 		/// Points to be awarded for achieving this level for a RubricCriterion.
 		/// </summary>
-		//[JsonProperty( "asn:score" )]
-		public decimal? Score { get; set; }
+		public decimal? Value { get; set; }
+		public decimal? MinValue { get; set; }
+		public decimal? MaxValue { get; set; }
 
-		/// <summary>
-		/// Numeric value representing the resource's position in a list (array) of resources.
-		/// </summary>
-		//[JsonProperty( "asn:sequence" )]
-		public int Sequence { get; set; }
+		public decimal? Percentage { get; set; }
+		public decimal? MinPercentage { get; set; }
+		public decimal? MaxPercentage { get; set; }
 
-		#endregion
 
 		#region relationship properties
 
 		/// <summary>
 		/// Reference to the RubricCriterion to which the CriterionLevel being described belongs.
+		/// IS THIS REALLY AN INVERSE PROPERTY??
 		/// </summary>
-		//[JsonProperty( "asn:levelFor" )]
-		public List<string> LevelFor { get; set; } = new List<string>();
+		public List<string> HasCriterionLevel { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Reference to a progression model used.

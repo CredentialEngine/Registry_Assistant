@@ -87,6 +87,7 @@
     <Compile Include="Organizations\PublishOrganization.cs" />
     <Compile Include="Pathways\PublishPathway.cs" />
     <Compile Include="Pathways\PublishPathwaySets.cs" />
+    <Compile Include="Rubrics\PublishRubric.cs" />
     <Compile Include="SampleModels\BaseModel.cs" />
     <Compile Include="SampleModels\Credential.cs" />
     <Compile Include="InputSamples\Frameworks.cs" />

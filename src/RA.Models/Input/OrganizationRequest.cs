@@ -542,6 +542,20 @@ namespace RA.Models.Input
 		public LanguageMap TransferValueStatementDescription_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
+		/// Webpage or online document that defines or explains the nature of support services offered by the organization.
+		/// </summary>
+		public string SupportServiceStatement { get; set; }
+		/// <summary>
+		/// Description of the nature of support services by the organization.
+		/// </summary>
+		public string SupportServiceStatementDescription { get; set; }
+
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap SupportServiceStatementDescription_Map { get; set; }
+
+		/// <summary>
 		/// Entity describing the means by which someone can verify whether a credential has been attained.
 		/// TODO on whether we will enable publishing these with an organization?
 		/// </summary>

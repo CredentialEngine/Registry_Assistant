@@ -23,6 +23,28 @@ namespace RA.Models.Input
     /// </summary>
     public class CredentialingAction
 	{
+		/// <summary>
+		/// Type of credentialing action
+		/// One of
+		/// ceterms:AccreditAction 
+		/// ceterms:AdvancedStandingAction 
+		/// ceterms:ApproveAction 
+		/// ceterms:CredentialingAction 
+		/// ceterms:OfferAction 
+		/// ceterms:RecognizeAction 
+		/// ceterms:RegulateAction 
+		/// ceterms:RenewAction 
+		/// ceterms:RevokeAction 
+		/// ceterms:RightsAction
+		/// ceterms:WorkforceDemandAction
+		/// REQUIRED
+		/// </summary>
+		public string Type { get; set; }
+
+		/// <summary>
+		/// REQUIRED
+		/// </summary>
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// Action Status
@@ -67,15 +89,18 @@ namespace RA.Models.Input
 		/// Object that helped the agent perform the action. e.g. John wrote a book with a pen.
 		/// A credential or other instrument whose criteria was applied in executing the action.
 		/// Provide the CTID for a credential in the Credential Registry or provide minimum data for a credential not in the registry.
+		/// TODO - implement blank node process using ReferenceObjects
 		/// </summary>
-		public List<EntityReference> Instrument { get; set; } = new List<EntityReference>();
+		public List<string> Instrument { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Object
 		/// Object upon which the action is carried out, whose state is kept intact or changed.
 		/// An EntityReference for Credentials, AssessmentProfile, or LearningOpportunity Profile
+		/// TODO - handle coded notation in a blank node
+		/// TODO - implement blank node process using ReferenceObjects
 		/// </summary>
-		public EntityReference Object { get; set; } = new EntityReference();
+		public string Object { get; set; } 
 
 		/// <summary>
 		/// Participant
@@ -84,6 +109,7 @@ namespace RA.Models.Input
 		/// LIST????
 		/// </summary>
 		public List<OrganizationReference> Participant { get; set; } = new List<OrganizationReference>();
+
 
 		/// <summary>
 		/// Date this action starts.
@@ -107,5 +133,18 @@ namespace RA.Models.Input
         /// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"></see>
         /// </summary>
         public List<JurisdictionProfile> Jurisdiction { get; set; }
-    }
+
+
+
+		/// <summary>
+		/// Resulting Award
+		/// Awarded credential resulting from an action.
+		/// Domain: AccreditAction, RenewAction
+		/// Range: ceterms:CredentialAssertion - Representation of a credential awarded to a person.
+		/// ???		https://www.imsglobal.org/sites/default/files/Badges/OBv2p0Final/index.html#Assertion
+		/// SO A URI???
+		/// NOT IMPLEMENTED
+		/// </summary>
+		public string ResultingAward { get; set; }
+	}
 }

@@ -238,7 +238,11 @@ namespace RA.Models.Input
 	/// </summary>
 	public class Concept  
 	{
-
+		/// <summary>
+		/// Helper property for use with blank nodes
+		/// </summary>
+		public string Type { get; set; } = "skos:Concept";
+		public string Id { get; set; } 
 		/// <summary>
 		/// CTID - identifier for concept. 
 		/// Format: ce-UUID (lowercase)
