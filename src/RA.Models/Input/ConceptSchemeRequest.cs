@@ -96,7 +96,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Helper property for use with blank nodes
 		/// </summary>
-		public string Type { get; set; } = "ConceptScheme";
+		public string Type { get; set; } = "skos:ConceptScheme";
 
 		/// <summary>
 		/// CTID - identifier for Concept Scheme. 
@@ -236,13 +236,13 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Concept class
 	/// </summary>
-	public class Concept  
+	public class Concept : BasePrimaryResource
 	{
 		/// <summary>
 		/// Helper property for use with blank nodes
 		/// </summary>
 		public string Type { get; set; } = "skos:Concept";
-		public string Id { get; set; } 
+
 		/// <summary>
 		/// CTID - identifier for concept. 
 		/// Format: ce-UUID (lowercase)
@@ -312,7 +312,6 @@ namespace RA.Models.Input
 		/// List of Concept URLs(CTIDs)
 		/// </summary>
 		public List<string> ExactMatch { get; set; } = new List<string>();
-
 
 		/// <summary>
 		///Label not intended for public presentation but to assist applications in disambiguating searcher intent - e.g., hidden labels can be used for common misspelling or a colloquial expression.

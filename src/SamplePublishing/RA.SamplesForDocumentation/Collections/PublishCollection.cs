@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using APIRequest = RA.Models.Input.CollectionRequest;
-using APIRequestEntity = RA.Models.Input.Collection;
+using APIRequestResource = RA.Models.Input.Collection;
 using Newtonsoft.Json;
 
 using RA.Models.Input;
@@ -45,7 +45,7 @@ namespace RA.SamplesForDocumentation.Collections
 			 //Assign a CTID for the entity being published and keep track of it
 			var myCTID = "ce-bb733c95-1df3-445e-98b6-bdaf7ca74a36";// "ce-" + Guid.NewGuid().ToString();
 
-			var myData = new APIRequestEntity()
+			var myData = new APIRequestResource()
 			{
 				Name = "A sample collection of credentials - College Of DuPage.",
 				Description = "This collection uses the HasMember property to list members of this collection using the CTIDs of a published credentials.",
@@ -120,7 +120,7 @@ namespace RA.SamplesForDocumentation.Collections
 			 //Assign a CTID for the entity being published and keep track of it
 			var myCTID = "ce-3bc3d4a3-c2de-4c16-8d7b-caca771b12f4";// "ce-" + Guid.NewGuid().ToString();
 
-			var myData = new APIRequestEntity()
+			var myData = new APIRequestResource()
 			{
 				Name = "A sample collection of credentials using CollectionMembers.",
 				AlternateName = new List<string>() { "alternate Dos", "Alternate Deux" },
@@ -269,7 +269,7 @@ namespace RA.SamplesForDocumentation.Collections
 			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 
 			//A simple CompetencyFramework object - see github for full class definition
-			var myData = new APIRequestEntity()
+			var myData = new APIRequestResource()
 			{
 				Name = "My Sample Collection",
 				Description = "This is some text that describes my Collection.",

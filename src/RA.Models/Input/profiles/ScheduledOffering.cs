@@ -11,7 +11,7 @@ namespace RA.Models.Input
 	/// Comment: Provides data specific to a given scheduled offering; the Learning Opportunity (including Course and Learning Program) or Assessment being offered provides all data that is shared between different offerings.
 	/// Usage Note: Rather than repeating data, only use the properties in this class when and where their data differs from the data provided by the resource for which this is an offer.
 	/// </summary>
-	public class ScheduledOffering
+	public class ScheduledOffering : BasePrimaryResource
 	{
 		public string CTID { get; set; }
 

@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 using RA.Models;
 using RA.Models.Input;
-using APIRequestEntity = RA.Models.Input.Occupation;
+using APIRequestResource = RA.Models.Input.Occupation;
 using APIRequest = RA.Models.Input.OccupationRequest;
 
 namespace RA.SamplesForDocumentation.Employment
@@ -31,14 +31,26 @@ namespace RA.SamplesForDocumentation.Employment
 			//create a new CTID (then save for reuse).
 			var entityCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 
-			var myData = new Occupation()
+			//create request object.
+			//This holds the resource being published and the identifier( CTID ) for the publishing organization
+			var myRequest = new APIRequest()
+			{
+				DefaultLanguage = "en-US",
+				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
+			};
+
+			var myData = new APIRequestResource()
 			{
 				Name = "Credentials Publisher",
 				CTID = entityCTID,
 				Description = "Credentials Publisher description",
 				SubjectWebpage = "https://example.com/?t=CredentialsPublisher",
 			};
-
+			//add asserting organization
+			myData.AssertedBy.Add( new OrganizationReference()
+			{
+				CTID = organizationIdentifierFromAccountsSite
+			} );
 			//instructionalPrograms
 			myData.OccupationType = new List<FrameworkItem>()
 			{
@@ -48,14 +60,23 @@ namespace RA.SamplesForDocumentation.Employment
 				}
 			};
 
-
-			//This holds the Occupation and the identifier (CTID) for the owning organization
-			var myRequest = new APIRequest()
+			//Classification- using a blank node to an object in ReferenceObjects
+			//1. create a blank node Id
+			var bnodeId = "_:" + Guid.NewGuid().ToString().ToLower();
+			//2. create the concept
+			var concept = new Concept()
 			{
-				Occupation = myData,
-				DefaultLanguage = "en-US",
-				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
+				BlankNodeId = bnodeId,
+				Type = "skos:Concept",
+				PrefLabel = "Equity Goal"
 			};
+			//add the bnodeId to Classification
+			myData.Classification = new List<string>() { bnodeId };
+			//add the blank node object to ReferenceObjects
+			myRequest.ReferenceObjects.Add( concept );
+
+			//Add the Occupation to the request
+			myRequest.Occupation = myData;
 
 			//create a literal to hold data to use with ARC
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );

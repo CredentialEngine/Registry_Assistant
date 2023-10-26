@@ -80,6 +80,11 @@ namespace RA.Models.Input
 		public List<string> DerivedFrom { get; set; } = new List<string>();
 
 		/// <summary>
+		/// Entity describing the process by which a resource, or aspects of it, are administered.
+		/// </summary>
+		public List<ProcessProfile> AdministrationProcess { get; set; } = new List<ProcessProfile>();
+
+		/// <summary>
 		/// Entity describing the process by which the transfer value profile, or aspects of it, were created.
 		/// </summary>
 		public List<ProcessProfile> DevelopmentProcess { get; set; } = new List<ProcessProfile>();
@@ -115,7 +120,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
 		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
-		/// Required
+		/// Recommended
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
 		/// </summary>
@@ -142,7 +147,7 @@ namespace RA.Models.Input
 		///  - Job  - TBD
 		///  - Occupation  - TBD
 		///  2021-05-10 An additional type will be a EntityReference. Actually any of the latter with a type and CTID
-		///  2023-08-23 mparsons - this will be much easier to start using just URIs, and ReferenceObjects for blank nodes
+		///  23-08-23 mparsons - this will be much easier to start using just URIs, and ReferenceObjects for blank nodes
 		/// </summary>
 		public List<object> TransferValueFrom { get; set; } = new List<object>();
 
@@ -159,6 +164,32 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<object> TransferValueFor { get; set; } = new List<object>();
 
+
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		public LanguageMapList AlternateName_Map { get; set; } = null;
+		#region Version related properties
+		//
+		/// <summary>
+		/// Latest version of the credential.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string LatestVersion { get; set; }
+		/// <summary>
+		/// Version of the resource that immediately precedes this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string PreviousVersion { get; set; }
+		/// <summary>
+		/// Version of the resource that immediately follows this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string NextVersion { get; set; }
 		/// <summary>
 		///  Resource that replaces this resource.
 		///  full URL OR CTID (recommended)
@@ -171,19 +202,14 @@ namespace RA.Models.Input
 		public string Supersedes { get; set; }
 
 		/// <summary>
-		/// List of Alternate Names for this resource
+		/// VersionIdentifier
+		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
+		/// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
 		/// </summary>
-		public List<string> AlternateName { get; set; } = new List<string>();
-		/// <summary>
-		/// LanguageMap for AlternateName
-		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = null;
+		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
 
-		///// <summary>
-		///// Experimenting
-		///// Not valid when publishing individual TVP.
-		///// </summary>
-		//public string HasTransferIntermediary { get; set; }
+		#endregion
+
 	}
 
 

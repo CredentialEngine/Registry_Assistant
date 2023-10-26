@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using APIRequest = RA.Models.Input.TransferIntermediaryRequest;
-using APIRequestEntity = RA.Models.Input.TransferIntermediary;
+using APIRequestResource = RA.Models.Input.TransferIntermediary;
 using Newtonsoft.Json;
 
 using RA.Models.Input;
@@ -37,7 +37,7 @@ namespace RA.SamplesForDocumentation
 			var myCTID = "ce-8391465c-38e1-4a76-a729-18601cf37285";// "ce-" + Guid.NewGuid().ToString().ToLower();
 
 			//===================================================================================
-			var myData = new APIRequestEntity()
+			var myData = new APIRequestResource()
 			{
 				Name = "A Transfer Intermediary for ....",
 				Description = "A useful description is coming soon. .",

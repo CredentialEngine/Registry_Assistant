@@ -45,8 +45,16 @@ namespace RA.SamplesForDocumentation
 				LifeCycleStatusType = "Active",
 				SubjectWebpage = "https://www.acenet.edu/National-Guide/Pages/Course.aspx?org=College%20Board%27s%20College-Level%20Examination%20Program%20(CLEP)&cid=fe05b1f6-84c4-ea11-a812-000d3a33232a",
 				StartDate = "2018-12-01",
-				EndDate = "2023-11-30"
+				EndDate = "2023-11-30",
+				PreviousVersion = "https://sandbox.credentialengineregistry.org/resources/ce-276a16e8-69d6-447f-9904-71c393d7a88d",
+				LatestVersion = "https://sandbox.credentialengineregistry.org/resources/ce-a7e72ad1-4220-4ca1-8028-cdb2fec245a0",
+				NextVersion = "https://sandbox.credentialengineregistry.org/resources/ce-330c41fb-f8d6-49ca-a97f-18e1bf6c1eb0",
 			};
+			myData.VersionIdentifier.Add( new IdentifierValue()
+			{
+				IdentifierTypeName = "MyVersion",
+				IdentifierValueCode = "2023-09-01"        //Alphanumeric string identifier of the entity
+			} );
 			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.
 			// The ownedBY CTID is typically the same as the CTID for the data owner.
 			myData.OwnedBy.Add( new OrganizationReference()
@@ -71,6 +79,8 @@ namespace RA.SamplesForDocumentation
 					Subject = new List<string>(){ "Introductory Sociology" }
 				}
 			};
+			//TBD versions
+
 
 			//==============	transfer value from ===================================================
 			//If not provided as much information as is available
@@ -82,7 +92,8 @@ namespace RA.SamplesForDocumentation
 				Name = "Introductory Sociology",
 				Description = "The Introductory Sociology examination is designed to assess an individual's knowledge of the material typically presented in a one-semester introductory-level sociology course at most colleges and universities. The examination emphasizes basic facts and concepts as well as general theoretical approaches used by sociologists on the topics of institutions, social patterns, social processes, social stratifications, and the sociological perspective. Highly specialized knowledge of the subject and the methodology of the discipline is not required or measured by the test content.The exam contains approximately 100 questions to be answered in 90 minutes. Some of these are pretest questions that will not be scored. Any time test takers spend on tutorials and providing personal information is in addition to the actual testing time.",
 				SubjectWebpage = "https://clep.collegeboard.org/?t=introductorySocialogy",
-				DeliveryType = new List<string>() { "deliveryType:InPerson" }
+				DeliveryType = new List<string>() { "deliveryType:InPerson" },
+
 			};
 			var ownedBy = new OrganizationReference()
 			{
@@ -90,8 +101,10 @@ namespace RA.SamplesForDocumentation
 				Name = "College Board's College-Level Examination Program (CLEP)",
 				SubjectWebpage = "https://clep.collegeboard.org/"
 			};
-			transferValueFrom.OwnedBy = new List<OrganizationReference>();
-			transferValueFrom.OwnedBy.Add( ownedBy );
+			transferValueFrom.OwnedBy = new List<OrganizationReference>
+			{
+				ownedBy
+			};
 			transferValueFrom.Assesses = AssignIntroductorySociologyCompetencies();
 
 			myData.TransferValueFrom.Add( transferValueFrom );

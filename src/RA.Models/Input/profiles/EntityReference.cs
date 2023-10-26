@@ -16,7 +16,9 @@ namespace RA.Models.Input
 	{
 		/// <summary>
 		/// Id is a resovable URI
-		/// If the entity exists in the registry, provide the URI. 
+		/// If the entity exists in the registry, use the CTID property.
+		/// NEW: Coming soon use of ReferenceObjects as a list resources to be blank nodes
+		/// 
 		/// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
 		/// Alterate URIs are under consideration. For example
 		/// http://dbpedia.com/Stanford_University
@@ -49,7 +51,7 @@ namespace RA.Models.Input
         public string CdtlType { get; set; }
 
         /// <summary>
-        /// Name of the entity (required)
+        /// Name of the entity (normally required)
         /// </summary>
         public string Name { get; set; }
         public string PrefLabel { get; set; }
@@ -63,9 +65,9 @@ namespace RA.Models.Input
 		{
 			get
 			{
-				if ( Type == "ceterms:AssessmentProfile" || Type == "AssessmentProfile"
-					|| CdtlType == "ceterms:AssessmentProfile" || CdtlType == "AssessmentProfile"
-                    )
+				if ( Type == "ceterms:AssessmentProfile" || Type == "AssessmentProfile" || Type == "Assessment"
+					|| CdtlType == "ceterms:AssessmentProfile" || CdtlType == "AssessmentProfile" || CdtlType == "Assessment"
+					)
 					return true;
 				else
 					return false;
@@ -366,7 +368,7 @@ namespace RA.Models.Input
 		public List<CredentialAlignmentObject> Teaches { get; set; } = new List<CredentialAlignmentObject>();
 		#endregion
 
-		#region properties for Occupation
+		#region properties for OccupationType, IndustryType
 		/*
 		 * Name
 		 * CodedNotation
@@ -402,7 +404,7 @@ namespace RA.Models.Input
 			//	|| string.IsNullOrWhiteSpace( Description )
 			if ( (string.IsNullOrWhiteSpace( Name ) || ( Name_Map == null || Name_Map?.Count == 0) )
 				|| string.IsNullOrWhiteSpace( Type )
-				|| string.IsNullOrWhiteSpace( SubjectWebpage )
+				//|| string.IsNullOrWhiteSpace( SubjectWebpage )		//TODO in some cases not requiring SWP. May want a type specific create
 				)
 				return false;
 			else
@@ -414,7 +416,7 @@ namespace RA.Models.Input
 				&& string.IsNullOrWhiteSpace( CTID )
 				&& ( string.IsNullOrWhiteSpace( Name ) && ( Name_Map == null || Name_Map?.Count == 0 ) )
 				&& ( string.IsNullOrWhiteSpace( Description ) && ( Description_Map == null || Description_Map.Count == 0 ) )
-				&& string.IsNullOrWhiteSpace( SubjectWebpage )
+				//&& string.IsNullOrWhiteSpace( SubjectWebpage )
 				)
 				return true;
 			else

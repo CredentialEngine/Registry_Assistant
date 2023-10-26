@@ -8,19 +8,22 @@ namespace RA.Models.Input
 {
 	/// <summary>
 	/// Profession, trade, or career field that may involve training and/or a formal qualification.
+	/// requires
+	/// - CTID
+	/// - NAME
+	/// - Description
 	/// </summary>
-	public class Occupation
+	public class Occupation : BasePrimaryResource
 	{
 		/// <summary>
 		/// Helper property for use with blank nodes
 		/// </summary>
 		public string Type { get; set; } = "Occupation";
+
+		#region Required
 		/// <summary>
 		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a resource recognizes it in transactions with the external environment (e.g., in verifiable claims involving the resource).
-		/// requires
-		/// - CTID
-		/// - NAME
-		/// - Description
+		/// Required
 		/// <see cref="https://credreg.net/ctdl/terms/ctid"/>
 		/// </summary>
 		public string CTID { get; set; }
@@ -46,6 +49,14 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+
+		/// <summary>
+		/// Agent making a statement based on fact or belief.
+		/// Required
+		/// </summary>
+		public List<OrganizationReference> AssertedBy { get; set; } = new List<OrganizationReference>();
+		#endregion
 
 		/// <summary>
 		/// List of Alternate Names for this resource
@@ -73,12 +84,6 @@ namespace RA.Models.Input
 		/// ceterms:classification
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
-		//public List<CredentialAlignmentObject> Classification { get; set; } = new List<CredentialAlignmentObject>();
-		/// <summary>
-		/// Additional Classification
-		/// List of concepts that don't exist in the registry. Will be published as blank nodes
-		/// </summary>
-		public List<CredentialAlignmentObject> AdditionalClassification { get; set; } = new List<CredentialAlignmentObject>();
 		/// <summary>
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
 		/// ceterms:codedNotation
@@ -109,11 +114,23 @@ namespace RA.Models.Input
 		public List<string> HasSpecialization { get; set; } = new List<string>();
 
 		/// <summary>
+		/// Task related to this resource.
+		/// CTID for an existing Task
+		/// </summary>
+		public List<string> HasTask { get; set; } = new List<string>();
+
+		/// <summary>
 		/// Work Role related to this resource.
 		/// CTID for an existing WorkRole
 		/// ceterms:hasWorkRole
 		/// </summary>
 		public List<string> HasWorkRole { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Indicates the level of demand for a resource via a demand level action.
+		/// Range Includes:	ceterms:WorkforceDemandAction
+		/// </summary>
+		public List<string> HasWorkForceDemand{ get; set; } = new List<string>();
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
@@ -210,11 +227,10 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Another source of information about the entity being described.
-		/// TBD?????
-		/// Using EntityReference to enable a source in the registry or externally
+		/// HINT: If the SameAs target is a resource in the Credential Registry, just the CTID needs to be provided. 
 		/// ceterms:sameAs
 		/// </summary>
-		public List<EntityReference> SameAs { get; set; } = new List<EntityReference>();
+		public List<string> SameAs { get; set; } = new List<string>();
 
 		/// <summary>
 		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
@@ -237,5 +253,34 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
 
+		/// <summary>
+		/// Environmental Hazard Type
+		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; 
+		/// select from an existing enumeration of such types.
+		/// skos:Concept
+		/// Blank nodes!
+		/// </summary>
+		public List<string> EnvironmentalHazardType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Type of required or expected human performance level; select from an existing enumeration of such types.
+		/// skos:Concept
+		/// Blank nodes!
+		/// </summary>
+		public List<string> PerformanceLevelType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Type of physical activity required or expected in performance; select from an existing enumeration of such types.
+		/// skos:Concept
+		/// Blank nodes!
+		/// </summary>
+		public List<string> PhysicalCapabilityType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Type of required or expected sensory capability; select from an existing enumeration of such types.
+		/// skos:Concept
+		/// Blank nodes!
+		/// </summary>
+		public List<string> SensoryCapabilityType { get; set; } = new List<string>();
 	}
 }

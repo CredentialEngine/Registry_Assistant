@@ -29,7 +29,7 @@ namespace RA.Models.Input
 		/// ceterms:AccreditAction 
 		/// ceterms:AdvancedStandingAction 
 		/// ceterms:ApproveAction 
-		/// ceterms:CredentialingAction 
+		/// ceterms:CredentialingAction		
 		/// ceterms:OfferAction 
 		/// ceterms:RecognizeAction 
 		/// ceterms:RegulateAction 
@@ -80,6 +80,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Evidence of Action
 		/// Entity that proves that the action occured or that the action continues to be valid.
+		/// The evidence verifies the information in the action and is particular to it. It is not a directory of such evidentiary entities or a description of how such verifications might generically be characterized.
 		/// URI
 		/// </summary>
 		public string EvidenceOfAction { get; set; }

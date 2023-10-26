@@ -9,7 +9,7 @@ using RA.Models;
 using RA.Models.Input;
 using RA.Models.Input.profiles.QData;
 using YourCredential = RA.SamplesForDocumentation.SampleModels.Credential;
-using APIRequestEntity = RA.Models.Input.Credential;
+using APIRequestResource = RA.Models.Input.Credential;
 using APIRequest = RA.Models.Input.CredentialRequest;
 
 namespace RA.SamplesForDocumentation

@@ -9,7 +9,7 @@ using RA.Models.Input;
 using RA.Models;
 
 using RA.Models.Input.profiles.QData;
-using APIRequestEntity = RA.Models.Input.LearningOpportunity;
+using APIRequestResource = RA.Models.Input.LearningOpportunity;
 using APIRequest = RA.Models.Input.LearningOpportunityRequest;
 namespace RA.SamplesForDocumentation
 {
@@ -37,7 +37,7 @@ namespace RA.SamplesForDocumentation
 			 //Assign a CTID for the entity being published and keep track of it
 			var myCTID = "ce-8500c459-2021-1216-892d-6d5d77b8388c";// "ce-" + Guid.NewGuid().ToString();
 
-			var myData = new APIRequestEntity()
+			var myData = new APIRequestResource()
 			{
 				Name = "Truck Driving Training With Outcome data, using: Aggregate Data Profile",
 				Description = "The Kishwaukee College 160-hour truck driver training program puts well-trained drivers on the road. The training combines classroom presentation with hands-on experience that leads to a Class A Commercial drivers license. The course will provide you with the basic skills to become a safe, professional truck driver. Upon successful completion, you will be able to secure an entry-level position in the trucking industry.",

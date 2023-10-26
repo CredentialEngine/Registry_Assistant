@@ -6,46 +6,27 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
-    /// <summary>
-    /// Collection of tasks and competencies that embody a particular function in one or more jobs.
-    /// </summary>
-    public class WorkRole
-    {
-        /*
-		 * 
-			ceasn:abilityEmbodied
-			ceasn:comment
-			ceasn:knowledgeEmbodied
-			ceasn:skillEmbodied
-			ceterms:alternateName
-			ceterms:classification
-			ceterms:codedNotation
-			ceterms:ctid
-			ceterms:description
-			ceterms:environmentalHazardType
-			ceterms:hasSupportService
-			ceterms:hasTask
-			ceterms:identifier
-			ceterms:isMemberOf
-			ceterms:name
-			ceterms:performanceLevelType
-			ceterms:physicalCapabilityType
-			ceterms:sensoryCapabilityType
-			ceterms:versionIdentifier
-		 */
+	/// <summary>
+	/// Collection of tasks and competencies that embody a particular function in one or more jobs.
+	/// NOTES:
+	/// IsMemberOf - this is an inverse property. It would not be published with a WorkRole.
+	/// </summary>
+	public class WorkRole : BasePrimaryResource
+	{
         /// <summary>
         /// Helper property for use with blank nodes
         /// </summary>
         public string Type { get; set; } = "WorkRole";
 
-        /// <summary>
-        /// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a resource recognizes it in transactions with the external environment (e.g., in verifiable claims involving the resource).
-        /// requires
-        /// - CTID
-        /// - NAME
-        /// <see cref="https://credreg.net/ctdl/terms/ctid"/>
-        /// </summary>
-        public string CTID { get; set; }
+		#region Required
+		/// <summary>
+		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a resource recognizes it in transactions with the external environment (e.g., in verifiable claims involving the resource).
+		/// required
+		/// - CTID
+		/// - NAME
+		/// <see cref="https://credreg.net/ctdl/terms/ctid"/>
+		/// </summary>
+		public string CTID { get; set; }
 
         /// <summary>
         /// Name of this WorkRole
@@ -58,21 +39,29 @@ namespace RA.Models.Input
         /// </summary>
         public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
-        /// <summary>
-        /// WorkRole description 
-        /// Required
-        /// </summary>
-        public string Description { get; set; }
+		/// <summary>
+		/// Agent making a statement based on fact or belief.
+		/// Required
+		/// Single is more likely
+		/// </summary>
+		public List<OrganizationReference> AssertedBy { get; set; } = new List<OrganizationReference>();
+		#endregion
 
-        /// <summary>
-        /// Alternately can provide a language map
-        /// </summary>
-        public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-        /// <summary>
-        /// List of Alternate Names for this resource
-        /// </summary>
-        public List<string> AlternateName { get; set; } = new List<string>();
+		/// <summary>
+		/// WorkRole description 
+		/// </summary>
+		public string Description { get; set; }
+
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// List of Alternate Names for this resource
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
         /// <summary>
         /// LanguageMap for AlternateName
         /// </summary>
@@ -135,7 +124,10 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> PhysicalCapabilityType { get; set; } = new List<string>();
 
-        public List<string> SensoryCapabilityType { get; set; } = new List<string>();
+		/// <summary>
+		/// Type of required or expected sensory capability; select from an existing enumeration of such types.
+		/// </summary>
+		public List<string> SensoryCapabilityType { get; set; } = new List<string>();
 
         /// <summary>
         /// Task related to this resource.
@@ -148,6 +140,11 @@ namespace RA.Models.Input
         /// List of CTIDs that reference one or more published support services
         /// </summary>
         public List<string> HasSupportService { get; set; }
+        /// <summary>
+        /// Reference to a relevant Occupation.
+        /// List of CTIDs that reference one or more published Occupations
+        /// </summary>
+        public List<string> HasOccupation { get; set; }
 
         /// <summary>
         /// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.

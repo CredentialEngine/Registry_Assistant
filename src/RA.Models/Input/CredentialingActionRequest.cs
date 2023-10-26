@@ -20,14 +20,5 @@ namespace RA.Models.Input
         public CredentialingAction CredentialingAction { get; set; } = new CredentialingAction();
     }
 
-	//public class WorkforceDemandAction : CredentialingAction
-	//{
-	//	public WorkforceDemandAction() { }
-
-	//	/// <summary>
-	//	/// Only for Workforce Demand Action, so likely handled differently, maybe inherit this class, and add CTID
-	//	/// </summary>
-	//	public string CTID { get; set; }
-	//}
 
 }

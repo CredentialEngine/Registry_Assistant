@@ -70,13 +70,14 @@ namespace RA.SamplesForDocumentation
 			myData.EducationLevelType = new List<string>() { "audLevel:BeginnerLevel" };
 			//concept
 			myData.EvaluatorType = new List<string>() { "evalCat:Authority" };
+
 			//Classification- using a blank node to an object in ReferenceObjects
 			//1. create a blank node Id
 			var bnodeId = "_:" + Guid.NewGuid().ToString().ToLower();
 			//2. create the concept
 			var concept = new Concept()
 			{
-				Id = bnodeId,
+				BlankNodeId = bnodeId,
 				Type = "skos:Concept",
 				PrefLabel = "Equity Goal"
 			};

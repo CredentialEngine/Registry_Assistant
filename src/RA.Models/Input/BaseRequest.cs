@@ -21,32 +21,22 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Registry { get; set; } = "";
 
-        /// <summary>
-        /// Future use
-        /// Allow publishing of custom concepts etc. The property type would be required, as well as an Id. 
-        /// The Id would be a Guid (TBD). The related property would have the same indentifier as say CreditLevelType
-        /// Maybe a custom class
-        /// Allowed (So far)
-        /// </summary>
-        public List<object> ReferenceObjects { get; set; } = new List<object>();
-        public List<ReferenceObject> ReferenceObject { get; set; } = new List<ReferenceObject>();
+		/// <summary>
+		/// List of objects that will be published as blank nodes. 
+		/// Allow publishing of custom concepts etc. 
+		/// 
+		/// Required properies
+		/// - Type	A valid CTDL type
+		/// - Id	A blank node identifier: format of _:plus guid (ex: _:48069056-13c3-4973-9b93-a905875619c2)
+		/// - any required properties for the target resource type, typically name and subject webpage (or equivalent URL property)
+		/// 
+		/// Used By Request types
+		/// Job, Occupation, Task, WorkRole
+		/// 
+		/// 
+		/// Allowed types - probably no limit
+		/// </summary>
+		public List<object> ReferenceObjects { get; set; } = new List<object>();
 	}
-	public class ReferenceObject
-    {
-		/// <summary>
-		/// The Id must be a valid Guid.
-		/// Required.
-		/// </summary>
-		public string Id { get; set; }	
-		/// <summary>
-		/// The class type.
-		/// Required.
-		/// </summary>
-		public string Type { get; set; }
 
-		/// <summary>
-		/// The content for the blank node, example: credential, 
-		/// </summary>
-		public object Resource { get; set; }
-    }
 }

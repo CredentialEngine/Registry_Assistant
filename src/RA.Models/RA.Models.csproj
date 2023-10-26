@@ -85,6 +85,7 @@
     <Compile Include="Input\PlainGraphRequest.cs" />
     <Compile Include="Input\profiles\AccreditAction.cs" />
     <Compile Include="Input\profiles\AggregateDataProfile.cs" />
+    <Compile Include="Input\profiles\BasePrimaryResource.cs" />
     <Compile Include="Input\profiles\CompetencyFrameworksGraph.cs" />
     <Compile Include="Input\profiles\ConditionProfile.cs" />
     <Compile Include="Input\profiles\CostProfile.cs" />
@@ -116,7 +117,6 @@
     <Compile Include="Input\profiles\Task.cs" />
     <Compile Include="Input\profiles\ValueProfile.cs" />
     <Compile Include="Input\profiles\VerificationServiceProfile.cs" />
-    <Compile Include="Input\profiles\WorkforceDemandAction.cs" />
     <Compile Include="Input\profiles\WorkRole.cs" />
     <Compile Include="Input\ProgressionModelRequest.cs" />
     <Compile Include="Input\RubricRequest.cs" />

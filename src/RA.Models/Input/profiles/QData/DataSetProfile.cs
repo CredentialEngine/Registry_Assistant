@@ -47,13 +47,19 @@ namespace RA.Models.Input.profiles.QData
         /// <summary>
         /// Credentialing organization or a third party providing the data.
         /// Required when publishing the DataSetProfile directly. Otherwise derived from owner of related resource.
-        /// Required when publishing the DataSetProfile directly. Otherwise derived from owner of related resource.
+        /// 
         /// </summary>
         public OrganizationReference DataProvider { get; set; } = new OrganizationReference();
 
         /// <summary>
         /// Subject matter of the resource.
-        /// Means to point to a credential where data is published by a third party.
+        /// Means to point to a credential or other resource where data is published by a third party. 
+        /// Allowed: 
+        /// - any credential
+        /// - assessment profile
+        /// - any learning opportunity
+        /// - scheduled offering
+        /// - 23-10-23 - any organization
         /// REQUIRED when dataSetProfile published separately.
         /// CTID/URI
         /// schema:about

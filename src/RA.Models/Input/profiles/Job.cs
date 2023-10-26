@@ -9,16 +9,17 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Set of responsibilities based on work roles within an occupation as defined by an employer.
 	/// </summary>
-	public class Job
+	public class Job : BasePrimaryResource
 	{
 		/// <summary>
 		/// Helper property for use with blank nodes
 		/// </summary>
 		public string Type { get; set; } = "Job";
 
+		#region Required
 		/// <summary>
 		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a resource recognizes it in transactions with the external environment (e.g., in verifiable claims involving the resource).
-		/// requires
+		/// required
 		/// - CTID
 		/// - NAME
 		/// <see cref="https://credreg.net/ctdl/terms/ctid"/>
@@ -46,6 +47,13 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Organization(s) that offer this resource
+		/// Required
+		/// </summary>
+		public List<OrganizationReference> OfferedBy { get; set; }
+		#endregion
 
 		/// <summary>
 		/// List of Alternate Names for this resource
@@ -214,10 +222,7 @@ namespace RA.Models.Input
 		public List<string> ONET_Codes { get; set; } = new List<string>();
 		#endregion
 
-		/// <summary>
-		/// Organization(s) that offer this resource
-		/// </summary>
-		public List<OrganizationReference> OfferedBy { get; set; }
+
 
         //Free floating Concepts 
 
@@ -258,11 +263,9 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Another source of information about the entity being described.
-		/// TBD?????
-		/// Using EntityReference to enable a source in the registry or externally
 		/// ceterms:sameAs
 		/// </summary>
-		public List<EntityReference> SameAs { get; set; } = new List<EntityReference>();
+		public List<string> SameAs { get; set; } = new List<string>();
 
 		/// <summary>
 		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.

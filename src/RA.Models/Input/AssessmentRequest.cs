@@ -60,12 +60,12 @@ namespace RA.Models.Input
 
 			AvailableAt = new List<Place>();
 
-			AdvancedStandingFrom = new List<ConnectionProfile>();
-			IsAdvancedStandingFor = new List<ConnectionProfile>();
-			PreparationFrom = new List<ConnectionProfile>();
-			IsPreparationFor = new List<ConnectionProfile>();
-			IsRecommendedFor = new List<ConnectionProfile>();
-			IsRequiredFor = new List<ConnectionProfile>();
+			AdvancedStandingFrom = new List<ConditionProfile>();
+			IsAdvancedStandingFor = new List<ConditionProfile>();
+			PreparationFrom = new List<ConditionProfile>();
+			IsPreparationFor = new List<ConditionProfile>();
+			IsRecommendedFor = new List<ConditionProfile>();
+			IsRequiredFor = new List<ConditionProfile>();
 
 			ExternalResearch = new List<string>();
 			InLanguage = new List<string>();
@@ -585,7 +585,7 @@ namespace RA.Models.Input
 		/// ceterms:advancedStandingFrom
 		/// <seealso href="https://credreg.net/ctdl/terms/advancedStandingFrom"></seealso>
 		/// </summary>
-		public List<ConnectionProfile> AdvancedStandingFrom { get; set; }
+		public List<ConditionProfile> AdvancedStandingFrom { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity reduces the time or cost required to earn or complete the referenced credential, assessment, or learning opportunity.
@@ -593,35 +593,35 @@ namespace RA.Models.Input
 		/// ceterms:isAdvancedStandingFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isAdvancedStandingFor">isAdvancedStandingFor</seealso>
 		/// </summary>
-		public List<ConnectionProfile> IsAdvancedStandingFor { get; set; }
+		public List<ConditionProfile> IsAdvancedStandingFor { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity provides preparation for the credential, assessment, or learning opportunity being referenced.
 		/// ceterms:isPreparationFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isPreparationFor">isPreparationFor</seealso>
 		/// </summary>
-		public List<ConnectionProfile> IsPreparationFor { get; set; }
+		public List<ConditionProfile> IsPreparationFor { get; set; }
 
 		/// <summary>
 		/// It is recommended to earn or complete this credential, assessment, or learning opportunity before attempting to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// ceterms:isRecommendedFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isRecommendedFor">isRecommendedFor</seealso>
 		/// </summary>
-		public List<ConnectionProfile> IsRecommendedFor { get; set; }
+		public List<ConditionProfile> IsRecommendedFor { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity must be earned or completed prior to attempting to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// ceterms:isRequiredFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isRequiredFor"></seealso>
 		/// </summary>
-		public List<ConnectionProfile> IsRequiredFor { get; set; }
+		public List<ConditionProfile> IsRequiredFor { get; set; }
 
 		/// <summary>
 		///  Another credential, learning opportunity or assessment that provides preparation for this credential, learning opportunity or assessment.
 		/// ceterms:preparationFrom
 		/// <seealso href="https://credreg.net/ctdl/terms/preparationFrom"></seealso>
 		/// </summary>
-		public List<ConnectionProfile> PreparationFrom { get; set; }
+		public List<ConditionProfile> PreparationFrom { get; set; }
 		#endregion
 
 		#region -- Quality Assurance BY --

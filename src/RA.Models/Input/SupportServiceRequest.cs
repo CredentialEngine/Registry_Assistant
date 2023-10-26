@@ -20,8 +20,8 @@ namespace RA.Models.Input
     /// Resources and assistance that help people overcome barriers to succeed in their education and career goals.
     /// Support services can be provided at any stage of an individual's education or career, and may be targeted towards people with or without direct affiliation with an organization. The goal of support services is to provide people with the assistance they need to achieve their full potential. Examples of Support Services include career advice, job placement, childcare, transportation, tools, mentorship, counseling, and other forms of aid.
     /// </summary>
-    public class SupportService : BaseRequestClass
-    {
+    public class SupportService : BasePrimaryResource
+	{
 
 
         #region *** Required Properties ***

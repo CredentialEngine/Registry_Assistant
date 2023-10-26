@@ -44,6 +44,7 @@ namespace RA.Models.Input
 		///		W is the week designator that follows the value for the number of weeks.
 		///		D is the day designator that follows the value for the number of days
 		/// T is the time designator that precedes the time components of the representation.
+		/// Time durations cannot be included if there is non-time durations present!
 		///		H is the hour designator that follows the value for the number of hours.
 		///		M is the minute designator that follows the value for the number of minutes.
 		///		S is the second designator that follows the value for the number of seconds.
@@ -62,5 +63,20 @@ namespace RA.Models.Input
 		public decimal? Hours { get; set; }
 		public decimal? Minutes { get; set; }
 
-	}
+        public string Print()
+        {
+            var parts = new List<string>();
+            if ( Years > 0 ) { parts.Add( Years + " year" + ( Years == 1 ? "" : "s" ) ); }
+            if ( Months > 0 ) { parts.Add( Months + " month" + ( Months == 1 ? "" : "s" ) ); }
+            if ( Weeks > 0 ) { parts.Add( Weeks + " week" + ( Weeks == 1 ? "" : "s" ) ); }
+            if ( Days > 0 ) { parts.Add( Days + " day" + ( Days == 1 ? "" : "s" ) ); }
+            if ( Hours > 0 ) { parts.Add( Hours + " hour" + ( Hours == 1 ? "" : "s" ) ); }
+            if ( Minutes > 0 ) { parts.Add( Minutes + " minute" + ( Minutes == 1 ? "" : "s" ) ); }
+
+            if ( parts.Count > 0 )
+                return string.Join( ", ", parts );
+            else
+                return string.Empty;
+        }
+    }
 }

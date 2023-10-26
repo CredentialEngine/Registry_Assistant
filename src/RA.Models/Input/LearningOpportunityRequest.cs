@@ -52,12 +52,12 @@ namespace RA.Models.Input
 
 			Teaches = new List<CredentialAlignmentObject>();
 
-			AdvancedStandingFrom = new List<ConnectionProfile>();
-			IsAdvancedStandingFor = new List<ConnectionProfile>();
-			PreparationFrom = new List<ConnectionProfile>();
-			IsPreparationFor = new List<ConnectionProfile>();
-			IsRecommendedFor = new List<ConnectionProfile>();
-			IsRequiredFor = new List<ConnectionProfile>();
+			AdvancedStandingFrom = new List<ConditionProfile>();
+			IsAdvancedStandingFor = new List<ConditionProfile>();
+			PreparationFrom = new List<ConditionProfile>();
+			IsPreparationFor = new List<ConditionProfile>();
+			IsRecommendedFor = new List<ConditionProfile>();
+			IsRequiredFor = new List<ConditionProfile>();
 			InLanguage = new List<string>();
 			AvailableAt = new List<Place>();
 			CommonConditions = new List<string>();
@@ -226,29 +226,29 @@ namespace RA.Models.Input
 		public LanguageMapList AlternateName_Map { get; set; } = null;
 
 		#region Proposed collection helpers
-		/// <summary>
-		/// One or more collections of which this resource is to be a member.
-		/// The owner of the collection must be the same as the publisher of this resource. 
-		/// Actions
-		/// Proposed: 
-		///		if this resource includes at least one of DateEffective or ExpirationDate, then a CollectionMember will be added to the collection, otherwise just the URI will be added to Collection.HasMember.
-		///	Response:
-		///		NO, it is believed that we cannot arbitrarily take action based on the dates
-		/// </summary>
-		public List<string> IsMemberOfCollection { get; set; } = new List<string>();
-		/// <summary>
-		/// List of collection members for a collection where this learning opportunity is to be added.
-		/// The CollectionCTID is required. 
-		/// The ProxyFor property should be empty or contain the same CTID as this resource.
-		///		- actually it will just be ignored
-		///	TODO - can we get away with just one property?
-		/// </summary>
-		public List<CollectionMember> IsCollectionMemberOfCollection { get; set; } = new List<CollectionMember>();
+		///// <summary>
+		///// One or more collections of which this resource is to be a member.
+		///// The owner of the collection must be the same as the publisher of this resource. 
+		///// Actions
+		///// Proposed: 
+		/////		if this resource includes at least one of DateEffective or ExpirationDate, then a CollectionMember will be added to the collection, otherwise just the URI will be added to Collection.HasMember.
+		/////	Response:
+		/////		NO, it is believed that we cannot arbitrarily take action based on the dates
+		///// </summary>
+		//public List<string> IsMemberOfCollection { get; set; } = new List<string>();
+		///// <summary>
+		///// List of collection members for a collection where this learning opportunity is to be added.
+		///// The CollectionCTID is required. 
+		///// The ProxyFor property should be empty or contain the same CTID as this resource.
+		/////		- actually it will just be ignored
+		/////	TODO - can we get away with just one property?
+		///// </summary>
+		//public List<CollectionMember> IsCollectionMemberOfCollection { get; set; } = new List<CollectionMember>();
 
-		/// <summary>
-		/// List of Collections from which to remove the current resource
-		/// </summary>
-		public List<string> RemoveCollectionMember{ get; set; } = new List<string>();
+		///// <summary>
+		///// List of Collections from which to remove the current resource
+		///// </summary>
+		//public List<string> RemoveCollectionMember{ get; set; } = new List<string>();
 
 		#endregion
 
@@ -566,7 +566,7 @@ namespace RA.Models.Input
 		/// ceterms:advancedStandingFrom
 		/// <seealso href="https://credreg.net/ctdl/terms/advancedStandingFrom"></seealso>
 		/// </summary>
-		public List<ConnectionProfile> AdvancedStandingFrom { get; set; }
+		public List<ConditionProfile> AdvancedStandingFrom { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity reduces the time or cost required to earn or complete the referenced credential, assessment, or learning opportunity.
@@ -574,53 +574,53 @@ namespace RA.Models.Input
 		/// ceterms:isAdvancedStandingFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isAdvancedStandingFor">isAdvancedStandingFor</seealso>
 		/// </summary>
-		public List<ConnectionProfile> IsAdvancedStandingFor { get; set; }
+		public List<ConditionProfile> IsAdvancedStandingFor { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity provides preparation for the credential, assessment, or learning opportunity being referenced.
 		/// ceterms:isPreparationFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isPreparationFor">isPreparationFor</seealso>
 		/// </summary>
-		public List<ConnectionProfile> IsPreparationFor { get; set; }
+		public List<ConditionProfile> IsPreparationFor { get; set; }
 
 		/// <summary>
 		/// It is recommended to earn or complete this credential, assessment, or learning opportunity before attempting to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// ceterms:isRecommendedFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isRecommendedFor">isRecommendedFor</seealso>
 		/// </summary>
-		public List<ConnectionProfile> IsRecommendedFor { get; set; }
+		public List<ConditionProfile> IsRecommendedFor { get; set; }
 
 		/// <summary>
 		/// This credential, assessment, or learning opportunity must be earned or completed prior to attempting to earn or complete the referenced credential, assessment, or learning opportunity.
 		/// ceterms:isRequiredFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isRequiredFor"></seealso>
 		/// </summary>
-		public List<ConnectionProfile> IsRequiredFor { get; set; }
+		public List<ConditionProfile> IsRequiredFor { get; set; }
 
 		/// <summary>
 		///  Another credential, learning opportunity or assessment that provides preparation for this credential, learning opportunity or assessment.
 		/// ceterms:preparationFrom
 		/// <seealso href="https://credreg.net/ctdl/terms/preparationFrom"></seealso>
 		/// </summary>
-		public List<ConnectionProfile> PreparationFrom { get; set; }
+		public List<ConditionProfile> PreparationFrom { get; set; }
 		#endregion
 
 		#region -- Quality Assurance BY --
 		/// <summary>
-		/// List of Organizations that accredit this credential
+		/// List of Organizations that accredit this resource
 		/// </summary>
 		public List<OrganizationReference> AccreditedBy { get; set; }
 
 		/// <summary>
-		/// List of Organizations that approve this credential
+		/// List of Organizations that approve this resource
 		/// </summary>
 		public List<OrganizationReference> ApprovedBy { get; set; }
 		/// <summary>
-		/// List of Organizations that recognize this credential
+		/// List of Organizations that recognize this resource
 		/// </summary>
 		public List<OrganizationReference> RecognizedBy { get; set; }
 		/// <summary>
-		/// List of Organizations that regulate this credential
+		/// List of Organizations that regulate this resource
 		/// </summary>
 		public List<OrganizationReference> RegulatedBy { get; set; }
 		#endregion

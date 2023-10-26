@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 using RA.Models;
 using RA.Models.Input;
-using APIRequestEntity = RA.Models.Input.WorkRole;
+using APIRequestResource = RA.Models.Input.WorkRole;
 using APIRequest = RA.Models.Input.WorkRoleRequest;
 
 namespace RA.SamplesForDocumentation.Employment
@@ -31,7 +31,15 @@ namespace RA.SamplesForDocumentation.Employment
 			//create a new CTID (then save for reuse).
 			var entityCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
 
-			var myData = new WorkRole()
+			//create request object.
+			//This holds the resource being published and the identifier( CTID ) for the publishing organization
+			var myRequest = new APIRequest()
+			{
+				DefaultLanguage = "en-US",
+				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
+			};
+
+			var myData = new APIRequestResource()
 			{
 				Name = "Acme WorkRole",
 				CTID = entityCTID,
@@ -42,13 +50,8 @@ namespace RA.SamplesForDocumentation.Employment
 			//
 
 
-			//This holds the WorkRole and the identifier (CTID) for the owning organization
-			var myRequest = new APIRequest()
-			{
-				WorkRole = myData,
-				DefaultLanguage = "en-US",
-				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
-			};
+			//Add the WorkRole to the request
+			myRequest.WorkRole = myData;
 
 			//create a literal to hold data to use with ARC
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
