@@ -52,8 +52,8 @@ namespace RA.SamplesForDocumentation
 			};
 			myData.VersionIdentifier.Add( new IdentifierValue()
 			{
-				IdentifierTypeName = "MyVersion",
-				IdentifierValueCode = "2023-09-01"        //Alphanumeric string identifier of the entity
+				IdentifierTypeName = "Current Version",
+				IdentifierValueCode = "2023: abbc123"        //Alphanumeric string identifier of the version
 			} );
 			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.
 			// The ownedBY CTID is typically the same as the CTID for the data owner.
