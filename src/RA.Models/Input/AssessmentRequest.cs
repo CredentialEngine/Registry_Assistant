@@ -9,10 +9,9 @@ namespace RA.Models.Input
 		{
 			Assessment = new Assessment();
 		}
-
 		public Assessment Assessment { get; set; }
-
 	}
+
 	/// <summary>
 	/// Assessment request input class
 	/// History
@@ -72,7 +71,6 @@ namespace RA.Models.Input
 			CommonConditions = new List<string>();
 			CommonCosts = new List<string>();
 			VersionIdentifier = new List<IdentifierValue>();
-
 		}
 		/// <summary>
 		/// Helper property for use with blank nodes
@@ -90,8 +88,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 		/// <summary>
-		/// Assessment Description 
-		/// Required
+		/// Profile Description 
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>
@@ -130,28 +128,6 @@ namespace RA.Models.Input
 		public List<OrganizationReference> OfferedBy { get; set; }
 		#endregion
 
-		#region at least one of the following
-
-		/// <summary>
-		/// Online location where the credential, assessment, or learning opportunity can be pursued.
-		/// URL
-		/// </summary>
-		public List<string> AvailableOnlineAt { get; set; } 
-
-		/// <summary>
-		/// Listing of online and/or physical locations where a credential can be pursued.
-		/// URL
-		/// </summary>
-		public List<string> AvailabilityListing { get; set; } 
-
-
-		/// <summary>
-		/// Physical location where the credential, assessment, or learning opportunity can be pursued.
-		/// Place
-		/// </summary>
-		public List<Place> AvailableAt { get; set; }
-		#endregion
-
 		#endregion
 
 		#region *** Recommended Benchmark ***
@@ -186,6 +162,28 @@ namespace RA.Models.Input
 		/// </summary>
 		public string DeliveryTypeDescription { get; set; }
 		public LanguageMap DeliveryTypeDescription_Map { get; set; } = new LanguageMap();
+		#endregion
+
+		#region Locations
+		//23-11-13 - there is no longer a requirement to have at least one of the following
+		/// <summary>
+		/// Online location where the credential, assessment, or learning opportunity can be pursued.
+		/// URL
+		/// </summary>
+		public List<string> AvailableOnlineAt { get; set; }
+
+		/// <summary>
+		/// Listing of online and/or physical locations where a credential can be pursued.
+		/// URL
+		/// </summary>
+		public List<string> AvailabilityListing { get; set; }
+
+
+		/// <summary>
+		/// Physical location where the credential, assessment, or learning opportunity can be pursued.
+		/// Place
+		/// </summary>
+		public List<Place> AvailableAt { get; set; }
 		#endregion
 
 		//=========== optional ================================
@@ -328,11 +326,18 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> HasOffering { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Reference to a relevant support service available for this resource.
+		/// <summary>
+		/// Rubric related to this resource.
+		/// <see cref="https://credreg.net/ctdl/terms/hasRubric"/>
+		/// ceterms:hasRubric
+		/// </summary>
+		public List<string> HasRubric { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Reference to a relevant support service available for this resource.
 		/// List of CTIDs for published resources
-        /// </summary>
-        public List<string> HasSupportService { get; set; } = new List<string>();
+		/// </summary>
+		public List<string> HasSupportService { get; set; } = new List<string>();
         //
 
         /// <summary>
@@ -341,6 +346,11 @@ namespace RA.Models.Input
         /// ceterms:identifier
         /// </summary>
         public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		public string InCatalog { get; set; }
 
 		/// <summary>
 		/// Is Non-Credit
@@ -402,6 +412,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap ProcessStandardsDescription_Map { get; set; } = new LanguageMap();
 
+
+		/// <summary>
+		/// This resource provides transfer value for the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> ProvidesTransferValueFor { get; set; } = new List<string>();
+
+		/// <summary>
+		/// This resource receives transfer value from the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> ReceivesTransferValueFrom { get; set; } = new List<string>();
 
 		#region Occupations, Industries, and instructional programs
 		//=====================================================================

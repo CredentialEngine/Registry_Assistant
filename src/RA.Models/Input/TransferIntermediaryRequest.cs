@@ -64,6 +64,16 @@ namespace RA.Models.Input
 		public string CTID { get; set; }
 
 		/// <summary>
+		/// Name or title of the resource.
+		/// Required
+		/// </summary>
+		public string Name { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
 		/// Set of alpha-numeric symbols as defined by the body responsible for this resource that uniquely identifies this resource and supports its discovery and use. 
 		/// Not Required
 		/// </summary>
@@ -76,17 +86,7 @@ namespace RA.Models.Input
 		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 
 		/// <summary>
-		/// Name or title of the resource.
-		/// Required
-		/// </summary>
-		public string Name { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
-
-		/// <summary>
-		/// Transfer Value Profile Description 
+		/// Transfer Intermediary Description 
 		/// Not Required
 		/// </summary>
 		public string Description { get; set; }

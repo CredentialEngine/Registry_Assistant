@@ -33,11 +33,11 @@ namespace RA.Models.Input.profiles.QData
         /// </summary>
         public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
-        /// <summary>
-        /// Description
-        /// Required This is new. Need to provide a template for legacy resources. 
-        /// </summary>
-        public string Description { get; set; }
+		/// <summary>
+		/// Description
+		/// REQUIRED and must be a minimum of 15 characters.
+		/// </summary>
+		public string Description { get; set; }
         /// <summary>
         /// LanguageMap for Description
         /// </summary>

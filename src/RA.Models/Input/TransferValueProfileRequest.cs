@@ -64,7 +64,7 @@ namespace RA.Models.Input
 		public LanguageMap Name_Map { get; set; } = null;
 		/// <summary>
 		/// Transfer Value Profile Description 
-		/// Required
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>
@@ -115,6 +115,11 @@ namespace RA.Models.Input
 		/// Definition:	en-US: Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		public string InCatalog { get; set; }
 
 
 		/// <summary>

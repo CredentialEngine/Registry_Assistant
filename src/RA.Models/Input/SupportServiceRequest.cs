@@ -46,11 +46,11 @@ namespace RA.Models.Input
         public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 
-        /// <summary>
-        /// Statement, characterization or account of the entity. 
-        /// Required
-        /// </summary>
-        public string Description { get; set; }
+		/// <summary>
+		/// Statement, characterization or account of the entity. 
+		/// REQUIRED and must be a minimum of 15 characters.
+		/// </summary>
+		public string Description { get; set; }
         /// <summary>
         /// Alternately can provide a language map
         /// </summary>

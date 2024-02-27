@@ -21,8 +21,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 		/// <summary>
-		/// Description 
-		/// Required
+		/// Profile Description 
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>

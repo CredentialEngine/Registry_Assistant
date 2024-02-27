@@ -24,13 +24,16 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Cost Details - A URL
-		/// Required
+		/// 23-11-13 - NO LONGER required
+		/// Optional
 		/// </summary>
 		public string CostDetails { get; set; }
 
 		/// <summary>
-		/// Description of cost profile
-		/// Required
+		/// Profile description 
+		/// 23-11-13 - NO LONGER required
+		/// Optional
+		/// Minimum of 15 characters when present, but should be clear.
 		/// </summary>
 		public string Description { get; set; }
 

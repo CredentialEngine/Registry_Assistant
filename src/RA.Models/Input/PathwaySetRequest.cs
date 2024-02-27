@@ -38,7 +38,7 @@ namespace RA.Models.Input
 		public string CTID { get; set; }
 
 		/// <summary>
-		/// Pathway Name
+		/// Pathway Set Name
 		/// </summary>
 		public string Name { get; set; }
 		/// <summary>
@@ -46,8 +46,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 		/// <summary>
-		/// Pathway Description 
-		/// Required
+		/// Pathway Set Description 
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>

@@ -128,7 +128,7 @@ namespace RA.Models.Input
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 		/// <summary>
 		/// Description 
-		/// Required
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>
@@ -462,6 +462,9 @@ namespace RA.Models.Input
 		public List<EntityReference> Approves { get; set; }
 		/// <summary>
 		/// Resource that the agent recommends, endorses, indicates preference for, or otherwise provides a positive judgment.
+		/// https://credreg.net/ctdl/terms/recognizes
+		/// range: 
+		/// ceasn:CompetencyFramework, ceterms:AssessmentProfile, ceterms:Course, all Credentials, all Organizations, 		ceterms:LearningOpportunityProfile, ceterms:LearningProgram, ceterms:TransferValueProfile
 		/// </summary>
 		public List<EntityReference> Recognizes { get; set; }
 		/// <summary>

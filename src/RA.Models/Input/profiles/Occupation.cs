@@ -13,7 +13,7 @@ namespace RA.Models.Input
 	/// - NAME
 	/// - Description
 	/// </summary>
-	public class Occupation : BasePrimaryResource
+	public class Occupation : BaseEmploymentToWorkObject
 	{
 		/// <summary>
 		/// Helper property for use with blank nodes
@@ -40,8 +40,8 @@ namespace RA.Models.Input
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
-		/// Occupation description 
-		/// Required
+		/// Profile Description 
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 
@@ -84,6 +84,7 @@ namespace RA.Models.Input
 		/// ceterms:classification
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
+		
 		/// <summary>
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
 		/// ceterms:codedNotation

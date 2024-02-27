@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using MJ = RA.Models.JsonV2;
+
 namespace RA.Models.Input
 {
     /// <summary>
@@ -15,6 +17,13 @@ namespace RA.Models.Input
         /// Collection of tasks and competencies that embody a particular function in one or more jobs.
         /// </summary>
         public WorkRole WorkRole { get; set; } = new WorkRole();
+
+
+        /// <summary>
+        /// WorkRole already formatted as JSON-LD
+        /// ONLY USED WITH PUBLISH LIST
+        /// </summary>
+        public MJ.WorkRole FormattedWorkRole { get; set; } = new MJ.WorkRole();
     }
 
     /// <summary>

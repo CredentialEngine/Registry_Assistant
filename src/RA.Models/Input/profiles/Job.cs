@@ -9,7 +9,7 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Set of responsibilities based on work roles within an occupation as defined by an employer.
 	/// </summary>
-	public class Job : BasePrimaryResource
+	public class Job : BaseEmploymentToWorkObject
 	{
 		/// <summary>
 		/// Helper property for use with blank nodes
@@ -38,8 +38,8 @@ namespace RA.Models.Input
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
-		/// Job description 
-		/// Required
+		/// Profile Description 
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 

@@ -29,11 +29,11 @@ namespace RA.Models.Input
         /// </summary>
         public string CTID { get; set; }
 
-        /// <summary>
-        /// Description of this profile
-        /// Required
-        /// </summary>
-        public string Description { get; set; }
+		/// <summary>
+		/// Profile Description 
+		/// REQUIRED and must be a minimum of 15 characters.
+		/// </summary>
+		public string Description { get; set; }
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
         /// <summary>

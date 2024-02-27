@@ -21,8 +21,8 @@ namespace RA.Models.Input
 			TargetLearningOpportunity = new List<EntityReference>();
 		}
 		/// <summary>
-		/// Process Profile Description
-		/// REQUIRED
+		/// Profile Description 
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
         /// <summary>

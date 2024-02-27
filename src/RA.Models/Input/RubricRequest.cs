@@ -46,6 +46,7 @@ namespace RA.Models.Input
 	/// </summary>
 	public class Rubric
 	{
+		
 		public Rubric()
 		{
 		}
@@ -66,7 +67,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// An account of the resource.
-		/// Required
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
@@ -181,13 +182,6 @@ namespace RA.Models.Input
         /// </summary>
         public string DateModified { get; set; }
 
-        ///// <summary>
-        ///// Effective date of this resource's content.
-        ///// Only allowing date (yyyy-mm-dd), no time. 
-        ///// xsd:date
-        ///// </summary>
-        //public string DateEffective { get; set; }
-
         /// <summary>
         /// xsd:dateTime
         /// </summary>
@@ -207,13 +201,6 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> DerivedFrom { get; set; }
 
-        ///// <summary>
-        ///// Date beyond which the resource is no longer offered or available.
-        ///// Only allowing date (yyyy-mm-dd), no time. 
-        ///// xsd:date
-        ///// ceterms:expirationDate
-        ///// </summary>
-        //public string ExpirationDate { get; set; }
 
         //????these are URIs/CTIDs? - could imply RubricCriterion is to be a top level class NO CTID yet
         /// <summary>
@@ -226,6 +213,13 @@ namespace RA.Models.Input
 		/// List of blank node identifiers that refer to an entry in request.RubricLevel
 		/// </summary>
 		public List<string> HasRubricLevel { get; set; } = new List<string>();
+
+		///// <summary>
+		///// Has Criterion Category
+		///// Resource referenced by the Rubric that defines categories for clustering logical sets of RubricCriterion.
+		///// ?List of URIs? or concepts? Oh, just CriterionCategory. So the latter have CTIDs.
+		///// </summary>
+		//public List<string> HasCriterionCategory { get; set; } = new List<string>();
 
 		/// <summary>
 		///  Indicates the Concept Scheme for clustering logical sets of Rubric Criteria.
@@ -258,6 +252,11 @@ namespace RA.Models.Input
 		/// ceterms:identifier
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		public string InCatalog { get; set; }
 
 
 		/// <summary>
@@ -427,16 +426,7 @@ namespace RA.Models.Input
     }
 	public class RubricLevel
 	{
-		/*
-asn:hasProgressionLevel		 * 
-d	ceasn:codedNotation
-d	ceasn:description
-ceasn:hasCriterionLevel
-ceasn:listID
-d	ceasn:name
 
-
-		*/
 		public RubricLevel()
 		{
 		}
@@ -486,22 +476,7 @@ d	ceasn:name
 	/// </summary>
 	public class RubricCriterion
 	{
-		/*
-		x	asn:hasProgressionLevel
-		x	ceasn:codedNotation	
-		x	ceasn:description
-		x	ceasn:hasCriterionCategory		concept with no concept scheme
-		x	ceasn:hasCriterionLevel			=> ceasn:CriterionLevel
-		x	ceasn:listID
-		x	ceasn:name
-		x	ceasn:weight
-		x	ceterms:ctid
-		x	ceterms:targetCompetency
-		x	ceterms:targetTask
 
-		 * 
-		 * 
-		 */
 		public RubricCriterion()
 		{
 		}
@@ -566,81 +541,17 @@ d	ceasn:name
 		/// Does that mean CAO should be a blank node?
 		/// </summary>
 		public List<CredentialAlignmentObject> TargetCompetency { get; set; }
-		#endregion`
+		#endregion
 
 
 	}
-	/*
-	/// <summary>
-	/// Resource that defines categories for clustering logical sets of RubricCriterion.
-	/// </summary>
-	[Obsolete]
-	public class CriterionCategory
-	{
-		public CriterionCategory()
-		{
-		}
-
-		//[JsonProperty( "ceterms:ctid" )]
-		public string CTID { get; set; }
-
-		/// <summary>
-		/// An account of the resource.
-		/// </summary>
-		//[JsonProperty( "dcterms:description" )]
-		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
-
-		//[JsonProperty( "dcterms:Language" )]
-		public List<string> Language { get; set; } = new List<string>();
-
-		/// <summary>
-		/// A name given to the resource.
-		/// </summary>
-		//[JsonProperty( "dcterms:title" )]
-		public string Title { get; set; }
-		public LanguageMap Title_Map { get; set; } = new LanguageMap();
-
-		/// <summary>
-		/// Resource referenced is a Rubric to which this CriterionCategory belongs.
-		/// List of Rubric URIs
-		/// </summary>
-		//[JsonProperty( "asn:criterionCategoryOf" )]
-		public List<string> CriterionCategoryOf { get; set; } = new List<string>();
-
-		/// <summary>
-		/// RubricCriterian referenced defines a principle or standard to be met that demonstrates quality in performance of a task or obtaining an objective.
-		/// List of RubricCriterian
-		/// LIKELY REQUIRED??
-		/// </summary>
-		//[JsonProperty( "asn:hasCriterion" )]
-		public List<string> HasCriterion { get; set; } = new List<string>();
-
-	}
-	*/
+	
     /// <summary>
     /// Resource description of a level of performance based on a RubricCriterion.
     /// </summary>
     public class CriterionLevel
 	{
-		/*
-			ceasn:codedNotation			x
-			ceasn:benchmarkLabel		x
-			ceasn:benchmarkText			x
-			ceasn:feedback				x
-			ceasn:hasCriterionLevel		x
-			asn:hasProgressionLevel		x
-			ceasn:isBinaryEvaluation	x
-			ceasn:listID			x
-			qdata:maxPercentage	x
-			schema:maxValue		x
-			qdata:minPercentage	x
-			schema:minValue		x
-			qdata:percentage	x	
-			schema:value		x
 
-
-		 */
 		public CriterionLevel()
 		{
 		}
@@ -653,6 +564,7 @@ d	ceasn:name
 
 		/// <summary>
 		/// Label for the level achieved as defined by the Rubric Criterion.
+		/// Required
 		/// </summary>
 		public string BenchmarkLabel { get; set; }
 		public LanguageMap BenchmarkLabel_Map { get; set; } = new LanguageMap();

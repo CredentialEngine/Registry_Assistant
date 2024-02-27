@@ -17,7 +17,11 @@ namespace RA.Models.Input
 		public string DateEffective { get; set; }
 		public string ExpirationDate { get; set; }
 
-		//NOT required
+		/// <summary>
+		/// Profile description 
+		/// Optional
+		/// Minimum of 15 characters when present, but should be clear.
+		/// </summary>
 		public string Description { get; set; }
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 

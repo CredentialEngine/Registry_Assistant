@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
-    /// <summary>
-    /// Credentialing Action
-    /// One of:
-    /// ceterms:AccreditAction 
-    /// ceterms:AdvancedStandingAction 
-    /// ceterms:ApproveAction 
-    /// ceterms:CredentialingAction 
-    /// ceterms:OfferAction 
-    /// ceterms:RecognizeAction 
-    /// ceterms:RegulateAction 
-    /// ceterms:RenewAction 
-    /// ceterms:RevokeAction 
+	/// <summary>
+	/// Credentialing Action
+	/// One of:
+	/// ceterms:AccreditAction 
+	/// ceterms:AdvancedStandingAction 
+	/// ceterms:ApproveAction 
+	/// ceterms:OfferAction 
+	/// ceterms:RecognizeAction 
+	/// ceterms:RegistrationAction 
+	/// ceterms:RegulateAction 
+	/// ceterms:RenewAction 
+	/// ceterms:RevokeAction 
 	/// ceterms:RightsAction
-    /// ceterms:WorkforceDemandAction
-    /// </summary>
-    public class CredentialingAction
+	/// ceterms:WorkforceDemandAction
+	/// </summary>
+	public class CredentialingAction
 	{
 		/// <summary>
 		/// Type of credentialing action
@@ -29,15 +29,18 @@ namespace RA.Models.Input
 		/// ceterms:AccreditAction 
 		/// ceterms:AdvancedStandingAction 
 		/// ceterms:ApproveAction 
-		/// ceterms:CredentialingAction		
 		/// ceterms:OfferAction 
 		/// ceterms:RecognizeAction 
+		/// ceterms:RegistrationAction 
 		/// ceterms:RegulateAction 
 		/// ceterms:RenewAction 
 		/// ceterms:RevokeAction 
 		/// ceterms:RightsAction
 		/// ceterms:WorkforceDemandAction
 		/// REQUIRED
+		/// 
+		/// NOTE:
+		/// ceterms:CredentialingAction	is the super class and cannot be published.
 		/// </summary>
 		public string Type { get; set; }
 
@@ -64,11 +67,23 @@ namespace RA.Models.Input
 		/// REQUIRED
 		/// Provide the CTID for a participant in the Credential Registry or provide minimum data where not in the registry.
 		/// </summary>
-		public List<OrganizationReference> ActingAgent { get; set; } 
+		public List<OrganizationReference> ActingAgent { get; set; }
+
 
 		/// <summary>
-		/// Accredit Action Description
+		/// Action Name
 		/// REQUIRED
+		/// </summary>
+		public string Name { get; set; }
+
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Action Description
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 
@@ -97,9 +112,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Object
 		/// Object upon which the action is carried out, whose state is kept intact or changed.
-		/// An EntityReference for Credentials, AssessmentProfile, or LearningOpportunity Profile
-		/// TODO - handle coded notation in a blank node
-		/// TODO - implement blank node process using ReferenceObjects
+		/// A reference for Credentials, AssessmentProfile, or LearningOpportunity Profile
+		/// Input: a CTID or a blank node Id where the bnode will be added in the request class ReferenceObjects property.
 		/// </summary>
 		public string Object { get; set; } 
 
@@ -107,7 +121,6 @@ namespace RA.Models.Input
 		/// Participant
 		/// Co-agents that participated in the action indirectly.
 		/// Provide the CTID for a participant in the Credential Registry or provide minimum data where not in the registry.
-		/// LIST????
 		/// </summary>
 		public List<OrganizationReference> Participant { get; set; } = new List<OrganizationReference>();
 
@@ -136,7 +149,6 @@ namespace RA.Models.Input
         public List<JurisdictionProfile> Jurisdiction { get; set; }
 
 
-
 		/// <summary>
 		/// Resulting Award
 		/// Awarded credential resulting from an action.
@@ -147,5 +159,19 @@ namespace RA.Models.Input
 		/// NOT IMPLEMENTED
 		/// </summary>
 		public string ResultingAward { get; set; }
+
+
+		/// <summary>
+		/// Outcome produced in the action.
+		/// Domain: only ceterms:WorkforceDemandAction
+		/// Range: ceterms:CredentialAlignmentObject
+		/// NOT CURRENTLY USED
+		/// </summary>
+		public List<CredentialAlignmentObject> Result { get; set; }
+
+		/// <summary>
+		/// Image URL
+		/// </summary>
+		public string Image { get; set; }
 	}
 }

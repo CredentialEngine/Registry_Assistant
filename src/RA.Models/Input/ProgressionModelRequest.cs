@@ -124,7 +124,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Progression Model description
-		/// REQUIRED
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 
@@ -198,7 +198,8 @@ namespace RA.Models.Input
 		/// Original Source of Progression Model
 		/// xsd:anyURI
 		/// </summary>
-		public string Source { get; set; }
+		public List<string> Source { get; set; } = new List<string>();
+		
 
 	}
 

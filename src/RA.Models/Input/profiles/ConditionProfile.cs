@@ -9,6 +9,7 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Input class for a condition profile
 	/// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
+	/// 2023-11-11 Description is NO longer required.
 	/// </summary>
 	public class ConditionProfile
 	{
@@ -23,7 +24,6 @@ namespace RA.Models.Input
 			AudienceType = new List<string>();
 			Condition = new List<string>();
 			SubmissionOf = new List<string>();
-
 			AlternativeCondition = new List<ConditionProfile>();
 
 			//ApplicableAudienceType = new List<string>();
@@ -47,7 +47,8 @@ namespace RA.Models.Input
 		public LanguageMap Name_Map { get; set; } = null;
 		/// <summary>
 		/// Condition description 
-		/// Required. Minimum of 10 characters, but should be clear.
+		/// Recommended. (2023-11-11 Description is NO longer required.)
+		/// Minimum of 15 characters when present, but should be clear.
 		/// </summary>
 		public string Description { get; set; }
 
@@ -59,8 +60,9 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Organization that asserts this condition
 		/// This should be single, but as CTDL defines as multi-value, need to handle a List
+		/// Defined as an object to handle legacy use.
 		/// </summary>
-		public List<OrganizationReference> AssertedBy { get; set; } = null;
+		public object AssertedBy { get; set; } = null;
 
 		/// <summary>
 		///  Webpage that describes this condition
@@ -153,11 +155,11 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Years of relevant experience.
 		/// </summary>
-		public decimal YearsOfExperience { get; set; }
+		public decimal? YearsOfExperience { get; set; }
 		/// <summary>
 		/// Measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
 		/// </summary>
-		public decimal Weight { get; set; }
+		public decimal? Weight { get; set; }
 
 		//external classes =====================================
 		/// <summary>
@@ -193,26 +195,28 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<EntityReference> TargetLearningOpportunity { get; set; }
 
-		//
-		/// <summary>
-		/// A competency relevant to the condition being described.
-		/// targetCompetency is typically a competency required for the parent of this condition profile
-		/// </summary>
-		public List<CredentialAlignmentObject> TargetCompetency { get; set; }
+        //
+        /// <summary>
+        /// A competency relevant to the resource being described.
+        /// targetCompetency is typically a competency required for the parent of this condition profile
+        /// TODO - the range for targetCompetency is a credentialAlignmentObject or Compentency. Need to handle the latter.
+		/// Does that mean CAO should be a blank node?
+        /// </summary>
+        public List<CredentialAlignmentObject> TargetCompetency { get; set; }
 
         /// <summary>
         /// Occupation that is the focus of a condition, process or another learning opportunity.
         /// Only valid for 
         ///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
         /// </summary>
-        public List<EntityReference> TargetJob { get; set; }
+        public List<EntityReference> TargetJob { get; set; } = new List<EntityReference>();
 
         /// <summary>
         /// Occupation that is the focus of a condition, process or another learning opportunity.
         /// Only valid for 
         ///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
         /// </summary>
-        public List<EntityReference> TargetOccupation { get; set; }
+        public List<EntityReference> TargetOccupation { get; set; } = new List<EntityReference>();
 
         /// <summary>
         /// List of Alternate Names for this resource
@@ -232,16 +236,30 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> TargetCompetencyFramework { get; set; }
 
+        /// <summary>
+        /// UNDER CONSTRUCTION, NOT FOR USE YET
+        /// The concept is that the property would be a list of CTIDs for competencies in the registry.
+        /// The API would validate the the competencies are valid, then format TargetCompetency(the credentialAlignmentObject list) simplifing the task for the publisher.
+        /// Under consideration is enabling this feature by:
+		///		- Continuing to use TargetCompetency
+		///		- Recommend that the publisher just provide a CTID in targetNode, and no other data (as a signal to use the CTID to get and format the CAO.
+		///		
+        /// </summary>
+        public List<string> TargetCompetencies { get; set; } = new List<string>();
+
         #endregion
     }
 
-    /// <summary>
-    /// The Connection profile is a subset of a condition profile. 
-    /// A separate profile is used by the API to clarify the subset of properties are applicable
-    /// 2023-03-28 Renamed to ConnectionProfile to make the purpose clearer? The old class is retained below ConnectionProfile for legacy purposes.
-    /// </summary>
-    public class ConnectionProfile
+	/// <summary>
+	/// The Connection profile is a subset of a condition profile. 
+	/// A separate profile is used by the API to clarify the subset of properties are applicable
+	/// 2023-03-28 Renamed to ConnectionProfile to make the purpose clearer? The old class is retained below ConnectionProfile for legacy purposes.
+	/// 2023-10-23 Moving to make this property obsolete, and just use ConditionProfile.
+	/// </summary>
+	[Obsolete]
+	public class ConnectionProfile : ConditionProfile
 	{
+		/*
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -281,7 +299,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
 		/// </summary>
-		public decimal Weight { get; set; }
+		public decimal? Weight { get; set; }
 
 		/// <summary>
 		/// Credit Information
@@ -320,19 +338,26 @@ namespace RA.Models.Input
         /// Only valid for 
         ///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
         /// </summary>
-        public List<EntityReference> TargetJob{ get; set; }
+        public List<EntityReference> TargetJob { get; set; } = new List<EntityReference>();
 
         /// <summary>
         /// Occupation that is the focus of a condition, process or another learning opportunity.
         /// Only valid for 
         ///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
         /// </summary>
-        public List<EntityReference> TargetOccupation { get; set; } 
+        public List<EntityReference> TargetOccupation { get; set; } = new List<EntityReference>();
 
+		/// <summary>
+		/// A competency relevant to the condition being described.
+		/// targetCompetency is typically a competency required for the parent of this condition profile
+		/// </summary>
+		public List<CredentialAlignmentObject> TargetCompetency { get; set; } = new List<CredentialAlignmentObject>();
+
+		*/
     }
 	//retain in order to not mess up previous use
-    public class Connections : ConnectionProfile
-    {
+    public class Connections : ConditionProfile
+	{
 
     }
 }

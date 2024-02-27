@@ -11,7 +11,7 @@ namespace RA.Models.Input
 	/// NOTES:
 	/// IsMemberOf - this is an inverse property. It would not be published with a WorkRole.
 	/// </summary>
-	public class WorkRole : BasePrimaryResource
+	public class WorkRole : BaseEmploymentToWorkObject
 	{
         /// <summary>
         /// Helper property for use with blank nodes
@@ -49,7 +49,9 @@ namespace RA.Models.Input
 
 
 		/// <summary>
-		/// WorkRole description 
+		/// Profile Description 
+		/// Optional
+		/// Minimum of 15 characters when present, but should be clear.
 		/// </summary>
 		public string Description { get; set; }
 

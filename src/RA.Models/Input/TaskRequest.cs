@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MJ = RA.Models.JsonV2;
 
 namespace RA.Models.Input
 {
@@ -12,6 +13,12 @@ namespace RA.Models.Input
 		/// Specific activity, typically related to performing a function or achieving a goal.
 		/// </summary>
 		public Task Task { get; set; } = new Task();
+
+		/// <summary>
+		/// Task already formatted as JSON-LD
+		/// ONLY USED WITH PUBLISH LIST
+		/// </summary>
+		public MJ.Task FormattedTask { get; set; } = new MJ.Task();
 
 	}
 	/// <summary>

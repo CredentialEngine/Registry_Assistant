@@ -45,6 +45,7 @@ namespace RA.Models.Input
 
     }
 
+	
 	/// <summary>
 	/// Proposed option to publish a document already formatted as CTDL JSON-LD.
 	/// </summary>
@@ -94,12 +95,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Additional Classification
-		/// List of concepts that don't exist in the registry. Will be published as blank nodes
-		/// OR should input be a list of Concepts?
-		/// </summary>
-		public List<CredentialAlignmentObject> AdditionalClassification { get; set; } = new List<CredentialAlignmentObject>();
 		#endregion
 
 		/// <summary>
@@ -121,7 +116,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// A short description of this resource.
-		/// Required
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>
@@ -310,6 +305,8 @@ namespace RA.Models.Input
 		/// Type for this class
 		/// </summary>
 		public string Type { get; set; } = "ceterms:CollectionMember";
+
+
 
 		/// <summary>
 		/// A short description of this resource.

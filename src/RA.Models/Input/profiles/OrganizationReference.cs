@@ -64,6 +64,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Description of the entity (optional)
+		/// Minimum of 15 characters when present, but should be clear.
 		/// This should be the general description of the entity. 
 		/// For example, for an organization, the description should be about the organization specifically not, how the organization is related to, or interacts with the refering entity. 
 		/// </summary>

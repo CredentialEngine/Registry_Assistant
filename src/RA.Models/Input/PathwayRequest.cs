@@ -69,7 +69,7 @@ namespace RA.Models.Input
 		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 		/// <summary>
 		/// Pathway Description 
-		/// Required
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>
@@ -445,7 +445,7 @@ namespace RA.Models.Input
 		///			If perceived to be useful, then provide a blank node id (a Guid) in proxyFor and add the blank node resource to ResourcesObjects
 		/// </summary>
 		public string ProxyFor { get; set; }
-		public string ProxyForList { get; set; }
+		public List<string> ProxyForList { get; set; }
 
 		#endregion
 

@@ -19,12 +19,5 @@ namespace RA.Models.Input
 		[JsonProperty( "@id" )]
 		public string BlankNodeId { get; set; }
 
-		/// <summary>
-		/// Legacy format for CTID
-		/// original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
-		/// </summary>
-		public string Ctid { get; set; }
-
-
 	}
 }

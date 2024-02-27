@@ -11,7 +11,7 @@ namespace RA.Models.Input
 	/// NOTES:
 	/// IsMemberOf - this is an inverse property. It would not be published with a Task.
 	/// </summary>
-	public class Task : BasePrimaryResource
+	public class Task : BaseEmploymentToWorkObject
 	{
 		/// <summary>
 		/// Helper property for use with blank nodes
@@ -29,8 +29,8 @@ namespace RA.Models.Input
 		public string CTID { get; set; }
 
 		/// <summary>
-		/// Task description 
-		/// Required
+		/// Profile Description 
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 

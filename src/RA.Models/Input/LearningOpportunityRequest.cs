@@ -84,7 +84,7 @@ namespace RA.Models.Input
 		public LanguageMap Name_Map { get; set; } = null;
 		/// <summary>
 		/// Description 
-		/// Required
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>
@@ -123,7 +123,6 @@ namespace RA.Models.Input
         public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
 
         #region at least one of
-
         /// <summary>
         /// Organization that owns this resource
         /// </summary>
@@ -133,26 +132,6 @@ namespace RA.Models.Input
 		/// Organization(s) that offer this resource
 		/// </summary>
 		public List<OrganizationReference> OfferedBy { get; set; } = new List<Input.OrganizationReference>();
-		#endregion
-
-		#region at least one of the following
-		/// <summary>
-		/// Online location where the credential, assessment, or learning opportunity can be pursued.
-		/// URL
-		/// </summary>
-		public List<string> AvailableOnlineAt { get; set; }
-
-		/// <summary>
-		/// Listing of online and/or physical locations where a credential can be pursued.
-		/// URL
-		/// </summary>
-		public List<string> AvailabilityListing { get; set; }
-
-		/// <summary>
-		/// Physical location where the credential, assessment, or learning opportunity can be pursued.
-		/// Place
-		/// </summary>
-		public List<Place> AvailableAt { get; set; }
 		#endregion
 
 		#endregion
@@ -215,6 +194,27 @@ namespace RA.Models.Input
 		public LanguageMap DeliveryTypeDescription_Map { get; set; } = null;
 		#endregion
 
+		#region location
+		//23-11-13 - there is no longer a requirement to have at least one of the following
+
+		/// <summary>
+		/// Online location where the credential, assessment, or learning opportunity can be pursued.
+		/// URL
+		/// </summary>
+		public List<string> AvailableOnlineAt { get; set; }
+
+		/// <summary>
+		/// Listing of online and/or physical locations where a credential can be pursued.
+		/// URL
+		/// </summary>
+		public List<string> AvailabilityListing { get; set; }
+
+		/// <summary>
+		/// Physical location where the credential, assessment, or learning opportunity can be pursued.
+		/// Place
+		/// </summary>
+		public List<Place> AvailableAt { get; set; }
+		#endregion
 		//=========== optional ================================
 		/// <summary>
 		/// List of Alternate Names for this learning opportunity
@@ -358,11 +358,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public string HasProxy { get; set; }
 
-        /// <summary>
-        /// Reference to a relevant support service.
+		/// <summary>
+		/// Rubric related to this resource.
+		/// <see cref="https://credreg.net/ctdl/terms/hasRubric"/>
+		/// ceterms:hasRubric
+		/// </summary>
+		public List<string> HasRubric { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Reference to a relevant support service.
 		/// List of CTIDs that reference one or more published support services
-        /// </summary>
-        public List<string> HasSupportService { get; set; }
+		/// </summary>
+		public List<string> HasSupportService { get; set; }
 
         /// <summary>
         /// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
@@ -370,6 +377,11 @@ namespace RA.Models.Input
         /// ceterms:identifier
         /// </summary>
         public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		public string InCatalog { get; set; }
 
 		/// <summary>
 		/// Is Non-Credit
@@ -399,18 +411,35 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMapList Keyword_Map { get; set; } = null;
 
-
 		/// <summary>
 		/// Resource that is required as a prior condition to this resource.
 		/// Only allowed for a course on a course
 		/// </summary>
 		public List<EntityReference> Prerequisite { get; set; } = new List<EntityReference>();
 
-        /// <summary>
-        /// Organization(s) that register this resource. 
+		/// <summary>
+		/// This resource provides transfer value for the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> ProvidesTransferValueFor { get; set; } = new List<string>();
+
+		/// <summary>
+		/// This resource receives transfer value from the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> ReceivesTransferValueFrom { get; set; } = new List<string>();
+		/// <summary>
+		/// This resource has a target action
+		/// Refer to the referenced Action for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> TargetAction { get; set; } = new List<string>();
+
+
+		/// <summary>
+		/// Organization(s) that register this resource. 
 		/// Typically used for Registered Apprenticeships
-        /// </summary>
-        public List<OrganizationReference> RegisteredBy { get; set; } = new List<Input.OrganizationReference>();
+		/// </summary>
+		public List<OrganizationReference> RegisteredBy { get; set; } = new List<Input.OrganizationReference>();
 
         /// <summary>
         /// Another source of information about the entity being described.
@@ -426,7 +455,6 @@ namespace RA.Models.Input
 		/// Language map list for Subject
 		/// </summary>
 		public LanguageMapList Subject_Map { get; set; } = null;
-
 
 
         /// <summary>
@@ -709,7 +737,6 @@ namespace RA.Models.Input
 		/// COURSE ONLY
 		/// </summary>
 		public string SCED { get; set; }
-
 
 		#region Properties allowed only for learning programs
 		//these will be ignored for all other types

@@ -149,7 +149,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Concept Scheme description
-		/// REQUIRED
+		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 

@@ -39,11 +39,11 @@ namespace RA.Models.Input
         /// Alternately can provide a language map
         /// </summary>
         public LanguageMap Name_Map { get; set; } = new LanguageMap();
-        /// <summary>
-        /// Description 
-        /// Required
-        /// </summary>
-        public string Description { get; set; }
+		/// <summary>
+		/// Description 
+		/// REQUIRED and must be a minimum of 15 characters.
+		/// </summary>
+		public string Description { get; set; }
         /// <summary>
         /// Alternately can provide a language map
         /// </summary>

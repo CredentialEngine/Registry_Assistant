@@ -22,11 +22,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CTID { get; set; }
 
-        /// <summary>
-        /// Description 
-        /// Required
-        /// </summary>
-        public string Description { get; set; }
+		/// <summary>
+		/// Description 
+		/// REQUIRED and must be a minimum of 15 characters.
+		/// </summary>
+		public string Description { get; set; }
         /// <summary>
         /// Alternately can provide a language map
         /// </summary>
