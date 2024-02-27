@@ -283,5 +283,16 @@ namespace RA.Models.Input
 		/// Blank nodes!
 		/// </summary>
 		public List<string> SensoryCapabilityType { get; set; } = new List<string>();
+		/// <summary>
+		/// This resource provides transfer value for the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> ProvidesTransferValueFor { get; set; } = new List<string>();
+
+		/// <summary>
+		/// This resource receives transfer value from the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> ReceivesTransferValueFrom { get; set; } = new List<string>();
 	}
 }

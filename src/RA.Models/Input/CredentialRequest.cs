@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using RA.Models.Input.profiles.QData;
-using static System.Net.WebRequestMethods;
+﻿using System.Collections.Generic;
 
 namespace RA.Models.Input
 {
@@ -362,11 +358,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<EntityReference> HasPart { get; set; }
 
-        /// <summary>
-        /// Reference to a relevant support service available for this resource.
-        /// List of CTIDs for published resources
-        /// </summary>
-        public List<string> HasSupportService { get; set; } = new List<string>();
+		/// <summary>
+		/// Rubric related to this resource.
+		/// <see cref="https://credreg.net/ctdl/terms/hasRubric"/>
+		/// ceterms:hasRubric
+		/// </summary>
+		public List<string> HasRubric { get; set; } = new List<string>();
+		/// <summary>
+		/// Reference to a relevant support service available for this resource.
+		/// List of CTIDs for published resources
+		/// </summary>
+		public List<string> HasSupportService { get; set; } = new List<string>();
         //
 
         /// <summary>
@@ -380,6 +382,11 @@ namespace RA.Models.Input
 		/// Image URL
 		/// </summary>
 		public string Image { get; set; }
+
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		public string InCatalog { get; set; }
 
 		/// <summary>
 		/// ISIC Revision 4 Code
@@ -431,13 +438,25 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap ProcessStandardsDescription_Map { get; set; } = new LanguageMap();
 
+		/// <summary>
+		/// This resource provides transfer value for the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> ProvidesTransferValueFor { get; set; } = new List<string>();
+
+		/// <summary>
+		/// This resource receives transfer value from the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> ReceivesTransferValueFrom { get; set; } = new List<string>();
+
 		#region Version related properties
-        //
-        /// <summary>
-        /// Latest version of the credential.
-        /// full URL OR CTID (recommended)
-        /// </summary>
-        public string LatestVersion { get; set; }
+		//
+		/// <summary>
+		/// Latest version of the credential.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string LatestVersion { get; set; }
 		/// <summary>
 		/// Version of the resource that immediately precedes this version.
 		/// full URL OR CTID (recommended)
@@ -661,6 +680,12 @@ namespace RA.Models.Input
 		public List<ConditionProfile> CoPrerequisite { get; set; } = new List<ConditionProfile>();
 
 		/// <summary>
+		/// Requirements for entry into a credentialing program, a learning opportunity, or an assessment, including credentials, transcripts, records of previous experience, or other forms of entry documentation.
+		/// </summary>
+		public List<ConditionProfile> EntryCondition { get; set; } = new List<ConditionProfile>();
+
+
+		/// <summary>
 		/// Entity describing the constraints, prerequisites, entry conditions, or requirements necessary to maintenance and renewal of an awarded credential.
 		/// </summary>
 		public List<ConditionProfile> Renewal { get; set; }
@@ -781,6 +806,4 @@ namespace RA.Models.Input
 		#endregion
 
 	}
-
-
 }

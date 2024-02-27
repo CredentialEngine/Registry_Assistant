@@ -120,6 +120,18 @@ namespace RA.Models.Input
 		public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
 
 		/// <summary>
+		/// This resource provides transfer value for the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> ProvidesTransferValueFor { get; set; } = new List<string>();
+
+		/// <summary>
+		/// This resource receives transfer value from the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> ReceivesTransferValueFrom { get; set; } = new List<string>();
+
+		/// <summary>
 		/// Requirement or set of requirements for this resource
 		/// Not Required
 		/// </summary>

@@ -784,11 +784,23 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> physicalCapabilityType { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Type of required or expected sensory capability; select from an existing enumeration of such types.
-        /// List of URIs (CTIDs recommended) for Concept
-        /// </summary>
-        public List<string> sensoryCapabilityType { get; set; } = new List<string>();
+		/// <summary>
+		/// This resource provides transfer value for the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> providesTransferValueFor { get; set; } = new List<string>();
+
+		/// <summary>
+		/// This resource receives transfer value from the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> receivesTransferValueFrom { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Type of required or expected sensory capability; select from an existing enumeration of such types.
+		/// List of URIs (CTIDs recommended) for Concept
+		/// </summary>
+		public List<string> sensoryCapabilityType { get; set; } = new List<string>();
 
 
         /// <summary>

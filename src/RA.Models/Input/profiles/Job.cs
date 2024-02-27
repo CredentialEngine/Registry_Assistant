@@ -104,12 +104,6 @@ namespace RA.Models.Input
 		public LanguageMapList Comment_map { get; set; } = new LanguageMapList();
 
         /// <summary>
-        /// Reference to a relevant support service.
-        /// List of CTIDs that reference one or more published support services
-        /// </summary>
-        public List<string> HasSupportService { get; set; }
-
-        /// <summary>
         /// Occupation related to this resource.
         /// CTID for an existing Occupation
 		/// NEW - handle blank nodes
@@ -117,14 +111,27 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> HasOccupation { get; set; } = new List<string>();
 
+		/// <summary>
+		/// Rubric related to this resource.
+		/// <see cref="https://credreg.net/ctdl/terms/hasRubric"/>
+		/// ceterms:hasRubric
+		/// </summary>
+		public List<string> HasRubric { get; set; } = new List<string>();
+
         /// <summary>
-        /// Task related to this resource.
-        /// CTID for an existing Task
-        /// NEW - handle blank nodes
-        /// <see cref="https://credreg.net/ctdl/terms/hasTask"/>
-        /// ceterms:hasTask
+        /// Reference to a relevant support service.
+        /// List of CTIDs that reference one or more published support services
         /// </summary>
-        public List<string> HasTask { get; set; } = new List<string>();
+        public List<string> HasSupportService { get; set; }
+
+		/// <summary>
+		/// Task related to this resource.
+		/// CTID for an existing Task
+		/// NEW - handle blank nodes
+		/// <see cref="https://credreg.net/ctdl/terms/hasTask"/>
+		/// ceterms:hasTask
+		/// </summary>
+		public List<string> HasTask { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Work Role related to this resource.
@@ -288,6 +295,17 @@ namespace RA.Models.Input
 		/// ceterms:versionIdentifier
 		/// </summary>
 		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
+		/// <summary>
+		/// This resource provides transfer value for the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> ProvidesTransferValueFor { get; set; } = new List<string>();
+
+		/// <summary>
+		/// This resource receives transfer value from the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		public List<string> ReceivesTransferValueFrom { get; set; } = new List<string>();
 
 
 	}
