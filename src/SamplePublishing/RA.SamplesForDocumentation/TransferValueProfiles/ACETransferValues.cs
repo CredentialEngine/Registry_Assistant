@@ -46,14 +46,14 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "https://www.acenet.edu/National-Guide/Pages/Course.aspx?org=College%20Board%27s%20College-Level%20Examination%20Program%20(CLEP)&cid=fe05b1f6-84c4-ea11-a812-000d3a33232a",
 				StartDate = "2018-12-01",
 				EndDate = "2023-11-30",
-				PreviousVersion = "https://sandbox.credentialengineregistry.org/resources/ce-276a16e8-69d6-447f-9904-71c393d7a88d",
-				LatestVersion = "https://sandbox.credentialengineregistry.org/resources/ce-a7e72ad1-4220-4ca1-8028-cdb2fec245a0",
-				NextVersion = "https://sandbox.credentialengineregistry.org/resources/ce-330c41fb-f8d6-49ca-a97f-18e1bf6c1eb0",
+				PreviousVersion = "ce-276a16e8-69d6-447f-9904-71c393d7a88d",
+				LatestVersion = "ce-a7e72ad1-4220-4ca1-8028-cdb2fec245a0",
+				NextVersion = "ce-330c41fb-f8d6-49ca-a97f-18e1bf6c1eb0",
 			};
 			myData.VersionIdentifier.Add( new IdentifierValue()
 			{
-				IdentifierTypeName = "MyVersion",
-				IdentifierValueCode = "2023-09-01"        //Alphanumeric string identifier of the entity
+				IdentifierTypeName = "Current Version",
+				IdentifierValueCode = "2023: abbc123"        //Alphanumeric string identifier of the version
 			} );
 			// OwnedBy is a list of OrganizationReferences. As a convenience just the CTID is necessary.
 			// The ownedBY CTID is typically the same as the CTID for the data owner.
