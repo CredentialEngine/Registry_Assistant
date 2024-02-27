@@ -137,9 +137,9 @@ namespace RA.SamplesForDocumentation
 			//A assessment *must* be connected to a credential in order to be published.
 			//The connection can be made using a Required condition profile in the Credential or using a RequiredFor Connection from the assessment
 
-			myData.IsRequiredFor = new List<ConnectionProfile>()
+			myData.IsRequiredFor = new List<ConditionProfile>()
 			{
-				new ConnectionProfile()
+				new ConditionProfile()
 				{
 					Description="This assessment is required for the 'Acme Credential'.",
 					TargetCredential = new List<EntityReference>()
@@ -152,7 +152,7 @@ namespace RA.SamplesForDocumentation
 					}
 				},
 				//if the credential is not in the registry (often where the owner is not the same as the owner of the assessment), or the publisher doesn't have the CTID, a full EntityReference can be provided. 
-				new ConnectionProfile()
+				new ConditionProfile()
 				{
 					Description="This assessment is required for the 'Third Party Credential'.",
 					TargetCredential = new List<EntityReference>()

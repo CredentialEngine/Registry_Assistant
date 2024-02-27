@@ -80,9 +80,9 @@ namespace RA.SamplesForDocumentation.Assessments
             //
             //A assessment *must* be connected to a credential in order to be published.
             //The connection can be made using a Required condition profile in the Credential or using a RequiredFor Connection from the assessment
-            myData.IsRequiredFor = new List<ConnectionProfile>()
+            myData.IsRequiredFor = new List<ConditionProfile>()
 			{
-				new ConnectionProfile()
+				new ConditionProfile()
 				{
 					Description="This assessment is required for the 'Acme Credential'.",
 					TargetCredential = new List<EntityReference>()
