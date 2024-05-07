@@ -51,7 +51,9 @@ namespace RA.SamplesForDocumentation
 				CredentialStatusType = "Active",
 				InLanguage = new List<string>() { "en-US" },
 				Keyword = new List<string>() { "Credentials", "Technical Information", "Credential Registry" },
-				Naics = new List<string>() { "333922", "333923", "333924" }
+				Naics = new List<string>() { "333922", "333923", "333924" },
+				DateEffective = "1999-09-01",
+				ExpirationDate = "2049-06-15"
 			};
 			//typically the ownedBy is the same as the CTID for the data owner
 			myData.OwnedBy.Add( new OrganizationReference()
@@ -89,6 +91,13 @@ namespace RA.SamplesForDocumentation
 				SubjectWebpage = "https://www.cswe.org/",
 				Description = "Founded in 1952, the Council on Social Work Education (CSWE) is the national association representing social work education in the United States."
 			} );
+
+			//AvailabilityListing and are defined as objects to accommodate partners who initially used the API when these were defined as a single string. These will be published as lists
+			//partners can define these properties as lists
+			myData.AvailabilityListing = new List<string>() { "https://example.org?availableListing=here" };
+			myData.AvailableOnlineAt = new List<string>() { "https://example.org?availableOnline=here" };
+
+			//List of Addresses for this credential, using Place
 			myData.AvailableAt = new List<Place>()
 			{
 				new Place()
@@ -100,12 +109,6 @@ namespace RA.SamplesForDocumentation
 					Country="United States"
 				}
 			};
-			//AvailabilityListing and are defined as objects to accommodate partners who initially used the API when these were defined as a single string. These will be published as lists
-			//partners can define these properties as lists
-			var list = new List<string>() { "https://example.org?availableListing=here" };
-			myData.AvailabilityListing = list;
-			list = new List<string>() { "https://example.org?availableOnline=here" };
-			myData.AvailableOnlineAt= list;
 			//optional identifier(s)
 			myData.Identifier.Add( new IdentifierValue()
 			{
@@ -114,8 +117,12 @@ namespace RA.SamplesForDocumentation
 			} );
 
 			//include valid concepts, with or without the namespace
-			myData.AudienceType = new List<string>() { " audience:PublicEmployee", "Resident" };
-			myData.AudienceLevelType = new List<string>() { "audLevel:BeginnerLevel", "IntermediateLevel" };
+			myData.AudienceType				= new List<string>() { " audience:PublicEmployee", "Resident" };
+			myData.AudienceLevelType		= new List<string>() { "audLevel:BeginnerLevel", "IntermediateLevel" };
+			myData.AssessmentDeliveryType	= new List<string>() { "deliveryType:BlendedDelivery" };
+			//Credential Identifier
+			//Globally unique identifier by which the creator, owner or provider of a credential recognizes that credential in transactions with the external environment( e.g., in verifiable claims involving the credential ).
+			myData.CredentialId = "a08f7c7c-1712-41aa-be86-8c84ed4334a0_61280f7f-a98f-4b78-b673-d3455eb40b7d";
 			//==================== JURISDICTION and Recognized In (specialized jurisdiction) ====================
 
 			myData.Jurisdiction.Add( Jurisdictions.SampleJurisdiction() );
@@ -207,8 +214,8 @@ namespace RA.SamplesForDocumentation
 			//see: https://credreg.net/ctdl/terms#CostType
 			myData.EstimatedCost.Add( new CostProfile()
 			{
-				Description = "A required description of the cost profile",
-				CostDetails = "https://example.com/t=loppCostProfile",
+				Description = "An optional description of the cost profile",
+				CostDetails = "https://example.com/t=optionalCostDetails",
 				Currency = "USD",
 				CostItems = new List<CostProfileItem>()
 				 {
@@ -232,6 +239,60 @@ namespace RA.SamplesForDocumentation
 			{
 				"ce-a37b5ac4-6a15-4cf1-9f06-8132e18e95eb", "ce-975b466b-ed8e-46c7-8629-2f2dc74153a2"
 			};
+
+			//HasPart - List of credentials that are part of this credential
+			myData.HasPart = new List<EntityReference>() 
+			{ 
+				new EntityReference()
+				{
+					CTID="ce-4f41c36d-bc71-490b-b7b8-008e8eebd212"
+				},
+				new EntityReference()
+				{
+					Type="Certificate",
+					Name="My non-published certificate",
+					Description= "A description of this certificate",
+					SubjectWebpage="https://example.org/myCertificate"
+				}
+			};
+
+			//IsPartOf - List of credentials where this credential is a part of.
+			myData.IsPartOf = new List<EntityReference>()
+			{
+				new EntityReference()
+				{
+					CTID="ce-946f3a64-3826-4537-b406-b362a504b58d"
+				}
+			};
+
+
+			//HasRubric - list of CTIDs of relevent (published) Rubrics
+			myData.HasRubric = new List<string>()
+			{
+				"ce-589e1e4c-0b14-410f-b65b-19f3e69af710"
+			};
+
+			//HasSupportService - list of CTIDs of relevent (published) support services
+			myData.HasSupportService = new List<string>()
+			{
+				"ce-44395283-8263-4e90-961e-12b6e49005ea", "ce-5d595b23-2dd4-483b-919b-9842c948378f"
+			};
+
+			//InCatalog - An inventory or listing of resources that includes this resource.
+			myData.InCatalog = "https://example.org/ourCatalog";
+
+
+			//This resource provides transfer value for the referenced Transfer Value Profile.
+			myData.ProvidesTransferValueFor = new List<string>()
+			{
+				"ce-2b1fd03a-eb21-4797-a264-ef419e3db3c6"
+			};
+
+			//This resource receives transfer value from the referenced Transfer Value Profile.
+			myData.ReceivesTransferValueFrom = new List<string>()
+			{
+				"ce-702bf41d-5763-43d6-ad55-fe13468463a6"
+			};
 			//====================	OCCUPATIONS ====================
 			PopulateOccupations( myData );
 			//====================	INDUSTRIES	====================
@@ -243,7 +304,7 @@ namespace RA.SamplesForDocumentation
 			//Connections between credentials can be published using properties such as
 			//- isPreparationFor, PreparationFrom, isAdvancedStandingFor, AdvancedStandingFrom, IsRequiredFor, and IsRecommendedFor. 
 			//example of a connection to a credential for which the current credential will prepare a student.
-			var isPreparationFor = new ConnectionProfile
+			var isPreparationFor = new ConditionProfile
 			{
 				Description = "This certification will prepare a student for the target credential",
 				TargetCredential = new List<EntityReference>()
@@ -261,7 +322,7 @@ namespace RA.SamplesForDocumentation
 			myData.IsPreparationFor.Add( isPreparationFor );
 
 			//add credential that prepares for this credential. 
-			var preparationFrom = new ConnectionProfile
+			var preparationFrom = new ConditionProfile
 			{
 				Description = "This credential will prepare a student for this credential",
 				TargetCredential = new List<EntityReference>()
@@ -388,8 +449,8 @@ namespace RA.SamplesForDocumentation
 			//see: https://credreg.net/ctdl/terms#CostType
 			myData.EstimatedCost.Add( new CostProfile()
 			{
-				Description = "A required description of the cost profile",
-				CostDetails = "https://example.com/t=loppCostProfile",
+				Description = "An optional description of the cost profile",
+				CostDetails = "https://example.com/t=optionalCostDetails",
 				Currency = "USD",
 				CostItems = new List<CostProfileItem>()
 				 {
