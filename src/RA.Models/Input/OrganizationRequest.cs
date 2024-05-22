@@ -346,6 +346,11 @@ namespace RA.Models.Input
 		public List<string> HasCostManifest { get; set; }
 
 		/// <summary>
+		/// TBD
+		/// </summary>
+		public string HasCourseCatalog { get; set; }
+
+		/// <summary>
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
 		/// </summary>
 		public List<FrameworkItem> IndustryType { get; set; }

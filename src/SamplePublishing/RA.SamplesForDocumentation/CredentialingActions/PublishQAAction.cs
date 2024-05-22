@@ -173,16 +173,21 @@ namespace RA.SamplesForDocumentation
             // Range: any Credential, any Learning Opportunity, Assessment, any Organization, ceasn:Competency or ceasn: CompetencyFramework
             //
             // This an example of using a blank node. The blank node id would be referenced here. Then an object is created that uses the latter in the BlankNodeId property, and all additional properties would be added. Then the object is added to request.ReferenceObjects
+
+            //create the bnodeId (prefix of "_:" followed by a UUID (V4)
             var thisBNodeId = "_:de25d94f-eda9-4931-8934-ddc1c065b7c8";
             myData.Object = thisBNodeId;
+            //create the organization data
             var organization = new Organization()
             {
                 BlankNodeId = thisBNodeId,
                 Type = "ceterms:QACredentialOrganization",
                 Name = "A QA Organization name",
                 Description = "An optional description.",
-                SubjectWebpage = "https://example.org/notRequiredButHelpful"
+                SubjectWebpage = "https://example.org/notRequiredButHelpful",
+                HasCourseCatalog = "https://example.org/ourCourseCatalog",
             };
+            //add the organization to the ReferenceObjects (a list of objects)
             myRequest.ReferenceObjects.Add( organization );
 
             //Co-agents that participated in the action indirectly.
