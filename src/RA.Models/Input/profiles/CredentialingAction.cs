@@ -112,7 +112,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Object
 		/// Object upon which the action is carried out, whose state is kept intact or changed.
-		/// A reference for Credentials, AssessmentProfile, or LearningOpportunity Profile
+		/// A reference for Credentials, AssessmentProfile, any LearningOpportunity Profile type, or any organization type
 		/// Input: a CTID or a blank node Id where the bnode will be added in the request class ReferenceObjects property.
 		/// </summary>
 		public string Object { get; set; } 

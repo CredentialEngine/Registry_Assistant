@@ -46,9 +46,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Name_Map { get; set; } = null;
 		/// <summary>
-		/// Condition description 
-		/// Recommended. (2023-11-11 Description is NO longer required.)
-		/// Minimum of 15 characters when present, but should be clear.
+		/// Profile description 
+		/// 23-11-13 - NO LONGER required
+		/// Optional
+		/// Minimum of 10 characters when present, but should be clear.
 		/// </summary>
 		public string Description { get; set; }
 
@@ -62,7 +63,7 @@ namespace RA.Models.Input
 		/// This should be single, but as CTDL defines as multi-value, need to handle a List
 		/// Defined as an object to handle legacy use.
 		/// </summary>
-		public object AssertedBy { get; set; } = null;
+		public List<OrganizationReference> AssertedBy { get; set; } = null;
 
 		/// <summary>
 		///  Webpage that describes this condition
@@ -236,16 +237,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> TargetCompetencyFramework { get; set; }
 
-        /// <summary>
-        /// UNDER CONSTRUCTION, NOT FOR USE YET
-        /// The concept is that the property would be a list of CTIDs for competencies in the registry.
-        /// The API would validate the the competencies are valid, then format TargetCompetency(the credentialAlignmentObject list) simplifing the task for the publisher.
-        /// Under consideration is enabling this feature by:
-		///		- Continuing to use TargetCompetency
-		///		- Recommend that the publisher just provide a CTID in targetNode, and no other data (as a signal to use the CTID to get and format the CAO.
-		///		
-        /// </summary>
-        public List<string> TargetCompetencies { get; set; } = new List<string>();
 
         #endregion
     }

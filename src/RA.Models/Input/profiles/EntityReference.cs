@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+
 namespace RA.Models.Input
 {
 
@@ -178,6 +174,8 @@ namespace RA.Models.Input
 		/// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
 		/// Alterate URIs are under consideration. For example
 		/// http://dbpedia.com/Stanford_University
+		/// 
+		/// NEW: Coming soon use of ReferenceObjects as a list resources to be blank nodes
 		/// </summary>
 		public string Id { get; set; }
 

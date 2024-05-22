@@ -127,7 +127,7 @@ namespace RA.Models.Input
 		/// List of URIs to frameworks
 		/// 2023-03-22 The datatype was changed to a list. The API will still handle a single string.
 		/// </summary>
-		public object derivedFrom { get; set; }
+		public List<string> derivedFrom { get; set; }
 
 		/// <summary>
 		/// A short description of this competency framework.
@@ -231,7 +231,7 @@ namespace RA.Models.Input
         /// List of URLs
         /// 2023-03-22 The datatype was changed to a list. The API will still handle a single string.
         /// </summary>
-        public object rightsHolder { get; set; }
+        public List<string> rightsHolder { get; set; }
 
 		/// <summary>
 		///  The original competency framework which this competency framework is based on or derived from.

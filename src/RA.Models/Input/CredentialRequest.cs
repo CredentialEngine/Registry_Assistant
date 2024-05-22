@@ -209,14 +209,12 @@ namespace RA.Models.Input
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
 		/// <summary>
 		/// AvailableOnlineAt URL
-		/// 22-08-30 Changed to an object to allow handling of a single or a list
 		/// </summary>
-		public object AvailableOnlineAt { get; set; } 
+		public List<string> AvailableOnlineAt { get; set; } 
 		/// <summary>
 		/// AvailabilityListing URL
-		/// 22-08-30 Changed to an object to allow handling of a single or a list
 		/// </summary>
-		public object AvailabilityListing { get; set; } 
+		public List<string> AvailabilityListing { get; set; } 
 		/// <summary>
 		/// List of Addresses for this credential, using Place
 		/// </summary>

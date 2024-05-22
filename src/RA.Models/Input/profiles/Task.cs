@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace RA.Models.Input
 {
@@ -82,7 +78,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Category or classification of this resource.
 		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-		/// URI to a concept(based on the ONet work activities example)
+		/// URI to a concept(based on the ONet work activities example) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
 		/// ceterms:classification
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
@@ -193,13 +189,6 @@ namespace RA.Models.Input
 		/// ceasn:skillEmbodied
 		/// </summary>
 		public List<string> SkillEmbodied { get; set; } = new List<string>();
-
-		/// <summary>
-		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
-		/// ceterms:versionIdentifier
-		/// </summary>
-		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
-
 
 		/// <summary>
 		/// Job related to this resource.

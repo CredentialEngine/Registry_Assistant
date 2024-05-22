@@ -24,9 +24,39 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Description { get; set; }
         public LanguageMap Description_Map { get; set; } = new LanguageMap();
-        public DurationItem MinimumDuration { get; set; }
-		public DurationItem MaximumDuration { get; set; }
+
+
+		/// <summary>
+		/// Overall span of time it will take to complete the activity, event, or resource.
+		/// Usage Note: If a resource takes 50 hours over a span of 6 months to complete, use this to record 6 months as P6M.
+		/// Comment: This is intended to indicate overall time span, regardless of what portion of that time is spent actively pursuing the completion of the activity, event, or resource.
+		/// </summary>
 		public DurationItem ExactDuration { get; set; }
+
+		/// <summary>
+		/// Minimum overall span of time it will take to complete the activity, event, or resource.
+		/// Usage Note: If a resource takes 50 hours over a span of 3-9 months to complete, use this to record 3 months as P3M.
+		/// Comment: This is intended to indicate overall time span, regardless of what portion of that time is spent actively pursuing the completion of the activity, event, or resource.
+		/// </summary>
+		public DurationItem MinimumDuration { get; set; }
+
+		/// <summary>
+		/// Maximum overall span of time it will take to complete the activity, event, or resource.
+		/// Usage Note: If a resource takes 50 hours over a span of 3-9 months to complete, use this to record 9 months as P9M.
+		/// This is intended to indicate overall time span, regardless of what portion of that time is spent actively pursuing the completion of the activity, event, or resource.
+		/// </summary>
+		public DurationItem MaximumDuration { get; set; }
+
+		/// <summary>
+		/// NEW 2024-04
+		/// Total engaged or participating time it will take to complete the activity, event, or resource.
+		/// - Recommended to be used with exactDuration to indicate effort within the duration
+		/// Usage Note: If a resource takes 50 hours over a span of 6 months to complete, use this to record 50 hours as PT50H.
+		/// Comment: This is intended to indicate only the sum of the individual amounts of time which are spent actively engaged in pursuing the completion of the activity, event, or resource, regardless of the overall time span required to complete it.
+		/// TBD:
+		///		Only hours or minutes can be used with time required
+		/// </summary>
+		public DurationTimeItem TimeRequired { get; set; }
 
 	}
 	//
@@ -47,7 +77,6 @@ namespace RA.Models.Input
 		/// Time durations cannot be included if there is non-time durations present!
 		///		H is the hour designator that follows the value for the number of hours.
 		///		M is the minute designator that follows the value for the number of minutes.
-		///		S is the second designator that follows the value for the number of seconds.
 		///	Examples:
 		///	P2Y		- two years
 		///	P10M	- 10 months
@@ -79,4 +108,48 @@ namespace RA.Models.Input
                 return string.Empty;
         }
     }
+
+	/// <summary>
+	/// A duration item that is for time (hours or minutes).
+	/// Enter either the Duration_ISO8601 value, OR one of hours or minutes.
+	/// </summary>
+	public class DurationTimeItem
+	{
+		/// <summary>
+		/// A duration in the registry is stored using the ISO8601 durations format. 
+		/// P is the duration designator (for period) placed at the start of the duration representation. P is always required, even if only time related designators are included. 
+		/// T is the time designator that precedes the time components of the representation.
+		/// Time durations cannot be included if there is non-time durations present!
+		///		H is the hour designator that follows the value for the number of hours.
+		///		M is the minute designator that follows the value for the number of minutes.
+		///	Examples:
+		///	PT10H	- 10 hours
+		///	PT90M	- 90 minutes
+		/// <seealso href="https://en.wikipedia.org/wiki/ISO_8601#Durations">ISO_8601 Durations</seealso>
+		/// </summary>
+		public string Duration_ISO8601 { get; set; }
+
+
+		/// <summary>
+		/// Enter the time required in hours. 
+		/// Only one of hours or minutes may be specified.
+		/// </summary>
+		public decimal? Hours { get; set; }
+
+		/// Enter the time required in minutes. 
+		/// Only one of hours or minutes may be specified.
+		public decimal? Minutes { get; set; }
+
+		public string Print()
+		{
+			var parts = new List<string>();
+			if ( Hours > 0 ) { parts.Add( Hours + " hour" + ( Hours == 1 ? "" : "s" ) ); }
+			if ( Minutes > 0 ) { parts.Add( Minutes + " minute" + ( Minutes == 1 ? "" : "s" ) ); }
+
+			if ( parts.Count > 0 )
+				return string.Join( ", ", parts );
+			else
+				return string.Empty;
+		}
+	}
 }
