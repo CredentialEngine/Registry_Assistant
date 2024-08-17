@@ -26,7 +26,6 @@ namespace RA.Models.Input
 			SubmissionOf = new List<string>();
 			AlternativeCondition = new List<ConditionProfile>();
 
-			//ApplicableAudienceType = new List<string>();
 			TargetAssessment = new List<EntityReference>();
 			TargetCredential = new List<EntityReference>();
 			TargetLearningOpportunity = new List<EntityReference>();
@@ -196,12 +195,9 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<EntityReference> TargetLearningOpportunity { get; set; }
 
-        //
         /// <summary>
         /// A competency relevant to the resource being described.
         /// targetCompetency is typically a competency required for the parent of this condition profile
-        /// TODO - the range for targetCompetency is a credentialAlignmentObject or Compentency. Need to handle the latter.
-		/// Does that mean CAO should be a blank node?
         /// </summary>
         public List<CredentialAlignmentObject> TargetCompetency { get; set; }
 
@@ -239,116 +235,5 @@ namespace RA.Models.Input
 
 
         #endregion
-    }
-
-	/// <summary>
-	/// The Connection profile is a subset of a condition profile. 
-	/// A separate profile is used by the API to clarify the subset of properties are applicable
-	/// 2023-03-28 Renamed to ConnectionProfile to make the purpose clearer? The old class is retained below ConnectionProfile for legacy purposes.
-	/// 2023-10-23 Moving to make this property obsolete, and just use ConditionProfile.
-	/// </summary>
-	[Obsolete]
-	public class ConnectionProfile : ConditionProfile
-	{
-		/*
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public ConnectionProfile()
-		{
-			//AssertedBy = new OrganizationReference();
-
-			TargetAssessment = new List<EntityReference>();
-			TargetCredential = new List<EntityReference>();
-			TargetLearningOpportunity = new List<EntityReference>();
-		}
-		/// <summary>
-		/// Name of this condition
-		/// Required
-		/// </summary>
-		public string Name { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Name_Map { get; set; } = null;
-		/// <summary>
-		/// Condition description 
-		/// Required. Minimum of 10 characters, but should be clear.
-		/// </summary>
-		public string Description { get; set; }
-
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Description_Map { get; set; } = null;
-
-		/// <summary>
-		/// Organization that owns this credential
-		/// </summary>
-		public OrganizationReference AssertedBy { get; set; }
-
-		/// <summary>
-		/// Measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
-		/// </summary>
-		public decimal? Weight { get; set; }
-
-		/// <summary>
-		/// Credit Information
-		/// 20-09-30 being replaced by ValueProfile
-		/// 21-04-04 had started with singles now allowing a List 
-		/// </summary>
-		public List<ValueProfile> CreditValue { get; set; } = null;
-
-		/// <summary>
-		/// Detailed description of credit unit type.
-		/// </summary>
-		public string CreditUnitTypeDescription { get; set; }
-		/// <summary>
-		/// Language map for Detailed description of credit unit type.
-		/// </summary>
-		public LanguageMap CreditUnitTypeDescription_Map { get; set; } = null;
-
-		//external classes =====================================
-
-		/// <summary>
-		/// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.
-		/// </summary>
-		public List<EntityReference> TargetAssessment { get; set; }
-		/// <summary>
-		/// Credential that is a focus or target of the condition, process or verification service.
-		/// </summary>
-		public List<EntityReference> TargetCredential { get; set; }
-		/// <summary>
-		/// Learning opportunity that is the focus of a condition, process or another learning opportunity.
-		/// </summary>
-		public List<EntityReference> TargetLearningOpportunity { get; set; }
-
-
-        /// <summary>
-        /// Occupation that is the focus of a condition, process or another learning opportunity.
-        /// Only valid for 
-        ///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
-        /// </summary>
-        public List<EntityReference> TargetJob { get; set; } = new List<EntityReference>();
-
-        /// <summary>
-        /// Occupation that is the focus of a condition, process or another learning opportunity.
-        /// Only valid for 
-        ///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
-        /// </summary>
-        public List<EntityReference> TargetOccupation { get; set; } = new List<EntityReference>();
-
-		/// <summary>
-		/// A competency relevant to the condition being described.
-		/// targetCompetency is typically a competency required for the parent of this condition profile
-		/// </summary>
-		public List<CredentialAlignmentObject> TargetCompetency { get; set; } = new List<CredentialAlignmentObject>();
-
-		*/
-    }
-	//retain in order to not mess up previous use
-    public class Connections : ConditionProfile
-	{
-
     }
 }

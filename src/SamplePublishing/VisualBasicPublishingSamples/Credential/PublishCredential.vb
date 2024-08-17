@@ -100,7 +100,7 @@ Public Class PublishCredential
 		PopulateOccupations(myData)
 		PopulateIndustries(myData)
 		PopulatePrograms(myData)
-		Dim isPreparationFor = New Connections With {
+		Dim isPreparationFor = New ConditionProfile With {
 				.Description = "This certification will prepare a student for the target credential",
 				.TargetCredential = New List(Of EntityReference)() From {
 					New EntityReference() With {
@@ -112,7 +112,7 @@ Public Class PublishCredential
 				}
 			}
 		myData.IsPreparationFor.Add(isPreparationFor)
-		Dim preparationFrom = New Connections With {
+		Dim preparationFrom = New ConditionProfile With {
 				.Description = "This credential will prepare a student for this credential",
 				.TargetCredential = New List(Of EntityReference)() From {
 					New EntityReference() With {

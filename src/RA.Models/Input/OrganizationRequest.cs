@@ -39,7 +39,7 @@ namespace RA.Models.Input
 	/// - At least one of email or address
 	/// 
 	/// </summary>
-	public class Organization : BaseRequestClass
+	public class Organization : BaseRequestHelper
 	{
 		/// <summary>
 		/// Constructor
@@ -49,7 +49,6 @@ namespace RA.Models.Input
 			Type = "CredentialOrganization";
 			AgentType = new List<string>();
 
-			//AgentSectorType = new List<string>();
 			IndustryType = new List<FrameworkItem>();
 			Naics = new List<string>();
 			Keyword = new List<string>();
@@ -61,7 +60,6 @@ namespace RA.Models.Input
 			Jurisdiction = new List<Input.JurisdictionProfile>();
 			Address = new List<Place>();
 			AlternateName = new List<string>();
-			//ContactPoint = new List<ContactPoint>();
 			//
 			AccreditedBy = new List<Input.OrganizationReference>();
 			ApprovedBy = new List<Input.OrganizationReference>();
@@ -75,10 +73,6 @@ namespace RA.Models.Input
 			Renews = new List<EntityReference>();
 			Revokes = new List<EntityReference>();
 			Recognizes = new List<EntityReference>();
-			//
-			//OwnsCredentials = new List<EntityReference>();
-			//OwnsAssessments = new List<EntityReference>();
-			//OwnsLearningOpportunities = new List<EntityReference>();
 			//
 			HasConditionManifest = new List<string>();
 			HasCostManifest = new List<string>();

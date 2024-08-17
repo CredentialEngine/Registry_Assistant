@@ -17,7 +17,7 @@ namespace RA.Models.Input
 	/// History
 	/// 2021-05-31 CodedNotation is no longer part of the AssessmentProfile class. The property will be left in the input class until later this year and then removed. If provided, the data will be moved to the Identifier property and a warning will be returned. 
 	/// </summary>
-	public class Assessment : BaseRequestClass
+	public class Assessment : BaseRequestHelper
 	{
 		public Assessment()
 		{
@@ -31,12 +31,10 @@ namespace RA.Models.Input
 			AvailabilityListing = new List<string>();
 			AvailableOnlineAt = new List<string>();
 			Jurisdiction = new List<Input.JurisdictionProfile>();
-			//JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
 			DeliveryType = new List<string>();
 
 			EstimatedCost = new List<CostProfile>();
 			EstimatedDuration = new List<DurationProfile>();
-			//
 			ScoringMethodType = new List<string>();
 
 			AccreditedBy = new List<Input.OrganizationReference>();
@@ -55,7 +53,6 @@ namespace RA.Models.Input
 			MaintenanceProcess = new List<ProcessProfile>();
 
 			Assesses = new List<CredentialAlignmentObject>();
-			//RequiresCompetency = new List<CredentialAlignmentObject>();
 
 			AvailableAt = new List<Place>();
 
@@ -721,7 +718,7 @@ namespace RA.Models.Input
 		public List<string> TargetLearningResource { get; set; } = new List<string>();
 		//public List<string> TargetPathway { get; set; } = new List<string>();
 		/// <summary>
-		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
+		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
 		/// </summary>
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 	}

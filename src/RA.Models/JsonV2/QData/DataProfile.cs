@@ -20,13 +20,6 @@ namespace RA.Models.JsonV2.QData
 		[JsonProperty( "@type" )]
 		public string Type { get; set; } = "qdata:DataProfile";
 
-		/// <summary>
-		/// Id for this blank node
-		/// </summary>
-		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
-
-
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
 
@@ -39,7 +32,7 @@ namespace RA.Models.JsonV2.QData
 		/// <summary>
 		/// Type of administrative record used; e.g. W2, 1099, and Unemployment Insurance Wage Record.
 		/// skos:Concept
-		/// <see cref="https://credreg.net/qdata/terms/administrativeRecordType#AdministrativeRecordCategory"/>
+		/// <see cref="https://credreg.net/qdata/terms/administrativeRecordType"/>
 		/// adminRecord:Tax1099
 		/// adminRecord:TaxW2
 		/// adminRecord:UnemploymentInsurance
@@ -116,7 +109,16 @@ namespace RA.Models.JsonV2.QData
 		/// Rate computed by dividing the number of holders or subjects meeting the data set's criteria of employment (meetEmploymentCriteria) by the number of holders or subjects for which data was available (dataAvailable).
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:employmentRate" )]
-		public List<QuantitativeValue> EmploymentRate { get; set; } 
+		public List<QuantitativeValue> EmploymentRate { get; set; }
+
+		/// <summary>
+		/// Faculty-to-Student Ratio
+		/// Ratio of the number of teaching faculty to the number of students.
+		/// The expression of the ratio should feature the number of faculty first, followed by the number of students, e.g., "1:10" to mean "one faculty per ten students".
+		/// 
+		/// </summary>
+		[JsonProperty( PropertyName = "qdata:facultyToStudentRatio" )]
+		public string FacultyToStudentRatio { get; set; }
 
 		/// <summary>
 		///  Number of credential holders in the final data collection and reporting.
@@ -127,7 +129,7 @@ namespace RA.Models.JsonV2.QData
 		/// <summary>
 		/// Mechanism by which income is determined; i.e., actual or annualized earnings.
 		/// skos:Concept
-		/// <see cref="https://credreg.net/qdata/terms/IncomeDeterminationMethod#IncomeDeterminationMethod"/>
+		/// <see cref="https://credreg.net/qdata/terms/IncomeDeterminationMethod"/>
 		/// incomeDetermination:ActualEarnings 
 		/// incomeDetermination:AnnualizedEarnings
 		/// </summary>
@@ -171,6 +173,12 @@ namespace RA.Models.JsonV2.QData
 		public List<QuantitativeValue> OccupationRate { get; set; }
 
 		/// <summary>
+		/// Rate computed by dividing the number of subjects passing an assessment by the total number taking the assessment.
+		/// </summary>
+		[JsonProperty( PropertyName = "qdata:passRate" )]
+		public List<QuantitativeValue> PassRate { get; set; }
+
+		/// <summary>
 		///  Reference to an entity describing median earnings as well as earnings at various percentiles for holders or subjects in the region.
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:regionalEarningsDistribution" )]
@@ -187,14 +195,36 @@ namespace RA.Models.JsonV2.QData
 		/// Number of people employed in the area of work (e.g., industry, occupation) in which the credential provided preparation.
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:relatedEmployment" )]
-		public List<QuantitativeValue> RelatedEmployment { get; set; } 
+		public List<QuantitativeValue> RelatedEmployment { get; set; }
 
-		///// <summary>
-		///// Category of subject excluded from the data.
-		///// </summary>
-		//[JsonProperty( PropertyName = "qdata:subjectExcluded" )]
-		//public List<SubjectProfile> SubjectExcluded { get; set; } 
+        /// <summary>
+        /// Type of subject included or excluded from the data set.
+        /// 23-??-?? No longer has a domain of dataProfile
+        /// skos:Concept
+        /// ConceptScheme: qdata:SubjectCategory
+        /// <see href="https://credreg.net/qdata/terms/SubjectCategory"/>
+        /// </summary>        
+        [Obsolete]
+        [JsonProperty( PropertyName = "qdata:subjectType" )]
+        public CredentialAlignmentObject SubjectType { get; set; }	
 
+        /// <summary>
+        /// Quantitative values and percentages for a subject category (SubjectType) in the data set.
+		/// 23-??-?? No longer has a domain of dataProfile
+        /// </summary>        
+		[Obsolete]
+		[JsonProperty( PropertyName = "qdata:subjectValue" )]
+        public List<QuantitativeValue> SubjectValue { get; set; }
+
+
+        /// <summary>
+        /// Category of subject excluded from the data.
+        /// Feb,2021 change type to QuantitativeValue
+        /// </summary>
+        [JsonProperty( PropertyName = "qdata:subjectExcluded" )]
+		public List<QuantitativeValue> SubjectExcluded { get; set; }
+
+		//deprecated Feb/2021
 		///// <summary>
 		///// Category of subject included in the data.
 		///// </summary>
@@ -227,13 +257,12 @@ namespace RA.Models.JsonV2.QData
 		public LanguageMap WorkTimeThreshold { get; set; }
 
 		[JsonProperty( PropertyName = "qdata:totalWIOACompleters" )]
-
 		public List<QuantitativeValue> TotalWIOACompleters { get; set; }
+
 		[JsonProperty( PropertyName = "qdata:totalWIOAParticipants" )]
-
 		public List<QuantitativeValue> TotalWIOAParticipants { get; set; }
-		[JsonProperty( PropertyName = "qdata:totalWIOAExiters" )]
 
+		[JsonProperty( PropertyName = "qdata:totalWIOAExiters" )]
 		public List<QuantitativeValue> TotalWIOAExiters { get; set; } 
 	}
 }

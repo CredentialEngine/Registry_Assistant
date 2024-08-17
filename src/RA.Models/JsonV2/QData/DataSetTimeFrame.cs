@@ -21,11 +21,11 @@ namespace RA.Models.JsonV2.QData
 		[JsonProperty( "@type" )]
 		public string Type { get; set; } = "qdata:DataSetTimeFrame";
 
-		/// <summary>
-		/// Id for this blank node
-		/// </summary>
-		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		///// <summary>
+		///// Id for this blank node
+		///// </summary>
+		//[JsonProperty( "@id" )]
+		//public string CtdlId { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; }
@@ -39,20 +39,26 @@ namespace RA.Models.JsonV2.QData
 		[JsonProperty( PropertyName = "ceterms:endDate" )]
 		public string EndDate { get; set; }
 
-		/// <summary>
-		/// Attributes of the data set.
-		/// URI to blank node
-		/// qdata:DataProfile
-		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; } 
+
+		///// <summary>
+		///// Attributes of the data set.
+		///// URI to blank node
+		///// qdata:DataProfile
+		///// </summary>
+		//[JsonProperty( PropertyName = "qdata:dataAttributesBNList" )]
+		//public List<string> DataAttributesBNList { get; set; }
+
 		[JsonProperty( PropertyName = "qdata:dataAttributes" )]
-		public List<string> DataAttributes { get; set; }
+		public List<DataProfile> DataAttributes { get; set; }
 
 		/// <summary>
 		/// Data Source Coverage Type
 		/// Type of geographic coverage of the subjects.
-		/// <see cref="https://credreg.net/qdata/terms/dataSourceCoverageType#dataSourceCoverageType"/>
+		/// <see cref="https://credreg.net/qdata/terms/dataSourceCoverageType"/>
 		/// skos:Concept
-		/// <see cref="https://credreg.net/qdata/terms/DataSourceCoverage#DataSourceCoverage"/>
+		/// <see cref="https://credreg.net/qdata/terms/DataSourceCoverage"/>
 		/// sourceCoverage:Country
 		///	sourceCoverage:Global
 		///	sourceCoverage:Region
@@ -60,7 +66,9 @@ namespace RA.Models.JsonV2.QData
 		///	sourceCoverage:UrbanArea
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:dataSourceCoverageType" )]
-		public List<CredentialAlignmentObject> DataSourceCoverageType { get; set; }
+		public List<CredentialAlignmentObject> DataSourceCoverageTypeOLD { get; set; }
 
+		[JsonProperty( PropertyName = "qdata:dataSourceCoverageTypeNew" )]
+		public object DataSourceCoverageType { get; set; }
 	}
 }

@@ -239,6 +239,19 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
 		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; } = new List<CredentialAlignmentObject>();
 
+		/// <summary>
+		/// This resource provides transfer value for the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:providesTransferValueFor" )]
+		public List<string> ProvidesTransferValueFor { get; set; }
+
+		/// <summary>
+		/// This resource receives transfer value from the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:receivesTransferValueFrom" )]
+		public List<string> ReceivesTransferValueFrom { get; set; }
 
 		[JsonProperty( "ceterms:hasWorkforceDemand" )]
 		public List<string> HasWorkforceDemand { get; set; }
@@ -393,9 +406,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceasn:substantiatingWorkrole" )]
 		public List<string> SubstantiatingWorkrole { get; set; }
 
-
-
-
 		//--------------- helpers ---------------------------------------
 		/// <summary>
 		/// CIP List is a helper when publishing from a graph. It will not be published
@@ -417,6 +427,35 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( "ceterms:isMemberOf" )]
 		public List<string> isMemberOf { get; set; }
+
+		/// <summary>
+		/// VersionIdentifier
+		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
+		/// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
+		public List<IdentifierValue> VersionIdentifier { get; set; }
+
+		/// <summary>
+		/// Latest version of the credential.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:latestVersion" )]
+		public string LatestVersion { get; set; } //URL
+
+		/// <summary>
+		/// Version of the resource that immediately precedes this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:previousVersion" )]
+		public string PreviousVersion { get; set; } //URL
+
+		/// <summary>
+		/// Version of the resource that immediately follows this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:nextVersion" )]
+		public string NextVersion { get; set; } //URL
 
 	}
 	public class CompetencyPlain : Competency

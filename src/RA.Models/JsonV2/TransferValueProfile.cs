@@ -45,9 +45,6 @@ namespace RA.Models.JsonV2
 		public List<string> DerivedFrom { get; set; }
 		//
 
-		[JsonProperty( PropertyName = "ceterms:administrationProcess" )]
-		public List<ProcessProfile> AdministrationProcess { get; set; }
-
 		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
 		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
@@ -83,6 +80,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:identifier" )]
 		public List<IdentifierValue> Identifier { get; set; }
 
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
+		public string InCatalog { get; set; }
 
 		/// <summary>
 		/// Date the validity or usefulness of the information in this resource begins.
@@ -101,13 +103,27 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:transferValue" )]
 		public List<ValueProfile> TransferValue { get; set; } = null;
-		//public List<QuantitativeValue> TransferValue { get; set; } = null;
+
+		#region Versions
+		[JsonProperty( PropertyName = "ceterms:latestVersion" )]
+		public string LatestVersion { get; set; } //URL
+
+		[JsonProperty( PropertyName = "ceterms:previousVersion" )]
+		public string PreviousVersion { get; set; } //URL
+
+		[JsonProperty( PropertyName = "ceterms:nextVersion" )]
+		public string NextVersion { get; set; } //URL
 
 		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
 		public string SupersededBy { get; set; } //URL
 
 		[JsonProperty( PropertyName = "ceterms:supersedes" )]
 		public string Supersedes { get; set; } //URL
+
+
+		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
+		public List<IdentifierValue> VersionIdentifier { get; set; }
+		#endregion
 
 		/// <summary>
 		///  Resource that accepts the transfer value described by this resource, according to the entity providing this resource.

@@ -41,7 +41,7 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Credential input class
 	/// </summary>
-	public class Credential : BaseRequestClass
+	public class Credential : BaseRequestHelper
 	{
 		/// <summary>
 		/// constructor
@@ -60,7 +60,6 @@ namespace RA.Models.Input
 			DegreeMajor = new List<string>();
 			DegreeMinor = new List<string>();
 
-			// Region = new List<GeoCoordinates>();
 			OwnedBy = new List<OrganizationReference>();
 
 			AccreditedBy = new List<Input.OrganizationReference>();
@@ -76,7 +75,6 @@ namespace RA.Models.Input
 			Recommends = new List<ConditionProfile>();
 			Requires = new List<ConditionProfile>();
 
-			//ProcessProfile = new List<Input.ProcessProfile>();
 			CommonConditions = new List<string>();
 			CommonCosts = new List<string>();
 
@@ -207,14 +205,14 @@ namespace RA.Models.Input
 		/// <see href="https://credreg.net/ctdl/terms/Delivery"></see>
 		/// </summary>
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
-		/// <summary>
-		/// AvailableOnlineAt URL
-		/// </summary>
-		public List<string> AvailableOnlineAt { get; set; } 
-		/// <summary>
-		/// AvailabilityListing URL
-		/// </summary>
-		public List<string> AvailabilityListing { get; set; } 
+        /// <summary>
+        /// AvailableOnlineAt URL
+        /// </summary>
+        public List<string> AvailableOnlineAt { get; set; }
+        /// <summary>
+        /// AvailabilityListing URL
+        /// </summary>
+        public List<string> AvailabilityListing { get; set; } 
 		/// <summary>
 		/// List of Addresses for this credential, using Place
 		/// </summary>
@@ -269,6 +267,13 @@ namespace RA.Models.Input
 		/// List of Organizations that recognize this credential
 		/// </summary>
 		public List<OrganizationReference> RecognizedBy { get; set; }
+		/// <summary>
+		/// Organization(s) that register this resource. 
+		/// Only allowed for Apprenticeship related certificates. Currently:
+		/// ceterms:ApprenticeshipCertificate, ceterms:JourneymanCertificate, ceterms:MasterCertificate, ceterms:PreApprenticeshipCertificate
+		/// </summary>
+		public List<OrganizationReference> RegisteredBy { get; set; } = new List<Input.OrganizationReference>();
+
 		/// <summary>
 		/// List of Organizations that regulate this credential
 		/// </summary>
@@ -342,13 +347,15 @@ namespace RA.Models.Input
 		public List<CostProfile> EstimatedCost { get; set; } = new List<CostProfile>();
 
 		/// <summary>
-		/// List of duration profiles expressing one or more duration profiles to attain this credential
+		/// Estimated time it will take to complete an activity, event, or resource.
+		/// List of duration profiles expressing one or more duration profiles to attain this resource.
 		/// </summary>
-		public List<DurationProfile> EstimatedDuration { get; set; } = new List<DurationProfile>();
+		public List<DurationProfile> EstimatedDuration { get; set; } 
+
 		/// <summary>
 		/// Entity that describes financial assistance that is offered or available.
 		/// </summary>
-		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
+		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; }
 		#endregion
 
 		/// <summary>
@@ -490,7 +497,7 @@ namespace RA.Models.Input
 		/// A single DurationItem, using Years, Months, etc. or a combination.
 		/// Alternately the actual ISO8601 format may be provided (using Duration_ISO8601)
 		/// </summary>
-		public DurationItem RenewalFrequency { get; set; } //= new DurationItem();
+		public DurationItem RenewalFrequency { get; set; }
 
 		/// <summary>
 		/// Revocation Profile

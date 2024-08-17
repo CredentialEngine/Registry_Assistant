@@ -27,7 +27,7 @@ namespace RA.Models.JsonV2
 		public object Graph { get; set; }
 
 	}
-	public class CompetencyFramework //: JsonLDDocument
+	public class CompetencyFramework 
 	{
 		//[JsonIgnore]
 		//public static string classType = "ceasn:CompetencyFramework";
@@ -35,15 +35,13 @@ namespace RA.Models.JsonV2
 		//public static string thisContext = "https://credreg.net/ctdlasn/schema/context/json";
 		public CompetencyFramework()
 		{
-			//Type = classType;
-			//Context = thisContext;	//
 		}
 
 		[JsonProperty( "@type" )]
 		public string Type { get; set; } = "ceasn:CompetencyFramework";
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }	//		/resource
+		public string CtdlId { get; set; }	
 
 		[JsonProperty( "ceterms:ctid" )]
 		public string CTID { get; set; }
@@ -53,9 +51,6 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( "ceasn:alignTo" )]
 		public List<string> alignTo { get; set; } 
-
-		//[JsonProperty( "ceasn:altIdentifier" )]
-		//public List<string> altIdentifier { get; set; }
 
 		[JsonProperty( "ceasn:author" )]
 		public string author { get; set; }
@@ -103,21 +98,26 @@ namespace RA.Models.JsonV2
 
 		//single per https://github.com/CredentialEngine/CompetencyFrameworks/issues/66
 		//23-03-22 back to a list
+		//but store as object due to old resources as string
 		[JsonProperty( "ceasn:derivedFrom" )]
-        public object derivedFrom { get; set; }
-        //public List<string> derivedFrom { get; set; }
+        public List<string> derivedFrom { get; set; }
 
-        //???language map??
         [JsonProperty( "ceasn:description" )]
 		public LanguageMap description { get; set; }
 
-		[JsonProperty( "ceasn:educationLevelType" )]
+        /// <summary>
+        /// Education Level Type
+		/// Best practice is to use terms from the http://purl.org/ctdl/terms/AudienceLevel concept scheme.
+        /// Range: skos:Concept
+        /// </summary>
+        [JsonProperty( "ceasn:educationLevelType" )]
 		public List<string> educationLevelType { get; set; }
 
-		/// <summary>
-		/// Top-level child competency of a competency framework.
-		/// </summary>
-		[JsonProperty( "ceasn:hasTopChild" )]
+        /// <summary>
+        /// Top-level child competency of a competency framework.
+        /// Range: ceasn:Competency
+        /// </summary>
+        [JsonProperty( "ceasn:hasTopChild" )]
 		public List<string> hasTopChild { get; set; } 
 
 		[JsonProperty( "ceasn:identifier" )]
@@ -135,7 +135,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceasn:name" )]
 		public LanguageMap name { get; set; } = new LanguageMap();
 
-		[JsonProperty("ceasn:publicationStatusType" )]
+        /// <summary>
+        /// The publication status of the resource.
+        /// Range: skos:Concept
+        /// </summary>
+        [JsonProperty("ceasn:publicationStatusType" )]
 		public string publicationStatusType { get; set; }
 		//
 		[JsonProperty( "ceasn:publisher" )]
@@ -148,16 +152,17 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceasn:repositoryDate" )]
 		public string repositoryDate { get; set; }
 
-		/// <summary>
-		/// 19-01-18 Changed to a language string
-		/// Hide until changed in CaSS
-		/// </summary>
-		[JsonProperty( "ceasn:rights" )]
-		public LanguageMap rights { get; set; } 
-		//public object rights { get; set; }
-		//public List<string> rights { get; set; } 
+        /// <summary>
+        /// Information about rights held in and over this resource.
+        /// </summary>
+        [JsonProperty( "ceasn:rights" )]
+		public LanguageMap rights { get; set; }
 
-		[JsonProperty( "ceasn:rightsHolder" )]
+        /// <summary>
+        /// An agent owning or managing rights over this resource.
+		/// Range: ceterms:CredentialOrganization, ceterms:Organization, ceterms:QACredentialOrganization
+        /// </summary>
+        [JsonProperty( "ceasn:rightsHolder" )]
 		public object rightsHolder { get; set; }
 
 		[JsonProperty( "ceasn:source" )]
@@ -172,37 +177,60 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( "ceterms:industryType" )]
 		public List<CredentialAlignmentObject> IndustryType { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
 		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; }
 
 
-		//*** Helper properties where publishing input is a graph. These will not be published
+        /// <summary>
+        /// VersionIdentifier
+        /// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
+        /// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
+		public List<IdentifierValue> VersionIdentifier { get; set; }
+
 		/// <summary>
-		/// CIP List is a helper when publishing from a graph. It will not be published
+		/// Latest version of the resource.
 		/// </summary>
-		[JsonProperty( "cipList" )]
-		public List<string> CIPList { get; set; } = null;
-		/// <summary>
-		/// SOC List is a helper when publishing from a graph. It will not be published
-		/// </summary>
-		[JsonProperty( "socList" )]
-		public List<string> SOCList { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:latestVersion" )]
+		public string LatestVersion { get; set; } //URL
+
+        /// <summary>
+        /// Previous version of the resource.
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:previousVersion" )]
+		public string PreviousVersion { get; set; } //URL
+
+        /// <summary>
+        /// Next version of the resource.
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:nextVersion" )]
+		public string NextVersion { get; set; } //URL
+
+
+        #region *** Helper properties where publishing input is a graph. These will not be published
+        /// <summary>
+        /// CIP List is a helper when publishing from a graph. It will not be published
+        /// </summary>
+        [JsonProperty( "cipList" )]
+        public List<string> CIPList { get; set; } = null;
+        /// <summary>
+        /// SOC List is a helper when publishing from a graph. It will not be published
+        /// </summary>
+        [JsonProperty( "socList" )]
+        public List<string> SOCList { get; set; } = null;
 
         /// NAICS List is a helper when publishing from a graph. It will not be published
         [JsonProperty( "naicsList" )]
-		public List<string> NaicsList { get; set; } = null;
+        public List<string> NaicsList { get; set; } = null;
+        #endregion
     }
 
-	public class CompetencyFrameworkPlain
+    public class CompetencyFrameworkPlain
 	{
-		//[JsonIgnore]
-		//public static string classType = "ceasn:CompetencyFramework";
-		//[JsonIgnore]
-		//public static string thisContext = "https://credreg.net/ctdlasn/schema/context/json";
 		public CompetencyFrameworkPlain()
 		{
-			//Type = classType;
-			//Context = thisContext;	//
 		}
 
 		[JsonProperty( "@type" )]
@@ -322,6 +350,7 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( "ceterms:industryType" )]
 		public List<CredentialAlignmentObject> IndustryType { get; set; } = new List<CredentialAlignmentObject>();
+
 
 	}
 	

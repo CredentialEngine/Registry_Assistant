@@ -56,8 +56,14 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:hasSupportService" )]
         public List<string> HasSupportService { get; set; }
 
-        //The primary language used in or by this resource.
-        [JsonProperty( "ceterms:inLanguage" )]
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
+		public string InCatalog { get; set; }
+
+		//The primary language used in or by this resource.
+		[JsonProperty( "ceterms:inLanguage" )]
 		public List<string> InLanguage { get; set; }
 
 		/// <summary>
@@ -91,11 +97,14 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Type of collection, list, set, or other grouping of resources; select from an existing enumeration of such types.
+		/// Need to treat as an object due to different sources (like CaSS)
 		/// ConceptScheme: CollectionCategory 
+		/// NOTE: this is an object in the API, but a CredentialAlignmentObject will be in the registry/finder - so be careful on updates to this class
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:collectionType" )]
-		//public object CollectionType { get; set; }
-		public List<CredentialAlignmentObject> CollectionType { get; set; }
+		public object CollectionType { get; set; }
+		//public List<CredentialAlignmentObject> CollectionType { get; set; }
+
 		/// <summary>
 		/// The name or title of this resource.
 		/// </summary>
@@ -129,14 +138,44 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
         public string SubjectWebpage { get; set; }
 
-        //[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-        //public List<string> SubjectWebpage2 { get; set; }
+		#region Version related 
+		/// <summary>
+		/// VersionIdentifier
+		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
+		/// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
+		public List<IdentifierValue> VersionIdentifier { get; set; }
 
-        //*** Helper properties where publishing input is a graph. These will not be published
-        /// <summary>
-        /// CIP List is a helper when publishing from a graph. It will not be published
-        /// </summary>
-        [JsonProperty( "cipList" )]
+		/// <summary>
+		/// Latest version of the credential.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:latestVersion" )]
+		public string LatestVersion { get; set; } //URL
+
+		/// <summary>
+		/// Version of the resource that immediately precedes this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:previousVersion" )]
+		public string PreviousVersion { get; set; } //URL
+
+		/// <summary>
+		/// Version of the resource that immediately follows this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:nextVersion" )]
+		public string NextVersion { get; set; } //URL
+
+
+		#endregion
+
+		//*** Helper properties where publishing input is a graph. These will not be published
+		/// <summary>
+		/// CIP List is a helper when publishing from a graph. It will not be published
+		/// </summary>
+		[JsonProperty( "cipList" )]
 		public List<string> CIPList { get; set; }
 		/// <summary>
 		/// SOC List is a helper when publishing from a graph. It will not be published
@@ -192,5 +231,7 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }
+
+	
 	}
 }

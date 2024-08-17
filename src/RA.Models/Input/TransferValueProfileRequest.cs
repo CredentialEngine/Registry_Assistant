@@ -80,11 +80,6 @@ namespace RA.Models.Input
 		public List<string> DerivedFrom { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Entity describing the process by which a resource, or aspects of it, are administered.
-		/// </summary>
-		public List<ProcessProfile> AdministrationProcess { get; set; } = new List<ProcessProfile>();
-
-		/// <summary>
 		/// Entity describing the process by which the transfer value profile, or aspects of it, were created.
 		/// </summary>
 		public List<ProcessProfile> DevelopmentProcess { get; set; } = new List<ProcessProfile>();
@@ -208,8 +203,8 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// VersionIdentifier
-		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
-		/// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
+		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+		/// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
 		/// </summary>
 		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
 

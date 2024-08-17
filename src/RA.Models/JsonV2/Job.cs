@@ -11,7 +11,7 @@ namespace RA.Models.JsonV2
 	/// <summary>
 	/// Profession, trade, or career field that may involve training and/or a formal qualification.
 	/// </summary>
-	public class Job
+	public class Job : BaseEmploymentToWorkObject
 	{
         [JsonIgnore]
         public static string classType = "ceterms:Job";
@@ -61,6 +61,7 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
 		public List<string> AbilityEmbodied { get; set; }
 
+
 		/// <summary>
 		/// Category or classification of this resource.
 		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
@@ -98,6 +99,12 @@ namespace RA.Models.JsonV2
         /// </summary>
         [JsonProperty( PropertyName = "ceterms:hasOccupation" )]
 		public List<string> HasOccupation { get; set; }
+
+		/// <summary>
+		/// Rubric related to this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasRubric" )]
+		public List<string> HasRubric { get; set; }
 
 		/// <summary>
 		/// Task related to this resource.
@@ -203,11 +210,17 @@ namespace RA.Models.JsonV2
 		public string SubjectWebpage { get; set; } //URL
 
 		/// <summary>
-		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
-		/// ceterms:versionIdentifier
+		/// This resource provides transfer value for the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
-		public List<IdentifierValue> VersionIdentifier { get; set; }
+		[JsonProperty( PropertyName = "ceterms:providesTransferValueFor" )]
+		public List<string> ProvidesTransferValueFor { get; set; }
 
+		/// <summary>
+		/// This resource receives transfer value from the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:receivesTransferValueFrom" )]
+		public List<string> ReceivesTransferValueFrom { get; set; }
 	}
 }

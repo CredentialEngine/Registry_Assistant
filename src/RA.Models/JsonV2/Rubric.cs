@@ -52,9 +52,6 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:audienceType" )]
         public List<CredentialAlignmentObject> AudienceType { get; set; }
 
-		[JsonProperty( "ceasn:author" )]
-		public string Author { get; set; }
-
 		/// <summary>
 		/// Category or classification of this resource.
 		/// List of URIs that point to a concept
@@ -116,7 +113,10 @@ namespace RA.Models.JsonV2
 		public List<CredentialAlignmentObject> EducationLevelType { get; set; }
 
 
-
+		/// <summary>
+		/// Evaluator Type
+		/// Type of evaluator; select from an existing enumeration of such types.
+		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:evaluatorType" )]
 		public List<string> EvaluatorType { get; set; }
 
@@ -176,7 +176,13 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:identifier" )]
         public List<IdentifierValue> Identifier { get; set; }
 
-        [JsonProperty( "ceasn:inLanguage" )]
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
+		public string InCatalog { get; set; }
+
+		[JsonProperty( "ceasn:inLanguage" )]
 		public List<string> InLanguage { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:conceptKeyword" )]
@@ -244,8 +250,6 @@ namespace RA.Models.JsonV2
         [JsonProperty( PropertyName = "ceterms:industryType" )]
         public List<CredentialAlignmentObject> IndustryType { get; set; } = new List<CredentialAlignmentObject>();
 
-        [JsonProperty( PropertyName = "ceterms:naics" )]
-        public List<string> Naics { get; set; } = new List<string>();
 
         [JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
         public List<CredentialAlignmentObject> InstructionalProgramType { get; set; } = new List<CredentialAlignmentObject>();
@@ -267,7 +271,7 @@ namespace RA.Models.JsonV2
 
 		#region Base properties
 		[JsonProperty( "@type" )]
-		public string Type { get; set; } = "asn:RubricCriterion";
+		public string Type { get; set; } = "ceasn:RubricCriterion";
 
 		[JsonProperty( "@id" )]
 		public string CtdlId { get; set; }  //resource
@@ -407,7 +411,7 @@ d	ceasn:name
 		}
 
 		[JsonProperty( "@type" )]
-		public string Type { get; set; } = "asn:CriterionLevel";
+		public string Type { get; set; } = "ceasn:CriterionLevel";
 
 		/// <summary>
 		/// The identifier for a Rubric level.

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,22 +7,11 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
-	/// <summary>
-	/// Credentialing Action
-	/// One of:
-	/// ceterms:AccreditAction 
-	/// ceterms:AdvancedStandingAction 
-	/// ceterms:ApproveAction 
-	/// ceterms:OfferAction 
-	/// ceterms:RecognizeAction 
-	/// ceterms:RegistrationAction 
-	/// ceterms:RegulateAction 
-	/// ceterms:RenewAction 
-	/// ceterms:RevokeAction 
-	/// ceterms:RightsAction
-	/// ceterms:WorkforceDemandAction
-	/// </summary>
-	public class CredentialingAction
+    /// <summary>
+    /// Credentialing Action
+    /// Action taken by an agent affecting the status of an object entity.
+    /// </summary>
+    public class CredentialingAction
 	{
 		/// <summary>
 		/// Type of credentialing action
@@ -111,18 +101,19 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Object
-		/// Object upon which the action is carried out, whose state is kept intact or changed.
+		/// 24-07-30 Made Object a list of strings. 
+		/// Object(s) upon which the action is carried out, whose state is kept intact or changed.
 		/// A reference for Credentials, AssessmentProfile, any LearningOpportunity Profile type, or any organization type
 		/// Input: a CTID or a blank node Id where the bnode will be added in the request class ReferenceObjects property.
 		/// </summary>
-		public string Object { get; set; } 
+        public List<string> Object { get; set; }
 
-		/// <summary>
-		/// Participant
-		/// Co-agents that participated in the action indirectly.
-		/// Provide the CTID for a participant in the Credential Registry or provide minimum data where not in the registry.
-		/// </summary>
-		public List<OrganizationReference> Participant { get; set; } = new List<OrganizationReference>();
+        /// <summary>
+        /// Participant
+        /// Co-agents that participated in the action indirectly.
+        /// Provide the CTID for a participant in the Credential Registry or provide minimum data where not in the registry.
+        /// </summary>
+        public List<OrganizationReference> Participant { get; set; } = new List<OrganizationReference>();
 
 
 		/// <summary>

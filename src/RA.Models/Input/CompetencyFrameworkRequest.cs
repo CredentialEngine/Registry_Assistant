@@ -224,7 +224,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public string rights { get; set; }
 		public LanguageMap rights_map { get; set; } = new LanguageMap();
-        //public List<string> rights { get; set; } = new List<string>();
 
         /// <summary>
         /// An agent owning or managing rights over this competency framework.

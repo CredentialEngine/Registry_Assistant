@@ -191,7 +191,10 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:creditUnitTypeDescription" )]
 		public LanguageMap CreditUnitTypeDescription { get; set; }
 
-
+		/// <summary>
+		/// Valid only for a Learning Program
+		/// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:degreeConcentration" )]
 		public List<CredentialAlignmentObject> DegreeConcentration { get; set; }
 
@@ -234,6 +237,12 @@ namespace RA.Models.JsonV2
 		public List<string> HasOffering { get; set; }
 
 		/// <summary>
+		/// Rubric related to this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasRubric" )]
+		public List<string> HasRubric { get; set; }
+
+		/// <summary>
 		/// Reference to a relevant support service available for this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasSupportService" )]
@@ -247,6 +256,12 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:identifier" )]
 		public List<IdentifierValue> Identifier { get; set; }
 
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
+		public string InCatalog { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:isPartOf" )]
 		public List<string> IsPartOf { get; set; }
 
@@ -254,17 +269,39 @@ namespace RA.Models.JsonV2
 		public List<string> OwnedBy { get; set; }
 
 		/// <summary>
+		/// Agent that offers the resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:offeredBy" )]
+
+		public List<string> OfferedBy { get; set; }
+		/// <summary>
 		/// Only allowed for a course on a course
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:prerequisite" )]
 		public List<string> Prerequisite { get; set; }
 
 
+
 		/// <summary>
-		/// Agent that offers the resource.
+		/// This resource provides transfer value for the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:offeredBy" )]
-		public List<string> OfferedBy { get; set; }
+		[JsonProperty( PropertyName = "ceterms:providesTransferValueFor" )]
+		public List<string> ProvidesTransferValueFor { get; set; }
+
+		/// <summary>
+		/// This resource receives transfer value from the referenced Transfer Value Profile.
+		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:receivesTransferValueFrom" )]
+		public List<string> ReceivesTransferValueFrom { get; set; }
+
+		/// <summary>
+		/// Action carried out upon this resource.
+		/// Refer to the referenced Action for more information. Other resources may be included for the full value.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:objectOfAction" )]
+		public List<string> ObjectOfAction { get; set; }
 
 		#region -- Quality Assurance BY --
 		/// <summary>
@@ -430,12 +467,12 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:targetLearningResource" )]
 		public List<string> TargetLearningResource { get; set; }
 
-		/// <summary>
-		/// Pathway in which this resource is a potential component.
-		/// This is an inverse property and would not be published with this resource
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:targetPathway" )]
-		public List<string> TargetPathway { get; set; }
+		///// <summary>
+		///// Pathway in which this resource is a potential component.
+		///// This is an inverse property and would not be published with this resource
+		///// </summary>
+		//[JsonProperty( PropertyName = "ceterms:targetPathway" )]
+		//public List<string> TargetPathway { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
 		public List<IdentifierValue> VersionIdentifier { get; set; }

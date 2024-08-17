@@ -11,7 +11,7 @@ namespace RA.Models.JsonV2
 	/// <summary>
 	/// Collection of tasks and competencies that embody a particular function in one or more jobs.
 	/// </summary>
-	public class WorkRole : BaseResourceDocument
+	public class WorkRole : BaseEmploymentToWorkObject
 	{
 		/// <summary>
 		///  type
@@ -48,14 +48,21 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }
 
-        /// <summary>
-        /// AbilityEmbodied
-        /// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
-        /// CTID/URI to any of:
-        /// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
-        /// ceasn:abilityEmbodied
-        /// </summary>
-        [JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
+
+		/// <summary>
+		/// Organization(s) that own this resource
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:assertedBy" )]
+		public List<string> AssertedBy { get; set; }
+
+		/// <summary>
+		/// AbilityEmbodied
+		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
+		/// CTID/URI to any of:
+		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
+		/// ceasn:abilityEmbodied
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
 		public List<string> AbilityEmbodied { get; set; }
 
 		/// <summary>
@@ -97,6 +104,11 @@ namespace RA.Models.JsonV2
         /// </summary>
         [JsonProperty( PropertyName = "ceterms:hasTask" )]
 		public List<string> HasTask { get; set; }
+		/// <summary>
+		/// Occupation related to this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasOccupation" )]
+		public List<string> HasOccupation { get; set; }
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
@@ -129,13 +141,6 @@ namespace RA.Models.JsonV2
         /// </summary>
         [JsonProperty( PropertyName = "ceasn:skillEmbodied" )]
 		public List<string> SkillEmbodied { get; set; }
-
-		/// <summary>
-		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
-		/// ceterms:versionIdentifier
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
-		public List<IdentifierValue> VersionIdentifier { get; set; }
 
 	}
 }

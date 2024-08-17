@@ -15,14 +15,14 @@ namespace RA.Models.Input
 	public class LearningProgramRequest : LearningOpportunityRequest
 	{
 	}
-	/// <summary>
+	/// <summary>	
 	/// A course will have all of the properties of LearningOpportunityProfile, except:
 	/// - ceterms:instructionalProgramType 
 	/// </summary>
 	public class CourseRequest : LearningOpportunityRequest
 	{
 	}
-	public class LearningOpportunity : BaseRequestClass
+	public class LearningOpportunity : BaseRequestHelper
 	{
 		public LearningOpportunity()
 		{
@@ -92,11 +92,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = null;
 
-		/// <summary>
-		/// Webpage that describes this entity.
-		/// URL
-		/// </summary>
-		public string SubjectWebpage { get; set; }
 
 		/// <summary>
 		/// Credential Identifier
@@ -113,14 +108,21 @@ namespace RA.Models.Input
 		public List<string> InLanguage { get; set; }
 
 
-        /// <summary>
-        /// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
-        /// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
-        /// Required
-        /// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
-        /// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
-        /// </summary>
-        public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
+		/// <summary>
+		/// Webpage that describes this entity.
+		/// 24-03-18 no longer required for course, but is still required for the others
+		/// URL
+		/// </summary>
+		public string SubjectWebpage { get; set; }
+
+		/// <summary>
+		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
+		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+		/// Required
+		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
+		/// </summary>
+		public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
 
         #region at least one of
         /// <summary>
@@ -141,10 +143,9 @@ namespace RA.Models.Input
 		/// Provide credit information in a ValueProfile value
 		/// A credit-related value.
 		/// 21-07-19 - updating Creditvalue to also allow a list. It is defined as an object. The API will accept either a ValueProfile object or List of ValueProfiles
-		/// 21-08-18 - Changing permantly to the List, as only existing use was from the publisher (and the latter is updated to use the list)
+		/// 21-08-18 - Changing permanently to the List, as only existing use was from the publisher (and the latter is updated to use the list)
 		/// </summary>
 		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
-		//public object CreditValue { get; set; }   
 
 
 		/// <summary>
@@ -192,10 +193,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public string DeliveryTypeDescription { get; set; }
 		public LanguageMap DeliveryTypeDescription_Map { get; set; } = null;
+
+
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		public string InCatalog { get; set; }
 		#endregion
 
-		#region location
+		#region Online or Physical Location
 		//23-11-13 - there is no longer a requirement to have at least one of the following
+		//24-03-25 mp - TBD, this may only apply to a Course, that is for other types, at least one of the properties must be provided
 
 		/// <summary>
 		/// Online location where the credential, assessment, or learning opportunity can be pursued.
@@ -378,10 +386,6 @@ namespace RA.Models.Input
         /// </summary>
         public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
-		/// <summary>
-		/// An inventory or listing of resources that includes this resource.
-		/// </summary>
-		public string InCatalog { get; set; }
 
 		/// <summary>
 		/// Is Non-Credit
@@ -429,10 +433,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> ReceivesTransferValueFrom { get; set; } = new List<string>();
 		/// <summary>
-		/// This resource has a target action
+		/// Action carried out upon this resource.
 		/// Refer to the referenced Action for more information. Other resources may be included for the full value.
 		/// </summary>
-		public List<string> TargetAction { get; set; } = new List<string>();
+		public List<string> ObjectOfAction { get; set; } = new List<string>();
 
 
 		/// <summary>
@@ -725,10 +729,9 @@ namespace RA.Models.Input
 		public List<string> TargetLearningResource { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
+		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
 		/// </summary>
 		public List<IdentifierValue> VersionIdentifier { get; set; }
-		//public List<string> TargetPathway { get; set; } = new List<string>();
 
 		/// <summary>
 		/// School Courses for the Exchange of Data code for a course.
@@ -750,6 +753,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMapList DegreeConcentration_Map { get; set; } = null;
         #endregion
+
+    }
+
+    public class MinimumRequest : BaseRequest
+    {
+        public MiniumumRequestClass LearningOpportunity { get; set; }
+    }
+    public class MiniumumRequestClass
+    {
+        public string Name { get; set; }
+        public string CTID { get; set; }
+
 
     }
 }

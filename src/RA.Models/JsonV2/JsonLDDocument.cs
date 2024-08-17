@@ -11,8 +11,8 @@ namespace RA.Models.JsonV2
 	/// <summary>
 	/// Base resource document
 	/// </summary>
-	public class BaseResourceDocument
-	{
+	public class BaseResourceDocument 
+	{   
 		/// <summary>
 		/// constructor
 		/// </summary>
@@ -20,12 +20,11 @@ namespace RA.Models.JsonV2
 		{
 			Context = "https://credreg.net/ctdl/schema/context/json";
 		}
-		[JsonIgnore]
-		[JsonProperty( "@context" )]
+        [JsonIgnore]
+        [JsonProperty( "@context" )]
 		public string Context { get; set; }
-		//public Dictionary<string, object> Context { get; set; }
 
-		[JsonProperty( "schema:datePublished" )]
-		public string DatePublished { get; set; } = null;
-	}
+        [JsonProperty( "schema:datePublished" )]
+        public string DatePublished { get; set; } = null;
+    }
 }
