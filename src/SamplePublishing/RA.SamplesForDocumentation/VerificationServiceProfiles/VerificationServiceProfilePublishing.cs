@@ -90,7 +90,6 @@ namespace RA.SamplesForDocumentation
 
             //list of target credentials
             //these will have to have been published to the registry
-            //OBSOLETE: LIKELY WILL BE REMOVED
             output.TargetCredential = new List<EntityReference>()
             {
                 new EntityReference()
