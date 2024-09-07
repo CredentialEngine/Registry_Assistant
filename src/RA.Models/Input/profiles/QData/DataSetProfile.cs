@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input.profiles.QData
 {
-	/// <summary>
-	/// DataSet Profile
-	/// Particular characteristics or properties of a data set and its records.
-	/// Required:
-	/// - CTID
-	/// - About
-	/// qdata:DataSetProfile
-	/// <see href="https://credreg.net/qdata/terms/DataSetProfile"/>
-	/// </summary>
-	public class DataSetProfile
-	{
+    /// <summary>
+    /// DataSet Profile
+    /// Particular characteristics or properties of a data set and its records.
+    /// Required:
+    /// - CTID
+    /// - About
+    /// qdata:DataSetProfile
+    /// <see href="https://credreg.net/qdata/terms/DataSetProfile"/>
+    /// </summary>
+    public class DataSetProfile
+    {
         #region Required
         /// <summary>
         /// CTID - Required 
@@ -33,11 +33,11 @@ namespace RA.Models.Input.profiles.QData
         /// </summary>
         public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// Description
-		/// REQUIRED and must be a minimum of 15 characters.
-		/// </summary>
-		public string Description { get; set; }
+        /// <summary>
+        /// Description
+        /// REQUIRED and must be a minimum of 15 characters.
+        /// </summary>
+        public string Description { get; set; }
         /// <summary>
         /// LanguageMap for Description
         /// </summary>
@@ -73,66 +73,66 @@ namespace RA.Models.Input.profiles.QData
         /// <summary>
         /// Data Set Time Period
         /// Short- and long-term post-award reporting intervals including start and end dates.
+        /// NOTE: This property is replaced by DataSetTemporalCoverage
+        /// NOTE: after official implementation, only one time period will be allowed
+        ///     Also any data attributes may be ignored, although attempts may be made to convert them to the new structure.
         /// </summary>
-        public List<DataSetTimeFrame> DataSetTimePeriod { get; set; } = new List<DataSetTimeFrame>();
+        [Obsolete]
+        public List<DataSetTimeFrame> DataSetTimePeriod { get; set; }
+
 
         /// <summary>
-        /// Authoritative source of an entity's information.
-        /// URL 
+        /// Location or geographic area for a data set. 
         /// </summary>
-        public string Source { get; set; }
+        public List<Place> DataSetSpatialCoverage { get; set; }
 
         /// <summary>
         /// Data Suppression Policy
         /// Description of a data suppression policy for earnings and employment data when cell size is below a certain threshold to ensure an individual's privacy and security.
         /// </summary>
         public string DataSuppressionPolicy { get; set; }
-        public LanguageMap DataSuppressionPolicy_Map { get; set; } = new LanguageMap();
+        public LanguageMap DataSuppressionPolicy_Map { get; set; }
 
         #endregion
 
-		/// <summary>
-		/// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
-		/// <see href="https://credreg.net/ctdl/terms/administrationProcess"/>
-		/// </summary>
-		public List<ProcessProfile> AdministrationProcess { get; set; } = new List<ProcessProfile>();
+        /// <summary>
+        /// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
+        /// <see href="https://credreg.net/ctdl/terms/administrationProcess"/>
+        /// </summary>
+        public List<ProcessProfile> AdministrationProcess { get; set; }
 
-		/// <summary>
-		/// List of Alternate Names for this resource
-		/// </summary>
-		public List<string> AlternateName { get; set; } = new List<string>();
-		/// <summary>
-		/// LanguageMap for AlternateName
-		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+        /// <summary>
+        /// List of Alternate Names for this resource
+        /// </summary>
+        public List<string> AlternateName { get; set; }
+        /// <summary>
+        /// LanguageMap for AlternateName
+        /// </summary>
+        public LanguageMapList AlternateName_Map { get; set; }
 
-		///// <summary>
-		///// Relevant Data Set For
-		///// Data set for the entity being referenced.
-		///// REQUIRED when dataSetProfile published separately.
-		///// Inverse property	- point back to the parent
-		///// 21-02-19 mparsons	Removing these from range: HoldersProfile, EarningsProfile, EmploymentOutlook
-		/////						- adding credential, assessment, and lopp
-		///// 21-05-10 mparsons	- effectively obsolete outside of HoldersProfile, EarningsProfile, EmploymentOutlook and the latter are moving to be obsolete
-		/////		Replaced by About
-		///// </summary>
-		//[Obsolete]
-		//public List<string> RelevantDataSetFor { get; set; } = new List<string>();
+        /// <summary>
+        /// Effective date of this resource's content.
+        /// </summary>
+        public string DateEffective { get; set; }
 
+        /// <summary>
+        /// Distribution File
+        /// Downloadable form of this dataset, at a specific location, in a specific format.
+        /// NOTE: 
+        ///     If any information is required to distinguish between different distribution files, use hasDataSetDistribution with the Data Set Distribution.
+        /// URL
+        /// </summary>
+        public List<string> DistributionFile { get; set; }
 
-		/// <summary>
-		/// Distribution File
-		/// Downloadable form of this dataset, at a specific location, in a specific format.
-		/// URL
-		/// </summary>
-		public List<string> DistributionFile { get; set; } = new List<string>();
 
         #region Instruction program and helpers
         /// <summary>
         /// Instructional Program Type
         /// Type of instructional program; select from an existing enumeration of such types.
         /// </summary>
+        [Obsolete]
         public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
+        [Obsolete]
         public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
 
         /// <summary>
@@ -140,21 +140,47 @@ namespace RA.Models.Input.profiles.QData
         /// List of valid Classification of Instructional Program codes. See:
         /// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
         /// </summary>
+        [Obsolete]
         public List<string> CIP_Codes { get; set; } = new List<string>();
         #endregion
+
+        /// <summary>
+        /// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+        /// <see href="https://credreg.net/ctdl/terms/identifier">Identifier</see>
+        /// ceterms:identifier
+        /// </summary>
+        public List<IdentifierValue> Identifier { get; set; }
 
         /// <summary>
         /// Jurisdiction Profile
         /// Geo-political information about applicable geographic areas and their exceptions.
         /// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
         /// </summary>
-        public List<JurisdictionProfile> Jurisdiction { get; set; } = new List<JurisdictionProfile>();
+        [Obsolete]
+        public List<JurisdictionProfile> Jurisdiction { get; set; }
 
         /// <summary>
-        /// Identification of data point(s) in the data set that describe personal subject attribute(s) used to uniquely identify a subject for the purpose of matching records and an indication of level of confidence in the accuracy of the match.
+        /// The publication status of the of this resource.
         /// </summary>
-        public string SubjectIdentification { get; set; }
-		public LanguageMap SubjectIdentification_Map { get; set; } = new LanguageMap();
+        public string PublicationStatusType { get; set; }
 
-	}
+        /// <summary>
+        /// A legal document giving official permission to do something with this resource.
+        /// xsd:anyURI
+        /// </summary>
+        public string License { get; set; }
+
+        /// <summary>
+        /// Information about rights held in and over this resource.
+        /// </summary>
+        public string Rights { get; set; }
+        public LanguageMap Rights_Map { get; set; }
+
+        /// <summary>
+        /// Authoritative source of an entity's information.
+        /// URL 
+        /// </summary>
+        public string Source { get; set; }
+
+    }
 }

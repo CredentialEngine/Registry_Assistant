@@ -10,19 +10,15 @@ namespace RA.Models.Input.profiles.QData
     /// DataSet Time Frame
     /// Time frame including earnings and employment start and end dates of the data set.
     /// Required:
-    /// - StartDate (otherwise doesn't make sense)
-    /// - DataAttributes (or doesn't make sense)
+    /// Requires at least one of: timeInterval, startDate, endDate
     /// https://credreg.net/qdata/terms/DataSetTimeFrame
     /// </summary>
     public class DataSetTimeFrame
 	{
-
         /// <summary>
-        /// Description of profile
-        /// RECOMMENDED - or should it be Required?
+        /// Length of the interval between two events. 
         /// </summary>
-        public string Description { get; set; }
-        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+        public DurationProfile TimeInterval { get; set; }
 
         /// <summary>
         /// Start date for the profile
@@ -36,33 +32,43 @@ namespace RA.Models.Input.profiles.QData
         public string EndDate { get; set; }
 
         /// <summary>
+        /// Description of profile
+        /// RECOMMENDED 
+        /// </summary>
+        public string Description { get; set; }
+        public LanguageMap Description_Map { get; set; }
+
+        /// <summary>
         /// Attributes of the data set.
-		/// HIGHLY RECOMMENDED or REQUIRED?
+		/// HIGHLY RECOMMENDED
+        /// 2024-07-31 This profile is now obsolete.
         /// qdata:DataProfile
         /// </summary>
+        [Obsolete]
         public List<DataProfile> DataAttributes { get; set; } = new List<DataProfile>();
 
-		/// <summary>
-		/// Data Source Coverage Type
-		/// Type of geographic coverage of the subjects.
-		/// <see cref="https://credreg.net/qdata/terms/dataSourceCoverageType"/>
-		/// skos:Concept
-		/// <see cref="https://credreg.net/qdata/terms/DataSourceCoverage"/>
-		/// sourceCoverage:Country
-		///	sourceCoverage:Global
-		///	sourceCoverage:Region
-		///	sourceCoverage:StateOrProvince
-		///	sourceCoverage:UrbanArea
-		/// </summary>
-		public List<string> DataSourceCoverageType { get; set; } = new List<string>();
+        /// <summary>
+        /// Data Source Coverage Type
+        /// Type of geographic coverage of the subjects.
+        /// <see cref="https://credreg.net/qdata/terms/dataSourceCoverageType"/>
+        /// skos:Concept
+        /// <see cref="https://credreg.net/qdata/terms/DataSourceCoverage"/>
+        /// sourceCoverage:Country
+        ///	sourceCoverage:Global
+        ///	sourceCoverage:Region
+        ///	sourceCoverage:StateOrProvince
+        ///	sourceCoverage:UrbanArea
+        /// </summary>
+        [Obsolete]
+        public List<string> DataSourceCoverageType { get; set; } = new List<string>();
 
 
         /// <summary>
-        /// Name of profile
+        /// Name or title of the resource.
         /// OPTIONAL
         /// </summary>
         public string Name { get; set; }
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		public LanguageMap Name_Map { get; set; }
 
         /// <summary>
         /// List of Alternate Names for this resource
