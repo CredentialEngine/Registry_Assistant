@@ -23,7 +23,6 @@ namespace RA.Models.Input
     public class SupportService : BasePrimaryResource
 	{
 
-
         #region *** Required Properties ***
 
         /// <summary>
@@ -33,7 +32,6 @@ namespace RA.Models.Input
         /// Required
         /// </summary>
         public string CTID { get; set; }
-
 
         /// <summary>
         /// Name or title of the resource.
@@ -45,12 +43,12 @@ namespace RA.Models.Input
         /// </summary>
         public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
-
-		/// <summary>
-		/// Statement, characterization or account of the entity. 
-		/// REQUIRED and must be a minimum of 15 characters.
-		/// </summary>
-		public string Description { get; set; }
+	/// <summary>
+	/// Statement, characterization or account of the entity. 
+	/// REQUIRED and must be a minimum of 15 characters.
+	/// </summary>
+	public string Description { get; set; }
+ 
         /// <summary>
         /// Alternately can provide a language map
         /// </summary>
@@ -84,11 +82,6 @@ namespace RA.Models.Input
         /// </summary>
         public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
 
-        /// <summary>
-        /// Webpage that describes this entity.
-        /// URL
-        /// </summary>
-        public string SubjectWebpage { get; set; }
         #endregion
 
         #region  RECOMMENDED
@@ -100,13 +93,16 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> DeliveryType { get; set; }
 
-
         /// <summary>
         /// Estimated cost of a credential, learning opportunity or assessment.
         /// </summary>
         public List<CostProfile> EstimatedCost { get; set; }
-
-
+	
+        /// <summary>
+        /// Webpage that describes this entity.
+        /// URL
+        /// </summary>
+        public string SubjectWebpage { get; set; }
         #endregion
 
 
