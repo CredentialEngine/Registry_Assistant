@@ -111,6 +111,9 @@
     <Compile Include="Input\profiles\QData\DataProfile.cs" />
     <Compile Include="Input\profiles\QData\DataSetProfile.cs" />
     <Compile Include="Input\profiles\QData\DataSetTimeFrame.cs" />
+    <Compile Include="Input\profiles\QData\Dimension.cs" />
+    <Compile Include="Input\profiles\QData\Metric.cs" />
+    <Compile Include="Input\profiles\QData\Observation.cs" />
     <Compile Include="Input\profiles\QData\SubjectProfile.cs" />
     <Compile Include="Input\profiles\QuantitativeValue.cs" />
     <Compile Include="Input\profiles\RevocationProfile.cs" />
@@ -193,7 +196,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client">
-      <Version>5.2.3</Version>
+      <Version>6.0.0</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>

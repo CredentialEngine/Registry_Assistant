@@ -192,17 +192,17 @@ namespace RA.SamplesForDocumentation.OutcomeData
         public string SubjectsInSetInput { get; set; }
     }
 
-    public class MonetaryAmount
-    {
-        public string Description { get; set; }
-        /// <summary>
-        /// Currency abbreviation (e.g., USD).
-        /// </summary>
-        public string Currency { get; set; }
+    //public class MonetaryAmount
+    //{
+    //    public string Description { get; set; }
+    //    /// <summary>
+    //    /// Currency abbreviation (e.g., USD).
+    //    /// </summary>
+    //    public string Currency { get; set; }
 
-        /// <summary>
-        /// Value of a monetary amount or a quantitative value.
-        /// </summary>
-        public decimal Value { get; set; }
-    }
+    //    /// <summary>
+    //    /// Value of a monetary amount or a quantitative value.
+    //    /// </summary>
+    //    public decimal Value { get; set; }
+    //}
 }

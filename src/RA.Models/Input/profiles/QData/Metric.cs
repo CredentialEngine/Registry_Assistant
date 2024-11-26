@@ -23,6 +23,8 @@ namespace RA.Models.Input.profiles.QData
         [JsonProperty( "@type" )]
         public string Type { get; set; }
 
+
+         */
         /// <summary>
         /// Globally unique Credential Transparency Identifier (CTID)
         /// Recommended, but can be a blank node.

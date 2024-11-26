@@ -172,6 +172,7 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public LanguageMapList AlternateName_Map { get; set; }
 
+
         /// <summary>
         /// Location or geographic area for a data set. 
         /// This will allow partial addresses. For example a state/region with a country
@@ -266,10 +267,11 @@ namespace RA.Models.Input.profiles.QData
 
 
         /// <summary>
-        /// Identification of data point(s) in the data set that describe personal subject attribute(s) used to uniquely identify a subject for the purpose of matching records and an indication of level of confidence in the accuracy of the match.
+        /// Authoritative source of an entity's information.
+        /// URL 
         /// </summary>
         public string SubjectIdentification { get; set; }
         public LanguageMap SubjectIdentification_Map { get; set; } 
 
-	}
+    }
 }
