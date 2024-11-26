@@ -101,10 +101,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
-		/// <summary>
-		/// URI to geonames location
-		/// </summary>
-		public string GeoURI { get; set; }
+
+        /// <summary>
+        /// Subject Webpage
+        /// URL
+        /// Optional
+        /// URL
+        /// </summary>
+        public string SubjectWebpage { get; set; }
+
+        /// <summary>
+        /// URI to geonames location
+        /// </summary>
+        public string GeoURI { get; set; }
 		public List<ContactPoint> ContactPoint { get; set; } = new List<Input.ContactPoint>();
 	}
 

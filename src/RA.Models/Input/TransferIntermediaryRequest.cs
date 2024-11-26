@@ -153,6 +153,35 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
-		
-	}
+
+        #region -- Process Profiles --
+
+        /// <summary>
+        /// Description of a formal process for objecting to decisions of an organization.
+        /// </summary>
+        public List<ProcessProfile> AppealProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process for handling complaints about a resource or related resources.
+        /// </summary>
+        public List<ProcessProfile> ComplaintProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+        /// <summary>
+        ///  Description of a process by which a resource is maintained, including review and updating.
+        /// </summary>
+        public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource is reviewed.
+        /// </summary>
+        public List<ProcessProfile> ReviewProcess { get; set; }
+
+        #endregion
+
+    }
 }

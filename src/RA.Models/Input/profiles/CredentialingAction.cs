@@ -82,13 +82,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// Evidence of Action
-		/// Entity that proves that the action occured or that the action continues to be valid.
-		/// The evidence verifies the information in the action and is particular to it. It is not a directory of such evidentiary entities or a description of how such verifications might generically be characterized.
-		/// URI
-		/// </summary>
-		public string EvidenceOfAction { get; set; }
+        /// <summary>
+        /// Description of a process by which a resource is administered.
+        /// ceterms:administrationProcess
+        /// </summary>
+        public List<ProcessProfile> AdministrationProcess { get; set; }
+
+        /// <summary>
+        /// Evidence of Action
+        /// Entity that proves that the action occured or that the action continues to be valid.
+        /// The evidence verifies the information in the action and is particular to it. It is not a directory of such evidentiary entities or a description of how such verifications might generically be characterized.
+        /// URI
+        /// </summary>
+        public string EvidenceOfAction { get; set; }
 
 		/// <summary>
 		/// Instrument
@@ -101,7 +107,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Object
-		/// 24-07-30 Made Object a list of strings. 
+		/// 24-07-30 Made Object a list of strings. May need to define as an object for initial testing - just in case 
 		/// Object(s) upon which the action is carried out, whose state is kept intact or changed.
 		/// A reference for Credentials, AssessmentProfile, any LearningOpportunity Profile type, or any organization type
 		/// Input: a CTID or a blank node Id where the bnode will be added in the request class ReferenceObjects property.

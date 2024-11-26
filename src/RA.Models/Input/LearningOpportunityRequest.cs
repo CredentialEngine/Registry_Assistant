@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+
 
 namespace RA.Models.Input
 {
@@ -21,7 +22,7 @@ namespace RA.Models.Input
 	/// </summary>
 	public class CourseRequest : LearningOpportunityRequest
 	{
-	}
+	}	
 	public class LearningOpportunity : BaseRequestHelper
 	{
 		public LearningOpportunity()
@@ -31,7 +32,6 @@ namespace RA.Models.Input
 			DeliveryType = new List<string>();
 			LearningMethodType = new List<string>();
 			EstimatedCost = new List<CostProfile>();
-			//Region = new List<GeoCoordinates>();
 
 			AudienceType = new List<string>();
 			AudienceType = new List<string>();
@@ -42,13 +42,6 @@ namespace RA.Models.Input
 			ApprovedBy = new List<Input.OrganizationReference>();
 			RecognizedBy = new List<Input.OrganizationReference>();
 			RegulatedBy = new List<Input.OrganizationReference>();
-
-			//JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
-
-			//Corequisite = new List<ConditionProfile>();
-			//Recommends = new List<ConditionProfile>();
-			//Requires = new List<ConditionProfile>();
-			//EntryCondition = new List<ConditionProfile>();
 
 			Teaches = new List<CredentialAlignmentObject>();
 
@@ -72,34 +65,48 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Type { get; set; } = "LearningOpportunityProfile";
 
-		#region *** Required Properties ***
-		/// <summary>
-		/// Name or title of the resource.
-		/// Required
-		/// </summary>
-		public string Name { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Name_Map { get; set; } = null;
-		/// <summary>
-		/// Description 
-		/// REQUIRED and must be a minimum of 15 characters.
-		/// </summary>
-		public string Description { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Description_Map { get; set; } = null;
+        /// <summary>
+        /// Handle both forms of input for type
+        /// </summary>
+        [JsonProperty( "@type" )]
+        public string AtType
+        {
+            get { return Type; }
+            set { Type = value; }
+        }
+
+        #region *** Required Properties ***
+        /// <summary>
+        /// Name or title of the resource.
+        /// Required
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        ///  LanguageMap for Name
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:name" )]
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+        /// <summary>
+        /// Description 
+        /// REQUIRED and must be a minimum of 15 characters.
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:description" )]
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
 
-		/// <summary>
-		/// Credential Identifier
-		/// format: 
-		/// ce-UUID (guid)
-		/// Required
-		/// </summary>
-		public string CTID { get; set; }
+        /// <summary>
+        /// Credential Identifier
+        /// format: 
+        /// ce-UUID (guid)
+        /// Required
+        /// </summary>
+        public string CTID { get; set; }
 
 		/// <summary>
 		/// The primary language or languages of the entity, even if it makes use of other languages; e.g., a course offered in English to teach Spanish would have an inLanguage of English, while a credential in Quebec could have an inLanguage of both French and English.
@@ -145,7 +152,8 @@ namespace RA.Models.Input
 		/// 21-07-19 - updating Creditvalue to also allow a list. It is defined as an object. The API will accept either a ValueProfile object or List of ValueProfiles
 		/// 21-08-18 - Changing permanently to the List, as only existing use was from the publisher (and the latter is updated to use the list)
 		/// </summary>
-		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
+		//public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
+		public object CreditValue { get; set; }   
 
 
 		/// <summary>
@@ -558,7 +566,6 @@ namespace RA.Models.Input
 		public List<string> CIP_Codes { get; set; } = new List<string>();
 		#endregion
 
-		//
 		#region Conditions and connections
 		//Connection Profiles are Condition Profiles but typically only a subject of the Condition Profile properties are used. 
 		/// <summary>
@@ -732,6 +739,7 @@ namespace RA.Models.Input
 		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
 		/// </summary>
 		public List<IdentifierValue> VersionIdentifier { get; set; }
+		//public List<string> TargetPathway { get; set; } = new List<string>();
 
 		/// <summary>
 		/// School Courses for the Exchange of Data code for a course.
@@ -741,13 +749,37 @@ namespace RA.Models.Input
 		/// </summary>
 		public string SCED { get; set; }
 
-		#region Properties allowed only for learning programs
-		//these will be ignored for all other types
-		/// <summary>
-		/// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
-		/// TODO: enable more detail by using a blank node in ReferenceObject. The latter would be a CredentialAlignmentObject. The Id would be a Guid in DegreeConcentration. Alternately a fully formed blank node id (	  _:(GUID)	)
-		/// </summary>
-		public List<string> DegreeConcentration { get; set; }
+        #region -- Process Profiles --
+
+        /// <summary>
+        /// Description of a process for handling complaints about a resource or related resources.
+        /// </summary>
+        public List<ProcessProfile> ComplaintProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+        /// <summary>
+        ///  Description of a process by which a resource is maintained, including review and updating.
+        /// </summary>
+        public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource is reviewed.
+        /// </summary>
+        public List<ProcessProfile> ReviewProcess { get; set; }
+
+        #endregion
+
+        #region Properties allowed only for learning programs
+        //these will be ignored for all other types
+        /// <summary>
+        /// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
+        /// TODO: enable more detail by using a blank node in ReferenceObject. The latter would be a CredentialAlignmentObject. The Id would be a Guid in DegreeConcentration. Alternately a fully formed blank node id (	  _:(GUID)	)
+        /// </summary>
+        public List<string> DegreeConcentration { get; set; }
 		/// <summary>
 		/// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
 		/// </summary>
@@ -756,9 +788,31 @@ namespace RA.Models.Input
 
     }
 
-    public class MinimumRequest : BaseRequest
+	/// <summary>
+	/// Protyping checking for minimum contents of an input request.
+	/// </summary>
+    public class MinimumRequest
     {
         public MiniumumRequestClass LearningOpportunity { get; set; }
+        /// <summary>
+        /// Identifier for Organization which Owns the data being published
+        /// This will be the CTID for the owning org, even if publisher is third party.
+		/// REQUIRED
+        /// </summary>
+        public string PublishForOrganizationIdentifier { get; set; }
+
+        /// <summary>
+        /// Leave blank for default
+        /// Formerly known as Community
+        /// </summary>
+        public string Registry { get; set; }
+
+        //temp backup (note that when serialized, this approach doesn't work, get two separate properties
+        public string Community
+        {
+            get { return Registry; }
+            set { Registry = value; }
+        }
     }
     public class MiniumumRequestClass
     {

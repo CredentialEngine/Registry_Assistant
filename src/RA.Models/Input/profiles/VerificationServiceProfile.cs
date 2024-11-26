@@ -102,6 +102,15 @@ namespace RA.Models.Input
         /// </summary>
         public List<JurisdictionAssertion> OfferedIn { get; set; } = new List<JurisdictionAssertion>();
 
+
+        #region -- Process Profiles --
+
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> AdministrationProcess { get; set; }
+
+        #endregion
     }
 }
 

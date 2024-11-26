@@ -1,23 +1,20 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
 
-	/// <summary>
-	/// Class for handling references to an organization
-	/// Either the Id as an resolvable URL, a CTID (that will be use to format the Id as a URI) or provide all of the properities:
-	/// - Type
-	/// - Name
-	/// - Description
-	/// - Subject webpage
-	/// - Social media
-	/// 2020-07-01 With the addition of many additional properties to EntityReference, changed OrganizationReference to no lonber inherit from EntityReference.
-	/// </summary>
-	public class OrganizationReference 
+    /// <summary>
+    /// Class for handling references to an organization
+    /// Either the Id as an resolvable URL, a CTID (that will be use to format the Id as a URI) or provide all of the properities:
+    /// - Type
+    /// - Name
+    /// - Description
+    /// - Subject webpage
+    /// - Social media
+    /// 2020-07-01 With the addition of many additional properties to EntityReference, changed OrganizationReference to no lonber inherit from EntityReference.
+    /// </summary>
+    public class OrganizationReference 
 	{
 		public static string CredentialOrganization = "CredentialOrganization";
 		public static string QACredentialOrganization = "QACredentialOrganization";
@@ -29,21 +26,36 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Type { get; set; }
 
-		/// <summary>
-		/// Id is a resovable URI
-		/// If the entity exists in the registry, provide the URI. 
-		/// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
-		/// Alterate URIs are under consideration. For example
-		/// http://dbpedia.com/Stanford_University
-		/// </summary>
-		public string Id { get; set; }
 
-		/// <summary>
-		/// Optionally, a CTID can be entered instead of an Id. 
-		/// A CTID is recommended for flexibility.
-		/// Only enter Id or CTID, but not both.
-		/// </summary>
-		public string CTID { get; set; }
+        /// <summary>
+        /// Type  of CTDL object
+        /// </summary>
+        [JsonProperty( "@type" )]
+        public string CtdlType { get; set; }
+
+
+        /// <summary>
+        /// Id is a resovable URI
+        /// If the entity exists in the registry, provide the URI. 
+        /// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
+        /// Alterate URIs are under consideration. For example
+        /// http://dbpedia.com/Stanford_University
+        /// </summary>
+        public string Id { get; set; }
+
+
+        /// <summary>
+        /// Handle both forms of input for type
+        /// </summary>
+        [JsonProperty( "@id" )]
+        public string AtId { get; set; }
+
+        /// <summary>
+        /// Optionally, a CTID can be entered instead of an Id. 
+        /// A CTID is recommended for flexibility.
+        /// Only enter Id or CTID, but not both.
+        /// </summary>
+        public string CTID { get; set; }
 
 		/// <summary>
 		/// Name of the entity (required)

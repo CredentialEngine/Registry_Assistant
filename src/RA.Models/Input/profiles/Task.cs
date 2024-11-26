@@ -16,7 +16,7 @@ namespace RA.Models.Input
 
 		#region Required
 		/// <summary>
-		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a resource recognizes it in transactions with the external environment (e.g., in verifiable claims involving the resource).
+		/// Globally unique Credential Transparency Identifier (CTID)
 		/// Required
 		/// - CTID
 		/// - NAME

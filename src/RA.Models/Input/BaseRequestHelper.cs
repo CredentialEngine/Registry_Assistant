@@ -2,10 +2,10 @@
 
 namespace RA.Models.Input
 {
-    /// <summary>
-    /// Helper class for publishers that are not using upper case CTID property
-    /// </summary>
-    public class BaseRequestHelper
+	/// <summary>
+	/// Helper class for publishers that are not using upper case CTID property
+	/// </summary>
+	public class BaseRequestHelper
 	{
 		/// <summary>
 		/// An identifier for use with blank nodes. 
@@ -14,6 +14,11 @@ namespace RA.Models.Input
 		[JsonProperty( "@id" )]
 		public string BlankNodeId { get; set; }
 
+		/// <summary>
+		/// Legacy format for CTID
+		/// original API used the following property. Both are supported but of course only one should be provided. CTID will take precedence. 
+		/// </summary>
+		public string Ctid { get; set; }
 
 
 	}

@@ -11,6 +11,7 @@ namespace RA.Models.Input
 
 		public List<Competency> Competencies { get; set; } = new List<Competency>();
 	}
+
     public class CompetencyFrameworkGraphRequest : BaseRequest
     {
         public CompetencyFrameworkGraphRequest()
@@ -23,6 +24,7 @@ namespace RA.Models.Input
         public CompetencyFrameworkGraph CompetencyFrameworkGraph { get; set; } 
 
     }
+
 	/// <summary>
 	/// Competency Framework
 	/// Required:
@@ -70,13 +72,13 @@ namespace RA.Models.Input
 		/// A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
 		/// List of Names
 		/// </summary>
-		public string author { get; set; } 
+        public List<string> author { get; set; } = new List<string>();
 
-		/// <summary>
-		/// A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
-		/// The conceptKeyword property is used in ASN-conforming data solely to denote the significant topicality of the competency using free-text keywords and phrases derived and assigned by the indexer, e.g., "George Washington", "Ayers Rock", etc.
-		/// </summary>
-		public List<string> conceptKeyword { get; set; } = new List<string>();
+        /// <summary>
+        /// A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
+        /// The conceptKeyword property is used in ASN-conforming data solely to denote the significant topicality of the competency using free-text keywords and phrases derived and assigned by the indexer, e.g., "George Washington", "Ayers Rock", etc.
+        /// </summary>
+        public List<string> conceptKeyword { get; set; } = new List<string>();
 		public LanguageMapList conceptKeyword_map { get; set; } = new LanguageMapList();
 
 		/// <summary>
@@ -127,7 +129,7 @@ namespace RA.Models.Input
 		/// List of URIs to frameworks
 		/// 2023-03-22 The datatype was changed to a list. The API will still handle a single string.
 		/// </summary>
-		public List<string> derivedFrom { get; set; }
+		public object derivedFrom { get; set; }
 
 		/// <summary>
 		/// A short description of this competency framework.
@@ -310,13 +312,53 @@ namespace RA.Models.Input
 		public List<string> CIP_Codes { get; set; } = new List<string>();
 		#endregion
 
+		/// <summary>
+		/// VersionIdentifier
+		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+		/// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
+		/// </summary>
+		public List<IdentifierValue> versionIdentifier { get; set; } = new List<IdentifierValue>();
 
-	}
+		/// <summary>
+		/// Latest version of the credential.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string latestVersion { get; set; }
+		/// <summary>
+		/// Version of the resource that immediately precedes this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string previousVersion { get; set; }
+		/// <summary>
+		/// Version of the resource that immediately follows this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string nextVersion { get; set; }
 
-	/// <summary>
-	/// CTDLASN Competency Class
-	/// </summary>
-	public class Competency 
+        #region -- Process Profiles --
+
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+        /// <summary>
+        ///  Description of a process by which a resource is maintained, including review and updating.
+        /// </summary>
+        public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource is reviewed.
+        /// </summary>
+        public List<ProcessProfile> ReviewProcess { get; set; }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// CTDLASN Competency Class
+    /// </summary>
+    public class Competency 
     {
         
 		/// <summary>
@@ -564,8 +606,8 @@ namespace RA.Models.Input
         public LanguageMapList keyword_map { get; set; } = new LanguageMapList();
 
         /// <summary>
-        /// A legal document giving official permission to do something with this resource.
-        /// Collections only
+		/// A legal document giving official permission to do something with this competency framework.
+		/// Value must be the URI to a license document (e.g., Creative Commons license or bespoke license).
         /// </summary>
         public string license { get; set; }
 
@@ -746,11 +788,9 @@ namespace RA.Models.Input
 		//new 2022-09
 
 		/// <summary>
-		/// The publication status of the of this competency.
+		/// The publication status of the of this resource.
 		/// </summary>
 		public string publicationStatusType { get; set; }
-		//New 2021-09-30 - 
-
 
 		/// <summary>
 		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; 
@@ -861,7 +901,47 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> hasWorkforceDemand { get; set; } = new List<string>();
 
+		/// <summary>
+		/// VersionIdentifier
+		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+		/// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
+		/// </summary>
+		public List<IdentifierValue> versionIdentifier { get; set; } = new List<IdentifierValue>();
 
+		/// <summary>
+		/// Latest version of the credential.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string latestVersion { get; set; }
+		/// <summary>
+		/// Version of the resource that immediately precedes this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string previousVersion { get; set; }
+		/// <summary>
+		/// Version of the resource that immediately follows this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string nextVersion { get; set; }
+
+        #region -- Process Profiles --
+
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+        /// <summary>
+        ///  Description of a process by which a resource is maintained, including review and updating.
+        /// </summary>
+        public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource is reviewed.
+        /// </summary>
+        public List<ProcessProfile> ReviewProcess { get; set; }
+
+        #endregion
     }
 
 

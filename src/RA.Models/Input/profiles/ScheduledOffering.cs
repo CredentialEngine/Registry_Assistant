@@ -9,7 +9,10 @@ namespace RA.Models.Input
 	/// </summary>
 	public class ScheduledOffering : BasePrimaryResource
 	{
-		public string CTID { get; set; }
+        /// <summary>
+        /// Globally unique Credential Transparency Identifier (CTID)
+        /// </summary>
+        public string CTID { get; set; }
 
 		public string Name { get; set; }
 		/// <summary>

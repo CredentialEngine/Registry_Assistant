@@ -80,11 +80,6 @@ namespace RA.Models.Input
 		public List<string> DerivedFrom { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Entity describing the process by which the transfer value profile, or aspects of it, were created.
-		/// </summary>
-		public List<ProcessProfile> DevelopmentProcess { get; set; } = new List<ProcessProfile>();
-
-		/// <summary>
 		/// Organization(s) that owns this resource
 		/// Required
 		/// </summary>
@@ -208,9 +203,43 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
 
-		#endregion
+        #endregion
 
-	}
+        #region -- Process Profiles --
+        /// <summary>
+        /// Description of a process by which a resource is administered.
+        /// ceterms:administrationProcess
+        /// </summary>
+        public List<ProcessProfile> AdministrationProcess { get; set; }
+
+        /// <summary>
+        /// Description of a formal process for objecting to decisions of an organization.
+        /// </summary>
+        public List<ProcessProfile> AppealProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process for handling complaints about a resource or related resources.
+        /// </summary>
+        public List<ProcessProfile> ComplaintProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+        /// <summary>
+        ///  Description of a process by which a resource is maintained, including review and updating.
+        /// </summary>
+        public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource is reviewed.
+        /// </summary>
+        public List<ProcessProfile> ReviewProcess { get; set; }
+
+        #endregion
+
+    }
 
 
 }

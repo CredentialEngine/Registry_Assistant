@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -60,6 +61,7 @@ namespace RA.Models.Input
 			DegreeMajor = new List<string>();
 			DegreeMinor = new List<string>();
 
+			// Region = new List<GeoCoordinates>();
 			OwnedBy = new List<OrganizationReference>();
 
 			AccreditedBy = new List<Input.OrganizationReference>();
@@ -75,6 +77,7 @@ namespace RA.Models.Input
 			Recommends = new List<ConditionProfile>();
 			Requires = new List<ConditionProfile>();
 
+			//ProcessProfile = new List<Input.ProcessProfile>();
 			CommonConditions = new List<string>();
 			CommonCosts = new List<string>();
 
@@ -104,46 +107,61 @@ namespace RA.Models.Input
 		/// Helper property for use with blank nodes
 		/// This is a 'broad' type. CredentialType is still required.
 		/// </summary>
-		public string Type { get; set; } = "Credential";
+		public string Type { get; set; }
+
+        /// <summary>
+        /// Handle both forms of input for type
+        /// </summary>
+        [JsonProperty( "@type" )]
+        public string AtType
+        {
+            get { return Type; }
+            set { Type = value; }
+        }
 
 
-		#region *** Required Properties ***
+        #region *** Required Properties ***
 
-		/// <summary>
-		/// The credential type as defined in CTDL
-		/// <see href="https://credreg.net/page/typeslist"/>
-		/// Required
-		/// NOTE: The following types are 'top level' types that may not be published:
-		///		Credential, Degree
-		/// Only the sub-types under the latter may be used in publishing
-		/// </summary>
-		public string CredentialType { get; set; }
+        /// <summary>
+        /// The credential type as defined in CTDL
+        /// <see href="https://credreg.net/page/typeslist"/>
+        /// Required
+        /// NOTE: The following types are 'top level' types that may not be published:
+        ///		Credential, Degree
+        /// Only the sub-types under the latter may be used in publishing
+        /// </summary>
+        public string CredentialType { get; set; }
 
-		/// <summary>
-		/// Name of this credential
-		/// Required
-		/// </summary>
-		public string Name { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Name or title of the resource.
+        /// Required
+        /// </summary>
+        public string Name { get; set; }
 
-		/// <summary>
-		/// Credential description 
-		/// REQUIRED and must be a minimum of 15 characters.
-		/// </summary>
-		public string Description { get; set; }
+        /// <summary>
+        ///  LanguageMap for Name
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:name" )]
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
-		/// <summary>
-		/// Organization that owns this credential
-		/// Required
-		/// </summary>
-		public List<OrganizationReference> OwnedBy { get; set; }
+        /// <summary>
+        /// Description 
+        /// REQUIRED and must be a minimum of 15 characters.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:description" )]
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+
+        /// <summary>
+        /// Organization that owns this credential
+        /// Required
+        /// </summary>
+        public List<OrganizationReference> OwnedBy { get; set; }
 
 		/// <summary>
 		/// The status type of this credential. 
@@ -205,14 +223,16 @@ namespace RA.Models.Input
 		/// <see href="https://credreg.net/ctdl/terms/Delivery"></see>
 		/// </summary>
 		public List<string> AssessmentDeliveryType { get; set; } = new List<string>();
-        /// <summary>
-        /// AvailableOnlineAt URL
-        /// </summary>
-        public List<string> AvailableOnlineAt { get; set; }
-        /// <summary>
-        /// AvailabilityListing URL
-        /// </summary>
-        public List<string> AvailabilityListing { get; set; } 
+		/// <summary>
+		/// AvailableOnlineAt URL
+		/// 22-08-30 Changed to an object to allow handling of a single or a list
+		/// </summary>
+		public object AvailableOnlineAt { get; set; } 
+		/// <summary>
+		/// AvailabilityListing URL
+		/// 22-08-30 Changed to an object to allow handling of a single or a list
+		/// </summary>
+		public object AvailabilityListing { get; set; } 
 		/// <summary>
 		/// List of Addresses for this credential, using Place
 		/// </summary>
@@ -228,13 +248,6 @@ namespace RA.Models.Input
 		/// NOTE: Acronyns should not be used here. Use AlternateName for providing acronyms.
 		/// </summary>
 		public string CredentialId { get; set; }
-
-		///// <summary>
-		///// Provide credit information in a ValueProfile value
-		///// A credit-related value.
-		///// 22-08-30 - NEW ==> actually not approved yet
-		///// </summary>
-		//public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 
 		/// <summary>
 		/// Effective date of the content of this profile
@@ -374,7 +387,6 @@ namespace RA.Models.Input
 		/// List of CTIDs for published resources
 		/// </summary>
 		public List<string> HasSupportService { get; set; } = new List<string>();
-        //
 
         /// <summary>
         /// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
@@ -441,7 +453,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Language map - Textual description of the criteria, standards, and/or requirements used with a process
 		/// </summary>
-		public LanguageMap ProcessStandardsDescription_Map { get; set; } = new LanguageMap();
+		public LanguageMap ProcessStandardsDescription_Map { get; set; }
 
 		/// <summary>
 		/// This resource provides transfer value for the referenced Transfer Value Profile.
@@ -745,30 +757,36 @@ namespace RA.Models.Input
 
         #region -- Process Profiles --
         /// <summary>
-        /// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
+        /// Description of a process by which a resource is administered.
         /// ceterms:administrationProcess
         /// </summary>
         public List<ProcessProfile> AdministrationProcess { get; set; }
-		/// <summary>
-		/// Entity describing the process by which a credential, or aspects of it, were created.
-		/// </summary>
-		public List<ProcessProfile> DevelopmentProcess { get; set; }
-		/// <summary>
-		/// Entity describing the process by which the credential is maintained including review and updating.
-		/// </summary>
-		public List<ProcessProfile> MaintenanceProcess { get; set; }
-		/// <summary>
-		/// Formal process for objecting to decisions of the organization regarding credentials, assessments or processes.
-		/// </summary>
-		public List<ProcessProfile> AppealProcess { get; set; }
-		/// <summary>
-		/// Process for handling complaints about a credential, or aspects of it including related learning opportunities and assessments.
-		/// </summary>
-		public List<ProcessProfile> ComplaintProcess { get; set; }
-		/// <summary>
-		/// Entity that describes the process by which the credential, or aspects of it, are reviewed.
-		/// </summary>
-		public List<ProcessProfile> ReviewProcess { get; set; }
+
+        /// <summary>
+        /// Description of a formal process for objecting to decisions of an organization.
+        /// </summary>
+        public List<ProcessProfile> AppealProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process for handling complaints about a resource or related resources.
+        /// </summary>
+        public List<ProcessProfile> ComplaintProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+        /// <summary>
+        ///  Description of a process by which a resource is maintained, including review and updating.
+        /// </summary>
+        public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource is reviewed.
+        /// </summary>
+        public List<ProcessProfile> ReviewProcess { get; set; }
+
 		/// <summary>
 		/// Entity describing the process by which the credential is revoked.
 		/// </summary>

@@ -207,7 +207,7 @@ namespace RA.Models.Input
 	/// <summary>
 	/// ProgressionLevel currently the same as the Concept class
 	/// </summary>
-	public class ProgressionLevel
+	public class ProgressionLevel : BasePrimaryResource
     {
 		/*
 

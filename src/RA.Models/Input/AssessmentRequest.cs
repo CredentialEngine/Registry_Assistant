@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+
 
 namespace RA.Models.Input
 {
@@ -31,10 +32,12 @@ namespace RA.Models.Input
 			AvailabilityListing = new List<string>();
 			AvailableOnlineAt = new List<string>();
 			Jurisdiction = new List<Input.JurisdictionProfile>();
+			//JurisdictionAssertions = new List<JurisdictionAssertedInProfile>();
 			DeliveryType = new List<string>();
 
 			EstimatedCost = new List<CostProfile>();
 			EstimatedDuration = new List<DurationProfile>();
+			//
 			ScoringMethodType = new List<string>();
 
 			AccreditedBy = new List<Input.OrganizationReference>();
@@ -53,6 +56,7 @@ namespace RA.Models.Input
 			MaintenanceProcess = new List<ProcessProfile>();
 
 			Assesses = new List<CredentialAlignmentObject>();
+			//RequiresCompetency = new List<CredentialAlignmentObject>();
 
 			AvailableAt = new List<Place>();
 
@@ -74,12 +78,22 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Type { get; set; } = "AssessmentProfile";
 
-		#region *** Required Properties ***
-		/// <summary>
-		/// Name or title of the resource.
-		/// Required
-		/// </summary>
-		public string Name { get; set; }
+        /// <summary>
+        /// Handle both forms of input for type
+        /// </summary>
+        [JsonProperty( "@type" )]
+        public string AtType
+        {
+            get { return Type; }
+            set { Type = value; }
+        }
+
+        #region *** Required Properties ***
+        /// <summary>
+        /// Name or title of the resource.
+        /// Required
+        /// </summary>
+        public string Name { get; set; }
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
@@ -691,32 +705,43 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<JurisdictionAssertion> RegulatedIn { get; set; } = new List<JurisdictionAssertion>();
 
-		#endregion
+        #endregion
 
-		//Processes
-		/// <summary>
-		/// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
-		/// </summary>
-		public List<ProcessProfile> AdministrationProcess { get; set; }
-		/// <summary>
-		/// Entity describing the process by which a credential, or aspects of it, were created.
-		/// </summary>
-		public List<ProcessProfile> DevelopmentProcess { get; set; }
+        //Processes
+        /// <summary>
+        /// Description of a process by which a resource is administered.
+        /// </summary>
+        public List<ProcessProfile> AdministrationProcess { get; set; }
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> DevelopmentProcess { get; set; }
 		/// <summary>
 		/// Entity describing the process by which the credential is maintained including review and updating.
 		/// </summary>
 		public List<ProcessProfile> MaintenanceProcess { get; set; }
 
-		/// <summary>
-		/// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.
-		/// </summary>
-		public List<EntityReference> TargetAssessment { get; set; }
+        /// <summary>
+        /// Process for handling complaints about a credential, or aspects of it including related learning opportunities and assessments.
+        /// </summary>
+        public List<ProcessProfile> ComplaintProcess { get; set; }
+
+        /// <summary>
+        /// Entity that describes the process by which the resource, or aspects of it, are reviewed.
+        /// </summary>
+        public List<ProcessProfile> ReviewProcess { get; set; }
+
+        /// <summary>
+        /// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.
+        /// </summary>
+        public List<EntityReference> TargetAssessment { get; set; }
+
 		/// <summary>
 		/// Learning object or resource that is used as part of an learning activity.
 		/// URL
 		/// </summary>
 		public List<string> TargetLearningResource { get; set; } = new List<string>();
-		//public List<string> TargetPathway { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
 		/// </summary>

@@ -1,14 +1,12 @@
-﻿using Newtonsoft.Json;
-
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
-	/// <summary>
-	/// Class used with an Organization format or publish request
-	/// </summary>
-	public class OrganizationRequest : BaseRequest
+    /// <summary>
+    /// Class used with an Organization format or publish request
+    /// </summary>
+    public class OrganizationRequest : BaseRequest
 	{
 		/// <summary>
 		/// constructor
@@ -23,7 +21,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public Organization Organization { get; set; }
 
-		//public List<BlankNode> BlankNodes = new List<BlankNode>();
 	}
 
 	/// <summary>
@@ -60,12 +57,12 @@ namespace RA.Models.Input
 			Jurisdiction = new List<Input.JurisdictionProfile>();
 			Address = new List<Place>();
 			AlternateName = new List<string>();
-			//
+			
 			AccreditedBy = new List<Input.OrganizationReference>();
 			ApprovedBy = new List<Input.OrganizationReference>();
 			RecognizedBy = new List<Input.OrganizationReference>();
 			RegulatedBy = new List<Input.OrganizationReference>();
-			//
+		
 			Accredits = new List<EntityReference>();
 			Approves = new List<EntityReference>();
 			Offers = new List<EntityReference>();
@@ -73,10 +70,10 @@ namespace RA.Models.Input
 			Renews = new List<EntityReference>();
 			Revokes = new List<EntityReference>();
 			Recognizes = new List<EntityReference>();
-			//
+			
 			HasConditionManifest = new List<string>();
 			HasCostManifest = new List<string>();
-			//
+			
 			AdministrationProcess = new List<ProcessProfile>();
 			DevelopmentProcess = new List<ProcessProfile>();
 			MaintenanceProcess = new List<ProcessProfile>();
@@ -84,7 +81,7 @@ namespace RA.Models.Input
 			ComplaintProcess = new List<ProcessProfile>();
 			ReviewProcess = new List<ProcessProfile>();
 			RevocationProcess = new List<ProcessProfile>();
-			//
+			
 			Department = new List<OrganizationReference>();
 			SubOrganization = new List<OrganizationReference>();
 
@@ -99,7 +96,7 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string Type { get; set; }
-		//Helper to check if the current organization is a QA organization
+		// Helper to check if the current organization is a QA organization
 		public bool IsQAOrganization
 		{
 			get 
@@ -111,32 +108,38 @@ namespace RA.Models.Input
 			}
 		}
 
-		/// <summary>
-		/// Name 
-		/// Required
-		/// </summary>
-		public string Name { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
-		/// <summary>
-		/// Description 
-		/// REQUIRED and must be a minimum of 15 characters.
-		/// </summary>
-		public string Description { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Name or title of the resource.
+        /// Required
+        /// </summary>
+        public string Name { get; set; }
 
-		/// <summary>
-		/// Credential Identifier
-		/// format: 
-		/// ce-UUID (guid)
-		/// Required
-		/// </summary>
-		public string CTID { get; set; }
+        /// <summary>
+        ///  LanguageMap for Name
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:name" )]
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+        /// <summary>
+        /// Description 
+        /// REQUIRED and must be a minimum of 15 characters.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:description" )]
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+
+        /// <summary>
+        /// Credential Identifier
+        /// format: 
+        /// ce-UUID (guid)
+        /// Required
+        /// </summary>
+        public string CTID { get; set; }
 
 		/// <summary>
 		/// Organization subject web page
@@ -282,6 +285,7 @@ namespace RA.Models.Input
 		/// Department of the organization.
 		/// </summary>
 		public List<OrganizationReference> Department { get; set; }
+
 		/// <summary>
 		/// Founding Date - the year, year-month, or year-month-day the organization was founded. 
 		/// Maximum length of 20
@@ -333,6 +337,7 @@ namespace RA.Models.Input
 		/// A condition manifest can never be a third party reference, so a url is expected
 		/// </summary>
 		public List<string> HasConditionManifest { get; set; }
+
 		/// <summary>
 		/// Reference to cost manifests
 		/// A cost manifest can never be a third party reference, so a url is expected
@@ -348,12 +353,14 @@ namespace RA.Models.Input
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
 		/// </summary>
 		public List<FrameworkItem> IndustryType { get; set; }
+
 		/// <summary>
 		/// AlternativeIndustryType
 		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
 		/// Any industries added using this property will be added to or appended to the IndustryType output.
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for AlternativeIndustryType
 		/// </summary>
@@ -373,19 +380,20 @@ namespace RA.Models.Input
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
 		/// </summary>
-		public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
+		public string LifeCycleStatusType { get; set; } 
 
 
-		//
 		/// <summary>
 		/// Webpage or online document that defines or explains the mission and goals of the organization.
 		/// URI
 		/// </summary>
 		public string MissionAndGoalsStatement { get; set; }
+
 		/// <summary>
 		/// Textual statement of the mission and goals of the organization.
 		/// </summary>
 		public string MissionAndGoalsStatementDescription { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
@@ -403,6 +411,7 @@ namespace RA.Models.Input
 		/// It is not necessary to include owns/offers when publishing an organization. It is considered a best practice to use the OwnedBy, OfferedBy properties of credential, etc to establish the relationships.
 		/// </summary>
 		public List<EntityReference> Owns { get; set; }
+
 		/// <summary>
 		/// Resource offered or conferred by the organization or person.
 		/// See Owns for best pratice recommendation
@@ -455,10 +464,12 @@ namespace RA.Models.Input
 		/// Credential, assessment, organization, or learning opportunity for which this organization provides official authorization or approval based on prescribed standards or criteria.
 		/// </summary>
 		public List<EntityReference> Accredits { get; set; }
+
 		/// <summary>
 		/// Credential, assessment, learning opportunity, or organization for which this organization pronounces favorable judgment.
 		/// </summary>
 		public List<EntityReference> Approves { get; set; }
+
 		/// <summary>
 		/// Resource that the agent recommends, endorses, indicates preference for, or otherwise provides a positive judgment.
 		/// https://credreg.net/ctdl/terms/recognizes
@@ -466,14 +477,17 @@ namespace RA.Models.Input
 		/// ceasn:CompetencyFramework, ceterms:AssessmentProfile, ceterms:Course, all Credentials, all Organizations, 		ceterms:LearningOpportunityProfile, ceterms:LearningProgram, ceterms:TransferValueProfile
 		/// </summary>
 		public List<EntityReference> Recognizes { get; set; }
+
 		/// <summary>
 		/// Credential, learning opportunity, assessment or organization that this quality assurance organization monitors, including enforcement of applicable legal requirements or standards.
 		/// </summary>
 		public List<EntityReference> Regulates { get; set; } = new List<EntityReference>();
+
 		/// <summary>
 		/// Credential type that has its validity extended by the organization or person.
 		/// </summary>
 		public List<EntityReference> Renews { get; set; }
+
 		/// <summary>
 		/// Credential type that can be invalidated or retracted by the awarding agent.
 		/// </summary>
@@ -487,42 +501,50 @@ namespace RA.Models.Input
 		/// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
 		/// </summary>
 		public List<ProcessProfile> AdministrationProcess { get; set; }
+
 		/// <summary>
 		/// Entity describing the process by which a credential, or aspects of it, were created.
 		/// </summary>
 		public List<ProcessProfile> DevelopmentProcess { get; set; }
+
 		/// <summary>
 		/// Entity describing the process by which the credential is maintained including review and updating.
 		/// </summary>
 		public List<ProcessProfile> MaintenanceProcess { get; set; }
+
 		/// <summary>
 		/// Formal process for objecting to decisions of the organization regarding credentials, assessments or processes.
 		/// </summary>
 		public List<ProcessProfile> AppealProcess { get; set; }
+
 		/// <summary>
 		/// Process for handling complaints about a credential, or aspects of it including related learning opportunities and assessments.
 		/// </summary>
 		public List<ProcessProfile> ComplaintProcess { get; set; }
+
 		/// <summary>
 		/// Entity that describes the process by which the credential, or aspects of it, are reviewed.
 		/// </summary>
 		public List<ProcessProfile> ReviewProcess { get; set; }
+
 		/// <summary>
 		/// Entity describing the process by which the credential is revoked.
 		/// </summary>
 		public List<ProcessProfile> RevocationProcess { get; set; }
-		#endregion
 
-		/// <summary>
-		/// Organization in a subordinate or lower position than a parent organization.
-		/// </summary>
-		public List<OrganizationReference> SubOrganization { get; set; }
+        #endregion
+
+        /// <summary>
+        ///  Organization in a subordinate or lower position than a parent organization.
+        /// </summary>
+        public List<OrganizationReference> SubOrganization { get; set; }
 
 		/// <summary>
 		///  Resource that replaces this resource.
 		///  full URL OR CTID (recommended)
 		/// </summary>
 		public string SupersededBy { get; set; }
+
 		/// <summary>
 		/// Resource that this resource replaces.
 		/// full URL OR CTID (recommended)
@@ -534,10 +556,12 @@ namespace RA.Models.Input
 		/// URI
 		/// </summary>
 		public string TransferValueStatement { get; set; }
+
 		/// <summary>
 		/// Description of the nature of transfer value handled by the organization.
 		/// </summary>
 		public string TransferValueStatementDescription { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
@@ -547,6 +571,7 @@ namespace RA.Models.Input
 		/// Webpage or online document that defines or explains the nature of support services offered by the organization.
 		/// </summary>
 		public string SupportServiceStatement { get; set; }
+
 		/// <summary>
 		/// Description of the nature of support services by the organization.
 		/// </summary>
@@ -558,83 +583,10 @@ namespace RA.Models.Input
 		public LanguageMap SupportServiceStatementDescription_Map { get; set; }
 
 		/// <summary>
-		/// Entity describing the means by which someone can verify whether a credential has been attained.
-		/// TODO on whether we will enable publishing these with an organization?
-		/// </summary>
-		[Obsolete]
-		public List<VerificationServiceProfile> VerificationServiceProfile { get; set; } = new List<VerificationServiceProfile>();
-		/// <summary>
 		/// LIst of CTIDS for existing Verification Service profiles
 		/// </summary>
         public List<string> HasVerificationService{ get; set; } = new List<string>(); 
 
-        //VerificationServiceProfiles was originally added uncorrectly as plural. The latter is incorrrect and is being maintained for legacy references. VerificationServiceProfile should be used, and is checked first
-        //[Obsolete]
-        //public List<VerificationServiceProfile> VerificationServiceProfiles { get; set; } = new List<VerificationServiceProfile>();
 
-        //pending
-
-
-
-        #region CredentialingActions
-        /// <summary>
-        /// Action by an independent, neutral, and authoritative agent that certifies an entity as meeting a prescribed set of standards.
-		/// CredentialingAction
-        /// </summary>
-        public List<CredentialingAction> AccreditAction { get; set; }
-
-        /// <summary>
-        /// Claim by an agent asserting that the object credential of the action provides advanced standing for a credential under the asserting agent's authority.
-		/// CredentialingAction
-        /// </summary>
-        public List<CredentialingAction> AdvancedStandingAction { get; set; }
-        /// <summary>
-        /// Claim by an agent asserting that the object credential of the action provides advanced standing for a credential under the asserting agent's authority.
-        /// CredentialingAction
-        /// </summary>
-        public List<CredentialingAction> ApproveAction { get; set; }
-
-        /// <summary>
-        ///  Action by an authoritative agent offering access to a entity such as a credential, learning opportunity or assessment.
-        /// CredentialingAction
-        /// </summary>
-        public List<CredentialingAction> OfferAction { get; set; }
-
-        /// <summary>
-        /// Action by an independent, neutral, and authoritative agent acknowledging the validity of a resource.
-        /// CredentialingAction
-        /// </summary>
-        public List<CredentialingAction> RecognizeAction { get; set; }
-
-        /// <summary>
-        /// Action by an independent, neutral, and authoritative agent enforcing the legal requirements of a resource.
-        /// CredentialingAction
-        /// </summary>
-        public List<CredentialingAction> RegulateAction { get; set; }
-
-        /// <summary>
-        /// Action by an agent renewing an existing credential assertion.
-        /// CredentialingAction
-        /// </summary>
-        public List<CredentialingAction> RenewAction { get; set; }
-
-        /// <summary>
-        /// Action by an agent removing an awarded credential (credential assertion) from the credential holder based on violations or failure of the holder to renew.
-        /// CredentialingAction
-        /// </summary>
-        public List<CredentialingAction> RevokeAction { get; set; }
-
-        /// <summary>
-        ///Action asserting legal rights by an agent to possess, defend, transfer, license, and grant conditional access to a credential, learning opportunity, or assessment.
-        /// CredentialingAction
-        /// </summary>
-        public List<CredentialingAction> RightsAction { get; set; }
-
-        /// <summary>
-        /// Action taken by an agent asserting that the resource being described has a workforce demand level worthy of note.
-        /// CredentialingAction
-        /// </summary>
-        public List<CredentialingAction> WorkforceDemandAction { get; set; }
-        #endregion
     }
 }

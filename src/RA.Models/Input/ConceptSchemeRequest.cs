@@ -91,8 +91,8 @@ namespace RA.Models.Input
 	/// A controlled vocabulary.
 	/// <seealso cref="https://credreg.net/ctdlasn/terms/ConceptScheme"/>
 	/// </summary>
-	public class ConceptScheme 
-	{
+	public class ConceptScheme : BaseRequestHelper
+    {
 		/// <summary>
 		/// Helper property for use with blank nodes
 		/// </summary>
@@ -153,17 +153,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Description { get; set; }
 
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        [JsonProperty( PropertyName = "ceasn:description" )]
+        public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// Top Concepts
-		/// Concept of the scheme at the top of a hierarchy of narrower concepts.
-		/// List of CTIDs (recommended) or actual registry URIs
-		/// </summary>
-		public List<string> HasTopConcept { get; set; } = new List<string>();
+        /// <summary>
+        /// Top Concepts
+        /// Concept of the scheme at the top of a hierarchy of narrower concepts.
+        /// List of CTIDs (recommended) or actual registry URIs
+        /// </summary>
+        public List<string> HasTopConcept { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Language. Required unless defaultLanguage is provided
@@ -182,16 +183,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Name { get; set; }
 
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        [JsonProperty( PropertyName = "ceasn:name" )]
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// The publication status of the of this resource.
-		/// <seealso cref="https://credreg.net/ctdlasn/terms/PublicationStatus"/>
-		/// </summary>
-		public string PublicationStatusType { get; set; }
+        /// <summary>
+        /// The publication status of the of this resource.
+        /// <seealso cref="https://credreg.net/ctdlasn/terms/PublicationStatus"/>
+        /// </summary>
+        public string PublicationStatusType { get; set; }
 
 		/// <summary>
 		/// Name of an agent responsible for making this resource available.
@@ -257,10 +259,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public string PrefLabel { get; set; }
 
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap PrefLabel_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        [JsonProperty( PropertyName = "skos:prefLabel" )]
+        public LanguageMap PrefLabel_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Alternative Label
@@ -268,10 +271,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AltLabel { get; set; } = new List<string>();
 
-		/// <summary>
-		///  Alternative Label language map
-		/// </summary>
-		public LanguageMapList AltLabel_Map { get; set; } = new LanguageMapList();
+        /// <summary>
+        ///  Alternative Label language map
+        /// </summary>
+        [JsonProperty( PropertyName = "skos:altLabel" )]
+        public LanguageMapList AltLabel_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Concept that is broader in some way than this concept.
@@ -289,7 +293,9 @@ namespace RA.Models.Input
 		/// Text describing a significant change to the concept.
 		/// </summary>
 		public List<string> ChangeNote { get; set; } = new List<string>();
-		public LanguageMapList ChangeNote_Map { get; set; } = new LanguageMapList();
+
+        [JsonProperty( PropertyName = "skos:changeNote" )]
+        public LanguageMapList ChangeNote_Map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Assertion indicates that two concepts are sufficiently similar that they can be used interchangeably.
@@ -302,16 +308,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Definition { get; set; }
 
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Definition_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        [JsonProperty( PropertyName = "skos:definition" )]
+        public LanguageMap Definition_Map { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// Indicates semantic similarity denoting an even higher degree of closeness than skos:closeMatch.
-		/// List of Concept URLs(CTIDs)
-		/// </summary>
-		public List<string> ExactMatch { get; set; } = new List<string>();
+        /// <summary>
+        /// Indicates semantic similarity denoting an even higher degree of closeness than skos:closeMatch.
+        /// List of Concept URLs(CTIDs)
+        /// </summary>
+        public List<string> ExactMatch { get; set; } = new List<string>();
 
 		/// <summary>
 		///Label not intended for public presentation but to assist applications in disambiguating searcher intent - e.g., hidden labels can be used for common misspelling or a colloquial expression.

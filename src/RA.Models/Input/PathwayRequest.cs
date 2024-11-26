@@ -265,19 +265,39 @@ namespace RA.Models.Input
 		public string NextVersion { get; set; }
 		/// <summary>
 		/// VersionIdentifier
-		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
-		/// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
+		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+		/// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
 		/// </summary>
 		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
-		#endregion
-	}
+        #endregion
 
-	/// <summary>
-	/// History
-	/// 21-01-06 remove CodedNotation
-	/// 23-04-30 Add CodedNotation for competencyComponent only
-	/// </summary>
-	public class PathwayComponent
+
+        #region -- Process Profiles --
+
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+        /// <summary>
+        ///  Description of a process by which a resource is maintained, including review and updating.
+        /// </summary>
+        public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource is reviewed.
+        /// </summary>
+        public List<ProcessProfile> ReviewProcess { get; set; }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// History
+    /// 21-01-06 remove CodedNotation
+    /// 23-04-30 Add CodedNotation for competencyComponent only
+    /// </summary>
+    public class PathwayComponent
 	{
 		#region REQUIRED Properties
 		/// <summary>
@@ -497,19 +517,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap ProgramTerm_Map { get; set; } = new LanguageMap();
 
-		#endregion
+        #endregion
 
 
-
-		#region JobComponent only - OccupationType and Industry type
-		/// <summary>
-		/// OccupationType
-		/// Type of occupation; select from an existing enumeration of such types.
-		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
-		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
-		///  ceterms:occupationType
-		/// </summary>
-		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+        #region JobComponent only - OccupationType and Industry type
+        /// <summary>
+        /// OccupationType
+        /// Type of occupation; select from an existing enumeration of such types.
+        ///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
+        ///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
+        ///  ceterms:occupationType
+        /// </summary>
+        public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
 		/// <summary>
 		/// AlternativeOccupationType
 		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 

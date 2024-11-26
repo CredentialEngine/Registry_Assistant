@@ -8,7 +8,6 @@ namespace RA.Models.Input
 {
     /// <summary>
     /// Collection Request class
-    /// Collection is required. 
     /// Collection.HasMember can be a list of CTIDs for all members. 
     /// Include CollectionMembers or Members, but not both.
     /// </summary>
@@ -28,6 +27,7 @@ namespace RA.Models.Input
 
         /// <summary>
         /// Members can be any of:
+		/// "ceterms:CredentialOrganization",
         /// "ceterms:AssessmentProfile",
         /// "ceterms:Credential", //any of the valid credential subclasses
         /// "ceasn:Competency",
@@ -45,7 +45,43 @@ namespace RA.Models.Input
 
     }
 
-	
+	/// <summary>
+	/// Prototype, not implemented
+	/// </summary>
+	public class CollectionUpdateRequest : BaseRequest
+	{
+		/// <summary>
+		/// Collection to update
+		/// TODO - would we want to allow updating the collection as well?
+		/// </summary>
+		public string CollectionCTID { get; set; }
+		/// <summary>
+		/// Members can be any of:
+		/// "ceterms:AssessmentProfile",
+		/// "ceterms:CollectionMember",
+		/// "ceterms:Credential", //any of the valid credential subclasses
+		/// "ceasn:Competency",
+		/// "ceterms:Course",
+		/// "ceterms:Job",
+		/// "ceterms:LearningOpportunityProfile",
+		/// "ceterms:LearningProgram",
+		/// "ceterms:Occupation",
+		/// "ceterms:Task",
+		/// "ceterms:WorkRole",
+		/// </summary>
+		public List<object> Members { get; set; } = new List<object>();
+
+		/// <summary>
+		/// CollectionMember
+		/// Collection members will be published in the graph like Members, but have a separate input propery for better organization
+		/// </summary>
+		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
+
+		/// <summary>
+		/// List of members to remove from a collection
+		/// </summary>
+		public List<string> RemoveMembers { get; set; } = new List<string>();
+	}
 	/// <summary>
 	/// Proposed option to publish a document already formatted as CTDL JSON-LD.
 	/// </summary>
@@ -70,15 +106,56 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Type { get; set; } = "ceterms:Collection";
 
-		/// <summary>
-		/// CTDL unique identifier
-		/// Required
-		/// </summary>
-		public string CTID { get; set; }
-		/// <summary>
-		/// Alternate names for this collection
-		/// </summary>
-		public List<string> AlternateName { get; set; } = new List<string>();
+        #region Required Properties
+        /// <summary>
+        /// CTDL unique identifier
+        /// Required
+        /// </summary>
+        public string CTID { get; set; }
+
+        /// <summary>
+        /// The name or title of this resource.
+        /// Required
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Language map for Name
+        /// </summary>
+        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+        /// <summary>
+        /// A short description of this resource.
+        /// REQUIRED and must be a minimum of 15 characters.
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
+        /// Language map for Description
+        /// </summary>
+        public LanguageMap Description_Map { get; set; }
+
+        /// <summary>
+        /// Organization that owns this resource
+        /// </summary>
+        public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
+
+        /// <summary>
+        /// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
+        /// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+        /// Required (but will default to Active)
+        /// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+        /// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
+        /// </summary>
+        public string LifeCycleStatusType { get; set; }
+
+		// requires Contents or subject webPage. 
+		// Contents include HasMember or CollectionMembers
+        #endregion
+
+        /// <summary>
+        /// Alternate names for this collection
+        /// </summary>
+        public List<string> AlternateName { get; set; } = new List<string>();
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
@@ -88,20 +165,34 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Category or classification of this resource.
 		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-		/// URI to a concept(based on the O*Net work activities example). 
-		/// OR can use blank nodes where the blank node Id would be in this list
-		/// Recommend using CTIDs
+		/// URI to a concept(based on the ONet work activities example) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
 		/// ceterms:classification
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
 
-		#endregion
+        ///// <summary>
+        ///// Additional Classification
+        ///// List of concepts that don't exist in the registry. Will be published as blank nodes
+        ///// OR should input be a list of Concepts?
+        ///// </summary>
+        //public List<CredentialAlignmentObject> AdditionalClassification { get; set; } = new List<CredentialAlignmentObject>();
+        #endregion
 
-		/// <summary>
-		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
-		/// ceterms:codedNotation
-		/// </summary>
-		public string CodedNotation { get; set; }
+
+        /// <summary>
+        /// Type of collection, list, set, or other grouping of resources; select from an existing enumeration of such types.
+        /// Optional
+        /// ConceptScheme: CollectionCategory 
+        /// Current valid values:
+        /// collectionCategory:ETPL, collectionCategory:GIBill, collectionCategory:IndustryRecognized, collectionCategory:Quality, collectionCategory:Perkins
+        /// </summary>
+        public List<string> CollectionType { get; set; }
+
+        /// <summary>
+        /// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
+        /// ceterms:codedNotation
+        /// </summary>
+        public string CodedNotation { get; set; }
 
 		/// <summary>
 		/// Only allow date (yyyy-mm-dd), no time
@@ -114,23 +205,16 @@ namespace RA.Models.Input
 		/// </summary>
 		public string ExpirationDate { get; set; }
 
-		/// <summary>
-		/// A short description of this resource.
-		/// REQUIRED and must be a minimum of 15 characters.
-		/// </summary>
-		public string Description { get; set; }
-		/// <summary>
-		/// Language map for Description
-		/// </summary>
-		public LanguageMap Description_Map { get; set; }
 
         /// <summary>
         /// Resource in a Collection.
         /// REQUIRED 
-		///		- or must have at least one of this property: HasMember, 
-		///		- or Request.CollectionMembers must have contents.
-		///		- or Request.Competencies must have contents
-        /// These are for resources that already exist in the registry
+		///		- or must have at least one of these property: 
+		///			- HasMember, 
+		///			- or Request.CollectionMembers must have contents.
+		///			- or SubjectWebpage
+        /// These are for resources that MUST already exist in the registry.
+		/// Currently the allowed types are:
         /// ceasn:Competency, any credential type, ceterms:AssessmentProfile, ceterms:Task ceterms:WorkRole ceterms:Job ceterms:Course ceterms:LearningOpportunityProfile ceterms:LearningProgram
         /// List of CTIDs (recommended) or URIs
         /// </summary>
@@ -148,6 +232,11 @@ namespace RA.Models.Input
         public List<string> InLanguage { get; set; }
 
 		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		public string InCatalog { get; set; }
+
+		/// <summary>
 		/// A word or phrase used by the promulgating agency to refine and differentiate individual resources contextually.
 		/// </summary>
 		public List<string> Keyword { get; set; }
@@ -162,43 +251,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public string License { get; set; }
 
-		/// <summary>
-		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
-		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
-		/// Required
-		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
-		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
-		/// </summary>
-		public string LifeCycleStatusType { get; set; }
-
-		/// <summary>
-		/// Type of collection, list, set, or other grouping of resources; select from an existing enumeration of such types.
-		/// Optional
-		/// ConceptScheme: CollectionCategory 
-		/// Current valid values:
-		/// collectionCategory:ETPL, collectionCategory:GIBill, collectionCategory:IndustryRecognized, collectionCategory:Quality, collectionCategory:Perkins
-		/// </summary>
-		public List<string> CollectionType { get; set; }
-
-		/// <summary>
-		/// The name or title of this resource.
-		/// Required
-		/// </summary>
-		public string Name { get; set; }
-		/// <summary>
-		/// Language map for Name
-		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Conditions for collection membership
 		/// </summary>
 		public List<ConditionProfile> MembershipCondition { get; set; } = new List<ConditionProfile>();
-
-		/// <summary>
-		/// Organization that owns this resource
-		/// </summary>
-		public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
 
 		/// <summary>
 		/// Subjects
@@ -213,6 +270,29 @@ namespace RA.Models.Input
 		/// Webpage that describes this entity.
 		/// </summary>
 		public string SubjectWebpage { get; set; }
+
+		/// <summary>
+		/// VersionIdentifier
+		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+		/// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
+		/// </summary>
+		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
+
+		/// <summary>
+		/// Latest version of the credential.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string LatestVersion { get; set; }
+		/// <summary>
+		/// Version of the resource that immediately precedes this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string PreviousVersion { get; set; }
+		/// <summary>
+		/// Version of the resource that immediately follows this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public string NextVersion { get; set; }
 
 		#region Occupations, Industries, and instructional programs
 		//=====================================================================
@@ -289,23 +369,51 @@ namespace RA.Models.Input
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
-		#endregion
+        #endregion
 
+        #region -- Process Profiles --
+        /// <summary>
+        /// Description of a process by which a resource is administered.
+        /// ceterms:administrationProcess
+        /// </summary>
+        public List<ProcessProfile> ComplaintProcess { get; set; }
 
-	}
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> DevelopmentProcess { get; set; }
 
-	/// <summary>
-	/// Collection Member (proposed)
-	/// The collection member will use a blank node format for the id.
-	/// Tip: we may use the CTID from the is proxy for in the blank node id
-	/// </summary>
-	public class CollectionMember
+        /// <summary>
+        ///  Description of a process by which a resource is maintained, including review and updating.
+        /// </summary>
+        public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource is reviewed.
+        /// </summary>
+        public List<ProcessProfile> ReviewProcess { get; set; }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Collection Member (proposed)
+    /// The collection member will use a blank node format for the id.
+    /// Tip: we may use the CTID from the is proxy for in the blank node id
+    /// </summary>
+    public class CollectionMember
 	{
 		/// <summary>
 		/// Type for this class
 		/// </summary>
 		public string Type { get; set; } = "ceterms:CollectionMember";
 
+		/// <summary>
+		/// CTID for a collection. 
+		/// PROPOSED - NOT IMPLEMENTED
+		/// This property is only used in publishing of documents like learning opportunities. It will be ignored in the context of publishing a collection.
+		/// </summary>
+		public string CollectionCTID { get; set; }
 
 
 		/// <summary>

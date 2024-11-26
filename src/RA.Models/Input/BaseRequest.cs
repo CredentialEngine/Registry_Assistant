@@ -17,6 +17,12 @@ namespace RA.Models.Input
         public string PublishForOrganizationIdentifier { get; set; }
 
 		/// <summary>
+		/// Flag to indicate if the data being published is from a primary source (true) or a secondary source (false)
+		/// There would be a risk where if not provided, defaults to false
+		/// </summary>
+		public bool IsPrimarySourceRecord { get; set; } = true;
+
+		/// <summary>
 		/// Envelope Identifier
 		/// Optional property, used where the publishing entity wishes to store the identifier.
 		/// Contains registry envelope identifier for a document in the registy. It should be empty for a new document. 
@@ -28,6 +34,19 @@ namespace RA.Models.Input
 		/// Formerly known as Community
 		/// </summary>
 		public string Registry { get; set; }
+
+		/// <summary>
+		/// Where an organization is publishing to a private registry, set this property to true to automatically sync the resource to the public registry 
+		/// (that is without an additonal publishing step)
+		/// </summary>
+        public bool AutomaticallySyncPrivateRequestToPublicRegistry { get; set; } 
+
+        //temp backup (note that when serialized, this approach doesn't work, get two separate properties
+        public string Community
+        {
+			get { return Registry; }
+			set { Registry = value; }
+        }
 
 		/// <summary>
 		/// List of objects that will be published as blank nodes. 

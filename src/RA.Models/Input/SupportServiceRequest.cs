@@ -21,8 +21,7 @@ namespace RA.Models.Input
     /// Support services can be provided at any stage of an individual's education or career, and may be targeted towards people with or without direct affiliation with an organization. The goal of support services is to provide people with the assistance they need to achieve their full potential. Examples of Support Services include career advice, job placement, childcare, transportation, tools, mentorship, counseling, and other forms of aid.
     /// </summary>
     public class SupportService : BasePrimaryResource
-	{
-
+    {
 
         #region *** Required Properties ***
 
@@ -34,12 +33,12 @@ namespace RA.Models.Input
         /// </summary>
         public string CTID { get; set; }
 
-
         /// <summary>
         /// Name or title of the resource.
         /// Required
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
         /// Alternately can provide a language map
         /// </summary>
@@ -51,6 +50,7 @@ namespace RA.Models.Input
 		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
+
         /// <summary>
         /// Alternately can provide a language map
         /// </summary>
@@ -84,11 +84,6 @@ namespace RA.Models.Input
         /// </summary>
         public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
 
-        /// <summary>
-        /// Webpage that describes this entity.
-        /// URL
-        /// </summary>
-        public string SubjectWebpage { get; set; }
         #endregion
 
         #region  RECOMMENDED
@@ -100,13 +95,16 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> DeliveryType { get; set; }
 
-
         /// <summary>
         /// Estimated cost of a credential, learning opportunity or assessment.
         /// </summary>
         public List<CostProfile> EstimatedCost { get; set; }
 
-
+        /// <summary>
+        /// Webpage that describes this entity.
+        /// URL
+        /// </summary>
+        public string SubjectWebpage { get; set; }
         #endregion
 
 
@@ -125,6 +123,7 @@ namespace RA.Models.Input
         /// List of Alternate Names for this learning opportunity
         /// </summary>
         public List<string> AlternateName { get; set; } = new List<string>();
+
         /// <summary>
         /// LanguageMap for AlternateName
         /// </summary>
@@ -148,13 +147,11 @@ namespace RA.Models.Input
         /// </summary>
         public List<Place> AvailableAt { get; set; }
 
-
         /// <summary>
         /// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
         /// Set constraints, prerequisites, entry conditions, or requirements that are shared across an organization, organizational subdivision, set of credentials, or category of entities and activities.
         /// </summary>
         public List<string> CommonConditions { get; set; }
-
 
         /// <summary>
         /// List of CTIDs (recommended) or full URLs for a CostManifest published by the owning organization.
@@ -162,12 +159,10 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> CommonCosts { get; set; }
 
-
         /// <summary>
         /// Start Date of this resource
         /// </summary>
         public string DateEffective { get; set; }
-
 
         /// <summary>
         /// End date of the learning opportunity if applicable
@@ -215,23 +210,25 @@ namespace RA.Models.Input
         ///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
         /// </summary>
         public List<FrameworkItem> OccupationType { get; set; }
+
         /// <summary>
         /// AlternativeOccupationType
         /// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
         /// Any occupations added using this property will be added to or appended to the OccupationType output.
         /// </summary>
         public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+
         /// <summary>
         /// Language map list for AlternativeOccupationType
         /// </summary>
         public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
+
         /// <summary>
         /// List of valid O*Net codes. See:
         /// https://www.onetonline.org/find/
         /// The API will validate and format the ONet codes as Occupations
         /// </summary>
         public List<string> ONET_Codes { get; set; } = new List<string>();
-
 
         #endregion
 
@@ -259,6 +256,35 @@ namespace RA.Models.Input
         /// ConceptScheme: <see href="https://credreg.net/ctdl/terms/SupportServiceCategory"></see>
         /// </summary>
         public List<string> SupportServiceType { get; set; }
+
+        #region -- Process Profiles --
+        /// <summary>
+        /// Description of a process by which a resource is administered.
+        /// ceterms:administrationProcess
+        /// </summary>
+        public List<ProcessProfile> AdministrationProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process for handling complaints about a resource or related resources.
+        /// </summary>
+        public List<ProcessProfile> ComplaintProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+        /// <summary>
+        ///  Description of a process by which a resource is maintained, including review and updating.
+        /// </summary>
+        public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource is reviewed.
+        /// </summary>
+        public List<ProcessProfile> ReviewProcess { get; set; }
+
+        #endregion
 
     }
 }

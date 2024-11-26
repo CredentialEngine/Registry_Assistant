@@ -87,7 +87,25 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
 
-	} //
+        #region -- Process Profiles --
+
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+        /// <summary>
+        ///  Description of a process by which a resource is maintained, including review and updating.
+        /// </summary>
+        public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource is reviewed.
+        /// </summary>
+        public List<ProcessProfile> ReviewProcess { get; set; }
+
+        #endregion
+    } 
 
 
 }

@@ -14,7 +14,7 @@ namespace RA.Models.Input
 
 		#region Required
 		/// <summary>
-		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a resource recognizes it in transactions with the external environment (e.g., in verifiable claims involving the resource).
+		/// Globally unique Credential Transparency Identifier (CTID)
 		/// required
 		/// - CTID
 		/// - NAME
@@ -31,7 +31,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		public LanguageMap Name_Map { get; set; }
 
 		/// <summary>
 		/// Profile Description 
@@ -42,7 +42,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		public LanguageMap Description_Map { get; set; }
 
 		/// <summary>
 		/// Organization(s) that offer this resource

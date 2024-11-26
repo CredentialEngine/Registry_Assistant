@@ -1,29 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace RA.Models.Input
 {
-	/// <summary>
-	/// Duration Profile
-	/// Either enter an ExactDuration or a range using Minimum duration, and maximum duration
-	/// </summary>
-	public class DurationProfile 
+    /// <summary>
+    /// Duration Profile
+    /// Either enter an ExactDuration or a range using Minimum duration, and maximum duration
+    /// </summary>
+    public class DurationProfile 
 	{
 		public DurationProfile()
 		{
 			MinimumDuration = new DurationItem();
 			MaximumDuration = new DurationItem();
 			ExactDuration = new DurationItem();
-		}
+            TimeRequired= new DurationTimeItem();
+
+        }
 
 		/// <summary>
 		/// Description of this duration profile - optional
 		/// </summary>
 		public string Description { get; set; }
-        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+        public LanguageMap Description_Map { get; set; }
 
 
 		/// <summary>
@@ -58,6 +56,27 @@ namespace RA.Models.Input
 		/// </summary>
 		public DurationTimeItem TimeRequired { get; set; }
 
+		/// <summary>
+		/// Check if there is any input data
+		/// </summary>
+		public bool HasValue
+		{
+			get
+			{
+				if ( ( ExactDuration != null && ExactDuration.HasValue )
+					|| ( MinimumDuration != null && MinimumDuration.HasValue )
+                    || ( MaximumDuration != null && MaximumDuration.HasValue )
+                    || ( TimeRequired != null && TimeRequired.HasValue )
+                    || !string.IsNullOrWhiteSpace( Description ) 
+					|| ( Description_Map != null && Description_Map.Count > 0 )
+                    )
+				{
+					return true;
+				}
+				else
+					return false;
+			}
+		}
 	}
 	//
 
@@ -84,7 +103,7 @@ namespace RA.Models.Input
 		/// <seealso href="https://en.wikipedia.org/wiki/ISO_8601#Durations">ISO_8601 Durations</seealso>
 		/// </summary>
 		public string Duration_ISO8601 { get; set; }
-		//TODO - technically a decimal can be used. So P2.5Y instead of P2Y6M. Or more precise: P4.38Y.
+		//A decimal can be used. So P2.5Y instead of P2Y6M. Or more precise: P4.38Y.
 		public decimal? Years { get; set; }
 		public decimal? Months { get; set; }
 		public decimal? Weeks { get; set; }
@@ -92,18 +111,40 @@ namespace RA.Models.Input
 		public decimal? Hours { get; set; }
 		public decimal? Minutes { get; set; }
 
-        public string Print()
+        /// <summary>
+        /// Check if there is any input data
+        /// </summary>
+        public bool HasValue
+        {
+            get
+            {
+                if ( !string.IsNullOrWhiteSpace( Display() ))
+                {
+                    return true;
+                }
+                else
+                    return false;
+            }
+        }
+        /// <summary>
+        /// Format the included data.
+        /// For now just return Duration_ISO8601 if present.
+        /// </summary>
+        /// <returns></returns>
+        public string Display()
         {
             var parts = new List<string>();
-            if ( Years > 0 ) { parts.Add( Years + " year" + ( Years == 1 ? "" : "s" ) ); }
-            if ( Months > 0 ) { parts.Add( Months + " month" + ( Months == 1 ? "" : "s" ) ); }
-            if ( Weeks > 0 ) { parts.Add( Weeks + " week" + ( Weeks == 1 ? "" : "s" ) ); }
-            if ( Days > 0 ) { parts.Add( Days + " day" + ( Days == 1 ? "" : "s" ) ); }
-            if ( Hours > 0 ) { parts.Add( Hours + " hour" + ( Hours == 1 ? "" : "s" ) ); }
-            if ( Minutes > 0 ) { parts.Add( Minutes + " minute" + ( Minutes == 1 ? "" : "s" ) ); }
+            if ( Years.HasValue && Years > 0 ) { parts.Add( Years.Value + " year" + ( Years.Value == 1 ? string.Empty : "s" ) ); }
+            if ( Months.HasValue && Months > 0 ) { parts.Add( Months.Value + " month" + ( Months.Value == 1 ? string.Empty : "s" ) ); }
+            if ( Weeks.HasValue && Weeks > 0 ) { parts.Add( Weeks.Value + " week" + ( Weeks.Value == 1 ? string.Empty : "s" ) ); }
+            if ( Days.HasValue && Days > 0 ) { parts.Add( Days.Value + " day" + ( Days.Value == 1 ? string.Empty : "s" ) ); }
+            if ( Hours.HasValue && Hours > 0 ) { parts.Add( Hours.Value + " hour" + ( Hours.Value == 1 ? string.Empty : "s" ) ); }
+            if ( Minutes.HasValue && Minutes > 0 ) { parts.Add( Minutes.Value + " minute" + ( Minutes.Value == 1 ? string.Empty : "s" ) ); }
 
             if ( parts.Count > 0 )
                 return string.Join( ", ", parts );
+            else if (!string.IsNullOrWhiteSpace( Duration_ISO8601) )
+                return Duration_ISO8601;
             else
                 return string.Empty;
         }
@@ -140,16 +181,39 @@ namespace RA.Models.Input
 		/// Only one of hours or minutes may be specified.
 		public decimal? Minutes { get; set; }
 
-		public string Print()
+        /// <summary>
+        /// Check if there is any input data
+        /// </summary>
+        public bool HasValue
+        {
+            get
+            {
+                if ( !string.IsNullOrWhiteSpace( Display() ) )
+                {
+                    return true;
+                }
+                else
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Format the included data.
+        /// For now just return Duration_ISO8601 if present.
+        /// </summary>
+        /// <returns></returns>
+        public string Display()
 		{
 			var parts = new List<string>();
-			if ( Hours > 0 ) { parts.Add( Hours + " hour" + ( Hours == 1 ? "" : "s" ) ); }
-			if ( Minutes > 0 ) { parts.Add( Minutes + " minute" + ( Minutes == 1 ? "" : "s" ) ); }
+			if ( Hours.HasValue && Hours > 0 ) { parts.Add( Hours.Value + " hour" + ( Hours.Value == 1 ? string.Empty : "s" ) ); }
+			if ( Minutes.HasValue && Minutes > 0 ) { parts.Add( Minutes.Value + " minute" + ( Minutes.Value	 == 1 ? string.Empty : "s" ) ); }
 
 			if ( parts.Count > 0 )
 				return string.Join( ", ", parts );
-			else
-				return string.Empty;
+            else if ( !string.IsNullOrWhiteSpace( Duration_ISO8601 ) )
+                return Duration_ISO8601;
+            else
+                return string.Empty;
 		}
 	}
 }

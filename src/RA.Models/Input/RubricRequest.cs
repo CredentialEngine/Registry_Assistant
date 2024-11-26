@@ -94,11 +94,6 @@ namespace RA.Models.Input
 		public string SubjectWebpage { get; set; }  //URI
 
 		#endregion
-		/// <summary>
-		/// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
-		/// ceterms:administrationProcess
-		/// </summary>
-		public List<ProcessProfile> AdministrationProcess { get; set; }
 
         /// <summary>
         /// Alternative Coded Notation
@@ -139,9 +134,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Category or classification of this resource.
 		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-		/// URI to a concept(based on the O*Net work activities example). 
-		/// OR can use blank nodes where the blank node Id would be in this list
-		/// Recommend using CTIDs
+		/// URI to a concept(based on the ONet work activities example) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
 		/// ceterms:classification
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
@@ -381,18 +374,18 @@ namespace RA.Models.Input
         /// Language map list for AlternativeIndustryType
         /// </summary>
         public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
-        /// <summary>
-        /// List of valid NAICS codes. See:
-        /// https://www.naics.com/search/
-        /// </summary>
-        public List<string> Naics { get; set; }
+		/// <summary>
+		/// List of valid NAICS codes. See:
+		/// https://www.naics.com/search/
+		/// </summary>
+		public List<string> Naics { get; set; }
 
-        //=============================================================================
-        /// <summary>
-        /// InstructionalProgramType
-        /// Type of instructional program; select from an existing enumeration of such types.
-        /// </summary>
-        public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
+		//=============================================================================
+		/// <summary>
+		/// InstructionalProgramType
+		/// Type of instructional program; select from an existing enumeration of such types.
+		/// </summary>
+		public List<FrameworkItem> InstructionalProgramType { get; set; } = new List<FrameworkItem>();
 
         /// <summary>
         /// AlternativeInstructionalProgramType
@@ -423,8 +416,33 @@ namespace RA.Models.Input
 		/// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
 		/// </summary>
 		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
+
+        #region -- Process Profiles --
+        /// <summary>
+        /// Description of a process by which a resource is administered.
+        /// ceterms:administrationProcess
+        /// </summary>
+        public List<ProcessProfile> AdministrationProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource was created.
+        /// </summary>
+        public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+        /// <summary>
+        ///  Description of a process by which a resource is maintained, including review and updating.
+        /// </summary>
+        public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+        /// <summary>
+        /// Description of a process by which a resource is reviewed.
+        /// </summary>
+        public List<ProcessProfile> ReviewProcess { get; set; }
+
+        #endregion
+
     }
-	public class RubricLevel
+    public class RubricLevel
 	{
 
 		public RubricLevel()
@@ -564,13 +582,14 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Label for the level achieved as defined by the Rubric Criterion.
-		/// Required
+		/// At least one of BenchmarkLabel or BenchmarkText is required
 		/// </summary>
 		public string BenchmarkLabel { get; set; }
 		public LanguageMap BenchmarkLabel_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Description of the level achieved as defined by the Rubric Criterion.
+		/// At least one of BenchmarkLabel or BenchmarkText is required
 		/// </summary>
 		public string BenchmarkText { get; set; }
 		public LanguageMap BenchmarkText_Map { get; set; } = new LanguageMap();
