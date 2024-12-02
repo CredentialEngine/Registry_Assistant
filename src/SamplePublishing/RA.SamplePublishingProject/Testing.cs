@@ -132,7 +132,7 @@ namespace RA.SamplePublishingProject
         [TestMethod]
         public void PublishSupportServiceList()
         {
-            new RA.SamplesForDocumentation.PublishSupportService().PublishList();
+            new RA.SamplesForDocumentation.PublishSupportServiceList().Publish();
 
         }
 

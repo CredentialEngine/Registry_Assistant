@@ -108,6 +108,7 @@
     <Compile Include="SupportingData\Occupations.cs" />
     <Compile Include="SupportingData\ProcessProfiles.cs" />
     <Compile Include="SupportService\PublishSupportService.cs" />
+    <Compile Include="SupportService\PublishSupportServiceList.cs" />
     <Compile Include="TransferValueProfiles\ACETransferValues.cs" />
     <Compile Include="TransferValueProfiles\IndianaTransferValues.cs" />
     <Compile Include="TransferValueProfiles\KansasTransferValues.cs" />
