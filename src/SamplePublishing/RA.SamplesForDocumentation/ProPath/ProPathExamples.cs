@@ -37,8 +37,8 @@ namespace RA.SamplesForDocumentation
 			}//
 			RequestHelper helper = new RA.Models.RequestHelper();
 			//create a new CTID (then save for reuse).
-			var credCtid = "ce-8c0497aa-c1bf-42ba-ade6-ca0234d0b35f";// "ce-" + Guid.NewGuid().ToString().ToLower();
-			var datasetProfileCtid = "ce-db0bbb2b-e216-4bcb-b7b8-acb823ba785e";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var credCtid = "ce-8c0497aa-c1bf-42ba-ade6-ca0234d0b35f";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
+			var datasetProfileCtid = "ce-db0bbb2b-e216-4bcb-b7b8-acb823ba785e";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 
 			var myData = new Credential()
 			{
@@ -257,7 +257,7 @@ namespace RA.SamplesForDocumentation
 			}//
 
 			 //Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-f8885b28-134d-4188-8c86-063aadff14ea";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-f8885b28-134d-4188-8c86-063aadff14ea";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//typically would have been stored prior to retrieving for publishing
 
 			//Populate the learning opportunity object

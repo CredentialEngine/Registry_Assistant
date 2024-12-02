@@ -12,7 +12,7 @@ namespace RA.SamplesForDocumentation
 		public string IntroductiontoBusinessTVP( bool doingPublish = false )
 		{
 			// Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
 			if ( string.IsNullOrWhiteSpace( apiKey ) )

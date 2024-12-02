@@ -120,6 +120,7 @@ namespace RA.Models.Input.profiles.QData
         /// <summary>
         /// RelevantDataSetFor is obsolete. 
         /// Data set for the entity being referenced.
+        /// Input is typically one or more CTIDs for the related resource, such as a Credential
         /// REQUIRED when dataSetProfile published separately.
         /// Inverse property - points back to the parent resource (to which the dataSetProfile pertains)
         /// 21-02-19 mparsons -	Removing these from range: HoldersProfile, EarningsProfile, EmploymentOutlook
@@ -127,7 +128,7 @@ namespace RA.Models.Input.profiles.QData
         /// 21-05-10 mparsons - effectively obsolete outside of HoldersProfile, EarningsProfile, EmploymentOutlook
         ///                     and the latter are moving to be obsolete
         ///		              - Replaced by About
-        /// 24-09-02 MAYBE NOT OBSOLETE
+        /// 24-09-02 THIS IS NOW THE PRIMARY PROPERTY! - it is replacing the use of About!
         /// Range
         ///     ceterms:AssessmentProfile
         ///     ceterms:Credential (and subclasses)
@@ -155,6 +156,7 @@ namespace RA.Models.Input.profiles.QData
         /// CTID/URI
         /// schema:about
         /// </summary>
+        [Obsolete("24-11-01 About is being replaced by RelevantDataSetFor")]
         public List<EntityReference> About { get; set; } = new List<EntityReference>();
 
 
@@ -171,7 +173,6 @@ namespace RA.Models.Input.profiles.QData
 		/// LanguageMap for AlternateName
 		/// </summary>
 		public LanguageMapList AlternateName_Map { get; set; }
-
 
         /// <summary>
         /// Location or geographic area for a data set. 
@@ -267,11 +268,10 @@ namespace RA.Models.Input.profiles.QData
 
 
         /// <summary>
-        /// Authoritative source of an entity's information.
-        /// URL 
+        /// Identification of data point(s) in the data set that describe personal subject attribute(s) used to uniquely identify a subject for the purpose of matching records and an indication of level of confidence in the accuracy of the match.
         /// </summary>
         public string SubjectIdentification { get; set; }
         public LanguageMap SubjectIdentification_Map { get; set; } 
 
-    }
+	}
 }

@@ -127,7 +127,7 @@ namespace RA.SamplesForDocumentation
 			 * 
 			 * Additional properties are also expected to be added. 
 			 */
-			var datasetProfileCtid = "ce-5d551a88-6916-4bfc-a271-073f2caf1930";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var datasetProfileCtid = "ce-5d551a88-6916-4bfc-a271-073f2caf1930";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 
 			var output = new AggregateDataProfile()
 			{

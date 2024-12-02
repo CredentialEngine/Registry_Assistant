@@ -105,8 +105,8 @@ namespace RA.SamplesForDocumentation.OutcomeData
 
 
                             //may want to make case insensitive!
-                            var header = headers[i];//.ToLower();
-                            var header2 = header.Replace( " ", "" ).Replace( "_", "" ).ToLower();
+                            var header = headers[i];//.ToLowerInvariant();
+                            var header2 = header.Replace( " ", "" ).Replace( "_", "" ).ToLowerInvariant();
                             switch ( header2 )
                             {
                                 case "publishedby": //would already have the api key for this custom process
@@ -438,7 +438,7 @@ namespace RA.SamplesForDocumentation.OutcomeData
                         var payload = JsonConvert.SerializeObject( myRequest );
 
                         //otherwise use a method where return status can be inspected
-                        var identifier = "DSP_" + myRequest.DataSetProfile.CTID.ToLower();
+                        var identifier = "DSP_" + myRequest.DataSetProfile.CTID.ToLowerInvariant();
                         //OR. All credential names will be similar
                         identifier = "DSP_" + entity.OrganizationName.Replace( " ", "" ) + "--" + entity.CredentialName;
                         SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()

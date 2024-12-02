@@ -151,7 +151,7 @@ namespace RA.Models.Input
 		/// List of the top competencies, those that are directly connected to the framework. Provide either a CTID for a competency that is include in the Competencies property, or the full URI formatted like the following:
 		/// "https://credentialengineregistry.org/resources/ce-b1e0eca2-7a19-49e9-8841-fa16ddf8396d"
 		/// List of URIs to competencies.
-		/// NOTE: or just provide the CTIDs, and the system will format the proper URI for the current environment.
+		/// NOTE: Just provide the CTIDs, and the system will format the proper URI for the current environment.
 		/// </summary>
 		public List<string> hasTopChild { get; set; } = new List<string>();
 
@@ -681,29 +681,6 @@ namespace RA.Models.Input
 		public string weight { get; set; }
 
 		/// <summary>
-		/// HasSourceIdentifier
-		/// A collection of identifiers related to this resource.
-		/// URI for a SourceIdentifier
-		/// </summary>
-		public List<string> hasSourceIdentifier { get; set; }
-
-		///// <summary>
-		///// HasMaintenanceTask
-		/////OBSOLETE See hasTask
-		///// Maintenance task related to this resource.
-		///// URI for a MaintenanceTask
-		///// </summary>
-		//public List<string> hasMaintenanceTask { get; set; } = new List<string>();
-
-		///// <summary>
-		///// HasTrainingTask
-		/////OBSOLETE See hasTask
-		///// Maintenance task related to this resource.
-		///// URI for a TrainingTask
-		///// </summary>
-		//public List<string> HasTrainingTask { get; set; } = new List<string>();
-
-		/// <summary>
 		/// Task related to this resource.
 		/// List of URIs (CTIDs recommended) for a Task
 		/// </summary>
@@ -804,13 +781,6 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> inLanguage { get; set; } = new List<string>();	
 
-		///// <summary>
-		///// Collection to which this resource belongs.
-		///// This is really an inverse property so would not be published with the competency
-		///// </summary>
-		//public string isMemberOf { get; set; }
-
-
 		/// <summary>
 		/// Type of required or expected performance level for a resource; select from an existing enumeration of such types.
 		/// List of URIs (CTIDs recommended) for Concept
@@ -840,7 +810,6 @@ namespace RA.Models.Input
 		/// List of URIs (CTIDs recommended) for Concept
 		/// </summary>
 		public List<string> sensoryCapabilityType { get; set; } = new List<string>();
-
 
         /// <summary>
         /// Human-readable information resource other than a competency framework from which this competency was generated or derived by humans or machines.

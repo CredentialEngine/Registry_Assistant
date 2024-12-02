@@ -33,7 +33,7 @@ namespace RA.SamplesForDocumentation
 			//
              //Assign a CTID for the entity being published and keep track of it
              //this must be permantently stored in partner system and used with all future updates. 
-            var myOrgCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+            var myOrgCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//
 
 			//A simple organization object - see below for sample class definition
@@ -213,7 +213,7 @@ namespace RA.SamplesForDocumentation
 		public string Publish( YourOrganization input )
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 			//this is the CTID of the organization that owns the data being published
@@ -304,7 +304,7 @@ namespace RA.SamplesForDocumentation
 		public string ThirdPartyPublishSimpleRecord()
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 
 			//assign the api key - this is the API key for the third party organization (not the data owner)
 			var apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
@@ -313,7 +313,7 @@ namespace RA.SamplesForDocumentation
 			var organizationIdentifierFromAccountsSite = "ce-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myOrgCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myOrgCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			DataService.SaveOrganizationCTID( myOrgCTID );
 			//A simple organization object - see below for sample class definition
 			var myData = new Organization()

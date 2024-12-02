@@ -15,13 +15,13 @@ namespace RA.SamplesForDocumentation.Pathways
 		public string PublishSimpleRecord( string requestType = "publish" )
 		{
 			// Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
 			// This is the CTID of the organization that owns the data being published
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 			// Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 
 			// A simple pathwaySet object - see below for sample class definition
 			var myData = new PathwaySet()
@@ -39,9 +39,9 @@ namespace RA.SamplesForDocumentation.Pathways
 			} );
 			//provide the CTIDs for the pathways in HasPathway. There must be a minimum of two pathways. 
 			//HasPathway can also refer to a pathway already published, that is not in the current list of Pathways
-			var pathway1CTID = "ce-" + Guid.NewGuid().ToString().ToLower();
-			var pathway2CTID = "ce-" + Guid.NewGuid().ToString().ToLower();
-			var pathway3CTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var pathway1CTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
+			var pathway2CTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
+			var pathway3CTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 
 			myData.HasPathway.AddRange( new List<string>() { pathway1CTID, pathway2CTID, pathway3CTID } );
 

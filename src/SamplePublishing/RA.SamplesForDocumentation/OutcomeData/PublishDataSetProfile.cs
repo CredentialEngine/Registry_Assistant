@@ -18,7 +18,7 @@ namespace RA.SamplesForDocumentation.OutcomeData
         public string PublishLegacy(string requestType = "publish")
         {
             //Holds the result of the publish action
-            var result = "";
+            var result = string.Empty;
 
             // Assign the api key - acquired from organization account of the organization doing the publishing
             var apiKey = SampleServices.GetMyApiKey();
@@ -61,10 +61,7 @@ namespace RA.SamplesForDocumentation.OutcomeData
             {
                 CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
             } );
-            myData.DistributionFile = new List<string>()
-            {
-                "https://exmple.org/distribution"
-            };
+
             myData.Identifier.Add( new IdentifierValue()
             {
                 IdentifierTypeName = "Some Identifer For Outcome Data",

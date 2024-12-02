@@ -18,7 +18,7 @@ namespace RA.SamplesForDocumentation
 		public string ACEIntroductorySociologyTVP( bool doingPublish = false )
 		{
 			// Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -32,7 +32,7 @@ namespace RA.SamplesForDocumentation
 
 			// Assign a CTID for the entity being published and keep track of it
 			//NOTE: afer being generated, this value be saved and used for successive tests or duplicates will occur.
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//from github
 			myCTID = "ce-fde8e91f-608b-4488-ba8d-b3d81b036b50";
 
@@ -234,7 +234,7 @@ namespace RA.SamplesForDocumentation
 		public string ACEPrinciplesOfFinanceTVP( bool doingPublish = false )
 		{
 			// Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -248,7 +248,7 @@ namespace RA.SamplesForDocumentation
 
 			// Assign a CTID for the entity being published and keep track of it
 			//NOTE: afer being generated, this value be saved and used for successive tests or duplicates will occur.
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//from github
 			myCTID = "ce-e4f5301e-0164-47f8-b020-23984defdb92";
 

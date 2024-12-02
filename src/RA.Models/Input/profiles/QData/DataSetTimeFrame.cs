@@ -63,13 +63,6 @@ namespace RA.Models.Input.profiles.QData
         public LanguageMap Description_Map { get; set; }
 
         /// <summary>
-        /// Description of profile
-        /// RECOMMENDED 
-        /// </summary>
-        public string Description { get; set; }
-        public LanguageMap Description_Map { get; set; }
-
-        /// <summary>
         /// Attributes of the data set.
         /// HIGHLY RECOMMENDED
         /// 2024-07-31 This profile is now (MOSTLY) obsolete.

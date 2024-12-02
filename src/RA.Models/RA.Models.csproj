@@ -83,7 +83,6 @@
     <Compile Include="Input\PathwayRequest.cs" />
     <Compile Include="Input\PathwaySetRequest.cs" />
     <Compile Include="Input\PlainGraphRequest.cs" />
-    <Compile Include="Input\profiles\AccreditAction.cs" />
     <Compile Include="Input\profiles\AggregateDataProfile.cs" />
     <Compile Include="Input\profiles\BaseEmploymentToWorkObject.cs" />
     <Compile Include="Input\profiles\BasePrimaryResource.cs" />
@@ -100,6 +99,7 @@
     <Compile Include="Input\profiles\FrameworkItem.cs" />
     <Compile Include="Input\profiles\HoldersProfile.cs" />
     <Compile Include="Input\profiles\IdentifierValue.cs" />
+    <Compile Include="Input\profiles\Industry.cs" />
     <Compile Include="Input\profiles\Job.cs" />
     <Compile Include="Input\profiles\Jurisdiction.cs" />
     <Compile Include="Input\profiles\LanguageMap.cs" />
@@ -109,7 +109,9 @@
     <Compile Include="Input\profiles\Place.cs" />
     <Compile Include="Input\profiles\ProcessProfile.cs" />
     <Compile Include="Input\profiles\QData\DataProfile.cs" />
+    <Compile Include="Input\profiles\QData\DataSetDistribution.cs" />
     <Compile Include="Input\profiles\QData\DataSetProfile.cs" />
+    <Compile Include="Input\profiles\QData\DataSetService.cs" />
     <Compile Include="Input\profiles\QData\DataSetTimeFrame.cs" />
     <Compile Include="Input\profiles\QData\Dimension.cs" />
     <Compile Include="Input\profiles\QData\Metric.cs" />

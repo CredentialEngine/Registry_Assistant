@@ -23,8 +23,6 @@ namespace RA.Models.Input.profiles.QData
         [JsonProperty( "@type" )]
         public string Type { get; set; }
 
-
-         */
         /// <summary>
         /// Globally unique Credential Transparency Identifier (CTID)
         /// Recommended, but can be a blank node.
@@ -136,8 +134,10 @@ namespace RA.Models.Input.profiles.QData
 
         /// <summary>
         /// Links an individual to an individual; such an owl:sameAs statement indicates that two URI references actually refer to the same thing: the individuals have the same "identity".
+        /// NOTE: sameAs applies to every resource and as such will not (likely) be an explicit property!
         /// owl:sameAs
         /// </summary>
         public List<string> SameAs { get; set; }
+
     }
 }

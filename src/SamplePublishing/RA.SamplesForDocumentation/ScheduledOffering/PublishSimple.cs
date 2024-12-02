@@ -18,7 +18,7 @@ namespace RA.SamplesForDocumentation
 		public string Publish( string requestType = "publish" )
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -34,7 +34,7 @@ namespace RA.SamplesForDocumentation
 			}//
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-a11fe49a-b546-4853-b83b-17f24d1ac42b";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-a11fe49a-b546-4853-b83b-17f24d1ac42b";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//typically would have been stored prior to retrieving for publishing
 
 			//Populate the Scheduled Offering object

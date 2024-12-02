@@ -15,7 +15,7 @@ namespace RA.SamplesForDocumentation
 		public string PublishSimpleRecord( string requestType = "publish" )
 		{
 			// Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -31,7 +31,7 @@ namespace RA.SamplesForDocumentation
 			}//
 	
 			// Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 
 			// A simple pathway object - see below for sample class definition
 			var myData = new Pathway()
@@ -179,7 +179,7 @@ namespace RA.SamplesForDocumentation
 
 			output.Name = input.Name;
 			output.Description = input.Description;
-			output.CTID = input.CTID.ToLower();
+			output.CTID = input.CTID.ToLowerInvariant();
 			output.SubjectWebpage = input.SubjectWebpage;
 
 			output.OwnedBy = MapToOrgReferences( input.OwningOrganization );
@@ -285,7 +285,7 @@ namespace RA.SamplesForDocumentation
 			//if ( isComponentDescriptionRequired && string.IsNullOrWhiteSpace( output.Description ) )
 			//	messages.Add( string.Format("Error: a description must be provided for component type: {0}, Name: {1}", input.PathwayComponentType, input.Name) );
 
-			output.CTID = input.CTID.ToLower();
+			output.CTID = input.CTID.ToLowerInvariant();
 			output.SubjectWebpage = input.SubjectWebpage;
 			output.SourceData = input.SourceData;
 

@@ -213,7 +213,7 @@ namespace RA.SamplesForDocumentation
 			var credCtid = "ce-343120e2-c068-1234-bb39-0a09e56d5613";
 			//2021-03-01	- HoldersProfile is a candidate to be deprecated. 
 			//				- Updated to use AggregateDataProfile
-			var hpctid = "ce-63920d52-04f5-4dd0-b8a4-b4f7f4e0cf81";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var hpctid = "ce-63920d52-04f5-4dd0-b8a4-b4f7f4e0cf81";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 
 			var myData = new Credential()
 			{
@@ -338,7 +338,7 @@ namespace RA.SamplesForDocumentation
 			 * 
 			 * Additional properties are also expected to be added. 
 			 */
-			var datasetProfileCtid = "ce-13e36d12-5d9b-4f56-a885-319a46302e29";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var datasetProfileCtid = "ce-13e36d12-5d9b-4f56-a885-319a46302e29";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			var relevantDataSet = new DataSetProfile()
 			{
 				CTID = datasetProfileCtid,
@@ -448,7 +448,7 @@ namespace RA.SamplesForDocumentation
 			 * 
 			 * Additional properties are also expected to be added. 
 			 */
-			var datasetProfileCtid = "ce-13e36d12-5d9b-4f56-a885-319a46302e29";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var datasetProfileCtid = "ce-13e36d12-5d9b-4f56-a885-319a46302e29";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			var relevantDataSet = new DataSetProfile()
 			{
 				CTID = datasetProfileCtid,

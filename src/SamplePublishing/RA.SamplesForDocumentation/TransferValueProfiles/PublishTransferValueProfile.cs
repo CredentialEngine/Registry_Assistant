@@ -26,7 +26,7 @@ namespace RA.SamplesForDocumentation
 		public string PublishSimpleRecord( bool usingSimplePost = true )
 		{
 			// Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -38,7 +38,7 @@ namespace RA.SamplesForDocumentation
 
 			// Assign a CTID for the entity being published and keep track of it
 			//NOTE: afer being generated, this value be saved and used for successive tests or duplicates will occur.
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//from previous test
 			myCTID = "ce-fd515001-6a9c-4f43-b401-3e65127fc807";
 
@@ -179,7 +179,7 @@ namespace RA.SamplesForDocumentation
 		public string PublishTVPSameAsRecord( bool usingSimplePost = true )
 		{
 			// Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
 			// This is the CTID of the organization that owns the data being published
@@ -187,7 +187,7 @@ namespace RA.SamplesForDocumentation
 
 			// Assign a CTID for the entity being published and keep track of it
 			//NOTE: afer being generated, this value be saved and used for successive tests or duplicates will occur.
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//from previous test
 			//myCTID = "ce-fd515001-6a9c-4f43-b401-3e65127fc807";
 

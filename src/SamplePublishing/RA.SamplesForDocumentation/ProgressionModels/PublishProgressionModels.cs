@@ -16,7 +16,7 @@ namespace RA.SamplesForDocumentation
 		public string PublishSimpleRecord()
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -27,7 +27,7 @@ namespace RA.SamplesForDocumentation
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 
 			//A simple ProgressionModel object - see github for full class definition
 			var myData = new ProgressionModel()
@@ -76,7 +76,7 @@ namespace RA.SamplesForDocumentation
 		public string PublishHierarchy()
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -87,7 +87,7 @@ namespace RA.SamplesForDocumentation
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 
 			//A simple ProgressionModel object - see github for full class definition
 			var myData = new ProgressionModel()

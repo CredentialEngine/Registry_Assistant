@@ -29,7 +29,7 @@ namespace RA.SamplesForDocumentation.Employment
 			}//
 			RequestHelper helper = new RA.Models.RequestHelper();
 			//create a new CTID (then save for reuse).
-			var entityCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var entityCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 
 			//create request object.
 			//This holds the resource being published and the identifier( CTID ) for the publishing organization
@@ -62,7 +62,7 @@ namespace RA.SamplesForDocumentation.Employment
 
 			//Classification- using a blank node to an object in ReferenceObjects
 			//1. create a blank node Id
-			var bnodeId = "_:" + Guid.NewGuid().ToString().ToLower();
+			var bnodeId = "_:" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//2. create the concept
 			var concept = new Concept()
 			{

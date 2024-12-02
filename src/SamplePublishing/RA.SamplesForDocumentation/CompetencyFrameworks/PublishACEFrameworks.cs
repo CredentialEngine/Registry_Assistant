@@ -16,7 +16,7 @@ namespace RA.SamplesForDocumentation
 		public string PublishACEPrinFin( bool doingPublish = false )
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -27,7 +27,7 @@ namespace RA.SamplesForDocumentation
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-d3913e58-b578-42be-8c8e-a55c0b66f5ab";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-d3913e58-b578-42be-8c8e-a55c0b66f5ab";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			var targetUrl = "https://sandbox.credentialengineregistry.org/resources/";
 			//A simple CompetencyFramework
 			var myData = new CompetencyFramework()
@@ -106,7 +106,7 @@ namespace RA.SamplesForDocumentation
 		public string PublishACEIntroductorySociology( bool doingPublish = false )
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -117,7 +117,7 @@ namespace RA.SamplesForDocumentation
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-85ea2bf0-b0a3-422c-9074-14f2efe51480";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-85ea2bf0-b0a3-422c-9074-14f2efe51480";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			var targetUrl = "https://sandbox.credentialengineregistry.org/resources/";
 			//A simple CompetencyFramework
 			var myData = new CompetencyFramework()

@@ -32,7 +32,7 @@ namespace RA.SamplesForDocumentation
 				//ensure you have added your organization account CTID to the app.config
 			}
 			// Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-c6b70e53-f7db-4df8-b48e-56bbee89ed91";// "ce -" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-c6b70e53-f7db-4df8-b48e-56bbee89ed91";// "ce -" + Guid.NewGuid().ToString().ToLowerInvariant();
 
 			//===================================================================================
 			var myData = new APIRequestResource()
@@ -102,7 +102,7 @@ namespace RA.SamplesForDocumentation
 		{
 			// Assign a CTID for the entity being published and keep track of it
 			//NOTE: afer being generated, this value be saved and used for successive tests or duplicates will occur.
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//from previous test
 			myCTID = "ce-fd515001-6a9c-4f43-b401-3e65127fc807";
 			var myData = new TransferValueProfile()
@@ -169,7 +169,7 @@ namespace RA.SamplesForDocumentation
 		{
 			// Assign a CTID for the entity being published and keep track of it
 			//NOTE: afer being generated, this value be saved and used for successive tests or duplicates will occur.
-			var myCTID = "ce-e909559d-925c-4f12-a579-a05f8935eaea";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-e909559d-925c-4f12-a579-a05f8935eaea";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 																   //from previous test
 																   //
 			var myData = new TransferValueProfile()

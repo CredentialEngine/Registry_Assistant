@@ -17,7 +17,7 @@ namespace RA.SamplesForDocumentation.Assessments
 		public string PublishSimpleRecord()
 		{
 			// Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 			// This is the CTID of the organization that owns the data being published

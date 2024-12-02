@@ -17,7 +17,7 @@ namespace RA.SamplesForDocumentation
 		public string PublishDetailedRecord( string requestType = "publish" )
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();

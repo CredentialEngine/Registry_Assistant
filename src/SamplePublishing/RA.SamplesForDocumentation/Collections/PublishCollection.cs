@@ -255,7 +255,7 @@ namespace RA.SamplesForDocumentation.Collections
 		public bool PublishLikeAFrameworkWithCompetencies( string requestType = "format" )
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -266,7 +266,7 @@ namespace RA.SamplesForDocumentation.Collections
 			var organizationIdentifierFromAccountsSite = SampleServices.GetMyOrganizationCTID();
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 
 			//A simple CompetencyFramework object - see github for full class definition
 			var myData = new APIRequestResource()

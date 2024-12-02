@@ -17,6 +17,23 @@ namespace RA.Models.Input
     }
 
     /// <summary>
+    /// Allow publishing a list of Suport services.
+    /// Initially there will not be a limit on the number of services that can be provided. 
+    /// Only used by the endpoint: bulkPublish
+    /// </summary>
+    public class BulkSupportServiceRequest : BaseRequest
+    {
+        public BulkSupportServiceRequest()
+        {
+        }
+
+        /// <summary>
+        /// List of support services to publish
+        /// </summary>
+        public List<SupportService> SupportServices { get; set; }
+    }
+
+    /// <summary>
     /// Resources and assistance that help people overcome barriers to succeed in their education and career goals.
     /// Support services can be provided at any stage of an individual's education or career, and may be targeted towards people with or without direct affiliation with an organization. The goal of support services is to provide people with the assistance they need to achieve their full potential. Examples of Support Services include career advice, job placement, childcare, transportation, tools, mentorship, counseling, and other forms of aid.
     /// </summary>

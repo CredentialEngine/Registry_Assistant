@@ -29,7 +29,7 @@ namespace RA.SamplesForDocumentation.Employment
 			}//
 			RequestHelper helper = new RA.Models.RequestHelper();
 			//create a new CTID (then save for reuse).
-			var entityCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var entityCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 
 			//create request object.
 			//This holds the resource being published and the identifier( CTID ) for the publishing organization

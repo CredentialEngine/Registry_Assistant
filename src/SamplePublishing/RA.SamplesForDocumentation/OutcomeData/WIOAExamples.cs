@@ -35,7 +35,7 @@ namespace RA.SamplesForDocumentation.OutcomeData
 			}//
 			RequestHelper helper = new RA.Models.RequestHelper();
 			//create a new CTID (then save for reuse) - add to spreadsheet
-			var datasetProfileCTID = "ce-7a4977bd-9245-46b4-a235-6af3b8ab5a17";// "ce-" + Guid.NewGuid().ToString().ToLower(); 
+			var datasetProfileCTID = "ce-7a4977bd-9245-46b4-a235-6af3b8ab5a17";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant(); 
 
 			var myData = new DataSetProfile()
 			{

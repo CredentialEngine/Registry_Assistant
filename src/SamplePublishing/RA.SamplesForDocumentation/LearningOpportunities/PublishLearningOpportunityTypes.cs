@@ -21,7 +21,7 @@ namespace RA.SamplesForDocumentation
 		public string PublishLearningOpportunity( string requestType = "format" )
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -35,7 +35,7 @@ namespace RA.SamplesForDocumentation
 			}//
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//typically would have been stored prior to retrieving for publishing
 			//DataService.SaveLearningOpportunityCTID( myCTID );
 
@@ -269,7 +269,7 @@ namespace RA.SamplesForDocumentation
 		public string PublishCourse( string requestType = "format" )
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -285,7 +285,7 @@ namespace RA.SamplesForDocumentation
 			}//
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-aaa5d617-f00d-4e94-89af-ad77e9f26389";// "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-aaa5d617-f00d-4e94-89af-ad77e9f26389";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//typically would have been stored prior to retrieving for publishing
 			//DataService.SaveLearningOpportunityCTID( myCTID );
 
@@ -451,7 +451,7 @@ namespace RA.SamplesForDocumentation
 		public string PublishLearningProgram( string requestType = "format" )
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -465,7 +465,7 @@ namespace RA.SamplesForDocumentation
 			}//
 
 			//Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//typically would have been stored prior to retrieving for publishing
 			//DataService.SaveLearningOpportunityCTID( myCTID );
 

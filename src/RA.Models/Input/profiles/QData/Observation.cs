@@ -1,8 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace RA.Models.Input.profiles.QData
@@ -17,19 +14,6 @@ namespace RA.Models.Input.profiles.QData
     /// </summary>
     public class Observation
     {
-        /*
-qdata:atPoint
-qdata:dataWithholdingType
-qdata:isObservationOf
-qdata:sizeOfNoData
-qdata:sizeOfData
-qdata:sizeOfPopulation
-qdata:standardDeviation
-
-
-
-         */
-
 
         public Observation()
         {
@@ -183,5 +167,4 @@ qdata:standardDeviation
         public decimal? Value { get; set; }
 
     }
-
 }

@@ -20,7 +20,7 @@ namespace RA.SamplesForDocumentation.TransferValueProfiles
 		public string KBORInfantrymanLevel10TVP( bool doingPublish = false )
 		{
 			// Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			// Assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetAppKeyValue( "myOrgApiKey" );
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -34,7 +34,7 @@ namespace RA.SamplesForDocumentation.TransferValueProfiles
 
 			// Assign a CTID for the entity being published and keep track of it
 			//NOTE: afer being generated, this value be saved and used for successive tests or duplicates will occur.
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//from github
 			//myCTID = "";
 

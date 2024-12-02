@@ -32,7 +32,7 @@ namespace RA.SamplesForDocumentation
             }//
 
             //Assign a CTID for the entity being published and keep track of it
-            var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+            var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
             //typically would have been stored prior to retrieving for publishing
 
             //create request object
@@ -126,7 +126,7 @@ namespace RA.SamplesForDocumentation
             }//
 
             //Assign a CTID for the entity being published and keep track of it
-            var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+            var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
             //typically would have been stored prior to retrieving for publishing
 
             //create request object

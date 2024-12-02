@@ -14,7 +14,7 @@ namespace RA.SamplesForDocumentation
 		public string PublishSimpleRecord()
 		{
 			//Holds the result of the publish action
-			var result = "";
+			var result = string.Empty;
 			//assign the api key - acquired from organization account of the organization doing the publishing
 			var apiKey = SampleServices.GetMyApiKey();
 			if ( string.IsNullOrWhiteSpace( apiKey ) )
@@ -28,7 +28,7 @@ namespace RA.SamplesForDocumentation
 				//ensure you have added your organization account CTID to the app.config
 			}//
 			 //Assign a CTID for the entity being published and keep track of it
-			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLower();
+			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 			//DataService.SaveAssessmentCTID( myCTID );
 
 			//A simple assessment object - see below for sample class definition
