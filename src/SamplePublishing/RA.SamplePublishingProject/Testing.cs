@@ -128,6 +128,14 @@ namespace RA.SamplePublishingProject
 
         }
 
+
+        [TestMethod]
+        public void PublishSupportServiceList()
+        {
+            new RA.SamplesForDocumentation.PublishSupportService().PublishList();
+
+        }
+
         #endregion
 
     }

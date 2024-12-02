@@ -26,14 +26,20 @@ namespace RA.SamplesForDocumentation
 		public static string GetMyApiKey()
 		{
 			return GetAppKeyValue( "myOrgApiKey" );
-		} //
+		} 
+
 		public static string GetMyOrganizationCTID()
 		{
 			return GetAppKeyValue( "myOrgCTID" );
-		} //
+		}
 
-		#region Assignments
-		public static QuantitativeValue AddQuantitativeValue( int value, string description )
+        public static string GetNewCTID()
+        {
+            return "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
+        }
+
+        #region Assignments
+        public static QuantitativeValue AddQuantitativeValue( int value, string description )
 		{
 			var output = new QuantitativeValue()
 			{
@@ -198,7 +204,7 @@ namespace RA.SamplesForDocumentation
 		}
 		public string SimplePost( string assistantUrl, string payload, string apiKey, ref string jsonldPayload, ref List<string> messages )
 		{
-			var result = "";
+			var result = string.Empty;
 			RAResponse response = new RAResponse();
 			string responseContents = "";
 			using ( var client = new HttpClient() )
@@ -293,7 +299,7 @@ namespace RA.SamplesForDocumentation
 					var result = task.Result;
 					responseContents = task.Result.Content.ReadAsStringAsync().Result;
 
-					if ( result.IsSuccessStatusCode == false )
+					if ( !result.IsSuccessStatusCode )
 					{
 						LoggingHelper.DoTrace( 6, "SampleServices.PostRequest: result.IsSuccessStatusCode == false" );
 						response = JsonConvert.DeserializeObject<RAResponse>( responseContents );
@@ -316,7 +322,7 @@ namespace RA.SamplesForDocumentation
 						{
 							//single response
 							response = JsonConvert.DeserializeObject<RAResponse>( responseContents );
-							//
+							
 							if ( response.Successful )
 							{
 								LoggingHelper.WriteLogFile( 5, request.EndpointType + "_" + request.CTID + "_payload_Successful.json", response.Payload, "", false );
@@ -347,10 +353,10 @@ namespace RA.SamplesForDocumentation
 								cntr++;
 								if ( lresponse.Successful )
 								{
-									LoggingHelper.WriteLogFile( 5, request.EndpointType + string.Format( "_(#{0})_{1}_payload_Successful.json", cntr, lresponse.CTID ), lresponse.Payload, "", false );
+									LoggingHelper.WriteLogFile( 5, request.EndpointType + $"_(#{cntr})_{lresponse.CTID}_payload_Successful.json",  lresponse.Payload, string.Empty, false );
 
-									//will assume we only want to return the last payload, the pathwaySet for example. 
-									if ( cntr == listResponse.Count() )
+									//will assume we only want to return the last payload? The real world will be different
+									if ( cntr == listResponse.Count )
 									{
 										request.FormattedPayload = lresponse.Payload;
 										request.EnvelopeIdentifier = lresponse.RegistryEnvelopeIdentifier;
@@ -363,7 +369,7 @@ namespace RA.SamplesForDocumentation
 									string status = string.Join( ",", lresponse.Messages.ToArray() );
 									LoggingHelper.DoTrace( 5, thisClassName + string.Format( " PostRequest #{0} FAILED. result: {1}", cntr, status ) );
 									request.Messages.AddRange( lresponse.Messages );
-									if ( cntr == listResponse.Count() )
+									if ( cntr == listResponse.Count )
 									{
 										request.FormattedPayload = lresponse.Payload;
 									}
