@@ -296,6 +296,7 @@ namespace RA.SamplesForDocumentation
 				Type = "LearningOpportunityProfile",
 				Name = "Principles of Finance",
 				SubjectWebpage = "https://www.sophia.org/?t=principlesOfFinance",
+				CodedNotation = "ABC-123";
 				DeliveryType = new List<string>() { "deliveryType:OnlineOnly" }
 			};
 
