@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
 
+using Newtonsoft.Json;
 using RA.Models;
 using RA.Models.Input;
-using APIRequestResource = RA.Models.Input.Job;
+
 using APIRequest = RA.Models.Input.JobRequest;
 
 namespace RA.SamplesForDocumentation.Employment
 {
-	public class Jobs
+    public class Jobs
 	{
-		public void PublishJob( string requestType = "format" )
+		public bool PublishJob( string requestType = "format" )
 		{
 
 			var apiKey = SampleServices.GetMyApiKey();
@@ -26,7 +23,8 @@ namespace RA.SamplesForDocumentation.Employment
 			if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
 			{
 				//ensure you have added your organization account CTID to the app.config
-			}//
+			}
+
 			RequestHelper helper = new RA.Models.RequestHelper();
 			//create a new CTID (then save for reuse).
 			var entityCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
@@ -47,6 +45,7 @@ namespace RA.SamplesForDocumentation.Employment
 				Description = "Assess problems and resources, taking a leadership role in the development, implementation and outcomes evaluation of a plan. Provides professional interventions at critical times. Position requires providing a service to one or more age groups from young adult upwards. ...",
 				CodedNotation = "100-1234",
 			};
+
 			myData.OfferedBy = new List<OrganizationReference>()
 			{
 				new OrganizationReference()
@@ -68,7 +67,6 @@ namespace RA.SamplesForDocumentation.Employment
 				}
 			};
 					
-			//
 			myData.Requires = new List<ConditionProfile>()
 			{
 				new ConditionProfile()
@@ -118,14 +116,15 @@ namespace RA.SamplesForDocumentation.Employment
 			bool isValid = new SampleServices().PublishRequest( req );
 
 			LoggingHelper.WriteLogFile( 2, string.Format( "Job_{0}_payload.json", myRequest.Job.CTID ), req.FormattedPayload, "", false );
+            return isValid;
 
-		}
+        }
 
-		/// <summary>
-		/// Publish a list of Jobs
-		/// - input can be plain Jobs or CTDL (JSON-LD) Jobs
-		/// </summary>
-		public void PublishJobList()
+        /// <summary>
+        /// Publish a list of Jobs
+        /// - input can be plain Jobs or CTDL (JSON-LD) Jobs
+        /// </summary>
+        public void PublishJobList()
 		{
 			//there is no format option for JobList
 			var apiKey = SampleServices.GetMyApiKey();

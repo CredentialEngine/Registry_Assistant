@@ -14,8 +14,9 @@ namespace RA.SamplePublishingProject
         [TestMethod]
 		public void LearningOpportunityWithOutcomeData()
 		{
-			new PublishLearningOpportunityWithOutcomes().LearningOpportunityWithOutcomeData( "publish" );
+            Assert.IsTrue( new PublishLearningOpportunityWithOutcomes().LearningOpportunityWithOutcomeData( "publish" ) );
 		}
+
 		[TestMethod]
 		public void PublishCourse()
 		{
@@ -81,19 +82,25 @@ namespace RA.SamplePublishingProject
 		{
 			new Occupations().PublishOccupationList();
 		}
-		#endregion
+        #endregion
 
+        [TestMethod]
+        public void PublishIndustry()
+        {
+           Assert.IsTrue( new RA.SamplesForDocumentation.PublishIndustry().DoPublish( "format" ) );
 
-		#region Job publishing
-		[TestMethod]
+        }
+
+        #region Job publishing
+        [TestMethod]
 		public void PublishJob()
 		{
-			new RA.SamplesForDocumentation.Employment.Jobs().PublishJob( "format" );
+            Assert.IsTrue( new RA.SamplesForDocumentation.Employment.Jobs().PublishJob( "format" ) );
 
-		}
+        }
 
 
-		[TestMethod]
+        [TestMethod]
 		public void PublishJobList()
 		{
 			new RA.SamplesForDocumentation.Employment.Jobs().PublishJobList();

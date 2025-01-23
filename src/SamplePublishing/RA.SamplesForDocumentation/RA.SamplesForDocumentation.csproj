@@ -73,6 +73,7 @@
     <Compile Include="Employment\Occupations.cs" />
     <Compile Include="Employment\Tasks.cs" />
     <Compile Include="Employment\WorkRoles.cs" />
+    <Compile Include="Industry\PublishIndustry.cs" />
     <Compile Include="LearningOpportunities\PublishLearningOpportunityWithOutcomes.cs" />
     <Compile Include="OutcomeData\CareerBridgeCredentials.cs" />
     <Compile Include="OutcomeData\IndianaPassRates.cs" />
