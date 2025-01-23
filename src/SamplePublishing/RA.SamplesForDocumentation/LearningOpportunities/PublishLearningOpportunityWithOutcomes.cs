@@ -177,7 +177,6 @@ namespace RA.SamplesForDocumentation
 			DataSetTimeFrame dstp = new DataSetTimeFrame()
 			{
 				Description = "AggregateDataProfile Profile DataSetTimeFrame",
-				DataSourceCoverageType = new List<string>() { "Global" },
 				StartDate = "2017-01-11",
 				EndDate = "2019-03-20"
 			};

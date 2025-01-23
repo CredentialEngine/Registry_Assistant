@@ -245,11 +245,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
-		/// <summary>
-		/// Social media access point for an agent or an agent's contact point.
-		/// List of URLs
-		/// </summary>
-		public List<string> SocialMedia { get; set; }
+
+        /// <summary>
+        /// Assertion by an agent that this resource has a specific workforce demand level.
+        /// Range Includes:	ceterms:WorkforceDemandAction
+        /// </summary>
+        public List<string> InDemandAction { get; set; }
+
+        /// <summary>
+        /// Social media access point for an agent or an agent's contact point.
+        /// List of URLs
+        /// </summary>
+        public List<string> SocialMedia { get; set; }
 
 		/// <summary>
 		/// Type of service offered by the agent being described; select from an existing enumeration of such terms.
@@ -344,10 +351,10 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> HasCostManifest { get; set; }
 
-		/// <summary>
-		/// TBD
-		/// </summary>
-		public string HasCourseCatalog { get; set; }
+        /// <summary>
+        /// An inventory or listing of resources maintained by this Organization
+        /// </summary>
+        public string HasCatalog { get; set; }
 
 		/// <summary>
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.

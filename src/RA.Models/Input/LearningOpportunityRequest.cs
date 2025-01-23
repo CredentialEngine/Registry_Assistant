@@ -177,7 +177,6 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> LearningMethodType { get; set; }
 
-
 		/// <summary>
 		/// Learning Method Description 
 		///  Description of the learning methods for a resource.
@@ -296,12 +295,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AssessmentMethodType { get; set; } = new List<string>();
 
-		/// <summary>
-		/// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
-		/// audience:Citizen audience:CurrentMilitary audience:CurrentMilitaryDependent audience:CurrentMilitarySpouse audience:CurrentStudent audience:FormerMilitary audience:FormerMilitaryDependent audience:FormerMilitarySpouse audience:FormerStudent audience:FullTime audience:Member audience:NonCitizen audience:NonMember audience:NonResident audience:PartTime audience:PrivateEmployee audience:PublicEmployee audience:Resident
-		/// <see href="https://credreg.net/ctdl/terms/Audience"></see>
-		/// </summary>
-		public List<string> AudienceType { get; set; }
+        /// <summary>
+        /// Indicates the stage or level of achievement in a progression of learning.
+        /// range: ceterms:CredentialAlignmentObject
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:atLevel" )]
+        public CredentialAlignmentObject AtLevel { get; set; }
+
+        /// <summary>
+        /// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
+        /// audience:Citizen audience:CurrentMilitary audience:CurrentMilitaryDependent audience:CurrentMilitarySpouse audience:CurrentStudent audience:FormerMilitary audience:FormerMilitaryDependent audience:FormerMilitarySpouse audience:FormerStudent audience:FullTime audience:Member audience:NonCitizen audience:NonMember audience:NonResident audience:PartTime audience:PrivateEmployee audience:PublicEmployee audience:Resident
+        /// <see href="https://credreg.net/ctdl/terms/Audience"></see>
+        /// </summary>
+        public List<string> AudienceType { get; set; }
 		/// <summary>
 		/// Type of level indicating a point in a progression through an educational or training context, for which the credential is intended; select from an existing enumeration of such types.
 		/// audLevel:AdvancedLevel audLevel:AssociatesDegreeLevel audLevel:BachelorsDegreeLevel audLevel:BeginnerLevel audLevel:DoctoralDegreeLevel audLevel:GraduateLevel audLevel:IntermediateLevel audLevel:LowerDivisionLevel audLevel:MastersDegreeLevel audLevel:PostSecondaryLevel audLevel:ProfessionalLevel audLevel:SecondaryLevel audLevel:UndergraduateLevel audLevel:UpperDivisionLevel

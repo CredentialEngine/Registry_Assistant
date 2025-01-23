@@ -462,7 +462,6 @@ namespace RA.SamplesForDocumentation
 			DataSetTimeFrame dstp = new DataSetTimeFrame()
 			{
 				Description = "The information on this page is based on employment for the most recent three years for which data is available.",
-				DataSourceCoverageType = new List<string>() { "Global" },
 			};
 			////DataProfile referenced from a DataSetTimeFrame ()
 			var dataProfile = new DataProfile()

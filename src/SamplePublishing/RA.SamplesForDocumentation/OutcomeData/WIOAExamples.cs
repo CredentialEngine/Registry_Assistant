@@ -65,7 +65,6 @@ namespace RA.SamplesForDocumentation.OutcomeData
 				Description = "Nursing Aide Certificate timeframe",
 				StartDate = "1990-01-02",//
 				EndDate = "2021-03-24",
-				DataSourceCoverageType = new List<string>() { "Global"}
 			};
 			//==================== 2018 =======================
 			var dataProfile1 = new DataProfile()

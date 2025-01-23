@@ -76,14 +76,18 @@
     <Compile Include="Input\CtdlAttributes.cs" />
     <Compile Include="Input\DataSetProfileRequest.cs" />
     <Compile Include="Input\DeleteRequest.cs" />
+    <Compile Include="Input\IndustryRequest.cs" />
     <Compile Include="Input\JobRequest.cs" />
     <Compile Include="Input\LearningOpportunityRequest.cs" />
+    <Compile Include="Input\MetricRequest.cs" />
     <Compile Include="Input\OccupationRequest.cs" />
     <Compile Include="Input\OrganizationRequest.cs" />
     <Compile Include="Input\PathwayRequest.cs" />
     <Compile Include="Input\PathwaySetRequest.cs" />
     <Compile Include="Input\PlainGraphRequest.cs" />
     <Compile Include="Input\profiles\AggregateDataProfile.cs" />
+    <Compile Include="Input\profiles\AlignmentMap.cs" />
+    <Compile Include="Input\profiles\AlignmentObject.cs" />
     <Compile Include="Input\profiles\BaseEmploymentToWorkObject.cs" />
     <Compile Include="Input\profiles\BasePrimaryResource.cs" />
     <Compile Include="Input\profiles\CompetencyFrameworksGraph.cs" />
@@ -117,6 +121,7 @@
     <Compile Include="Input\profiles\QData\Metric.cs" />
     <Compile Include="Input\profiles\QData\Observation.cs" />
     <Compile Include="Input\profiles\QData\SubjectProfile.cs" />
+    <Compile Include="Input\profiles\QualificationsFramework.cs" />
     <Compile Include="Input\profiles\QuantitativeValue.cs" />
     <Compile Include="Input\profiles\RevocationProfile.cs" />
     <Compile Include="Input\profiles\ScheduledOffering.cs" />
@@ -125,6 +130,7 @@
     <Compile Include="Input\profiles\VerificationServiceProfile.cs" />
     <Compile Include="Input\profiles\WorkRole.cs" />
     <Compile Include="Input\ProgressionModelRequest.cs" />
+    <Compile Include="Input\PurgeRequest.cs" />
     <Compile Include="Input\RubricRequest.cs" />
     <Compile Include="Input\ScheduledOfferingRequest.cs" />
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />
@@ -133,6 +139,7 @@
     <Compile Include="Input\TransferIntermediaryRequest.cs" />
     <Compile Include="Input\TransferValueProfileRequest.cs" />
     <Compile Include="Input\VerificationServiceProfileRequest.cs" />
+    <Compile Include="Input\VerifyRequest.cs" />
     <Compile Include="Input\WorkRoleRequest.cs" />
     <Compile Include="JsonV2\Agent.cs" />
     <Compile Include="JsonV2\AggregateDataProfile.cs" />

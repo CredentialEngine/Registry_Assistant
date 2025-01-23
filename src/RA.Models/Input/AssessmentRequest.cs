@@ -195,13 +195,20 @@ namespace RA.Models.Input
 		/// Place
 		/// </summary>
 		public List<Place> AvailableAt { get; set; }
-		#endregion
+        #endregion
 
-		//=========== optional ================================
-		/// <summary>
-		/// List of Alternate Names for this assessment
-		/// </summary>
-		public List<string> AlternateName { get; set; } = new List<string>();
+        /// <summary>
+        /// Indicates the stage or level of achievement in a progression of learning.
+        /// range: ceterms:CredentialAlignmentObject
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:atLevel" )]
+        public CredentialAlignmentObject AtLevel { get; set; }
+
+        //=========== optional ================================
+        /// <summary>
+        /// List of Alternate Names for this assessment
+        /// </summary>
+        public List<string> AlternateName { get; set; } = new List<string>();
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
@@ -390,24 +397,32 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
 
-		/// <summary>
-		/// Learning Method Description 
-		///  Description of the learning methods for a resource.
-		/// </summary>
-		public string LearningMethodDescription { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap LearningMethodDescription_Map { get; set; } = new LanguageMap();
+        /// <summary>
+        /// Types of methods used to conduct the learning opportunity; 
+        /// Concepts: Applied, Gaming, Laboratory, Lecture, Prerecorded, SelfPaced, Seminar, WorkBased
+        /// ConceptScheme: <see href="https://credreg.net/ctdl/terms/LearningMethod">LearningMethod</see>
+        /// </summary>
+        public List<string> LearningMethodType { get; set; }
 
-		/// <summary>
-		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
-		/// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
-		/// Required
-		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
-		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
-		/// </summary>
-		public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
+        /// <summary>
+        /// Learning Method Description 
+        ///  Description of the learning methods for a resource.
+        /// </summary>
+        public string LearningMethodDescription { get; set; }
+
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap LearningMethodDescription_Map { get; set; } = null;
+
+        /// <summary>
+        /// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
+        /// Provide the string value. API will format correctly. The name space of lifecycle doesn't have to be included
+        /// Required
+        /// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
+        /// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
+        /// </summary>
+        public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
 
 
 		/// <summary>

@@ -118,7 +118,6 @@ namespace RA.Models.Input.profiles.QData
 
 
         /// <summary>
-        /// RelevantDataSetFor is obsolete. 
         /// Data set for the entity being referenced.
         /// Input is typically one or more CTIDs for the related resource, such as a Credential
         /// REQUIRED when dataSetProfile published separately.

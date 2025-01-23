@@ -72,22 +72,6 @@ namespace RA.Models.Input.profiles.QData
         public List<DataProfile> DataAttributes { get; set; } = new List<DataProfile>();
 
         /// <summary>
-        /// Data Source Coverage Type
-        /// Type of geographic coverage of the subjects.
-        /// <see cref="https://credreg.net/qdata/terms/dataSourceCoverageType"/>
-        /// skos:Concept
-        /// <see cref="https://credreg.net/qdata/terms/DataSourceCoverage"/>
-        /// sourceCoverage:Country
-        ///	sourceCoverage:Global
-        ///	sourceCoverage:Region
-        ///	sourceCoverage:StateOrProvince
-        ///	sourceCoverage:UrbanArea
-        /// </summary>
-        [Obsolete( "2024-07-30 DataSourceCoverageType is deprecated" )]
-        public List<string> DataSourceCoverageType { get; set; } = new List<string>();
-
-
-        /// <summary>
         /// Name or title of the resource.
         /// OPTIONAL
         /// </summary>

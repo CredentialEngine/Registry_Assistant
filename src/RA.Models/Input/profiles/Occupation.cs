@@ -127,7 +127,7 @@ namespace RA.Models.Input
 		/// Indicates the level of demand for a resource via a demand level action.
 		/// Range Includes:	ceterms:WorkforceDemandAction
 		/// </summary>
-		public List<string> HasWorkForceDemand{ get; set; } 
+		public List<string> HasWorkforceDemand{ get; set; } 
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.

@@ -238,10 +238,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<Place> AvailableAt { get; set; }
 
-		/// <summary>
-		/// Person or organization holding the rights in copyright to entities such as credentials, learning opportunities, assessments, competencies or concept schemes.
-		/// </summary>
-		public OrganizationReference CopyrightHolder { get; set; }
+        /// <summary>
+        /// Indicates the stage or level of achievement in a progression of learning.
+        /// range: ceterms:CredentialAlignmentObject
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:atLevel" )]
+        public CredentialAlignmentObject AtLevel { get; set; }
+
+        /// <summary>
+        /// Person or organization holding the rights in copyright to entities such as credentials, learning opportunities, assessments, competencies or concept schemes.
+        /// </summary>
+        public OrganizationReference CopyrightHolder { get; set; }
 		/// <summary>
 		/// Credential Identifier
 		/// Globally unique identifier by which the creator, owner or provider of a credential recognizes that credential in transactions with the external environment (e.g., in verifiable claims involving the credential).
@@ -420,6 +427,7 @@ namespace RA.Models.Input
 		/// List of credentials where this credential is a part of.
 		/// </summary>
 		public List<EntityReference> IsPartOf { get; set; }
+
 		/// <summary>
 		/// Jurisdiction Profile
 		/// Geo-political information about applicable geographic areas and their exceptions.
@@ -430,6 +438,7 @@ namespace RA.Models.Input
 		/// Keyword or key phrase describing relevant aspects of an entity.
 		/// </summary>
 		public List<string> Keyword { get; set; }
+
 		/// <summary>
 		/// Language map list for Keyword
 		/// </summary>
@@ -442,10 +451,28 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> LearningDeliveryType { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Webpage or online document that describes the criteria, standards, and/or requirements used with a process.
-		/// </summary>
-		public string ProcessStandards { get; set; }
+        /// <summary>
+        /// Types of methods used to conduct the learning opportunity; 
+        /// Concepts: Applied, Gaming, Laboratory, Lecture, Prerecorded, SelfPaced, Seminar, WorkBased
+        /// ConceptScheme: <see href="https://credreg.net/ctdl/terms/LearningMethod">LearningMethod</see>
+        /// </summary>
+        public List<string> LearningMethodType { get; set; }
+
+        /// <summary>
+        /// Learning Method Description 
+        ///  Description of the learning methods for a resource.
+        /// </summary>
+        public string LearningMethodDescription { get; set; }
+
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap LearningMethodDescription_Map { get; set; } = null;
+
+        /// <summary>
+        /// Webpage or online document that describes the criteria, standards, and/or requirements used with a process.
+        /// </summary>
+        public string ProcessStandards { get; set; }
 		/// <summary>
 		/// Textual description of the criteria, standards, and/or requirements used with a process
 		/// </summary>

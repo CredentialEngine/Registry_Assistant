@@ -162,10 +162,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AudienceType { get; set; }
 
-		/// <summary>
-		/// Payment Pattern
-		/// </summary>
-		public string PaymentPattern { get; set; }
+        /// <summary>
+        /// Payment Pattern
+        /// Applicable pattern for payments such as "per semester" and "every three months".
+        /// </summary>
+        public string PaymentPattern { get; set; }
 		/// <summary>
 		/// Alternately use a LanguageMap for PaymentPattern.
 		/// </summary>

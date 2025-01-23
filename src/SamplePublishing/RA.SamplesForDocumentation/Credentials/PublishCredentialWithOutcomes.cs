@@ -166,7 +166,6 @@ namespace RA.SamplesForDocumentation
 				Name = "Optional name for time frame",
 				AlternateName = new List<string>() {"alternate Dos", "Alternate Deux" },
 				Description = "Description of a DataSetTimeFrame",
-				DataSourceCoverageType = new List<string>() { "Global" },
 				StartDate = "2017-01-11",
 				EndDate = "2019-03-20"
 			};

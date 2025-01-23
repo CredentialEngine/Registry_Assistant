@@ -26,7 +26,8 @@ namespace RA.Models.Input
         public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
 
         /// <summary>
-        /// Members can be any of:
+        /// Prototype: publish a list of refernce resources /blank nodes, by providing the data in this property
+		/// Currently members can be any of:
 		/// "ceterms:CredentialOrganization",
         /// "ceterms:AssessmentProfile",
         /// "ceterms:Credential", //any of the valid credential subclasses
@@ -35,10 +36,7 @@ namespace RA.Models.Input
         /// "ceterms:Job",
         /// "ceterms:LearningOpportunityProfile",
         /// "ceterms:LearningProgram",
-        /// "ceterms:Occupation",
-        /// "ceterms:Task",
-        /// "ceterms:WorkRole",
-        /// Members must all be the same type. This rule (TBD) includes learning opportunity types. So all courses, or all learning programs, etc. 
+        /// At this time, Members must all be the same type. 
         /// </summary>
         public List<object> Members { get; set; } = new List<object>();
 
@@ -216,6 +214,7 @@ namespace RA.Models.Input
         /// These are for resources that MUST already exist in the registry.
 		/// Currently the allowed types are:
         /// ceasn:Competency, any credential type, ceterms:AssessmentProfile, ceterms:Task ceterms:WorkRole ceterms:Job ceterms:Course ceterms:LearningOpportunityProfile ceterms:LearningProgram
+		/// 24-12-02 The restrictions are being eliminated, so additional types like competency frameworks will be allowed
         /// List of CTIDs (recommended) or URIs
         /// </summary>
         public List<string> HasMember { get; set; } = new List<string>();

@@ -181,7 +181,7 @@ namespace RA.SamplesForDocumentation
                 Name = "A QA Organization name",
                 Description = "An optional description.",
                 SubjectWebpage = "https://example.org/notRequiredButHelpful",
-                HasCourseCatalog = "https://example.org/ourCourseCatalog",
+                HasCatalog = "https://example.org/ourCourseCatalog",
             };
             //add the organization to the ReferenceObjects (a list of objects)
             myRequest.ReferenceObjects.Add( organization );

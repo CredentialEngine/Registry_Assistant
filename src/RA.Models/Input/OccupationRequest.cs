@@ -21,6 +21,7 @@ namespace RA.Models.Input
 	}
 	/// <summary>
 	/// Request class for publishing a list of Occupations
+	/// The list must already be formatted as JSON-LD
 	/// </summary>
 	public class OccupationListRequest : BaseRequest
 	{
@@ -29,6 +30,7 @@ namespace RA.Models.Input
 		/// Using data type of object to allow handling plain requests or those with language maps
 		/// </summary>
 		public List<object> OccupationList { get; set; } = new List<object>();
+
 		/// <summary>
 		/// HasLanguageMaps
 		/// If false, will format input using the plain Occupation classes otherwise the JSON-LD class

@@ -104,7 +104,6 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 Description = "The information on this page is based on employment for 2018.",
                 StartDate = "2020-01-01",
                 EndDate = "2020-12-31",
-                DataSourceCoverageType = new List<string>() { "Global" },
             };
 
             //DataProfile referenced from a DataSetTimeFrame ()

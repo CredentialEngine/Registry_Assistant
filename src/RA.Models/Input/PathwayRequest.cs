@@ -456,16 +456,24 @@ namespace RA.Models.Input
 		public List<string> PrecededBy { get; set; } = new List<string>();
 
 
-		/// <summary>
-		/// Indicates the resource for which a pathway component or similar proxy resource is a stand-in.
-		/// This property is slated to completely replace SourceData in late 2022
-		/// URL
-		/// NOTES: Where the referenced data is not in the registry, a 'blank node' could be condsidered. 
-		///			BUT there would be no reason to, as all of the pertinent data could just be added to the related component?
-		///			If perceived to be useful, then provide a blank node id (a Guid) in proxyFor and add the blank node resource to ResourcesObjects
-		/// </summary>
-		public string ProxyFor { get; set; }
-		public List<string> ProxyForList { get; set; }
+        /// <summary>
+        /// Indicates the resource for which a pathway component or similar proxy resource is a stand-in.
+        /// This property is slated to completely replace SourceData in late 2022
+        /// URL
+        /// NOTES: Where the referenced data is not in the registry, a 'blank node' could be condsidered. 
+        ///			BUT there would be no reason to, as all of the pertinent data could just be added to the related component?
+        ///			If perceived to be useful, then provide a blank node id (a Guid) in proxyFor and add the blank node resource to ResourcesObjects
+        /// Domain: All pathway components, except ceterms:MultiComponent, which uses ProxyForItems
+        /// </summary>
+        public string ProxyFor { get; set; }
+
+
+        /// <summary>
+        /// Indicates the multiple resources for which a MultiComponent proxy resource is a stand-in.
+        /// Domain: ceterms:MultiComponent
+        /// Range: xsd:anyURI
+        /// </summary>
+        public List<string> ProxyForItems { get; set; }
 
 		#endregion
 

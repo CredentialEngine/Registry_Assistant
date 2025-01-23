@@ -28,7 +28,14 @@ namespace RA.Models.Input
 		/// Formerly known as Community
 		/// </summary>
 		public string Registry { get; set; }
-	}
+
+        /// <summary>
+        /// Where an organization is deleting a resource from a private registry, 
+		/// set this property to true to delete the related resource from the public 
+		/// registry
+        /// </summary>
+        public bool AutoDeletePublicResourceOnPrivateDelete { get; set; }
+    }
 
 	/// <summary>
 	/// Request class for a Deactive/Cease request

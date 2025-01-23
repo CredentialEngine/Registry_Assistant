@@ -18,7 +18,7 @@ namespace RA.Models.Input
         {
             CompetencyFrameworkGraph = new CompetencyFrameworkGraph();
         }
-		//used for testing only
+		// Added when publishing from CaSS for reference
         public string CTID { get; set; }
 
         public CompetencyFrameworkGraph CompetencyFrameworkGraph { get; set; } 
