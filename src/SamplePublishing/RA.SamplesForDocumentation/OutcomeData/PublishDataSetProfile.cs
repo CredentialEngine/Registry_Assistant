@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
 
+using Newtonsoft.Json;
 using RA.Models.Input;
 using RA.Models.Input.profiles.QData;
-using APIRequestResource = RA.Models.Input.profiles.QData.DataSetProfile;
+
 using APIRequest = RA.Models.Input.DataSetProfileRequest;
+using APIRequestResource = RA.Models.Input.profiles.QData.DataSetProfile;
 
 namespace RA.SamplesForDocumentation.OutcomeData
 {
     public class PublishDataSetProfile
     {
-
-        public string PublishLegacy(string requestType = "publish")
+        /// <summary>
+        /// 25-01-01 A dataSetProfile must now include metrics, via HasMetric, and observations, via HasObservations. 
+        /// </summary>
+        /// <param name="requestType"></param>
+        /// <returns></returns>
+        public string Publish( string requestType = "publish" )
         {
-            //Holds the result of the publish action
-            var result = string.Empty;
 
             // Assign the api key - acquired from organization account of the organization doing the publishing
             var apiKey = SampleServices.GetMyApiKey();
@@ -32,8 +32,7 @@ namespace RA.SamplesForDocumentation.OutcomeData
             if ( string.IsNullOrWhiteSpace( organizationIdentifierFromAccountsSite ) )
             {
                 //ensure you have added your organization account CTID to the app.config
-            }//
-
+            }
 
             //Assign a CTID for the entity being published and keep track of it
             var myCTID = "ce-" + Guid.NewGuid().ToString();
@@ -47,8 +46,8 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 Source = "http://example.com/DataSetProfile/Source",
                 PublicationStatusType = "Published",
                 DateEffective = "1999-09-01",
-                License= "http://example.com/DataSetProfile/license",
-                Rights= "Information about rights held in and over this resource."
+                License = "http://example.com/DataSetProfile/license",
+                Rights = "Information about rights held in and over this resource."
             };
             //typically the ownedBy is the same as the CTID for the data owner
             myData.DataProvider = new OrganizationReference()
@@ -56,104 +55,138 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 CTID = organizationIdentifierFromAccountsSite
             };
 
-            //CTID for Subject matter of the resource.
-            myData.About.Add( new EntityReference()
+            // RelevantDataSetFor
+            // - optional
+            // - if the dataSetProfile is about only one resource, then ReleventDataSetFor can be used rather than creating a Dimension with one entry. 
+            //  - provide one or more (unlikely) CTIDs.
+            myData.RelevantDataSetFor = ( new List<string>()
             {
-                CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
+                "ce-541da30c-15dd-4ead-881b-729796024b8f"
             } );
 
             myData.Identifier.Add( new IdentifierValue()
             {
                 IdentifierTypeName = "Some Identifer For Outcome Data",
-                IdentifierValueCode = "Catalog: xyz1234 "       
+                IdentifierValueCode = "Catalog: xyz1234 "
             } );
 
 
-            //	INDUSTRIES
-            //obsolete
-            myData.InstructionalProgramType = new List<FrameworkItem>
+            // DataSetTemporalCoverage (DataSetTimeFrame)
+            // This a required class with at least one of StartDate/EndDate, or TimeInterval
+            myData.DataSetTemporalCoverage = new DataSetTimeFrame()
             {
-				//Using existing frameworks such as CIP
-				//programs from a framework like Classification of Instructional Program - where the information is stored locally and can be included in publishing
-				new FrameworkItem()
+                Name = "An optional name for the time period.",
+                Description = "The information on this page is based on employment for 2020.",
+                StartDate = "2010-01-01",
+                EndDate = "2020-12-31",
+                TimeInterval = "P10Y" //TimeInterval will be an ISO8601 duration string
+            };
+            // NOTE/Reminder:
+            //  The DataProfile (DataSetTimeFrame.DataAttributes) is deprecated
+            //  and not allowed for new DataSetProfiles.
+            //  This can be distinguished by thinking of dataSetProfile.DataSetTimePeriod being deprecated, and only using DataSetTemporalCoverage.
+
+            // HasMetric
+            //  - this is a required property.
+            //  - it is list of URIs such as the CTID for a published Metric or
+            //      a blank node identifier (for a bnode that will be added to the Request.ReferenceObjects property)
+
+            myData.HasMetric = new List<string>()
+            {
+                "ce-224ebc0b-8d7e-4792-b0e0-8502e27c15fd",
+                "ce-453faad5-d302-4e7f-8dbc-a50eed9e2282"
+            };
+
+            // HasDimension
+            // Dimensions are optional. If a dataSetProfile relates to one resource (say a credential) and one time period/interval, then there is no need to add an arbitrary dimension
+            //  - it is list of URIs such as the CTID for a published resource or
+            //      a blank node identifier (for a bnode that will be added to the Request.ReferenceObjects property)
+
+            // NOTE: a valid blank node identifier has the following pattern:
+            //      _: following by a guid, all lowercase
+            //  ex  "_:dafdadb9-3f15-4d75-81e1-82dec7e0a3d4
+            // However for clarity, these examples will use 'friendlier' codes
+            myData.HasDimension = new List<string>()
+            {
+                "_:dimension1",
+                "_:dimension2",
+            };
+
+            // HasObservation
+            // Observations are required. The observation relates to a Metric, and if dimensions are present, to points in a dimension
+            //  - it is list of URIs such as the CTID for a published resource or
+            //      a blank node identifier (for a bnode that will be added to the Request.ReferenceObjects property)
+            myData.HasObservation = new List<string>()
+            {
+                "_:observation1",
+                "_:observation2",
+                "_:observation3",
+                "_:observation4",
+            };
+
+
+            // Blank Nodes
+            // Create the objects that will metrics (recommended to use published metrics rather than bnodes), dimensions, observations, and more
+            Dimension dimension1 = new Dimension()
+            {
+                Type = "qdata:Dimension",
+                BlankNodeId = "_:dimension1",
+                Name = "Credentials",
+                Description = "A list of credentials that will have observations.",
+                DimensionType = "ceterms:Credential",
+                // comparing three credentials 
+                HasPoint = new List<string>()
                 {
-                    Framework = "https://nces.ed.gov/ipeds/cipcode/search.aspx?y=56",
-                    FrameworkName = "Classification of Instructional Program",
-                    Name = "Medieval and Renaissance Studies",
-                    TargetNode = "https://nces.ed.gov/ipeds/cipcode/cipdetail.aspx?y=56&cip=30.1301",
-                    CodedNotation = "30.1301",
-                    Description = "A program that focuses on the  study of the Medieval and/or Renaissance periods in European and circum-Mediterranean history from the perspective of various disciplines in the humanities and social sciences, including history and archeology, as well as studies of period art and music."
-                },
-                new FrameworkItem()
+                    "ce-66f641d8-6556-42b8-961a-ad4253e501c3",
+                    "ce-80d44af0-10a6-4b13-8bd0-19c675df9b14",
+                    "ce-0199633b-c59a-49a2-9071-e2a457ee3551"
+                }
+            };
+
+            Dimension dimension2 = new Dimension()
+            {
+                Type = "qdata:Dimension",
+                BlankNodeId = "_:dimension2",
+                Name = "Time Periods",
+                Description = "List of time periods that will have observations",
+                DimensionType = "qdta:DataSetTimeFrame",
+                // comparing three timeperiods 
+                HasPoint = new List<string>()
                 {
-                    Framework = "https://nces.ed.gov/ipeds/cipcode/search.aspx?y=56",
-                    FrameworkName = "Classification of Instructional Program",
-                    Name = "Classical, Ancient Mediterranean and Near Eastern Studies and Archaeology",
-                    TargetNode = "https://nces.ed.gov/ipeds/cipcode/cipdetail.aspx?y=56&cip=30.2202",
-                    CodedNotation = "30.2202",
-                    Description = "A program that focuses on the cultures, environment, and history of the ancient Near East, Europe, and the Mediterranean basin from the perspective of the humanities and social sciences, including archaeology."
+                    "_:timeperiod1",
+                    "_:timeperiod2",
+                    "_:timeperiod3",
+                }
+            };
+
+            // now the observations
+            Observation obs1 = new Observation()
+            {
+                Type = "qdata:Observation",
+                BlankNodeId = "_:observation1",
+                Comment = "An optional comment to support the .",
+                DimensionType = "ceterms:Credential",
+                // comparing three credentials 
+                HasPoint = new List<string>()
+                {
+                    "ce-66f641d8-6556-42b8-961a-ad4253e501c3",
+                    "ce-80d44af0-10a6-4b13-8bd0-19c675df9b14",
+                    "ce-0199633b-c59a-49a2-9071-e2a457ee3551"
                 }
             };
 
 
-            //DataSetTimeFrame
-            //  referenced from a DataSetProfile (DataAttributes)
-            DataSetTimeFrame dstp = new DataSetTimeFrame()
-            {
-                Name = "An optional name for the time period.",
-                Description = "The information on this page is based on employment for 2018.",
-                StartDate = "2020-01-01",
-                EndDate = "2020-12-31",
-            };
-
-            //DataProfile referenced from a DataSetTimeFrame ()
-            var dataProfile = new DataProfile()
-            {
-                AdministrativeRecordType = "adminRecord:Tax1099",	
-                Description = "CareerBridge DataProfile",
-                IncomeDeterminationType = "ActualEarnings"	
-            };
-
-            //
-            dataProfile.TotalWIOACompleters.Add( SampleServices.AddQuantitativeValue( 415, "All Completers" ) );
-            dataProfile.HoldersInSet.Add( SampleServices.AddQuantitativeValue( 344, "Successful Completers" ) );
-            dataProfile.TotalWIOAExiters.Add( SampleServices.AddQuantitativeValue( 329, "Completed Successfully and Exited WIOA" ) );
-            dataProfile.TotalWIOAParticipants.Add( SampleServices.AddQuantitativeValue( 416, "Total Enrollment (Including Currently Enrolled)" ) );
-
-            //Data profile for unrelated employment
-            var dataProfileUnrelatedEmployment = new DataProfile() { Description = "Training unrelated employment", };
-            dataProfileUnrelatedEmployment.UnrelatedEmployment.Add( SampleServices.AddQuantitativeValue( 22, "Hired for a Non-Training Related Job" ) );
-            //EarningsAmount
-            dataProfileUnrelatedEmployment.EarningsAmount.Add( new MonetaryAmount()
-            {
-                Currency = "USD",
-                Value = 15.91M,
-                Description = "Average Wage"
-            } );
-
-            //Data profile for related employment
-            var dataProfileRelatedEmployment = new DataProfile() { Description = "Training related employment", };
-            dataProfileRelatedEmployment.RelatedEmployment.Add( SampleServices.AddQuantitativeValue( 195, "Hired for a Training-Related Job" ) );
-            dataProfileRelatedEmployment.EarningsAmount.Add( new MonetaryAmount()
-            {
-                Currency = "USD",
-                Value = 19.35M,
-                Description = "Average Wage"
-            } );
-            //==========================================
-            //populate all
-            dstp.DataAttributes.Add( dataProfile );
-            dstp.DataAttributes.Add( dataProfileUnrelatedEmployment );
-            dstp.DataAttributes.Add( dataProfileRelatedEmployment );
-
-            myData.DataSetTimePeriod.Add( dstp );
+            List<object> referenceObjects = new List<object>();
+            referenceObjects.Add(dimension1);
+            referenceObjects.Add(dimension2);
             //====================	DataSetProfile REQUEST ====================
             //This holds the DataSetProfile and the identifier (CTID) for the owning organization
             var myRequest = new APIRequest()
             {
                 DataSetProfile = myData,
                 DefaultLanguage = "en-US",
-                PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
+                PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite,
+                ReferenceObjects = referenceObjects
             };
 
             //Serialize the DataSetProfile request object
@@ -173,7 +206,7 @@ namespace RA.SamplesForDocumentation.OutcomeData
             };
 
             bool isValid = new SampleServices().PublishRequest( req );
-            //Return the result
+
             return req.FormattedPayload;
         }
 

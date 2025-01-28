@@ -80,6 +80,8 @@
     <Compile Include="OutcomeData\KansasExamples.cs" />
     <Compile Include="OutcomeData\OutcomeDataServices.cs" />
     <Compile Include="OutcomeData\PublishDataSetProfile.cs" />
+    <Compile Include="OutcomeData\PublishLegacyFormat.cs" />
+    <Compile Include="OutcomeData\PublishMetrics.cs" />
     <Compile Include="OutcomeData\TexasOutcomeData.cs" />
     <Compile Include="OutcomeData\WIOAExamples.cs" />
     <Compile Include="ProgressionModels\PublishProgressionModels.cs" />

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
+
 using Newtonsoft.Json;
 using RA.Models;
-using RA.Models.Input;
+using RA.Models.Input.profiles.QData;
 
-using APIRequest = RA.Models.Input.IndustryRequest;
+using APIRequest = RA.Models.Input.MetricRequest;
 
 namespace RA.SamplesForDocumentation
 {
-    public class PublishIndustry
+    public class PublishMetric
     {
         public bool DoPublish( string requestType = "format" )
         {
@@ -36,42 +36,27 @@ namespace RA.SamplesForDocumentation
                 PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
             };
 
-            var myData = new Industry()
+            var myData = new Metric()
             {
-                Name = "Acme Industry",
+                Name = "Median Wages",
                 CTID = entityCTID,
-                SubjectWebpage = "https://example.com?t=acmeIndustry",
-                Description = "Assess problems and resources, taking a leadership role in the development, implementation and outcomes evaluation of a plan. Provides professional interventions at critical times. Position requires providing a service to one or more age groups from young adult upwards. ...",
-                CodedNotation = "100-1234",
+                Description = "Median earnings are for graduates who graduated between academic years 2004-05 and 2011-12, as of their 10th year after graduation.  For example, earnings for a 2004-05 graduate were earned in 2014-15.  All earnings are in inflation-adjusted 2021 dollars.",
+                IncomeDeterminationType = "incomeDetermination:ActualEarnings",
             };
-            myData.AssertedBy = new List<OrganizationReference>()
+            myData.Publisher = new List<string>()
             {
-                new OrganizationReference()
-                {
-                    Type="ceterms:Organization",
-                    Name="ACME",
-                    SubjectWebpage="https://example.com?t=acmeOrg",
-                    Address = new List<Place>()
-                    {
-                        new Place()
-                        {
-                            Address1="123 Acme Way",
-                            City="New York",
-                            AddressRegion="New York",
-                            PostalCode="11223",
-                            Country="USA"
-                        }
-                    }
-                }
+                "ce-0199633b-c59a-49a2-9071-e2a457ee3551"
             };
 
-            List<string> alternateTypes = new List<string>();
-            List<string> codes = new List<string>();
-            myData.IndustryType = Industries.PopulateIndustries( ref alternateTypes, ref codes );
+            myData.MetricType = new List<string>()
+            {
+                "Earnings"
+            };
+            // optional information
+            myData.EmploymentDefinition = "Median earnings of graduates who were employed in Pennsylvania as of their 10th year after graduation.  For example, earnings for a 2004-05 graduate were earned in 2014-15.  All earnings are in inflation-adjusted to the year of the dataset.";
 
-
-            //Add the Industry to the request
-            myRequest.Industry = myData;
+            //Add the Metric to the request
+            myRequest.Metric = myData;
 
             //create a literal to hold data to use with ARC
             string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
@@ -79,17 +64,17 @@ namespace RA.SamplesForDocumentation
             //call the Assistant API
             SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
             {
-                EndpointType = "Industry",
+                EndpointType = "Metric",
                 RequestType = requestType,
                 OrganizationApiKey = apiKey,
-                CTID = myRequest.Industry.CTID.ToLower(),   //added here for logging
+                CTID = myRequest.Metric.CTID.ToLower(),   //added here for logging
                 Identifier = "testing",     //useful for logging, might use the ctid
                 InputPayload = payload
             };
 
             bool isValid = new SampleServices().PublishRequest( req );
 
-            LoggingHelper.WriteLogFile( 2, string.Format( "Industry_{0}_payload.json", myRequest.Industry.CTID ), req.FormattedPayload, "", false );
+            LoggingHelper.WriteLogFile( 2, string.Format( "Metric_{0}_payload.json", myRequest.Metric.CTID ), req.FormattedPayload, "", false );
 
             return isValid;
         }
