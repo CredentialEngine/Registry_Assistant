@@ -38,10 +38,10 @@ namespace RA.SamplesForDocumentation
 
             var myData = new Industry()
             {
-                Name = "Acme Industry",
+                Name = "Health Industry",
                 CTID = entityCTID,
                 SubjectWebpage = "https://example.com?t=acmeIndustry",
-                Description = "Assess problems and resources, taking a leadership role in the development, implementation and outcomes evaluation of a plan. Provides professional interventions at critical times. Position requires providing a service to one or more age groups from young adult upwards. ...",
+                Description = "A description of this industry",
                 CodedNotation = "100-1234",
             };
             myData.AssertedBy = new List<OrganizationReference>()
