@@ -7,10 +7,17 @@ using RA.Models.Input.profiles.QData;
 
 using APIRequest = RA.Models.Input.MetricRequest;
 
-namespace RA.SamplesForDocumentation
+namespace RA.SamplesForDocumentation.OutcomeData
 {
+    /// <summary>
+    /// 25-01-01 All new publishing of outcome data (dataSetProfiles) will require references to one or more metrics.
+    /// This class provides an example for publishing a Metric.
+    /// NOTE: A full Metric (as long as the CTID is provided) may also be published as part of the dataSetProfile publishing transaction
+    /// See: RA.SamplesForDocumentation.OutcomeData.PublishDataSetProfile
+    /// </summary>
     public class PublishMetric
     {
+        
         public bool DoPublish( string requestType = "format" )
         {
 
@@ -50,7 +57,8 @@ namespace RA.SamplesForDocumentation
 
             myData.MetricType = new List<string>()
             {
-                "Earnings"
+                "Earnings",
+                "metricCat:EducationLevel"
             };
             // optional information
             myData.EmploymentDefinition = "Median earnings of graduates who were employed in Pennsylvania as of their 10th year after graduation.  For example, earnings for a 2004-05 graduate were earned in 2014-15.  All earnings are in inflation-adjusted to the year of the dataset.";

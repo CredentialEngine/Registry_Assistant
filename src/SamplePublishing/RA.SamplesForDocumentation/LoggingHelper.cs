@@ -293,7 +293,9 @@ namespace RA.SamplesForDocumentation
 					if ( File.Exists( outputFile ) )
 					{
 						if ( File.GetLastWriteTime( outputFile ).Month != DateTime.Now.Month )
+						{
 							File.Delete( outputFile );
+						}
 					}
 					else
 					{

@@ -10,7 +10,7 @@ namespace RA.Models.Input
 		/// It will be ignored if included with a primary resource
 		/// </summary>
 		[JsonProperty( "@id" )]
-		public string BlankNodeId { get; set; }
+		public string Id { get; set; }
 
 	}
 }

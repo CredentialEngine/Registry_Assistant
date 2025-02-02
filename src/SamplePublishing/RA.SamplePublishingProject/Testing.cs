@@ -68,7 +68,7 @@ namespace RA.SamplePublishingProject
 		}
 		#endregion
 
-		#region Occupation publishing
+		#region Occupation/Industry/Jobs publishing
 		[TestMethod]
 		public void PublishOccupation()
 		{
@@ -82,7 +82,6 @@ namespace RA.SamplePublishingProject
 		{
 			new Occupations().PublishOccupationList();
 		}
-        #endregion
 
         [TestMethod]
         public void PublishIndustry()
@@ -91,7 +90,6 @@ namespace RA.SamplePublishingProject
 
         }
 
-        #region Job publishing
         [TestMethod]
 		public void PublishJob()
 		{
@@ -105,11 +103,28 @@ namespace RA.SamplePublishingProject
 		{
 			new RA.SamplesForDocumentation.Employment.Jobs().PublishJobList();
 		}
-		#endregion
+        #endregion
 
+        #region Outcome Data
+        [TestMethod]
+        public void PublishSimpleOutcomes()
+        {
+            var results = new RA.SamplesForDocumentation.OutcomeData.PublishDataSetProfile().PublishSimpleData( "publish" );
 
-		#region Rubric publishing
-		[TestMethod]
+            Assert.IsNotNull( results );
+        }
+
+        [TestMethod]
+        public void PublishWithDimensions()
+        {
+            var results = new RA.SamplesForDocumentation.OutcomeData.PublishDataSetProfile().PublishWithDimensions( "publish" );
+			Assert.IsNotNull( results );
+        }
+
+        #endregion
+
+        #region Rubric publishing
+        [TestMethod]
 		public void PublishRubric()
 		{
 			new RA.SamplesForDocumentation.PublishRubric().Publish( "publish" );

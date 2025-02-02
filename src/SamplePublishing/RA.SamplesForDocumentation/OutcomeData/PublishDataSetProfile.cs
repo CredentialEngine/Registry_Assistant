@@ -12,6 +12,8 @@ namespace RA.SamplesForDocumentation.OutcomeData
 {
     /// <summary>
     /// 25-01-01 A dataSetProfile must now include metrics, via HasMetric, and observations, via HasObservations. 
+    /// For a sample of publishing of Metrics, see:
+    ///     RA.SamplesForDocumentation.OutcomeData.PublishMetric
     /// </summary>
     public class PublishDataSetProfile
     {
@@ -60,11 +62,14 @@ namespace RA.SamplesForDocumentation.OutcomeData
             };
 
             // some optional data
-            myData.Identifier.Add( new IdentifierValue()
+            myData.Identifier = new List<IdentifierValue>()
             {
-                IdentifierTypeName = "Some Identifer For Outcome Data",
-                IdentifierValueCode = "Catalog: xyz1234 "
-            } );
+                new IdentifierValue()
+                {
+                    IdentifierTypeName = "Some Identifer For Outcome Data",
+                    IdentifierValueCode = "Catalog: xyz1234 "
+                }
+            };
 
             // RelevantDataSetFor
             // - this is optional, but will want to use it in this case to indicate to what the outcome data refers
@@ -88,7 +93,7 @@ namespace RA.SamplesForDocumentation.OutcomeData
             // NOTE/Reminder:
             //  The DataProfile (DataSetTimeFrame.DataAttributes) is deprecated
             //  and not allowed for new DataSetProfiles.
-            //  This can be distinguished by thinking of dataSetProfile.DataSetTimeFrame being deprecated, and only using DataSetTemporalCoverage.
+            //  This can be distinguished by thinking of dataSetProfile.DataSetTimePeriod as being deprecated, and only using DataSetTemporalCoverage.
 
             // HasMetric
             //  - this is a required property.
@@ -128,7 +133,7 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 new Observation()
                 {
                     Type = "qdata:Observation",
-                    // this must match an entry in HasObservation
+                    // this 'point' identifier will be referenced in HasObservation.AtPoint
                     BlankNodeId = "_:observation1",
                     Comment = "An optional comment to support the observation.",
                     // A Metric is required in IsObservationOf
@@ -145,7 +150,7 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 new Observation()
                 {
                     Type = "qdata:Observation",
-                    // this must match an entry in HasObservation
+                    // this 'point' identifier will be referenced in HasObservation.AtPoint
                     BlankNodeId = "_:observation2",
                     Comment = "An optional comment to support the observation.",
                     // A Metric is required in IsObservationOf
@@ -164,6 +169,7 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 DataSetProfile = myData,
                 DefaultLanguage = "en-US",
                 PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite,
+                // be sure to inclue the referenceObjects in the request
                 ReferenceObjects = referenceObjects
             };
 
@@ -190,7 +196,8 @@ namespace RA.SamplesForDocumentation.OutcomeData
 
 
         /// <summary>
-        /// Publish observations about a resources for three time periods
+        /// Publish observations about a resources for three time periods.
+        /// Bonus: publish a new Metric as part of the same publishing transaction.
         /// </summary>
         /// <param name="requestType"></param>
         /// <returns></returns>
@@ -242,11 +249,14 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 "ce-541da30c-15dd-4ead-881b-729796024b8f"
             } );
 
-            myData.Identifier.Add( new IdentifierValue()
+            myData.Identifier = new List<IdentifierValue>()
             {
-                IdentifierTypeName = "Some Identifer For Outcome Data",
-                IdentifierValueCode = "Catalog: xyz1234 "
-            } );
+                new IdentifierValue()
+                {
+                    IdentifierTypeName = "Some Identifer For Outcome Data",
+                    IdentifierValueCode = "Catalog: xyz1234 "
+                }
+            };
 
 
             // DataSetTemporalCoverage (DataSetTimeFrame)
@@ -262,17 +272,21 @@ namespace RA.SamplesForDocumentation.OutcomeData
             // NOTE/Reminder:
             //  The DataProfile (DataSetTimeFrame.DataAttributes) is deprecated
             //  and not allowed for new DataSetProfiles.
-            //  This can be distinguished by thinking of dataSetProfile.DataSetTimeFrame being deprecated, and only using DataSetTemporalCoverage.
+            //  This can be distinguished by thinking of dataSetProfile.DataSetTimePeriod being deprecated, and only using DataSetTemporalCoverage.
 
             // HasMetric
             //  - this is a required property.
             //  - it is list of URIs such as the CTID for a published Metric or
             //      a blank node identifier (for a bnode that will be added to the Request.ReferenceObjects property)
+            // BONUS: this endpoint has the option of being able to publish Metric as part of the same publish step as the dataSetProfile
+            // using a variable for easy reference, even though only one metric
+            var metric1 = "ce-5756ddbf-cb7e-4d0c-9a1e-db330dbcdf6b";
 
             myData.HasMetric = new List<string>()
             {
-                "ce-224ebc0b-8d7e-4792-b0e0-8502e27c15fd",
-                "ce-453faad5-d302-4e7f-8dbc-a50eed9e2282"
+                // this metric had not been published yet, and will be added to ReferenceObjects
+                // the API will first check if a CTID is in the ReferenceObjects before checking for existance in the registry.
+                metric1
             };
 
             // There will be a lot of blank nodes used in dataSetProfile publishing. 
@@ -281,20 +295,48 @@ namespace RA.SamplesForDocumentation.OutcomeData
             // At the end, this property will be added to the APIRequest.ReferenceObjects
             List<object> referenceObjects = new List<object>();
 
+            // add the new Metric
+            var metric = new Metric()
+            {
+                CTID = metric1,
+                // an @id is still required (for general validation)
+                Id = "_:5756ddbf-cb7e-4d0c-9a1e-db330dbcdf6b",
+                // always need an  @type
+                Type = "qdata:Metric",
+                Name = "Employment Rate",
+                Description = "Percent of graduates who were employed in Pennsylvania at 10 years after graduation.",
+                // a publisher is required
+                Publisher = new List<string>() { organizationIdentifierFromAccountsSite },
+                MetricType = new List<string>() { "Employment", "metricCat:Earnings" }
+            };
+            referenceObjects.Add( metric );
+
             // HasDimension
             // Dimensions are optional. If a dataSetProfile relates to one resource (say a credential) and one time period/interval, then there is no need to add an arbitrary dimension
             //  - it is list of URIs such as the CTID for a published resource or
             //      a blank node identifier (for a bnode that will be added to the Request.ReferenceObjects property)
 
+
+            // Blank Node Identifiers
             // NOTE: a valid blank node identifier has the following pattern:
             //      _: following by a guid, all lowercase
             //  ex  "_:dafdadb9-3f15-4d75-81e1-82dec7e0a3d4
-            // However for clarity, these examples will use 'friendlier' codes
+            // However for clarity, these examples will use properties with 'friendlier' names for easy reference
+            var dimensionTimePeriod = "_:04dc0493-aa99-4f1d-a612-10b6873ea9ce";
+            var dimensionCredentials = "_:e0459386-0f2b-424e-9d05-e8e09426aefd";
+            var timeperiod1 = "_:1aaebe1e-3b16-42ac-aed8-71fdf6a2cfed";
+            var timeperiod2 = "_:6b7a2c20-7000-4718-a725-6fe4a04bd1e9";
+
+
+            var credential1 = "ce-3ff09833-2cf8-4017-bcfa-0cdc3232b3b4";
+            var credential2 = "ce-ab15e029-d112-412c-96fd-1c2a79943eab";
+            var credential3 = "ce-7051cdf9-2023-0202-dfea-37cfeb64fdfe";
+
             // there will be one dimension for time periods, and one for credentials
             myData.HasDimension = new List<string>()
             {
-                "_:dimensionTimePeriod",
-                "_:dimensionCredentials"
+                dimensionTimePeriod,
+                dimensionCredentials
             };
 
             // Blank Nodes
@@ -303,14 +345,14 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 new Dimension()
                 {
                     Type = "qdata:Dimension",
-                    // this must match an entry in HasObservation
-                    BlankNodeId = "_:dimensionTimePeriod",
+                    // this 'point' identifier will be referenced in HasObservation.AtPoint
+                    BlankNodeId =dimensionTimePeriod,
                     Name = "Time periods for wage statistics",
                     // HasPoint will contain bnode ids for two time periods (which will be qdata:DataSetTimeFrame objects)
                     HasPoint = new List<string>()
                     {
-                        "_:timeperiod1",
-                        "_:timeperiod2",
+                        timeperiod1,
+                        timeperiod2,
                     }
 
                 } );
@@ -319,15 +361,15 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 new Dimension()
                 {
                     Type = "qdata:Dimension",
-                    // this must match an entry in HasObservation
-                    BlankNodeId = "_:dimensionCredentials",
+                    // this 'point' identifier will be referenced in HasObservation.AtPoint
+                    BlankNodeId = dimensionCredentials,
                     Name = "Credentials for wage statistics",
                     // HasPoint will contain CTIDs for published resources, but could reference a bnode
                     HasPoint = new List<string>()
                     {
-                        "ce-04c2939d-cr01-4b45-b65c-7eca87d4245e",
-                        "ce-04c2939d-cr02-4b45-b65c-7eca87d4245e",
-                        "ce-04c2939d-cr03-4b45-b65c-7eca87d4245e",
+                        credential1,
+                        credential2,
+                        credential3,
                     }
 
                 } );
@@ -338,10 +380,10 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 {
                     Type = "qdata:DataSetTimeFrame",
                     // this must match an entry in dimenstion.HasPoint
-                    BlankNodeId = "_:timeperiod1",
+                    BlankNodeId = timeperiod1,
                     Name = "Five years after graduation",
                     StartDate = "2014-06-30",
-                    EndDate="2019-07-01",
+                    EndDate = "2019-07-01",
                     TimeInterval = "P5Y"
 
                 } );
@@ -351,7 +393,7 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 {
                     Type = "qdata:DataSetTimeFrame",
                     // this must match an entry in dimenstion.HasPoint
-                    BlankNodeId = "_:timeperiod2",
+                    BlankNodeId = timeperiod2,
                     Name = "Ten years after graduation",
                     StartDate = "2014-06-30",
                     EndDate = "2024-07-01",
@@ -361,15 +403,16 @@ namespace RA.SamplesForDocumentation.OutcomeData
 
 
             // HasObservation
-            // with 3 credentials, and 2 time periods, there will be 6 observations
+            // with 1 metric, 3 credentials, and 2 time periods, there will be 6 observations
             // Observations are required. The observation relates to a Metric, and if dimensions are present, to points in a dimension
             //  - it is list of URIs such as the CTID for a published resource or
-            //      a blank node identifier (for a bnode that will be added to the Request.ReferenceObjects property)
+            //    a blank node identifier (for a bnode that will be added to the Request.ReferenceObjects property)
             myData.HasObservation = new List<string>()
             {
                 "_:obsCred1Time1",
                 "_:obsCred2Time1",
                 "_:obsCred3Time1",
+
                 "_:obsCred1Time2",
                 "_:obsCred2Time2",
                 "_:obsCred3Time2",
@@ -378,29 +421,32 @@ namespace RA.SamplesForDocumentation.OutcomeData
 
             // now the observations
             // time period 1
-            referenceObjects.Add( 
+            referenceObjects.Add(
                 new Observation()
                 {
                     Type = "qdata:Observation",
                     BlankNodeId = "_:obsCred1Time1",
+                    // A Metric is required in IsObservationOf
+                    IsObservationOf = metric1,
                     AtPoint = new List<string>()
                     {
-                        "_:timeperiod1",
-                        "ce-04c2939d-cr01-4b45-b65c-7eca87d4245e",
+                        timeperiod1,
+                        credential1,
                     },
                     Value = 45811
-                });
+                } );
 
             referenceObjects.Add(
                 new Observation()
                 {
                     Type = "qdata:Observation",
                     BlankNodeId = "_:obsCred2Time1",
+                    IsObservationOf = metric1,
                     AtPoint = new List<string>()
-                {
-                                "_:timeperiod1",
-                                "ce-04c2939d-cr02-4b45-b65c-7eca87d4245e",
-                },
+                    {
+                        timeperiod1,
+                        credential2,
+                    },
                     Value = 45821
                 } );
 
@@ -409,11 +455,12 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 {
                     Type = "qdata:Observation",
                     BlankNodeId = "_:obsCred3Time1",
+                    IsObservationOf = metric1,
                     AtPoint = new List<string>()
-                {
-                                "_:timeperiod1",
-                                "ce-04c2939d-cr03-4b45-b65c-7eca87d4245e",
-                },
+                    {
+                        timeperiod1,
+                        credential3,
+                    },
                     Value = 45831
                 } );
 
@@ -423,10 +470,11 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 {
                     Type = "qdata:Observation",
                     BlankNodeId = "_:obsCred1Time2",
+                    IsObservationOf = metric1,
                     AtPoint = new List<string>()
                     {
-                        "_:timeperiod1",
-                        "ce-04c2939d-cr02-4b45-b65c-7eca87d4245e",
+                        timeperiod1,
+                        credential2,
                     },
                     Value = 45812
                 } );
@@ -436,25 +484,27 @@ namespace RA.SamplesForDocumentation.OutcomeData
                 {
                     Type = "qdata:Observation",
                     BlankNodeId = "_:obsCred2Time2",
+                    IsObservationOf = metric1,
                     AtPoint = new List<string>()
                     {
-                        "_:timeperiod2",
-                        "ce-04c2939d-cr02-4b45-b65c-7eca87d4245e",
+                        timeperiod2,
+                        credential2,
                     },
-                        Value = 45822
-                    } );
+                    Value = 45822
+                } );
 
             referenceObjects.Add(
                 new Observation()
                 {
                     Type = "qdata:Observation",
                     BlankNodeId = "_:obsCred3Time2",
+                    IsObservationOf = metric1,
                     AtPoint = new List<string>()
                     {
-                        "_:timeperiod2",
-                        "ce-04c2939d-cr03-4b45-b65c-7eca87d4245e",
+                        timeperiod2,
+                        credential3,
                     },
-                    Value = 458832
+                    Value = 45882
                 } );
             //====================	DataSetProfile REQUEST ====================
             //This holds the DataSetProfile and the identifier (CTID) for the owning organization

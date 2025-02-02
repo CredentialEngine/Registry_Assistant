@@ -77,7 +77,7 @@ namespace RA.SamplesForDocumentation
 			//2. create the concept
 			var concept = new Concept()
 			{
-				BlankNodeId = bnodeId,
+				Id = bnodeId,
 				Type = "skos:Concept",
 				PrefLabel = "Equity Goal"
 			};

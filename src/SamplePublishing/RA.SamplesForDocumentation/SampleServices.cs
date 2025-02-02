@@ -20,8 +20,8 @@ namespace RA.SamplesForDocumentation
 {
 	public class SampleServices
 	{
-		public static string thisClassName = "SampleServices";
-		public string environment = GetAppKeyValue( "environment" );
+		private const string thisClassName = "SampleServices";
+		private static string environment = GetAppKeyValue( "environment" );
 		//helpers. Could hard code or retrieve from the config file. 
 		public static string GetMyApiKey()
 		{
@@ -273,7 +273,9 @@ namespace RA.SamplesForDocumentation
 					//for initial prototyping, check for OrganizationApiKey
 					//not required in the sandbox
 					if ( string.IsNullOrWhiteSpace( request.AuthorizationToken ) )
+					{
 						request.AuthorizationToken = request.OrganizationApiKey;
+					}
 
 					if ( !string.IsNullOrWhiteSpace( request.AuthorizationToken ) )
 					{
