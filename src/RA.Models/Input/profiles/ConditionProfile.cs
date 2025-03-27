@@ -26,7 +26,6 @@ namespace RA.Models.Input
 			SubmissionOf = new List<string>();
 			AlternativeCondition = new List<ConditionProfile>();
 
-			//ApplicableAudienceType = new List<string>();
 			TargetAssessment = new List<EntityReference>();
 			TargetCredential = new List<EntityReference>();
 			TargetLearningOpportunity = new List<EntityReference>();
@@ -49,7 +48,7 @@ namespace RA.Models.Input
 		/// Profile description 
 		/// 23-11-13 - NO LONGER required
 		/// Optional
-		/// Minimum of 10 characters when present, but should be clear.
+		/// 25-02-10 - there is no longer a restriction on the minimum length of 10 for the description 
 		/// </summary>
 		public string Description { get; set; }
 
@@ -197,7 +196,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<EntityReference> TargetLearningOpportunity { get; set; }
 
-        //
         /// <summary>
         /// A competency relevant to the resource being described.
         /// targetCompetency is typically a competency required for the parent of this condition profile
@@ -238,17 +236,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> TargetCompetencyFramework { get; set; }
 
-        /// <summary>
-        /// UNDER CONSTRUCTION, NOT FOR USE YET
-        /// The concept is that the property would be a list of CTIDs for competencies in the registry.
-        /// The API would validate the the competencies are valid, then format TargetCompetency(the credentialAlignmentObject list) simplifing the task for the publisher.
-        /// Under consideration is enabling this feature by:
-		///		- Continuing to use TargetCompetency
-		///		- Recommend that the publisher just provide a CTID in targetNode, and no other data (as a signal to use the CTID to get and format the CAO.
-		///		
-        /// </summary>
-        public List<string> TargetCompetencies { get; set; } = new List<string>();
-
         #endregion
     }
 
@@ -261,101 +248,6 @@ namespace RA.Models.Input
 	[Obsolete]
 	public class ConnectionProfile : ConditionProfile
 	{
-		/*
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		public ConnectionProfile()
-		{
-			//AssertedBy = new OrganizationReference();
-
-			TargetAssessment = new List<EntityReference>();
-			TargetCredential = new List<EntityReference>();
-			TargetLearningOpportunity = new List<EntityReference>();
-		}
-		/// <summary>
-		/// Name of this condition
-		/// Required
-		/// </summary>
-		public string Name { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Name_Map { get; set; } = null;
-		/// <summary>
-		/// Condition description 
-		/// Required. Minimum of 10 characters, but should be clear.
-		/// </summary>
-		public string Description { get; set; }
-
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Description_Map { get; set; } = null;
-
-		/// <summary>
-		/// Organization that owns this credential
-		/// </summary>
-		public OrganizationReference AssertedBy { get; set; }
-
-		/// <summary>
-		/// Measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
-		/// </summary>
-		public decimal? Weight { get; set; }
-
-		/// <summary>
-		/// Credit Information
-		/// 20-09-30 being replaced by ValueProfile
-		/// 21-04-04 had started with singles now allowing a List 
-		/// </summary>
-		public List<ValueProfile> CreditValue { get; set; } = null;
-
-		/// <summary>
-		/// Detailed description of credit unit type.
-		/// </summary>
-		public string CreditUnitTypeDescription { get; set; }
-		/// <summary>
-		/// Language map for Detailed description of credit unit type.
-		/// </summary>
-		public LanguageMap CreditUnitTypeDescription_Map { get; set; } = null;
-
-		//external classes =====================================
-
-		/// <summary>
-		/// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.
-		/// </summary>
-		public List<EntityReference> TargetAssessment { get; set; }
-		/// <summary>
-		/// Credential that is a focus or target of the condition, process or verification service.
-		/// </summary>
-		public List<EntityReference> TargetCredential { get; set; }
-		/// <summary>
-		/// Learning opportunity that is the focus of a condition, process or another learning opportunity.
-		/// </summary>
-		public List<EntityReference> TargetLearningOpportunity { get; set; }
-
-
-        /// <summary>
-        /// Occupation that is the focus of a condition, process or another learning opportunity.
-        /// Only valid for 
-        ///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
-        /// </summary>
-        public List<EntityReference> TargetJob { get; set; } = new List<EntityReference>();
-
-        /// <summary>
-        /// Occupation that is the focus of a condition, process or another learning opportunity.
-        /// Only valid for 
-        ///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
-        /// </summary>
-        public List<EntityReference> TargetOccupation { get; set; } = new List<EntityReference>();
-
-		/// <summary>
-		/// A competency relevant to the condition being described.
-		/// targetCompetency is typically a competency required for the parent of this condition profile
-		/// </summary>
-		public List<CredentialAlignmentObject> TargetCompetency { get; set; } = new List<CredentialAlignmentObject>();
-
-		*/
     }
 	//retain in order to not mess up previous use
     public class Connections : ConditionProfile

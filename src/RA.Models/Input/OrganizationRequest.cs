@@ -352,9 +352,16 @@ namespace RA.Models.Input
 		public List<string> HasCostManifest { get; set; }
 
         /// <summary>
+        /// Alignment map owned by the agent.
+		/// List of CTIDs. BNodes are not allowed.
+        /// ceterms:hasAlignmentMap
+        /// </summary>
+        public List<string> HasAlignmentMap { get; set; }
+
+        /// <summary>
         /// An inventory or listing of resources maintained by this Organization
         /// </summary>
-        public string HasCatalog { get; set; }
+        public List<string> HasCatalog { get; set; }
 
 		/// <summary>
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.

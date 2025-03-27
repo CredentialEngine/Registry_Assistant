@@ -299,8 +299,7 @@ namespace RA.Models.Input
         /// Indicates the stage or level of achievement in a progression of learning.
         /// range: ceterms:CredentialAlignmentObject
         /// </summary>
-        [JsonProperty( PropertyName = "ceterms:atLevel" )]
-        public CredentialAlignmentObject AtLevel { get; set; }
+        public List<CredentialAlignmentObject> AtLevel { get; set; }
 
         /// <summary>
         /// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
@@ -308,6 +307,7 @@ namespace RA.Models.Input
         /// <see href="https://credreg.net/ctdl/terms/Audience"></see>
         /// </summary>
         public List<string> AudienceType { get; set; }
+
 		/// <summary>
 		/// Type of level indicating a point in a progression through an educational or training context, for which the credential is intended; select from an existing enumeration of such types.
 		/// audLevel:AdvancedLevel audLevel:AssociatesDegreeLevel audLevel:BachelorsDegreeLevel audLevel:BeginnerLevel audLevel:DoctoralDegreeLevel audLevel:GraduateLevel audLevel:IntermediateLevel audLevel:LowerDivisionLevel audLevel:MastersDegreeLevel audLevel:PostSecondaryLevel audLevel:ProfessionalLevel audLevel:SecondaryLevel audLevel:UndergraduateLevel audLevel:UpperDivisionLevel
@@ -327,12 +327,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> CommonCosts { get; set; }
 
-
 		/// <summary>
 		/// Detailed description of credit unit. 
 		/// Recommendation is to use CreditValue rather than this property.
 		/// </summary>
 		public string CreditUnitTypeDescription { get; set; }
+
 		/// <summary>
 		/// LanguageMap for CreditUnitTypeDescription
 		/// </summary>
@@ -400,7 +400,6 @@ namespace RA.Models.Input
         /// </summary>
         public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
-
 		/// <summary>
 		/// Is Non-Credit
 		/// Resource carries or confers no official academic credit towards a program or a credential.
@@ -452,7 +451,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> ObjectOfAction { get; set; } = new List<string>();
 
-
 		/// <summary>
 		/// Organization(s) that register this resource. 
 		/// Typically used for Registered Apprenticeships
@@ -473,7 +471,6 @@ namespace RA.Models.Input
 		/// Language map list for Subject
 		/// </summary>
 		public LanguageMapList Subject_Map { get; set; } = null;
-
 
         /// <summary>
         /// Type of frequency at which a resource is offered; select from an existing enumeration of such types.
@@ -570,15 +567,24 @@ namespace RA.Models.Input
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
-		#endregion
+        #endregion
 
-		#region Conditions and connections
-		//Connection Profiles are Condition Profiles but typically only a subject of the Condition Profile properties are used. 
-		/// <summary>
-		/// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
-		/// Set constraints, prerequisites, entry conditions, or requirements that are shared across an organization, organizational subdivision, set of credentials, or category of entities and activities.
-		/// </summary>
-		public List<string> CommonConditions { get; set; }
+
+        /// <summary>
+        /// Category or classification of this resource.
+        /// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
+        /// URI to a concept(based on the ONet work activities example) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
+        /// ceterms:classification
+        /// </summary>
+        public List<string> Classification { get; set; } = new List<string>();
+
+        #region Conditions and connections
+        //Connection Profiles are Condition Profiles but typically only a subject of the Condition Profile properties are used. 
+        /// <summary>
+        /// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
+        /// Set constraints, prerequisites, entry conditions, or requirements that are shared across an organization, organizational subdivision, set of credentials, or category of entities and activities.
+        /// </summary>
+        public List<string> CommonConditions { get; set; }
 
 		/// <summary>
 		///  Resources that must be pursued concurrently.
@@ -741,11 +747,15 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> TargetLearningResource { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
-		/// </summary>
-		public List<IdentifierValue> VersionIdentifier { get; set; }
-		//public List<string> TargetPathway { get; set; } = new List<string>();
+        /// <summary>
+        /// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+        /// </summary>
+        public string VersionCode { get; set; }
+
+        /// <summary>
+        /// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+        /// </summary>
+        public List<IdentifierValue> VersionIdentifier { get; set; }
 
 		/// <summary>
 		/// School Courses for the Exchange of Data code for a course.

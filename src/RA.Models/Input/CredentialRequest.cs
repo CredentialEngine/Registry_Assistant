@@ -52,17 +52,17 @@ namespace RA.Models.Input
 			Type = "Credential";
 			AudienceLevelType = new List<string>();
 			AudienceType = new List<string>();
-			Subject = new List<string>();
-			OccupationType = new List<FrameworkItem>();
-			IndustryType = new List<FrameworkItem>();
-			Naics = new List<string>();
-			Keyword = new List<string>();
+            AvailableAt = new List<Place>();
 			DegreeConcentration = new List<string>();
 			DegreeMajor = new List<string>();
 			DegreeMinor = new List<string>();
-
-			// Region = new List<GeoCoordinates>();
-			OwnedBy = new List<OrganizationReference>();
+            InLanguage = new List<string>();
+			Keyword = new List<string>();
+			OccupationType = new List<FrameworkItem>();
+            OwnedBy = new List<OrganizationReference>();
+			IndustryType = new List<FrameworkItem>();
+			Naics = new List<string>();
+            Subject = new List<string>();
 
 			AccreditedBy = new List<Input.OrganizationReference>();
 			ApprovedBy = new List<Input.OrganizationReference>();
@@ -72,12 +72,10 @@ namespace RA.Models.Input
 			RenewedBy = new List<Input.OrganizationReference>();
 			RevokedBy = new List<Input.OrganizationReference>();
 
-
 			Corequisite = new List<ConditionProfile>();
 			Recommends = new List<ConditionProfile>();
 			Requires = new List<ConditionProfile>();
 
-			//ProcessProfile = new List<Input.ProcessProfile>();
 			CommonConditions = new List<string>();
 			CommonCosts = new List<string>();
 
@@ -90,8 +88,6 @@ namespace RA.Models.Input
 			IsPreparationFor = new List<ConditionProfile>();
 			IsRecommendedFor = new List<ConditionProfile>();
 			IsRequiredFor = new List<ConditionProfile>();
-			InLanguage = new List<string>();
-			AvailableAt = new List<Place>();
 			Renewal = new List<ConditionProfile>();
 
 			AdministrationProcess = new List<ProcessProfile>();
@@ -103,6 +99,7 @@ namespace RA.Models.Input
 			RevocationProcess = new List<ProcessProfile>();
 
 		}
+
 		/// <summary>
 		/// Helper property for use with blank nodes
 		/// This is a 'broad' type. CredentialType is still required.
@@ -163,19 +160,28 @@ namespace RA.Models.Input
         /// </summary>
         public List<OrganizationReference> OwnedBy { get; set; }
 
-		/// <summary>
-		/// The status type of this credential. 
-		/// Required
-		/// The default is Active. 
-		/// </summary>
-		public string CredentialStatusType { get; set; }
-		/// <summary>
-		/// Credential Identifier
-		/// format: 
-		/// ce-UUID (guid)
-		/// Required
-		/// </summary>
-		public string CTID { get; set; }
+        [JsonProperty( PropertyName = "ceterms:ownedBy" )]
+        public List<string> OwnedByList { get; set; } 
+
+
+        /// <summary>
+        /// The status type of this credential. 
+        /// Required
+        /// The default is Active. 
+        /// </summary>
+        public string CredentialStatusType { get; set; }
+
+        [JsonProperty( PropertyName = "ceterms:credentialStatusType" )]
+        public RA.Models.JsonV2.CredentialAlignmentObject CredentialStatusType2 { get; set; }
+
+
+        /// <summary>
+        /// Credential Identifier
+        /// format: 
+        /// ce-UUID (guid)
+        /// Required
+        /// </summary>
+        public string CTID { get; set; }
 
 		/// <summary>
 		/// Webpage that describes this entity.
@@ -240,10 +246,11 @@ namespace RA.Models.Input
 
         /// <summary>
         /// Indicates the stage or level of achievement in a progression of learning.
+		/// The Target can be a ProgressionLevel or a Concept. Typically just a CTID needs to be provided. 
+		/// If the Target is not in the registry, then both the ProgressionModel (framework) and ProgressLevel (targetNode) will be required.
         /// range: ceterms:CredentialAlignmentObject
         /// </summary>
-        [JsonProperty( PropertyName = "ceterms:atLevel" )]
-        public CredentialAlignmentObject AtLevel { get; set; }
+        public List<CredentialAlignmentObject> AtLevel { get; set; }
 
         /// <summary>
         /// Person or organization holding the rights in copyright to entities such as credentials, learning opportunities, assessments, competencies or concept schemes.
@@ -522,12 +529,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Supersedes { get; set; }
 
-		/// <summary>
-		/// VersionIdentifier
-		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
-		/// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
-		/// </summary>
-		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
+        /// <summary>
+        /// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+        /// </summary>
+        public string VersionCode { get; set; }
+
+        /// <summary>
+        /// VersionIdentifier
+        /// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
+        /// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
+        /// </summary>
+        public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
 
 		#endregion
 
@@ -572,16 +584,23 @@ namespace RA.Models.Input
 		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
 		/// </summary>
 		public List<FrameworkItem> OccupationType { get; set; }
-		/// <summary>
-		/// AlternativeOccupationType
-		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
-		/// Any occupations added using this property will be added to or appended to the OccupationType output.
-		/// </summary>
-		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+
+        [JsonProperty( PropertyName = "ceterms:occupationType" )]
+        public List<RA.Models.JsonV2.CredentialAlignmentObject> OccupationTypeList { get; set; }
+
+
+        /// <summary>
+        /// AlternativeOccupationType
+        /// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
+        /// Any occupations added using this property will be added to or appended to the OccupationType output.
+        /// </summary>
+        public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for AlternativeOccupationType
 		/// </summary>
 		public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
+
 		/// <summary>
 		/// List of valid O*Net codes. See:
 		/// https://www.onetonline.org/find/
@@ -604,10 +623,12 @@ namespace RA.Models.Input
 		/// Any industries added using this property will be added to or appended to the IndustryType output.
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for AlternativeIndustryType
 		/// </summary>
 		public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+
 		/// <summary>
 		/// List of valid NAICS codes. See:
 		/// https://www.naics.com/search/
@@ -627,19 +648,18 @@ namespace RA.Models.Input
 		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
 		/// </summary>
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for AlternativeInstructionalProgramType
 		/// </summary>
 		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
+
 		/// <summary>
 		/// List of valid Classification of Instructional Program codes. See:
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
 		#endregion
-		//
-		//Navy
-
 
 		#region Properties allowed only for degree types
 
@@ -648,26 +668,32 @@ namespace RA.Models.Input
 		/// TODO: enable more detail by using a blank node in ReferenceObject. The latter would be a CredentialAlignmentObject. The Id would be a Guid in DegreeConcentration. Alternately a fully formed blank node id (	  _:(GUID)	)
 		/// </summary>
 		public List<string> DegreeConcentration { get; set; }
+
 		/// <summary>
 		/// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
 		/// </summary>
 		public LanguageMapList DegreeConcentration_Map { get; set; } = new LanguageMapList();
+
 		/// <summary>
 		/// LanguageMapList for Primary field of study of a degree-seeking student.
 		/// </summary>
 		public List<string> DegreeMajor { get; set; }
+
 		/// <summary>
 		/// LanguageMapList for Primary field of study of a degree-seeking student.
 		/// </summary>
 		public LanguageMapList DegreeMajor_Map { get; set; } = new LanguageMapList();
+
 		/// <summary>
 		/// Optional, secondary field of study of a degree-seeking student.
 		/// </summary>
 		public List<string> DegreeMinor { get; set; }
+
 		/// <summary>
 		/// LanguageMapList for Optional, secondary field of study of a degree-seeking student.
 		/// </summary>
 		public LanguageMapList DegreeMinor_Map { get; set; } = new LanguageMapList();
+
 		#endregion
 
 		#region Properties allowed only for a Quality Assurance Credential
@@ -680,7 +706,6 @@ namespace RA.Models.Input
 		public List<string> HasETPLResource { get; set; } = new List<string>();
 
 		#endregion
-		//
 
 		#region Outcome data 
 		/// <summary>
@@ -699,6 +724,13 @@ namespace RA.Models.Input
         /// </summary>
         public List<string> UsesVerificationService { get; set; } = new List<string>();
 
+        /// <summary>
+        /// Category or classification of this resource.
+        /// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
+        /// URI to a concept(based on the ONet work activities example) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
+        /// ceterms:classification
+        /// </summary>
+        public List<string> Classification { get; set; } = new List<string>();
 
         #region -- Condition Profiles --
         /// <summary>
@@ -735,9 +767,8 @@ namespace RA.Models.Input
 		public List<ConditionProfile> Renewal { get; set; }
 		#endregion
 
-
 		#region -- Connections Profiles --
-		//Connection Profiles are Condition Profiles but typically only a subject of the Condition Profile properties are used. 
+		//Connection Profiles are Condition Profiles but typically only a subset of the Condition Profile properties are used. 
 		/// <summary>
 		/// Credential that has its time or cost reduced by another credential, assessment or learning opportunity.
 		/// ceterms:advancedStandingFrom
@@ -821,39 +852,15 @@ namespace RA.Models.Input
 		#endregion
 
 		/// <summary>
-		/// HasRating - Navy
-		/// Rating related to this resource.
-		/// URI to a Rating
-		/// </summary>
-		public List<string> HasRating { get; set; } = new List<string>();
-
-		/// <summary>
 		/// Action related to the credential
-		/// This may end up being a list of CTIDs?
-		/// PROPOSED - NOT VALID FOR PRODUCTION YET
+		/// list of CTIDs
 		/// </summary>
-		public List<CredentialingAction> RelatedAction { get; set; } = new List<CredentialingAction>();
-
-		#region OBSOLETE
+		public List<string> RelatedAction { get; set; }
 
 
-		#endregion
-		///// <summary>
-		///// List of CTIDs for a published pathway.
-		///// Blank nodes are not supported/relevent.
-		///// NOTE: the TargetPathway is an inverse property for a credential. That is, it will not be published with the credential, and is instead derived via a PathwayComponent
-		///// </summary>
-		//public List<string> TargetPathway { get; set; } = new List<string>();
-
-
-		#region Alignments - Not relevent for the Credential Registry Profile
-		// <summary>
-		// Item that covers all of the relevant concepts in the item being described as well as additional relevant concepts.
-		// ceterms:broadAlignment
-		// List of CTIDs. The referenced object must exist in the registry
-		// </summary>
-		//public List<string> BroadAlignment { get; set; } = new List<string>();
-		#endregion
+		// TargetPathway
+		// NOTE: the TargetPathway is an inverse property for a credential. That is, it will not be published with the credential, and is instead derived via a PathwayComponent
+		// 
 
 	}
 }

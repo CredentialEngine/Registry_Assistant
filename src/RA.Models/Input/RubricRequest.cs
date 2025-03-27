@@ -410,12 +410,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> TargetOccupation { get; set; } = new List<string>();
 
-		/// <summary>
-		/// VersionIdentifier
-		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
-		/// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
-		/// </summary>
-		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
+        /// <summary>
+        /// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+        /// </summary>
+        public string VersionCode { get; set; }
+
+        /// <summary>
+        /// VersionIdentifier
+        /// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
+        /// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
+        /// </summary>
+        public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
 
         #region -- Process Profiles --
         /// <summary>

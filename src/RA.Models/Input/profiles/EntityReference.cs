@@ -323,6 +323,9 @@ namespace RA.Models.Input
         public string CodedNotation { get; set; }
         //both
         public List<string> DeliveryType { get; set; } = new List<string>();
+        public string DeliveryTypeDescription { get; set; }
+        public LanguageMap DeliveryTypeDescription_LangMap { get; set; } = new LanguageMap();
+
         //condition profiles
         public List<ConditionProfile> Requires { get; set; } = new List<ConditionProfile>();
         public List<ConditionProfile> Corequisite { get; set; } = new List<ConditionProfile>();
@@ -359,6 +362,17 @@ namespace RA.Models.Input
         /// </summary>
         public LanguageMap LearningMethodDescription_Map { get; set; } = new LanguageMap();
         public List<string> LearningMethodType { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Delivery type for the learning opportunity for the credential.
+        /// </summary>
+        public List<string> LearningDeliveryType { get; set; } = new List<string>();
+        public string LearningDeliveryTypeDescription { get; set; }
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap LearningDeliveryTypeDescription_Map { get; set; } = new LanguageMap();
+
         //
         /// <summary>
         /// Organization(s) that offer this resource

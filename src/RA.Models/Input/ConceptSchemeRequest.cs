@@ -220,19 +220,24 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<OrganizationReference> RightsHolder { get; set; } = new List<OrganizationReference>();
 
-
 		/// <summary>
 		/// Original Source of concept scheme
 		/// xsd:anyURI
 		/// </summary>
 		public List<string> Source { get; set; }
 
-		/// <summary>
-		///  Indicates the entity that supersedes this entity.
-		///  Must exist.
-		///  xsd:anyURI
-		/// </summary>
-		public string SupersededBy { get; set; }
+        /// <summary>
+        /// Human-readable information resource other than a competency framework from which this competency was generated or derived by humans or machines.
+        /// URI
+        /// </summary>
+        public List<string> SourceDocumentation { get; set; }
+
+        /// <summary>
+        ///  Indicates the entity that supersedes this entity.
+        ///  Must exist.
+        ///  xsd:anyURI
+        /// </summary>
+        public string SupersededBy { get; set; }
 	}
 
 	/// <summary>
@@ -377,7 +382,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> Related { get; set; } = new List<string>();
 
-		public string SubjectWebpage { get; set; }
+        /// <summary>
+        /// Human-readable information resource other than a competency framework from which this competency was generated or derived by humans or machines.
+        /// URI
+        /// </summary>
+        public List<string> SourceDocumentation { get; set; }
+
+        public string SubjectWebpage { get; set; }
 		/// <summary>
 		/// Indicates the entity that supersedes this entity.
 		/// URL

@@ -174,6 +174,14 @@ namespace RA.Models.Input.profiles.QData
 		public LanguageMapList AlternateName_Map { get; set; }
 
         /// <summary>
+        /// Category or classification of this resource.
+        /// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
+        /// URI to a concept(based on the ONet work activities example) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
+        /// ceterms:classification
+        /// </summary>
+        public List<string> Classification { get; set; } = new List<string>();
+
+        /// <summary>
         /// Location or geographic area for a data set. 
         /// This will allow partial addresses. For example a state/region with a country
         /// </summary>

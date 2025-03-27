@@ -263,12 +263,18 @@ namespace RA.Models.Input
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public string NextVersion { get; set; }
-		/// <summary>
-		/// VersionIdentifier
-		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
-		/// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
-		/// </summary>
-		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
+
+        /// <summary>
+        /// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+        /// </summary>
+        public string VersionCode { get; set; }
+
+        /// <summary>
+        /// VersionIdentifier
+        /// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+        /// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
+        /// </summary>
+        public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
         #endregion
 
 

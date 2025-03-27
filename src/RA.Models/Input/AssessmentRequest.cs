@@ -201,8 +201,7 @@ namespace RA.Models.Input
         /// Indicates the stage or level of achievement in a progression of learning.
         /// range: ceterms:CredentialAlignmentObject
         /// </summary>
-        [JsonProperty( PropertyName = "ceterms:atLevel" )]
-        public CredentialAlignmentObject AtLevel { get; set; }
+        public List<CredentialAlignmentObject> AtLevel { get; set; }
 
         //=========== optional ================================
         /// <summary>
@@ -594,6 +593,15 @@ namespace RA.Models.Input
         /// scheduleTiming:Daytime scheduleTiming:Evening scheduleTiming:Weekdays scheduleTiming:Weekends
         /// </summary>
         public List<string> ScheduleTimingType { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Category or classification of this resource.
+        /// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
+        /// URI to a concept(based on the ONet work activities example) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
+        /// ceterms:classification
+        /// </summary>
+        public List<string> Classification { get; set; } = new List<string>();
+
         #region Conditions and connections
         //Connection Profiles are Condition Profiles but typically only a subject of the Condition Profile properties are used. 
         /// <summary>
@@ -757,9 +765,14 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> TargetLearningResource { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
-		/// </summary>
-		public List<IdentifierValue> VersionIdentifier { get; set; }
+        /// <summary>
+        /// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+        /// </summary>
+        public string VersionCode { get; set; }
+
+        /// <summary>
+        /// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+        /// </summary>
+        public List<IdentifierValue> VersionIdentifier { get; set; }
 	}
 }

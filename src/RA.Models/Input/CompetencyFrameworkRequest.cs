@@ -45,7 +45,7 @@ namespace RA.Models.Input
 		/// A unique URI for this framework. 
 		/// If not entered (RECOMMENDED), a credential registry URI will be generated using the CTID.
 		/// </summary>
-		public string CtdlId { get; set; }
+		public string CtdlId { get; set; } = string.Empty;
 
 
 		/// <summary>
@@ -145,7 +145,7 @@ namespace RA.Models.Input
 		/// Best practice is to use terms from the http://purl.org/ctdl/terms/AudienceLevel concept scheme.
 		/// List of URIs to concepts
 		/// </summary>
-		public List<string> educationLevelType { get; set; } = new List<string>();
+		public List<string> EducationLevelType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// List of the top competencies, those that are directly connected to the framework. Provide either a CTID for a competency that is include in the Competencies property, or the full URI formatted like the following:
@@ -153,27 +153,27 @@ namespace RA.Models.Input
 		/// List of URIs to competencies.
 		/// NOTE: Just provide the CTIDs, and the system will format the proper URI for the current environment.
 		/// </summary>
-		public List<string> hasTopChild { get; set; } = new List<string>();
+		public List<string> HasTopChild { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Identifier
 		/// An alternative URI by which this competency framework or competency is identified.
 		/// List of URIs 
 		/// </summary>
-		public List<string> identifier { get; set; } = new List<string>();
+		public List<string> Identifier { get; set; } = new List<string>();
 
 		/// <summary>
 		/// In Language
 		/// The primary language used in or by this competency framework or competency.The primary language used in or by this competency framework or competency.
 		/// This is the language the text is primarily written in, even if it makes use of other languages. For example, a competency for teaching spanish to english-speaking students would primarily be in english, because that is the language used to convey the material.
 		/// </summary>
-		public List<string> inLanguage { get; set; } = new List<string>();
+		public List<string> InLanguage { get; set; } = new List<string>();
 
 		/// <summary>
 		/// A legal document giving official permission to do something with this competency framework.
 		/// Value must be the URI to a license document (e.g., Creative Commons license or bespoke license).
 		/// </summary>
-		public string license { get; set; }
+		public string License { get; set; }
 
 		/// <summary>
 		/// The text string denoting the subject of the competency framework or competency as designated by the promulgating agency.
@@ -185,16 +185,16 @@ namespace RA.Models.Input
 		/// <summary>
 		/// The name or title of this competency framework.
 		/// </summary>
-		public string name { get; set; } 
+		public string Name { get; set; } 
 		/// <summary>
 		/// Language map for name
 		/// </summary>
-		public LanguageMap name_map { get; set; } = new LanguageMap();
+		public LanguageMap Name_map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// The publication status of the of this competency framework.
 		/// </summary>
-		public string publicationStatusType { get; set; }
+		public string PublicationStatusType { get; set; }
 
 		/// <summary>
 		/// An agent responsible for making this entity available.
@@ -203,16 +203,16 @@ namespace RA.Models.Input
 		/// Or provide a list of CTIDs and the Assistant API will format the proper URL for the environment.
 		/// Required
 		/// </summary>
-		public List<string> publisher { get; set; } = new List<string>();
+		public List<string> Publisher { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Name of an agent responsible for making this entity available.
 		/// </summary>
-		public List<string> publisherName { get; set; } = new List<string>();
+		public List<string> PublisherName { get; set; } = new List<string>();
 		/// <summary>
 		/// Language map for publisher name
 		/// </summary>
-		public LanguageMapList publisherName_map { get; set; } = new LanguageMapList();
+		public LanguageMapList PublisherName_map { get; set; } = new LanguageMapList();
 		//
 
 		/// <summary>
@@ -240,11 +240,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> source { get; set; } = new List<string>();
 
-		/// <summary>
-		/// A list of sub-units of this competency framework.
-		/// The table of contents is a "manifest", or a hierarchic, ordered, syntactic representation of the competencies that are part of this competency framework.
-		/// </summary>
-		public string tableOfContents { get; set; }
+        /// <summary>
+        /// Human-readable information resource other than a competency framework from which this competency was generated or derived by humans or machines.
+        /// List of URIs
+        /// </summary>
+        public List<string> SourceDocumentation { get; set; } = new List<string>();
+
+        /// <summary>
+        /// A list of sub-units of this competency framework.
+        /// The table of contents is a "manifest", or a hierarchic, ordered, syntactic representation of the competencies that are part of this competency framework.
+        /// </summary>
+        public string tableOfContents { get; set; }
 		public LanguageMap tableOfContents_map { get; set; } = new LanguageMap();
 
 		#region Occupations, Industries, and instructional programs
@@ -310,14 +316,19 @@ namespace RA.Models.Input
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
-		#endregion
+        #endregion
 
-		/// <summary>
-		/// VersionIdentifier
-		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
-		/// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
-		/// </summary>
-		public List<IdentifierValue> versionIdentifier { get; set; } = new List<IdentifierValue>();
+        /// <summary>
+        /// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+        /// </summary>
+        public string VersionCode { get; set; }
+
+        /// <summary>
+        /// VersionIdentifier
+        /// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+        /// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
+        /// </summary>
+        public List<IdentifierValue> versionIdentifier { get; set; } = new List<IdentifierValue>();
 
 		/// <summary>
 		/// Latest version of the credential.
@@ -379,85 +390,89 @@ namespace RA.Models.Input
 		/// List of URIs (CTIDs recommended) for a competency
 		/// ceasn:abilityEmbodied
 		/// </summary>
-		public List<string> abilityEmbodied { get; set; } = new List<string>();
+		public List<string> AbilityEmbodied { get; set; } = new List<string>();
+
 		/// <summary>
 		/// A competency framework or competency from which this competency framework or competency is aligned.
 		/// An alignment is an assertion of some degree of equivalency between the subject and the object of the assertion.
 		/// List of CTIDs for a competency framework or competency
 		/// </summary>
-		public List<string> alignFrom { get; set; } = new List<string>();
+		public List<string> AlignFrom { get; set; } = new List<string>();
 
 		/// <summary>
 		/// A competency framework or competency to which this competency framework or competency is aligned.
 		/// An alignment is an assertion of some degree of equivalency between the subject and the object of the assertion.
 		/// List of URIs (CTIDs recommended) for a competency framework or competency
 		/// </summary>
-		public List<string> alignTo { get; set; } = new List<string>();
+		public List<string> AlignTo { get; set; } = new List<string>();
 
         /// <summary>
         /// Alternative Coded Notation
         /// An alphanumeric notation or ID code identifying this competency in common use among end-users.
         /// ceasn:altCodedNotation
         /// </summary>
-        public List<string> altCodedNotation { get; set; } = new List<string>();
+        public List<string> AltCodedNotation { get; set; } = new List<string>();
 
 		/// <summary>
 		/// A person or organization chiefly responsible for the intellectual or artistic content of this competency.
 		/// List of Names
 		/// </summary>
-		public string author { get; set; } 
+		public string Author { get; set; } 
 
 		/// <summary>
 		/// Broad Alignment
 		/// The referenced competency covers all of the relevant concepts in this competency as well as relevant concepts not found in this competency.
 		/// List of URIs (CTIDs recommended) for a competency framework or competency
 		/// </summary>
-		public List<string> broadAlignment { get; set; } = new List<string>();
+		public List<string> BroadAlignment { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Coded Notation
 		/// An alphanumeric notation or ID code as defined by the promulgating body to identify this competency.
 		/// </summary>
-		public string codedNotation { get; set; }
+		public string CodedNotation { get; set; }
 
 		/// <summary>
 		/// Comment
 		/// Supplemental text provided by the promulgating body that clarifies the nature, scope or use of this competency.
 		/// </summary>
-		public List<string> comment { get; set; } = new List<string>();
+		public List<string> Comment { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for comment
 		/// </summary>
-		public LanguageMapList comment_map { get; set; } = new LanguageMapList();
+		public LanguageMapList Comment_map { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Competency Category
 		/// The textual label identifying the category of the competency as designated by the promulgating body.
 		/// </summary>
-		public string competencyCategory { get; set; }
+		public string CompetencyCategory { get; set; }
+
 		/// <summary>
 		/// Language map for competencyCategory
 		/// </summary>
-		public LanguageMap competencyCategory_map { get; set; } = new LanguageMap();
+		public LanguageMap CompetencyCategory_map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// The text of the competency.
 		/// This property should be used to provide the actual text of the competency statement. To provide information about the competency other than the text itself, use the comment property.
 		/// </summary>
-		public string competencyText { get; set; }
+		public string CompetencyText { get; set; }
+
 		/// <summary>
 		/// Language map for competencyText
 		/// </summary>
-		public LanguageMap competencyText_map { get; set; } = new LanguageMap();
+		public LanguageMap CompetencyText_map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Short identifying phrase or name applied to a competency by the creator of the competency framework.
 		/// </summary>
-		public string competencyLabel { get; set; }
+		public string CompetencyLabel { get; set; }
 		/// <summary>
 		/// Language map for competencyLabel
 		/// </summary>
-		public LanguageMap competencyLabel_map { get; set; } = new LanguageMap();
+		public LanguageMap CompetencyLabel_map { get; set; } = new LanguageMap();
 
 
 		/// <summary>
@@ -465,31 +480,32 @@ namespace RA.Models.Input
 		/// The expected performance level of a learner or professional as defined by a competency.
 		/// ceasn:ProficiencyScale NOT IMPLEMENTED Expecting Concept
 		/// </summary>
-		public List<string> complexityLevel { get; set; } = new List<string>();
+		public List<string> ComplexityLevel { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Comprised Of
 		/// This competency includes, comprehends or encompasses, in whole or in part, the meaning, nature or importance of the referenced competency.
 		/// List of URIs (CTIDs recommended) for a competency framework or competency
 		/// </summary>
-		public List<string> comprisedOf { get; set; } = new List<string>();
+		public List<string> ComprisedOf { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Concept Keyword
 		/// A word or phrase used by the promulgating agency to refine and differentiate individual competencies contextually.
 		/// </summary>
-		public List<string> conceptKeyword { get; set; } = new List<string>();
+		public List<string> ConceptKeyword { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for ConceptKeyword
 		/// </summary>
-		public LanguageMapList conceptKeyword_maplist { get; set; } = new LanguageMapList();
+		public LanguageMapList ConceptKeyword_maplist { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Concept Term
 		/// A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual competencies contextually.
 		/// List of URIs (CTIDs recommended) to a concept
 		/// </summary>
-		public List<string> conceptTerm { get; set; } = new List<string>();
+		public List<string> ConceptTerm { get; set; } = new List<string>();
 
         /// <summary>
         /// An entity primarily responsible for making this competency framework or competency.
@@ -497,26 +513,26 @@ namespace RA.Models.Input
         /// List of URIs (CTIDs recommended) to the creator
         /// ceasn:creator
         /// </summary>
-        public List<string> creator { get; set; } = new List<string>();
+        public List<string> Creator { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Cross-Subject Reference
 		/// A relationship between this competency and a competency in a separate competency framework.
 		/// List of URIs (CTIDs recommended) to competencies
 		/// </summary>
-		public List<string> crossSubjectReference { get; set; } = new List<string>();
+		public List<string> CrossSubjectReference { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Date of creation of this competency framework or competency.
 		/// xsd:date
 		/// </summary>
-		public string dateCreated { get; set; }
+		public string DateCreated { get; set; }
 
 		/// <summary>
 		/// The date on which this framework or competency was most recently modified in some way.
 		/// xsd:dateTime
 		/// </summary>
-		public string dateModified { get; set; }
+		public string DateModified { get; set; }
 
         /// <summary>
         /// Derived From
@@ -524,7 +540,7 @@ namespace RA.Models.Input
         /// List of URIs (CTIDs recommended) to a competency
         /// 2023-03-22 The datatype was changed to a list. The API will still handle a single string.
         /// </summary>
-        public List<string> derivedFrom { get; set; }
+        public List<string> DerivedFrom { get; set; }
 
 		/// <summary>
 		/// Education Level Type
@@ -532,14 +548,14 @@ namespace RA.Models.Input
 		/// Best practice is to use terms from the http://purl.org/ctdl/terms/AudienceLevel concept scheme.
 		/// List of URIs (CTIDs recommended) to concepts
 		/// </summary>
-		public List<string> educationLevelType { get; set; } = new List<string>();
+		public List<string> EducationLevelType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Exact Alignment
 		/// The relevant concepts in this competency and the referenced competency are coextensive.
 		/// List of URIs (CTIDs recommended) for a competency
 		/// </summary>
-		public List<string> exactAlignment { get; set; } = new List<string>();
+		public List<string> ExactAlignment { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Has Child
@@ -549,142 +565,143 @@ namespace RA.Models.Input
 		/// List of URIs (CTIDs recommended) for a competency
 		/// NOTE: or just provide the CTIDs, and the system will format the proper URI for the current environment.
 		/// </summary>
-		public List<string> hasChild { get; set; } = new List<string>();
+		public List<string> HasChild { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Concept in a ProgressionModel concept scheme
 		/// URI
 		/// </summary>
-		public string hasProgressionLevel { get; set; }
+		public string HasProgressionLevel { get; set; }
 
 		/// <summary>
 		/// Identifier
 		/// An alternative URI by which this competency framework or competency is identified.
 		/// List of URIs 
 		/// </summary>
-		public List<string> identifier { get; set; } = new List<string>();
+		public List<string> Identifier { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Competency deduced or arrive at by reasoning on the competency being described.
 		/// List of URIs (CTIDs recommended) to competencies
 		/// </summary>
-		public List<string> inferredCompetency { get; set; } = new List<string>();
+		public List<string> InferredCompetency { get; set; } = new List<string>();
 
-		//
 		/// <summary>
 		/// Is Child Of
 		/// The referenced competency is higher in some arbitrary hierarchy than this competency.
 		/// List of URIs (CTIDs recommended) to competencies.
 		/// </summary>
-		public List<string> isChildOf { get; set; } = new List<string>();
+		public List<string> IsChildOf { get; set; } = new List<string>();
 		/// <summary>
 		/// Indicates that this competency is at the top of the framework.
 		/// </summary>
-		public string isTopChildOf { get; set; }
+		public string IsTopChildOf { get; set; }
 
 		/// <summary>
 		/// Competency framework that this competency is a part of.
 		/// </summary>
-		public string isPartOf { get; set; }
+		public string IsPartOf { get; set; }
 
         /// <summary>
         /// Collection to which this resource belongs.
 		/// Only used where part of a Collection
         /// </summary>
-        public List<string> isMemberOf { get; set; } = new List<string>();
+        public List<string> IsMemberOf { get; set; } = new List<string>();
 
         /// <summary>
         /// A related competency of which this competency is a version, edition, or adaptation.
         /// List of URIs (CTIDs recommended) for a competency
         /// </summary>
-        public string isVersionOf { get; set; }
+        public string IsVersionOf { get; set; }
 
-        public List<string> keyword { get; set; } = new List<string>();
+        public List<string> Keyword { get; set; } = new List<string>();
+
         /// <summary>
         /// Language map list for keyword
         /// </summary>
-        public LanguageMapList keyword_map { get; set; } = new LanguageMapList();
+        public LanguageMapList Keyword_map { get; set; } = new LanguageMapList();
 
         /// <summary>
 		/// A legal document giving official permission to do something with this competency framework.
 		/// Value must be the URI to a license document (e.g., Creative Commons license or bespoke license).
         /// </summary>
-        public string license { get; set; }
+        public string License { get; set; }
 
         /// <summary>
         /// An alphanumeric string indicating the relative position of a resource in an ordered list of resources such as "A", "B", or "a", "b", or "I", "II", or "1", "2".
         /// </summary>
-        public string listID { get; set; }
+        public string ListID { get; set; }
 
 		/// <summary>
 		/// The text string denoting the subject of the competency framework or competency as designated by the promulgating agency.
 		/// </summary>
-		public List<string> localSubject { get; set; } = new List<string>();
+		public List<string> LocalSubject { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for local subject
 		/// </summary>
-		public LanguageMapList localSubject_maplist { get; set; } = new LanguageMapList();
+		public LanguageMapList LocalSubject_maplist { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Major overlap of relevant concepts between this competency and the referenced competency.
 		/// List of URIs (CTIDs recommended) for a competency
 		/// </summary>
-		public List<string> majorAlignment { get; set; } = new List<string>();
+		public List<string> MajorAlignment { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Minor overlap of relevant concepts between this competency and the referenced competency.
 		/// List of URIs (CTIDs recommended) for a competency
 		/// </summary>
-		public List<string> minorAlignment { get; set; } = new List<string>();
+		public List<string> MinorAlignment { get; set; } = new List<string>();
 
 		/// <summary>
 		/// This competency covers all of the relevant concepts in the referenced competency as well as relevant concepts not found in the referenced competency.
 		/// List of URIs (CTIDs recommended) for a competency
 		/// </summary>
-		public List<string> narrowAlignment { get; set; } = new List<string>();
+		public List<string> NarrowAlignment { get; set; } = new List<string>();
 
 		/// <summary>
 		/// The referenced resource is a prerequisite to this resource.
 		/// List of URIs (CTIDs recommended) for a competency
 		/// </summary>
-		public List<string> prerequisiteAlignment { get; set; } = new List<string>();
+		public List<string> PrerequisiteAlignment { get; set; } = new List<string>();
 
 
 		/// <summary>
 		/// Indicates whether correlators should or should not assign the competency during correlation.
 		/// </summary>
-		public bool? shouldIndex { get; set; }
+		public bool? ShouldIndex { get; set; }
 
 		/// <summary>
 		/// Body of information embodied either directly or indirectly in this resource.
 		/// List of URIs (CTIDs recommended) for a competency
 		/// ceasn:knowledgeEmbodied
 		/// </summary>
-		public List<string> knowledgeEmbodied { get; set; } = new List<string>();
+		public List<string> KnowledgeEmbodied { get; set; } = new List<string>();
 
 		/// <summary>
 		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
 		/// List of URIs (CTIDs recommended) for a competency
 		/// ceasn:skillEmbodied
 		/// </summary>
-		public List<string> skillEmbodied { get; set; } = new List<string>();
+		public List<string> SkillEmbodied { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Specifically defined piece of work embodied either directly or indirectly in this resource.
 		/// ceasn:taskEmbodied
 		/// </summary>
-		public List<string> taskEmbodied { get; set; } = new List<string>();
+		public List<string> TaskEmbodied { get; set; } = new List<string>();
 
 		/// <summary>
 		/// An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
 		/// </summary>
-		public string weight { get; set; }
+		public string Weight { get; set; }
 
 		/// <summary>
 		/// Task related to this resource.
 		/// List of URIs (CTIDs recommended) for a Task
 		/// </summary>
-		public List<string> hasTask { get; set; } = new List<string>();
+		public List<string> HasTask { get; set; } = new List<string>();
 
 		#region Occupations, Industries, and instructional programs
 		//=====================================================================
@@ -767,131 +784,136 @@ namespace RA.Models.Input
 		/// <summary>
 		/// The publication status of the of this resource.
 		/// </summary>
-		public string publicationStatusType { get; set; }
+		public string PublicationStatusType { get; set; }
 
 		/// <summary>
 		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; 
 		/// List of URIs (CTIDs recommended) for Concept
 		/// </summary>
-		public List<string> environmentalHazardType { get; set; } = new List<string>();
+		public List<string> EnvironmentalHazardType { get; set; } = new List<string>();
 
         /// <summary>
         /// The primary language used in or by this resource.
         /// Collections only
         /// </summary>
-        public List<string> inLanguage { get; set; } = new List<string>();	
+        public List<string> InLanguage { get; set; } = new List<string>();	
 
 		/// <summary>
 		/// Type of required or expected performance level for a resource; select from an existing enumeration of such types.
 		/// List of URIs (CTIDs recommended) for Concept
 		/// </summary>
-		public List<string> performanceLevelType { get; set; } = new List<string>();
+		public List<string> PerformanceLevelType { get; set; } = new List<string>();
 
         /// <summary>
         /// Type of physical activity required or expected in performance; select from an existing enumeration of such types.
         /// List of URIs (CTIDs recommended) for Concept
         /// </summary>
-        public List<string> physicalCapabilityType { get; set; } = new List<string>();
+        public List<string> PhysicalCapabilityType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// This resource provides transfer value for the referenced Transfer Value Profile.
 		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
 		/// </summary>
-		public List<string> providesTransferValueFor { get; set; } = new List<string>();
+		public List<string> ProvidesTransferValueFor { get; set; } = new List<string>();
 
 		/// <summary>
 		/// This resource receives transfer value from the referenced Transfer Value Profile.
 		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
 		/// </summary>
-		public List<string> receivesTransferValueFrom { get; set; } = new List<string>();
+		public List<string> ReceivesTransferValueFrom { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Type of required or expected sensory capability; select from an existing enumeration of such types.
 		/// List of URIs (CTIDs recommended) for Concept
 		/// </summary>
-		public List<string> sensoryCapabilityType { get; set; } = new List<string>();
+		public List<string> SensoryCapabilityType { get; set; } = new List<string>();
 
         /// <summary>
         /// Human-readable information resource other than a competency framework from which this competency was generated or derived by humans or machines.
         /// List of URIs
         /// </summary>
-        public List<string> sourceDocumentation { get; set; } = new List<string>();
+        public List<string> SourceDocumentation { get; set; } = new List<string>();
 
         /// <summary>
         /// Aspects of the referenced Competency Framework provide some justification that the resource being described is useful.
         /// List of URIs (CTIDs recommended) for a competency framework
         /// </summary>
-        public List<string> substantiatingCompetencyFramework { get; set; } = new List<string>();
+        public List<string> SubstantiatingCompetencyFramework { get; set; } = new List<string>();
 
         /// <summary>
         /// Aspects of the referenced Credential provide some justification that the resource being described is useful.
         /// List of URIs (CTIDs recommended) for a Credential
         /// </summary>
-        public List<string> substantiatingCredential { get; set; } = new List<string>();
+        public List<string> SubstantiatingCredential { get; set; } = new List<string>();
 
         /// <summary>
         /// Aspects of the referenced Job provide some justification that the resource being described is useful.
         /// </summary>
-        public List<string> substantiatingJob { get; set; } = new List<string>();
+        public List<string> SubstantiatingJob { get; set; } = new List<string>();
 
         /// <summary>
         /// Aspects of the referenced Occupation provide some justification that the resource being described is useful.
         /// List of URIs (CTIDs recommended) for an Occupation
         /// </summary>
-        public List<string> substantiatingOccupation { get; set; } = new List<string>();
+        public List<string> SubstantiatingOccupation { get; set; } = new List<string>();
 
         /// <summary>
         /// Aspects of the referenced Organization provide some justification that the resource being described is useful.
         /// List of URIs (CTIDs recommended) for an Organization
         /// </summary>
-        public List<string> substantiatingOrganization { get; set; } = new List<string>();
+        public List<string> SubstantiatingOrganization { get; set; } = new List<string>();
 
         /// <summary>
         /// Aspects of the referenced resource provide some justification that the resource being described is useful.
         /// List of URIs (CTIDs recommended) for a
         /// </summary>
-        public List<string> substantiatingResource { get; set; } = new List<string>();
+        public List<string> SubstantiatingResource { get; set; } = new List<string>();
 
         /// <summary>
         /// Referenced Task attests to some level of achievement/mastery of the competency being described.
         /// List of URIs (CTIDs recommended) for a Task
         /// </summary>
-        public List<string> substantiatingTask { get; set; } = new List<string>();
+        public List<string> SubstantiatingTask { get; set; } = new List<string>();
 
         /// <summary>
         /// Referenced Workrole attests to some level of achievement/mastery of the competency being described.
         /// List of URIs (CTIDs recommended) for a Work role
         /// </summary>
-        public List<string> substantiatingWorkrole { get; set; } = new List<string>();
+        public List<string> SubstantiatingWorkrole { get; set; } = new List<string>();
 
         /// <summary>
         /// Level of workforce demand for the resource.
         /// List of URIs (CTIDs recommended) for a WorkforceDemandAction
         /// </summary>
-        public List<string> hasWorkforceDemand { get; set; } = new List<string>();
+        public List<string> HasWorkforceDemand { get; set; } = new List<string>();
 
-		/// <summary>
-		/// VersionIdentifier
-		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
-		/// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
-		/// </summary>
-		public List<IdentifierValue> versionIdentifier { get; set; } = new List<IdentifierValue>();
+        /// <summary>
+        /// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+        /// </summary>
+        public string VersionCode { get; set; }
+
+        /// <summary>
+        /// VersionIdentifier
+        /// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+        /// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
+        /// </summary>
+        public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
 
 		/// <summary>
 		/// Latest version of the credential.
 		/// full URL OR CTID (recommended)
 		/// </summary>
-		public string latestVersion { get; set; }
+		public string LatestVersion { get; set; }
 		/// <summary>
 		/// Version of the resource that immediately precedes this version.
 		/// full URL OR CTID (recommended)
 		/// </summary>
-		public string previousVersion { get; set; }
+		public string PreviousVersion { get; set; }
 		/// <summary>
 		/// Version of the resource that immediately follows this version.
 		/// full URL OR CTID (recommended)
 		/// </summary>
-		public string nextVersion { get; set; }
+		public string NextVersion { get; set; }
 
         #region -- Process Profiles --
 

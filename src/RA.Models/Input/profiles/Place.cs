@@ -82,7 +82,6 @@ namespace RA.Models.Input
 		/// Postal Code
 		/// </summary>
 		public string PostalCode { get; set; }
-		//public LanguageMap PostalCode_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Country

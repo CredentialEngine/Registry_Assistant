@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -54,8 +52,6 @@ namespace RA.Models.Input
 
 	/// <summary>
 	/// Progression Model
-	/// Currently identical to a ConceptScheme
-	/// 22-09-27 not anymore
 	/// </summary>
 	public class ProgressionModel
     {
@@ -68,10 +64,11 @@ namespace RA.Models.Input
             Type = "ProgressionModel";
             ConceptTerm = null;
         }
+
 		/// <summary>
 		/// Helper property for use with blank nodes
 		/// </summary>
-		public string Type { get; set; } = "ProgressionModel";
+		public string Type { get; set; }
 
 		/// <summary>
 		/// CTID - identifier for Progression Model. 
@@ -79,22 +76,70 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CTID { get; set; }
 
-		/// <summary>
-		/// Concept Keyword
-		/// A word or phrase used by the promulgating agency to refine and differentiate individual resources contextually.
-		/// </summary>
-		public List<string> ConceptKeyword { get; set; } = new List<string>();
+        /// <summary>
+        /// Name of the Progression Model
+        /// REQUIRED
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Name_LangMap { get; set; } = new LanguageMap();
+
+        /// <summary>
+        /// Progression Model description
+        /// REQUIRED and must be a minimum of 15 characters.
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Alternately can provide a language map
+        /// </summary>
+        public LanguageMap Description_LangMap { get; set; } = new LanguageMap();
+
+        /// <summary>
+        /// Top Concepts
+        /// Concept of the scheme at the top of a hierarchy of narrower concepts.
+        /// List of CTIDs (recommended) or actual registry URIs
+        /// REQUIRED
+        /// </summary>
+        public List<string> HasTopConcept { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Language. 
+        /// Required unless defaultLanguage is provided
+        /// </summary>
+        public List<string> InLanguage { get; set; } = new List<string>();
+
+        /// <summary>
+        /// An agent responsible for making this resource available.
+        /// This was originally defined as a single, and continuing to match CaSS.
+        ///  REQUIRED
+        /// </summary>
+        public List<OrganizationReference> Publisher { get; set; } = new List<OrganizationReference>();
+
+        /// <summary>
+        /// ChangeNotes via LanguageMapList
+        /// </summary>
+        public LanguageMapList ChangeNote_LangMap { get; set; } = new LanguageMapList();
+
+        /// <summary>
+        /// Concept Keyword
+        /// A word or phrase used by the promulgating agency to refine and differentiate individual resources contextually.
+        /// </summary>
+        public List<string> ConceptKeyword { get; set; } = new List<string>();
 		/// <summary>
 		/// Concept Keywords via LanguageMapList
 		/// </summary>
-		public LanguageMapList ConceptKeyword_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList ConceptKeyword_LangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Concept Term
 		/// A term drawn from a controlled vocabulary used by the promulgating agency to refine and differentiate individual resources contextually.
 		/// skos:Concept
 		/// </summary>
-		public List<string> ConceptTerm { get; set; } = new List<string>();
+		public List<string> ConceptTerm { get; set; } 
 
 		/// <summary>
 		/// Creator
@@ -123,45 +168,10 @@ namespace RA.Models.Input
 		public string DateModified { get; set; }
 
 		/// <summary>
-		/// Progression Model description
-		/// REQUIRED and must be a minimum of 15 characters.
-		/// </summary>
-		public string Description { get; set; }
-
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
-
-		/// <summary>
-		/// Top Concepts
-		/// Concept of the scheme at the top of a hierarchy of narrower concepts.
-		/// List of CTIDs (recommended) or actual registry URIs
-		/// REQUIRED
-		/// </summary>
-		public List<string> HasTopConcept { get; set; } = new List<string>();
-
-		/// <summary>
-		/// Language. Required unless defaultLanguage is provided
-		/// </summary>
-		public List<string> InLanguage { get; set; } = new List<string>();
-
-		/// <summary>
 		/// A legal document giving official permission to do something with this resource.
 		/// xsd:anyURI
 		/// </summary>
 		public string License { get; set; }
-
-		/// <summary>
-		/// Name of the Progression Model - required
-		/// REQUIRED
-		/// </summary>
-		public string Name { get; set; }
-
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// The publication status of the of this resource.
@@ -173,20 +183,14 @@ namespace RA.Models.Input
 		/// Name of an agent responsible for making this resource available.
 		/// </summary>
 		public List<string> PublisherName { get; set; } = new List<string>();
-		public LanguageMapList PublisherName_Map { get; set; } = new LanguageMapList();
-
-		/// <summary>
-		/// An agent responsible for making this resource available.
-		/// This was originally defined as a single, and continuing to match CaSS.
-		/// </summary>
-		public List<OrganizationReference> Publisher { get; set; } = new List<OrganizationReference>();
+		public LanguageMapList PublisherName_LangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Information about rights held in and over this resource.
 		/// rdf:langString
 		/// </summary>
 		public string Rights { get; set; }
-		public LanguageMap Rights_Map { get; set; } = new LanguageMap();
+		public LanguageMap Rights_LangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		///  An agent owning or managing rights over this resource.
@@ -199,20 +203,14 @@ namespace RA.Models.Input
 		/// xsd:anyURI
 		/// </summary>
 		public List<string> Source { get; set; } = new List<string>();
-		
 
 	}
-
 
 	/// <summary>
 	/// ProgressionLevel currently the same as the Concept class
 	/// </summary>
 	public class ProgressionLevel : BasePrimaryResource
     {
-		/*
-
-skos:topConceptOf
-		*/
 
 		/// <summary>
 		/// CTID - identifier for concept. 
@@ -221,16 +219,16 @@ skos:topConceptOf
 		/// </summary>
 		public string CTID { get; set; }
 
-		/// <summary>
-		/// Concept 
-		/// Required
-		/// </summary>
-		public string PrefLabel { get; set; }
+        /// <summary>
+        /// PrefLabel 
+        /// Required
+        /// </summary>
+        public string PrefLabel { get; set; }
 
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap PrefLabel_Map { get; set; } = new LanguageMap();
+		public LanguageMap PrefLabel_LangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Progression Model to which this Progression Level belongs.
@@ -243,22 +241,27 @@ skos:topConceptOf
 		/// </summary>
 		public string Broader { get; set; }
 
-
-		/// <summary>
-		/// Supplies a complete explanation of the intended meaning of a concept.
-		/// </summary>
-		public string Definition { get; set; }
+        /// <summary>
+        /// Supplies a complete explanation of the intended meaning of a concept.
+        /// </summary>
+        public string Definition { get; set; }
 
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Definition_Map { get; set; } = new LanguageMap();
+		public LanguageMap Definition_LangMap { get; set; } = new LanguageMap();
 
-		/// <summary>
-		/// Concept that is narrower in some way than this concept.
-		/// List of Concept URLs(CTIDs)
-		/// </summary>
-		public List<string> Narrower { get; set; } = new List<string>();
+        /// <summary>
+        /// Description of a specific aspect or characteristic of this resource.
+        /// List of Competencies(CTIDs)
+        /// </summary>
+        public List<string> FacetedDescription { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Concept that is narrower in some way than this concept.
+        /// List of Concept URLs(CTIDs)
+        /// </summary>
+        public List<string> Narrower { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Alphanumeric notation or ID code as defined by the promulgating body to identify this resource.
@@ -270,7 +273,9 @@ skos:topConceptOf
 		/// rdf:langString
 		/// </summary>
 		public List<string> Note { get; set; } = new List<string>();
-		public LanguageMapList Note_Map { get; set; } = new LanguageMapList();
+
+        [JsonProperty( PropertyName = "skos:note" )]
+        public LanguageMapList Note_LangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Progression Level that logically comes after this level.
