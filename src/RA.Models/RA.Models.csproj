@@ -63,6 +63,7 @@
     <Compile Include="BusObj\ActivityLog.cs" />
     <Compile Include="BusObj\ConceptScheme.cs" />
     <Compile Include="BusObj\TransferOwner.cs" />
+    <Compile Include="Input\AlignmentMapRequest.cs" />
     <Compile Include="Input\AssessmentRequest.cs" />
     <Compile Include="Input\BaseRequest.cs" />
     <Compile Include="Input\BaseRequestHelper.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Input\profiles\WorkRole.cs" />
     <Compile Include="Input\ProgressionModelRequest.cs" />
     <Compile Include="Input\PurgeRequest.cs" />
+    <Compile Include="Input\QualificationsFrameworkRequest.cs" />
     <Compile Include="Input\RubricRequest.cs" />
     <Compile Include="Input\ScheduledOfferingRequest.cs" />
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />
