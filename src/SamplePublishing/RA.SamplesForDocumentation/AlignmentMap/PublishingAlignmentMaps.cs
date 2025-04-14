@@ -5,10 +5,10 @@ using RA.Models.Input;
 using System;
 using System.Collections.Generic;
 
-using APIRequest = RA.Models.Input.QualificationsFrameworkRequest;
-using APIRequestResource = RA.Models.Input.QualificationsFramework;
+using APIRequest = RA.Models.Input.AlignmentMapRequest;
+using APIRequestResource = RA.Models.Input.AlignmentMap;
 
-namespace RA.SamplesForDocumentation.QualificationsFrameworks
+namespace RA.SamplesForDocumentation.AlignmentMaps
 {
     public class PublishingAlignmentMaps
     {
@@ -33,11 +33,11 @@ namespace RA.SamplesForDocumentation.QualificationsFrameworks
             //Assign a CTID for the entity being published and keep track of it
             var myCTID = "ce-95517789-e925-4f40-ae32-8cc3007ada94";
 
-            //Populate the Qualifications Framework object
+            //Populate the Alignment Map object
             var myData = new APIRequestResource()
             {
-                Name = "My Qualifications Framework Name",
-                Description = "This is some text that describes my Qualifications Framework.",
+                Name = "My Alignment Map Name",
+                Description = "This is some text that describes my Alignment Map.",
                 CTID = myCTID,
                 SubjectWebpage = "https://example.org/?t=QFramework",
 
@@ -80,14 +80,6 @@ namespace RA.SamplesForDocumentation.QualificationsFrameworks
             myData.DateValidFrom = "2020-01-01"; ;
             myData.DateValidUntil = "2030-01-01"; ;
 
-            // Concept scheme used characterize different aspects (facets) of descriptors of nodes in a framework or similar resource.
-            myData.HasFacetScheme = new List<string>() { "ce-cc12d805-b982-4452-9534-1fd61aa584e1" };
-
-            // Terms and definitions applicable to the resource.
-            myData.HasGlossary = new List<string>() { "ce-ec963362-8cd5-40bf-89ac-710cd8dcb450", "ce-2e3d957c-dd69-4ba5-8cb7-7bdecafa5085" };
-
-            // Reference to a progression model used.
-            myData.HasProgressionModel = "ce-77f5b777-e0ce-4f9b-9e36-c821ce09b089";
 
             myData.Identifier.Add( new IdentifierValue()
             {
@@ -120,9 +112,6 @@ namespace RA.SamplesForDocumentation.QualificationsFrameworks
             myData.SourceDocumentation = new List<string>() { "https://example.org/SourceDocumentation" };
             myData.Subject = new List<string>() { "Credentials", "Qualifications" };
 
-            // A CreativeWork or Event about this Thing.
-            myData.SubjectOf = new List<string>() { "https://example.org/SubjectOf" };
-
             myData.VersionIdentifier.Add( new IdentifierValue()
             {
                 IdentifierTypeName = "MyVersion",
@@ -130,10 +119,10 @@ namespace RA.SamplesForDocumentation.QualificationsFrameworks
             } );
             myData.VersionCode = "abc:123";
 
-            //This holds the Qualifications Framework and the identifier (CTID) for the owning organization
+            //This holds the Alignment Map and the identifier (CTID) for the owning organization
             var myRequest = new APIRequest()
             {
-                QualificationsFramework = myData,
+                AlignmentMap = myData,
                 DefaultLanguage = "en-US",
                 PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
             };
@@ -143,10 +132,10 @@ namespace RA.SamplesForDocumentation.QualificationsFrameworks
             //call the Assistant API
             SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
             {
-                EndpointType = "QualificationsFramework",
+                EndpointType = "AlignmentMap",
                 RequestType = requestType,
                 OrganizationApiKey = apiKey,
-                CTID = myRequest.QualificationsFramework.CTID.ToLower(),   //added here for logging
+                CTID = myRequest.AlignmentMap.CTID.ToLower(),   //added here for logging
                 Identifier = "testing",     //useful for logging, might use the ctid
                 InputPayload = payload
             };

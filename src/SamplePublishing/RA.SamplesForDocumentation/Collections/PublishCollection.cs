@@ -322,9 +322,9 @@ namespace RA.SamplesForDocumentation.Collections
 		{
 			Competency output = new Competency()
 			{
-				competencyText_map = new LanguageMap( competency ),
+                CompetencyText_map = new LanguageMap( competency ),
 				CTID = "ce-" + Guid.NewGuid().ToString().ToLower(),
-				isPartOf = frameworkCTID
+				IsPartOf = frameworkCTID
 			};
 			//add keywords
 			//output.conceptKeyword_maplist = new LanguageMapList( new List<string>() { "concept 1", "concept 2", "concept 3" } );

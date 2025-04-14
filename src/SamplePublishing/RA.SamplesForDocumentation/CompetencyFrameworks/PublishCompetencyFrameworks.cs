@@ -31,11 +31,11 @@ namespace RA.SamplesForDocumentation
 			//A simple CompetencyFramework object - see github for full class definition
 			var myData = new CompetencyFramework()
 			{
-				name = "My Competency Framework Name",
+				Name = "My Competency Framework Name",
 				description = "This is some text that describes my Competency Framework.",
 				CTID = myCTID,
-				publicationStatusType="Published",
-				publisher = new List<string>() { organizationIdentifierFromAccountsSite }
+				PublicationStatusType="Published",
+				Publisher = new List<string>() { organizationIdentifierFromAccountsSite }
 			};
 
 			//This holds the data and the identifier (CTID) for the owning organization
@@ -76,9 +76,9 @@ namespace RA.SamplesForDocumentation
 		{
 			Competency output = new Competency()
 			{
-				competencyText_map = new LanguageMap( competency ),
+                CompetencyText_map = new LanguageMap( competency ),
 				CTID = "ce-" + Guid.NewGuid().ToString().ToLower(),
-				isPartOf = frameworkCTID
+				IsPartOf = frameworkCTID
 			};
 			//add keywords
 			//output.conceptKeyword_maplist = new LanguageMapList( new List<string>() { "concept 1", "concept 2", "concept 3" } );

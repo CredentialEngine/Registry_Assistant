@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlignmentMap\PublishingAlignmentMaps.cs" />
     <Compile Include="Assessments\PublishAssessment.cs" />
     <Compile Include="Assessments\SampleAssessmentPublish.cs" />
     <Compile Include="Collections\PublishCollection.cs" />
