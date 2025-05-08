@@ -10,7 +10,7 @@ using APIRequestResource = RA.Models.Input.QualificationsFramework;
 
 namespace RA.SamplesForDocumentation.QualificationsFrameworks
 {
-    public class PublishingAlignmentMaps
+    public class PublishingQualificationsFrameworks
     {
         public string Publish( string requestType = "publish" )
         {
