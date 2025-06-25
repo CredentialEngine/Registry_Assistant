@@ -683,7 +683,7 @@ namespace RA.Models.Input
 		// 2010-01-06 The property JurisdictionAssertions may become obsolete soon. We recomend to NOT use this property.
 
 
-		//JurisdictionAssertion
+		//JurisdictionProfile
 		//Each 'IN' property must include one or more organizations and a Main jurisdiction. Only one main jusrisdiction (and multiple exceptions) can be entered with each property.
 		//Only use this property where the organization only makes the assertion for a specific jurisdiction. 
 		//Use the 'BY' equivalent (ex. accreditedBy) where the organization makes a general assertion
@@ -691,32 +691,32 @@ namespace RA.Models.Input
 		/// <summary>
 		/// List of Organizations that accredit this learning opportunity in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> AccreditedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> AccreditedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
 		/// List of Organizations that approve this learning opportunity in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> ApprovedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> ApprovedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
 		/// List of Organizations that offer this learning opportunity in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> OfferedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> OfferedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
 		/// List of Organizations that recognize this learning opportunity in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> RecognizedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> RecognizedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
 		/// List of Organizations that regulate this learning opportunity in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> RegulatedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> RegulatedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
 		/// List of Organizations that revoke this learning opportunity in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> RevokedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> RevokedIn { get; set; } = new List<JurisdictionProfile>();
 
 		#endregion
 

@@ -47,6 +47,7 @@ namespace RA.Models.Input
 		/// Optional
 		/// </summary>
 		public string Name { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
@@ -77,6 +78,7 @@ namespace RA.Models.Input
 		/// Optional
 		/// </summary>
 		public string StartDate { get; set; }
+
 		/// <summary>
 		/// End date or expiry date of this cost profile
 		/// Optional
@@ -89,6 +91,7 @@ namespace RA.Models.Input
 		/// Optional
 		/// </summary>
 		public List<string> Condition { get; set; }
+
 		/// <summary>
 		/// Alternately use a LanguageMapList for the conditions
 		/// </summary>
@@ -100,11 +103,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
-
 		/// <summary>
 		/// List of Alternate Names for this resource
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
+
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
@@ -150,6 +153,7 @@ namespace RA.Models.Input
 		/// <see cref="https://credreg.net/ctdl/terms/CostType"/>
 		/// </summary>
 		public string DirectCostType { get; set; }
+
 		/// <summary>
 		/// List of Residency items
 		/// </summary>
@@ -162,20 +166,20 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AudienceType { get; set; }
 
-        /// <summary>
-        /// Payment Pattern
-        /// Applicable pattern for payments such as "per semester" and "every three months".
-        /// </summary>
-        public string PaymentPattern { get; set; }
+		/// <summary>
+		/// Payment Pattern
+		/// Applicable pattern for payments such as "per semester" and "every three months".
+		/// </summary>
+		public string PaymentPattern { get; set; }
+
 		/// <summary>
 		/// Alternately use a LanguageMap for PaymentPattern.
 		/// </summary>
 		public LanguageMap PaymentPattern_Map { get; set; } = null;
+
 		/// <summary>
 		/// Price for this cost - optional
 		/// </summary>
 		public decimal? Price { get; set; }
-
 	}
-
 }

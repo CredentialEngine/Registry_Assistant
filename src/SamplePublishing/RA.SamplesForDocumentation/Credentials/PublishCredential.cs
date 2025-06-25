@@ -39,8 +39,8 @@ namespace RA.SamplesForDocumentation
 			var myCTID = "ce-5a33409a-f3db-42f3-8a3c-b00c7bb393af"; //"ce-" + Guid.NewGuid().ToString();
 
 			//A simple credential object - see below for sample class definition
-			//For a complete list of all credential types, see: 
-			//	https://credreg.net/page/typeslist#ceterms_Credential 
+			//For a complete list of all credential types, see:
+			//	https://credreg.net/page/typeslist#ceterms_Credential
 			var myData = new APIRequestResource()
 			{
 				Name = "My Certification Name",
@@ -61,21 +61,12 @@ namespace RA.SamplesForDocumentation
 				CTID = organizationIdentifierFromAccountsSite
 			} );
 			//Specify available delivery types
-			myData.LearningDeliveryType = new List<string>() 
-			{ 
-				"deliveryType:InPerson", 
-				"deliveryType:OnlineOnly" 
+			myData.LearningDeliveryType = new List<string>()
+			{
+				"deliveryType:InPerson",
+				"deliveryType:OnlineOnly"
 			};
-			myData.Identifier.Add( new IdentifierValue()
-			{
-				IdentifierTypeName = "Some Identifer For Credential",
-				IdentifierValueCode = "Catalog: xyz1234 "        //Alphanumeric string identifier of the entity
-			} );
-			myData.VersionIdentifier.Add( new IdentifierValue()
-			{
-				IdentifierTypeName = "MyVersion",
-				IdentifierValueCode = "2023-09-01"        //Alphanumeric string identifier of the entity
-			} );
+
 			//==================== QUALITY ASSURANCE RECEIVED ====================
 
 			//CTID for Higher learning commission.
@@ -109,15 +100,21 @@ namespace RA.SamplesForDocumentation
 					Country="United States"
 				}
 			};
-			//optional identifier(s)
-			myData.Identifier.Add( new IdentifierValue()
-			{
-				IdentifierTypeName = "Some Course Code",
-				IdentifierValueCode = "0276"        //Alphanumeric string identifier of the identifier type
-			} );
 
-			//include valid concepts, with or without the namespace
-			myData.AudienceType				= new List<string>() { " audience:PublicEmployee", "Resident" };
+			// optional identifier(s)
+            myData.Identifier.Add( new IdentifierValue()
+            {
+                IdentifierTypeName = "Some Identifer For Resource",
+                IdentifierValueCode = "Catalog: xyz1234 "        //Alphanumeric string identifier of the entity
+            } );
+
+            myData.VersionIdentifier.Add( new IdentifierValue()
+            {
+                IdentifierTypeName = "MyVersion",
+                IdentifierValueCode = "2023-09-01"        //Alphanumeric string identifier of the entity
+            } );
+            //include valid concepts, with or without the namespace
+            myData.AudienceType				= new List<string>() { " audience:PublicEmployee", "Resident" };
 			myData.AudienceLevelType		= new List<string>() { "audLevel:BeginnerLevel", "IntermediateLevel" };
 			myData.AssessmentDeliveryType	= new List<string>() { "deliveryType:BlendedDelivery" };
 			//Credential Identifier
@@ -126,14 +123,14 @@ namespace RA.SamplesForDocumentation
 			//==================== JURISDICTION and Recognized In (specialized jurisdiction) ====================
 
 			myData.Jurisdiction.Add( Jurisdictions.SampleJurisdiction() );
-			//Add a jurisdiction assertion for Recognized in 
+			//Add a jurisdiction assertion for Recognized in
 			myData.RecognizedIn.Add( Jurisdictions.SampleJurisdictionAssertion() );
 
 			//==================== CONDITION PROFILE ====================
-			// add a requires Condition profile with conditions and a required learning opportunity. 
+			// add a requires Condition profile with conditions and a required learning opportunity.
 			// See the code sample for a ConditionProfile for more detailed information
 			//	https://github.com/CredentialEngine/Registry_Assistant/blob/master/src/SamplePublishing/RA.SamplesForDocumentation/SupportingData/ConditionProfiles.cs
-			/*Scenario: 
+			/*Scenario:
 				- The learning opportunity will be published to the credential registry
 				- The credential must be published before the learning opportunity
 				- The learning opportunity is referenced using the Condition Profile property of TargetLearningOpportunity
@@ -187,7 +184,7 @@ namespace RA.SamplesForDocumentation
 			//common conditions
 			//An organization may publish common condition information such as pre-requisties using a ConditionManifest.
 			//Each credential can then reference these common conditions using the CommonCondition property rather than having to repeat the information.
-			//This propery is a list of CTIDs (recommended) for each published ConditionManifest or the actual credential registry URIs 
+			//This propery is a list of CTIDs (recommended) for each published ConditionManifest or the actual credential registry URIs
 			myData.CommonConditions = new List<string>()
 			{
 				"ce-82a854b6-1e17-4cd4-845d-0b9b6df2fb5c"
@@ -201,7 +198,7 @@ namespace RA.SamplesForDocumentation
 					MinimumDuration = new DurationItem()
                     {
 						Weeks=8
-                    }, 
+                    },
 					MaximumDuration = new DurationItem()
                     {
 						Weeks=12
@@ -234,15 +231,15 @@ namespace RA.SamplesForDocumentation
 			} );
 
 			//common costs
-			//An organization may publish common cost information such as Tuition costs using a CostManifest. Each credential can then reference these common costs using the CommonCost property rather than having to repeat the information. This propery is a list of CTIDs (recommended) for each published costManifest or the actual credential registry URIs 
+			//An organization may publish common cost information such as Tuition costs using a CostManifest. Each credential can then reference these common costs using the CommonCost property rather than having to repeat the information. This propery is a list of CTIDs (recommended) for each published costManifest or the actual credential registry URIs
 			myData.CommonCosts = new List<string>()
 			{
 				"ce-a37b5ac4-6a15-4cf1-9f06-8132e18e95eb", "ce-975b466b-ed8e-46c7-8629-2f2dc74153a2"
 			};
 
 			//HasPart - List of credentials that are part of this credential
-			myData.HasPart = new List<EntityReference>() 
-			{ 
+			myData.HasPart = new List<EntityReference>()
+			{
 				new EntityReference()
 				{
 					CTID="ce-4f41c36d-bc71-490b-b7b8-008e8eebd212"
@@ -302,7 +299,7 @@ namespace RA.SamplesForDocumentation
 
 			//====================	CONNECTIONS ====================
 			//Connections between credentials can be published using properties such as
-			//- isPreparationFor, PreparationFrom, isAdvancedStandingFor, AdvancedStandingFrom, IsRequiredFor, and IsRecommendedFor. 
+			//- isPreparationFor, PreparationFrom, isAdvancedStandingFor, AdvancedStandingFrom, IsRequiredFor, and IsRecommendedFor.
 			//example of a connection to a credential for which the current credential will prepare a student.
 			var isPreparationFor = new ConditionProfile
 			{
@@ -321,7 +318,7 @@ namespace RA.SamplesForDocumentation
 			};
 			myData.IsPreparationFor.Add( isPreparationFor );
 
-			//add credential that prepares for this credential. 
+			//add credential that prepares for this credential.
 			var preparationFrom = new ConditionProfile
 			{
 				Description = "This credential will prepare a student for this credential",
@@ -350,7 +347,7 @@ namespace RA.SamplesForDocumentation
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 
 			//call the Assistant API
-		
+
 			SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
 			{
 				EndpointType = "credential",
@@ -368,8 +365,8 @@ namespace RA.SamplesForDocumentation
 
 		/// <summary>
 		/// Publish a credential using an input class
-		/// An organization will have its data stored somewhere. The first step would be to have a process retrieve the information and send that data to a method to do the publishing. 		
-		/// In this example: 
+		/// An organization will have its data stored somewhere. The first step would be to have a process retrieve the information and send that data to a method to do the publishing.
+		/// In this example:
 		/// -	YourCredential would be defined by the organization
 		///-	A process would be developed to read data from the organization data source( s) and populate the class
 		///		o   Important: a CTID must be created in the data source and populated
@@ -498,7 +495,7 @@ namespace RA.SamplesForDocumentation
 		/// - List of frameworks
 		/// - list of occupation names
 		/// - List of SOC codes
-		/// 
+		///
 		/// </summary>
 		/// <param name="request"></param>
 		public static void PopulateOccupations( Credential request )

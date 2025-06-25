@@ -74,6 +74,7 @@
     <Compile Include="Input\CostManifestRequest.cs" />
     <Compile Include="Input\CredentialingActionRequest.cs" />
     <Compile Include="Input\CredentialRequest.cs" />
+    <Compile Include="Input\CredentialTypeRequest.cs" />
     <Compile Include="Input\CtdlAttributes.cs" />
     <Compile Include="Input\DataSetProfileRequest.cs" />
     <Compile Include="Input\DeleteRequest.cs" />

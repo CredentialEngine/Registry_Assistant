@@ -321,37 +321,37 @@ namespace RA.Models.Input
 		/// <summary>
 		/// List of Organizations that accredit this credential in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> AccreditedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> AccreditedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
 		/// List of Organizations that approve this credential in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> ApprovedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> ApprovedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
 		/// List of Organizations that offer this credential in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> OfferedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> OfferedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
 		/// List of Organizations that recognize this credential in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> RecognizedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> RecognizedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
 		/// List of Organizations that regulate this credential in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> RegulatedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> RegulatedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
 		/// List of Organizations that renew this credential in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> RenewedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> RenewedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
 		/// List of Organizations that revoke this credential in a specific Jurisdiction. 
 		/// </summary>
-		public List<JurisdictionAssertion> RevokedIn { get; set; } = new List<JurisdictionAssertion>();
+		public List<JurisdictionProfile> RevokedIn { get; set; } = new List<JurisdictionProfile>();
 
 		#endregion
 

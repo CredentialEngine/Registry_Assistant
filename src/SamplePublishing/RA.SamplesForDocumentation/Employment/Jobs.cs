@@ -79,9 +79,9 @@ namespace RA.SamplesForDocumentation.Employment
 							Type="license",
 							Name="License to practise",
 							SubjectWebpage="https://example.net?t=licenseToPractice",
-							RecognizedIn= new List<JurisdictionAssertion>()
+							RecognizedIn= new List<JurisdictionProfile>()
 							{
-								new JurisdictionAssertion()
+								new JurisdictionProfile()
 								{
 									MainJurisdiction = new Place()
 									{

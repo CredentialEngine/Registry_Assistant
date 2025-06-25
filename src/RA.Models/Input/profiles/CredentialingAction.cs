@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
-    /// <summary>
-    /// Credentialing Action
-    /// Action taken by an agent affecting the status of an object entity.
-    /// </summary>
-    public class CredentialingAction
+	/// <summary>
+	/// Credentialing Action
+	/// Action taken by an agent affecting the status of an object entity.
+	/// </summary>
+	public class CredentialingAction
 	{
 		/// <summary>
 		/// Type of credentialing action
@@ -59,7 +59,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<OrganizationReference> ActingAgent { get; set; }
 
-
 		/// <summary>
 		/// Action Name
 		/// REQUIRED
@@ -82,19 +81,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public LanguageMap Description_Map { get; set; } = new LanguageMap();
 
-        /// <summary>
-        /// Description of a process by which a resource is administered.
-        /// ceterms:administrationProcess
-        /// </summary>
-        public List<ProcessProfile> AdministrationProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource is administered.
+		/// ceterms:administrationProcess
+		/// </summary>
+		public List<ProcessProfile> AdministrationProcess { get; set; }
 
-        /// <summary>
-        /// Evidence of Action
-        /// Entity that proves that the action occured or that the action continues to be valid.
-        /// The evidence verifies the information in the action and is particular to it. It is not a directory of such evidentiary entities or a description of how such verifications might generically be characterized.
-        /// URI
-        /// </summary>
-        public string EvidenceOfAction { get; set; }
+		/// <summary>
+		/// Evidence of Action
+		/// Entity that proves that the action occured or that the action continues to be valid.
+		/// The evidence verifies the information in the action and is particular to it. It is not a directory of such evidentiary entities or a description of how such verifications might generically be characterized.
+		/// URI
+		/// </summary>
+		public string EvidenceOfAction { get; set; }
 
 		/// <summary>
 		/// Instrument
@@ -112,15 +111,14 @@ namespace RA.Models.Input
 		/// A reference for Credentials, AssessmentProfile, any LearningOpportunity Profile type, or any organization type
 		/// Input: a CTID or a blank node Id where the bnode will be added in the request class ReferenceObjects property.
 		/// </summary>
-        public List<string> Object { get; set; }
+		public List<string> Object { get; set; }
 
-        /// <summary>
-        /// Participant
-        /// Co-agents that participated in the action indirectly.
-        /// Provide the CTID for a participant in the Credential Registry or provide minimum data where not in the registry.
-        /// </summary>
-        public List<OrganizationReference> Participant { get; set; } = new List<OrganizationReference>();
-
+		/// <summary>
+		/// Participant
+		/// Co-agents that participated in the action indirectly.
+		/// Provide the CTID for a participant in the Credential Registry or provide minimum data where not in the registry.
+		/// </summary>
+		public List<OrganizationReference> Participant { get; set; } = new List<OrganizationReference>();
 
 		/// <summary>
 		/// Date this action starts.
@@ -136,15 +134,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public string EndDate { get; set; }
 
-
-        /// <summary>
-        /// Jurisdiction Profile
+		/// <summary>
+		/// Jurisdiction Profile
 		/// ONLY valid for WorkforceDemandAction
-        /// Geo-political information about applicable geographic areas and their exceptions.
-        /// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"></see>
-        /// </summary>
-        public List<JurisdictionProfile> Jurisdiction { get; set; }
-
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"></see>
+		/// </summary>
+		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
 		/// <summary>
 		/// Resulting Award
@@ -156,7 +152,6 @@ namespace RA.Models.Input
 		/// NOT IMPLEMENTED
 		/// </summary>
 		public string ResultingAward { get; set; }
-
 
 		/// <summary>
 		/// Outcome produced in the action.

@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 
 using RA.Models.Input;
-
-using System;
 using System.Collections.Generic;
 
 using APIRequest = RA.Models.Input.AlignmentMapRequest;

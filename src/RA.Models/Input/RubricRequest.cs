@@ -296,7 +296,7 @@ namespace RA.Models.Input
         /// <summary>
         /// List of Organizations that offer this credential in a specific Jurisdiction. 
         /// </summary>
-        public List<JurisdictionAssertion> OfferedIn { get; set; } = new List<JurisdictionAssertion>();
+        public List<JurisdictionProfile> OfferedIn { get; set; } = new List<JurisdictionProfile>();
 
         /// <summary>
         /// The publication status of the of this competency framework.

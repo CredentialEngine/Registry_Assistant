@@ -252,7 +252,7 @@ namespace RA.Models.Input
         /// <summary>
         /// List of Organizations that offer this learning opportunity in a specific Jurisdiction. 
         /// </summary>
-        public List<JurisdictionAssertion> OfferedIn { get; set; } = new List<JurisdictionAssertion>();
+        public List<JurisdictionProfile> OfferedIn { get; set; } = new List<JurisdictionProfile>();
 
         /// <summary>
         /// Qualifying requirements for receiving a support service.
