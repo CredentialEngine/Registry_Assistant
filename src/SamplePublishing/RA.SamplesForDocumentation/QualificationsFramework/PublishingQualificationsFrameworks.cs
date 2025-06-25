@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using APIRequest = RA.Models.Input.QualificationsFrameworkRequest;
 using APIRequestResource = RA.Models.Input.QualificationsFramework;
 
-namespace RA.SamplesForDocumentation.QualificationsFrameworks
+namespace RA.SamplesForDocumentation.QualificationsFramework
 {
     public class PublishingAlignmentMaps
     {
