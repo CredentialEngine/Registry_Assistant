@@ -23,9 +23,7 @@ namespace RA.Models.Input
 		/// The PathwaySet.HasPathway is a list of CTIDs that will reference pathways in this list.
 		/// </summary>
 		public List<PathwayRequest> Pathways { get; set; } = new List<PathwayRequest>();
-
-	}//
-
+	}
 
 	public class PathwaySet
 	{
@@ -41,19 +39,22 @@ namespace RA.Models.Input
 		/// Pathway Set Name
 		/// </summary>
 		public string Name { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
+
 		/// <summary>
 		/// Pathway Set Description 
 		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// The webpage that describes this entity.
@@ -72,7 +73,8 @@ namespace RA.Models.Input
 		/// Organization(s) that owns this resource
 		/// </summary>
 		public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
-		//OR
+		// OR
+
 		/// <summary>
 		/// Organization(s) that offer this resource
 		/// </summary>
@@ -82,30 +84,29 @@ namespace RA.Models.Input
 		/// List of Alternate Names for this resource
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
+
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
-        #region -- Process Profiles --
+		#region -- Process Profiles --
 
-        /// <summary>
-        /// Description of a process by which a resource was created.
-        /// </summary>
-        public List<ProcessProfile> DevelopmentProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource was created.
+		/// </summary>
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
-        /// <summary>
-        ///  Description of a process by which a resource is maintained, including review and updating.
-        /// </summary>
-        public List<ProcessProfile> MaintenanceProcess { get; set; }
+		/// <summary>
+		///  Description of a process by which a resource is maintained, including review and updating.
+		/// </summary>
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
 
-        /// <summary>
-        /// Description of a process by which a resource is reviewed.
-        /// </summary>
-        public List<ProcessProfile> ReviewProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource is reviewed.
+		/// </summary>
+		public List<ProcessProfile> ReviewProcess { get; set; }
 
-        #endregion
-    } 
-
-
+		#endregion
+	}
 }

@@ -55,7 +55,6 @@ namespace RA.SamplesForDocumentation
              * other required properties
              * RegulatedBy
              * RegulatedIn
-             * OfferedIn
              */
 
             //CTID for an org that provides regulation
@@ -65,15 +64,19 @@ namespace RA.SamplesForDocumentation
             } );
 
             myData.RegulatedIn.Add( Jurisdictions.SampleJurisdictionAssertion() );
-            myData.OfferedIn.Add( Jurisdictions.SampleJurisdictionAssertion() );
 
             // Optional
+
+            // subclassOf a broader type or class than the one being described.
+            myData.SubclassOf = "ceterms:Certificate";
+
             myData.ApprovedBy.Add( new OrganizationReference()
             {
                 CTID = "ce-541da30c-15dd-4ead-881b-729796024b8f"
             } );
 
             myData.ApprovedIn.Add( Jurisdictions.SampleJurisdictionAssertion() );
+            myData.OfferedIn.Add( Jurisdictions.SampleJurisdictionAssertion() );
 
             myData.AudienceLevelType = new List<string> { "Undergraduate Level" };
 
@@ -196,9 +199,6 @@ namespace RA.SamplesForDocumentation
 
             //====================	INDUSTRIES	====================
             PopulateIndustries( myData );
-
-            // subclassOf a broader type or class than the one being described.
-            myData.SubclassOf = "ceterms:Certificate";
 
             myData.VersionCode = "Some useful code";
             myData.VersionIdentifier.Add( new IdentifierValue()

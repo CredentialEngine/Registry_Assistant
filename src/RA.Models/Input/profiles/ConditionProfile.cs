@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -45,7 +46,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Profile description
@@ -58,7 +60,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Organization that asserts this condition
@@ -242,7 +245,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = null;
+		public LanguageMapList AlternateNameLangMap { get; set; } = null;
 
 		#region Helpers
 

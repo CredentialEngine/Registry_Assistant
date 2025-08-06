@@ -1,8 +1,10 @@
-﻿using System;
+﻿// <copyright file="CredentialRequest.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -22,7 +24,7 @@ namespace RA.Models.Input
 	}
 
 	/// <summary>
-	/// A request only used by the Transfer Intermediary bulk publish request. 
+	/// A request only used by the Transfer Intermediary bulk publish request.
 	/// </summary>
 	public class TransferIntermediaryBulkRequest : BaseRequest
 	{
@@ -68,13 +70,15 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string Name { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
-		/// Set of alpha-numeric symbols as defined by the body responsible for this resource that uniquely identifies this resource and supports its discovery and use. 
+		///  LanguageMap for Name
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = null;
+
+		/// <summary>
+		/// Set of alpha-numeric symbols as defined by the body responsible for this resource that uniquely identifies this resource and supports its discovery and use.
 		/// Not Required
 		/// </summary>
 		public string CodedNotation { get; set; }
@@ -86,30 +90,34 @@ namespace RA.Models.Input
 		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 
 		/// <summary>
-		/// Transfer Intermediary Description 
+		/// Transfer Intermediary Description
 		/// Not Required
 		/// </summary>
 		public string Description { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
-        /// <summary>
-        /// List of Alternate Names for this credential
-        /// </summary>
-        public List<string> AlternateName { get; set; } = new List<string>();
-        /// <summary>
-        /// LanguageMap for AlternateName
-        /// </summary>
-        public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; }
 
+		/// <summary>
+		/// List of Alternate Names for this credential
+		/// </summary>
+		public List<string> AlternateName { get; set; } = new List<string>();
+
+		/// <summary>
+		/// LanguageMap for AlternateName
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateNameLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Resource(s) for which this resource is an intermediary.
-		/// Required. If a list the complete list of transfer value profiles is included with this transaction, then this property does not need to duplicate the information. 
+		/// Required. If a list the complete list of transfer value profiles is included with this transaction, then this property does not need to duplicate the information.
 		/// Range: ceterms:TransferValueProfile
-		/// Provide the CTID for a transfer value that is already published to the registry or is included the list of transfer value profiles with this request. 
-		/// NOTE: API will always take all transfer value profiles in the request list, 
+		/// Provide the CTID for a transfer value that is already published to the registry or is included the list of transfer value profiles with this request.
+		/// NOTE: API will always take all transfer value profiles in the request list,
 		/// </summary>
 		public List<string> IntermediaryFor { get; set; } = new List<string>();
 
@@ -137,51 +145,53 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<ConditionProfile> Requires { get; set; } = new List<ConditionProfile>();
 
-        /// <summary>
-        /// Name or title of the resource.
-        /// Not Required
-        /// </summary>
-        public string SubjectWebpage { get; set; }
-
-        /// <summary>
-        /// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
-        /// Not Required
-        /// https://credreg.net/ctdl/terms/subject
-        /// </summary>
-        public List<string> Subject { get; set; }
 		/// <summary>
-		/// Alternately can provide a language map
+		/// Name or title of the resource.
+		/// Not Required
 		/// </summary>
-		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
+		public string SubjectWebpage { get; set; }
 
-        #region -- Process Profiles --
+		/// <summary>
+		/// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
+		/// Not Required
+		/// https://credreg.net/ctdl/terms/subject
+		/// </summary>
+		public List<string> Subject { get; set; }
 
-        /// <summary>
-        /// Description of a formal process for objecting to decisions of an organization.
-        /// </summary>
-        public List<ProcessProfile> AppealProcess { get; set; }
+		/// <summary>
+		/// Language map list for Subject
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:subject" )]
+		public LanguageMapList SubjectLangMap { get; set; } = new LanguageMapList();
 
-        /// <summary>
-        /// Description of a process for handling complaints about a resource or related resources.
-        /// </summary>
-        public List<ProcessProfile> ComplaintProcess { get; set; }
+		#region -- Process Profiles --
 
-        /// <summary>
-        /// Description of a process by which a resource was created.
-        /// </summary>
-        public List<ProcessProfile> DevelopmentProcess { get; set; }
+		/// <summary>
+		/// Description of a formal process for objecting to decisions of an organization.
+		/// </summary>
+		public List<ProcessProfile> AppealProcess { get; set; }
 
-        /// <summary>
-        ///  Description of a process by which a resource is maintained, including review and updating.
-        /// </summary>
-        public List<ProcessProfile> MaintenanceProcess { get; set; }
+		/// <summary>
+		/// Description of a process for handling complaints about a resource or related resources.
+		/// </summary>
+		public List<ProcessProfile> ComplaintProcess { get; set; }
 
-        /// <summary>
-        /// Description of a process by which a resource is reviewed.
-        /// </summary>
-        public List<ProcessProfile> ReviewProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource was created.
+		/// </summary>
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
-        #endregion
+		/// <summary>
+		///  Description of a process by which a resource is maintained, including review and updating.
+		/// </summary>
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
 
-    }
+		/// <summary>
+		/// Description of a process by which a resource is reviewed.
+		/// </summary>
+		public List<ProcessProfile> ReviewProcess { get; set; }
+
+		#endregion
+
+	}
 }

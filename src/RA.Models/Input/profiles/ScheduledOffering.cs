@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -9,35 +15,41 @@ namespace RA.Models.Input
 	/// </summary>
 	public class ScheduledOffering : BasePrimaryResource
 	{
-        /// <summary>
-        /// Globally unique Credential Transparency Identifier (CTID)
-        /// </summary>
-        public string CTID { get; set; }
+		/// <summary>
+		/// Globally unique Credential Transparency Identifier (CTID)
+		/// </summary>
+		public string CTID { get; set; }
 
 		public string Name { get; set; }
+
 		/// <summary>
-		/// Alternately can provide a language map
+		///  LanguageMap for Name
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = null;
+
 		/// <summary>
-		/// Profile Description 
+		/// Profile Description
 		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; }
 
 		/// <summary>
 		/// List of Alternate Names for this resource
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
+
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
-
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateNameLangMap { get; set; } = null;
 
 		/// <summary>
 		///  Resource containing summary/statistical employment outcome, earnings, and/or holders information.
@@ -73,6 +85,7 @@ namespace RA.Models.Input
 		/// Detailed description of the delivery type of an assessment or learning opportunity.
 		/// </summary>
 		public string DeliveryTypeDescription { get; set; }
+
 		public LanguageMap DeliveryTypeDescription_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
@@ -91,18 +104,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<DurationProfile> EstimatedDuration { get; set; } = new List<DurationProfile>();
 
-        /// <summary>
-        /// Reference to a relevant support service.
-        /// List of CTIDs that reference one or more published support services
-        /// </summary>
-        public List<string> HasSupportService { get; set; }
+		/// <summary>
+		/// Reference to a relevant support service.
+		/// List of CTIDs that reference one or more published support services
+		/// </summary>
+		public List<string> HasSupportService { get; set; }
 
-        /// <summary>
-        /// Type of frequency at which a resource is offered; select from an existing enumeration of such types.
-        /// ConceptScheme: ceterms:ScheduleFrequency
-        /// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly
-        /// </summary>
-        public List<string> OfferFrequencyType { get; set; } = new List<string>();
+		/// <summary>
+		/// Type of frequency at which a resource is offered; select from an existing enumeration of such types.
+		/// ConceptScheme: ceterms:ScheduleFrequency
+		/// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly
+		/// </summary>
+		public List<string> OfferFrequencyType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Type of frequency with which events typically occur; select from an existing enumeration of such types.
@@ -123,6 +136,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<OrganizationReference> OfferedBy { get; set; } = new List<Input.OrganizationReference>();
 
-		public string SubjectWebpage { get; set; } //URL
+		public string SubjectWebpage { get; set; } // URL
 	}
 }

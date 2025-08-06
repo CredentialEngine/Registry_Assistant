@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿// <copyright file="LearningOpportunityRequest.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
 
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -13,16 +17,18 @@ namespace RA.Models.Input
 
 		public LearningOpportunity LearningOpportunity { get; set; }
 	}
+
 	public class LearningProgramRequest : LearningOpportunityRequest
 	{
 	}
-	/// <summary>	
+
+	/// <summary>
 	/// A course will have all of the properties of LearningOpportunityProfile, except:
-	/// - ceterms:instructionalProgramType 
+	/// - ceterms:instructionalProgramType
 	/// </summary>
 	public class CourseRequest : LearningOpportunityRequest
 	{
-	}	
+	}
 	public class LearningOpportunity : BaseRequestHelper
 	{
 		public LearningOpportunity()
@@ -60,60 +66,61 @@ namespace RA.Models.Input
 			IsPartOf = new List<EntityReference>();
 			VersionIdentifier = new List<IdentifierValue>();
 		}
+
 		/// <summary>
 		/// Helper property for use with blank nodes
 		/// </summary>
 		public string Type { get; set; } = "LearningOpportunityProfile";
 
-        /// <summary>
-        /// Handle both forms of input for type
-        /// </summary>
-        [JsonProperty( "@type" )]
-        public string AtType
-        {
-            get { return Type; }
-            set { Type = value; }
-        }
+		/// <summary>
+		/// Handle both forms of input for type
+		/// </summary>
+		[JsonProperty( "@type" )]
+		public string AtType
+		{
+			get { return Type; }
+			set { Type = value; }
+		}
 
-        #region *** Required Properties ***
-        /// <summary>
-        /// Name or title of the resource.
-        /// Required
-        /// </summary>
-        public string Name { get; set; }
+		#region *** Required Properties ***
 
-        /// <summary>
-        ///  LanguageMap for Name
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:name" )]
-        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		/// Name or title of the resource.
+		/// Required
+		/// </summary>
+		public string Name { get; set; }
 
-        /// <summary>
-        /// Description 
-        /// REQUIRED and must be a minimum of 15 characters.
-        /// </summary>
-        public string Description { get; set; }
-        /// <summary>
-        /// Alternately can provide a language map
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:description" )]
-        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		///  LanguageMap for Name
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
+		/// <summary>
+		/// Description
+		/// REQUIRED and must be a minimum of 15 characters.
+		/// </summary>
+		public string Description { get; set; }
 
-        /// <summary>
-        /// Credential Identifier
-        /// format: 
-        /// ce-UUID (guid)
-        /// Required
-        /// </summary>
-        public string CTID { get; set; }
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Credential Identifier
+		/// format:
+		/// ce-UUID (guid)
+		/// Required
+		/// </summary>
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// The primary language or languages of the entity, even if it makes use of other languages; e.g., a course offered in English to teach Spanish would have an inLanguage of English, while a credential in Quebec could have an inLanguage of both French and English.
 		/// List of language codes. ex: en, es
 		/// </summary>
 		public List<string> InLanguage { get; set; }
-
 
 		/// <summary>
 		/// Webpage that describes this entity.
@@ -131,12 +138,14 @@ namespace RA.Models.Input
 		/// </summary>
 		public string LifeCycleStatusType { get; set; } = "lifeCycle:Active";
 
-        #region at least one of
-        /// <summary>
-        /// Organization that owns this resource
-        /// </summary>
-        public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
-		//OR
+		#region at least one of
+
+		/// <summary>
+		/// Organization that owns this resource
+		/// </summary>
+		public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
+		// OR
+
 		/// <summary>
 		/// Organization(s) that offer this resource
 		/// </summary>
@@ -146,47 +155,49 @@ namespace RA.Models.Input
 		#endregion
 
 		#region *** Recommended Benchmark ***
+
 		/// <summary>
 		/// Provide credit information in a ValueProfile value
 		/// A credit-related value.
 		/// 21-07-19 - updating Creditvalue to also allow a list. It is defined as an object. The API will accept either a ValueProfile object or List of ValueProfiles
 		/// 21-08-18 - Changing permanently to the List, as only existing use was from the publisher (and the latter is updated to use the list)
 		/// </summary>
-		//public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
-		public object CreditValue { get; set; }   
-
+		// public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
+		public object CreditValue { get; set; }
 
 		/// <summary>
 		/// Competency that the learning opportunity is intended to teach.
-		/// List of CredentialAlignmentObjects where TargetNodeName is the only required property. 
+		/// List of CredentialAlignmentObjects where TargetNodeName is the only required property.
 		/// </summary>
 		public List<CredentialAlignmentObject> Teaches { get; set; }
 
-        /// <summary>
-        /// Teaches Competency Framework - Helper property
-        /// A list of CTIDs for frameworks, where this resource teaches all competencies in a framework.
-        /// API will look up framework, get all competencies and add as Teaches for this resource. 
-        /// Only provide Teaches or TeachesCompetencyFramework, but not both (will result in an error).
-        /// </summary>
-        public List<string> TeachesCompetencyFramework { get; set; }
-
-        /// <summary>
-        /// Types of methods used to conduct the learning opportunity; 
-        /// Concepts: Applied, Gaming, Laboratory, Lecture, Prerecorded, SelfPaced, Seminar, WorkBased
-        /// ConceptScheme: <see href="https://credreg.net/ctdl/terms/LearningMethod">LearningMethod</see>
-        /// </summary>
-        public List<string> LearningMethodType { get; set; }
+		/// <summary>
+		/// Teaches Competency Framework - Helper property
+		/// A list of CTIDs for frameworks, where this resource teaches all competencies in a framework.
+		/// API will look up framework, get all competencies and add as Teaches for this resource.
+		/// Only provide Teaches or TeachesCompetencyFramework, but not both (will result in an error).
+		/// </summary>
+		public List<string> TeachesCompetencyFramework { get; set; }
 
 		/// <summary>
-		/// Learning Method Description 
+		/// Types of methods used to conduct the learning opportunity;
+		/// Concepts: Applied, Gaming, Laboratory, Lecture, Prerecorded, SelfPaced, Seminar, WorkBased
+		/// ConceptScheme: <see href="https://credreg.net/ctdl/terms/LearningMethod">LearningMethod</see>
+		/// </summary>
+		public List<string> LearningMethodType { get; set; }
+
+		/// <summary>
+		/// Learning Method Description
 		///  Description of the learning methods for a resource.
-		/// 
+		///
 		/// </summary>
 		public string LearningMethodDescription { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap LearningMethodDescription_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:learningMethodDescription" )]
+		public LanguageMap LearningMethodDescriptionLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Type of means by which a learning opportunity or assessment is delivered to credential seekers and by which they interact; select from an existing enumeration of such types.
@@ -199,8 +210,9 @@ namespace RA.Models.Input
 		/// Detailed description of the delivery type of an assessment or learning opportunity.
 		/// </summary>
 		public string DeliveryTypeDescription { get; set; }
-		public LanguageMap DeliveryTypeDescription_Map { get; set; } = null;
 
+		[JsonProperty( PropertyName = "ceterms:deliveryTypeDescription" )]
+		public LanguageMap DeliveryTypeDescriptionLangMap { get; set; } = null;
 
 		/// <summary>
 		/// An inventory or listing of resources that includes this resource.
@@ -209,8 +221,8 @@ namespace RA.Models.Input
 		#endregion
 
 		#region Online or Physical Location
-		//23-11-13 - there is no longer a requirement to have at least one of the following
-		//24-03-25 mp - TBD, this may only apply to a Course, that is for other types, at least one of the properties must be provided
+		// 23-11-13 - there is no longer a requirement to have at least one of the following
+		// 24-03-25 mp - TBD, this may only apply to a Course, that is for other types, at least one of the properties must be provided
 
 		/// <summary>
 		/// Online location where the credential, assessment, or learning opportunity can be pursued.
@@ -230,40 +242,43 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<Place> AvailableAt { get; set; }
 		#endregion
-		//=========== optional ================================
+		// =========== optional ================================
+
 		/// <summary>
 		/// List of Alternate Names for this learning opportunity
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
+
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateNameLangMap { get; set; } = null;
 
 		#region Proposed collection helpers
 		///// <summary>
 		///// One or more collections of which this resource is to be a member.
-		///// The owner of the collection must be the same as the publisher of this resource. 
+		///// The owner of the collection must be the same as the publisher of this resource.
 		///// Actions
-		///// Proposed: 
+		///// Proposed:
 		/////		if this resource includes at least one of DateEffective or ExpirationDate, then a CollectionMember will be added to the collection, otherwise just the URI will be added to Collection.HasMember.
 		/////	Response:
 		/////		NO, it is believed that we cannot arbitrarily take action based on the dates
 		///// </summary>
-		//public List<string> IsMemberOfCollection { get; set; } = new List<string>();
+		// public List<string> IsMemberOfCollection { get; set; } = new List<string>();
 		///// <summary>
 		///// List of collection members for a collection where this learning opportunity is to be added.
-		///// The CollectionCTID is required. 
+		///// The CollectionCTID is required.
 		///// The ProxyFor property should be empty or contain the same CTID as this resource.
 		/////		- actually it will just be ignored
 		/////	TODO - can we get away with just one property?
 		///// </summary>
-		//public List<CollectionMember> IsCollectionMemberOfCollection { get; set; } = new List<CollectionMember>();
+		// public List<CollectionMember> IsCollectionMemberOfCollection { get; set; } = new List<CollectionMember>();
 
 		///// <summary>
 		///// List of Collections from which to remove the current resource
 		///// </summary>
-		//public List<string> RemoveCollectionMember{ get; set; } = new List<string>();
+		// public List<string> RemoveCollectionMember{ get; set; } = new List<string>();
 
 		#endregion
 
@@ -274,19 +289,21 @@ namespace RA.Models.Input
 		public List<AggregateDataProfile> AggregateData { get; set; } = new List<AggregateDataProfile>();
 
 		/// <summary>
-		///  Competency evaluated through the learning opportunity.		  
+		///  Competency evaluated through the learning opportunity.
 		/// </summary>
 		public List<CredentialAlignmentObject> Assesses { get; set; } = new List<CredentialAlignmentObject>();
 
 		/// <summary>
-		/// Assessment Method Description 
+		/// Assessment Method Description
 		/// Description of the assessment methods for a resource.
 		/// </summary>
 		public string AssessmentMethodDescription { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap AssessmentMethodDescription_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )] 
+		public LanguageMap AssessmentMethodDescriptionLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Type of method used to conduct an assessment; select from an existing enumeration of such types.
@@ -295,18 +312,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AssessmentMethodType { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Indicates the stage or level of achievement in a progression of learning.
-        /// range: ceterms:CredentialAlignmentObject
-        /// </summary>
-        public List<CredentialAlignmentObject> AtLevel { get; set; }
+		/// <summary>
+		/// Indicates the stage or level of achievement in a progression of learning.
+		/// range: ceterms:CredentialAlignmentObject
+		/// </summary>
+		public List<CredentialAlignmentObject> AtLevel { get; set; }
 
-        /// <summary>
-        /// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
-        /// audience:Citizen audience:CurrentMilitary audience:CurrentMilitaryDependent audience:CurrentMilitarySpouse audience:CurrentStudent audience:FormerMilitary audience:FormerMilitaryDependent audience:FormerMilitarySpouse audience:FormerStudent audience:FullTime audience:Member audience:NonCitizen audience:NonMember audience:NonResident audience:PartTime audience:PrivateEmployee audience:PublicEmployee audience:Resident
-        /// <see href="https://credreg.net/ctdl/terms/Audience"></see>
-        /// </summary>
-        public List<string> AudienceType { get; set; }
+		/// <summary>
+		/// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
+		/// audience:Citizen audience:CurrentMilitary audience:CurrentMilitaryDependent audience:CurrentMilitarySpouse audience:CurrentStudent audience:FormerMilitary audience:FormerMilitaryDependent audience:FormerMilitarySpouse audience:FormerStudent audience:FullTime audience:Member audience:NonCitizen audience:NonMember audience:NonResident audience:PartTime audience:PrivateEmployee audience:PublicEmployee audience:Resident
+		/// <see href="https://credreg.net/ctdl/terms/Audience"></see>
+		/// </summary>
+		public List<string> AudienceType { get; set; }
 
 		/// <summary>
 		/// Type of level indicating a point in a progression through an educational or training context, for which the credential is intended; select from an existing enumeration of such types.
@@ -328,7 +345,7 @@ namespace RA.Models.Input
 		public List<string> CommonCosts { get; set; }
 
 		/// <summary>
-		/// Detailed description of credit unit. 
+		/// Detailed description of credit unit.
 		/// Recommendation is to use CreditValue rather than this property.
 		/// </summary>
 		public string CreditUnitTypeDescription { get; set; }
@@ -336,7 +353,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// LanguageMap for CreditUnitTypeDescription
 		/// </summary>
-		public LanguageMap CreditUnitTypeDescription_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:creditUnitTypeDescription" )]
+		public LanguageMap CreditUnitTypeDescriptionLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Start Date of the Learning opportunity
@@ -363,19 +381,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
 
-        /// <summary>
-        ///  Indicates an offering and typical schedule.
-        ///  NOTE: Only use this property when it is necessary and useful to provide data about specific offerings of a learning opportunity or assessment, such as particular combinations of schedule, location, and delivery.
-        /// </summary>
-        public List<string> HasOffering { get; set; } = new List<string>();
-
-        /// <summary>
-        ///  Indicates a separately identifiable and independently useful component of the entity.
-        /// </summary>
-        public List<EntityReference> HasPart { get; set; }
+		/// <summary>
+		///  Indicates an offering and typical schedule.
+		///  NOTE: Only use this property when it is necessary and useful to provide data about specific offerings of a learning opportunity or assessment, such as particular combinations of schedule, location, and delivery.
+		/// </summary>
+		public List<string> HasOffering { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Indicates a resource that acts as a stand-in for the resource. 
+		///  Indicates a separately identifiable and independently useful component of the entity.
+		/// </summary>
+		public List<EntityReference> HasPart { get; set; }
+
+		/// <summary>
+		/// Indicates a resource that acts as a stand-in for the resource.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public string HasProxy { get; set; }
@@ -393,12 +411,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> HasSupportService { get; set; }
 
-        /// <summary>
-        /// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-        /// <see href="https://purl.org/ctdl/terms/identifier"></see>
-        /// ceterms:identifier
-        /// </summary>
-        public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+		/// <summary>
+		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// <see href="https://purl.org/ctdl/terms/identifier"></see>
+		/// ceterms:identifier
+		/// </summary>
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
 		/// <summary>
 		/// Is Non-Credit
@@ -417,16 +435,18 @@ namespace RA.Models.Input
 		/// Geo-political information about applicable geographic areas and their exceptions.
 		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile"></see>
 		/// </summary>
-		public List<JurisdictionProfile> Jurisdiction { get; set; } 
+		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
 		/// <summary>
 		/// Keyword or key phrase describing relevant aspects of an entity.
 		/// </summary>
 		public List<string> Keyword { get; set; }
+
 		/// <summary>
 		/// Language map list for Keyword
 		/// </summary>
-		public LanguageMapList Keyword_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
+		public LanguageMapList KeywordLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Resource that is required as a prior condition to this resource.
@@ -445,6 +465,7 @@ namespace RA.Models.Input
 		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
 		/// </summary>
 		public List<string> ReceivesTransferValueFrom { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Action carried out upon this resource.
 		/// Refer to the referenced Action for more information. Other resources may be included for the full value.
@@ -452,66 +473,73 @@ namespace RA.Models.Input
 		public List<string> ObjectOfAction { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Organization(s) that register this resource. 
+		/// Organization(s) that register this resource.
 		/// Typically used for Registered Apprenticeships
 		/// </summary>
 		public List<OrganizationReference> RegisteredBy { get; set; } = new List<Input.OrganizationReference>();
 
-        /// <summary>
-        /// Another source of information about the entity being described.
-        /// HINT: If the SameAs target is a resource in the Credential Registry, just the CTID needs to be provided. 
-        /// ceterms:sameAs
-        /// </summary>
-        public List<string> SameAs { get; set; } = new List<string>();
+		/// <summary>
+		/// Another source of information about the entity being described.
+		/// HINT: If the SameAs target is a resource in the Credential Registry, just the CTID needs to be provided.
+		/// ceterms:sameAs
+		/// </summary>
+		public List<string> SameAs { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
 		/// </summary>
 		public List<string> Subject { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for Subject
 		/// </summary>
-		public LanguageMapList Subject_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:subject" )]
+		public LanguageMapList SubjectLangMap { get; set; } = null;
 
-        /// <summary>
-        /// Type of frequency at which a resource is offered; select from an existing enumeration of such types.
-        /// ConceptScheme: ceterms:ScheduleFrequency
-        /// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly
-        /// </summary>
-        public List<string> OfferFrequencyType { get; set; } = new List<string>();
+		/// <summary>
+		/// Type of frequency at which a resource is offered; select from an existing enumeration of such types.
+		/// ConceptScheme: ceterms:ScheduleFrequency
+		/// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly
+		/// </summary>
+		public List<string> OfferFrequencyType { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Type of frequency with which events typically occur; select from an existing enumeration of such types.
-        /// ConceptScheme: ceterms:ScheduleFrequency
-        /// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly
-        /// </summary>
-        public List<string> ScheduleFrequencyType { get; set; } = new List<string>();
+		/// <summary>
+		/// Type of frequency with which events typically occur; select from an existing enumeration of such types.
+		/// ConceptScheme: ceterms:ScheduleFrequency
+		/// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly
+		/// </summary>
+		public List<string> ScheduleFrequencyType { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Type of time at which events typically occur; select from an existing enumeration of such types.
-        /// ConceptScheme: ceterms:ScheduleTiming
-        /// scheduleTiming:Daytime scheduleTiming:Evening scheduleTiming:Weekdays scheduleTiming:Weekends
-        /// </summary>
-        public List<string> ScheduleTimingType { get; set; } = new List<string>();
-        #region Occupations, Industries, and instructional programs
-        //=====================================================================
-        //List of occupations from a published framework, that is with a web URL
-        /// <summary>
-        /// OccupationType
-        /// Type of occupation; select from an existing enumeration of such types.
-        ///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
-        ///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
-        /// </summary>
-        public List<FrameworkItem> OccupationType { get; set; }
+		/// <summary>
+		/// Type of time at which events typically occur; select from an existing enumeration of such types.
+		/// ConceptScheme: ceterms:ScheduleTiming
+		/// scheduleTiming:Daytime scheduleTiming:Evening scheduleTiming:Weekdays scheduleTiming:Weekends
+		/// </summary>
+		public List<string> ScheduleTimingType { get; set; } = new List<string>();
+		#region Occupations, Industries, and instructional programs
+		// =====================================================================
+		// List of occupations from a published framework, that is with a web URL
+
+		/// <summary>
+		/// OccupationType
+		/// Type of occupation; select from an existing enumeration of such types.
+		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net.
+		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
+		/// </summary>
+		public List<FrameworkItem> OccupationType { get; set; }
+
 		/// <summary>
 		/// AlternativeOccupationType
-		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
+		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType.
 		/// Any occupations added using this property will be added to or appended to the OccupationType output.
 		/// </summary>
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for AlternativeOccupationType
 		/// </summary>
-		public LanguageMapList AlternativeOccupationType_Map { get; set; } = null;
+		public LanguageMapList AlternativeOccupationTypeLangMap { get; set; } = null;
+
 		/// <summary>
 		/// List of valid O*Net codes. See:
 		/// https://www.onetonline.org/find/
@@ -519,25 +547,28 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> ONET_Codes { get; set; } = new List<string>();
 
-		//=============================================================================
+		// =============================================================================
+
 		/// <summary>
 		/// IndustryType
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
-		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
+		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property.
 		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
 		/// </summary>
 		public List<FrameworkItem> IndustryType { get; set; }
 
 		/// <summary>
 		/// AlternativeIndustryType
-		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
+		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType.
 		/// Any industries added using this property will be added to or appended to the IndustryType output.
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for AlternativeIndustryType
 		/// </summary>
 		public LanguageMapList AlternativeIndustryType_Map { get; set; } = null;
+
 		/// <summary>
 		/// List of valid NAICS codes. These will be mapped to industry type
 		/// See:
@@ -545,7 +576,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
 
-		//=============================================================================
+		// =============================================================================
+
 		/// <summary>
 		/// InstructionalProgramType
 		/// Type of instructional program; select from an existing enumeration of such types.
@@ -554,37 +586,39 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// AlternativeInstructionalProgramType
-		/// Programs that are not found in a formal framework can be still added using AlternativeInstructionalProgramType. 
+		/// Programs that are not found in a formal framework can be still added using AlternativeInstructionalProgramType.
 		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
 		/// </summary>
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for AlternativeInstructionalProgramType
 		/// </summary>
 		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = null;
+
 		/// <summary>
 		/// List of valid Classification of Instructional Program codes. See:
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>
 		public List<string> CIP_Codes { get; set; } = new List<string>();
-        #endregion
+		#endregion
 
+		/// <summary>
+		/// Category or classification of this resource.
+		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
+		/// URI to a concept(based on the ONet work activities example) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
+		/// ceterms:classification
+		/// </summary>
+		public List<string> Classification { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Category or classification of this resource.
-        /// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-        /// URI to a concept(based on the ONet work activities example) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
-        /// ceterms:classification
-        /// </summary>
-        public List<string> Classification { get; set; } = new List<string>();
+		#region Conditions and connections
+		// Connection Profiles are Condition Profiles but typically only a subject of the Condition Profile properties are used.
 
-        #region Conditions and connections
-        //Connection Profiles are Condition Profiles but typically only a subject of the Condition Profile properties are used. 
-        /// <summary>
-        /// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
-        /// Set constraints, prerequisites, entry conditions, or requirements that are shared across an organization, organizational subdivision, set of credentials, or category of entities and activities.
-        /// </summary>
-        public List<string> CommonConditions { get; set; }
+		/// <summary>
+		/// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
+		/// Set constraints, prerequisites, entry conditions, or requirements that are shared across an organization, organizational subdivision, set of credentials, or category of entities and activities.
+		/// </summary>
+		public List<string> CommonConditions { get; set; }
 
 		/// <summary>
 		///  Resources that must be pursued concurrently.
@@ -605,6 +639,7 @@ namespace RA.Models.Input
 		///  Requirement or set of requirements for this resource.
 		/// </summary>
 		public List<ConditionProfile> Requires { get; set; }
+
 		/// <summary>
 		///  Resource that must be completed prior to, or pursued at the same time as, this resource.
 		/// </summary>
@@ -657,6 +692,7 @@ namespace RA.Models.Input
 		#endregion
 
 		#region -- Quality Assurance BY --
+
 		/// <summary>
 		/// List of Organizations that accredit this resource
 		/// </summary>
@@ -666,10 +702,12 @@ namespace RA.Models.Input
 		/// List of Organizations that approve this resource
 		/// </summary>
 		public List<OrganizationReference> ApprovedBy { get; set; }
+
 		/// <summary>
 		/// List of Organizations that recognize this resource
 		/// </summary>
 		public List<OrganizationReference> RecognizedBy { get; set; }
+
 		/// <summary>
 		/// List of Organizations that regulate this resource
 		/// </summary>
@@ -677,44 +715,43 @@ namespace RA.Models.Input
 		#endregion
 
 		#region Quality Assurance IN - Jurisdiction based Quality Assurance  (INs)
-		//There are currently two separate approaches to publishing properties like assertedIn
-		//- Publish all 'IN' properties using JurisdictionAssertions
-		//- Publish using ehe separate specific properties like AccreditedIn, ApprovedIn, etc
+		// There are currently two separate approaches to publishing properties like assertedIn
+		// - Publish all 'IN' properties using JurisdictionAssertions
+		// - Publish using ehe separate specific properties like AccreditedIn, ApprovedIn, etc
 		// 2010-01-06 The property JurisdictionAssertions may become obsolete soon. We recomend to NOT use this property.
 
-
-		//JurisdictionProfile
-		//Each 'IN' property must include one or more organizations and a Main jurisdiction. Only one main jusrisdiction (and multiple exceptions) can be entered with each property.
-		//Only use this property where the organization only makes the assertion for a specific jurisdiction. 
-		//Use the 'BY' equivalent (ex. accreditedBy) where the organization makes a general assertion
+		// JurisdictionAssertion
+		// Each 'IN' property must include one or more organizations and a Main jurisdiction. Only one main jusrisdiction (and multiple exceptions) can be entered with each property.
+		// Only use this property where the organization only makes the assertion for a specific jurisdiction.
+		// Use the 'BY' equivalent (ex. accreditedBy) where the organization makes a general assertion
 
 		/// <summary>
-		/// List of Organizations that accredit this learning opportunity in a specific Jurisdiction. 
+		/// List of Organizations that accredit this learning opportunity in a specific Jurisdiction.
 		/// </summary>
 		public List<JurisdictionProfile> AccreditedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
-		/// List of Organizations that approve this learning opportunity in a specific Jurisdiction. 
+		/// List of Organizations that approve this learning opportunity in a specific Jurisdiction.
 		/// </summary>
 		public List<JurisdictionProfile> ApprovedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
-		/// List of Organizations that offer this learning opportunity in a specific Jurisdiction. 
+		/// List of Organizations that offer this learning opportunity in a specific Jurisdiction.
 		/// </summary>
 		public List<JurisdictionProfile> OfferedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
-		/// List of Organizations that recognize this learning opportunity in a specific Jurisdiction. 
+		/// List of Organizations that recognize this learning opportunity in a specific Jurisdiction.
 		/// </summary>
 		public List<JurisdictionProfile> RecognizedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
-		/// List of Organizations that regulate this learning opportunity in a specific Jurisdiction. 
+		/// List of Organizations that regulate this learning opportunity in a specific Jurisdiction.
 		/// </summary>
 		public List<JurisdictionProfile> RegulatedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
-		/// List of Organizations that revoke this learning opportunity in a specific Jurisdiction. 
+		/// List of Organizations that revoke this learning opportunity in a specific Jurisdiction.
 		/// </summary>
 		public List<JurisdictionProfile> RevokedIn { get; set; } = new List<JurisdictionProfile>();
 
@@ -725,6 +762,7 @@ namespace RA.Models.Input
 		///  full URL OR CTID (recommended)
 		/// </summary>
 		public string SupersededBy { get; set; }
+
 		/// <summary>
 		/// Resource that this resource replaces.
 		/// full URL OR CTID (recommended)
@@ -747,94 +785,98 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> TargetLearningResource { get; set; } = new List<string>();
 
-        /// <summary>
-        /// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
-        /// </summary>
-        public string VersionCode { get; set; }
+		/// <summary>
+		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+		/// </summary>
+		public string VersionCode { get; set; }
 
-        /// <summary>
-        /// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
-        /// </summary>
-        public List<IdentifierValue> VersionIdentifier { get; set; }
+		/// <summary>
+		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+		/// </summary>
+		public List<IdentifierValue> VersionIdentifier { get; set; }
 
 		/// <summary>
 		/// School Courses for the Exchange of Data code for a course.
 		/// It is preferable to record the whole 12 character alphanumeric code, however it is also valid to record just the five digit subject code + course number.
-		/// Minimum of 5 characters and maximum of 14 characters for now. 
+		/// Minimum of 5 characters and maximum of 14 characters for now.
 		/// COURSE ONLY
 		/// </summary>
 		public string SCED { get; set; }
 
-        #region -- Process Profiles --
+		#region -- Process Profiles --
 
-        /// <summary>
-        /// Description of a process for handling complaints about a resource or related resources.
-        /// </summary>
-        public List<ProcessProfile> ComplaintProcess { get; set; }
+		/// <summary>
+		/// Description of a process for handling complaints about a resource or related resources.
+		/// </summary>
+		public List<ProcessProfile> ComplaintProcess { get; set; }
 
-        /// <summary>
-        /// Description of a process by which a resource was created.
-        /// </summary>
-        public List<ProcessProfile> DevelopmentProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource was created.
+		/// </summary>
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
-        /// <summary>
-        ///  Description of a process by which a resource is maintained, including review and updating.
-        /// </summary>
-        public List<ProcessProfile> MaintenanceProcess { get; set; }
+		/// <summary>
+		///  Description of a process by which a resource is maintained, including review and updating.
+		/// </summary>
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
 
-        /// <summary>
-        /// Description of a process by which a resource is reviewed.
-        /// </summary>
-        public List<ProcessProfile> ReviewProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource is reviewed.
+		/// </summary>
+		public List<ProcessProfile> ReviewProcess { get; set; }
 
-        #endregion
+		#endregion
 
-        #region Properties allowed only for learning programs
-        //these will be ignored for all other types
-        /// <summary>
-        /// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
-        /// TODO: enable more detail by using a blank node in ReferenceObject. The latter would be a CredentialAlignmentObject. The Id would be a Guid in DegreeConcentration. Alternately a fully formed blank node id (	  _:(GUID)	)
-        /// </summary>
-        public List<string> DegreeConcentration { get; set; }
+		#region Properties allowed only for learning programs
+		// these will be ignored for all other types
+
+		/// <summary>
+		/// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
+		/// TODO: enable more detail by using a blank node in ReferenceObject. The latter would be a CredentialAlignmentObject. The Id would be a Guid in DegreeConcentration. Alternately a fully formed blank node id (	  _:(GUID)	)
+		/// </summary>
+		public List<string> DegreeConcentration { get; set; }
+
 		/// <summary>
 		/// Focused plan of study within a college or university degree such as a concentration in Aerospace Engineering within an Engineering degree.
 		/// </summary>
-		public LanguageMapList DegreeConcentration_Map { get; set; } = null;
-        #endregion
+		[JsonProperty( PropertyName = "ceterms:degreeConcentration" )]
+		public LanguageMapList DegreeConcentrationLangMap { get; set; } = null;
+		#endregion
 
-    }
+	}
 
 	/// <summary>
 	/// Protyping checking for minimum contents of an input request.
 	/// </summary>
-    public class MinimumRequest
-    {
-        public MiniumumRequestClass LearningOpportunity { get; set; }
-        /// <summary>
-        /// Identifier for Organization which Owns the data being published
-        /// This will be the CTID for the owning org, even if publisher is third party.
+	public class MinimumRequest
+	{
+		public MiniumumRequestClass LearningOpportunity { get; set; }
+
+		/// <summary>
+		/// Identifier for Organization which Owns the data being published
+		/// This will be the CTID for the owning org, even if publisher is third party.
 		/// REQUIRED
-        /// </summary>
-        public string PublishForOrganizationIdentifier { get; set; }
+		/// </summary>
+		public string PublishForOrganizationIdentifier { get; set; }
 
-        /// <summary>
-        /// Leave blank for default
-        /// Formerly known as Community
-        /// </summary>
-        public string Registry { get; set; }
+		/// <summary>
+		/// Leave blank for default
+		/// Formerly known as Community
+		/// </summary>
+		public string Registry { get; set; }
 
-        //temp backup (note that when serialized, this approach doesn't work, get two separate properties
-        public string Community
-        {
-            get { return Registry; }
-            set { Registry = value; }
-        }
-    }
-    public class MiniumumRequestClass
-    {
-        public string Name { get; set; }
-        public string CTID { get; set; }
+		// temp backup (note that when serialized, this approach doesn't work, get two separate properties
+		public string Community
+		{
+			get { return Registry; }
+			set { Registry = value; }
+		}
+	}
 
+	public class MiniumumRequestClass
+	{
+		public string Name { get; set; }
 
-    }
+		public string CTID { get; set; }
+	}
 }

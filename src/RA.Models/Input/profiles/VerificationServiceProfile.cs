@@ -1,14 +1,21 @@
-﻿using System;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
 	/// <summary>
-	/// Common input class for all verification profiles
-	/// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
+	/// Entity describing the means by which someone can verify whether a resource has been attained.
+	/// REQUIRED:
+	/// - CTID
+	/// - Description
+	/// - OfferedBy
+	///
+	/// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first.
 	/// </summary>
 	public class VerificationServiceProfile
 	{
@@ -24,18 +31,22 @@ namespace RA.Models.Input
 		}
 
 		/// <summary>
-		/// Globally unique Credential Transparency Identifier (CTID) 
+		/// Globally unique Credential Transparency Identifier (CTID)
 		/// Required
 		/// </summary>
 		public string CTID { get; set; }
 
 		/// <summary>
-		/// Profile Description 
+		/// Profile Description
 		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
 
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Agent that offers the resource.
@@ -79,7 +90,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public string VerificationMethodDescription { get; set; }
 
-		public LanguageMap VerificationMethodDescription_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:verificationMethodDescription" )]
+		public LanguageMap VerificationMethodDescriptionLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Direct access to the verification service.
@@ -101,7 +116,7 @@ namespace RA.Models.Input
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
 		/// <summary>
-		/// List of Organizations that offer this entity in a specific Jurisdiction. 
+		/// List of Organizations that offer this entity in a specific Jurisdiction.
 		/// </summary>
 		public List<JurisdictionProfile> OfferedIn { get; set; } = new List<JurisdictionProfile>();
 

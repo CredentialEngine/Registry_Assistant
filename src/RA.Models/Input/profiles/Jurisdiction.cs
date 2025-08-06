@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -6,7 +12,7 @@ namespace RA.Models.Input
 	/// Jurisdiction Profile
 	/// Geo-political information about applicable geographic areas and their exceptions.
 	/// A Jurisdiction Profile must have at least one of the following:
-	///		A global jurisdiction of true</a>,
+	///		A global jurisdiction of true,
 	///		or just a description,
 	///		or a <a href="https://credreg.net/ctdl/terms/mainJurisdiction" target="credreg">main Jurisdiction</a> with possible exceptions (<a href="https://credreg.net/ctdl/terms/jurisdictionException" target="credreg">jurisdiction exception</a>).
 	/// <see cref="https://credreg.net/ctdl/terms/JurisdictionProfile"/>
@@ -23,7 +29,6 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// List of Organizations that asserts this condition
-		/// Required
 		/// </summary>
 		public List<OrganizationReference> AssertedBy { get; set; } = new List<OrganizationReference>();
 
@@ -36,6 +41,12 @@ namespace RA.Models.Input
 		/// Statement, or characterization for the Jurisdiction.
 		/// </summary>
 		public string Description { get; set; }
+
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// TBD - does it make sense to offer providing the full GeoCoordinates.

@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
@@ -14,7 +19,7 @@ namespace RA.Models.Input
 		/// Id is a resovable URI
 		/// If the entity exists in the registry, use the CTID property.
 		/// NEW: Coming soon use of ReferenceObjects as a list resources to be blank nodes
-		/// 
+		///
 		/// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
 		/// Alterate URIs are under consideration. For example
 		/// http://dbpedia.com/Stanford_University
@@ -28,7 +33,7 @@ namespace RA.Models.Input
 		public string AtId { get; set; }
 
 		/// <summary>
-		/// Optionally, a CTID can be entered instead of an Id. 
+		/// Optionally, a CTID can be entered instead of an Id.
 		/// A CTID is recommended for flexibility.
 		/// Only enter Id or CTID, but not both.
 		/// </summary>
@@ -69,16 +74,9 @@ namespace RA.Models.Input
 		{
 			get
 			{
-				if ( Type == "ceterms:AssessmentProfile" || Type == "AssessmentProfile" || Type == "Assessment"
+				return ( Type == "ceterms:AssessmentProfile" || Type == "AssessmentProfile" || Type == "Assessment"
 					|| CtdlType == "ceterms:AssessmentProfile" || CtdlType == "AssessmentProfile" || CtdlType == "Assessment"
-					)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+					);
 			}
 		}
 
@@ -86,16 +84,9 @@ namespace RA.Models.Input
 		{
 			get
 			{
-				if ( Type == "ceasn:Competency" || Type == "Competency"
+				return ( Type == "ceasn:Competency" || Type == "Competency"
 					|| CtdlType == "ceasn:Competency" || CtdlType == "Competency"
-					)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+					);
 			}
 		}
 
@@ -146,16 +137,9 @@ namespace RA.Models.Input
 		{
 			get
 			{
-				if ( Type == "Job"
+				return ( Type == "Job"
 					|| Type == "ceterms:Job"
-					)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+					);
 			}
 		}
 
@@ -163,16 +147,9 @@ namespace RA.Models.Input
 		{
 			get
 			{
-				if ( Type == "Occupation"
+				return ( Type == "Occupation"
 					|| Type == "ceterms:Occupation"
-					)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+					);
 			}
 		}
 
@@ -180,16 +157,9 @@ namespace RA.Models.Input
 		{
 			get
 			{
-				if ( Type == "Task"
+				return ( Type == "Task"
 					|| Type == "ceterms:Task"
-					)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+					);
 			}
 		}
 
@@ -197,16 +167,9 @@ namespace RA.Models.Input
 		{
 			get
 			{
-				if ( Type == "WorkRole"
+				return ( Type == "WorkRole"
 					|| Type == "ceterms:WorkRole"
-					)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+					);
 			}
 		}
 	}
@@ -220,11 +183,11 @@ namespace RA.Models.Input
 	{
 		/// <summary>
 		/// Id is a resovable URI
-		/// If the entity exists in the registry, provide the URI. 
+		/// If the entity exists in the registry, provide the URI.
 		/// If not sure of the exact URI, especially if just publishing the entity, then provide the CTID and the API will format the URI.
 		/// Alterate URIs are under consideration. For example
 		/// http://dbpedia.com/Stanford_University
-		/// 
+		///
 		/// NEW: Coming soon use of ReferenceObjects as a list resources to be blank nodes
 		/// </summary>
 		public string Id { get; set; }
@@ -236,7 +199,7 @@ namespace RA.Models.Input
 		public string AtId { get; set; }
 
 		/// <summary>
-		/// Optionally, a CTID can be entered instead of an Id. 
+		/// Optionally, a CTID can be entered instead of an Id.
 		/// A CTID is recommended for flexibility.
 		/// Only enter Id or CTID, but not both.
 		/// </summary>
@@ -266,19 +229,20 @@ namespace RA.Models.Input
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Alternately can provide a language map
+		///  LanguageMap for Name
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = null;
 
 		/// <summary>
-		/// If the entity described below does exist in the registry, use this SameAs property to relate the two. 
+		/// If the entity described below does exist in the registry, use this SameAs property to relate the two.
 		/// Provide a CTID(recommended) or a URI to the thing in the credential registry.
 		/// </summary>
 		public string SameAs { get; set; }
 
 		/// <summary>
 		/// Subject webpage of the entity (required)
-		/// This should be for the referenced entity. 
+		/// This should be for the referenced entity.
 		/// For example, if the reference is for an organization, the subject webpage should be on the organization site.
 		/// </summary>
 		public string SubjectWebpage { get; set; }
@@ -286,18 +250,19 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Description of the entity (optional)
 		/// Minimum of 15 characters when present, but should be clear.
-		/// This should be the general description of the entity. 
-		/// For example, for an organization, the description should be about the organization specifically not, how the organization is related to, or interacts with the refering entity. 
+		/// This should be the general description of the entity.
+		/// For example, for an organization, the description should be about the organization specifically not, how the organization is related to, or interacts with the refering entity.
 		/// </summary>
 		public string Description { get; set; }
 
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		#region Assessment/Lopp related properties
-		// 2020-05-18 Additional properties have been added to the EntityReference. 
+		// 2020-05-18 Additional properties have been added to the EntityReference.
 		/*Allowed properties for Assessment
 		 * Assesses
 		 * AssessmentMethodDescription
@@ -346,7 +311,7 @@ namespace RA.Models.Input
 		public List<string> AssessmentMethodType { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Assessment Method Description 
+		/// Assessment Method Description
 		/// Description of the assessment methods for a resource.
 		/// </summary>
 		public string AssessmentMethodDescription { get; set; }
@@ -377,7 +342,7 @@ namespace RA.Models.Input
 		public List<ConditionProfile> EntryCondition { get; set; } = new List<ConditionProfile>();
 
 		/// <summary>
-		/// Assertions that recognize this entity in a specific Jurisdiction. 
+		/// Assertions that recognize this entity in a specific Jurisdiction.
 		/// </summary>
 		public List<JurisdictionProfile> RecognizedIn { get; set; } = new List<JurisdictionProfile>();
 
@@ -395,11 +360,11 @@ namespace RA.Models.Input
 
 		public List<string> Keyword { get; set; } = new List<string>();
 
-		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList KeywordLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
-		/// Learning Method Description 
-		///  Description of the learning methods for a resource.		/// 
+		/// Learning Method Description
+		///  Description of the learning methods for a resource.
 		/// </summary>
 		public string LearningMethodDescription { get; set; }
 
@@ -426,14 +391,13 @@ namespace RA.Models.Input
 		/// Organization(s) that offer this resource
 		/// /// Can't initialize this or will be loop
 		/// </summary>
-		public List<OrganizationReference> OfferedBy { get; set; }// = new List<OrganizationReference>();
-																  //
+		public List<OrganizationReference> OfferedBy { get; set; }
 
 		/// <summary>
 		/// Organization(s) that owns this resource
 		/// Can't initialize this or will be loop
 		/// </summary>
-		public List<OrganizationReference> OwnedBy { get; set; }// = new List<OrganizationReference>();
+		public List<OrganizationReference> OwnedBy { get; set; }
 
 		public List<string> Subject { get; set; } = new List<string>();
 
@@ -493,7 +457,7 @@ namespace RA.Models.Input
 		{
 
 			if ( !string.IsNullOrWhiteSpace( Type )
-				&& ( !string.IsNullOrWhiteSpace( Name ) || ( Name_Map != null && Name_Map.Count > 0 ) )
+				&& ( !string.IsNullOrWhiteSpace( Name ) || ( NameLangMap != null && NameLangMap.Count > 0 ) )
 				)
 			{
 				return true;
@@ -503,15 +467,15 @@ namespace RA.Models.Input
 		}
 
 		/// <summary>
-		/// Check for minimum data in the reference. 
+		/// Check for minimum data in the reference.
 		/// </summary>
 		/// <returns></returns>
 		public virtual bool IsEmpty()
 		{
 			if ( string.IsNullOrWhiteSpace( Id )
 				&& string.IsNullOrWhiteSpace( CTID )
-				&& ( string.IsNullOrWhiteSpace( Name ) && ( Name_Map == null || Name_Map.Count == 0 ) )
-				&& ( string.IsNullOrWhiteSpace( Description ) && ( Description_Map == null || Description_Map.Count == 0 ) )
+				&& ( string.IsNullOrWhiteSpace( Name ) && ( NameLangMap == null || NameLangMap.Count == 0 ) )
+				&& ( string.IsNullOrWhiteSpace( Description ) && ( DescriptionLangMap == null || DescriptionLangMap.Count == 0 ) )
 				// && string.IsNullOrWhiteSpace( SubjectWebpage )
 				)
 			{

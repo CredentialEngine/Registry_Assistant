@@ -1,6 +1,10 @@
-﻿
-using System.Collections.Generic;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
 
+using System.Collections.Generic;
+using Newtonsoft.Json;
 using RA.Models.Input.profiles.QData;
 
 namespace RA.Models.Input
@@ -16,13 +20,14 @@ namespace RA.Models.Input
 		public string ExpirationDate { get; set; }
 
 		/// <summary>
-		/// Profile description 
+		/// Profile description
 		/// Optional
 		/// Minimum of 15 characters when present, but should be clear.
 		/// </summary>
 		public string Description { get; set; }
 
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// A currency code, for ex USD
@@ -74,7 +79,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Name { get; set; }
 
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		///  LanguageMap for Name
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// List of Alternate Names for this resource
@@ -84,7 +93,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Faculty-to-Student Ratio

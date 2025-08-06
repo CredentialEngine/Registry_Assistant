@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Newtonsoft.Json;
 using RA.Models.Input.profiles.QData;
 
 namespace RA.Models.Input
@@ -26,20 +26,25 @@ namespace RA.Models.Input
 		/// ceterms:description
 		/// </summary>
 		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// DemographicInformation
 		/// Aggregate data or summaries of statistical data relating to the population of credential holders including data about gender, geopolitical regions, age, education levels, and other categories of interest.
 		/// </summary>
 		public string DemographicInformation { get; set; }
+
 		/// <summary>
 		/// DemographicInformation - language map
 		/// </summary>
 		public LanguageMap DemographicInformation_Map { get; set; } = new LanguageMap();
 
 		public string Name { get; set; }
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
+
 		/// <summary>
 		///  Number of credentials awarded.
 		///  ceterms:numberAwarded
@@ -67,7 +72,8 @@ namespace RA.Models.Input
 		/// qdata:relevantDataSet
 		/// </summary>
 		public List<DataSetProfile> RelevantDataSet { get; set; } = new List<DataSetProfile>();
-		//21-02-19 mparsons - change to external reference by URI/CTID
+
+		// 21-02-19 mparsons - change to external reference by URI/CTID
 		public List<string> RelevantDataSetList { get; set; } = new List<string>();
 	}
 }

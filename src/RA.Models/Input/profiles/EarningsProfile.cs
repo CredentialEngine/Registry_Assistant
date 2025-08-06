@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
 
+using System.Collections.Generic;
+using Newtonsoft.Json;
 using RA.Models.Input.profiles.QData;
 
 namespace RA.Models.Input
@@ -24,7 +25,9 @@ namespace RA.Models.Input
 		public string DateEffective { get; set; }
 
 		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		///  Upper interquartile earnings.
@@ -49,7 +52,8 @@ namespace RA.Models.Input
 		public int MedianEarnings { get; set; }
 
 		public string Name { get; set; }
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Number of months after earning a credential when employment and earnings data is collected.
@@ -70,7 +74,7 @@ namespace RA.Models.Input
 		/// qdata:relevantDataSet
 		/// </summary>
 		public List<DataSetProfile> RelevantDataSet { get; set; }
-		public List<string> RelevantDataSetList { get; set; }
 
+		public List<string> RelevantDataSetList { get; set; }
 	}
 }

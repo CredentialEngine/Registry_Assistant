@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -37,9 +38,10 @@ namespace RA.Models.Input
 		public string Description { get; set; }
 
 		/// <summary>
-		/// Language map for description
+		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; }
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Word or phrase indicating the unit of measure - mostly if the use of Currency is not sufficient

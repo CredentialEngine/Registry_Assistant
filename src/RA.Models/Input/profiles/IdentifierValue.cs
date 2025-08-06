@@ -1,4 +1,11 @@
-﻿namespace RA.Models.Input
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using Newtonsoft.Json;
+
+namespace RA.Models.Input
 {
 	/// <summary>
 	///  Means of identifying a resource, typically consisting of an alphanumeric token and a context or scheme from which that token originates.
@@ -24,7 +31,8 @@
 		/// Language map for IdentifierTypeName
 		/// OPTIONAL
 		/// </summary>
-		public LanguageMap IdentifierTypeName_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:identifierTypeName" )]
+		public LanguageMap IdentifierTypeNameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Alphanumeric string identifier of the entity.
@@ -33,5 +41,4 @@
 		/// </summary>
 		public string IdentifierValueCode { get; set; }
 	}
-
 }

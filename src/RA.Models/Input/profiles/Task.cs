@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -15,6 +21,7 @@ namespace RA.Models.Input
 		public string Type { get; set; } = "Task";
 
 		#region Required
+
 		/// <summary>
 		/// Globally unique Credential Transparency Identifier (CTID)
 		/// Required
@@ -25,7 +32,7 @@ namespace RA.Models.Input
 		public string CTID { get; set; }
 
 		/// <summary>
-		/// Profile Description 
+		/// Profile Description
 		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
@@ -33,7 +40,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; }
 
 		/// <summary>
 		/// Agent making a statement based on fact or belief.
@@ -43,7 +51,6 @@ namespace RA.Models.Input
 		public List<OrganizationReference> AssertedBy { get; set; } = new List<OrganizationReference>();
 		#endregion
 
-
 		/// <summary>
 		/// Name of this Task
 		/// NOT Required
@@ -52,19 +59,21 @@ namespace RA.Models.Input
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Alternately can provide a language map
+		///  LanguageMap for Name
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = null;
 
 		/// <summary>
 		/// List of Alternate Names for this resource
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
+
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
-
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateNameLangMap { get; set; } = null;
 
 		/// <summary>
 		/// AbilityEmbodied
@@ -78,7 +87,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Category or classification of this resource.
 		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
-		/// URI to a concept(based on the ONet work activities example) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
+		/// URI to a concept or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
 		/// ceterms:classification
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
@@ -95,11 +104,16 @@ namespace RA.Models.Input
 		/// ceasn:comment
 		/// </summary>
 		public List<string> Comment { get; set; } = new List<string>();
-		public LanguageMapList Comment_map { get; set; } = new LanguageMapList();
+
+		/// <summary>
+		/// LanguageMap for Comment
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:comment" )]
+		public LanguageMapList CommentLangMap { get; set; }
 
 		/// <summary>
 		/// Environmental Hazard Type
-		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; 
+		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes;
 		/// select from an existing enumeration of such types.
 		/// skos:Concept
 		/// Blank nodes!
@@ -159,9 +173,9 @@ namespace RA.Models.Input
 		///// <summary>
 		///// Is Member Of
 		///// Collection to which this resource belongs.
-		///// Inverse property that cannot be used here. 
+		///// Inverse property that cannot be used here.
 		///// </summary>
-		//public List<string> IsMemberOf { get; set; } = new List<string>();
+		// public List<string> IsMemberOf { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Body of information embodied either directly or indirectly in this resource.
@@ -204,12 +218,12 @@ namespace RA.Models.Input
 		/// ceterms:hasWorkRole
 		/// </summary>
 		public List<string> HasWorkRole { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Occupation related to this resource.
 		/// CTID for an existing Ocuupation
 		/// ceterms:hasOccupation
 		/// </summary>
 		public List<string> HasOccupation { get; set; } = new List<string>();
-
 	}
 }

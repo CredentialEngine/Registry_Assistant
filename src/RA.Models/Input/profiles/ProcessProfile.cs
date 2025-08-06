@@ -1,14 +1,16 @@
-﻿using System;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
 	/// <summary>
-	/// Common input class for all process profiles 
-	/// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first. 
+	/// Common input class for all process profiles
+	/// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first.
 	/// </summary>
 	public class ProcessProfile
 	{
@@ -22,7 +24,7 @@ namespace RA.Models.Input
 		}
 
 		/// <summary>
-		/// Profile Description 
+		/// Profile Description
 		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
@@ -30,7 +32,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Effective date of the content of this profile
@@ -56,7 +59,6 @@ namespace RA.Models.Input
 		/// Object that helped the agent perform the action. e.g. John wrote a book with a pen.
 		/// A credential or other instrument whose criteria was applied in executing the action.
 		/// Provide the CTID for a credential in the Credential Registry or provide minimum data for a credential not in the registry.
-		/// TODO - implement blank node process using ReferenceObjects
 		/// </summary>
 		public List<string> Instrument { get; set; } = new List<string>();
 
@@ -176,9 +178,9 @@ namespace RA.Models.Input
 		/// CER Target Scheme:	qdata:CollectionMethod
 		/// <see cref="https://credreg.net/qdata/terms/CollectionMethod"/>
 		/// collectionMethod:AdministrativeRecordMatching
-		/// collectionMethod:CredentialHolderReporting 
-		/// collectionMethod:CredentialHolderSurvey 
-		/// collectionMethod:SupplementalMethod 
+		/// collectionMethod:CredentialHolderReporting
+		/// collectionMethod:CredentialHolderSurvey
+		/// collectionMethod:SupplementalMethod
 		/// collectionMethod:SupplementalSource
 		/// </summary>
 		public List<string> DataCollectionMethodType { get; set; } = new List<string>();

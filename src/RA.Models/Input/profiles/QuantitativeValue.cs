@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
 	/// <summary>
 	/// Class for providing values for a property like FinancialAssistance.FinancialAssistanceValue or  LearningOpportunity.CreditValue.
 	/// Recommended: Provide a single value OR a Min and Max value or a Percentage and provide a valid concept in UnitText
-	/// If UnitText is provided, then a value is required.	
+	/// If UnitText is provided, then a value is required.
 	/// Alternatively just a description can be provided if value is more complicated than can be expressed using either the Value or MinValue/MaxValue
 	/// Edits:
-	/// -	Where no values are entered for a QuantitativeValue, a description is required, the UnitText is not enough  
+	/// -	Where no values are entered for a QuantitativeValue, a description is required, the UnitText is not enough
 	/// -	Any of the values must be non-negative
 	/// -	Currently can only have one numeric type: Value, or Min/MaxValue or Percentage
 	/// -	Either UnitText or Description are required when values are present in the QuantitativeValue
@@ -22,17 +23,17 @@ namespace RA.Models.Input
 	{
 		/// <summary>
 		/// The unit for the context of this profile.
-		/// For credit: 
-		///		Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace. 
+		/// For credit:
+		///		Provide a valid concept from the CreditUnitType concept scheme, with or without the namespace.
 		///		For example:
 		///		creditUnit:DegreeCredit or ContinuingEducationUnit
-		///		<see cref="https://credreg.net/ctdl/terms/creditUnitType"/> 
+		///		<see cref="https://credreg.net/ctdl/terms/creditUnitType"/>
 		/// If this object is a monetary purpose, the UnitText would typically be the related currency for the value (example: "USD")
 		/// </summary>
 		public string UnitText { get; set; }
 
 		/// <summary>
-		/// A single value for this purpose. 
+		/// A single value for this purpose.
 		/// Do not use if providing a percentage, or minimum and maximum value.
 		/// </summary>
 		public decimal? Value { get; set; }
@@ -48,7 +49,7 @@ namespace RA.Models.Input
 		public decimal? MaxValue { get; set; }
 
 		/// <summary>
-		/// A percentage for this purpose. 
+		/// A percentage for this purpose.
 		/// Best practice is to treat the value of this property as a verbatim percentage; for example, a value of 1.5 should be interpreted as 1.5%
 		/// Do not use if providing any of: Value, Minimum or Maximum value.
 		/// qdata:percentage
@@ -60,7 +61,12 @@ namespace RA.Models.Input
 		/// NOTE: the description is required if there are no quanitities (Value, Percentage, Minimum or Maximum value.), or there is a quantity without a unitText
 		/// </summary>
 		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Type of suppression, masking, or other modification made to the data to protect the identities of its subjects.

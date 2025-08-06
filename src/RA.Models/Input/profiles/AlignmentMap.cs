@@ -1,8 +1,29 @@
-﻿using System.Collections.Generic;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
+	/// <summary>
+	/// Entity comprised of a set of alignment or mapping assertions between two existing entities.
+	/// Alignment maps provide the means for parties to assert sets of alignments between already existing entities created by themselves or other parties.
+	/// REQUIRED
+	/// - CTID
+	/// - Name
+	/// - Description
+	/// - HasPart (AlignmentObject)
+	/// - InLanguage
+	/// - LifeCycleStatusType
+	/// - OwnedBy
+	/// - PublicationStatusType
+	/// - Publisher
+	/// - SubjectWebpage
+	///
+	/// </summary>
 	public class AlignmentMap
 	{
 
@@ -19,19 +40,19 @@ namespace RA.Models.Input
 		public string Name { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:name" )]
-		public LanguageMap Name_LangMap { get; set; }
+		public LanguageMap NameLangMap { get; set; }
 
 		/// <summary>
-		/// Statement, characterization or account of the entity. 
+		/// Statement, characterization or account of the entity.
 		/// REQUIRED
 		/// </summary>
 		public string Description { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap Description_LangMap { get; set; }
+		public LanguageMap DescriptionLangMap { get; set; }
 
 		/// <summary>
-		/// Indicates a separately identifiable and independently useful component of the entity. 
+		/// Indicates a separately identifiable and independently useful component of the entity.
 		/// A this time, the only valid CTDL type is AlignmentObject, so this will be a list of bnode identifiers
 		///     (provided in request.ReferenceObjects)
 		/// REQUIRED
@@ -39,7 +60,7 @@ namespace RA.Models.Input
 		public List<AlignmentObject> HasPart { get; set; }
 
 		/// <summary>
-		/// The primary language or languages of the entity, even if it makes use of other languages; 
+		/// The primary language or languages of the entity, even if it makes use of other languages;
 		/// e.g., a course offered in English to teach Spanish would have an inLanguage of English, while a credential in Quebec could have an inLanguage of both French and English.
 		/// REQUIRED
 		/// </summary>
@@ -244,7 +265,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Identifier
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-		/// List of IdentifierValue 
+		/// List of IdentifierValue
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; }
 
@@ -260,7 +281,7 @@ namespace RA.Models.Input
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
 		/// <summary>
-		/// Keyword or key phrase describing relevant aspects of an entity. 
+		/// Keyword or key phrase describing relevant aspects of an entity.
 		/// </summary>
 		public List<string> Keyword { get; set; }
 

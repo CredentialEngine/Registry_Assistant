@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -16,19 +17,23 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Type of credentialing action
 		/// One of
-		/// ceterms:AccreditAction 
-		/// ceterms:AdvancedStandingAction 
-		/// ceterms:ApproveAction 
-		/// ceterms:OfferAction 
-		/// ceterms:RecognizeAction 
-		/// ceterms:RegistrationAction 
-		/// ceterms:RegulateAction 
-		/// ceterms:RenewAction 
-		/// ceterms:RevokeAction 
+		/// ceterms:AccreditAction
+		/// ceterms:AdvancedStandingAction
+		/// ceterms:ApproveAction
+		/// ceterms:OfferAction
+		/// ceterms:RecognizeAction
+		/// ceterms:RegistrationAction
+		/// ceterms:RegulateAction
+		/// ceterms:RenewAction
+		/// ceterms:RevokeAction
 		/// ceterms:RightsAction
 		/// ceterms:WorkforceDemandAction
 		/// REQUIRED
-		/// 
+		/// - CTID
+		/// - ActionStatusType
+		/// - ActingAgent
+		/// - Name
+		/// - Description
 		/// NOTE:
 		/// ceterms:CredentialingAction	is the super class and cannot be published.
 		/// </summary>
@@ -44,9 +49,9 @@ namespace RA.Models.Input
 		/// Types of current status of an action.
 		/// REQUIRED
 		/// Available statuses include:
-		///		ActiveActionStatus, 
-		///		CompletedActionStatus, 
-		///		FailedActionStatus, 
+		///		ActiveActionStatus,
+		///		CompletedActionStatus,
+		///		FailedActionStatus,
 		///		PotentialActionStatus.
 		/// <see href="https://credreg.net/ctdl/terms/ActionStatus">ActionStatus</see>
 		/// </summary>
@@ -66,9 +71,10 @@ namespace RA.Models.Input
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Alternately can provide a language map
+		///  LanguageMap for Name
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Action Description
@@ -79,7 +85,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Description of a process by which a resource is administered.
@@ -106,7 +113,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Object
-		/// 24-07-30 Made Object a list of strings. May need to define as an object for initial testing - just in case 
+		/// 24-07-30 Made Object a list of strings. May need to define as an object for initial testing - just in case
 		/// Object(s) upon which the action is carried out, whose state is kept intact or changed.
 		/// A reference for Credentials, AssessmentProfile, any LearningOpportunity Profile type, or any organization type
 		/// Input: a CTID or a blank node Id where the bnode will be added in the request class ReferenceObjects property.

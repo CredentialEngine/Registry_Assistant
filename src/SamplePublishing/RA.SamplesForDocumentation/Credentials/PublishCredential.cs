@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
+﻿using System.Collections.Generic;
 
+using Newtonsoft.Json;
 using RA.Models.Input;
-using YourCredential = RA.SamplesForDocumentation.SampleModels.Credential;
-using APIRequestResource = RA.Models.Input.Credential;
+
 using APIRequest = RA.Models.Input.CredentialRequest;
+using APIRequestResource = RA.Models.Input.Credential;
+using YourCredential = RA.SamplesForDocumentation.SampleModels.Credential;
 
 namespace RA.SamplesForDocumentation
 {

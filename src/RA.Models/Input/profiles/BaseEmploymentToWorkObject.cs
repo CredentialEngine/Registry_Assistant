@@ -1,24 +1,25 @@
-﻿using System;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RA.Models.Input
 {
 	public class BaseEmploymentToWorkObject : BasePrimaryResource
 	{
-        /// <summary>
-        /// Indicates the stage or level of achievement in a progression of learning.
-        /// (EXCEPT task)
-        /// range: ceterms:CredentialAlignmentObject
-        /// </summary>
-        public List<CredentialAlignmentObject> AtLevel { get; set; }
+		/// <summary>
+		/// Indicates the stage or level of achievement in a progression of learning.
+		/// (EXCEPT task)
+		/// range: ceterms:CredentialAlignmentObject
+		/// </summary>
+		public List<CredentialAlignmentObject> AtLevel { get; set; }
 
-        /// <summary>
-        /// An inventory or listing of resources that includes this resource.
-        /// </summary>
-        public string InCatalog { get; set; }
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		public string InCatalog { get; set; }
 
 		/// <summary>
 		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
@@ -36,35 +37,35 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<CredentialAlignmentObject> TargetCompetency { get; set; }
 
-        /// <summary>
-        /// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
-        /// </summary>
-        public string VersionCode { get; set; }
+		/// <summary>
+		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+		/// </summary>
+		public string VersionCode { get; set; }
 
-        /// <summary>
-        /// VersionIdentifier
-        /// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
-        /// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
-        /// </summary>
-        public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
+		/// <summary>
+		/// VersionIdentifier
+		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+		/// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
+		/// </summary>
+		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
 
-        #region -- Process Profiles --
+		#region -- Process Profiles --
 
-        /// <summary>
-        /// Description of a process by which a resource was created.
-        /// </summary>
-        public List<ProcessProfile> DevelopmentProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource was created.
+		/// </summary>
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
-        /// <summary>
-        ///  Description of a process by which a resource is maintained, including review and updating.
-        /// </summary>
-        public List<ProcessProfile> MaintenanceProcess { get; set; }
+		/// <summary>
+		///  Description of a process by which a resource is maintained, including review and updating.
+		/// </summary>
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
 
-        /// <summary>
-        /// Description of a process by which a resource is reviewed.
-        /// </summary>
-        public List<ProcessProfile> ReviewProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource is reviewed.
+		/// </summary>
+		public List<ProcessProfile> ReviewProcess { get; set; }
 
-        #endregion
-    }
+		#endregion
+	}
 }

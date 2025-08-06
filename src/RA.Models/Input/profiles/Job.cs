@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -13,6 +19,7 @@ namespace RA.Models.Input
 		public string Type { get; set; } = "Job";
 
 		#region Required
+
 		/// <summary>
 		/// Globally unique Credential Transparency Identifier (CTID)
 		/// required
@@ -28,13 +35,15 @@ namespace RA.Models.Input
 		/// ceterms:name
 		/// </summary>
 		public string Name { get; set; }
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		public LanguageMap Name_Map { get; set; }
 
 		/// <summary>
-		/// Profile Description 
+		///  LanguageMap for Name
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = null;
+
+		/// <summary>
+		/// Profile Description
 		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
@@ -42,7 +51,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; }
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Organization(s) that offer this resource
@@ -55,11 +65,11 @@ namespace RA.Models.Input
 		/// List of Alternate Names for this resource
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
+
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
-
+		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// AbilityEmbodied
@@ -96,15 +106,16 @@ namespace RA.Models.Input
 		/// ceasn:comment
 		/// </summary>
 		public List<string> Comment { get; set; } = new List<string>();
-		public LanguageMapList Comment_map { get; set; } = new LanguageMapList();
 
-        /// <summary>
-        /// Occupation related to this resource.
-        /// CTID for an existing Occupation
+		public LanguageMapList CommentLangMap { get; set; } = new LanguageMapList();
+
+		/// <summary>
+		/// Occupation related to this resource.
+		/// CTID for an existing Occupation
 		/// NEW - handle blank nodes
-        /// ceterms:hasOccupation
-        /// </summary>
-        public List<string> HasOccupation { get; set; } = new List<string>();
+		/// ceterms:hasOccupation
+		/// </summary>
+		public List<string> HasOccupation { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Rubric related to this resource.
@@ -113,11 +124,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> HasRubric { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Reference to a relevant support service.
-        /// List of CTIDs that reference one or more published support services
-        /// </summary>
-        public List<string> HasSupportService { get; set; }
+		/// <summary>
+		/// Reference to a relevant support service.
+		/// List of CTIDs that reference one or more published support services
+		/// </summary>
+		public List<string> HasSupportService { get; set; }
 
 		/// <summary>
 		/// Task related to this resource.
@@ -143,32 +154,36 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
-        ///// <summary>
-        ///// Is Member Of
-        ///// Collection to which this resource belongs.
-        ///// Inverse property that cannot be used here. 
-        ///// </summary>
-        //public List<string> IsMemberOf { get; set; } = new List<string>();
+		///// <summary>
+		///// Is Member Of
+		///// Collection to which this resource belongs.
+		///// Inverse property that cannot be used here.
+		///// </summary>
+		// public List<string> IsMemberOf { get; set; } = new List<string>();
 
-        #region Industry type and helpers
-        /// <summary>
-        /// IndustryType
-        /// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
-        /// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
-        /// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
-        /// ceterms:industryType
-        /// </summary>
-        public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+		#region Industry type and helpers
+
+		/// <summary>
+		/// IndustryType
+		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
+		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property.
+		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
+		/// ceterms:industryType
+		/// </summary>
+		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+
 		/// <summary>
 		/// AlternativeIndustryType
-		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
+		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType.
 		/// Any industries added using this property will be added to or appended to the IndustryType output.
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for AlternativeIndustryType
 		/// </summary>
 		public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+
 		/// <summary>
 		/// List of valid NAICS codes. These will be mapped to industry type
 		/// See:
@@ -185,32 +200,36 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> KnowledgeEmbodied { get; set; } = new List<string>();
 
-
 		/// <summary>
 		/// Keyword or key phrase describing relevant aspects of an entity.
 		/// ceterms:keyword
 		/// </summary>
 		public List<string> Keyword { get; set; } = new List<string>();
+
 		/// <summary>
-		/// or provide via a LanguageMapList
+		/// Language map list for Keyword
 		/// </summary>
-		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
+		public LanguageMapList KeywordLangMap { get; set; } = null;
 
 		#region OccupationType and related helpers
+
 		/// <summary>
 		/// OccupationType
 		/// Type of occupation; select from an existing enumeration of such types.
-		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
+		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net.
 		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
 		///  ceterms:occupationType
 		/// </summary>
 		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+
 		/// <summary>
 		/// AlternativeOccupationType
-		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
+		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType.
 		/// Any occupations added using this property will be added to or appended to the OccupationType output.
 		/// </summary>
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for AlternativeOccupationType
 		/// </summary>
@@ -224,44 +243,42 @@ namespace RA.Models.Input
 		public List<string> ONET_Codes { get; set; } = new List<string>();
 		#endregion
 
+		// Free floating Concepts
 
+		/// <summary>
+		/// Environmental Hazard Type
+		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes;
+		/// select from an existing enumeration of such types.
+		/// skos:Concept
+		/// Blank nodes!
+		/// </summary>
+		public List<string> EnvironmentalHazardType { get; set; } = new List<string>();
 
-        //Free floating Concepts 
+		/// <summary>
+		/// Type of required or expected human performance level; select from an existing enumeration of such types.
+		/// skos:Concept
+		/// Blank nodes!
+		/// </summary>
+		public List<string> PerformanceLevelType { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Environmental Hazard Type
-        /// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; 
-        /// select from an existing enumeration of such types.
-        /// skos:Concept
-        /// Blank nodes!
-        /// </summary>
-        public List<string> EnvironmentalHazardType { get; set; } = new List<string>();
+		/// <summary>
+		/// Type of physical activity required or expected in performance; select from an existing enumeration of such types.
+		/// skos:Concept
+		/// Blank nodes!
+		/// </summary>
+		public List<string> PhysicalCapabilityType { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Type of required or expected human performance level; select from an existing enumeration of such types.
-        /// skos:Concept
-        /// Blank nodes!
-        /// </summary>
-        public List<string> PerformanceLevelType { get; set; } = new List<string>();
+		/// <summary>
+		/// Type of required or expected sensory capability; select from an existing enumeration of such types.
+		/// skos:Concept
+		/// Blank nodes!
+		/// </summary>
+		public List<string> SensoryCapabilityType { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Type of physical activity required or expected in performance; select from an existing enumeration of such types.
-        /// skos:Concept
-        /// Blank nodes!
-        /// </summary>
-        public List<string> PhysicalCapabilityType { get; set; } = new List<string>();
-
-        /// <summary>
-        /// Type of required or expected sensory capability; select from an existing enumeration of such types.
-        /// skos:Concept
-        /// Blank nodes!
-        /// </summary>
-        public List<string> SensoryCapabilityType { get; set; } = new List<string>();
-
-        /// <summary>
-        /// Requirement or set of requirements for this resource
-        /// </summary>
-        public List<ConditionProfile> Requires { get; set; }
+		/// <summary>
+		/// Requirement or set of requirements for this resource
+		/// </summary>
+		public List<ConditionProfile> Requires { get; set; }
 
 		/// <summary>
 		/// Another source of information about the entity being described.
@@ -283,7 +300,7 @@ namespace RA.Models.Input
 		/// Optional
 		/// ceterms:subjectWebpage
 		/// </summary>
-		public string SubjectWebpage { get; set; } //URL
+		public string SubjectWebpage { get; set; } // URL
 
 		/// <summary>
 		/// This resource provides transfer value for the referenced Transfer Value Profile.
@@ -296,7 +313,5 @@ namespace RA.Models.Input
 		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
 		/// </summary>
 		public List<string> ReceivesTransferValueFrom { get; set; } = new List<string>();
-
-
 	}
 }

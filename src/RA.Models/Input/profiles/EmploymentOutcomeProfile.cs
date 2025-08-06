@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
 
+using System.Collections.Generic;
+using Newtonsoft.Json;
 using RA.Models.Input.profiles.QData;
 
 namespace RA.Models.Input
@@ -29,18 +30,22 @@ namespace RA.Models.Input
 		/// ceterms:description
 		/// </summary>
 		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		///  Number of jobs obtained in the region during a given timeframe.
-		///  21-02-19 - UPDATE added JobsObtainedList, which uses QuantitativeValue. This allows for providing percentage data - typically with a description. 
+		///  21-02-19 - UPDATE added JobsObtainedList, which uses QuantitativeValue. This allows for providing percentage data - typically with a description.
 		///  ceterms:jobsObtained
 		/// </summary>
 		public List<QuantitativeValue> JobsObtainedList { get; set; }
+
 		/// <summary>
-		/// Where JobsObtained is a simple integer, this property can be used. 
+		/// Where JobsObtained is a simple integer, this property can be used.
 		/// </summary>
 		public int JobsObtained { get; set; }
+
 		/// <summary>
 		/// Jurisdiction Profile
 		/// Geo-political information about applicable geographic areas and their exceptions.
@@ -50,7 +55,8 @@ namespace RA.Models.Input
 		public List<JurisdictionProfile> Jurisdiction { get; set; } = new List<JurisdictionProfile>();
 
 		public string Name { get; set; }
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Authoritative source of an entity's information.
@@ -65,6 +71,7 @@ namespace RA.Models.Input
 		/// qdata:relevantDataSet
 		/// </summary>
 		public List<DataSetProfile> RelevantDataSet { get; set; }
+
 		public List<string> RelevantDataSetList { get; set; }
 	}
 }

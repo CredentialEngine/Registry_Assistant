@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -8,6 +9,7 @@ namespace RA.Models.Input
 		{
 			CostManifest = new CostManifest();
 		}
+
 		public CostManifest CostManifest { get; set; }
 	}
 
@@ -17,6 +19,7 @@ namespace RA.Models.Input
 		{
 			EstimatedCost = new List<CostProfile>();
 		}
+
 		/// <summary>
 		/// Required
 		/// </summary>
@@ -27,10 +30,12 @@ namespace RA.Models.Input
 		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
-        /// <summary>
-        /// Alternately can provide a language map
-        /// </summary>
-        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// URL for cost details
@@ -43,21 +48,24 @@ namespace RA.Models.Input
 		/// Recommended
 		/// </summary>
 		public string Name { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// List of Alternate Names for this resource
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
+
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
 		public string StartDate { get; set; }
+
 		public string EndDate { get; set; }
 
 		/// <summary>
@@ -68,25 +76,25 @@ namespace RA.Models.Input
 		/// <summary>
 		/// List of cost profiles
 		/// </summary>
-        public List<CostProfile> EstimatedCost { get; set; }
+		public List<CostProfile> EstimatedCost { get; set; }
 
-        #region -- Process Profiles --
+		#region -- Process Profiles --
 
-        /// <summary>
-        /// Description of a process by which a resource was created.
-        /// </summary>
-        public List<ProcessProfile> DevelopmentProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource was created.
+		/// </summary>
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
-        /// <summary>
-        ///  Description of a process by which a resource is maintained, including review and updating.
-        /// </summary>
-        public List<ProcessProfile> MaintenanceProcess { get; set; }
+		/// <summary>
+		///  Description of a process by which a resource is maintained, including review and updating.
+		/// </summary>
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
 
-        /// <summary>
-        /// Description of a process by which a resource is reviewed.
-        /// </summary>
-        public List<ProcessProfile> ReviewProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource is reviewed.
+		/// </summary>
+		public List<ProcessProfile> ReviewProcess { get; set; }
 
-        #endregion
-    }
+		#endregion
+	}
 }

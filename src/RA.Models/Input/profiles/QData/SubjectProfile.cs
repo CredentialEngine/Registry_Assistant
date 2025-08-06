@@ -11,13 +11,15 @@ namespace RA.Models.Input.profiles.QData
 	/// qdata:SubjectProfile
 	/// </summary>
 	public class SubjectProfile
-	{		
-		//NOT required
+	{
+		// NOT required
 		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		public string Name { get; set; }
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Type of subject included or excluded from the data set.

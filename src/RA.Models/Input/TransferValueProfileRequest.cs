@@ -1,8 +1,10 @@
-﻿using System;
+﻿// <copyright file="CredentialRequest.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -20,7 +22,6 @@ namespace RA.Models.Input
 		/// List of TransferValueProfiles to publish
 		/// </summary>
 		public TransferValueProfile TransferValueProfile { get; set; } = new TransferValueProfile();
-
 	}
 
 	/// <summary>
@@ -46,7 +47,8 @@ namespace RA.Models.Input
 	public class TransferValueProfile
 	{
 
-		#region Required 
+		#region Required
+
 		/// <summary>
 		/// Globally unique Credential Transparency Identifier (CTID)
 		/// Required
@@ -58,19 +60,24 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string Name { get; set; }
+
 		/// <summary>
-		/// Alternately can provide a language map
+		///  LanguageMap for Name
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = null;
+
 		/// <summary>
-		/// Transfer Value Profile Description 
+		/// Transfer Value Profile Description
 		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; }
 
 		/// <summary>
 		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
@@ -89,8 +96,7 @@ namespace RA.Models.Input
 		/// Webpage that describes this entity.
 		/// Required
 		/// </summary>
-		public string SubjectWebpage { get; set; } //URL
-
+		public string SubjectWebpage { get; set; } // URL
 
 		/// <summary>
 		/// A suggested or articulated credit- or point-related transfer value.
@@ -98,7 +104,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<ValueProfile> TransferValue { get; set; } = new List<ValueProfile>();
 		#endregion
-
 
 		/// <summary>
 		/// Identifier
@@ -110,7 +115,6 @@ namespace RA.Models.Input
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
 		public string InCatalog { get; set; }
-
 
 		/// <summary>
 		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
@@ -134,7 +138,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		///  Resource that provides the transfer value described by this resource, according to the entity providing this resource.
-		///  2020-12-07 The data type was changed to object. The handled CTDL classes are: 
+		///  2020-12-07 The data type was changed to object. The handled CTDL classes are:
 		///  - AssessmentProfile
 		///  - LearningOpportunityProfile
 		///  - All credential classes
@@ -148,7 +152,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		///  Resource that accepts the transfer value described by this resource, according to the entity providing this resource.
-		///  2020-12-07 The data type was changed to object. The handled CTDL classes are: 
+		///  2020-12-07 The data type was changed to object. The handled CTDL classes are:
 		///  - AssessmentProfile
 		///  - LearningOpportunityProfile
 		///  - All credential classes
@@ -159,92 +163,97 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<object> TransferValueFor { get; set; } = new List<object>();
 
-
 		/// <summary>
 		/// List of Alternate Names for this resource
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
+
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateNameLangMap { get; set; } = null;
 		#region Version related properties
 		//
+
 		/// <summary>
 		/// Latest version of the credential.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public string LatestVersion { get; set; }
+
 		/// <summary>
 		/// Version of the resource that immediately precedes this version.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public string PreviousVersion { get; set; }
+
 		/// <summary>
 		/// Version of the resource that immediately follows this version.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public string NextVersion { get; set; }
+
 		/// <summary>
 		///  Resource that replaces this resource.
 		///  full URL OR CTID (recommended)
 		/// </summary>
 		public string SupersededBy { get; set; }
+
 		/// <summary>
 		/// Resource that this resource replaces.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public string Supersedes { get; set; }
 
-        /// <summary>
-        /// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
-        /// </summary>
-        public string VersionCode { get; set; }
+		/// <summary>
+		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+		/// </summary>
+		public string VersionCode { get; set; }
 
-        /// <summary>
-        /// VersionIdentifier
-        /// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
-        /// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
-        /// </summary>
-        public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
+		/// <summary>
+		/// VersionIdentifier
+		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+		/// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
+		/// </summary>
+		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
 
-        #endregion
+		#endregion
 
-        #region -- Process Profiles --
-        /// <summary>
-        /// Description of a process by which a resource is administered.
-        /// ceterms:administrationProcess
-        /// </summary>
-        public List<ProcessProfile> AdministrationProcess { get; set; }
+		#region -- Process Profiles --
 
-        /// <summary>
-        /// Description of a formal process for objecting to decisions of an organization.
-        /// </summary>
-        public List<ProcessProfile> AppealProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource is administered.
+		/// ceterms:administrationProcess
+		/// </summary>
+		public List<ProcessProfile> AdministrationProcess { get; set; }
 
-        /// <summary>
-        /// Description of a process for handling complaints about a resource or related resources.
-        /// </summary>
-        public List<ProcessProfile> ComplaintProcess { get; set; }
+		/// <summary>
+		/// Description of a formal process for objecting to decisions of an organization.
+		/// </summary>
+		public List<ProcessProfile> AppealProcess { get; set; }
 
-        /// <summary>
-        /// Description of a process by which a resource was created.
-        /// </summary>
-        public List<ProcessProfile> DevelopmentProcess { get; set; }
+		/// <summary>
+		/// Description of a process for handling complaints about a resource or related resources.
+		/// </summary>
+		public List<ProcessProfile> ComplaintProcess { get; set; }
 
-        /// <summary>
-        ///  Description of a process by which a resource is maintained, including review and updating.
-        /// </summary>
-        public List<ProcessProfile> MaintenanceProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource was created.
+		/// </summary>
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
-        /// <summary>
-        /// Description of a process by which a resource is reviewed.
-        /// </summary>
-        public List<ProcessProfile> ReviewProcess { get; set; }
+		/// <summary>
+		///  Description of a process by which a resource is maintained, including review and updating.
+		/// </summary>
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
 
-        #endregion
+		/// <summary>
+		/// Description of a process by which a resource is reviewed.
+		/// </summary>
+		public List<ProcessProfile> ReviewProcess { get; set; }
 
-    }
+		#endregion
 
-
+	}
 }

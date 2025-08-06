@@ -1,14 +1,16 @@
-﻿using System;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
 	/// <summary>
 	/// CostProfile class
-	/// 2018-09-02 Where LanguageMap alternates are available, only enter one (string or language map). The system will check the string version first. 
+	/// 2018-09-02 Where LanguageMap alternates are available, only enter one (string or language map). The system will check the string version first.
 	/// </summary>
 	public class CostProfile
 	{
@@ -30,7 +32,7 @@ namespace RA.Models.Input
 		public string CostDetails { get; set; }
 
 		/// <summary>
-		/// Profile description 
+		/// Profile description
 		/// 23-11-13 - NO LONGER required
 		/// Optional
 		/// Minimum of 15 characters when present, but should be clear.
@@ -40,7 +42,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Name for this cost profile
@@ -49,9 +52,10 @@ namespace RA.Models.Input
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Alternately can provide a language map
+		///  LanguageMap for Name
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = null;
 
 		/// <summary>
 		/// A currency (ISO_4217) code, for example USD
@@ -111,7 +115,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 	}
 
 	/// <summary>
@@ -129,7 +133,7 @@ namespace RA.Models.Input
 		}
 
 		/// <summary>
-		/// Must be a valid CTDL cost type. 
+		/// Must be a valid CTDL cost type.
 		/// costType:AggregateCost
 		///	costType:Application
 		///	costType:BackgroundCheck

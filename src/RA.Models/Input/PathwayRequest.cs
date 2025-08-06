@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -30,8 +31,8 @@ namespace RA.Models.Input
 		/// Pathway Components
 		/// </summary>
 		public List<PathwayComponent> PathwayComponents { get; set; } = new List<PathwayComponent>();
+	}
 
-	}//
 	/// <summary>
 	/// Proposed option to publish a document already formatted as CTDL JSON-LD.
 	/// </summary>
@@ -43,8 +44,8 @@ namespace RA.Models.Input
 		}
 
 		public GraphInput PathwayGraph { get; set; }
-
 	}
+
 	/// <summary>
 	/// Resource composed of a structured set of PathwayComponents defining points along a route to fulfillment of a goal or objective.
 	/// </summary>
@@ -53,6 +54,7 @@ namespace RA.Models.Input
 		public Pathway() { }
 
 		#region *** Required Properties ***
+
 		/// <summary>
 		/// CTID
 		/// Required
@@ -63,21 +65,23 @@ namespace RA.Models.Input
 		/// Pathway Name
 		/// </summary>
 		public string Name { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
+
 		/// <summary>
 		/// Pathway Description 
 		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
-
-
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; }
 
 		#region at least one of
 
@@ -85,13 +89,13 @@ namespace RA.Models.Input
 		/// Organization that owns this resource
 		/// </summary>
 		public List<OrganizationReference> OwnedBy { get; set; } = new List<OrganizationReference>();
-		//OR
+		// OR
+
 		/// <summary>
 		/// Organization(s) that offer this resource
 		/// </summary>
 		public List<OrganizationReference> OfferedBy { get; set; }
 		#endregion
-
 
 		#endregion
 
@@ -141,28 +145,31 @@ namespace RA.Models.Input
 		/// </summary>
 		public string SubjectWebpage { get; set; }
 
-		//Also OccupationType, and IndustryType - see below
+		// Also OccupationType, and IndustryType - see below
 		#endregion
 
 		/// <summary>
 		/// Keyword or key phrase describing relevant aspects of an entity.
 		/// </summary>
 		public List<string> Keyword { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for Keyword
 		/// </summary>
-		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList KeywordLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
 		/// </summary>
 		public List<string> Subject { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for Subject
 		/// </summary>
 		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
 
 		#region Occupations, and Industries
+
 		/// <summary>
 		/// OccupationType
 		/// Type of occupation; select from an existing enumeration of such types.
@@ -170,12 +177,14 @@ namespace RA.Models.Input
 		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
 		/// </summary>
 		public List<FrameworkItem> OccupationType { get; set; }
+
 		/// <summary>
 		/// AlternativeOccupationType
 		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
 		/// Any occupations added using this property will be added to or appended to the OccupationType output.
 		/// </summary>
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// List of valid O*Net codes. See:
 		/// https://www.onetonline.org/find/
@@ -183,7 +192,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> ONET_Codes { get; set; } = new List<string>();
 
-		//=============================================================================
+		// =============================================================================
+
 		/// <summary>
 		/// IndustryType
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
@@ -191,20 +201,23 @@ namespace RA.Models.Input
 		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
 		/// </summary>
 		public List<FrameworkItem> IndustryType { get; set; }
+
 		/// <summary>
 		/// AlternativeIndustryType
 		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
 		/// Any industries added using this property will be added to or appended to the IndustryType output.
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
-		//public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+		// public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+
 		/// <summary>
 		/// List of valid NAICS codes. These will be mapped to industry type
 		/// See:
 		/// https://www.naics.com/search/
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
-		//=============================================================================
+		// =============================================================================
+
 		/// <summary>
 		/// InstructionalProgramType
 		/// Type of instructional program; select from an existing enumeration of such types.
@@ -217,10 +230,12 @@ namespace RA.Models.Input
 		/// Any programs added using this property will be added to or appended to the InstructionalProgramType output.
 		/// </summary>
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// Language map list for AlternativeInstructionalProgramType
 		/// </summary>
 		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
+
 		/// <summary>
 		/// List of valid Classification of Instructional Program codes. See:
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
@@ -241,71 +256,75 @@ namespace RA.Models.Input
 		/// List of Alternate Names for this resource
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
+
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
 		#region Version related properties
 		//
+
 		/// <summary>
 		/// Latest version of the credential.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public string LatestVersion { get; set; }
+
 		/// <summary>
 		/// Version of the resource that immediately precedes this version.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public string PreviousVersion { get; set; }
+
 		/// <summary>
 		/// Version of the resource that immediately follows this version.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public string NextVersion { get; set; }
 
-        /// <summary>
-        /// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
-        /// </summary>
-        public string VersionCode { get; set; }
+		/// <summary>
+		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+		/// </summary>
+		public string VersionCode { get; set; }
 
-        /// <summary>
-        /// VersionIdentifier
-        /// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
-        /// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
-        /// </summary>
-        public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
-        #endregion
+		/// <summary>
+		/// VersionIdentifier
+		/// Alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner.
+		/// The resource version captured here is any local identifier used by the resource owner to identify the version of the resource in the its local system.
+		/// </summary>
+		public List<IdentifierValue> VersionIdentifier { get; set; } = new List<IdentifierValue>();
+		#endregion
 
+		#region -- Process Profiles --
 
-        #region -- Process Profiles --
+		/// <summary>
+		/// Description of a process by which a resource was created.
+		/// </summary>
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
-        /// <summary>
-        /// Description of a process by which a resource was created.
-        /// </summary>
-        public List<ProcessProfile> DevelopmentProcess { get; set; }
+		/// <summary>
+		///  Description of a process by which a resource is maintained, including review and updating.
+		/// </summary>
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
 
-        /// <summary>
-        ///  Description of a process by which a resource is maintained, including review and updating.
-        /// </summary>
-        public List<ProcessProfile> MaintenanceProcess { get; set; }
+		/// <summary>
+		/// Description of a process by which a resource is reviewed.
+		/// </summary>
+		public List<ProcessProfile> ReviewProcess { get; set; }
 
-        /// <summary>
-        /// Description of a process by which a resource is reviewed.
-        /// </summary>
-        public List<ProcessProfile> ReviewProcess { get; set; }
+		#endregion
+	}
 
-        #endregion
-    }
-
-    /// <summary>
-    /// History
-    /// 21-01-06 remove CodedNotation
-    /// 23-04-30 Add CodedNotation for competencyComponent only
-    /// </summary>
-    public class PathwayComponent
+	/// <summary>
+	/// History
+	/// 21-01-06 remove CodedNotation
+	/// 23-04-30 Add CodedNotation for competencyComponent only
+	/// </summary>
+	public class PathwayComponent
 	{
 		#region REQUIRED Properties
+
 		/// <summary>
 		/// Type of PathwayComponent. 
 		/// Valid values (with or without ceterms:) :
@@ -336,10 +355,11 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string Name { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Type of credential such as badge, certification, bachelor degree.
@@ -348,21 +368,20 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CredentialType { get; set; }
 
-
 		#endregion
 
 		#region RECOMMENDED Properties
-
 
 		/// <summary>
 		/// PathwayComponent Description 
 		/// </summary>
 		public string Description { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
-
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; }
 
 		/// <summary>
 		/// This property identifies the Pathways of which it is a part. 		
@@ -385,7 +404,6 @@ namespace RA.Models.Input
 		/// Examples may include "Required", "Core", "General Education", "Elective", etc.
 		/// </summary>
 		public List<string> ComponentDesignation { get; set; } = new List<string>();
-
 
 		/// <summary>
 		/// Resource(s) that describes what must be done to complete a PathwayComponent, or part thereof, as determined by the issuer of the Pathway.
@@ -414,7 +432,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
-
 		/// <summary>
 		/// The referenced resource is higher in some arbitrary hierarchy than this resource.
 		/// Provide the CTID or the full URI for the target environment. 
@@ -422,7 +439,6 @@ namespace RA.Models.Input
 		/// ceterms:PathwayComponent
 		/// </summary>
 		public List<string> IsChildOf { get; set; } = new List<string>();
-
 
 		/// <summary>
 		/// Pathway for which this resource is the goal or destination.
@@ -432,21 +448,20 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> IsDestinationComponentOf { get; set; } = new List<string>();
 
-
 		/// <summary>
 		/// List of Alternate Names for this resource
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
+
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Points associated with this resource, or points possible.
 		/// </summary>
 		public QuantitativeValue PointValue { get; set; } = new QuantitativeValue();
-
 
 		/// <summary>
 		/// Resource that logically comes after this resource.
@@ -461,29 +476,28 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> PrecededBy { get; set; } = new List<string>();
 
+		/// <summary>
+		/// Indicates the resource for which a pathway component or similar proxy resource is a stand-in.
+		/// This property is slated to completely replace SourceData in late 2022
+		/// URL
+		/// NOTES: Where the referenced data is not in the registry, a 'blank node' could be condsidered. 
+		///			BUT there would be no reason to, as all of the pertinent data could just be added to the related component?
+		///			If perceived to be useful, then provide a blank node id (a Guid) in proxyFor and add the blank node resource to ResourcesObjects
+		/// Domain: All pathway components, except ceterms:MultiComponent, which uses ProxyForItems
+		/// </summary>
+		public string ProxyFor { get; set; }
 
-        /// <summary>
-        /// Indicates the resource for which a pathway component or similar proxy resource is a stand-in.
-        /// This property is slated to completely replace SourceData in late 2022
-        /// URL
-        /// NOTES: Where the referenced data is not in the registry, a 'blank node' could be condsidered. 
-        ///			BUT there would be no reason to, as all of the pertinent data could just be added to the related component?
-        ///			If perceived to be useful, then provide a blank node id (a Guid) in proxyFor and add the blank node resource to ResourcesObjects
-        /// Domain: All pathway components, except ceterms:MultiComponent, which uses ProxyForItems
-        /// </summary>
-        public string ProxyFor { get; set; }
-
-
-        /// <summary>
-        /// Indicates the multiple resources for which a MultiComponent proxy resource is a stand-in.
-        /// Domain: ceterms:MultiComponent
-        /// Range: xsd:anyURI
-        /// </summary>
-        public List<string> ProxyForItems { get; set; }
+		/// <summary>
+		/// Indicates the multiple resources for which a MultiComponent proxy resource is a stand-in.
+		/// Domain: ceterms:MultiComponent
+		/// Range: xsd:anyURI
+		/// </summary>
+		public List<string> ProxyForItems { get; set; }
 
 		#endregion
 
 		#region BasicComponent,	CocurricularComponent, ExtracurricularComponent 
+
 		/// <summary>
 		/// Component Category
 		/// Identifies the type of PathwayComponent subclass not explicitly covered in the current array of PathwayComponent subclasses.
@@ -491,14 +505,15 @@ namespace RA.Models.Input
 		/// ceterms:BasicComponent,	ceterms:CocurricularComponent, ceterms:ExtracurricularComponent 
 		/// </summary>
 		public string ComponentCategory { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap ComponentCategory_Map { get; set; } = new LanguageMap();
 		#endregion
 
-
 		#region CompetencyComponent
+
 		/// <summary>
 		/// //23-05-26 no longer available. Use Identifier
 		///  Set of alpha-numeric symbols as defined by the body responsible for this resource that uniquely identifies this resource and supports its discovery and use.
@@ -509,8 +524,8 @@ namespace RA.Models.Input
 
 		#endregion
 
-
 		#region CourseComponent
+
 		/// <summary>
 		/// CreditValue
 		/// A credit-related value.
@@ -526,29 +541,32 @@ namespace RA.Models.Input
 		/// ceterms:CourseComponent only 
 		/// </summary>
 		public string ProgramTerm { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
 		public LanguageMap ProgramTerm_Map { get; set; } = new LanguageMap();
 
-        #endregion
+		#endregion
 
+		#region JobComponent only - OccupationType and Industry type
 
-        #region JobComponent only - OccupationType and Industry type
-        /// <summary>
-        /// OccupationType
-        /// Type of occupation; select from an existing enumeration of such types.
-        ///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
-        ///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
-        ///  ceterms:occupationType
-        /// </summary>
-        public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+		/// <summary>
+		/// OccupationType
+		/// Type of occupation; select from an existing enumeration of such types.
+		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
+		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
+		///  ceterms:occupationType
+		/// </summary>
+		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+
 		/// <summary>
 		/// AlternativeOccupationType
 		/// Occupations that are not found in a formal framework can be still added using AlternativeOccupationType. 
 		/// Any occupations added using this property will be added to or appended to the OccupationType output.
 		/// </summary>
 		public List<string> AlternativeOccupationType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// List of valid O*Net codes. See:
 		/// https://www.onetonline.org/find/
@@ -557,6 +575,7 @@ namespace RA.Models.Input
 		public List<string> ONET_Codes { get; set; } = new List<string>();
 
 		// Industry type and helpers
+
 		/// <summary>
 		/// IndustryType
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
@@ -565,12 +584,14 @@ namespace RA.Models.Input
 		/// ceterms:industryType
 		/// </summary>
 		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+
 		/// <summary>
 		/// AlternativeIndustryType
 		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
 		/// Any industries added using this property will be added to or appended to the IndustryType output.
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
+
 		/// <summary>
 		/// List of valid NAICS codes. These will be mapped to industry type
 		/// See:
@@ -585,8 +606,8 @@ namespace RA.Models.Input
 		///// Provide the CTID or the full URI for the target environment. 
 		///// ceterms:ComponentCondition
 		///// </summary>
-		//[Obsolete]		//June 30, 2022
-		//public List<string> Prerequisite { get; set; } = new List<string>();
+		// [Obsolete]		//June 30, 2022
+		// public List<string> Prerequisite { get; set; } = new List<string>();
 
 		/// <summary>
 		/// URL to structured data representing the resource.
@@ -599,6 +620,7 @@ namespace RA.Models.Input
 		#endregion
 
 	}
+
 	/// <summary>
 	/// The 
 	/// </summary>
@@ -609,10 +631,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public new List<string> ProxyFor { get; set; }
 	}
-    /// <summary>
-    /// Component Condition
-    /// </summary>
-    public class ComponentCondition
+
+	/// <summary>
+	/// Component Condition
+	/// </summary>
+	public class ComponentCondition
 	{
 
 		/// <summary>
@@ -620,20 +643,21 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string Description { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
-
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// ComponentCondition Name
 		/// </summary>
 		public string Name { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Number of targetComponent resources that must be fulfilled in order to satisfy the ComponentCondition.
@@ -655,18 +679,18 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<ComponentCondition> HasCondition { get; set; } = new List<ComponentCondition>();
 
-        /// <summary>
-        /// Number of hasConstraint objects that must be fulfilled in order to satisfy the ComponentCondition.
-        /// </summary>
-        public int RequiredConstraints { get; set; }
+		/// <summary>
+		/// Number of hasConstraint objects that must be fulfilled in order to satisfy the ComponentCondition.
+		/// </summary>
+		public int RequiredConstraints { get; set; }
 
-        /// <summary>
-        /// Referenced resource defines a single constraint.
-        /// URI or CTID??
-        /// ceterms:hasConstraint
-        ///  Range: ceterms:Constraint
-        /// </summary>
-        public List<Constraint> HasConstraint { get; set; } = new List<Constraint>();
+		/// <summary>
+		/// Referenced resource defines a single constraint.
+		/// URI or CTID??
+		/// ceterms:hasConstraint
+		///  Range: ceterms:Constraint
+		/// </summary>
+		public List<Constraint> HasConstraint { get; set; } = new List<Constraint>();
 
 		/// <summary>
 		/// Type that denotes a logical operation such as "AND", "OR", "NOT"; select from an existing enumeration of such types.
@@ -679,13 +703,12 @@ namespace RA.Models.Input
 		/// List of Alternate Names for this resource
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
+
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
-
+		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 	}
-
 
 	/// <summary>
 	/// Resource that identifies the parameters defining a limitation or restriction applicable to candidate pathway components.
@@ -697,20 +720,23 @@ namespace RA.Models.Input
 		/// Optional
 		/// </summary>
 		public string Name { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Constraint Description 
 		/// Optional
 		/// </summary>
 		public string Description { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
+
 		/// <summary>
 		/// Type of symbol that denotes an operator in a constraint expression such as "gteq" (greater than or equal to), "eq" (equal to), "lt" (less than), "isAllOf" (is all of), "isAnyOf" (is any of); 
 		/// select from an existing enumeration of such types.
@@ -724,14 +750,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> LeftSource { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Action performed on the left constraint; 
-        /// Required if LeftSource has multiple values.
-        /// 
-        /// Range: ceterms:Concept (Select from a controlled vocabulary-ceterms:ArrayOperation)
-        /// </summary>
-        public string LeftAction { get; set; }
-
+		/// <summary>
+		/// Action performed on the left constraint; 
+		/// Required if LeftSource has multiple values.
+		/// 
+		/// Range: ceterms:Concept (Select from a controlled vocabulary-ceterms:ArrayOperation)
+		/// </summary>
+		public string LeftAction { get; set; }
 
 		/// <summary>
 		/// Right hand parameter of a constraint.
@@ -739,24 +764,22 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> RightSource { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Action performed on the right constraint; 
-        /// Required if RightSource has multiple values.
-        /// 
-        /// Range: ceterms:Concept (Select from a controlled vocabulary-ceterms:ArrayOperation)
-        /// </summary>
-        public string RightAction{ get; set; }
+		/// <summary>
+		/// Action performed on the right constraint; 
+		/// Required if RightSource has multiple values.
+		/// 
+		/// Range: ceterms:Concept (Select from a controlled vocabulary-ceterms:ArrayOperation)
+		/// </summary>
+		public string RightAction { get; set; }
 
 		/// <summary>
 		/// List of Alternate Names for this resource
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
+
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
-
+		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 	}
-
-
 }

@@ -1,12 +1,17 @@
-﻿using System.Collections.Generic;
+﻿// <copyright file="OrganizationRequest.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
-    /// <summary>
-    /// Class used with an Organization format or publish request
-    /// </summary>
-    public class OrganizationRequest : BaseRequest
+	/// <summary>
+	/// Class used with an Organization format or publish request
+	/// </summary>
+	public class OrganizationRequest : BaseRequest
 	{
 		/// <summary>
 		/// constructor
@@ -20,7 +25,6 @@ namespace RA.Models.Input
 		/// Organization Input Class
 		/// </summary>
 		public Organization Organization { get; set; }
-
 	}
 
 	/// <summary>
@@ -34,7 +38,7 @@ namespace RA.Models.Input
 	/// - AgentType
 	/// - AgentSectorType
 	/// - At least one of email or address
-	/// 
+	///
 	/// </summary>
 	public class Organization : BaseRequestHelper
 	{
@@ -57,12 +61,12 @@ namespace RA.Models.Input
 			Jurisdiction = new List<Input.JurisdictionProfile>();
 			Address = new List<Place>();
 			AlternateName = new List<string>();
-			
+
 			AccreditedBy = new List<Input.OrganizationReference>();
 			ApprovedBy = new List<Input.OrganizationReference>();
 			RecognizedBy = new List<Input.OrganizationReference>();
 			RegulatedBy = new List<Input.OrganizationReference>();
-		
+
 			Accredits = new List<EntityReference>();
 			Approves = new List<EntityReference>();
 			Offers = new List<EntityReference>();
@@ -70,10 +74,10 @@ namespace RA.Models.Input
 			Renews = new List<EntityReference>();
 			Revokes = new List<EntityReference>();
 			Recognizes = new List<EntityReference>();
-			
+
 			HasConditionManifest = new List<string>();
 			HasCostManifest = new List<string>();
-			
+
 			AdministrationProcess = new List<ProcessProfile>();
 			DevelopmentProcess = new List<ProcessProfile>();
 			MaintenanceProcess = new List<ProcessProfile>();
@@ -81,13 +85,13 @@ namespace RA.Models.Input
 			ComplaintProcess = new List<ProcessProfile>();
 			ReviewProcess = new List<ProcessProfile>();
 			RevocationProcess = new List<ProcessProfile>();
-			
+
 			Department = new List<OrganizationReference>();
 			SubOrganization = new List<OrganizationReference>();
-
 		}
 
 		#region *** Required Properties ***
+
 		/// <summary>
 		/// The type of organization is one of :
 		/// - CredentialOrganization
@@ -96,50 +100,54 @@ namespace RA.Models.Input
 		/// Required
 		/// </summary>
 		public string Type { get; set; }
+
 		// Helper to check if the current organization is a QA organization
 		public bool IsQAOrganization
 		{
-			get 
-			{ 
-				if ( !string.IsNullOrWhiteSpace(Type) && Type.ToLower().IndexOf("qacredentialorganization") > -1 )
+			get
+			{
+				if ( !string.IsNullOrWhiteSpace( Type ) && Type.ToLower().IndexOf( "qacredentialorganization" ) > -1 )
+				{
 					return true;
+				}
 				else
+				{
 					return false;
+				}
 			}
 		}
 
-        /// <summary>
-        /// Name or title of the resource.
-        /// Required
-        /// </summary>
-        public string Name { get; set; }
+		/// <summary>
+		/// Name or title of the resource.
+		/// Required
+		/// </summary>
+		public string Name { get; set; }
 
-        /// <summary>
-        ///  LanguageMap for Name
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:name" )]
-        public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		///  LanguageMap for Name
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
-        /// <summary>
-        /// Description 
-        /// REQUIRED and must be a minimum of 15 characters.
-        /// </summary>
-        public string Description { get; set; }
+		/// <summary>
+		/// Description
+		/// REQUIRED and must be a minimum of 15 characters.
+		/// </summary>
+		public string Description { get; set; }
 
-        /// <summary>
-        /// Alternately can provide a language map
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:description" )]
-        public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
-
-        /// <summary>
-        /// Credential Identifier
-        /// format: 
-        /// ce-UUID (guid)
-        /// Required
-        /// </summary>
-        public string CTID { get; set; }
+		/// <summary>
+		/// Credential Identifier
+		/// format:
+		/// ce-UUID (guid)
+		/// Required
+		/// </summary>
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// Organization subject web page
@@ -158,24 +166,25 @@ namespace RA.Models.Input
 		public List<string> AgentType { get; set; }
 
 		/// <summary>
-		/// The types of sociological, economic, or political subdivision of society served by an agent. 
+		/// The types of sociological, economic, or political subdivision of society served by an agent.
 		/// Required
 		/// Enter one of:
 		/// <value>
-		/// agentSector:PrivateForProfit 
-		/// agentSector:PrivateNonProfit 
+		/// agentSector:PrivateForProfit
+		/// agentSector:PrivateNonProfit
 		/// agentSector:Public
 		/// </value>
 		/// </summary>
 		public string AgentSectorType { get; set; }
 
+		// also require contact information via at least one of
 
-		//also require contact information via at least one of 
 		/// <summary>
 		/// Email addresses for organization
 		/// Require at least Email or Address
 		/// </summary>
 		public List<string> Email { get; set; }
+
 		/// <summary>
 		/// Addresses for organization
 		/// Require at least Email or Address
@@ -184,6 +193,7 @@ namespace RA.Models.Input
 		#endregion
 
 		#region *** Recommended Benchmark Properties ***
+
 		/// <summary>
 		/// Organization's primary purpose as found on an "about" page of a website.
 		/// </summary>
@@ -193,24 +203,30 @@ namespace RA.Models.Input
 		/// Short, key phrases describing the primary purpose of an organization as might be derived from the "about" page of it's website.
 		/// </summary>
 		public string AgentPurposeDescription { get; set; }
+
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap AgentPurposeDescription_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:agentPurposeDescription" )]
+		public LanguageMap AgentPurposeDescriptionLangMap { get; set; } = new LanguageMap();
 
-		//External Quality Assurance
+		// External Quality Assurance
+
 		/// <summary>
 		/// Quality assurance organization that provides official authorization to this  organization.
 		/// </summary>
 		public List<OrganizationReference> AccreditedBy { get; set; }
+
 		/// <summary>
 		/// Organization that pronounces favorable judgment for this organization.
 		/// </summary>
 		public List<OrganizationReference> ApprovedBy { get; set; }
+
 		/// <summary>
 		/// Agent that acknowledges the validity of the organization.
 		/// </summary>
 		public List<OrganizationReference> RecognizedBy { get; set; }
+
 		/// <summary>
 		/// Quality assurance organization that enforces the legal requirements of this organization
 		/// </summary>
@@ -240,47 +256,49 @@ namespace RA.Models.Input
 		/// Keyword or key phrase describing relevant aspects of an entity.
 		/// </summary>
 		public List<string> Keyword { get; set; }
+
 		/// <summary>
 		/// Language map list for Keyword
 		/// </summary>
-		public LanguageMapList Keyword_Map { get; set; } = new LanguageMapList();
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
+		public LanguageMapList KeywordLangMap { get; set; } = new LanguageMapList();
 
+		/// <summary>
+		/// Assertion by an agent that this resource has a specific workforce demand level.
+		/// Range Includes:	ceterms:WorkforceDemandAction
+		/// </summary>
+		public List<string> InDemandAction { get; set; }
 
-        /// <summary>
-        /// Assertion by an agent that this resource has a specific workforce demand level.
-        /// Range Includes:	ceterms:WorkforceDemandAction
-        /// </summary>
-        public List<string> InDemandAction { get; set; }
-
-        /// <summary>
-        /// Social media access point for an agent or an agent's contact point.
-        /// List of URLs
-        /// </summary>
-        public List<string> SocialMedia { get; set; }
+		/// <summary>
+		/// Social media access point for an agent or an agent's contact point.
+		/// List of URLs
+		/// </summary>
+		public List<string> SocialMedia { get; set; }
 
 		/// <summary>
 		/// Type of service offered by the agent being described; select from an existing enumeration of such terms.
 		/// List of concepts from ConceptScheme: ceterms:AgentServiceType
 		/// Valid values:
-		/// serviceType:AccreditService 
-		/// serviceType:ApproveService 
-		/// serviceType:OfferService 
-		/// serviceType:RecognizeService 
-		/// serviceType:RegulateService 
+		/// serviceType:AccreditService
+		/// serviceType:ApproveService
+		/// serviceType:OfferService
+		/// serviceType:RecognizeService
+		/// serviceType:RegulateService
 		/// serviceType:RenewService
 		/// </summary>
 		public List<string> ServiceType { get; set; }
 		#endregion
 
-
 		/// <summary>
 		/// Alias for the organization including acronyms, alpha-numeric notations, and other forms of name abbreviations in common use
 		/// </summary>
 		public List<string> AlternateName { get; set; }
+
 		/// <summary>
 		/// alternate name using a LanguageMapList
 		/// </summary>
-		public LanguageMapList AlternateName_Map { get; set; } = new LanguageMapList();
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Listing of online and/or physical locations
@@ -294,7 +312,7 @@ namespace RA.Models.Input
 		public List<OrganizationReference> Department { get; set; }
 
 		/// <summary>
-		/// Founding Date - the year, year-month, or year-month-day the organization was founded. 
+		/// Founding Date - the year, year-month, or year-month-day the organization was founded.
 		/// Maximum length of 20
 		/// Examples:
 		/// 2000
@@ -305,10 +323,12 @@ namespace RA.Models.Input
 		public string FoundingDate { get; set; }
 
 		#region Concrete codes/identifiers
+
 		/// <summary>
 		/// Dun and Bradstreet DUNS number for identifying an organization or business person.
 		/// </summary>
 		public string Duns { get; set; }
+
 		/// <summary>
 		/// Federal Employer Identification Number (FEIN) identifying organizations, persons, states, government agencies, corporations, and companies.
 		/// </summary>
@@ -318,26 +338,29 @@ namespace RA.Models.Input
 		/// Unique six digit identifier assigned to all U.S. institutions that have submitted data to the Integrated Postsecondary Education Data System (IPEDS).
 		/// </summary>
 		public string IpedsId { get; set; }
+
 		/// <summary>
 		/// OPE ID number (U.S. Office of Postsecondary Education Identification), sometimes referred to as the Federal School Code.
 		/// </summary>
 		public string OpeId { get; set; }
+
 		/// <summary>
 		/// A 20-digit, alpha-numeric code, based on the ISO 17442 standard, for identifying legal entities participating in financial transactions.
 		/// </summary>
 		public string LEICode { get; set; }
+
 		/// <summary>
 		/// ISIC Revision 4 Code
 		/// The International Standard of Industrial Classification of All Economic Activities (ISIC), Revision 4 code for a particular organization, business person, or place.
 		/// </summary>
 		public string ISICV4 { get; set; }
+
 		/// <summary>
 		/// Identifier comprised of a 12 digit code issued by the National Center for Education Statistics (NCES) for educational institutions where the first 7 digits are the NCES District ID.
 		/// </summary>
 		public string NcesID { get; set; }
 
 		#endregion
-
 
 		/// <summary>
 		/// Reference to condition manifests
@@ -351,17 +374,17 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> HasCostManifest { get; set; }
 
-        /// <summary>
-        /// Alignment map owned by the agent.
+		/// <summary>
+		/// Alignment map owned by the agent.
 		/// List of CTIDs. BNodes are not allowed.
-        /// ceterms:hasAlignmentMap
-        /// </summary>
-        public List<string> HasAlignmentMap { get; set; }
+		/// ceterms:hasAlignmentMap
+		/// </summary>
+		public List<string> HasAlignmentMap { get; set; }
 
-        /// <summary>
-        /// An inventory or listing of resources maintained by this Organization
-        /// </summary>
-        public List<string> HasCatalog { get; set; }
+		/// <summary>
+		/// An inventory or listing of resources maintained by this Organization
+		/// </summary>
+		public List<string> HasCatalog { get; set; }
 
 		/// <summary>
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
@@ -370,7 +393,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// AlternativeIndustryType
-		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType. 
+		/// Industries that are not found in a formal framework can be still added using AlternativeIndustryType.
 		/// Any industries added using this property will be added to or appended to the IndustryType output.
 		/// </summary>
 		public List<string> AlternativeIndustryType { get; set; } = new List<string>();
@@ -394,8 +417,7 @@ namespace RA.Models.Input
 		/// lifecycle:Developing, lifecycle:Active", lifecycle:Suspended, lifecycle:Ceased
 		/// <see href="https://credreg.net/ctdl/terms/LifeCycleStatus">ceterms:LifeCycleStatus</see>
 		/// </summary>
-		public string LifeCycleStatusType { get; set; } 
-
+		public string LifeCycleStatusType { get; set; }
 
 		/// <summary>
 		/// Webpage or online document that defines or explains the mission and goals of the organization.
@@ -411,7 +433,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap MissionAndGoalsStatementDescription_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:missionAndGoalsStatementDescription" )]
+		public LanguageMap MissionAndGoalsStatementDescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// North American Industry Classification System (NAICS) code of an organization or business person.
@@ -432,44 +455,39 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<EntityReference> Offers { get; set; }
 
-
 		/// <summary>
 		/// A resource that unambiguously indicates the identity of the resource being described.
 		/// Resources that may indicate identity include, but are not limited to, descriptions of entities in open databases such as DBpedia and Wikidata or social media accounts such as FaceBook and LinkedIn.
 		/// </summary>
 		public List<string> SameAs { get; set; }
 
-
-
 		#region Quality Assurance IN - Jurisdiction based Quality Assurance  (INs)
-		//There are currently two separate approaches to publishing properties like assertedIn
-		//- Publish all 'IN' properties using JurisdictionAssertions
-		//- Publish using ehe separate specific properties like AccreditedIn, ApprovedIn, etc
+		// There are currently two separate approaches to publishing properties like assertedIn
+		// - Publish all 'IN' properties using JurisdictionAssertions
+		// - Publish using ehe separate specific properties like AccreditedIn, ApprovedIn, etc
 		// 2010-01-06 The property JurisdictionAssertions may become obsolete soon. We recomend to NOT use this property.
 
-
 		/// <summary>
-		/// List of Organizations that accredit this organization in a specific Jurisdiction. 
+		/// List of Organizations that accredit this organization in a specific Jurisdiction.
 		/// </summary>
 		public List<JurisdictionProfile> AccreditedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
-		/// List of Organizations that approve this organization in a specific Jurisdiction. 
+		/// List of Organizations that approve this organization in a specific Jurisdiction.
 		/// </summary>
 		public List<JurisdictionProfile> ApprovedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
-		/// List of Organizations that recognize this organization in a specific Jurisdiction. 
+		/// List of Organizations that recognize this organization in a specific Jurisdiction.
 		/// </summary>
 		public List<JurisdictionProfile> RecognizedIn { get; set; } = new List<JurisdictionProfile>();
 
 		/// <summary>
-		/// List of Organizations that regulate this organization in a specific Jurisdiction. 
+		/// List of Organizations that regulate this organization in a specific Jurisdiction.
 		/// </summary>
 		public List<JurisdictionProfile> RegulatedIn { get; set; } = new List<JurisdictionProfile>();
 
 		#endregion
-
 
 		#region Quality Assurance Performed
 		// Organization performs QA on these entities
@@ -487,7 +505,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Resource that the agent recommends, endorses, indicates preference for, or otherwise provides a positive judgment.
 		/// https://credreg.net/ctdl/terms/recognizes
-		/// range: 
+		/// range:
 		/// ceasn:CompetencyFramework, ceterms:AssessmentProfile, ceterms:Course, all Credentials, all Organizations, 		ceterms:LearningOpportunityProfile, ceterms:LearningProgram, ceterms:TransferValueProfile
 		/// </summary>
 		public List<EntityReference> Recognizes { get; set; }
@@ -509,8 +527,8 @@ namespace RA.Models.Input
 
 		#endregion
 
-
 		#region -- Process Profiles --
+
 		/// <summary>
 		/// Entity describing the process by which a credential, assessment, organization, or aspects of it, are administered.
 		/// </summary>
@@ -546,12 +564,12 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<ProcessProfile> RevocationProcess { get; set; }
 
-        #endregion
+		#endregion
 
-        /// <summary>
-        ///  Organization in a subordinate or lower position than a parent organization.
-        /// </summary>
-        public List<OrganizationReference> SubOrganization { get; set; }
+		/// <summary>
+		///  Organization in a subordinate or lower position than a parent organization.
+		/// </summary>
+		public List<OrganizationReference> SubOrganization { get; set; }
 
 		/// <summary>
 		///  Resource that replaces this resource.
@@ -579,7 +597,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap TransferValueStatementDescription_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:transferValueStatementDescription" )]
+		public LanguageMap TransferValueStatementDescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Webpage or online document that defines or explains the nature of support services offered by the organization.
@@ -594,13 +613,12 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap SupportServiceStatementDescription_Map { get; set; }
+		[JsonProperty( PropertyName = "ceterms:supportServiceStatementDescription" )]
+		public LanguageMap SupportServiceStatementDescriptionLangMap { get; set; }
 
 		/// <summary>
 		/// LIst of CTIDS for existing Verification Service profiles
 		/// </summary>
-        public List<string> HasVerificationService{ get; set; } = new List<string>(); 
-
-
-    }
+		public List<string> HasVerificationService { get; set; } = new List<string>();
+	}
 }

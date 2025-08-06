@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input.profiles.QData
 {
@@ -20,6 +21,7 @@ namespace RA.Models.Input.profiles.QData
 		/// qdata:adjustment
 		/// </summary>
 		public string Adjustment { get; set; }
+
 		public LanguageMap Adjustment_Map { get; set; }
 
 		/// <summary>
@@ -45,7 +47,6 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public List<QuantitativeValue> DataNotAvailable { get; set; } = new List<QuantitativeValue>();
 
-
 		/// <summary>
 		/// Earnings rate for a demographic category.
 		/// qdata:demographicEarningsRate
@@ -58,9 +59,11 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public List<QuantitativeValue> DemographicEmploymentRate { get; set; } = new List<QuantitativeValue>();
 
-		//not required
+		// not required
 		public string Description { get; set; }
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Reference to an entity describing aggregate earnings.
@@ -73,6 +76,7 @@ namespace RA.Models.Input.profiles.QData
 		/// qdata:earningsDefinition
 		/// </summary>
 		public string EarningsDefinition { get; set; }
+
 		public LanguageMap EarningsDefinition_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
@@ -87,6 +91,7 @@ namespace RA.Models.Input.profiles.QData
 		/// qdata:earningsThreshold
 		/// </summary>
 		public string EarningsThreshold { get; set; }
+
 		public LanguageMap EarningsThreshold_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
@@ -94,7 +99,9 @@ namespace RA.Models.Input.profiles.QData
 		/// qdata:employmentDefinition
 		/// </summary>
 		public string EmploymentDefinition { get; set; }
+
 		public LanguageMap EmploymentDefinition_Map { get; set; } = new LanguageMap();
+
 		/// <summary>
 		/// Projected employment estimate.
 		/// qdata:employmentOutlook
@@ -198,13 +205,13 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public List<QuantitativeValue> SubjectExcluded { get; set; } = new List<QuantitativeValue>();
 
-		//deprecated Feb/2021
+		// deprecated Feb/2021
 		///// <summary>
 		///// Category of subject included in the data.
 		///// qdata:subjectIncluded
 		///// </summary>
-		//[Obsolete]
-		//public List<SubjectProfile> SubjectIncluded { get; set; } = new List<SubjectProfile>();
+		// [Obsolete]
+		// public List<SubjectProfile> SubjectIncluded { get; set; } = new List<SubjectProfile>();
 
 		/// <summary>
 		/// Total credential holders and non-holders in the final data collection and reporting.
@@ -212,12 +219,11 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public List<QuantitativeValue> SubjectsInSet { get; set; } = new List<QuantitativeValue>();
 
-
-        /// <summary>
-        /// Number of holders that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set (employmentDefinition).
-        /// qdata:sufficientEmploymentCriteria
-        /// </summary>
-        public List<QuantitativeValue> SufficientEmploymentCriteria { get; set; } = new List<QuantitativeValue>();
+		/// <summary>
+		/// Number of holders that meet the prescribed employment threshold in terms of earnings or time engaged in work as defined for the data set (employmentDefinition).
+		/// qdata:sufficientEmploymentCriteria
+		/// </summary>
+		public List<QuantitativeValue> SufficientEmploymentCriteria { get; set; } = new List<QuantitativeValue>();
 
 		/// <summary>
 		/// Number of people employed outside the area of work (e.g., industry, occupation) in which the credential provided preparation.
@@ -230,14 +236,17 @@ namespace RA.Models.Input.profiles.QData
 		/// qdata:workTimeThreshold
 		/// </summary>
 		public string WorkTimeThreshold { get; set; }
+
 		public LanguageMap WorkTimeThreshold_Map { get; set; } = new LanguageMap();
 
 		public List<QuantitativeValue> TotalWIOACompleters { get; set; } = new List<QuantitativeValue>();
+
 		public List<QuantitativeValue> TotalWIOAParticipants { get; set; } = new List<QuantitativeValue>();
+
 		public List<QuantitativeValue> TotalWIOAExiters { get; set; } = new List<QuantitativeValue>();
 
-        #region Obsolete
-        /*
+		#region Obsolete
+		/*
 		
         /// <summary>
         /// Type of subject included or excluded from the data set.
@@ -255,7 +264,7 @@ namespace RA.Models.Input.profiles.QData
         public List<QuantitativeValue> SubjectValue{ get; set; } = new List<QuantitativeValue>();
 
 		*/
-        #endregion
+		#endregion
 
-    }
+	}
 }

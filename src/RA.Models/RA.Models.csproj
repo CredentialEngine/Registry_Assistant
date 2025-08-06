@@ -66,6 +66,7 @@
     <Compile Include="Input\AlignmentMapRequest.cs" />
     <Compile Include="Input\AssessmentRequest.cs" />
     <Compile Include="Input\BaseRequest.cs" />
+    <Compile Include="Input\BaseRequestClass.cs" />
     <Compile Include="Input\BaseRequestHelper.cs" />
     <Compile Include="Input\CollectionRequest.cs" />
     <Compile Include="Input\CompetencyFrameworkRequest.cs" />
@@ -122,7 +123,6 @@
     <Compile Include="Input\profiles\QData\Dimension.cs" />
     <Compile Include="Input\profiles\QData\Metric.cs" />
     <Compile Include="Input\profiles\QData\Observation.cs" />
-    <Compile Include="Input\profiles\QData\SubjectProfile.cs" />
     <Compile Include="Input\profiles\QualificationsFramework.cs" />
     <Compile Include="Input\profiles\QuantitativeValue.cs" />
     <Compile Include="Input\profiles\RevocationProfile.cs" />
@@ -132,6 +132,8 @@
     <Compile Include="Input\profiles\VerificationServiceProfile.cs" />
     <Compile Include="Input\profiles\WorkRole.cs" />
     <Compile Include="Input\ProgressionModelRequest.cs" />
+    <Compile Include="Input\Provisional\BaseRequest.cs" />
+    <Compile Include="Input\Provisional\Requests.cs" />
     <Compile Include="Input\PurgeRequest.cs" />
     <Compile Include="Input\QualificationsFrameworkRequest.cs" />
     <Compile Include="Input\RubricRequest.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="JsonV2\AssessmentProfile.cs" />
     <Compile Include="JsonV2\BaseEmploymentToWorkObject.cs" />
     <Compile Include="JsonV2\BlankNode.cs" />
+    <Compile Include="JsonV2\Collection.cs" />
     <Compile Include="JsonV2\Competency.cs" />
     <Compile Include="JsonV2\CompetencyFramework.cs" />
     <Compile Include="JsonV2\ConceptScheme.cs" />
@@ -188,7 +191,10 @@
     <Compile Include="JsonV2\QData\SubjectProfile.cs" />
     <Compile Include="JsonV2\QuantitativeValue.cs" />
     <Compile Include="JsonV2\Rubric.cs" />
+    <Compile Include="JsonV2\ScheduledOffering.cs" />
+    <Compile Include="JsonV2\SupportService.cs" />
     <Compile Include="JsonV2\Task.cs" />
+    <Compile Include="JsonV2\TransferIntermediary.cs" />
     <Compile Include="JsonV2\TransferValueProfile.cs" />
     <Compile Include="JsonV2\ValueProfile.cs" />
     <Compile Include="JsonV2\VerificationServiceProfile.cs" />

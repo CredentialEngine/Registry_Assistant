@@ -1,11 +1,29 @@
-﻿using System;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
 	/// <summary>
-	/// Qualifcations Framework request
+	/// Qualifcations Framework
+	///		Instrument for developing, classifying and issuing qualifications at international, national, regional or sectoral levels
+	///		according to a set of criteria (such as descriptors) applicable to specified levels of learning
+	/// REQUIRED
+	/// - CTID
+	/// - Name
+	/// - Description
+	/// - OwnedBy
+	/// - HasFacetScheme
+	/// - HasProgressionModel
+	/// - InLanguage
+	/// - LifeCycleStatusType
+	/// - PublicationStatusType
+	/// - Publisher
+	/// - SubjectWebpage
 	/// </summary>
 	public class QualificationsFramework
 	{
@@ -40,7 +58,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Globally unique Credential Transparency Identifier
-		/// format: 
+		/// format:
 		/// ce-UUID (guid)
 		/// Required
 		/// </summary>
@@ -59,7 +77,7 @@ namespace RA.Models.Input
 		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
-		/// Description 
+		/// Description
 		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
@@ -68,50 +86,63 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
+		public LanguageMap DescriptionLangMap { get; set; }
 
 		/// <summary>
-		/// List of CTIDs
+		/// Owning Organization
+		/// REQUIRED
 		/// </summary>
 		public List<OrganizationReference> OwnedBy { get; set; }
 
 		/// <summary>
 		/// Concept scheme used characterize different aspects (facets) of descriptors of nodes in a framework or similar resource.
 		/// URI to the concept scheme
+		/// REQUIRED
 		/// </summary>
 		public List<string> HasFacetScheme { get; set; }
 
 		/// <summary>
-		/// The primary language or languages of the entity, even if it makes use of other languages; 
+		/// Reference to a progression model used.
+		/// REQUIRED
+		/// </summary>
+		public string HasProgressionModel { get; set; }
+
+		/// <summary>
+		/// The primary language or languages of the entity, even if it makes use of other languages;
 		/// e.g., a course offered in English to teach Spanish would have an inLanguage of English, while a credential in Quebec could have an inLanguage of both French and English.
+		/// REQUIRED
 		/// </summary>
 		public List<string> InLanguage { get; set; }
 
 		/// <summary>
 		/// Type of official status of the Assessment; select from an enumeration of such types.
 		/// URI to a concept
+		/// REQUIRED
 		/// </summary>
 		public string LifeCycleStatusType { get; set; }
 
 		/// <summary>
 		/// The publication status of the resource.
+		/// REQUIRED
 		/// </summary>
 		public string PublicationStatusType { get; set; }
 
 		/// <summary>
 		/// An agent responsible for making this resource available.
 		/// List of CTIDs or bnode identifiers
+		/// REQUIRED
 		/// </summary>
 		public List<OrganizationReference> Publisher { get; set; }
 
 		/// <summary>
-		/// Alternate source for publishers using a bnode list. 
+		/// Alternate source for publishers using a bnode list.
 		/// This will be ignored if any data is provided for Publisher.
 		/// </summary>
 		public List<string> PublisherList { get; set; }
 
 		/// <summary>
 		/// Webpage that describes this entity.
+		/// REQUIRED
 		/// </summary>
 		public string SubjectWebpage { get; set; }
 		#endregion
@@ -219,11 +250,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> HasGlossary { get; set; }
 
-		/// <summary>
-		/// Reference to a progression model used.
-		/// </summary>
-		public string HasProgressionModel { get; set; }
-
 
 		/// <summary>
 		/// Has Sub-framework scheme
@@ -235,7 +261,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Identifier
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
-		/// List of IdentifierValue 
+		/// List of IdentifierValue
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; }
 
@@ -332,7 +358,7 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map for Rights
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:rights" )]
-		public LanguageMap Rights_LangMap { get; set; }
+		public LanguageMap RightsLangMap { get; set; }
 
 		/// <summary>
 		/// Another source of information about the entity being described.
@@ -362,7 +388,7 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map list for Subject
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:subject" )]
-		public LanguageMapList Subject_LangMap { get; set; }
+		public LanguageMapList SubjectLangMap { get; set; }
 
 		/// <summary>
 		/// A CreativeWork or Event about this Thing.

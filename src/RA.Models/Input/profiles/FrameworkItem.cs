@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using Newtonsoft.Json;
 
 namespace RA.Models.Input
 {
@@ -25,10 +26,12 @@ namespace RA.Models.Input
 		/// Formal name of the framework.
 		/// </summary>
 		public string FrameworkName { get; set; }
+
 		/// <summary>
 		/// Name of the framework - using LanguageMap
 		/// </summary>
-		public LanguageMap FrameworkName_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:frameworkName" )]
+		public LanguageMap FrameworkNameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Set of alpha-numeric symbols as defined by the body responsible for this resource that uniquely identifies this resource and supports its discovery and use.
@@ -40,19 +43,24 @@ namespace RA.Models.Input
 		/// targetNodeName
 		/// </summary>
 		public string Name { get; set; }
+
 		/// <summary>
-		/// Alternately provide name using LanguageMap
+		///  LanguageMap for Name
 		/// </summary>
-		public LanguageMap Name_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = null;
+
 		/// <summary>
 		/// Description of the framework item
 		/// targetNodeDescription
 		/// </summary>
 		public string Description { get; set; }
+
 		/// <summary>
 		/// Alternately provide description using LanguageMap
 		/// </summary>
-		public LanguageMap Description_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// URI for the FrameworkItem
