@@ -70,7 +70,7 @@ namespace RA.SamplesForDocumentation
             myData.HasSpecificService = new List<string>() { "ce-d0740c95-336d-46ca-a9ee-06d080a948e7", "ce-a3a8162d-1f1b-4a71-bcb3-0d2697eab952" };
 
             //IsSpecificServiceOf.
-            //Use this property to reference a support service that includes this support service (the inverse of HasSpecificService). Typically only one of HasSpecificService or IsSpecificServiceOf would be used unless there is a hierarchical structure like may be seen in say a competency framework. 
+            //Use this property to reference a support service that includes this support service (the inverse of HasSpecificService). Typically only one of HasSpecificService or IsSpecificServiceOf would be used unless there is a hierarchical structure like may be seen in say a competency framework.
             myData.IsSpecificServiceOf = new List<string>() { "ce-b64e0c4e-01a3-45a0-bc6b-d2b62b979bbe" };
 
             myData.AvailableAt = new List<Place>()

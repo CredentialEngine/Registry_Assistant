@@ -32,7 +32,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new CompetencyFramework()
 			{
 				Name = "My Competency Framework Name",
-				description = "This is some text that describes my Competency Framework.",
+				Description = "This is some text that describes my Competency Framework.",
 				CTID = myCTID,
 				PublicationStatusType="Published",
 				Publisher = new List<string>() { organizationIdentifierFromAccountsSite }
@@ -76,7 +76,7 @@ namespace RA.SamplesForDocumentation
 		{
 			Competency output = new Competency()
 			{
-                CompetencyText_map = new LanguageMap( competency ),
+                CompetencyTextLangMap = new LanguageMap( competency ),
 				CTID = "ce-" + Guid.NewGuid().ToString().ToLower(),
 				IsPartOf = frameworkCTID
 			};

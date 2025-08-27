@@ -207,10 +207,21 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> HasSupportService { get; set; } = new List<string>();
 
-		/// <summary>
-		/// Keyword or key phrase describing relevant aspects of an entity.
-		/// </summary>
-		public List<string> Keyword { get; set; }
+        /// Reference to a relevant support service related to this support service.
+        /// List of CTIDs for published resources
+        /// </summary>
+        public List<string> HasSpecificService { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Reference to support services that this support service is part of or related to.
+        /// List of CTIDs for published resources
+        /// </summary>
+        public List<string> IsSpecificServiceOf { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Keyword or key phrase describing relevant aspects of an entity.
+        /// </summary>
+        public List<string> Keyword { get; set; }
 
 		/// <summary>
 		/// Language map list for Keyword

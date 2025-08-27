@@ -13,12 +13,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public Occupation Occupation { get; set; } = new Occupation();
 
-		/// <summary>
-		/// Occupation already formatted as JSON-LD
-		/// ONLY USED WITH PUBLISH LIST
-		/// </summary>
-		public MJ.Occupation FormattedOccupation { get; set; } = new MJ.Occupation();
 	}
+
 	/// <summary>
 	/// Request class for publishing a list of Occupations
 	/// The list must already be formatted as JSON-LD

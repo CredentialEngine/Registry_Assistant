@@ -46,43 +46,6 @@ namespace RA.Models.Input
 	}
 
 	/// <summary>
-	/// Prototype, not implemented
-	/// </summary>
-	public class CollectionUpdateRequest : BaseRequest
-	{
-		/// <summary>
-		/// Collection to update
-		/// TODO - would we want to allow updating the collection as well?
-		/// </summary>
-		public string CollectionCTID { get; set; }
-		/// <summary>
-		/// Members can be any of:
-		/// "ceterms:AssessmentProfile",
-		/// "ceterms:CollectionMember",
-		/// "ceterms:Credential", //any of the valid credential subclasses
-		/// "ceasn:Competency",
-		/// "ceterms:Course",
-		/// "ceterms:Job",
-		/// "ceterms:LearningOpportunityProfile",
-		/// "ceterms:LearningProgram",
-		/// "ceterms:Occupation",
-		/// "ceterms:Task",
-		/// "ceterms:WorkRole",
-		/// </summary>
-		public List<object> Members { get; set; } = new List<object>();
-
-		/// <summary>
-		/// CollectionMember
-		/// Collection members will be published in the graph like Members, but have a separate input propery for better organization
-		/// </summary>
-		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
-
-		/// <summary>
-		/// List of members to remove from a collection
-		/// </summary>
-		public List<string> RemoveMembers { get; set; } = new List<string>();
-	}
-	/// <summary>
 	/// Proposed option to publish a document already formatted as CTDL JSON-LD.
 	/// </summary>
 	public class CollectionGraphRequest : BaseRequest
@@ -435,14 +398,6 @@ namespace RA.Models.Input
 		/// Type for this class
 		/// </summary>
 		public string Type { get; set; } = "ceterms:CollectionMember";
-
-		/// <summary>
-		/// CTID for a collection.
-		/// PROPOSED - NOT IMPLEMENTED
-		/// This property is only used in publishing of documents like learning opportunities. It will be ignored in the context of publishing a collection.
-		/// </summary>
-		public string CollectionCTID { get; set; }
-
 
 		/// <summary>
 		/// A short description of this resource.

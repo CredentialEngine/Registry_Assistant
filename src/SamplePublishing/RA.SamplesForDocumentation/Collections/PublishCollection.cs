@@ -94,11 +94,11 @@ namespace RA.SamplesForDocumentation.Collections
 		}
 
 		/// <summary>
-		/// Code sample including a MemberCondition, CollectionType, and LifeCycleStatusType. 
+		/// Code sample including a MemberCondition, CollectionType, and LifeCycleStatusType.
 		/// As well uses the CollectionMember class to provide additional information about members of this collection including:
 		/// - Name
 		/// - Optional start and end dates (for membership in this collection)
-		/// 
+		///
 		/// <see href="https://sandbox.credentialengineregistry.org/graph/ce-3bc3d4a3-c2de-4c16-8d7b-caca771b12f4"/>
 		/// </summary>
 		/// <param name="requestType">Format or Publish</param>
@@ -186,7 +186,7 @@ namespace RA.SamplesForDocumentation.Collections
 				PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
 			};
 			//add collection members that have additional information about members
-			//CollectionMembers is a property of the Request object, not the Collection. Upon publish, blank nodes will be added to the graph, and the Ids of the blank nodes will be added to the HasMembers property. 
+			//CollectionMembers is a property of the Request object, not the Collection. Upon publish, blank nodes will be added to the graph, and the Ids of the blank nodes will be added to the HasMembers property.
 			myRequest.CollectionMembers.Add( new CollectionMember()
 			{
 				Name = "Associate’s Degree A.A Indigenous Leadership",
@@ -275,15 +275,15 @@ namespace RA.SamplesForDocumentation.Collections
 				Description = "This is some text that describes my Collection.",
 				CTID = myCTID,
 				Keyword = new List<string>() { "Testing", "Prototype"},
-				 
+
 				ONET_Codes= new List<string>() { "19-4090", "21-1090" },
-				OwnedBy = new List<OrganizationReference>() 
-				{ 
-					new OrganizationReference() 
+				OwnedBy = new List<OrganizationReference>()
+				{
+					new OrganizationReference()
 					{
 						Type="Organization",
 						CTID = organizationIdentifierFromAccountsSite
-					} 
+					}
 				}
 			};
 
@@ -322,7 +322,7 @@ namespace RA.SamplesForDocumentation.Collections
 		{
 			Competency output = new Competency()
 			{
-                CompetencyText_map = new LanguageMap( competency ),
+                CompetencyTextLangMap = new LanguageMap( competency ),
 				CTID = "ce-" + Guid.NewGuid().ToString().ToLower(),
 				IsPartOf = frameworkCTID
 			};

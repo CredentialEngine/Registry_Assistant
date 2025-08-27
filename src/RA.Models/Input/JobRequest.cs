@@ -19,12 +19,6 @@ namespace RA.Models.Input
         /// </summary>
         public Job Job { get; set; } = new Job();
 
-
-		/// <summary>
-		/// Job already formatted as JSON-LD
-		/// ONLY USED WITH PUBLISH LIST and request.HasLanguageMaps must be set to true.
-		/// </summary>
-		public MJ.Job FormattedJob { get; set; } = new MJ.Job();
     }
 
     /// <summary>

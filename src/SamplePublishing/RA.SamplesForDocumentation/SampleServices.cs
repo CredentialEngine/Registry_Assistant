@@ -22,11 +22,11 @@ namespace RA.SamplesForDocumentation
 	{
 		private const string thisClassName = "SampleServices";
 		private static string environment = GetAppKeyValue( "environment" );
-		//helpers. Could hard code or retrieve from the config file. 
+		//helpers. Could hard code or retrieve from the config file.
 		public static string GetMyApiKey()
 		{
 			return GetAppKeyValue( "myOrgApiKey" );
-		} 
+		}
 
 		public static string GetMyOrganizationCTID()
 		{
@@ -173,7 +173,7 @@ namespace RA.SamplesForDocumentation
 		}
 		#endregion
 
-		#region publishing 
+		#region publishing
 		/// <summary>
 		/// Method to post to a Registry Assistant publish or format endpoint
 		/// </summary>
@@ -200,7 +200,7 @@ namespace RA.SamplesForDocumentation
 
 			//https://localhost:44312/
 			string assistantUrl = serviceUri + string.Format( "{0}/{1}", entityType, requestType );
-			return SimplePost( assistantUrl, payload, apiKey, ref jsonldPayload, ref messages ); 
+			return SimplePost( assistantUrl, payload, apiKey, ref jsonldPayload, ref messages );
 		}
 		public string SimplePost( string assistantUrl, string payload, string apiKey, ref string jsonldPayload, ref List<string> messages )
 		{
@@ -244,10 +244,7 @@ namespace RA.SamplesForDocumentation
 		public bool PublishRequest( AssistantRequestHelper request )
 		{
 			string serviceUri = GetAppKeyValue( "registryAssistantApi" );
-			if (System.DateTime.Now.Day==07)
-			{
-				//serviceUri = "https://localhost:44312/";
-			}
+
 			request.EndpointUrl = serviceUri + string.Format( "{0}/{1}", request.EndpointType, request.RequestType );
 
 			return PostRequest( request );
@@ -255,7 +252,7 @@ namespace RA.SamplesForDocumentation
 		public bool PostRequest( AssistantRequestHelper request )
 		{
 			RAResponse response = new RAResponse();
-			//for a bulk request, a list of Responses will be returned. 
+			//for a bulk request, a list of Responses will be returned.
 			var listResponse = new List<RAResponse>();
 			LoggingHelper.DoTrace( 5, string.Format( thisClassName + ".PostRequest, RequestType: {0}, CTID: {1}, payloadLen: {2}, starts: '{3}' ....", request.RequestType, request.CTID, ( request.InputPayload ?? "" ).Length, request.InputPayload.Substring( 0, request.InputPayload.Length > 200 ? 200 : request.InputPayload.Length ) ) );
 			//writelog of input formatted file
@@ -295,7 +292,7 @@ namespace RA.SamplesForDocumentation
 
 					LoggingHelper.DoTrace( 6, "SampleServices.PostRequest: doing PostAsync to: " + request.EndpointUrl );
 					var task = client.PostAsync( request.EndpointUrl, new StringContent( request.InputPayload, Encoding.UTF8, "application/json" ) );
-					
+
 
 					task.Wait();
 					var result = task.Result;
@@ -324,7 +321,7 @@ namespace RA.SamplesForDocumentation
 						{
 							//single response
 							response = JsonConvert.DeserializeObject<RAResponse>( responseContents );
-							
+
 							if ( response.Successful )
 							{
 								LoggingHelper.WriteLogFile( 5, request.EndpointType + "_" + request.CTID + "_payload_Successful.json", response.Payload, "", false );

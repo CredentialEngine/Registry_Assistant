@@ -138,7 +138,7 @@ namespace RA.Models.Input
 		/// List of URIs to frameworks
 		/// 2023-03-22 The datatype was changed to a list. The API will still handle a single string.
 		/// </summary>
-		public object DerivedFrom { get; set; }
+		public List<string> DerivedFrom { get; set; }
 
 		/// <summary>
 		/// A short description of this competency framework.

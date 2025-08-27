@@ -55,21 +55,21 @@ namespace RA.SamplesForDocumentation
 				CTID = organizationIdentifierFromAccountsSite
 			} );
             //add name languages
-            myData.Name_Map = new LanguageMap
+            myData.NameLangMap = new LanguageMap
             {
                 { "ar-SA", "بكالوريوس العلوم في المحاسبة" },
                 { "en-US", "Bachelor of Science in Accounting" }
             };
 
             //add desc languages
-            myData.Description_Map = new LanguageMap();
-			myData.Description_Map.Add( "ar-SA", "المحاسبة من أكثر الدرجات تنوعًا في مجال الأعمال. يقدم برنامج المحاسبة في دار الحكمة برنامجًا أكاديميًا شاملاً وصارمًا في الدراسات المحاسبية. سيحصل الطلاب على فهم متعمق للجوانب التقنية والنظرية للمحاسبة ، بما في ذلك التدقيق والضرائب والإدارة المالية وعلوم الإدارة والاقتصاد والتسويق. سيقوم البرنامج بإعداد الطلاب لمجموعة متنوعة من فرص العمل في العديد من قطاعات الاقتصاد. أيضًا ، يمكن أن يساعد الطلاب على تلبية متطلبات التعيين المهني ، بما في ذلك المحاسب المحترف المعتمد (CPA) ، والمحاسب الإداري المعتمد (CMA) والمحلل المالي المعتمد (CFA). \n\n يتزايد الطلب على المحاسبين في المملكة العربية السعودية بسبب تطبيق المعايير الدولية لإعداد التقارير المالية (IFRS) للمؤسسات الصغيرة و" );
-			myData.Description_Map.Add( "en-US", "The Bachelor of Science in Accounting is considered one of the most versatile degrees in business. The Accounting program at Dar Al-Hekma offers a thorough and rigorous academic program in accounting studies. Students will get an in-depth understanding of the technical and theoretical aspects of accounting, including auditing, taxation, financial management, management science, economics, and marketing. The program will prepare students for a variety of job opportunities in numerous sectors of the economy. Also, it can help students meet professional designation requirements, including the Chartered Professional Accountant (CPA), the Certified Management Accountant (CMA) and the Chartered Financial Analyst (CFA). \n\nAccountants are in high demand in Saudi Arabia, due to the implementation of the International Financial Reporting Standards (IFRS) for small and medium enterprises (SMEs)." );
+            myData.DescriptionLangMap = new LanguageMap();
+			myData.DescriptionLangMap.Add( "ar-SA", "المحاسبة من أكثر الدرجات تنوعًا في مجال الأعمال. يقدم برنامج المحاسبة في دار الحكمة برنامجًا أكاديميًا شاملاً وصارمًا في الدراسات المحاسبية. سيحصل الطلاب على فهم متعمق للجوانب التقنية والنظرية للمحاسبة ، بما في ذلك التدقيق والضرائب والإدارة المالية وعلوم الإدارة والاقتصاد والتسويق. سيقوم البرنامج بإعداد الطلاب لمجموعة متنوعة من فرص العمل في العديد من قطاعات الاقتصاد. أيضًا ، يمكن أن يساعد الطلاب على تلبية متطلبات التعيين المهني ، بما في ذلك المحاسب المحترف المعتمد (CPA) ، والمحاسب الإداري المعتمد (CMA) والمحلل المالي المعتمد (CFA). \n\n يتزايد الطلب على المحاسبين في المملكة العربية السعودية بسبب تطبيق المعايير الدولية لإعداد التقارير المالية (IFRS) للمؤسسات الصغيرة و" );
+			myData.DescriptionLangMap.Add( "en-US", "The Bachelor of Science in Accounting is considered one of the most versatile degrees in business. The Accounting program at Dar Al-Hekma offers a thorough and rigorous academic program in accounting studies. Students will get an in-depth understanding of the technical and theoretical aspects of accounting, including auditing, taxation, financial management, management science, economics, and marketing. The program will prepare students for a variety of job opportunities in numerous sectors of the economy. Also, it can help students meet professional designation requirements, including the Chartered Professional Accountant (CPA), the Certified Management Accountant (CMA) and the Chartered Financial Analyst (CFA). \n\nAccountants are in high demand in Saudi Arabia, due to the implementation of the International Financial Reporting Standards (IFRS) for small and medium enterprises (SMEs)." );
 
 			//add keywords. In this case if a language is not provided, a default language is used. 
-			myData.Keyword_Map = new LanguageMapList( new List<string>() { "Accounting", "Taxation", "financial management" } );
+			myData.KeywordLangMap = new LanguageMapList( new List<string>() { "Accounting", "Taxation", "financial management" } );
 			//now add a list in a new language
-			myData.Keyword_Map.Add( "ar-SA", new List<string>() { "محاسبة", "تحصيل الضرائب", "ادارة مالية" } );
+			myData.KeywordLangMap.Add( "ar-SA", new List<string>() { "محاسبة", "تحصيل الضرائب", "ادارة مالية" } );
 
             //==================== QUALITY ASSURANCE RECEIVED ====================
 
@@ -77,7 +77,7 @@ namespace RA.SamplesForDocumentation
 			myData.AccreditedBy.Add( new OrganizationReference()
 			{
 				Type = "QACredentialOrganization",
-				Name_Map = FormatLanguages( languages, new List<string>() { "بعض هيئات الاعتماد" , "Some Accreditation Body" } ),
+				NameLangMap = FormatLanguages( languages, new List<string>() { "بعض هيئات الاعتماد" , "Some Accreditation Body" } ),
 				SubjectWebpage = "https://www.cswe.org/"
 			} );
 			//TBD on addresses
@@ -119,7 +119,7 @@ namespace RA.SamplesForDocumentation
 					{
 						Weeks=12
 					}, 
-					Description_Map=FormatLanguages(languages, new List<string>() {"المدة المقدرة من 8 إلى 12 أسبوعًا.", "Estimated duration of 8 to 12 weeks."})
+					DescriptionLangMap=FormatLanguages(languages, new List<string>() {"المدة المقدرة من 8 إلى 12 أسبوعًا.", "Estimated duration of 8 to 12 weeks."})
 				}
 			};
 			//====================	COSTS	====================
@@ -128,7 +128,7 @@ namespace RA.SamplesForDocumentation
 			//see: https://credreg.net/ctdl/terms#CostType
 			myData.EstimatedCost.Add( new CostProfile()
 			{
-				Description_Map = FormatLanguages(languages, new List<string>() { "الوصف المطلوب لملف تعريف التكلفة", "A required description of the cost profile" }),
+				DescriptionLangMap = FormatLanguages(languages, new List<string>() { "الوصف المطلوب لملف تعريف التكلفة", "A required description of the cost profile" }),
 				CostDetails = "https://example.com/t=loppCostProfile",
 				Currency = "USD", //does this need to be a language map?
 				CostItems = new List<CostProfileItem>()
@@ -142,7 +142,7 @@ namespace RA.SamplesForDocumentation
 					 {
 						 DirectCostType="Tuition",
 						 Price=12999,
-						 PaymentPattern_Map= FormatLanguages(languages, new List<string>() {"كامل المبلغ المستحق وقت التسجيل","Full amount due at time of registration"})
+						 PaymentPatternLangMap= FormatLanguages(languages, new List<string>() {"كامل المبلغ المستحق وقت التسجيل","Full amount due at time of registration"})
 					 }
 				 }
 			} );
@@ -225,7 +225,7 @@ namespace RA.SamplesForDocumentation
 			var output = new ConditionProfile()
 			{
 
-				Description_Map = FormatLanguages( languageCodes, new List<string>() { "للحصول على هذا الاعتماد ، يجب استيفاء الشروط التالية ، ويجب إكمال فرصة التعلم المستهدفة.", "To earn this credential the following conditions must be met, and the target learning opportunity must be completed." } ),
+				DescriptionLangMap = FormatLanguages( languageCodes, new List<string>() { "للحصول على هذا الاعتماد ، يجب استيفاء الشروط التالية ، ويجب إكمال فرصة التعلم المستهدفة.", "To earn this credential the following conditions must be met, and the target learning opportunity must be completed." } ),
 				TargetLearningOpportunity = new List<EntityReference>()
 					{
 						//if the target learning opportunity exists in the registry, then only the CTID has to be provided in the EntityReference
@@ -238,16 +238,16 @@ namespace RA.SamplesForDocumentation
 							//Learning opportunities not in the registry may still be published as 'blank nodes'
 							//The type, name, and subject webpage are required. The description while useful is optional.
 							Type="LearningOpportunity",
-							Name_Map= FormatLanguages(languageCodes,new List<string>(){ "فرصة التعلم المطلوبة.", "A required learning opportunity." }),
-							Description_Map= FormatLanguages(languageCodes,new List<string>(){ "الوصف بينما مفيد هو اختياري.", "The description while useful is optional. " }),
+							NameLangMap= FormatLanguages(languageCodes,new List<string>(){ "فرصة التعلم المطلوبة.", "A required learning opportunity." }),
+							DescriptionLangMap= FormatLanguages(languageCodes,new List<string>(){ "الوصف بينما مفيد هو اختياري.", "The description while useful is optional. " }),
 							SubjectWebpage="https://example.org?t=anotherLopp",
 							 CodedNotation="Learning 101" //string, single value, no language map
 						}
 					}
 			};
-			output.Condition_Map = new LanguageMapList();
-			output.Condition_Map.Add( "ar-SA", new List<string>() { "إكمال المدرسة الثانوية", "لديك رخصة قيادة" } );
-			output.Condition_Map.Add( "en", new List<string>() { "Complete High School", "Have a drivers licence" } );
+			output.ConditionLangMap = new LanguageMapList();
+			output.ConditionLangMap.Add( "ar-SA", new List<string>() { "إكمال المدرسة الثانوية", "لديك رخصة قيادة" } );
+			output.ConditionLangMap.Add( "en", new List<string>() { "Complete High School", "Have a drivers licence" } );
 
 			return output;
 		}
@@ -256,7 +256,7 @@ namespace RA.SamplesForDocumentation
 		{
 			var output = new ConditionProfile()
 			{
-				Description_Map = FormatLanguages( languageCodes, new List<string>() { "للحصول على هذا الاعتماد يجب أن تتحقق الشروط التالية.", "To earn this credential the following conditions must be met" } ),
+				DescriptionLangMap = FormatLanguages( languageCodes, new List<string>() { "للحصول على هذا الاعتماد يجب أن تتحقق الشروط التالية.", "To earn this credential the following conditions must be met" } ),
 				//credit Value
 				CreditValue = new List<ValueProfile>()
 					{
@@ -268,7 +268,7 @@ namespace RA.SamplesForDocumentation
 							// - creditUnit:ClockHour, creditUnit:ContactHour, creditUnit:DegreeCredit
 							CreditUnitType = new List<string>() {"SemesterHour"}, //fixed vocabulary
 							Value=10,
-							Description_Map=FormatLanguages( languageCodes, new List<string>() { "وحدة الائتمان في ساعات الفصل الدراسي.", "Credit unit is in semester hours." })
+							DescriptionLangMap=FormatLanguages( languageCodes, new List<string>() { "وحدة الائتمان في ساعات الفصل الدراسي.", "Credit unit is in semester hours." })
 						}
 					}
 			};

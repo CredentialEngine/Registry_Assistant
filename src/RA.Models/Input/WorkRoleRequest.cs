@@ -19,11 +19,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public WorkRole WorkRole { get; set; } = new WorkRole();
 
-		/// <summary>
-		/// WorkRole already formatted as JSON-LD
-		/// ONLY USED WITH PUBLISH LIST
-		/// </summary>
-		public MJ.WorkRole FormattedWorkRole { get; set; } = new MJ.WorkRole();
 	}
 
 	/// <summary>

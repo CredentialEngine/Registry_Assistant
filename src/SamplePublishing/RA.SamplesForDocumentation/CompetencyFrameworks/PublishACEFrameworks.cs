@@ -33,7 +33,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new CompetencyFramework()
 			{
 				Name = "ACE - Principles of Finance Learning Outcomes",
-				description = "Learning Outcomes for the Principles of Finance program.",
+				Description = "Learning Outcomes for the Principles of Finance program.",
 				CTID = myCTID,
 				PublisherName = new List<string>() { "American Council on Education" },
 				Publisher = new List<string>() { targetUrl + organizationIdentifierFromAccountsSite }
@@ -123,7 +123,7 @@ namespace RA.SamplesForDocumentation
 			var myData = new CompetencyFramework()
 			{
 				Name = "ACE - Introductory Sociology Skills Measured",
-				description = "Skills measured for the Introductory Sociology Skills Measured exam.",
+				Description = "Skills measured for the Introductory Sociology Skills Measured exam.",
 				CTID = myCTID,
 				PublisherName = new List<string>() { "American Council on Education" },
 				Publisher = new List<string>() { targetUrl + organizationIdentifierFromAccountsSite }
