@@ -66,10 +66,11 @@
     <Compile Include="CredentialingActions\PublishQAAction.cs" />
     <Compile Include="Credentials\CredentialWithMultipleLanguages.cs" />
     <Compile Include="Credentials\DeleteCredential.cs" />
+    <Compile Include="Credentials\GraphPublishing.cs" />
+    <Compile Include="Credentials\PublishProvisionalCredential.cs" />
     <Compile Include="Credentials\SampleCredentialPublish.cs" />
     <Compile Include="Credentials\PublishCredentialWithMultipleCampuses.cs" />
     <Compile Include="Credentials\PublishCredentialWithOutcomes.cs" />
-    <Compile Include="Credentials\PublishQACredentialWithETPL.cs" />
     <Compile Include="CredentialType\PublishingCredentialTypes.cs" />
     <Compile Include="Employment\Jobs.cs" />
     <Compile Include="Employment\Occupations.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="VerificationServiceProfiles\VerificationServiceProfilePublishing.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Credentials\files\CredentialGraphSampleInput.json" />
     <None Include="Credentials\files\CredentialWithMultipleLanguages_Api_input.json" />
     <None Include="Credentials\files\CredentialWithMultipleLanguages_Api_output.json" />
     <None Include="Credentials\files\Credential_PublishDetailedRecord_API_Input.json" />
