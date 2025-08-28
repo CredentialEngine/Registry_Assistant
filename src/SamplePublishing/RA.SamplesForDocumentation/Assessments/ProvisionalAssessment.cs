@@ -1,15 +1,15 @@
 ﻿using Newtonsoft.Json;
 
-using APIRequest = RA.Models.Input.Provisional.CredentialRequest;
-using APIRequestResource = RA.Models.Input.Provisional.Credential;
+using APIRequest = RA.Models.Input.Provisional.AssessmentRequest;
+using APIRequestResource = RA.Models.Input.Provisional.BaseProvisional;
 
 
 namespace RA.SamplesForDocumentation
 {
-    public class ProvisionalCredential
+    public class ProvisionalAssessment
     {
         /// <summary>
-        /// Example of the minimum data that can be published for a provisional credential
+        /// Example of the minimum data that can be published for a provisional Assessment
         /// </summary>
         /// <returns></returns>
         public string PublishAbsoluteMinimum()
@@ -29,34 +29,30 @@ namespace RA.SamplesForDocumentation
                 //ensure you have added your organization account CTID to the app.config
             }
 
-            // Assign a CTID for the entity being published and keep track of it
+            //Assign a CTID for the entity being published and keep track of it
             var myCTID = "ce-082c7bb4-5b86-4542-9055-968b654a063b";
 
-            // A simple credential object - see below for sample class definition
-            // For a complete list of all credential types, see:
-            //	https://credreg.net/page/typeslist#ceterms_Credential
+
             var myData = new APIRequestResource()
             {
                 Name = "My Provisional Certification Name",
                 CTID = myCTID,
-                CredentialType = "ceterms:Certification",
             };
 
             // must have at least one of ownedBy or offeredBy
             // NOTE: blank nodes are not allowed, so this will be one or more CTIDs
             myData.OwnedBy.Add( organizationIdentifierFromAccountsSite );
 
-
-            //====================	CREDENTIAL REQUEST ====================
-            // This holds the credential and the identifier (CTID) for the owning organization
+            //==================== REQUEST ====================
+            //This holds the Assessment and the identifier (CTID) for the owning organization
             var myRequest = new APIRequest()
             {
-                Credential = myData,
+                Assessment = myData,
                 DefaultLanguage = "en-US",
                 PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
             };
 
-            //Serialize the credential request object
+            //Serialize the request object
             //Preferably, use method that will exclude null/empty properties
             string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 
@@ -64,10 +60,10 @@ namespace RA.SamplesForDocumentation
 
             SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
             {
-                EndpointType = "credential",
+                EndpointType = "Assessment",
                 RequestType = "provisional",
                 OrganizationApiKey = apiKey,
-                CTID = myRequest.Credential.CTID.ToLowerInvariant(),   //added here for logging
+                CTID = myRequest.Assessment.CTID.ToLowerInvariant(),   //added here for logging
                 InputPayload = payload
             };
 
@@ -78,7 +74,7 @@ namespace RA.SamplesForDocumentation
         }
 
         /// <summary>
-        /// Publish provisional credential with all allowed data
+        /// Publish provisional Assessment with all allowed data
         /// </summary>
         /// <returns></returns>
         public string PublishMaxForProvisionalResource()
@@ -101,16 +97,12 @@ namespace RA.SamplesForDocumentation
             //Assign a CTID for the entity being published and keep track of it
             var myCTID = "ce-2b19648c-fefe-4f21-94d6-7e747220febb";
 
-            //A simple credential object - see below for sample class definition
-            //For a complete list of all credential types, see:
-            //	https://credreg.net/page/typeslist#ceterms_Credential
             var myData = new APIRequestResource()
             {
-                Name = "My Provisional Certification Name",
-                Description = "This is some text that describes my credential.",
+                Name = "My Provisional Assessment Name",
+                Description = "This is some text that describes my Assessment.",
                 CTID = myCTID,
-                SubjectWebpage = "http://example.com/credential/1234",
-                CredentialType = "ceterms:Certification",
+                SubjectWebpage = "http://example.com/Assessment/1234",
             };
 
             // must have at least one of ownedBy or offeredBy
@@ -118,27 +110,26 @@ namespace RA.SamplesForDocumentation
             myData.OwnedBy.Add( organizationIdentifierFromAccountsSite );
             myData.OfferedBy.Add( organizationIdentifierFromAccountsSite );
 
-            //====================	CREDENTIAL REQUEST ====================
-            //This holds the credential and the identifier (CTID) for the owning organization
+            //==================== REQUEST ====================
+            //This holds the Assessment and the identifier (CTID) for the owning organization
             var myRequest = new APIRequest()
             {
-                Credential = myData,
+                Assessment = myData,
                 DefaultLanguage = "en-US",
                 PublishForOrganizationIdentifier = organizationIdentifierFromAccountsSite
             };
 
-            //Serialize the credential request object
+            //Serialize the Assessment request object
             //Preferably, use method that will exclude null/empty properties
             string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );
 
             //call the Assistant API
-
             SampleServices.AssistantRequestHelper req = new SampleServices.AssistantRequestHelper()
             {
-                EndpointType = "credential",
+                EndpointType = "Assessment",
                 RequestType = "provisional",
                 OrganizationApiKey = apiKey,
-                CTID = myRequest.Credential.CTID.ToLowerInvariant(),   //added here for logging
+                CTID = myRequest.Assessment.CTID.ToLowerInvariant(),   //added here for logging
                 InputPayload = payload
             };
 
