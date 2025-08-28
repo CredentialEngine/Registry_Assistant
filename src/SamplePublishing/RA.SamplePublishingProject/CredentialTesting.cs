@@ -61,12 +61,7 @@ namespace RA.SamplePublishingProject
 			//using simple post
 			new KansasExamples().CredentialWithAggregateDataProfile( "publish" );
 		}
-		[TestMethod]
-		public void PublishQACredential()
-		{
-			//using simple post
-			new PublishQACredentialWithETPL().Publish( true );
-		}
+
 		[TestMethod]
 		public void PublishProPathCredential()
 		{
@@ -84,13 +79,13 @@ namespace RA.SamplePublishingProject
 		[TestMethod]
 		public void DoAPublishRequestFromExternalData()
 		{
-			var input = new SamplesForDocumentation.SampleModels.Credential() 
-			{ 
+			var input = new SamplesForDocumentation.SampleModels.Credential()
+			{
 				Name="My internal credential",
 				Description="Description of my credential",
 				CTID="ce-" + Guid.NewGuid().ToString().ToLower(),
 				CredentialType = "BachelorDegree",
-				SubjectWebpage ="https://example.com?type=thisTest", 
+				SubjectWebpage ="https://example.com?type=thisTest",
 				Keyword = new System.Collections.Generic.List<string>() { "Engineering","Mechanical Engineering","Bachelor"}
 
 			};
