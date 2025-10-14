@@ -252,6 +252,11 @@ namespace RA.SamplesForDocumentation.Collections
 		}
 
 		#region publish like a framework
+		/// <summary>
+		/// Full competencies may be published as part of a collection instead of in a competency framework.
+		/// </summary>
+		/// <param name="requestType"></param>
+		/// <returns></returns>
 		public bool PublishLikeAFrameworkWithCompetencies( string requestType = "format" )
 		{
 			//Holds the result of the publish action
@@ -296,10 +301,10 @@ namespace RA.SamplesForDocumentation.Collections
 			};
 			//add competencies
 			//example of a flat framework
-			myRequest.Members.Add( MapCompetency( myCTID, "Looks both ways before crossing street" ) );
-			myRequest.Members.Add( MapCompetency( myCTID, "Looks before leaping" ) );
-			myRequest.Members.Add( MapCompetency( myCTID, "Deals with the faults of others as gently as their own" ) );
-			myRequest.Members.Add( MapCompetency( myCTID, "Knows what he/she knows and does not know what he/she does not know " ) );
+			myRequest.ReferenceMembers.Add( MapCompetency( myCTID, "Looks both ways before crossing street" ) );
+			myRequest.ReferenceMembers.Add( MapCompetency( myCTID, "Looks before leaping" ) );
+			myRequest.ReferenceMembers.Add( MapCompetency( myCTID, "Deals with the faults of others as gently as their own" ) );
+			myRequest.ReferenceMembers.Add( MapCompetency( myCTID, "Knows what he/she knows and does not know what he/she does not know " ) );
 
 			//Serialize the request object
 			string payload = JsonConvert.SerializeObject( myRequest, SampleServices.GetJsonSettings() );

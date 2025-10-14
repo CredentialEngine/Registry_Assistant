@@ -11,7 +11,7 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Collection Request class
 	/// Collection.HasMember can be a list of CTIDs for all members.
-	/// Include CollectionMembers or Members, but not both.
+	/// Include CollectionMembers or ReferenceMembers, but not both.
 	/// </summary>
 	public class CollectionRequest : BaseRequest
 	{
@@ -20,7 +20,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public Collection Collection { get; set; } = new Collection();
 
-
 		/// <summary>
 		/// CollectionMember
 		/// Collection members will be published in the graph like Members, but have a separate input propery for better organization
@@ -28,21 +27,49 @@ namespace RA.Models.Input
 		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
 
 		/// <summary>
-		/// Prototype: publish a list of refernce resources /blank nodes, by providing the data in this property
+		/// Publish a list of reference resources (blank nodes), by providing the data in this property
 		/// Currently members can be any of:
 		/// "ceterms:CredentialOrganization",
 		/// "ceterms:AssessmentProfile",
 		/// "ceterms:Credential", //any of the valid credential subclasses
 		/// "ceasn:Competency",
+		///		NOTE: currently "full" competencies (i.e. have CTIDs) are handled
 		/// "ceterms:Course",
 		/// "ceterms:Job",
 		/// "ceterms:LearningOpportunityProfile",
 		/// "ceterms:LearningProgram",
-		/// At this time, Members must all be the same type.
+		/// At this time, ReferenceMembers must all be the same type.
 		/// </summary>
-		public List<object> Members { get; set; } = new List<object>();
+		public List<object> ReferenceMembers { get; set; } = new List<object>();
 
+	}
 
+	/// <summary>
+	/// Prototype, not implemented
+	/// </summary>
+	public class CollectionUpdateRequest : BaseRequest
+	{
+		/// <summary>
+		/// Collection to update
+		/// TODO - would we want to allow updating the collection as well? ==> NO
+		/// </summary>
+		public string CollectionCTID { get; set; }
+
+		/// <summary>
+		/// List of CTIDs to append to a collection HasMember
+		/// </summary>
+		public List<string> HasMember { get; set; } = new List<string>();
+
+		/// <summary>
+		/// CollectionMember
+		/// Listof Collection members to be added to a collection 
+		/// </summary>
+		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
+
+		/// <summary>
+		/// List of members to remove from a collection
+		/// </summary>
+		public List<string> RemoveMembers { get; set; } = new List<string>();
 	}
 
 	/// <summary>
@@ -138,14 +165,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
 
-		///// <summary>
-		///// Additional Classification
-		///// List of concepts that don't exist in the registry. Will be published as blank nodes
-		///// OR should input be a list of Concepts?
-		///// </summary>
-		//public List<CredentialAlignmentObject> AdditionalClassification { get; set; } = new List<CredentialAlignmentObject>();
 		#endregion
-
 
 		/// <summary>
 		/// Type of collection, list, set, or other grouping of resources; select from an existing enumeration of such types.
@@ -193,7 +213,7 @@ namespace RA.Models.Input
 		/// Reference to a relevant support service.
 		/// List of CTIDs that reference one or more published support services
 		/// </summary>
-		public List<string> HasSupportService { get; set; }
+		public List<string> HasSupportService { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Image URL
@@ -388,7 +408,7 @@ namespace RA.Models.Input
 	}
 
 	/// <summary>
-	/// Collection Member (proposed)
+	/// Collection Member
 	/// The collection member will use a blank node format for the id.
 	/// Tip: we may use the CTID from the is proxy for in the blank node id
 	/// </summary>
