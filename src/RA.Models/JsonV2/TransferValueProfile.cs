@@ -23,7 +23,7 @@ namespace RA.Models.JsonV2
 		public string Type { get; set; }
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		public string CtdlId { get; set; } = string.Empty;
 
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
@@ -43,10 +43,20 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:derivedFrom" )]
 		public List<string> DerivedFrom { get; set; }
-		//
 
-		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
-		public List<ProcessProfile> DevelopmentProcess { get; set; }
+		/// <summary>
+		/// Receiving curriculum or requirement context to which the transfer value is applied.
+		/// Range: ceterms:CredentialAlignmentObject
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:applicability" )]
+		public List<CredentialAlignmentObject> Applicability { get; set; }
+
+		/// <summary>
+		/// Summary of evidence about this resource.
+		/// Range: ceterms:EvaluationOutcome
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:evaluationEvidence" )]
+		public List<EvaluationOutcome> EvaluationEvidence { get; set; }
 
 		/// <summary>
 		/// The webpage that describes this TransferValueProfile.
@@ -69,8 +79,8 @@ namespace RA.Models.JsonV2
 		///// <summary>
 		///// May be replace by Identifier
 		///// </summary>
-		//[JsonProperty( PropertyName = "ceterms:codedNotation" )]
-		//public string CodedNotation { get; set; }
+		// [JsonProperty( PropertyName = "ceterms:codedNotation" )]
+		// public string CodedNotation { get; set; }
 
 		/// <summary>
 		/// Identifier
@@ -100,26 +110,30 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]
 		public CredentialAlignmentObject LifeCycleStatusType { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:transferValue" )]
 		public List<ValueProfile> TransferValue { get; set; } = null;
 
 		#region Versions
 		[JsonProperty( PropertyName = "ceterms:latestVersion" )]
-		public string LatestVersion { get; set; } //URL
+		public string LatestVersion { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:previousVersion" )]
-		public string PreviousVersion { get; set; } //URL
+		public string PreviousVersion { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:nextVersion" )]
-		public string NextVersion { get; set; } //URL
+		public string NextVersion { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
-		public string SupersededBy { get; set; } //URL
+		public string SupersededBy { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:supersedes" )]
-		public string Supersedes { get; set; } //URL
+		public string Supersedes { get; set; }
 
+		/// <summary>
+		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:versionCode" )]
+		public string VersionCode { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
 		public List<IdentifierValue> VersionIdentifier { get; set; }
@@ -146,39 +160,39 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:hasTransferIntermediary" )]
 		public string HasTransferIntermediary { get; set; }
 
-		/*
-		 * 
-		 * 
-		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
-		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; } = new List<CredentialAlignmentObject>();
-		//
 
-		[JsonProperty( PropertyName = "ceterms:subject" )]
-		public List<CredentialAlignmentObject> Subject { get; set; }
+		[JsonProperty( PropertyName = "ceterms:commonConditions" )]
+		public List<string> CommonConditions { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:targetAssessment" )]
-		public List<string> TargetAssessment { get; set; }
+		[JsonProperty( PropertyName = "ceterms:requires" )]
+		public List<ConditionProfile> Requires { get; set; }
 
+		#region process profiles
+		[JsonProperty( PropertyName = "ceterms:administrationProcess" )]
+		public List<ProcessProfile> AdministrationProcess { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:appealProcess" )]
+		public List<ProcessProfile> AppealProcess { get; set; }
 
-		/// <summary>
-		///  Learning opportunity that is the focus of a condition, process or another learning opportunity.
-		///  List of EntityReferences. 
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:targetLearningOpportunity" )]
-		public List<string> TargetLearningOpportunity { get; set; }
+		[JsonProperty( PropertyName = "ceterms:complaintProcess" )]
+		public List<ProcessProfile> ComplaintProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
 		/// <summary>
-		/// Provider for the resource that is the focus or target of this resource.
-		/// Registry URI, or CTID
+		/// Description of a process used to appraise this resource.
+		/// Range: ceterms:ProcessProfile
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:targetProvidedBy" )]
-		public List<string> TargetProvidedBy { get; set; } 
+		[JsonProperty( PropertyName = "ceterms:evaluationProcess" )]
+		public List<ProcessProfile> EvaluationProcess { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:teaches" )]
-		public List<CredentialAlignmentObject> Teaches { get; set; }
+		[JsonProperty( PropertyName = "ceterms:maintenanceProcess" )]
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:reviewProcess" )]
+		public List<ProcessProfile> ReviewProcess { get; set; }
 
-	*/
+		#endregion
 	}
 }

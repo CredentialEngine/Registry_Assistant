@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
-
 namespace RA.Models.JsonV2
 {
 	public class AggregateDataProfile
@@ -21,7 +20,7 @@ namespace RA.Models.JsonV2
 		public LanguageMap Description { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName { get; set; } 
+		public LanguageMapList AlternateName { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:currency" )]
 		public string Currency { get; set; }
@@ -34,6 +33,7 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
 		public string ExpirationDate { get; set; }
+
 		/// <summary>
 		/// DemographicInformation
 		/// Aggregate data or summaries of statistical data relating to the population of credential holders including data about gender, geopolitical regions, age, education levels, and other categories of interest.
@@ -54,7 +54,7 @@ namespace RA.Models.JsonV2
 		///  Upper interquartile earnings.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:highEarnings" )]
-		public int HighEarnings { get; set; }
+		public decimal? HighEarnings { get; set; }
 
 		/// <summary>
 		///  Number of jobs obtained in the region during a given timeframe.
@@ -75,27 +75,26 @@ namespace RA.Models.JsonV2
 		///  Lower interquartile earnings.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:lowEarnings" )]
-		public int LowEarnings { get; set; }
+		public decimal? LowEarnings { get; set; }
 
 		/// <summary>
 		///  Median earnings.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:medianEarnings" )]
-		public int MedianEarnings { get; set; }
+		public decimal? MedianEarnings { get; set; }
 
 		/// <summary>
 		///  Number of credentials awarded.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:numberAwarded" )]
-		public int NumberAwarded { get; set; }
+		public int? NumberAwarded { get; set; }
 
 		/// <summary>
 		/// Number of months after earning a credential when employment and earnings data is collected.
 		/// Number of months usually range between 3 months (one quarter) to ten years.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:postReceiptMonths" )]
-		public int PostReceiptMonths { get; set; }
-		//public JurisdictionProfile Region { get; set; }
+		public int? PostReceiptMonths { get; set; }
 
 		/// <summary>
 		/// Authoritative source of an entity's information.
@@ -108,7 +107,6 @@ namespace RA.Models.JsonV2
 		/// Relevant Data Set
 		/// Data Set on which earnings or employment data is based.
 		/// qdata:DataSetProfile
-		/// TODO - this may change to URIs
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:relevantDataSet" )]
 		public List<string> RelevantDataSet { get; set; }
@@ -119,44 +117,32 @@ namespace RA.Models.JsonV2
 		/// <returns></returns>
 		public bool HasOutcomeData()
 		{
-			if ( JobsObtained != null     //prime
-			|| RelevantDataSet != null  //prime
-
-			|| HighEarnings > 0
-			|| LowEarnings > 0
-			|| MedianEarnings > 0
-			|| NumberAwarded > 0
-			|| PostReceiptMonths > 0
-			|| NumberAwarded > 0
-			)
-				return true;
-			else
-				return false;
+			return JobsObtained != null     // prime
+					|| RelevantDataSet != null  // prime
+					|| HighEarnings > 0
+					|| LowEarnings > 0
+					|| MedianEarnings > 0
+					|| NumberAwarded > 0
+					|| PostReceiptMonths > 0;
 		}
-		public bool HasData()
-        {
-			if ( Name != null		//name is not important without other data
-			//|| Description != null		//skip description here. Use with check for HasData. Actual Name as well
-			|| DemographicInformation != null
-			|| JobsObtained != null		//prime
-			|| Jurisdiction != null
-			|| RelevantDataSet != null	//prime
 
-			|| !string.IsNullOrWhiteSpace( Currency )
-			|| !string.IsNullOrWhiteSpace( DateEffective )
-			|| !string.IsNullOrWhiteSpace( ExpirationDate )
-			|| !string.IsNullOrWhiteSpace( FacultyToStudentRatio )
-			|| !string.IsNullOrWhiteSpace( Source )
-			|| HighEarnings> 0
-			|| LowEarnings > 0
-			|| MedianEarnings > 0
-			|| NumberAwarded > 0
-			|| PostReceiptMonths > 0
-			|| NumberAwarded > 0
-			)
-				return true;
-			else
-				return false;
-        }
+		public bool HasData()
+		{
+			return Name != null     // name is not important without other data
+				|| DemographicInformation != null
+				|| JobsObtained != null
+				|| Jurisdiction != null
+				|| RelevantDataSet != null
+				|| !string.IsNullOrWhiteSpace( Currency )
+				|| !string.IsNullOrWhiteSpace( DateEffective )
+				|| !string.IsNullOrWhiteSpace( ExpirationDate )
+				|| !string.IsNullOrWhiteSpace( FacultyToStudentRatio )
+				|| !string.IsNullOrWhiteSpace( Source )
+				|| HighEarnings > 0
+				|| LowEarnings > 0
+				|| MedianEarnings > 0
+				|| NumberAwarded > 0
+				|| PostReceiptMonths > 0;
+		}
 	}
 }

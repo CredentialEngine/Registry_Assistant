@@ -15,11 +15,10 @@ namespace RA.Models.JsonV2
 		public ConditionManifest()
 		{
 			Type = "ceterms:ConditionManifest";
-            EntryConditions = new List<ConditionProfile>();
-            Requires = new List<ConditionProfile>();
-            Renewal = new List<ConditionProfile>();
+			EntryConditions = new List<ConditionProfile>();
+			Requires = new List<ConditionProfile>();
+			Renewal = new List<ConditionProfile>();
 			Recommends = new List<ConditionProfile>();
-
 		}
 
 		/// <summary>
@@ -29,7 +28,7 @@ namespace RA.Models.JsonV2
 		public string Type { get; set; }
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		public string CtdlId { get; set; } = string.Empty;
 
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
@@ -41,32 +40,43 @@ namespace RA.Models.JsonV2
 		public LanguageMap Description { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-		public string SubjectWebpage { get; set; } //URL
-
+		public string SubjectWebpage { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:conditionManifestOf" )]
 		public List<string> ConditionManifestOf { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:requires" )]
-        public List<ConditionProfile> Requires { get; set; }
+		public List<ConditionProfile> Requires { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:renewal" )]
-        public List<ConditionProfile> Renewal { get; set; }
+		[JsonProperty( PropertyName = "ceterms:renewal" )]
+		public List<ConditionProfile> Renewal { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:recommends" )]
+		[JsonProperty( PropertyName = "ceterms:recommends" )]
 		public List<ConditionProfile> Recommends { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:entryCondition" )]
-        public List<ConditionProfile> EntryConditions { get; set; }
+		[JsonProperty( PropertyName = "ceterms:entryCondition" )]
+		public List<ConditionProfile> EntryConditions { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:corequisite" )]
 		public List<ConditionProfile> Corequisite { get; set; }
-
 
 		[JsonProperty( PropertyName = "ceterms:coPrerequisite" )]
 		public List<ConditionProfile> CoPrerequisite { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName { get; set; } 
+		public LanguageMapList AlternateName { get; set; }
+
+		#region process profiles
+
+		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:maintenanceProcess" )]
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:reviewProcess" )]
+		public List<ProcessProfile> ReviewProcess { get; set; }
+
+		#endregion
 	}
 }

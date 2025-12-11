@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
@@ -11,9 +7,12 @@ namespace RA.Models.JsonV2
 	{
 		[JsonIgnore]
 		public static string classType = "ceterms:LearningOpportunityProfile";
+
 		public LearningOpportunityProfile()
 		{
 			Type = "ceterms:LearningOpportunityProfile";
+			InLanguage = new List<string>();
+
 		}
 
 		/// <summary>
@@ -26,7 +25,7 @@ namespace RA.Models.JsonV2
 		/// Resource Locator
 		/// </summary>
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		public string CtdlId { get; set; } = string.Empty;
 
 		/// <summary>
 		/// Name or title of the resource.
@@ -35,7 +34,7 @@ namespace RA.Models.JsonV2
 		public LanguageMap Name { get; set; }
 
 		/// <summary>
-		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a resource recognizes it in transactions with the external environment (e.g., in verifiable claims involving the resource).
+		/// Globally unique Credential Transparency Identifier (CTID)
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
@@ -51,7 +50,6 @@ namespace RA.Models.JsonV2
 		/// List of language codes. ex: en, es
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:inLanguage" )]
-		//public string InLanguage { get; set; }
 		public List<string> InLanguage { get; set; }
 
 		/// <summary>
@@ -60,7 +58,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:keyword" )]
 		public LanguageMapList Keyword { get; set; }
 
-		//
 		/// <summary>
 		/// Another source of information about the entity being described.
 		/// List of URIs
@@ -76,7 +73,7 @@ namespace RA.Models.JsonV2
 		/// Webpage that describes this entity.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-		public string SubjectWebpage { get; set; } //URL
+		public string SubjectWebpage { get; set; } // URL
 
 		/// <summary>
 		/// The status type of this LearningOpportunityProfile. 
@@ -85,6 +82,13 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]
 		public CredentialAlignmentObject LifeCycleStatusType { get; set; }
+
+		/// <summary>
+		/// Category or classification of this resource.
+		/// List of URIs that point to a concept
+		/// </summary>
+		[JsonProperty( "ceterms:classification" )]
+		public List<string> Classification { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
 		public string CodedNotation { get; set; }
@@ -100,7 +104,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
 		public string ExpirationDate { get; set; }
-		//
 
 		[JsonProperty( PropertyName = "ceterms:aggregateData" )]
 		public List<AggregateDataProfile> AggregateData { get; set; }
@@ -110,6 +113,13 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }
+
+		/// <summary>
+		/// Indicates the stage or level of achievement in a progression of learning.
+		/// range: ceterms:CredentialAlignmentObject
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:atLevel" )]
+		public List<CredentialAlignmentObject> AtLevel { get; set; }
 
 		/// <summary>
 		/// Physical location where the learning opportunity can be pursued.
@@ -123,12 +133,13 @@ namespace RA.Models.JsonV2
 		/// URL
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:availabilityListing" )]
-		public List<string> AvailabilityListing { get; set; } //URL
+		public List<string> AvailabilityListing { get; set; } // URL
+
 		/// <summary>
 		/// Online location where the learning opportunity can be pursued.
 		/// URL
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:availableOnlineAt" )] //URL
+		[JsonProperty( PropertyName = "ceterms:availableOnlineAt" )] // URL
 		public List<string> AvailableOnlineAt { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:audienceLevelType" )]
@@ -139,6 +150,13 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:learningMethodType" )]
 		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
+
+		/// <summary>
+		/// Learning Method Description 
+		///  Description of the learning methods for a resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:learningMethodDescription" )]
+		public LanguageMap LearningMethodDescription { get; set; }
 
 		/// <summary>
 		///  Competency evaluated through the learning opportunity.		  
@@ -155,13 +173,6 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:assessmentMethodType" )]
 		public List<CredentialAlignmentObject> AssessmentMethodType { get; set; }
-
-		/// <summary>
-		/// Learning Method Description 
-		///  Description of the learning methods for a resource.
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:learningMethodDescription" )]
-		public LanguageMap LearningMethodDescription { get; set; }
 
 		/// <summary>
 		/// Type of means by which a learning opportunity or assessment is delivered to credential seekers and by which they interact; select from an existing enumeration of such types.
@@ -182,11 +193,10 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:estimatedCost" )]
 		public List<CostProfile> EstimatedCost { get; set; }
-		//
-		//20-10-31 CreditValue is now of type ValueProfile
+
+		// 20-10-31 CreditValue is now of type ValueProfile
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
 		public List<ValueProfile> CreditValue { get; set; } = null;
-		//
 
 		[JsonProperty( PropertyName = "ceterms:creditUnitTypeDescription" )]
 		public LanguageMap CreditUnitTypeDescription { get; set; }
@@ -212,7 +222,7 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
 		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; }
-		//
+
 		/// <summary>
 		/// Is Non-Credit
 		/// Will be null unless true
@@ -223,12 +233,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:teaches" )]
 		public List<CredentialAlignmentObject> Teaches { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:hasPart" )]
 		public List<string> HasPart { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:hasProxy" )]
-		public string HasProxy { get; set; } //URL
+		public string HasProxy { get; set; } // URL
 
 		/// <summary>
 		/// Offering of a Learning Opportunity or Assessment with a schedule associated with a specified location or modality.
@@ -272,15 +281,13 @@ namespace RA.Models.JsonV2
 		/// Agent that offers the resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:offeredBy" )]
-
 		public List<string> OfferedBy { get; set; }
+
 		/// <summary>
 		/// Only allowed for a course on a course
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:prerequisite" )]
 		public List<string> Prerequisite { get; set; }
-
-
 
 		/// <summary>
 		/// This resource provides transfer value for the referenced Transfer Value Profile.
@@ -304,6 +311,7 @@ namespace RA.Models.JsonV2
 		public List<string> ObjectOfAction { get; set; }
 
 		#region -- Quality Assurance BY --
+
 		/// <summary>
 		/// List of Organizations that accredit this resource
 		/// </summary>
@@ -336,6 +344,7 @@ namespace RA.Models.JsonV2
 		#endregion
 
 		#region Quality Assurance IN - Jurisdiction based Quality Assurance  (INs)
+
 		/// <summary>
 		/// List of Organizations that accredit this learning opportunity in a specific Jurisdiction. 
 		/// </summary>
@@ -374,7 +383,6 @@ namespace RA.Models.JsonV2
 
 		#endregion
 
-
 		[JsonProperty( PropertyName = "ceterms:requires" )]
 		public List<ConditionProfile> Requires { get; set; }
 
@@ -404,10 +412,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:commonCosts" )]
 		public List<string> CommonCosts { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
-
 
 		[JsonProperty( PropertyName = "ceterms:advancedStandingFrom" )]
 		public List<ConditionProfile> AdvancedStandingFrom { get; set; }
@@ -438,14 +444,14 @@ namespace RA.Models.JsonV2
 		///  full URL OR CTID (recommended)
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
-		public string SupersededBy { get; set; } //URL
+		public string SupersededBy { get; set; } // URL
 
 		/// <summary>
 		/// Resource that this resource replaces.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:supersedes" )]
-		public string Supersedes { get; set; } //URL
+		public string Supersedes { get; set; } // URL
 
 		/// <summary>
 		/// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.
@@ -467,12 +473,16 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:targetLearningResource" )]
 		public List<string> TargetLearningResource { get; set; }
 
-		///// <summary>
-		///// Pathway in which this resource is a potential component.
-		///// This is an inverse property and would not be published with this resource
-		///// </summary>
-		//[JsonProperty( PropertyName = "ceterms:targetPathway" )]
-		//public List<string> TargetPathway { get; set; }
+		/// <Note>
+		/// TargetPathway- Pathway in which this resource is a potential component.
+		/// This is an inverse property and would not be published with this resource
+		/// </Note>
+
+		/// <summary>
+		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:versionCode" )]
+		public string VersionCode { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
 		public List<IdentifierValue> VersionIdentifier { get; set; }
@@ -486,8 +496,24 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:scheduleTimingType" )]
 		public List<CredentialAlignmentObject> ScheduleTimingType { get; set; }
 
-		//COURSE ONLY
+		// COURSE ONLY
 		[JsonProperty( PropertyName = "ceterms:sced" )]
 		public string SCED { get; set; }
+
+		#region process profiles
+
+		[JsonProperty( PropertyName = "ceterms:complaintProcess" )]
+		public List<ProcessProfile> ComplaintProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:maintenanceProcess" )]
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:reviewProcess" )]
+		public List<ProcessProfile> ReviewProcess { get; set; }
+
+		#endregion
 	}
 }

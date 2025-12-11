@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 using Newtonsoft.Json;
+
 namespace RA.Models.JsonV2
 {
 	public class PathwaySet : BaseResourceDocument
@@ -19,7 +19,7 @@ namespace RA.Models.JsonV2
 		public string Type { get; set; }
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		public string CtdlId { get; set; } = string.Empty;
 
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
@@ -34,7 +34,7 @@ namespace RA.Models.JsonV2
 		public LanguageMapList AlternateName { get; set; }
 
 		[JsonProperty( PropertyName = "ceasn:hasPathway" )]
-		public List<string> HasPathway{ get; set; }
+		public List<string> HasPathway { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
 		public List<string> OwnedBy { get; set; }
@@ -48,5 +48,18 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
 		public string SubjectWebpage { get; set; }
+
+		#region process profiles
+
+		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:maintenanceProcess" )]
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:reviewProcess" )]
+		public List<ProcessProfile> ReviewProcess { get; set; }
+
+		#endregion
 	}
 }

@@ -11,9 +11,11 @@ namespace RA.Models.JsonV2
 	{
 		[JsonIgnore]
 		public static string classType = "ceterms:CostManifest";
+
 		public CostManifest()
 		{
 			Type = "ceterms:CostManifest";
+			CtdlId = string.Empty;
 		}
 
 		/// <summary>
@@ -23,7 +25,7 @@ namespace RA.Models.JsonV2
 		public string Type { get; set; }
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		public string CtdlId { get; set; } = string.Empty;
 
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
@@ -38,7 +40,7 @@ namespace RA.Models.JsonV2
 		public List<string> CostManifestOf { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:costDetails" )]
-		public string CostDetails { get; set; } //URL
+		public string CostDetails { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:startDate" )]
 		public string StartDate { get; set; }
@@ -50,6 +52,19 @@ namespace RA.Models.JsonV2
 		public List<CostProfile> EstimatedCost { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName { get; set; } 
+		public LanguageMapList AlternateName { get; set; }
+
+		#region process profiles
+
+		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:maintenanceProcess" )]
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:reviewProcess" )]
+		public List<ProcessProfile> ReviewProcess { get; set; }
+
+		#endregion
 	}
 }

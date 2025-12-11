@@ -4,12 +4,12 @@ using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
-    /// <summary>
-    /// History
-    /// 21-01-06 remove CodedNotation
-    /// 23-04-30 Add CodedNotation for competencyComponent only
-    /// </summary>
-    public class PathwayComponent
+	/// <summary>
+	/// History
+	/// 21-01-06 remove CodedNotation
+	/// 23-04-30 Add CodedNotation for competencyComponent only
+	/// </summary>
+	public class PathwayComponent
 	{
 		public PathwayComponent() { }
 
@@ -20,27 +20,20 @@ namespace RA.Models.JsonV2
 		public string PathwayComponentType { get; set; }
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		public string CtdlId { get; set; } = string.Empty;
 
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
 
-        //23-05-26 banished
-        //[JsonProperty( PropertyName = "ceasn:codedNotation" )]
-        //public string CodedNotation { get; set; }
-
-        //
-        [JsonProperty( PropertyName = "ceterms:componentCategory" )]
+		[JsonProperty( PropertyName = "ceterms:componentCategory" )]
 		public LanguageMap ComponentCategory { get; set; }
 
-		//ceterms:componentDesignation
+		// ceterms:componentDesignation
 		[JsonProperty( PropertyName = "ceterms:componentDesignation" )]
 		public List<CredentialAlignmentObject> ComponentDesignation { get; set; } = new List<CredentialAlignmentObject>();
 
-
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
-
 
 		/// <summary>
 		/// This property identifies a child pathwayComponent(s) in the downward path.
@@ -50,19 +43,12 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceasn:hasChild" )]
 		public List<string> HasChild { get; set; } = new List<string>();
 
-		///// <summary>
-		///// An indicator whether or not the pathway component being described is required for successful completion of its parent component
-		///// </summary>
-		//[JsonProperty( PropertyName = "ceterms:requiredForParentCompletion" )]
-		//public bool RequiredForParentCompletion { get; set; }
-
 		/// <summary>
 		/// Resource(s) that describes what must be done to complete a PathwayComponent, or part thereof, as determined by the issuer of the Pathway.
 		/// ceterms:ComponentCondition
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasCondition" )]
 		public List<ComponentCondition> HasCondition { get; set; }
-
 
 		[JsonProperty( PropertyName = "ceterms:identifier" )]
 		public List<IdentifierValue> Identifier { get; set; }
@@ -73,7 +59,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:isChildOf" )]
 		public List<string> IsChildOf { get; set; }
-
 
 		/// <summary>
 		/// Pathway for which this resource is the goal or destination.
@@ -89,7 +74,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "asn:hasProgressionLevel" )]
 		public List<string> HasProgressionLevel { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; } = new LanguageMap();
 
@@ -104,7 +88,7 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:pointValue" )]
 		public QuantitativeValue PointValue { get; set; } = null;
-		//
+
 		/// <summary>
 		/// Credit Value
 		/// </summary>
@@ -146,8 +130,13 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:proxyFor" )]
 		public string ProxyFor { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:proxyForList" )]
-		public List<string> ProxyForList { get; set; }
+		/// <summary>
+		/// Indicates the multiple resources for which a MultiComponent proxy resource is a stand-in.
+		/// Domain: ceterms:MultiComponent
+		/// Range: xsd:anyURI
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:proxyForItems" )]
+		public List<string> ProxyForItems { get; set; }
 
 		/// <summary>
 		/// URL to structured data representing the resource.
@@ -157,7 +146,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:sourceData" )]
 		public string SourceData { get; set; }
 
-
 		/// <summary>
 		/// The webpage that describes this entity.
 		/// URL
@@ -165,8 +153,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
 		public string SubjectWebpage { get; set; }
 
-
 		#region For JobComponent only
+
 		/// <summary>
 		/// IndustryType
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
@@ -199,11 +187,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
 
-		//[JsonProperty( "@id" )]
-		//public string CtdlId { get; set; }
+		// [JsonProperty( "@id" )]
+		// public string CtdlId { get; set; }
 
-		//[JsonProperty( PropertyName = "ceterms:ctid" )]
-		//public string CTID { get; set; }
+		// [JsonProperty( PropertyName = "ceterms:ctid" )]
+		// public string CTID { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; } = new LanguageMap();
@@ -238,18 +226,18 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:hasCondition" )]
 		public List<ComponentCondition> HasCondition { get; set; }
 
-        /// <summary>
-        /// Number of hasConstraint objects that must be fulfilled in order to satisfy the ComponentCondition.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:requiredConstraints" )]
-        public int RequiredConstraints { get; set; }
-        /// <summary>
-        /// Resource(s) that describes what must be done to complete a PathwayComponent, or part thereof, as determined by the issuer of the Pathway.
-        /// ceterms:ComponentCondition
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:hasConstraint" )]
-		public List<Constraint> HasConstraint{ get; set; }
+		/// <summary>
+		/// Number of hasConstraint objects that must be fulfilled in order to satisfy the ComponentCondition.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:requiredConstraints" )]
+		public int RequiredConstraints { get; set; }
 
+		/// <summary>
+		/// Resource(s) that describes what must be done to complete a PathwayComponent, or part thereof, as determined by the issuer of the Pathway.
+		/// ceterms:ComponentCondition
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasConstraint" )]
+		public List<Constraint> HasConstraint { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }
@@ -271,7 +259,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; } = null;
-
 
 		/// <summary>
 		/// Constraint Description 
@@ -323,6 +310,5 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }
-
 	}
 }

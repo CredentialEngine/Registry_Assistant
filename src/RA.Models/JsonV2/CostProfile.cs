@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 using Newtonsoft.Json;
-
 
 namespace RA.Models.JsonV2
 {
@@ -9,19 +9,14 @@ namespace RA.Models.JsonV2
 	{
 		public CostProfile()
 		{
-            Type = "ceterms:CostProfile";
-            Jurisdiction = new List<JurisdictionProfile>();
-			//Region = null;
-            //AudienceType = new List<CredentialAlignmentObject>();
-            //ResidencyType = new List<CredentialAlignmentObject>();
-			//Condition = new List<string>();
-
+			Type = "ceterms:CostProfile";
+			Jurisdiction = new List<JurisdictionProfile>();
 		}
 
-        [JsonProperty( "@type" )]
-        public string Type { get; set; }
+		[JsonProperty( "@type" )]
+		public string Type { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:costDetails" )]
+		[JsonProperty( PropertyName = "ceterms:costDetails" )]
 		public string CostDetails { get; set; }
 
 		/// <summary>
@@ -45,36 +40,32 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:startDate" )]
 		public string StartDate { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:condition" )]
 		public LanguageMapList Condition { get; set; }
-
 
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:directCostType" )]
-        public CredentialAlignmentObject DirectCostType { get; set; } //= new CredentialAlignmentObject();
+		[JsonProperty( PropertyName = "ceterms:directCostType" )]
+		public CredentialAlignmentObject DirectCostType { get; set; }
 
-        //[JsonProperty( PropertyName = "ceterms:directCostType" )]
-        //public List<CredentialAlignmentObject> DirectCostTypes { get; set; } = new List<CredentialAlignmentObject>();
-
-        [JsonProperty( PropertyName = "ceterms:residencyType" )]
+		[JsonProperty( PropertyName = "ceterms:residencyType" )]
 		public List<CredentialAlignmentObject> ResidencyType { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:audienceType" )]
 		public List<CredentialAlignmentObject> AudienceType { get; set; }
 
+		[DefaultValue( 0 )]
 		[JsonProperty( PropertyName = "ceterms:price" )]
-		public decimal Price { get; set; }
+		public decimal? Price { get; set; }
 
+		/// <summary>
+		/// Applicable pattern for payments such as "per semester" and "every three months".
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:paymentPattern" )]
 		public LanguageMap PaymentPattern { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName { get; set; } 
-
-		//[JsonProperty( PropertyName = "ceterms:region" )]
-		//public List<GeoCoordinates> Region { get; set; }
+		public LanguageMapList AlternateName { get; set; }
 	}
 }

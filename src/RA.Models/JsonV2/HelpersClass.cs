@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-//using System.Text.Json;
-//using System.Text.Json.Serialization;
+// using System.Text.Json;
+// using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
 
-    /*
+	/*
 	public class GraphContainer2
 	{
 		//[JsonIgnore]
@@ -45,32 +45,27 @@ namespace RA.Models.JsonV2
 		public string Id { get; set; }
 	}
 
-
 	/// <summary>
 	/// 20-08-23
 	/// TBD - this may be obsolete now
 	/// </summary>
 	public class EntityReferenceHelper
-    {
-        public EntityReferenceHelper()
-        {
-           // IdPropertyList = new List<IdProperty>();
-            ReturnedDataType = 0;
-        }
-        public List<OrganizationBase> OrgBaseList { get; set; } = new List<OrganizationBase>();
+	{
+		public EntityReferenceHelper()
+		{
+			// IdPropertyList = new List<IdProperty>();
+			ReturnedDataType = 0;
+		}
 
-        public List<EntityBase> EntityBaseList { get; set; } = new List<EntityBase>();
-       // public List<IdProperty> IdPropertyList { get; set; }
+		public List<OrganizationBase> OrgBaseList { get; set; } = new List<OrganizationBase>();
 
-        /// <summary>
-        /// indicate data returned
-        /// 0 - none; 1 - Id list; 2 - org list
-        /// </summary>
-        public int ReturnedDataType { get; set; }
+		public List<EntityBase> EntityBaseList { get; set; } = new List<EntityBase>();
+		// public List<IdProperty> IdPropertyList { get; set; }
 
-    }
-
-
-
-
+		/// <summary>
+		/// indicate data returned
+		/// 0 - none; 1 - Id list; 2 - org list
+		/// </summary>
+		public int ReturnedDataType { get; set; }
+	}
 }

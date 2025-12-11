@@ -42,6 +42,7 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:assertedBy" )]
 		public List<string> AssertedBy { get; set; }
 	}
+
 	/// <summary>
 	/// Specific activity, typically related to performing a function or achieving a goal.
 	/// </summary>
@@ -60,7 +61,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public string Description { get; set; }
 
-
 		/// <summary>
 		/// Comment
 		/// Definition:	en-US: Supplemental text provided by the promulgating body that clarifies the nature, scope or use of this competency.
@@ -68,8 +68,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:comment" )]
 		public List<string> Comment { get; set; }
-
-
 	}
 	public class BaseTask : BaseEmploymentToWorkObject
 	{
@@ -83,24 +81,24 @@ namespace RA.Models.JsonV2
 		/// URI
 		/// </summary>
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		public string CtdlId { get; set; } = string.Empty;
 
 		/// <summary>
-		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a resource recognizes it in transactions with the external environment (e.g., in verifiable claims involving the resource).
+		/// Globally unique Credential Transparency Identifier (CTID)
 		/// required
 		/// <see cref="https://credreg.net/ctdl/terms/ctid"/>
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
 
-        /// <summary>
-        /// AbilityEmbodied
-        /// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
-        /// CTID/URI to any of:
-        /// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
-        /// ceasn:abilityEmbodied
-        /// </summary>
-        [JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
+		/// <summary>
+		/// AbilityEmbodied
+		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
+		/// CTID/URI to any of:
+		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
+		/// ceasn:abilityEmbodied
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
 		public List<string> AbilityEmbodied { get; set; }
 
 		/// <summary>
@@ -119,7 +117,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
 		public string CodedNotation { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:environmentalHazardType" )]
 		public List<string> EnvironmentalHazardType { get; set; }
 
@@ -128,7 +125,6 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:physicalCapabilityType" )]
 		public List<string> PhysicalCapabilityType { get; set; }
-
 
 		[JsonProperty( PropertyName = "ceterms:sensoryCapabilityType" )]
 		public List<string> SensoryCapabilityType { get; set; }
@@ -186,12 +182,12 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceasn:skillEmbodied" )]
 		public List<string> SkillEmbodied { get; set; }
 
-
 		/// <summary>
 		/// Occupation related to this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasOccupation" )]
 		public List<string> HasOccupation { get; set; }
+
 		/// <summary>
 		/// Work Role related to this resource.
 		/// List of URIs for an existing WorkRole
@@ -207,6 +203,5 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasJob" )]
 		public List<string> HasJob { get; set; }
-
 	}
 }

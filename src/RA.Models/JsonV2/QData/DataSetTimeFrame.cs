@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Newtonsoft.Json;
-using RA.Models.JsonV2;
+
 namespace RA.Models.JsonV2.QData
 {
 	/// <summary>
@@ -15,23 +12,36 @@ namespace RA.Models.JsonV2.QData
 	/// </summary>
 	public class DataSetTimeFrame
 	{
+		public DataSetTimeFrame()
+		{
+			TimeInterval = null;
+		}
+
 		/// <summary>
 		/// The type of the entity
 		/// </summary>
 		[JsonProperty( "@type" )]
 		public string Type { get; set; } = "qdata:DataSetTimeFrame";
 
-		///// <summary>
-		///// Id for this blank node
-		///// </summary>
-		//[JsonProperty( "@id" )]
-		//public string CtdlId { get; set; }
+		/// <summary>
+		/// An identifier for use with blank nodes. 
+		/// It will be ignored if included with a primary resource
+		/// </summary>
+		[JsonProperty( "@id" )]
+		public string Id { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
+
+		/// <summary>
+		/// Length of the interval between two events. 
+		/// schema:Duration
+		/// </summary>
+		[JsonProperty( PropertyName = "qdata:timeInterval" )]
+		public string TimeInterval { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:startDate" )]
 		public string StartDate { get; set; }
@@ -40,35 +50,17 @@ namespace RA.Models.JsonV2.QData
 		public string EndDate { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName { get; set; } 
-
-		///// <summary>
-		///// Attributes of the data set.
-		///// URI to blank node
-		///// qdata:DataProfile
-		///// </summary>
-		//[JsonProperty( PropertyName = "qdata:dataAttributesBNList" )]
-		//public List<string> DataAttributesBNList { get; set; }
+		public LanguageMapList AlternateName { get; set; }
 
 		[JsonProperty( PropertyName = "qdata:dataAttributes" )]
 		public List<DataProfile> DataAttributes { get; set; }
 
 		/// <summary>
-		/// Data Source Coverage Type
-		/// Type of geographic coverage of the subjects.
-		/// <see cref="https://credreg.net/qdata/terms/dataSourceCoverageType"/>
-		/// skos:Concept
-		/// <see cref="https://credreg.net/qdata/terms/DataSourceCoverage"/>
-		/// sourceCoverage:Country
-		///	sourceCoverage:Global
-		///	sourceCoverage:Region
-		///	sourceCoverage:StateOrProvince
-		///	sourceCoverage:UrbanArea
+		/// Requires at least one of: timeInterval, startDate, endDate
 		/// </summary>
-		[JsonProperty( PropertyName = "qdata:dataSourceCoverageType" )]
-		public List<CredentialAlignmentObject> DataSourceCoverageTypeOLD { get; set; }
-
-		[JsonProperty( PropertyName = "qdata:dataSourceCoverageTypeNew" )]
-		public object DataSourceCoverageType { get; set; }
+		public bool HasRequiredData()
+		{
+			return !( string.IsNullOrWhiteSpace( StartDate ) && string.IsNullOrWhiteSpace( EndDate ) && string.IsNullOrWhiteSpace( TimeInterval ) );
+		}
 	}
 }

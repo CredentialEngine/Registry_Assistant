@@ -13,22 +13,23 @@ namespace RA.Models.JsonV2
 	/// </summary>
 	public class Job : BaseEmploymentToWorkObject
 	{
-        [JsonIgnore]
-        public static string classType = "ceterms:Job";
-        /// <summary>
-        ///  type
-        /// </summary>
-        [JsonProperty( "@type" )]
+		[JsonIgnore]
+		public static string classType = "ceterms:Job";
+
+		/// <summary>
+		///  type
+		/// </summary>
+		[JsonProperty( "@type" )]
 		public string Type { get; set; } = "ceterms:Job";
 
 		/// <summary>
 		/// URI
 		/// </summary>
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		public string Id { get; set; } = string.Empty;
 
 		/// <summary>
-		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a resource recognizes it in transactions with the external environment (e.g., in verifiable claims involving the resource).
+		/// Globally unique Credential Transparency Identifier (CTID)
 		/// required
 		/// <see cref="https://credreg.net/ctdl/terms/ctid"/>
 		/// </summary>
@@ -47,20 +48,18 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }
 
-        /// <summary>
-        /// AbilityEmbodied
-        /// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
-        /// CTID/URI to any of:
-        /// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
-        /// ceasn:abilityEmbodied
-        /// </summary>
-        [JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
+		/// <summary>
+		/// AbilityEmbodied
+		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
+		/// CTID/URI to any of:
+		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
+		/// ceasn:abilityEmbodied
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
 		public List<string> AbilityEmbodied { get; set; }
-
 
 		/// <summary>
 		/// Category or classification of this resource.
@@ -70,7 +69,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:classification" )]
 		public List<string> Classification { get; set; }
-		//public List<CredentialAlignmentObject> Classification { get; set; }
 
 		/// <summary>
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
@@ -87,17 +85,16 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceasn:comment" )]
 		public LanguageMapList Comment { get; set; } = new LanguageMapList();
 
+		/// <summary>
+		/// Reference to a relevant support service available for this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasSupportService" )]
+		public List<string> HasSupportService { get; set; }
 
-        /// <summary>
-        /// Reference to a relevant support service available for this resource.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:hasSupportService" )]
-        public List<string> HasSupportService { get; set; }
-
-        /// <summary>
-        /// Occupation related to this resource.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:hasOccupation" )]
+		/// <summary>
+		/// Occupation related to this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasOccupation" )]
 		public List<string> HasOccupation { get; set; }
 
 		/// <summary>
@@ -147,14 +144,12 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceasn:knowledgeEmbodied" )]
 		public List<string> KnowledgeEmbodied { get; set; }
 
-
 		/// <summary>
 		/// Keyword or key phrase describing relevant aspects of an entity.
 		/// ceterms:keyword
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:keyword" )]
 		public LanguageMapList Keyword { get; set; }
-
 
 		/// <summary>
 		/// OccupationType
@@ -165,35 +160,26 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:occupationType" )]
 		public List<CredentialAlignmentObject> OccupationType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:environmentalHazardType" )]
-        public List<string> EnvironmentalHazardType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:environmentalHazardType" )]
+		public List<string> EnvironmentalHazardType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:performanceLevelType" )]
-        public List<string> PerformanceLevelType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:performanceLevelType" )]
+		public List<string> PerformanceLevelType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:physicalCapabilityType" )]
-        public List<string> PhysicalCapabilityType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:physicalCapabilityType" )]
+		public List<string> PhysicalCapabilityType { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:sensoryCapabilityType" )]
+		public List<string> SensoryCapabilityType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:sensoryCapabilityType" )]
-        public List<string> SensoryCapabilityType { get; set; }
-
-        /// <summary>
-        /// Organization(s) that offer this resource
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:offeredBy" )]
+		/// <summary>
+		/// Organization(s) that offer this resource
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:offeredBy" )]
 		public List<string> OfferedBy { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:requires" )]
 		public List<ConditionProfile> Requires { get; set; }
-
-		/// <summary>
-		/// Another source of information about the entity being described.
-		/// List of URIs
-		/// ceterms:sameAs
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:sameAs" )]
-		public List<string> SameAs { get; set; }
 
 		/// <summary>
 		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
@@ -207,7 +193,7 @@ namespace RA.Models.JsonV2
 		/// Required
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-		public string SubjectWebpage { get; set; } //URL
+		public string SubjectWebpage { get; set; }
 
 		/// <summary>
 		/// This resource provides transfer value for the referenced Transfer Value Profile.

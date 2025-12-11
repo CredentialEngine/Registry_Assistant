@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-//using System.Text.Json;
-//using System.Text.Json.Serialization;
+
 using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
@@ -8,19 +7,15 @@ namespace RA.Models.JsonV2
 	/// <summary>
 	/// Competency class
 	/// </summary>
-	public class Competency //: JsonLDDocument
+	public class Competency // : JsonLDDocument
 	{
-		//required": [ "@type", "@id", "ceasn:competencyText", "ceasn:inLanguage", "ceasn:isPartOf", "ceterms:ctid" ]
-
-		//[STJ.JsonIgnore]
-		//public static string classType = "ceasn:Competency";
 		public Competency()
 		{
-			//Type = classType;
+			Type = "ceasn:Competency";
 		}
 
 		[JsonProperty( "@type" )]
-		public string Type { get; set; } = "ceasn:Competency";
+		public string Type { get; set; }
 
 		[JsonProperty( "@id" )]
 		public string CtdlId { get; set; }
@@ -28,105 +23,97 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceterms:ctid" )]
 		public string CTID { get; set; }
 
+		[JsonProperty( "ceasn:competencyText" )]
+		public LanguageMap CompetencyText { get; set; }
+
+		[JsonProperty( "ceasn:creator" )]
+		public List<string> Creator { get; set; }
+
+		[JsonProperty( "ceasn:competencyCategory" )]
+		public LanguageMap CompetencyCategory { get; set; }
+
+		[JsonProperty( "ceasn:competencyLabel" )]
+		public LanguageMap CompetencyLabel { get; set; }
+
 		[JsonProperty( "ceasn:publicationStatusType" )]
-		public string publicationStatusType { get; set; }
+		public string PublicationStatusType { get; set; }
 
 		/// <summary>
 		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
 		/// The abilityEmbodied property may referenced a defined ability in an ontology such as O*NET or an existing competency defined in a competency framework.
-		/// URI
+		/// Competency
 		/// </summary>
 		[JsonProperty( "ceasn:abilityEmbodied" )]
-		public List<string> abilityEmbodied { get; set; }
+		public List<string> AbilityEmbodied { get; set; }
+
 		/// <summary>
 		/// Competency uris
 		/// </summary>
 		[JsonProperty( "ceasn:alignFrom" )]
-		public List<string> alignFrom { get; set; } 
+		public List<string> AlignFrom { get; set; }
 
 		/// <summary>
 		/// Competency uris
 		/// </summary>
 		[JsonProperty( "ceasn:alignTo" )]
-		public List<string> alignTo { get; set; } 
+		public List<string> AlignTo { get; set; }
 
 		[JsonProperty( "ceasn:altCodedNotation" )]
-		public List<string> altCodedNotation { get; set; } 
+		public List<string> AltCodedNotation { get; set; }
 
 		[JsonProperty( "ceasn:author" )]
-		public string author { get; set; } 
+		public string Author { get; set; }
 
 		[JsonProperty( "ceasn:codedNotation" )]
-		public string codedNotation { get; set; }
-
+		public string CodedNotation { get; set; }
 
 		[JsonProperty( "ceasn:comment" )]
-		public LanguageMapList comment { get; set; }
-
-
-		[JsonProperty( "ceasn:competencyCategory" )]
-		public LanguageMap competencyCategory { get; set; }
-
-		[JsonProperty( "ceasn:competencyText" )]
-		public LanguageMap competencyText { get; set; }
-
-		[JsonProperty( "ceasn:competencyLabel" )]
-		public LanguageMap competencyLabel { get; set; }
+		public LanguageMapList Comment { get; set; }
 
 		[JsonProperty( "ceasn:complexityLevel" )]
-		public List<string> complexityLevel { get; set; } 
-		//public List<ProficiencyScale> complexityLevel { get; set; } = new List<ProficiencyScale>();
+		public List<string> ComplexityLevel { get; set; }
 
 		[JsonProperty( "ceasn:comprisedOf" )]
-		public List<string> comprisedOf { get; set; } 
+		public List<string> ComprisedOf { get; set; }
 
 		[JsonProperty( "ceasn:conceptKeyword" )]
-		public LanguageMapList conceptKeyword { get; set; }
+		public LanguageMapList ConceptKeyword { get; set; }
 
 		[JsonProperty( "ceasn:conceptTerm" )]
-		public List<string> conceptTerm { get; set; } 
-
-		[JsonProperty( "ceasn:creator" )]
-		public List<string> creator { get; set; } 
-
+		public List<string> ConceptTerm { get; set; }
 
 		[JsonProperty( "ceasn:dateCreated" )]
-		public string dateCreated { get; set; }
-
+		public string DateCreated { get; set; }
 
 		[JsonProperty( "ceasn:dateModified" )]
-		public string dateModified { get; set; }
+		public string DateModified { get; set; }
+
 		/// <summary>
 		/// A version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
 		/// 23-03-22 - change to a list, sigh
 		/// </summary>
 		[JsonProperty( "ceasn:derivedFrom" )]
-        public object derivedFrom { get; set; }
-        //public List<string> derivedFrom { get; set; }
+		public List<string> DerivedFrom { get; set; }
 
-        /// <summary>
-        /// Education Level Type
-        /// Concept URI
-        /// </summary>
-        [JsonProperty( "ceasn:educationLevelType" )]
-		//public List<string> educationLevelType { get; set; }
-		public List<string> educationLevelType { get; set; }
-
+		/// <summary>
+		/// Education Level Type
+		/// Concept URI
+		/// </summary>
+		[JsonProperty( "ceasn:educationLevelType" )]
+		public List<string> EducationLevelType { get; set; }
 
 		[JsonProperty( "ceasn:hasChild" )]
-		public List<string> hasChild { get; set; } 
+		public List<string> HasChild { get; set; }
 
 		[JsonProperty( "ceasn:identifier" )]
-		public List<string> identifier { get; set; } 
-
+		public List<string> Identifier { get; set; }
 
 		/// <summary>
 		/// Competency deduced or arrive at by reasoning on the competency being described.
 		/// List of URIs (CTIDs recommended) to competencies
 		/// </summary>
 		[JsonProperty( "ceasn:inferredCompetency" )]
-		public List<string> inferredCompetency { get; set; }
-
+		public List<string> InferredCompetency { get; set; }
 
 		/// <summary>
 		/// Is Child Of
@@ -134,98 +121,100 @@ namespace RA.Models.JsonV2
 		/// List of URIs (CTIDs recommended) to competenciesenvironment.
 		/// </summary>
 		[JsonProperty( "ceasn:isChildOf" )]
-		public List<string> isChildOf { get; set; }
+		public List<string> IsChildOf { get; set; }
 
 		/// <summary>
-		/// URI to the framework that this competency is part of. 
+		/// URI to the framework that this competency is part of.
 		/// Will not be present for a member of a collection.
 		/// </summary>
 		[JsonProperty( "ceasn:isPartOf" )]
-		public string isPartOf { get; set; }
-		//public List<string> isPartOf { get; set; } 
+		public string IsPartOf { get; set; }
 
 		[JsonProperty( "ceasn:isTopChildOf" )]
-		public string isTopChildOf { get; set; }
+		public string IsTopChildOf { get; set; }
 
 		/// <summary>
 		/// A related competency of which this competency is a version, edition, or adaptation.
 		/// </summary>
 		[JsonProperty( "ceasn:isVersionOf" )]
-		public string isVersionOf { get; set; }
+		public string IsVersionOf { get; set; }
 
 		/// <summary>
 		/// Concept in a ProgressionModel concept scheme
+		/// 24-09-05 mp - temporarily defining as an object due to a CaSS bug that exports the data as a list.
 		/// </summary>
 		[JsonProperty( PropertyName = "asn:hasProgressionLevel" )]
-		public string HasProgressionLevel { get; set; }
+		public object HasProgressionLevel { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:keyword" )]
-        public LanguageMapList Keyword { get; set; }
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
+		public LanguageMapList Keyword { get; set; }
 
-        [JsonProperty( "ceasn:listID" )]
+		[JsonProperty( "ceasn:listID" )]
 		public string ListID { get; set; }
 
 		[JsonProperty( "ceasn:localSubject" )]
-		//public LanguageMapList LocalSubject { get; set; }
-		public object localSubject { get; set; }
+		// public LanguageMapList LocalSubject { get; set; }
+		public object LocalSubject { get; set; }
+
 		#region alignments
+
 		/// <summary>
 		/// Competency uris
 		/// </summary>
 		[JsonProperty( "ceasn:broadAlignment" )]
-		public List<string> broadAlignment { get; set; }
+		public List<string> BroadAlignment { get; set; }
 
 		/// <summary>
 		/// A relationship between this competency and a competency in a separate competency framework.
 		/// Range Includes: ceasn:Competency
 		/// </summary>
 		[JsonProperty( "ceasn:crossSubjectReference" )]
-		public List<string> crossSubjectReference { get; set; }
+		public List<string> CrossSubjectReference { get; set; }
 
 		/// <summary>
 		/// Competency uris
 		/// This should be a list of URIs. The data type is object to handle receiving a string, which will be converted to a list of strings
 		/// </summary>
 		[JsonProperty( "ceasn:exactAlignment" )]
-		//public List<string> exactAlignment { get; set; } 
-		public object exactAlignment { get; set; }
+		// public List<string> exactAlignment { get; set; }
+		public object ExactAlignment { get; set; }
 
 		/// <summary>
 		/// Competency uris
 		/// </summary>
 		[JsonProperty( "ceasn:majorAlignment" )]
-		public List<string> majorAlignment { get; set; } 
+		public List<string> MajorAlignment { get; set; }
 
 		/// <summary>
 		/// Competency uris
 		/// </summary>
 		[JsonProperty( "ceasn:minorAlignment" )]
-		public List<string> minorAlignment { get; set; } 
+		public List<string> MinorAlignment { get; set; }
 
 		/// <summary>
 		/// Competency uris
 		/// </summary>
 		[JsonProperty( "ceasn:narrowAlignment" )]
-		public List<string> narrowAlignment { get; set; } 
+		public List<string> NarrowAlignment { get; set; }
 
 		/// <summary>
 		/// This competency is a prerequisite to the referenced competency.
 		/// Uri to a competency
 		/// </summary>
 		[JsonProperty( "ceasn:prerequisiteAlignment" )]
-		public List<string> prerequisiteAlignment { get; set; } 
+		public List<string> PrerequisiteAlignment { get; set; }
 		#endregion
 
 		/// <summary>
 		/// Body of information embodied either directly or indirectly in this competency.
-		/// URI
+		/// Competency
 		/// </summary>
 		[JsonProperty( "ceasn:knowledgeEmbodied" )]
-		public List<string> KnowledgeEmbodied { get; set; } 
+		public List<string> KnowledgeEmbodied { get; set; }
 
 		/// <summary>
 		/// Specifically defined piece of work embodied either directly or indirectly in this competency.
-		/// URI
+		/// Task, Competency
 		/// </summary>
 		[JsonProperty( "ceasn:taskEmbodied" )]
 		public List<string> TaskEmbodied { get; set; }
@@ -256,7 +245,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceterms:hasWorkforceDemand" )]
 		public List<string> HasWorkforceDemand { get; set; }
 
-
 		/// <summary>
 		/// An asserted measurement of the weight, degree, percent, or strength of a recommendation, requirement, or comparison.
 		/// Float
@@ -264,30 +252,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceasn:weight" )]
 		public string Weight { get; set; }
 
-
 		/// <summary>
 		/// Task related to this resource.
 		/// </summary>
 		[JsonProperty( "ceterms:hasTask" )]
 		public List<string> HasTask { get; set; }
-
-		#region Navy terms
-		/// <summary>
-		/// Has Source Identifier
-		///  A collection of identifiers related to this resource.
-		/// </summary>
-		[JsonProperty( "navy:hasSourceIdentifier" )]
-		public List<string> HasSourceIdentifier { get; set; }
-
-		//[JsonProperty( "navy:hasMaintenanceTask" )]
-		//public List<string> HasMaintenanceTask { get; set; }
-
-
-		//[JsonProperty( "navy:hasTrainingTask" )]
-		//public List<string> HasTrainingTask { get; set; }
-		#endregion
-
-		//New 2021-09-30
 
 		/// <summary>
 		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes; select from an existing enumeration of such types.
@@ -296,17 +265,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceasn:environmentalHazardType" )]
 		public List<string> EnvironmentalHazardType { get; set; }
 
-		//only for collection context
 		[JsonProperty( "ceasn:inLanguage" )]
 		public List<string> InLanguage { get; set; }
-
-		///// <summary>
-		///// Collection to which this resource belongs.
-		///// This is really an inverse property so would not be published with the competency
-		///// Collection ONLY
-		///// </summary>
-		//[JsonProperty( "ceasn:isMemberOf" )]
-		//public string IsMemberOf { get; set; }
 
 		/// <summary>
 		/// A legal document giving official permission to do something with this resource.
@@ -316,7 +276,7 @@ namespace RA.Models.JsonV2
 		public string License { get; set; }
 
 		/// <summary>
-		/// Type of required or expected performance level for a resource; 
+		/// Type of required or expected performance level for a resource;
 		/// There is no concept scheme for this. Must allow any URI.
 		/// </summary>
 		[JsonProperty( "ceasn:performanceLevelType" )]
@@ -330,7 +290,7 @@ namespace RA.Models.JsonV2
 		public List<string> PhysicalCapabilityType { get; set; }
 
 		/// <summary>
-		/// Type of required or expected sensory capability; 
+		/// Type of required or expected sensory capability;
 		/// There is no concept scheme for this. Must allow any URI.
 		/// </summary>
 		[JsonProperty( "ceasn:sensoryCapabilityType" )]
@@ -342,14 +302,12 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceasn:shouldIndex" )]
 		public bool? ShouldIndex { get; set; }
 
-
 		/// <summary>
 		/// Cognitive, affective, and psychomotor skills directly or indirectly embodied in this competency.
-		/// URI
+		/// Competency
 		/// </summary>
 		[JsonProperty( "ceasn:skillEmbodied" )]
 		public List<string> SkillEmbodied { get; set; }
-
 
 		/// <summary>
 		/// Human-readable information resource other than a competency framework from which this competency was generated or derived by humans or machines.
@@ -407,11 +365,13 @@ namespace RA.Models.JsonV2
 		public List<string> SubstantiatingWorkrole { get; set; }
 
 		//--------------- helpers ---------------------------------------
+
 		/// <summary>
 		/// CIP List is a helper when publishing from a graph. It will not be published
 		/// </summary>
 		[JsonProperty( "cipList" )]
 		public List<string> CIPList { get; set; }
+
 		/// <summary>
 		/// SOC List is a helper when publishing from a graph. It will not be published
 		/// </summary>
@@ -421,12 +381,19 @@ namespace RA.Models.JsonV2
 		/// NAICS List is a helper when publishing from a graph. It will not be published
 		[JsonProperty( "naicsList" )]
 		public List<string> NaicsList { get; set; }
-		//temp??
+		// temp??
+
 		/// <summary>
 		/// Only used where part of a Collection
 		/// </summary>
 		[JsonProperty( "ceterms:isMemberOf" )]
-		public List<string> isMemberOf { get; set; }
+		public List<string> IsMemberOf { get; set; }
+
+		/// <summary>
+		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:versionCode" )]
+		public string VersionCode { get; set; }
 
 		/// <summary>
 		/// VersionIdentifier
@@ -437,74 +404,85 @@ namespace RA.Models.JsonV2
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 
 		/// <summary>
+		/// temporary helpers pending a CaSS update
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:versionIdentifier" )]
+		public List<string> VersionIdentifier1 { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceasn:versionIdentifier_1" )]
+		public List<string> VersionIdentifier2 { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceasn:versionIdentifier_2" )]
+		public List<string> VersionIdentifier3 { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceasn:versionIdentifier_3" )]
+		public List<string> VersionIdentifier4 { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceasn:versionIdentifier_4" )]
+		public List<string> VersionIdentifier5 { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceasn:versionIdentifier_5" )]
+		public List<string> VersionIdentifier6 { get; set; } = null;
+
+		/// <summary>
 		/// Latest version of the credential.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:latestVersion" )]
-		public string LatestVersion { get; set; } //URL
+		public string LatestVersion { get; set; } // URL
 
 		/// <summary>
 		/// Version of the resource that immediately precedes this version.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:previousVersion" )]
-		public string PreviousVersion { get; set; } //URL
+		public string PreviousVersion { get; set; } // URL
 
 		/// <summary>
 		/// Version of the resource that immediately follows this version.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:nextVersion" )]
-		public string NextVersion { get; set; } //URL
+		public string NextVersion { get; set; } // URL
 
+		#region process profiles
+
+		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:maintenanceProcess" )]
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:reviewProcess" )]
+		public List<ProcessProfile> ReviewProcess { get; set; }
+
+		#endregion
 	}
+
 	public class CompetencyPlain : Competency
 	{
-		
+
 		public CompetencyPlain()
 		{
-			//Type = classType;
 		}
 
-
 		[JsonProperty( "ceasn:comment" )]
-		public new List<string> comment { get; set; } = new List<string>();
-
+		public new List<string> Comment { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:competencyCategory" )]
-		public new string competencyCategory { get; set; }
+		public new string CompetencyCategory { get; set; }
 
 		[JsonProperty( "ceasn:competencyText" )]
-		public new string competencyText { get; set; }
+		public new string CompetencyText { get; set; }
 
 		[JsonProperty( "ceasn:competencyLabel" )]
-		public new string competencyLabel { get; set; }
+		public new string CompetencyLabel { get; set; }
 
 		[JsonProperty( "ceasn:conceptKeyword" )]
-		public new List<string> conceptKeyword { get; set; } = new List<string>();
+		public new List<string> ConceptKeyword { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:localSubject" )]
-		public new List<string> localSubject { get; set; } = new List<string>();
-
-
+		public new List<string> LocalSubject { get; set; } = new List<string>();
 	}
-
-	///// <summary>
-	///// The class of structured profiles describing discrete levels of expertise and performance mastery.
-	///// </summary>
-	////	public class ProficiencyScale
-	////	{
-	////      "ceasn:ProficiencyScale": {
-	////      "type": "object",
-	////      "properties": { "@type": { "enum": [ "ceasn:ProficiencyScale" ]
-	////	}
-	////},
-	////      "required": [ "@type" ],
-	////      "additionalProperties": false
-	////    },
-	////        [JsonProperty( "@id" )]
-	////        public string CtdlId { get; set; }
-	////    }
-
 
 }

@@ -4,44 +4,43 @@ using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
-    public class AssessmentProfile : BaseResourceDocument
-    {
+	public class AssessmentProfile : BaseResourceDocument
+	{
 		[JsonIgnore]
 		public static string classType = "ceterms:AssessmentProfile";
+
 		public AssessmentProfile()
-        {
+		{
 			Type = "ceterms:AssessmentProfile";
+			CtdlId = string.Empty;
 
-			//Keyword = new List<string>();
-
-            AudienceType = new List<CredentialAlignmentObject>();
-            AvailabilityListing = new List<string>();
-            AvailableOnlineAt = new List<string>();
+			AudienceType = new List<CredentialAlignmentObject>();
+			AvailabilityListing = new List<string>();
+			AvailableOnlineAt = new List<string>();
 			AvailableAt = new List<Place>();
 			DeliveryType = new List<CredentialAlignmentObject>();
-            AssessmentMethodType = new List<CredentialAlignmentObject>();
-            EstimatedCost = new List<CostProfile>();
-            EstimatedDuration = new List<DurationProfile>();
-            ScoringMethodType = new List<CredentialAlignmentObject>();
+			AssessmentMethodType = new List<CredentialAlignmentObject>();
+			EstimatedCost = new List<CostProfile>();
+			EstimatedDuration = new List<DurationProfile>();
+			ScoringMethodType = new List<CredentialAlignmentObject>();
 
 			Requires = new List<ConditionProfile>();
-            Recommends = new List<ConditionProfile>();
-            EntryCondition = new List<ConditionProfile>();
-			//CreditUnitType = new CredentialAlignmentObject();
+			Recommends = new List<ConditionProfile>();
+			EntryCondition = new List<ConditionProfile>();
 			Assesses = new List<CredentialAlignmentObject>();
 			OwnedBy = null;
 			AccreditedBy = null;
-            ApprovedBy = null;
-            OfferedBy = null;
-            RegulatedBy = null;
-            RecognizedBy = null;
+			ApprovedBy = null;
+			OfferedBy = null;
+			RegulatedBy = null;
+			RecognizedBy = null;
 
 			AccreditedIn = null;
 			ApprovedIn = null;
 			OfferedIn = null;
 			RecognizedIn = null;
 			RegulatedIn = null;
-		
+
 			InLanguage = new List<string>();
 			AdministrationProcess = new List<ProcessProfile>();
 			DevelopmentProcess = new List<ProcessProfile>();
@@ -54,11 +53,10 @@ namespace RA.Models.JsonV2
 			IsRequiredFor = new List<ConditionProfile>();
 			PreparationFrom = new List<ConditionProfile>();
 			Jurisdiction = new List<JurisdictionProfile>();
-            ExternalResearch = new List<string>();
-			
-            CommonConditions = new List<string>();
-            CommonCosts = new List<string>();
-            //FinancialAssistanceOLD = new List<FinancialAlignmentObject>();
+			ExternalResearch = new List<string>();
+
+			CommonConditions = new List<string>();
+			CommonCosts = new List<string>();
 
 			VersionIdentifier = new List<IdentifierValue>();
 		}
@@ -79,34 +77,31 @@ namespace RA.Models.JsonV2
 		/// Name
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:name" )]
-        public LanguageMap Name { get; set; }
+		public LanguageMap Name { get; set; }
 
 		/// <summary>
 		/// Description
 		/// </summary>
-        [JsonProperty( PropertyName = "ceterms:description" )]
-        public LanguageMap Description { get; set; }
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:inLanguage" )]
-		//public string InLanguage { get; set; }
+		[JsonProperty( PropertyName = "ceterms:inLanguage" )]
 		public List<string> InLanguage { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:keyword" )]
-        public LanguageMapList Keyword { get; set; }
+		public LanguageMapList Keyword { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:subject" )]
-        public List<CredentialAlignmentObject> Subject { get; set; } 
+		[JsonProperty( PropertyName = "ceterms:subject" )]
+		public List<CredentialAlignmentObject> Subject { get; set; }
 
-		//*** pending schema changes
-
-        [JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-        public string SubjectWebpage { get; set; } //URL
+		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
+		public string SubjectWebpage { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:aggregateData" )]
 		public List<AggregateDataProfile> AggregateData { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName { get; set; } 
+		public LanguageMapList AlternateName { get; set; }
 
 		/// <summary>
 		/// Assessment Method Description 
@@ -115,66 +110,70 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )]
 		public LanguageMap AssessmentMethodDescription { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:learningMethodType" )]
+		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
+
 		/// <summary>
 		/// Learning Method Description 
-		///  Description of the learning methods for a resource.		/// 
+		///  Description of the learning methods for a resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:learningMethodDescription" )]
 		public LanguageMap LearningMethodDescription { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:assessmentMethodType" )]
-        public List<CredentialAlignmentObject> AssessmentMethodType { get; set; }
+		public List<CredentialAlignmentObject> AssessmentMethodType { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:assesses" )]
 		public List<CredentialAlignmentObject> Assesses { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:assessmentExample" )] // URL
+		public string AssessmentExample { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:assessmentExampleDescription" )]
+		public LanguageMap AssessmentExampleDescription { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:assessmentExample" )] //URL
-        public string AssessmentExample { get; set; } //URL
+		[JsonProperty( PropertyName = "ceterms:assessmentOutput" )]
+		public LanguageMap AssessmentOutput { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:assessmentExampleDescription" )]
-        public LanguageMap AssessmentExampleDescription { get; set; }
+		[JsonProperty( PropertyName = "ceterms:assessmentUseType" )]
+		public List<CredentialAlignmentObject> AssessmentUseType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:assessmentOutput" )]
-        public LanguageMap AssessmentOutput { get; set; }
-
-        [JsonProperty( PropertyName = "ceterms:assessmentUseType" )]
-        public List<CredentialAlignmentObject> AssessmentUseType { get; set; }
+		/// <summary>
+		/// Indicates the stage or level of achievement in a progression of learning.
+		/// range: ceterms:CredentialAlignmentObject
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:atLevel" )]
+		public List<CredentialAlignmentObject> AtLevel { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:availableAt" )]
 		public List<Place> AvailableAt { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:availabilityListing" )]
-        public List<string> AvailabilityListing { get; set; } //URL
+		public List<string> AvailabilityListing { get; set; }
 
-
-        [JsonProperty( PropertyName = "ceterms:availableOnlineAt" )] //URL
-        public List<string> AvailableOnlineAt { get; set; }
+		[JsonProperty( PropertyName = "ceterms:availableOnlineAt" )] // URL
+		public List<string> AvailableOnlineAt { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:audienceLevelType" )]
 		public List<CredentialAlignmentObject> AudienceLevelType { get; set; }
 
-		[JsonProperty(PropertyName = "ceterms:audienceType")]
-        public List<CredentialAlignmentObject> AudienceType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:audienceType" )]
+		public List<CredentialAlignmentObject> AudienceType { get; set; }
 
-
-		//D
-
-		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
-		public string CodedNotation { get; set; }
-		//
+		/// <summary>
+		/// Category or classification of this resource.
+		/// List of URIs that point to a concept
+		/// </summary>
+		[JsonProperty( "ceterms:classification" )]
+		public List<string> Classification { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:commonConditions" )]
 		public List<string> CommonConditions { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:commonCosts" )]
 		public List<string> CommonCosts { get; set; }
-		//
-		//[JsonProperty( PropertyName = "ceterms:creditValue" )]
-		//public List<QuantitativeValue> CreditValue { get; set; } = null;
-		//20-10-31 CreditValue is now of type ValueProfile
+
+		// 20-10-31 CreditValue is now of type ValueProfile
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
 		public List<ValueProfile> CreditValue { get; set; } = null;
 
@@ -187,14 +186,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
 		public string ExpirationDate { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:deliveryType" )]
-        public List<CredentialAlignmentObject> DeliveryType { get; set; }
-
+		public List<CredentialAlignmentObject> DeliveryType { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:deliveryTypeDescription" )]
 		public LanguageMap DeliveryTypeDescription { get; set; }
-
 
 		[JsonProperty( PropertyName = "ceterms:estimatedDuration" )]
 		public List<DurationProfile> EstimatedDuration { get; set; }
@@ -202,27 +198,23 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:estimatedCost" )]
 		public List<CostProfile> EstimatedCost { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:externalResearch" )]
 		public List<string> ExternalResearch { get; set; }
-
 
 		[JsonProperty( PropertyName = "ceterms:financialAssistance" )]
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; }
 
-		//  H
 		[JsonProperty( PropertyName = "ceterms:hasGroupEvaluation", DefaultValueHandling = DefaultValueHandling.Include )]
-        public bool? HasGroupEvaluation { get; set; }
+		public bool? HasGroupEvaluation { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:hasGroupParticipation", DefaultValueHandling = DefaultValueHandling.Include )]
-        public bool? HasGroupParticipation { get; set; }
+		[JsonProperty( PropertyName = "ceterms:hasGroupParticipation", DefaultValueHandling = DefaultValueHandling.Include )]
+		public bool? HasGroupParticipation { get; set; }
 
-        /// <summary>
-        /// Offering of a Learning Opportunity or Assessment with a schedule associated with a specified location or modality.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:hasOffering" )]
-        //public List<ScheduledOffering> HasOffering { get; set; }
-        public List<string> HasOffering { get; set; }
+		/// <summary>
+		/// Offering of a Learning Opportunity or Assessment with a schedule associated with a specified location or modality.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasOffering" )]
+		public List<string> HasOffering { get; set; }
 
 		/// <summary>
 		/// Rubric related to this resource.
@@ -234,14 +226,14 @@ namespace RA.Models.JsonV2
 		/// Reference to a relevant support service available for this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasSupportService" )]
-        public List<string> HasSupportService { get; set; }
+		public List<string> HasSupportService { get; set; }
 
-        /// <summary>
-        /// Identifier
-        /// Definition:	Alphanumeric Identifier value.
-        /// List of URIs 
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:identifier" )]
+		/// <summary>
+		/// Identifier
+		/// Definition:	Alphanumeric Identifier value.
+		/// List of URIs 
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:identifier" )]
 		public List<IdentifierValue> Identifier { get; set; }
 
 		/// <summary>
@@ -262,7 +254,6 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
-
 
 		#region Conditions 
 		[JsonProperty( PropertyName = "ceterms:requires" )]
@@ -311,8 +302,21 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:maintenanceProcess" )]
 		public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+		/// <summary>
+		/// Process for handling complaints about a credential, or aspects of it including related learning opportunities and assessments.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:complaintProcess" )]
+		public List<ProcessProfile> ComplaintProcess { get; set; }
+
+		/// <summary>
+		/// Entity that describes the process by which the credential, or aspects of it, are reviewed.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:reviewProcess" )]
+		public List<ProcessProfile> ReviewProcess { get; set; }
+
 		#endregion
-		//QA ======================================
+		// QA ======================================
 		#region  QA BY
 		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
 		public List<string> OwnedBy { get; set; }
@@ -353,12 +357,10 @@ namespace RA.Models.JsonV2
 
 		#endregion
 
-
-		//V
 		[JsonProperty( PropertyName = "ceterms:processStandardsDescription" )]
-        public LanguageMap ProcessStandardsDescription { get; set; }
+		public LanguageMap ProcessStandardsDescription { get; set; }
 
-		//URL
+		// URL
 		[JsonProperty( PropertyName = "ceterms:processStandards" )]
 		public string ProcessStandards { get; set; }
 
@@ -376,7 +378,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:receivesTransferValueFrom" )]
 		public List<string> ReceivesTransferValueFrom { get; set; }
 
-		//
 		/// <summary>
 		/// Another source of information about the entity being described.
 		/// List of URIs
@@ -385,17 +386,17 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:sameAs" )]
 		public List<string> SameAs { get; set; }
 
-		//S
 		[JsonProperty( PropertyName = "ceterms:scoringMethodDescription" )]
-        public LanguageMap ScoringMethodDescription { get; set; }
-        [JsonProperty( PropertyName = "ceterms:scoringMethodExample" )]
-        public string ScoringMethodExample { get; set; } //URL
+		public LanguageMap ScoringMethodDescription { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:scoringMethodExampleDescription" )]
-        public LanguageMap ScoringMethodExampleDescription { get; set; }
+		[JsonProperty( PropertyName = "ceterms:scoringMethodExample" )]
+		public string ScoringMethodExample { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:scoringMethodType" )]
-        public List<CredentialAlignmentObject> ScoringMethodType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:scoringMethodExampleDescription" )]
+		public LanguageMap ScoringMethodExampleDescription { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:scoringMethodType" )]
+		public List<CredentialAlignmentObject> ScoringMethodType { get; set; }
 
 		/// <summary>
 		/// Type of official status of the Assessment; select from an enumeration of such types.
@@ -404,7 +405,7 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]
 		public CredentialAlignmentObject LifeCycleStatusType { get; set; }
 
-		//frameworks
+		// frameworks
 		[JsonProperty( PropertyName = "ceterms:occupationType" )]
 		public List<CredentialAlignmentObject> OccupationType { get; set; } = new List<CredentialAlignmentObject>();
 
@@ -413,35 +414,40 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
 		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; } = new List<CredentialAlignmentObject>();
-		//
+
 		[JsonProperty( PropertyName = "ceterms:targetAssessment" )]
-		public List<string> TargetAssessment{ get; set; }
+		public List<string> TargetAssessment { get; set; }
 
 		/// <summary>
 		/// Learning object or resource that is used as part of an learning activity.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:targetLearningResource" )]
 		public List<string> TargetLearningResource { get; set; }
-        //
-        /// <summary>
-        /// Pathway in which this resource is a potential component.
-        /// This is an inverse property and would not be published with this resource
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:targetPathway" )]
-        public List<string> TargetPathway { get; set; }
 
+		/// <summary>
+		/// Pathway in which this resource is a potential component.
+		/// This is an inverse property and would not be published with this resource
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:targetPathway" )]
+		public List<string> TargetPathway { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
+		/// <summary>
+		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:versionCode" )]
+		public string VersionCode { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:offerFrequencyType" )]
-        public List<CredentialAlignmentObject> OfferFrequencyType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:offerFrequencyType" )]
+		public List<CredentialAlignmentObject> OfferFrequencyType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:scheduleFrequencyType" )]
-        public List<CredentialAlignmentObject> ScheduleFrequencyType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:scheduleFrequencyType" )]
+		public List<CredentialAlignmentObject> ScheduleFrequencyType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:scheduleTimingType" )]
-        public List<CredentialAlignmentObject> ScheduleTimingType { get; set; }
-    }
+		[JsonProperty( PropertyName = "ceterms:scheduleTimingType" )]
+		public List<CredentialAlignmentObject> ScheduleTimingType { get; set; }
+	}
 }
 

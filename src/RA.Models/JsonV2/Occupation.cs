@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
@@ -11,24 +7,23 @@ namespace RA.Models.JsonV2
 	/// <summary>
 	/// Profession, trade, or career field that may involve training and/or a formal qualification.
 	/// </summary>
-	public class Occupation : BaseEmploymentToWorkObject 
+	public class Occupation : BaseEmploymentToWorkObject
 	{
-        [JsonIgnore]
-        public static string classType = "ceterms:Occupation";
 
-        /// <summary>
-        ///  type
-        /// </summary>
-        [JsonProperty( "@type" )]
+		/// <summary>
+		///  type
+		/// </summary>
+		[JsonProperty( "@type" )]
 		public string Type { get; set; } = "ceterms:Occupation";
 
 		/// <summary>
 		/// URI
 		/// </summary>
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		public string Id { get; set; }
+
 		/// <summary>
-		/// Globally unique Credential Transparency Identifier (CTID) by which the creator, owner or provider of a resource recognizes it in transactions with the external environment (e.g., in verifiable claims involving the resource).
+		/// Globally unique Credential Transparency Identifier (CTID)
 		/// required
 		/// <see cref="https://credreg.net/ctdl/terms/ctid"/>
 		/// </summary>
@@ -54,14 +49,14 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }
 
-        /// <summary>
-        /// AbilityEmbodied
-        /// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
-        /// CTID/URI to any of:
-        /// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
-        /// ceasn:abilityEmbodied
-        /// </summary>
-        [JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
+		/// <summary>
+		/// AbilityEmbodied
+		/// Enduring attributes of the individual that influence performance are embodied either directly or indirectly in this resource.
+		/// CTID/URI to any of:
+		/// ceasn:Competency ceterms:Job ceterms:Occupation ceterms:Task ceterms:WorkRole
+		/// ceasn:abilityEmbodied
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:abilityEmbodied" )]
 		public List<string> AbilityEmbodied { get; set; }
 
 		/// <summary>
@@ -72,7 +67,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:classification" )]
 		public List<string> Classification { get; set; }
-		//public List<CredentialAlignmentObject> Classification { get; set; }
 
 		/// <summary>
 		/// Set of alpha-numeric symbols that uniquely identifies an item and supports its discovery and use.
@@ -95,7 +89,7 @@ namespace RA.Models.JsonV2
 		/// ceterms:hasJob
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasJob" )]
-		public List<string> HasJob { get; set; } 
+		public List<string> HasJob { get; set; }
 
 		/// <summary>
 		/// More specialized profession, trade, or career field that is encompassed by the one being described.
@@ -118,19 +112,26 @@ namespace RA.Models.JsonV2
 		/// ceterms:hasWorkRole
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasWorkRole" )]
-		public List<string> HasWorkRole { get; set; } 
+		public List<string> HasWorkRole { get; set; }
+
+		/// <summary>
+		/// Indicates the level of demand for a resource via a demand level action.
+		/// Range Includes:	ceterms:WorkforceDemandAction
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasWorkforceDemand" )]
+		public List<string> HasWorkforceDemand { get; set; }
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
 		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:identifier" )]
-		public List<IdentifierValue> Identifier { get; set; } 
+		public List<IdentifierValue> Identifier { get; set; }
 
 		/// <summary>
 		/// IndustryType
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
-		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
+		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property.
 		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
 		/// ceterms:industryType
 		/// </summary>
@@ -143,7 +144,7 @@ namespace RA.Models.JsonV2
 		/// ceterms:isSpecializationOf
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:isSpecializationOf" )]
-		public List<string> IsSpecializationOf { get; set; } 
+		public List<string> IsSpecializationOf { get; set; }
 
 		/// <summary>
 		/// Keyword or key phrase describing relevant aspects of an entity.
@@ -159,36 +160,30 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:knowledgeEmbodied" )]
 		public List<string> KnowledgeEmbodied { get; set; }
-		//public List<CredentialAlignmentObject> KnowledgeEmbodied { get; set; } 
-
-
 
 		/// <summary>
 		/// OccupationType
 		/// Type of occupation; select from an existing enumeration of such types.
-		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
+		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net.
 		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:occupationType" )]
 		public List<CredentialAlignmentObject> OccupationType { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:preparationFrom" )]
+		public List<ConditionProfile> PreparationFrom { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:recommends" )]
+		public List<ConditionProfile> Recommends { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:requires" )]
 		public List<ConditionProfile> Requires { get; set; }
-
-		/// <summary>
-		/// Another source of information about the entity being described.
-		/// List of URIs
-		/// ceterms:sameAs
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:sameAs" )]
-		public List<string> SameAs { get; set; } 
 
 		/// <summary>
 		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:skillEmbodied" )]
 		public List<string> SkillEmbodied { get; set; }
-		//public List<CredentialAlignmentObject> SkillEmbodied { get; set; } 
 
 		/// <summary>
 		/// Subject Webpage
@@ -196,9 +191,7 @@ namespace RA.Models.JsonV2
 		/// Required
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-		public string SubjectWebpage { get; set; } //URL
-
-
+		public string SubjectWebpage { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:environmentalHazardType" )]
 		public List<string> EnvironmentalHazardType { get; set; }
@@ -208,7 +201,6 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:physicalCapabilityType" )]
 		public List<string> PhysicalCapabilityType { get; set; }
-
 
 		[JsonProperty( PropertyName = "ceterms:sensoryCapabilityType" )]
 		public List<string> SensoryCapabilityType { get; set; }

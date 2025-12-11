@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 using Newtonsoft.Json;
-using RA.Models.JsonV2;
+
 namespace RA.Models.JsonV2.QData
 {
 	/// <summary>
@@ -22,7 +18,6 @@ namespace RA.Models.JsonV2.QData
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
-
 
 		/// <summary>
 		/// Type of subject included or excluded from the data set.
@@ -49,6 +44,6 @@ namespace RA.Models.JsonV2.QData
 		/// qdata:subjectValue
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:subjectValue" )]
-		public List<QuantitativeValue> SubjectValue { get; set; } 
+		public List<QuantitativeValue> SubjectValue { get; set; }
 	}
 }

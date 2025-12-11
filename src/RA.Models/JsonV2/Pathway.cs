@@ -15,7 +15,7 @@ namespace RA.Models.JsonV2
 		public string Type { get; set; }
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		public string CtdlId { get; set; } = string.Empty;
 
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
@@ -33,7 +33,7 @@ namespace RA.Models.JsonV2
 		/// This property identifies a child pathwayComponent(s) in the downward path.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:hasChild" )]
-		public List<string> HasChild { get; set; } 
+		public List<string> HasChild { get; set; }
 
 		/// <summary>
 		/// Goal or destination node of the pathway. 
@@ -43,29 +43,27 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:hasDestinationComponent" )]
 		public List<string> HasDestinationComponent { get; set; }
 
-        /// <summary>
-        /// Reference to a relevant support service available for this resource.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:hasSupportService" )]
-        public List<string> HasSupportService { get; set; }
+		/// <summary>
+		/// Reference to a relevant support service available for this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasSupportService" )]
+		public List<string> HasSupportService { get; set; }
 
-        /// <summary>
-        /// This property identifies all pathway components for a pathway
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:hasPart" )]
+		/// <summary>
+		/// This property identifies all pathway components for a pathway
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasPart" )]
 		public List<string> HasPart { get; set; } = new List<string>();
 
 		[JsonProperty( PropertyName = "asn:hasProgressionModel" )]
-		public string HasProgressionModel{ get; set; }
+		public string HasProgressionModel { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:industryType" )]
 		public List<CredentialAlignmentObject> IndustryType { get; set; } = new List<CredentialAlignmentObject>();
 
 		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
-		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; } 
-		//
+		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; }
 
-		//
 		[JsonProperty( PropertyName = "ceterms:keyword" )]
 		public LanguageMapList Keyword { get; set; }
 
@@ -85,7 +83,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:offeredBy" )]
 		public List<string> OfferedBy { get; set; }
 
-		//
 		[JsonProperty( PropertyName = "ceterms:subject" )]
 		public List<CredentialAlignmentObject> Subject { get; set; }
 
@@ -96,20 +93,36 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
 		public string SubjectWebpage { get; set; }
 
+		#region process profiles
+
+		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:maintenanceProcess" )]
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:reviewProcess" )]
+		public List<ProcessProfile> ReviewProcess { get; set; }
+
+		#endregion
 		#region Versions
 		[JsonProperty( PropertyName = "ceterms:latestVersion" )]
-		public string LatestVersion { get; set; } //URL
+		public string LatestVersion { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:previousVersion" )]
-		public string PreviousVersion { get; set; } //URL
+		public string PreviousVersion { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:nextVersion" )]
-		public string NextVersion { get; set; } //URL
+		public string NextVersion { get; set; }
+
+		/// <summary>
+		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:versionCode" )]
+		public string VersionCode { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 		#endregion
-		//
 	}
-
 }

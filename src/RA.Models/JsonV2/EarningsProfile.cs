@@ -21,7 +21,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceterms:ctid" )]
 		public string CTID { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; }
 
@@ -34,12 +33,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
 		public string DateEffective { get; set; }
 
-
 		/// <summary>
 		///  Upper interquartile earnings.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:highEarnings" )]
-		public int HighEarnings { get; set; }
+		public int? HighEarnings { get; set; }
 
 		/// <summary>
 		/// Jurisdiction Profile
@@ -53,22 +51,21 @@ namespace RA.Models.JsonV2
 		///  Lower interquartile earnings.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:lowEarnings" )]
-		public int LowEarnings { get; set; }
+		public int? LowEarnings { get; set; }
 
 		/// <summary>
 		///  Median earnings.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:medianEarnings" )]
-		public int MedianEarnings { get; set; }
-
+		public int? MedianEarnings { get; set; }
 
 		/// <summary>
 		/// Number of months after earning a credential when employment and earnings data is collected.
 		/// Number of months usually range between 3 months (one quarter) to ten years.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:postReceiptMonths" )]
-		public int PostReceiptMonths { get; set; }
-		//public JurisdictionProfile Region { get; set; }
+		public int? PostReceiptMonths { get; set; }
+		// public JurisdictionProfile Region { get; set; }
 
 		/// <summary>
 		/// Authoritative source of an entity's information.
@@ -85,10 +82,10 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:relevantDataSet" )]
 		public List<string> RelevantDataSet { get; set; }
-		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName { get; set; } 
-		//[JsonProperty( PropertyName = "qdata:relevantDataSet" )]
-		//public List<DataSetProfile> RelevantDataSets { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; }
+		// [JsonProperty( PropertyName = "qdata:relevantDataSet" )]
+		// public List<DataSetProfile> RelevantDataSets { get; set; }
 	}
 }

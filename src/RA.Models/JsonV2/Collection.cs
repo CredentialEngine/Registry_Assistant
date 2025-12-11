@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
@@ -13,22 +9,22 @@ namespace RA.Models.JsonV2
 		public string Type { get; set; } = "ceterms:Collection";
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }  
+		public string CtdlId { get; set; } = string.Empty;
 
 		[JsonProperty( "ceterms:ctid" )]
 		public string CTID { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName { get; set; } 
+		public LanguageMapList AlternateName { get; set; }
 
 		/// <summary>
 		/// Category or classification of this resource.
 		/// List of URIs that point to a concept
 		/// </summary>
 		[JsonProperty( "ceterms:classification" )]
-        public List<string> Classification { get; set; }
+		public List<string> Classification { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:codedNotation" )]
+		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
 		public string CodedNotation { get; set; }
 
 		[JsonProperty( "ceterms:dateEffective" )]
@@ -49,12 +45,15 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceterms:hasMember" )]
 		public List<string> HasMember { get; set; }
 
+		/// <summary>
+		/// Reference to a relevant support service available for this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasSupportService" )]
+		public List<string> HasSupportService { get; set; }
 
-        /// <summary>
-        /// Reference to a relevant support service available for this resource.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:hasSupportService" )]
-        public List<string> HasSupportService { get; set; }
+		//Image URL
+		[JsonProperty( PropertyName = "ceterms:image" )]
+		public string Image { get; set; }
 
 		/// <summary>
 		/// An inventory or listing of resources that includes this resource.
@@ -78,9 +77,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
 		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:keyword" )]
-		public object Keyword { get; set; }
-		//public LanguageMapList Keyword { get; set; }
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
+		public LanguageMapList Keyword { get; set; }
 
 		/// <summary>
 		/// Type of official status of the record; select from an enumeration of such types.
@@ -98,12 +96,11 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// Type of collection, list, set, or other grouping of resources; select from an existing enumeration of such types.
 		/// Need to treat as an object due to different sources (like CaSS)
-		/// ConceptScheme: CollectionCategory 
+		/// ConceptScheme: CollectionCategory
 		/// NOTE: this is an object in the API, but a CredentialAlignmentObject will be in the registry/finder - so be careful on updates to this class
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:collectionType" )]
-		public object CollectionType { get; set; }
-		//public List<CredentialAlignmentObject> CollectionType { get; set; }
+		public List<CredentialAlignmentObject> CollectionType { get; set; }
 
 		/// <summary>
 		/// The name or title of this resource.
@@ -127,18 +124,32 @@ namespace RA.Models.JsonV2
 		public List<string> OwnedBy { get; set; }
 
 		/// <summary>
+		/// Organizations that have permission to offer credentials of a
+		/// specific CredentialType.
+		/// The value of this property should be a ceterms:Collection of ceterms:CredentialOrganizations (or similar).
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:recognizedOfferers" )]
+		public string RecognizedOfferers { get; set; }
+
+		/// <summary>
 		/// Subjects
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:subject" )]
 		public List<CredentialAlignmentObject> Subject { get; set; }
 
-        /// <summary>
-        /// Webpage(s) that describes this entity.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-        public string SubjectWebpage { get; set; }
+		/// <summary>
+		/// Webpage(s) that describes this entity.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
+		public string SubjectWebpage { get; set; }
 
-		#region Version related 
+		#region Version related
+		/// <summary>
+		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:versionCode" )]
+		public string VersionCode { get; set; }
+
 		/// <summary>
 		/// VersionIdentifier
 		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
@@ -152,22 +163,37 @@ namespace RA.Models.JsonV2
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:latestVersion" )]
-		public string LatestVersion { get; set; } //URL
+		public string LatestVersion { get; set; }
 
 		/// <summary>
 		/// Version of the resource that immediately precedes this version.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:previousVersion" )]
-		public string PreviousVersion { get; set; } //URL
+		public string PreviousVersion { get; set; }
 
 		/// <summary>
 		/// Version of the resource that immediately follows this version.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:nextVersion" )]
-		public string NextVersion { get; set; } //URL
+		public string NextVersion { get; set; }
 
+
+		#endregion
+
+		#region process profiles
+		[JsonProperty( PropertyName = "ceterms:complaintProcess" )]
+		public List<ProcessProfile> ComplaintProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:maintenanceProcess" )]
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:reviewProcess" )]
+		public List<ProcessProfile> ReviewProcess { get; set; }
 
 		#endregion
 
@@ -232,6 +258,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }
 
-	
+
 	}
 }

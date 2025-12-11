@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RA.Models.JsonV2.QData;
 using Newtonsoft.Json;
+
 namespace RA.Models.JsonV2
 {
 	/// <summary>
@@ -40,7 +41,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
 		public string DateEffective { get; set; }
 
-
 		/// <summary>
 		/// DemographicInformation
 		/// Aggregate data or summaries of statistical data relating to the population of credential holders including data about gender, geopolitical regions, age, education levels, and other categories of interest.
@@ -52,7 +52,7 @@ namespace RA.Models.JsonV2
 		///  Upper interquartile earnings.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:numberAwarded" )]
-		public int NumberAwarded { get; set; }
+		public int? NumberAwarded { get; set; }
 
 		/// <summary>
 		/// Jurisdiction Profile
@@ -61,7 +61,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
-
 
 		/// <summary>
 		/// Authoritative source of an entity's information.
@@ -77,8 +76,7 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "qdata:relevantDataSet" )]
 		public List<string> RelevantDataSet { get; set; }
-		//public List<DataSetProfile> RelevantDataSet { get; set; }
-
+		// public List<DataSetProfile> RelevantDataSet { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }

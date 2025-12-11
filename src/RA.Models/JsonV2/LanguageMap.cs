@@ -6,146 +6,160 @@ using System.Threading.Tasks;
 
 namespace RA.Models.JsonV2
 {
-    /// <summary>
-    /// Class to represent a LanguageMap and related components
-    /// </summary>
-    public class LanguageMap : Dictionary<string, string>
-    {
-        public LanguageMap() { }
-        public LanguageMap( string text )
-        {
-            this.Add( "en-US", text );
-        }
-        public LanguageMap( string languageCode, string text )
-        {
-            this.Add( languageCode, text );
-        }
+	/// <summary>
+	/// Class to represent a LanguageMap and related components
+	/// </summary>
+	public class LanguageMap : Dictionary<string, string>
+	{
+		private const string _defaultLanguageCode = "en-US";
+
+		public LanguageMap() { }
+
+		public LanguageMap( string text )
+		{
+			this.Add( _defaultLanguageCode, text );
+		}
+
+		public LanguageMap( string languageCode, string text )
+		{
+			this.Add( languageCode, text );
+		}
+
 		/// <summary>
 		/// Return true if the language map is empty
-		/// !!doesnt' work
+		/// Still have to first check if the property is null
 		/// </summary>
 		/// <returns></returns>
 		public bool IsEmpty()
 		{
-			if ( this == null || this.Count == 0 )
-				return true;
-			else
-				return false;
+			return ( this == null || this.Count == 0 );
 		}
+
 		public override string ToString()
-        {
-            //if nothing found for default, should return first one
-            string value = ToString( "en" );
-            if ( string.IsNullOrWhiteSpace( value ) )
-            {
-                value = this.FirstOrDefault().Value;
-            } 
-            return value;
-        }
-        public string ToString( string languageCode )
-        {
-            return LanguageMap.ToString( this, languageCode );
-        }
-        public static string ToString( LanguageMap map, string languageCode )
-        {
-            //Fast check
-            if ( map.ContainsKey( languageCode ) )
-            {
-                return map[ languageCode ];
-            }
+		{
+			// if nothing found for default, should return first one
+			string value = ToString( _defaultLanguageCode );
+			if ( string.IsNullOrWhiteSpace( value ) )
+			{
+				value = this.FirstOrDefault().Value;
+			}
 
-            //Search
-            var parts = languageCode.ToLower().Split( '-' ).ToList();
-            while ( parts.Count() > 0 )
-            {
-                var match = map.Keys.FirstOrDefault( m => m.ToLower() == string.Join( "-", parts ) );
-                if ( match != null )
-                {
-                    return map[ match ];
-                }
-                var closeMatch = map.Keys.FirstOrDefault( m => m.ToLower().Contains( string.Join( "-", parts ) ) );
-                if ( closeMatch != null )
-                {
-                    return map[ closeMatch ];
-                }
-                parts.Remove( parts.Last() );
-            }
+			return value;
+		}
 
-            //Default
-            return "";
-        }
+		public string ToString( string languageCode )
+		{
+			return LanguageMap.ToString( this, languageCode );
+		}
 
-    //    /// <summary>
-    //    /// Helper prototype in case useful
-    //    /// </summary>
-    //    /// <returns></returns>
-    //    public List<LanguageItem> ToList()
-    //    {
-    //        List<LanguageItem> list = new List<LanguageItem>();
-    //        LanguageItem li = new LanguageItem();
-    //        foreach ( var item in this )
-    //        {
-    //            li = new LanguageItem();
-    //            li.Language = item.Key;
-    //            li.Text = item.Value;
-    //            list.Add( li );
-    //        }
-    //        return list;
-    //    }
+		public static string ToString( LanguageMap map, string languageCode )
+		{
+			// Fast check
+			if ( map.ContainsKey( languageCode ) )
+			{
+				return map[ languageCode ];
+			}
 
-    }
-    //public class LanguageItem
-    //{
-    //    public string Language { get; set; }
-    //    public string Text { get; set; }
-    //}
-    public class LanguageMapList : Dictionary<string, List<string>>
-    {
-        public LanguageMapList() { }
-        public LanguageMapList( List<string> items )
-        {
-            this.Add( "en-US", items );
-        }
-        public LanguageMapList( string languageCode, List<string> items )
-        {
-            this.Add( languageCode, items );
-        }
+			// Search
+			var parts = languageCode.ToLower().Split( '-' ).ToList();
+			while ( parts.Count > 0 )
+			{
+				var match = map.Keys.FirstOrDefault( m => m.ToLower() == string.Join( "-", parts ) );
+				if ( match != null )
+				{
+					return map[ match ];
+				}
+				var closeMatch = map.Keys.FirstOrDefault( m => m.ToLower().Contains( string.Join( "-", parts ) ) );
+				if ( closeMatch != null )
+				{
+					return map[ closeMatch ];
+				}
+				parts.Remove( parts.Last() );
+			}
 
-        public List<string> ToList()
-        {
-            return ToList( "en" );
-        }
-        public List<string> ToList( string languageCode )
-        {
-            return LanguageMapList.ToList( this, languageCode );
-        }
-        public static List<string> ToList( LanguageMapList list, string languageCode )
-        {
-            //Fast check
-            if ( list.ContainsKey( languageCode ) )
-            {
-                return list[ languageCode ];
-            }
+			// Default
+			return string.Empty;
+		}
 
-            //Search
-            var parts = languageCode.ToLower().Split( '-' ).ToList();
-            while ( parts.Count() > 0 )
-            {
-                var match = list.Keys.FirstOrDefault( m => m.ToLower() == string.Join( "-", parts ) );
-                if ( match != null )
-                {
-                    return list[ match ];
-                }
-                var closeMatch = list.Keys.FirstOrDefault( m => m.ToLower().Contains( string.Join( "-", parts ) ) );
-                if ( closeMatch != null )
-                {
-                    return list[ closeMatch ];
-                }
-                parts.Remove( parts.Last() );
-            }
+		/// <summary>
+		/// Helper prototype in case useful
+		/// </summary>
+		/// <returns></returns>
+		public List<LanguageItem> ToList()
+		{
+			List<LanguageItem> list = new List<LanguageItem>();
+			LanguageItem li = new LanguageItem();
+			foreach ( var item in this )
+			{
+				li = new LanguageItem();
+				li.Language = item.Key;
+				li.Text = item.Value;
+				list.Add( li );
+			}
+			return list;
+		}
+	}
 
-            //Default
-            return new List<string>();
-        }
-    }
+	public class LanguageItem
+	{
+		public string Language { get; set; }
+
+		public string Text { get; set; }
+	}
+
+	public class LanguageMapList : Dictionary<string, List<string>>
+	{
+		private const string _defaultLanguageCode = "en-US";
+
+		public LanguageMapList() { }
+
+		public LanguageMapList( List<string> items )
+		{
+			this.Add( _defaultLanguageCode, items );
+		}
+
+		public LanguageMapList( string languageCode, List<string> items )
+		{
+			this.Add( languageCode, items );
+		}
+
+		public List<string> ToList()
+		{
+			return ToList( _defaultLanguageCode );
+		}
+
+		public List<string> ToList( string languageCode )
+		{
+			return LanguageMapList.ToList( this, languageCode );
+		}
+
+		public static List<string> ToList( LanguageMapList list, string languageCode )
+		{
+			// Fast check
+			if ( list.ContainsKey( languageCode ) )
+			{
+				return list[ languageCode ];
+			}
+
+			// Search
+			var parts = languageCode.ToLower().Split( '-' ).ToList();
+			while ( parts.Count > 0 )
+			{
+				var match = list.Keys.FirstOrDefault( m => m.ToLower() == string.Join( "-", parts ) );
+				if ( match != null )
+				{
+					return list[ match ];
+				}
+				var closeMatch = list.Keys.FirstOrDefault( m => m.ToLower().Contains( string.Join( "-", parts ) ) );
+				if ( closeMatch != null )
+				{
+					return list[ closeMatch ];
+				}
+				parts.Remove( parts.Last() );
+			}
+
+			// Default
+			return new List<string>();
+		}
+	}
 }

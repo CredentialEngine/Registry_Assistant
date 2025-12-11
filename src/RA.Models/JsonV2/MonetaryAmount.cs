@@ -14,6 +14,7 @@ namespace RA.Models.JsonV2
 		{
 			Type = "schema:MonetaryAmount";
 		}
+
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
 

@@ -20,7 +20,7 @@ namespace RA.Models.JsonV2
 		public string Type { get; set; }
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		public string CtdlId { get; set; } = string.Empty;
 
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
@@ -31,10 +31,10 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:alternateName" )]
-        public LanguageMapList AlternateName { get; set; } 
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:codedNotation" )]
+		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
 		public string CodedNotation { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
@@ -42,7 +42,6 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:intermediaryFor" )]
 		public List<string> IntermediaryFor { get; set; }
-
 
 		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
 		public List<string> OwnedBy { get; set; }
@@ -69,5 +68,24 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:receivesTransferValueFrom" )]
 		public List<string> ReceivesTransferValueFrom { get; set; }
+
+		#region process profiles
+
+		[JsonProperty( PropertyName = "ceterms:appealProcess" )]
+		public List<ProcessProfile> AppealProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:complaintProcess" )]
+		public List<ProcessProfile> ComplaintProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:maintenanceProcess" )]
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:reviewProcess" )]
+		public List<ProcessProfile> ReviewProcess { get; set; }
+
+		#endregion
 	}
 }

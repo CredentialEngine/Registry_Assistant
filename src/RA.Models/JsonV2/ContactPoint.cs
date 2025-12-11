@@ -7,35 +7,29 @@ using System.Threading.Tasks;
 
 namespace RA.Models.JsonV2
 {
-    public class ContactPoint
-    {
-        public ContactPoint()
-        {
-            PhoneNumbers = new List<string>();
-            Emails = new List<string>();
-            SocialMediaPages = new List<string>();
-            Type = "ceterms:ContactPoint";
-            //ContactOption = new List<string>();
-        }
+	public class ContactPoint
+	{
+		public ContactPoint()
+		{
+			Name = null;
+			ContactType = null;
+			PhoneNumbers = new List<string>();
+			Emails = new List<string>();
+			SocialMediaPages = new List<string>();
+			Type = "ceterms:ContactPoint";
+		}
 
-        [JsonProperty( PropertyName = "@type" )]
-        public string Type { get; set; }
+		[JsonProperty( PropertyName = "@type" )]
+		public string Type { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:name" )]
-        public LanguageMap Name { get; set; }
-
-        /// <summary>
-        /// Specification of the type of contact
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:contactType" )]
-        public LanguageMap ContactType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap Name { get; set; }
 
 		/// <summary>
-		/// An option available on this contact point.
-		/// For example, a toll-free number or support for hearing-impaired callers.
+		/// Specification of the type of contact
 		/// </summary>
-		//[JsonProperty( PropertyName = "ceterms:contactOption" )]
-		//public List<string> ContactOption { get; set; }
+		[JsonProperty( PropertyName = "ceterms:contactType" )]
+		public LanguageMap ContactType { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:faxNumber" )]
 		public List<string> FaxNumber { get; set; }
@@ -49,7 +43,7 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:telephone" )]
 		public List<string> PhoneNumbers { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:alternateName" )]
-        public LanguageMapList AlternateName { get; set; } 
-    }
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; }
+	}
 }

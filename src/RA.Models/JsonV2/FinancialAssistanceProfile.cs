@@ -13,6 +13,7 @@ namespace RA.Models.JsonV2
 		{
 			Type = "ceterms:FinancialAssistanceProfile";
 		}
+
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
 
@@ -23,16 +24,15 @@ namespace RA.Models.JsonV2
 		public LanguageMap Description { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-		public string SubjectWebpage { get; set; } //URL
+		public string SubjectWebpage { get; set; }
 
-		[JsonProperty(PropertyName = "ceterms:financialAssistanceType")]
+		[JsonProperty( PropertyName = "ceterms:financialAssistanceType" )]
 		public List<CredentialAlignmentObject> FinancialAssistanceType { get; set; }
 
-		//
 		[JsonProperty( PropertyName = "ceterms:financialAssistanceValue" )]
 		public List<QuantitativeValue> FinancialAssistanceValue { get; set; } = null;
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName { get; set; } 
+		public LanguageMapList AlternateName { get; set; }
 	}
 }

@@ -15,6 +15,7 @@ namespace RA.Models.JsonV2
 			Value = null;
 			Percentage = null;
 		}
+
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
 
@@ -23,7 +24,6 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( "schema:value" )]
 		public decimal? Value { get; set; }
-
 
 		/// <summary>
 		/// Minimum value for this purpose.

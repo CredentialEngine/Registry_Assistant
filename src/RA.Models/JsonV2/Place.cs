@@ -15,16 +15,27 @@ namespace RA.Models.JsonV2
 			Type = "ceterms:Place";
 			ContactPoint = new List<ContactPoint>();
 		}
+
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
 
+		/// <summary>
+		/// An identifier for use with blank nodes. 
+		/// It will be ignored if included with a primary resource
+		/// </summary>
+		[JsonProperty( "@id" )]
+		public string Id { get; set; } = null;
+
+		/// <summary>
+		/// Entity that describes the longitude, latitude and other location details of a place.
+		/// </summary>
 		[JsonProperty( "ceterms:geoURI" )]
 		public string GeoURI { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; }
 
-		//2020-12-15 - adding back use of description
+		// 2020-12-15 - adding back use of description
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
 
@@ -40,17 +51,12 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceterms:addressRegion" )]
 		public LanguageMap AddressRegion { get; set; }
 
-		/// <summary>
-		/// Named area or division within a region, such as a county in the U.S. or Canada.
-		/// </summary>
-		[JsonProperty( "ceterms:addressSubRegion" )]
-		public LanguageMap SubRegion { get; set; }
-		//
 		[JsonProperty( "ceterms:postalCode" )]
 		public string PostalCode { get; set; }
 
 		[JsonProperty( "ceterms:addressCountry" )]
 		public LanguageMap Country { get; set; }
+
 		/// <summary>
 		/// Identifier
 		/// Definition:	Alphanumeric Identifier value.
@@ -66,7 +72,14 @@ namespace RA.Models.JsonV2
 		public double? Longitude { get; set; } = null;
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName { get; set; } 
+		public LanguageMapList AlternateName { get; set; }
+
+		/// <summary>
+		/// Subject Webpage
+		/// URL
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
+		public string SubjectWebpage { get; set; }
 
 		[JsonProperty( "ceterms:targetContactPoint" )]
 		public List<ContactPoint> ContactPoint { get; set; }

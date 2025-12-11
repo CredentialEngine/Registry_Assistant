@@ -7,33 +7,32 @@ using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
-    /// <summary>
-    /// Credentialing Action
-    /// Action taken by an agent affecting the status of an object entity.
-    /// </summary>
-    public class CredentialingAction : BaseResourceDocument
+	/// <summary>
+	/// Credentialing Action
+	/// Action taken by an agent affecting the status of an object entity.
+	/// </summary>
+	public class CredentialingAction : BaseResourceDocument
 	{
-        /// <summary>
-        /// Type of credentialing action
-        /// One of
-        /// ceterms:AccreditAction 
-        /// ceterms:AdvancedStandingAction 
-        /// ceterms:ApproveAction 
-        /// ceterms:OfferAction 
-        /// ceterms:RecognizeAction 
-        /// ceterms:RegistrationAction 
-        /// ceterms:RegulateAction 
-        /// ceterms:RenewAction 
-        /// ceterms:RevokeAction 
-        /// ceterms:RightsAction
-        /// ceterms:WorkforceDemandAction
-        /// </summary>
-        [JsonProperty( "@type" )]
+		/// <summary>
+		/// Type of credentialing action
+		/// One of
+		/// ceterms:AccreditAction 
+		/// ceterms:AdvancedStandingAction 
+		/// ceterms:ApproveAction 
+		/// ceterms:OfferAction 
+		/// ceterms:RecognizeAction 
+		/// ceterms:RegistrationAction 
+		/// ceterms:RegulateAction 
+		/// ceterms:RenewAction 
+		/// ceterms:RevokeAction 
+		/// ceterms:RightsAction
+		/// ceterms:WorkforceDemandAction
+		/// </summary>
+		[JsonProperty( "@type" )]
 		public string Type { get; set; } = "ceterms:CredentialingAction";
 
-
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }
+		public string CtdlId { get; set; } = string.Empty;
 
 		[JsonProperty( "ceterms:ctid" )]
 		public string CTID { get; set; }
@@ -59,16 +58,17 @@ namespace RA.Models.JsonV2
 		/// REQUIRED
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:name" )]
-		public LanguageMap Name { get; set; } 
-
+		public LanguageMap Name { get; set; }
 
 		/// <summary>
 		/// Accredit Action Description
 		/// REQUIRED
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap Description { get; set; } 
+		public LanguageMap Description { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:administrationProcess" )]
+		public List<ProcessProfile> AdministrationProcess { get; set; }
 
 		/// <summary>
 		/// Evidence of Action
@@ -104,7 +104,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:participant" )]
 		public List<string> Participant { get; set; }
 
-
 		/// <summary>
 		/// Date this action starts.
 		/// </summary>
@@ -117,10 +116,8 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:endDate" )]
 		public string EndDate { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:jurisdiction" )]
-        public List<JurisdictionProfile> Jurisdiction { get; set; }
-
-
+		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
+		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
 		/// <summary>
 		/// Outcome produced in the action.

@@ -14,6 +14,7 @@ namespace RA.Models.JsonV2
 		{
 			Type = "ceterms:ValueProfile";
 		}
+
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
 

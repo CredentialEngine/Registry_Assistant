@@ -21,12 +21,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceterms:ctid" )]
 		public string CTID { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName { get; set; } 
+		public LanguageMapList AlternateName { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
@@ -37,14 +36,13 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
 		public string DateEffective { get; set; }
 
-
 		/// <summary>
 		///  Number of jobs obtained in the region during a given timeframe.
 		///  ceterms:jobsObtained
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:jobsObtained" )]
 		public List<QuantitativeValue> JobsObtained { get; set; }
-		//public int JobsObtained { get; set; }
+		// public int? JobsObtained { get; set; }
 
 		/// <summary>
 		/// Jurisdiction Profile
@@ -53,7 +51,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
-
 
 		/// <summary>
 		/// Authoritative source of an entity's information.
@@ -68,8 +65,8 @@ namespace RA.Models.JsonV2
 		/// qdata:DataSetProfile
 		/// TODO - this may change to URIs
 		/// </summary>
-		//[JsonProperty( PropertyName = "qdata:relevantDataSet" )]
-		//public List<DataSetProfile> RelevantDataSet { get; set; }
+		// [JsonProperty( PropertyName = "qdata:relevantDataSet" )]
+		// public List<DataSetProfile> RelevantDataSet { get; set; }
 
 		[JsonProperty( PropertyName = "qdata:relevantDataSet" )]
 		public List<string> RelevantDataSet { get; set; }

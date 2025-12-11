@@ -5,24 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
+
 namespace RA.Models.JsonV2
 {
 	public class JurisdictionProfile
 	{
-        public JurisdictionProfile()
-        {
-            Type = "ceterms:JurisdictionProfile";
-			//MainJurisdiction = null;
+		public JurisdictionProfile()
+		{
+			Type = "ceterms:JurisdictionProfile";
 			MainJurisdiction = new List<Place>();
 			JurisdictionException = new List<Place>();
-			//AssertedBy = new List<string>();
 			AssertedBy = null;
 		}
 
-        [JsonProperty( "@type" )]
-        public string Type { get; set; }
+		[JsonProperty( "@type" )]
+		public string Type { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:globalJurisdiction" , DefaultValueHandling = DefaultValueHandling.Include)]        
+		[JsonProperty( PropertyName = "ceterms:globalJurisdiction", DefaultValueHandling = DefaultValueHandling.Include )]
 		public bool? GlobalJurisdiction { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
@@ -35,9 +34,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:mainJurisdiction" )]
 		public List<Place> MainJurisdiction { get; set; }
 
-		//[JsonProperty( PropertyName = "ceterms:jurisdictionException" )]
-		//public List<GeoCoordinates> JurisdictionException { get; set; }
-
 		[JsonProperty( PropertyName = "ceterms:jurisdictionException" )]
 		public List<Place> JurisdictionException { get; set; }
 
@@ -47,8 +43,5 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:assertedBy" )]
 		public List<string> AssertedBy { get; set; }
-
 	}
-	
-
 }

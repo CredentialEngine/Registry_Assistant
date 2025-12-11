@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
+
 namespace RA.Models.JsonV2
 {
 	public class DurationProfile
@@ -18,13 +19,13 @@ namespace RA.Models.JsonV2
 			Type = "ceterms:DurationProfile";
 		}
 
-        [JsonProperty( "@type" )]
-        public string Type { get; set; }
+		[JsonProperty( "@type" )]
+		public string Type { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:description" )]
-        public LanguageMap Description { get; set; }
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
 
-        [JsonProperty( PropertyName = "ceterms:minimumDuration" )]
+		[JsonProperty( PropertyName = "ceterms:minimumDuration" )]
 		public string MinimumDuration { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:maximumDuration" )]
@@ -33,20 +34,23 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:exactDuration" )]
 		public string ExactDuration { get; set; }
 
-
 		[JsonProperty( PropertyName = "ceterms:timeRequired" )]
 		public string TimeRequired { get; set; }
 
+		/// <summary>
+		/// Check if there is any input data
+		/// </summary>
+		[JsonIgnore]
+		public bool HasValue
+		{
+			get
+			{
+				return !string.IsNullOrWhiteSpace( ExactDuration )
+					|| !string.IsNullOrWhiteSpace( MinimumDuration )
+					|| !string.IsNullOrWhiteSpace( MaximumDuration )
+					|| !string.IsNullOrWhiteSpace( TimeRequired )
+					|| ( Description != null && Description.Count > 0 );
+			}
+		}
 	}
-
-	//public class DurationItem
-	//{
-	//	public int Years { get; set; }
-	//	public int Months { get; set; }
-	//	public int Weeks { get; set; }
-	//	public int Days { get; set; }
-	//	public int Hours { get; set; }
-	//	public int Minutes { get; set; }
-	//	public bool HasValue { get { return Years + Months + Weeks + Days + Hours + Minutes > 0; } }
-	//}
 }

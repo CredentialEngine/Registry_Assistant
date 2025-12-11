@@ -1,28 +1,20 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
 	/// <summary>
-	/// Credential Alignment Object
-	/// Modifications
-	/// 2017-10-17 TargetNodeName is now required!
+	/// Any value in inheriting from CredentialAlignmentObject?
 	/// </summary>
-	public class CredentialAlignmentObject
+	public class AlignmentObject
 	{
-		/// <summary>
-		/// constructor
-		/// </summary>
-		public CredentialAlignmentObject()
+		public AlignmentObject()
 		{
-			Type = "ceterms:CredentialAlignmentObject";
-			CodedNotation = null;
+			Type = "ceterms:AlignmentObject";
 			AlignmentDate = null;
-			AlignmentType = null;
 		}
 
-		/// <summary>
-		/// Need a custom mapping to @type based on input value
-		/// </summary>
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
 
@@ -47,25 +39,36 @@ namespace RA.Models.JsonV2
 		public string AlignmentType { get; set; }
 
 		/// <summary>
-		/// Coded Notation
-		/// A short set of alpha-numeric symbols that uniquely identifies a resource and supports its discovery.
+		/// Statement, characterization or account of the entity. 
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
-		public string CodedNotation { get; set; }
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap Description { get; set; }
 
 		/// <summary>
-		/// Framework URL
-		/// The framework to which the resource being described is aligned.Must be a valid URL.
+		/// Individual entry in a formally defined framework such as a competency or an industry, instructional program, or occupation code that is the source of an alignment. 
+		/// xsd:anyURI
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:framework" )]
-		public string Framework { get; set; }
+		[JsonProperty( PropertyName = "ceterms:sourceNode" )]
+		public string SourceNode { get; set; }
 
 		/// <summary>
-		/// Framework Name
-		/// Formal name of the framework, or progression model, etc.
+		/// Textual description of an individual concept or competency in a formally defined framework  that is the source of an alignment.
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:frameworkName" )]
-		public LanguageMap FrameworkName { get; set; }
+		[JsonProperty( PropertyName = "ceterms:sourceNodeDescription" )]
+		public LanguageMap SourceNodeDescription { get; set; }
+
+		/// <summary>
+		/// Name of an individual concept or competency in a formally defined framework  that is the source of an alignment. 
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:sourceNodeName" )]
+		public LanguageMap SourceNodeName { get; set; }
+
+		/// <summary>
+		/// Target Node
+		/// The node of a framework targeted by the alignment. Must be a valid URL.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:targetNode" )]
+		public string TargetNode { get; set; }
 
 		/// <summary>
 		/// Target Description
@@ -73,13 +76,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:targetNodeDescription" )]
 		public LanguageMap TargetNodeDescription { get; set; } = new LanguageMap();
-
-		/// <summary>
-		/// Target Node
-		/// The node of a framework targeted by the alignment. Must be a valid URL or short URI.
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:targetNode" )]
-		public string TargetNode { get; set; }
 
 		/// <summary>
 		/// Target Node Name
@@ -94,12 +90,5 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:weight" )]
 		public decimal? Weight { get; set; }
-
-		/// <summary>
-		/// A helper property for use where the range is a concept URL
-		/// </summary>
-		[JsonIgnore]
-		public string PurlUrl { get; set; }
-
 	}
 }

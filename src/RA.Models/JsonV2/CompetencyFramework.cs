@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-//using System.Text.Json;
-//using System.Text.Json.Serialization;
 
 using Newtonsoft.Json;
 
@@ -8,31 +6,26 @@ namespace RA.Models.JsonV2
 {
 	public class CompetencyFrameworksGraph
 	{
-		
+
 		public CompetencyFrameworksGraph()
 		{
-			//Type = classType;
-			//Context = "https://credreg.net/ctdlasn/schema/context/json";
 		}
+
 		[JsonProperty( "@context" )]
 		public string Context { get; set; } = "https://credreg.net/ctdlasn/schema/context/json";
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; } //		/graph/
+		public string CtdlId { get; set; }
 
 		/// <summary>
 		/// Main graph object
 		/// </summary>
 		[JsonProperty( "@graph" )]
 		public object Graph { get; set; }
-
 	}
-	public class CompetencyFramework 
+
+	public class CompetencyFramework // : JsonLDDocument
 	{
-		//[JsonIgnore]
-		//public static string classType = "ceasn:CompetencyFramework";
-		//[JsonIgnore]
-		//public static string thisContext = "https://credreg.net/ctdlasn/schema/context/json";
 		public CompetencyFramework()
 		{
 		}
@@ -41,139 +34,149 @@ namespace RA.Models.JsonV2
 		public string Type { get; set; } = "ceasn:CompetencyFramework";
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }	
+		public string CtdlId { get; set; }
 
 		[JsonProperty( "ceterms:ctid" )]
 		public string CTID { get; set; }
 
 		[JsonProperty( "ceasn:alignFrom" )]
-		public List<string> alignFrom { get; set; } 
+		public List<string> AlignFrom { get; set; }
 
 		[JsonProperty( "ceasn:alignTo" )]
-		public List<string> alignTo { get; set; } 
+		public List<string> AlignTo { get; set; }
 
 		[JsonProperty( "ceasn:author" )]
-		public string author { get; set; }
-		//public List<string> author { get; set; }
+		public List<string> Author { get; set; }
 
+		[JsonProperty( "ceasn:codedNotation" )]
+		public string CodedNotation { get; set; }
 
 		[JsonProperty( "ceasn:conceptKeyword" )]
-		public LanguageMapList conceptKeyword { get; set; }
+		public LanguageMapList ConceptKeyword { get; set; }
 
 		[JsonProperty( "ceasn:conceptTerm" )]
-		public List<string> conceptTerm { get; set; } 
+		public List<string> ConceptTerm { get; set; }
 
 		[JsonProperty( "ceasn:creator" )]
-		public List<string> creator { get; set; } 
+		public List<string> Creator { get; set; }
 
 		[JsonProperty( "ceasn:dateCopyrighted" )]
-		public string dateCopyrighted { get; set; }
+		public string DateCopyrighted { get; set; }
 
 		/// <summary>
 		/// Only allow date (yyyy-mm-dd), no time
 		/// xsd:date
 		/// </summary>
 		[JsonProperty( "ceasn:dateCreated" )]
-		public string dateCreated { get; set; }
+		public string DateCreated { get; set; }
 
 		/// <summary>
-		/// Originally only allowing date (yyyy-mm-dd), no time. 
+		/// Originally only allowing date (yyyy-mm-dd), no time.
 		/// However, this is defined as: xsd:dateTime. So consumers like the credential registry search, expect a datetime format.
 		/// </summary>
 
 		[JsonProperty( "ceasn:dateModified" )]
-		public string dateModified { get; set; }
+		public string DateModified { get; set; }
 
 		/// <summary>
 		/// xsd:dateTime
 		/// </summary>
 		[JsonProperty( "ceasn:dateValidFrom" )]
-		public string dateValidFrom { get; set; }
+		public string DateValidFrom { get; set; }
 
 		/// <summary>
 		/// xsd:dateTime
 		/// </summary>
 		[JsonProperty( "ceasn:dateValidUntil" )]
-		public string dateValidUntil { get; set; }
+		public string DateValidUntil { get; set; }
 
-		//single per https://github.com/CredentialEngine/CompetencyFrameworks/issues/66
-		//23-03-22 back to a list
-		//but store as object due to old resources as string
+		/// <summary>
+		/// single per https://github.com/CredentialEngine/CompetencyFrameworks/issues/66
+		/// 23-03-22 back to a list
+		/// but store as object due to old resources as string
+		/// </summary>
 		[JsonProperty( "ceasn:derivedFrom" )]
-        public List<string> derivedFrom { get; set; }
+		public object DerivedFrom { get; set; }
 
-        [JsonProperty( "ceasn:description" )]
-		public LanguageMap description { get; set; }
+		[JsonProperty( "ceasn:description" )]
+		public LanguageMap Description { get; set; }
 
-        /// <summary>
-        /// Education Level Type
+		/// <summary>
+		/// Education Level Type
 		/// Best practice is to use terms from the http://purl.org/ctdl/terms/AudienceLevel concept scheme.
-        /// Range: skos:Concept
-        /// </summary>
-        [JsonProperty( "ceasn:educationLevelType" )]
-		public List<string> educationLevelType { get; set; }
+		/// Range: skos:Concept
+		/// </summary>
+		[JsonProperty( "ceasn:educationLevelType" )]
+		public List<string> EducationLevelType { get; set; }
 
-        /// <summary>
-        /// Top-level child competency of a competency framework.
-        /// Range: ceasn:Competency
-        /// </summary>
-        [JsonProperty( "ceasn:hasTopChild" )]
-		public List<string> hasTopChild { get; set; } 
+		/// <summary>
+		/// Terms and definitions applicable to the resource.
+		/// URI to the concept scheme
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasGlossary" )]
+		public List<string> HasGlossary { get; set; }
+
+		/// <summary>
+		/// Top-level child competency of a competency framework.
+		/// </summary>
+		[JsonProperty( "ceasn:hasTopChild" )]
+		public List<string> HasTopChild { get; set; }
 
 		[JsonProperty( "ceasn:identifier" )]
-		public List<string> identifier { get; set; } 
+		public List<string> Identifier { get; set; }
 
 		[JsonProperty( "ceasn:inLanguage" )]
-		public List<string> inLanguage { get; set; } 
+		public List<string> InLanguage { get; set; }
 
 		[JsonProperty( "ceasn:license" )]
-		public string license { get; set; }
+		public string License { get; set; }
 
 		[JsonProperty( "ceasn:localSubject" )]
-		public LanguageMapList localSubject { get; set; } 
-		
-		[JsonProperty( "ceasn:name" )]
-		public LanguageMap name { get; set; } = new LanguageMap();
+		public LanguageMapList LocalSubject { get; set; }
 
-        /// <summary>
-        /// The publication status of the resource.
-        /// Range: skos:Concept
-        /// </summary>
-        [JsonProperty("ceasn:publicationStatusType" )]
-		public string publicationStatusType { get; set; }
-		//
+		[JsonProperty( "ceasn:name" )]
+		public LanguageMap Name { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// The publication status of the resource.
+		/// Range: skos:Concept
+		/// </summary>
+		[JsonProperty( "ceasn:publicationStatusType" )]
+		public string PublicationStatusType { get; set; }
+
 		[JsonProperty( "ceasn:publisher" )]
-		public List<string> publisher { get; set; } 
+		public List<string> Publisher { get; set; }
 
 		[JsonProperty( "ceasn:publisherName" )]
-		public LanguageMapList publisherName { get; set; } 
-		//
+		public LanguageMapList PublisherName { get; set; }
 
 		[JsonProperty( "ceasn:repositoryDate" )]
-		public string repositoryDate { get; set; }
+		public string RepositoryDate { get; set; }
 
-        /// <summary>
-        /// Information about rights held in and over this resource.
-        /// </summary>
-        [JsonProperty( "ceasn:rights" )]
-		public LanguageMap rights { get; set; }
+		/// <summary>
+		/// 19-01-18 Changed to a language string
+		/// </summary>
+		[JsonProperty( "ceasn:rights" )]
+		public LanguageMap Rights { get; set; }
 
-        /// <summary>
-        /// An agent owning or managing rights over this resource.
-		/// Range: ceterms:CredentialOrganization, ceterms:Organization, ceterms:QACredentialOrganization
-        /// </summary>
-        [JsonProperty( "ceasn:rightsHolder" )]
-		public object rightsHolder { get; set; }
+		[JsonProperty( "ceasn:rightsHolder" )]
+		public object RightsHolder { get; set; }
 
 		[JsonProperty( "ceasn:source" )]
-		public List<string> source { get; set; } 
+		public List<string> Source { get; set; }
 
-		//
+		/// <summary>
+		/// Human-readable information resource other than a competency framework from which this competency was generated or derived by humans or machines.
+		/// URI
+		/// </summary>
+		[JsonProperty( "ceasn:sourceDocumentation" )]
+		public List<string> SourceDocumentation { get; set; }
+
 		[JsonProperty( "ceasn:tableOfContents" )]
-		public LanguageMap tableOfContents { get; set; } 
+		public LanguageMap TableOfContents { get; set; }
 
 		[JsonProperty( "ceterms:occupationType" )]
-		public List<CredentialAlignmentObject> OccupationType { get; set; } 
+		public List<CredentialAlignmentObject> OccupationType { get; set; }
 
 		[JsonProperty( "ceterms:industryType" )]
 		public List<CredentialAlignmentObject> IndustryType { get; set; }
@@ -181,53 +184,98 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
 		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; }
 
+		#region Helper properties where publishing input is a graph. These will not be published
 
-        /// <summary>
-        /// VersionIdentifier
-        /// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
-        /// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
+		/// <summary>
+		/// CIP List is a helper when publishing from a graph. It will not be published
+		/// </summary>
+		[JsonProperty( "cipList" )]
+		public List<string> CIPList { get; set; } = null;
+
+		/// <summary>
+		/// SOC List is a helper when publishing from a graph. It will not be published
+		/// </summary>
+		[JsonProperty( "socList" )]
+		public List<string> SOCList { get; set; } = null;
+
+		/// <summary>
+		/// NAICS List is a helper when publishing from a graph. It will not be published
+		/// </summary>
+		[JsonProperty( "naicsList" )]
+		public List<string> NaicsList { get; set; } = null;
+		#endregion
+
+		/// <summary>
+		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:versionCode" )]
+		public string VersionCode { get; set; }
+
+		/// <summary>
+		/// VersionIdentifier
+		/// Alphanumeric identifier of the version of the credential that is unique within the organizational context of its owner.
+		/// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
 		public List<IdentifierValue> VersionIdentifier { get; set; }
 
 		/// <summary>
-		/// Latest version of the resource.
+		/// temporary helpers pending a CaSS update
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:versionIdentifier" )]
+		public List<string> VersionIdentifier1 { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceasn:versionIdentifier_1" )]
+		public List<string> VersionIdentifier2 { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceasn:versionIdentifier_2" )]
+		public List<string> VersionIdentifier3 { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceasn:versionIdentifier_3" )]
+		public List<string> VersionIdentifier4 { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceasn:versionIdentifier_4" )]
+		public List<string> VersionIdentifier5 { get; set; } = null;
+
+		[JsonProperty( PropertyName = "ceasn:versionIdentifier_5" )]
+		public List<string> VersionIdentifier6 { get; set; } = null;
+
+		/// <summary>
+		/// Latest version of the credential.
+		/// full URL OR CTID (recommended)
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:latestVersion" )]
-		public string LatestVersion { get; set; } //URL
+		public string LatestVersion { get; set; }
 
-        /// <summary>
-        /// Previous version of the resource.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:previousVersion" )]
-		public string PreviousVersion { get; set; } //URL
+		/// <summary>
+		/// Version of the resource that immediately precedes this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:previousVersion" )]
+		public string PreviousVersion { get; set; }
 
-        /// <summary>
-        /// Next version of the resource.
-        /// </summary>
-        [JsonProperty( PropertyName = "ceterms:nextVersion" )]
-		public string NextVersion { get; set; } //URL
+		/// <summary>
+		/// Version of the resource that immediately follows this version.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:nextVersion" )]
+		public string NextVersion { get; set; }
 
+		#region process profiles
 
-        #region *** Helper properties where publishing input is a graph. These will not be published
-        /// <summary>
-        /// CIP List is a helper when publishing from a graph. It will not be published
-        /// </summary>
-        [JsonProperty( "cipList" )]
-        public List<string> CIPList { get; set; } = null;
-        /// <summary>
-        /// SOC List is a helper when publishing from a graph. It will not be published
-        /// </summary>
-        [JsonProperty( "socList" )]
-        public List<string> SOCList { get; set; } = null;
+		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
+		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
-        /// NAICS List is a helper when publishing from a graph. It will not be published
-        [JsonProperty( "naicsList" )]
-        public List<string> NaicsList { get; set; } = null;
-        #endregion
-    }
+		[JsonProperty( PropertyName = "ceterms:maintenanceProcess" )]
+		public List<ProcessProfile> MaintenanceProcess { get; set; }
 
-    public class CompetencyFrameworkPlain
+		[JsonProperty( PropertyName = "ceterms:reviewProcess" )]
+		public List<ProcessProfile> ReviewProcess { get; set; }
+
+		#endregion
+	}
+
+	public class CompetencyFrameworkPlain
 	{
 		public CompetencyFrameworkPlain()
 		{
@@ -243,115 +291,103 @@ namespace RA.Models.JsonV2
 		public string CTID { get; set; }
 
 		[JsonProperty( "ceasn:alignFrom" )]
-		public List<string> alignFrom { get; set; } = new List<string>();
+		public List<string> AlignFrom { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:alignTo" )]
-		public List<string> alignTo { get; set; } = new List<string>();
+		public List<string> AlignTo { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:altIdentifier" )]
-		public List<string> altIdentifier { get; set; }
+		public List<string> AltIdentifier { get; set; }
 
-        //[JsonProperty( "ceasn:author" )]
-        //public List<string> author { get; set; }
+		[JsonProperty( "ceasn:author" )]
+		public List<string> Author { get; set; }
 
+		[JsonProperty( "ceasn:conceptKeyword" )]
+		public List<string> ConceptKeyword { get; set; } = new List<string>();
 
-        [JsonProperty( "ceasn:conceptKeyword" )]
-        public List<string> conceptKeyword { get; set; } = new List<string>();
-
-        [JsonProperty( "ceasn:conceptTerm" )]
-		public List<string> conceptTerm { get; set; } = new List<string>();
+		[JsonProperty( "ceasn:conceptTerm" )]
+		public List<string> ConceptTerm { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:creator" )]
-		public List<string> creator { get; set; } = new List<string>();
+		public List<string> Creator { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:dateCopyrighted" )]
-		public string dateCopyrighted { get; set; }
+		public string DateCopyrighted { get; set; }
 
 		[JsonProperty( "ceasn:dateCreated" )]
-		public string dateCreated { get; set; }
+		public string DateCreated { get; set; }
 
 		[JsonProperty( "ceasn:dateModified" )]
-		public string dateModified { get; set; }
+		public string DateModified { get; set; }
 
 		[JsonProperty( "ceasn:dateValidFrom" )]
-		public string dateValidFrom { get; set; }
+		public string DateValidFrom { get; set; }
 
 		[JsonProperty( "ceasn:dateValidUntil" )]
-		public string dateValidUntil { get; set; }
+		public string DateValidUntil { get; set; }
 
-        //single per https://github.com/CredentialEngine/CompetencyFrameworks/issues/66
-        //23-03-22 back to a list
-        [JsonProperty( "ceasn:derivedFrom" )]
-        public List<string> derivedFrom { get; set; }
+		/// <summary>
+		/// single per https://github.com/CredentialEngine/CompetencyFrameworks/issues/66
+		/// 23-03-22 back to a list
+		/// </summary>
+		[JsonProperty( "ceasn:derivedFrom" )]
+		public List<string> DerivedFrom { get; set; }
 
-        //???language map??
-        [JsonProperty( "ceasn:description" )]
-		public string description { get; set; }
+		[JsonProperty( "ceasn:description" )]
+		public string Description { get; set; }
 
 		[JsonProperty( "ceasn:educationLevelType" )]
-		public List<string> educationLevelType { get; set; } = new List<string>();
+		public List<string> EducationLevelType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Top-level child competency of a competency framework.
 		/// </summary>
 		[JsonProperty( "ceasn:hasTopChild" )]
-		public List<string> hasTopChild { get; set; } = new List<string>();
+		public List<string> HasTopChild { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:identifier" )]
-		public List<string> identifier { get; set; } = new List<string>();
+		public List<string> Identifier { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:inLanguage" )]
-		public List<string> inLanguage { get; set; } = new List<string>();
+		public List<string> InLanguage { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:license" )]
-		public string license { get; set; }
+		public string License { get; set; }
 
 		[JsonProperty( "ceasn:localSubject" )]
-		public List<string> localSubject { get; set; } = new List<string>();
-
+		public List<string> LocalSubject { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:name" )]
-		public string name { get; set; }
+		public string Name { get; set; }
 
 		[JsonProperty( "ceasn:publicationStatusType" )]
-		public string publicationStatusType { get; set; }// = new List<IdProperty>();
+		public string PublicationStatusType { get; set; }
 
 		[JsonProperty( "ceasn:publisher" )]
-		public List<string> publisher { get; set; } = new List<string>();
+		public List<string> Publisher { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:publisherName" )]
-		public List<string> publisherName { get; set; } = new List<string>();
-		//
+		public List<string> PublisherName { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:repositoryDate" )]
-		public string repositoryDate { get; set; }
+		public string RepositoryDate { get; set; }
 
-		/// <summary>
-		/// 19-01-18 Changed to a language string
-		/// Hide until changed in CaSS
-		/// </summary>
 		[JsonProperty( "ceasn:rights" )]
-		public LanguageMap rights { get; set; } = new LanguageMap();
-		//public object rights { get; set; }
-		//public List<string> rights { get; set; } = new List<string>();
+		public LanguageMap Rights { get; set; } = new LanguageMap();
 
 		[JsonProperty( "ceasn:rightsHolder" )]
-		public List<string> rightsHolder { get; set; }
+		public List<string> RightsHolder { get; set; }
 
 		[JsonProperty( "ceasn:source" )]
-		public List<string> source { get; set; } = new List<string>();
+		public List<string> Source { get; set; } = new List<string>();
 
-		//
 		[JsonProperty( "ceasn:tableOfContents" )]
-		public string tableOfContents { get; set; }
+		public string TableOfContents { get; set; }
 
 		[JsonProperty( "ceterms:occupationType" )]
 		public List<CredentialAlignmentObject> OccupationType { get; set; } = new List<CredentialAlignmentObject>();
 
 		[JsonProperty( "ceterms:industryType" )]
 		public List<CredentialAlignmentObject> IndustryType { get; set; } = new List<CredentialAlignmentObject>();
-
-
 	}
-	
 }
