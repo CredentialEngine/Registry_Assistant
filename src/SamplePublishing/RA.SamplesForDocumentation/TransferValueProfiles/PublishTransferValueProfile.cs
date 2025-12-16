@@ -70,19 +70,26 @@ namespace RA.SamplesForDocumentation
 				IdentifierTypeName = "ACE Course Code",
 				IdentifierValueCode = "0276"        //Alphanumeric string identifier of the entity
 			} );
-			//============== TransferValue ================================
-			//Required. Provide a transfer value amount using Value and CreditUnitType. ex. DegreeCredit This is a concept scheme and so has a strict vocabulary. 
-			myData.TransferValue = new List<ValueProfile>()
-			{
-				new ValueProfile()
-				{
-					Value=3,
-					CreditUnitType = new List<string>() {"DegreeCredit"},
-					CreditLevelType = new List<string>() {"LowerDivisionLevel"}
-				}
-			};
-			//development prpcess profile
-			myData.DevelopmentProcess = new List<ProcessProfile>()
+            //============== TransferValue ================================
+            //Required. Provide a transfer value amount using Value and CreditUnitType. ex. DegreeCredit This is a concept scheme and so has a strict vocabulary. 
+            myData.TransferValue = new List<ValueProfile>()
+            {
+                new ValueProfile()
+                {
+                    Value=3,
+                    CreditUnitType = new List<string>() {"DegreeCredit"},
+                    CreditLevelType = new List<string>() {"LowerDivisionLevel"}
+                },
+                new ValueProfile()
+                {
+                    Value=6,
+                    CreditUnitType = new List<string>() {"DegreeCredit"},
+                    CreditLevelType = new List<string>() {"UpperDivisionLevel"}
+                }
+            };
+
+            //development prpcess profile
+            myData.DevelopmentProcess = new List<ProcessProfile>()
 			{
 				new ProcessProfile() 
 				{
