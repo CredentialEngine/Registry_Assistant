@@ -216,8 +216,14 @@ namespace RA.SamplesForDocumentation
 					Value=3,
 					CreditUnitType = new List<string>() {"DegreeCredit"},
 					CreditLevelType = new List<string>() {"LowerDivisionLevel"}
-				}
-			};
+				},
+                new ValueProfile()
+                {
+                    Value=6,
+                    CreditUnitType = new List<string>() {"DegreeCredit"},
+                    CreditLevelType = new List<string>() {"UpperDivisionLevel"}
+                }
+            };
 			//==============	transfer value from ===========================================
 			//Resource that provides the transfer value described by this resource, according to the entity providing this resource.
 			//A list of entity references. 
