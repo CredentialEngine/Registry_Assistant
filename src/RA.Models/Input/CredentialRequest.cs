@@ -281,13 +281,15 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CredentialId { get; set; }
 
-		/// <summary>
-		/// CredentialType: Type of credential as defined by an authoritative body for use within an officially regulated qualification system.
-		/// The actual CTDL term is ceterms:credentialType, but the latter property is already in use, so using CredentialTypeObject as the input class
-		///  <see cref="https://purl.org/ctdl/terms/credentialType"/>
-		/// Range: is an object of type: CredentialType
-		/// </summary>
-		public List<string> CredentialTypeObject { get; set; }
+        /// <summary>
+        /// GovernmentCredentialType: Type of credential as defined by an authoritative body 
+        ///		for use within an officially regulated qualification system.
+        /// The actual CTDL term is ceterms:credentialType, but the latter property is already in use, 
+        ///		so using GovernmentCredentialType as the input class
+        ///  <see cref="https://purl.org/ctdl/terms/credentialType"/>
+        /// Range: is an object of type: CredentialType
+        /// </summary>
+        public List<string> GovernmentCredentialType { get; set; }
 
 		/// <summary>
 		/// Effective date of the content of this profile
@@ -636,7 +638,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Language map list for AlternativeOccupationType
 		/// </summary>
-		public LanguageMapList AlternativeOccupationType_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternativeOccupationTypeLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// List of valid O*Net codes. See:
@@ -665,7 +667,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Language map list for AlternativeIndustryType
 		/// </summary>
-		public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternativeIndustryTypeLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// List of valid NAICS codes. See:
@@ -691,7 +693,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Language map list for AlternativeInstructionalProgramType
 		/// </summary>
-		public LanguageMapList AlternativeInstructionalProgramType_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternativeInstructionalProgramTypeLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// List of valid Classification of Instructional Program codes. See:
@@ -715,7 +717,7 @@ namespace RA.Models.Input
 		public LanguageMapList DegreeConcentrationLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
-		/// LanguageMapList for Primary field of study of a degree-seeking student.
+		/// List for Primary field of study of a degree-seeking student.
 		/// </summary>
 		public List<string> DegreeMajor { get; set; }
 

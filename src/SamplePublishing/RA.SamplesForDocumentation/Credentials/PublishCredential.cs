@@ -259,6 +259,14 @@ namespace RA.SamplesForDocumentation
 				}
 			};
 
+            // This resource is related to a Type of credential as defined by an authoritative body for use within an officially regulated qualification system.
+            myData.GovernmentCredentialType = new List<string>()
+            {
+                "ce-e3b2c052-c9ce-4a0b-ba0f-85120c09b5af"
+            };
+
+			//InCatalog - An inventory or listing of resources that includes this resource.
+			myData.InCatalog = "https://example.org/ourCatalog";
 
 			//HasRubric - list of CTIDs of relevent (published) Rubrics
 			myData.HasRubric = new List<string>()
@@ -272,10 +280,6 @@ namespace RA.SamplesForDocumentation
 				"ce-44395283-8263-4e90-961e-12b6e49005ea", "ce-5d595b23-2dd4-483b-919b-9842c948378f"
 			};
 
-			//InCatalog - An inventory or listing of resources that includes this resource.
-			myData.InCatalog = "https://example.org/ourCatalog";
-
-
 			//This resource provides transfer value for the referenced Transfer Value Profile.
 			myData.ProvidesTransferValueFor = new List<string>()
 			{
@@ -287,8 +291,9 @@ namespace RA.SamplesForDocumentation
 			{
 				"ce-702bf41d-5763-43d6-ad55-fe13468463a6"
 			};
-			//====================	OCCUPATIONS ====================
-			PopulateOccupations( myData );
+
+            //====================	OCCUPATIONS ====================
+            PopulateOccupations( myData );
 			//====================	INDUSTRIES	====================
 			PopulateIndustries( myData );
 			//====================	PROGRAMS	====================
