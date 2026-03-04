@@ -61,6 +61,7 @@
     <Compile Include="Collections\PublishCollection.cs" />
     <Compile Include="CompetencyFrameworks\PublishACEFrameworks.cs" />
     <Compile Include="CompetencyFrameworks\PublishCompetencyFrameworks.cs" />
+    <Compile Include="CompetencyFrameworks\PublishStandaloneCompetencies.cs" />
     <Compile Include="ConceptSchemes\PublishConceptSchemes.cs" />
     <Compile Include="ConditionManifests\PublishConditionManifest.cs" />
     <Compile Include="CostManifests\PublishCostManifest.cs" />

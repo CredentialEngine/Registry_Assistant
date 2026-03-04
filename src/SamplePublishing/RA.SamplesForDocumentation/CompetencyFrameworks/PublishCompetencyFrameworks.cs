@@ -72,7 +72,7 @@ namespace RA.SamplesForDocumentation
 			//Return the result
 			return result;
 		}
-		public static Competency MapCompetency( string frameworkCTID, string competency )
+		private static Competency MapCompetency( string frameworkCTID, string competency )
 		{
 			Competency output = new Competency()
 			{
