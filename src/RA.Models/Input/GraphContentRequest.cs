@@ -22,8 +22,8 @@ namespace RA.Models.Input
 			HasLanguageMaps = true;
 		}
 
-		//*** shouldn't use this!!!	- just for tracing/output files
-		public string CTID { get; set; } = "";
+		// *** shouldn't use this!!!	- just for tracing/output files
+		public string CTID { get; set; } = string.Empty;
 
 		/// <summary>
 		/// HasLanguageMaps
@@ -35,8 +35,31 @@ namespace RA.Models.Input
 		/// Main input data as a graph
 		/// </summary>
 		public GraphInput GraphInput { get; set; }
-
 	}
+
+	public class GraphListRequest : BaseRequest
+	{
+		/// <summary>
+		/// constructor
+		/// </summary>
+		public GraphListRequest()
+		{
+			GraphInput = new List<GraphInput>();
+			HasLanguageMaps = true;
+		}
+
+		/// <summary>
+		/// HasLanguageMaps
+		/// If false, will format input using the Plain classes
+		/// </summary>
+		public bool HasLanguageMaps { get; set; }
+
+		/// <summary>
+		/// Main input data as a graph
+		/// </summary>
+		public List<GraphInput> GraphInput { get; set; }
+	}
+
 	/// <summary>
 	/// Graph Class
 	/// </summary>
@@ -56,6 +79,9 @@ namespace RA.Models.Input
 		public object Graph { get; set; }
 	}
 
+	/// <summary>
+	/// Graph Node: can be used to check for minimum properties in the Graph object
+	/// </summary>
 	public class GraphNode
 	{
 
@@ -65,11 +91,10 @@ namespace RA.Models.Input
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
 
-
 		/// <summary>
 		/// CTID - present for toplevel node, but not always for child nodes
 		/// </summary>
 		[JsonProperty( "ceterms:ctid" )]
-		public object CTID { get; set; }
+		public string CTID { get; set; }
 	}
 }

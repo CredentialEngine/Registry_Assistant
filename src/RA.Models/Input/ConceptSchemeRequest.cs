@@ -209,7 +209,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> PublisherName { get; set; } = new List<string>();
 
-		public LanguageMapList PublisherName_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList PublisherNameMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// An agent responsible for making this resource available.
@@ -223,7 +223,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Rights { get; set; }
 
-		public LanguageMap Rights_Map { get; set; } = new LanguageMap();
+		public LanguageMap RightsMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		///  An agent owning or managing rights over this resource.
@@ -279,7 +279,7 @@ namespace RA.Models.Input
 		/// Alternately can provide a language map
 		/// </summary>
 		[JsonProperty( PropertyName = "skos:prefLabel" )]
-		public LanguageMap PrefLabel_Map { get; set; } = new LanguageMap();
+		public LanguageMap PrefLabelMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Alternative Label

@@ -6,30 +6,32 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace RA.Models.JsonV2
+namespace RA.Models.Input
 {
 	/// <summary>
 	/// Structured Statement
 	/// A statement provided verbatim or by reference, with additional context such as type, source, or citation.
 	/// </summary>
-	public class StructuredStatement : BaseResourceDocument
+	public class StructuredStatement
 	{
+		[JsonIgnore]
+		public static string classType = "ceterms:StructuredStatement";
 
 		public StructuredStatement()
 		{
-			Type = "ceterms:StructuredStatement";
 			SubjectWebpage = null;
 		}
 
 		#region Required Properties
-		/// <summary>
-		/// Need a custom mapping to @type based on input value
-		/// </summary>
-		[JsonProperty( "@type" )]
-		public string Type { get; set; }
 
-		[JsonProperty( "ceterms:name" )]
-		public LanguageMap Name { get; set; }
+		/// <summary>
+		/// Name of this resource
+		/// REQUIRED
+		/// </summary>
+		public string Name { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; }
 
 		#endregion
 
@@ -40,44 +42,42 @@ namespace RA.Models.JsonV2
 		/// 
 		/// Conditional Required if no Statement Text
 		/// </summary>
-		[JsonProperty( "ceterms:description" )]
-		public LanguageMap Description { get; set; }
+		public string Description { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:description" )]
+		public LanguageMap DescriptionLangMap { get; set; }
 
 		/// <summary>
 		/// Verbatim unformatted text of a statement, typically one made in a larger document.
 		/// 
 		/// Conditional Required if no Subject Webpage
 		/// </summary>
+		public string StatementText { get; set; }		
+		
 		[JsonProperty( "ceterms:statementText" )]
-		public LanguageMap StatementText { get; set; }
+		public LanguageMap StatementTextLangMap { get; set; }
 
 		/// <summary>
 		/// Webpage that describes this entity.
 		/// 
 		/// Conditional Required if no Statement Text
 		/// </summary>
-		[JsonProperty( "ceterms:subjectWebpage" )]
 		public string SubjectWebpage { get; set; }
 
 		#endregion
 
-		[JsonProperty( "ceterms:codedNotation" )]
 		public string CodedNotation { get; set; }
 
 		/// <summary>
 		/// An alphanumeric string indicating the relative position of a resource in an ordered list of resources
 		/// </summary>
-		[JsonProperty( "ceasn:listID" )]
 		public string ListID { get; set; }
 
 		/// <summary>
-		/// Type of prior learning evidence accepted for evaluation under the policy.
+		/// Type of prior learning evidence accepted for evaluation under the policy; select from an existing enumeration of such types.
 		/// Concept Scheme: ceterms:StatementCategory
-		/// Range: list of URIs
 		/// </summary>
-		[JsonProperty( "ceterms:statementType" )]
 		public List<string> StatementType { get; set; }
 
 	}
-
 }

@@ -31,7 +31,7 @@ namespace RA.Models.JsonV2
 		public string CTID { get; set; }
 	}
 
-	public class ConceptScheme // : JsonLDDocument
+	public class ConceptScheme
 	{
 		/// <summary>
 		/// constructor
@@ -107,7 +107,7 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceasn:publisherName" )]
 		public object PublisherName { get; set; }
-		// public LanguageMap PublisherName { get; set; }
+		// public LanguageMapList PublisherName { get; set; }
 
 		[JsonProperty( PropertyName = "ceasn:rights" )]
 		public LanguageMap Rights { get; set; }
@@ -139,7 +139,7 @@ namespace RA.Models.JsonV2
 	/// <summary>
 	/// Concept
 	/// </summary>
-	public class Concept // : JsonLDDocument
+	public class Concept
 	{
 		/// <summary>
 		/// Constructor
@@ -244,7 +244,7 @@ namespace RA.Models.JsonV2
 	}
 
 	#region Plain graph
-	public class ConceptSchemePlain // : JsonLDDocument
+	public class ConceptSchemePlain
 	{
 		public ConceptSchemePlain()
 		{
@@ -297,7 +297,7 @@ namespace RA.Models.JsonV2
 		public string PublicationStatusType { get; set; }
 
 		[JsonProperty( PropertyName = "ceasn:publisher" )]
-		public string Publisher { get; set; }
+		public List<string> Publisher { get; set; }
 
 		[JsonProperty( PropertyName = "ceasn:publisherName" )]
 		public List<string> PublisherName { get; set; }

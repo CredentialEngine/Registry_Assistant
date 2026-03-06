@@ -319,8 +319,15 @@ namespace RA.Models.Input
 		/// Jan, 2000
 		/// Jan. 1, 2000
 		/// November 11, 2000 (len=17)
+		/// range: xsd:string
 		/// </summary>
 		public string FoundingDate { get; set; }
+
+		/// <summary>
+		/// Date the organization ceased operations or ceased to exist.
+		/// range: xsd:date
+		/// </summary>
+		public string ClosingDate { get; set; }
 
 		#region Concrete codes/identifiers
 

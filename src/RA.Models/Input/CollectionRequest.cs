@@ -1,4 +1,4 @@
-﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+﻿// <copyright file="CollectionRequest.cs" company="Credential Engine">
 //     Copyright (c) Credential Engine. All rights reserved.
 // </copyright>
 // <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
@@ -11,7 +11,7 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Collection Request class
 	/// Collection.HasMember can be a list of CTIDs for all members.
-	/// Include CollectionMembers or ReferenceMembers, but not both.
+	/// Include CollectionMembers or Members, but not both.
 	/// </summary>
 	public class CollectionRequest : BaseRequest
 	{
@@ -26,39 +26,35 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
 
+		public List<Competency> CompetencyMembers { get; set; } = new List<Competency>();
+
 		/// <summary>
-		/// Publish a list of reference resources (blank nodes), by providing the data in this property
+		/// Prototype: publish a list of reference resources (blank nodes), by providing the data in this property
 		/// Currently members can be any of:
 		/// "ceterms:CredentialOrganization",
 		/// "ceterms:AssessmentProfile",
 		/// "ceterms:Credential", //any of the valid credential subclasses
 		/// "ceasn:Competency",
-		///		NOTE: currently "full" competencies (i.e. have CTIDs) are handled
 		/// "ceterms:Course",
 		/// "ceterms:Job",
 		/// "ceterms:LearningOpportunityProfile",
 		/// "ceterms:LearningProgram",
-		/// At this time, ReferenceMembers must all be the same type.
+		/// At this time, Members must all be the same type.
 		/// </summary>
 		public List<object> ReferenceMembers { get; set; } = new List<object>();
 
 	}
 
+
 	/// <summary>
-	/// Prototype, not implemented
+	/// Append collection members
 	/// </summary>
-	public class CollectionUpdateRequest : BaseRequest
+	public class CollectionMembersAppendRequest : BaseRequest
 	{
 		/// <summary>
 		/// Collection to update
-		/// TODO - would we want to allow updating the collection as well? ==> NO
 		/// </summary>
 		public string CollectionCTID { get; set; }
-
-		/// <summary>
-		/// List of CTIDs to append to a collection HasMember
-		/// </summary>
-		public List<string> HasMember { get; set; } = new List<string>();
 
 		/// <summary>
 		/// CollectionMember
@@ -66,10 +62,47 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
 
+	}
+
+	/// <summary>
+	/// Append HasMembers
+	/// </summary>
+	public class HasMembersAppendRequest : BaseRequest
+	{
 		/// <summary>
-		/// List of members to remove from a collection
+		/// Collection to update
 		/// </summary>
-		public List<string> RemoveMembers { get; set; } = new List<string>();
+		public string CollectionCTID { get; set; }
+
+		/// <summary>
+		/// List of CTIDs to add to a collection HasMember
+		/// </summary>
+		public List<string> HasMember { get; set; } = new List<string>();
+
+	}
+
+	/// <summary>
+	/// List of CTIDS to remove from HasMember
+	/// </summary>
+	public class HasMembersRemoveRequest : HasMembersAppendRequest
+	{
+
+	}
+
+	/// <summary>
+	/// Append compentencies
+	/// </summary>
+	public class CollectionCompetenciesAppendRequest : BaseRequest
+	{
+		/// <summary>
+		/// Collection to update
+		/// </summary>
+		public string CollectionCTID { get; set; }
+
+		/// <summary>
+		/// List of Competencies to be added to a collection 
+		/// </summary>
+		public List<Competency> CompetencyMembers { get; set; } = new List<Competency>();
 	}
 
 	/// <summary>
@@ -165,7 +198,14 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
 
+		///// <summary>
+		///// Additional Classification
+		///// List of concepts that don't exist in the registry. Will be published as blank nodes
+		///// OR should input be a list of Concepts?
+		///// </summary>
+		//public List<CredentialAlignmentObject> AdditionalClassification { get; set; } = new List<CredentialAlignmentObject>();
 		#endregion
+
 
 		/// <summary>
 		/// Type of collection, list, set, or other grouping of resources; select from an existing enumeration of such types.
@@ -408,7 +448,7 @@ namespace RA.Models.Input
 	}
 
 	/// <summary>
-	/// Collection Member
+	/// Collection Member (proposed)
 	/// The collection member will use a blank node format for the id.
 	/// Tip: we may use the CTID from the is proxy for in the blank node id
 	/// </summary>
@@ -418,6 +458,14 @@ namespace RA.Models.Input
 		/// Type for this class
 		/// </summary>
 		public string Type { get; set; } = "ceterms:CollectionMember";
+
+		/// <summary>
+		/// CTID for a collection.
+		/// PROPOSED - NOT IMPLEMENTED
+		/// This property is only used in publishing of documents like learning opportunities. It will be ignored in the context of publishing a collection.
+		/// </summary>
+		public string CollectionCTID { get; set; }
+
 
 		/// <summary>
 		/// A short description of this resource.

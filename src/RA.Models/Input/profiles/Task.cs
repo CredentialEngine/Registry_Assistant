@@ -225,5 +225,12 @@ namespace RA.Models.Input
 		/// ceterms:hasOccupation
 		/// </summary>
 		public List<string> HasOccupation { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Subject Webpage
+		/// URL
+		/// ceterms:subjectWebpage
+		/// </summary>
+		public string SubjectWebpage { get; set; }
 	}
 }

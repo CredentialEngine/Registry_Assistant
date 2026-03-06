@@ -248,13 +248,13 @@ namespace RA.Models.Input
 		/// AvailableOnlineAt URL
 		/// 22-08-30 Changed to an object to allow handling of a single or a list
 		/// </summary>
-		public List<string> AvailableOnlineAt { get; set; }
+		public object AvailableOnlineAt { get; set; }
 
 		/// <summary>
 		/// AvailabilityListing URL
 		/// 22-08-30 Changed to an object to allow handling of a single or a list
 		/// </summary>
-		public List<string> AvailabilityListing { get; set; }
+		public object AvailabilityListing { get; set; }
 
 		/// <summary>
 		/// List of Addresses for this credential, using Place
@@ -281,15 +281,15 @@ namespace RA.Models.Input
 		/// </summary>
 		public string CredentialId { get; set; }
 
-        /// <summary>
-        /// GovernmentCredentialType: Type of credential as defined by an authoritative body 
-        ///		for use within an officially regulated qualification system.
-        /// The actual CTDL term is ceterms:credentialType, but the latter property is already in use, 
-        ///		so using GovernmentCredentialType as the input class
-        ///  <see cref="https://purl.org/ctdl/terms/credentialType"/>
-        /// Range: is an object of type: CredentialType
-        /// </summary>
-        public List<string> GovernmentCredentialType { get; set; }
+		/// <summary>
+		/// GovernmentCredentialType: Type of credential as defined by an authoritative body 
+		///		for use within an officially regulated qualification system.
+		/// The actual CTDL term is ceterms:credentialType, but the latter property is already in use, 
+		///		so using GovernmentCredentialType as the input class
+		///  <see cref="https://purl.org/ctdl/terms/credentialType"/>
+		/// Range: is an object of type: CredentialType
+		/// </summary>
+		public List<string> GovernmentCredentialType { get; set; }
 
 		/// <summary>
 		/// Effective date of the content of this profile

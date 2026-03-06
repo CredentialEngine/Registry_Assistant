@@ -51,7 +51,7 @@ namespace RA.Models.Input
 		public string Description { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
+		public LanguageMap DescriptionLangMap { get; set; }
 
 		/// <summary>
 		/// Individual entry in a formally defined framework such as a competency or an industry, instructional program, or occupation code that is the source of an alignment.
@@ -67,7 +67,7 @@ namespace RA.Models.Input
 		public string SourceNodeName { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:sourceNodeName" )]
-		public LanguageMap SourceNodeName_LangMap { get; set; }
+		public LanguageMap SourceNodeNameLangMap { get; set; }
 
 		/// <summary>
 		/// Textual description of an individual concept or competency in a formally defined framework  that is the source of an alignment.
@@ -75,7 +75,7 @@ namespace RA.Models.Input
 		public string SourceNodeDescription { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:sourceNodeDescription" )]
-		public LanguageMap SourceNodeDescription_LangMap { get; set; }
+		public LanguageMap SourceNodeDescriptionLangMap { get; set; }
 
 		/// <summary>
 		/// Target Node
@@ -92,7 +92,7 @@ namespace RA.Models.Input
 		public string TargetNodeName { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:targetNodeName" )]
-		public LanguageMap TargetNodeName_LangMap { get; set; }
+		public LanguageMap TargetNodeNameLangMap { get; set; }
 
 		/// <summary>
 		/// Target Description
@@ -101,7 +101,7 @@ namespace RA.Models.Input
 		public string TargetNodeDescription { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:targetNodeDescription" )]
-		public LanguageMap TargetNodeDescription_LangMap { get; set; }
+		public LanguageMap TargetNodeDescriptionLangMap { get; set; }
 
 		/// <summary>
 		/// Weight

@@ -46,6 +46,12 @@ namespace RA.Models.Input
 	/// </summary>
 	public class TransferValueProfile
 	{
+		public TransferValueProfile()
+		{
+			Requires = new List<ConditionProfile>();
+
+			CommonConditions = new List<string>();
+		}
 
 		#region Required
 
@@ -80,13 +86,6 @@ namespace RA.Models.Input
 		public LanguageMap DescriptionLangMap { get; set; }
 
 		/// <summary>
-		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
-		/// List of CTIDs - must exist in the registry
-		/// ceasn:derivedFrom
-		/// </summary>
-		public List<string> DerivedFrom { get; set; } = new List<string>();
-
-		/// <summary>
 		/// Organization(s) that owns this resource
 		/// Required
 		/// </summary>
@@ -104,6 +103,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<ValueProfile> TransferValue { get; set; } = new List<ValueProfile>();
 		#endregion
+
+		/// <summary>
+		/// A third party version of the entity being referenced that has been modified in meaning through editing, extension or refinement.
+		/// List of CTIDs - must exist in the registry
+		/// ceasn:derivedFrom
+		/// </summary>
+		public List<string> DerivedFrom { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Summary of evidence about this resource.
+		/// Range: ceterms:EvaluationOutcome
+		/// </summary>
+		public List<EvaluationOutcome> EvaluationEvidence { get; set; }
 
 		/// <summary>
 		/// Identifier
@@ -173,6 +185,27 @@ namespace RA.Models.Input
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateNameLangMap { get; set; } = null;
+
+		/// <summary>
+		/// Receiving curriculum or requirement context to which the transfer value is applied.
+		/// If the types of applicability are formally defined as an enumeration published with URIs, then:
+		///		the relevant URI can be entered as the targetNode of the Credential Alignment Object; 
+		///	if they are informally defined or not published then:
+		///		use the targetNodeName and targetNodeDescription of the Credential Alignment Object to define the relevant type.
+		/// Range: ceterms:CredentialAlignmentObject
+		/// </summary>
+		public List<CredentialAlignmentObject> Applicability { get; set; }
+
+		/// <summary>
+		/// List of CTIDs or full URLs for a ConditionManifest published by the owning organization
+		/// </summary>
+		public List<string> CommonConditions { get; set; }
+
+		/// <summary>
+		/// Requirement or set of requirements for this resource
+		/// </summary>
+		public List<ConditionProfile> Requires { get; set; }
+
 		#region Version related properties
 		//
 
@@ -242,6 +275,11 @@ namespace RA.Models.Input
 		/// Description of a process by which a resource was created.
 		/// </summary>
 		public List<ProcessProfile> DevelopmentProcess { get; set; }
+
+		/// <summary>
+		/// Description of a process used to appraise this resource.
+		/// </summary>
+		public List<ProcessProfile> EvaluationProcess { get; set; }
 
 		/// <summary>
 		///  Description of a process by which a resource is maintained, including review and updating.

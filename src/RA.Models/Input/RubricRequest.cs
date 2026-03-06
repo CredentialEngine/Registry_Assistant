@@ -646,11 +646,6 @@ namespace RA.Models.Input
 		public LanguageMap Feedback_Map { get; set; } = new LanguageMap();
 
 		/// <summary>
-		/// Indicates whether the criterion level is evaluated as having been met or not.
-		/// </summary>
-		public bool? IsBinaryEvaluation { get; set; }
-
-		/// <summary>
 		/// Points to be awarded for achieving this level for a RubricCriterion.
 		/// </summary>
 		public decimal? Value { get; set; }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RA.Models.Input.profiles.QData
 {
@@ -15,10 +16,12 @@ namespace RA.Models.Input.profiles.QData
 		// NOT required
 		public string Description { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		public string Name { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>

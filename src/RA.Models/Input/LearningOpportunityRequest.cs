@@ -20,6 +20,13 @@ namespace RA.Models.Input
 
 	public class LearningProgramRequest : LearningOpportunityRequest
 	{
+		public LearningProgramRequest()
+		{
+			LearningOpportunity = new LearningOpportunity()
+			{
+				Type = "LearningProgram"
+			};
+		}
 	}
 
 	/// <summary>
@@ -28,7 +35,15 @@ namespace RA.Models.Input
 	/// </summary>
 	public class CourseRequest : LearningOpportunityRequest
 	{
+		public CourseRequest()
+		{
+			LearningOpportunity = new LearningOpportunity()
+			{
+				Type = "Course"
+			};
+		}
 	}
+
 	public class LearningOpportunity : BaseRequestHelper
 	{
 		public LearningOpportunity()
@@ -302,7 +317,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )] 
+		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )]
 		public LanguageMap AssessmentMethodDescriptionLangMap { get; set; } = null;
 
 		/// <summary>
@@ -409,7 +424,7 @@ namespace RA.Models.Input
 		/// Reference to a relevant support service.
 		/// List of CTIDs that reference one or more published support services
 		/// </summary>
-		public List<string> HasSupportService { get; set; }
+		public List<string> HasSupportService { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.

@@ -1,4 +1,9 @@
-﻿namespace RA.Models.Input.Provisional
+﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+namespace RA.Models.Input.Provisional
 {
 
 	#region Credential

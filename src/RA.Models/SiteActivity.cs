@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RA.Models
 {
-	public class SiteActivity 
+	public class SiteActivity
 	{
 		public static string AssessmentType = "AssessmentProfile";
 		public static string LearningOpportunity = "LearningOpportunity";
@@ -15,15 +15,21 @@ namespace RA.Models
 		{
 			ActivityType = "RegistryAssistant";
 		}
-		
-		public string ActivityType { get; set; }
-		public string Activity { get; set; }
-		public string Event { get; set; }
-		public string Comment { get; set; }
-		public string DataOwnerCTID { get; set; }
-		public string ActionByUser { get; set; }
-		public string IPAddress { get; set; }
-		public string Referrer { get; set; }
 
+		public string ActivityType { get; set; }
+
+		public string Activity { get; set; }
+
+		public string Event { get; set; }
+
+		public string Comment { get; set; }
+
+		public string DataOwnerCTID { get; set; }
+
+		public string ActionByUser { get; set; }
+
+		public string IPAddress { get; set; }
+
+		public string Referrer { get; set; }
 	}
 }

@@ -125,6 +125,9 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:targetOccupation" )]
 		public List<string> TargetOccupation { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:targetTask" )]
+		public List<string> TargetTask { get; set; }
 		#endregion
 
 		[JsonProperty( PropertyName = "ceterms:weight" )]

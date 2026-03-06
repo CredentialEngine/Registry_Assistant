@@ -105,7 +105,7 @@ namespace CredentialRegistry
 			string publicKey = File.ReadAllText( publicKeyPath );
 
 			string encoded = JWT.Encode( contents, DotNetUtilities.ToRSA( privateKey ), JwsAlgorithm.RS256 );
-				//			EnvelopeCommunity = "ce_registry",
+				//			EnvelopeCommunity = "ce-registry",
 				//EnvelopeIdentifier = envelopeIdentifier,
 			return new DeleteEnvelope
 			{

@@ -1,4 +1,4 @@
-﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+﻿// <copyright file="CredentialingAction.cs" company="Credential Engine">
 //     Copyright (c) Credential Engine. All rights reserved.
 // </copyright>
 // <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
@@ -11,6 +11,15 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Credentialing Action
 	/// Action taken by an agent affecting the status of an object entity.
+	/// REQUIRED
+	/// - Type
+	/// - CTID
+	/// - ActionStatusType
+	/// - ActingAgent
+	/// - Name
+	/// - Description
+	/// NOTE:
+	/// ceterms:CredentialingAction	is the super class and cannot be published.
 	/// </summary>
 	public class CredentialingAction
 	{
@@ -28,14 +37,6 @@ namespace RA.Models.Input
 		/// ceterms:RevokeAction
 		/// ceterms:RightsAction
 		/// ceterms:WorkforceDemandAction
-		/// REQUIRED
-		/// - CTID
-		/// - ActionStatusType
-		/// - ActingAgent
-		/// - Name
-		/// - Description
-		/// NOTE:
-		/// ceterms:CredentialingAction	is the super class and cannot be published.
 		/// </summary>
 		public string Type { get; set; }
 
@@ -107,7 +108,6 @@ namespace RA.Models.Input
 		/// Object that helped the agent perform the action. e.g. John wrote a book with a pen.
 		/// A credential or other instrument whose criteria was applied in executing the action.
 		/// Provide the CTID for a credential in the Credential Registry or provide minimum data for a credential not in the registry.
-		/// TODO - implement blank node process using ReferenceObjects
 		/// </summary>
 		public List<string> Instrument { get; set; } = new List<string>();
 
@@ -117,6 +117,7 @@ namespace RA.Models.Input
 		/// Object(s) upon which the action is carried out, whose state is kept intact or changed.
 		/// A reference for Credentials, AssessmentProfile, any LearningOpportunity Profile type, or any organization type
 		/// Input: a CTID or a blank node Id where the bnode will be added in the request class ReferenceObjects property.
+		/// 26-02-09 - WorkForceDemand action can have ceterms:Job ceterms:Occupation
 		/// </summary>
 		public List<string> Object { get; set; }
 

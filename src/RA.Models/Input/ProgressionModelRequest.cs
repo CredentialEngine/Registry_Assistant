@@ -1,4 +1,4 @@
-﻿// <copyright file="CredentialRequest.cs" company="Credential Engine">
+﻿// <copyright file="ProgressionModelRequest.cs" company="Credential Engine">
 //     Copyright (c) Credential Engine. All rights reserved.
 // </copyright>
 // <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
@@ -212,7 +212,7 @@ namespace RA.Models.Input
 		///  An agent owning or managing rights over this resource.
 		///  Use OrganizationReference for flexibility
 		/// </summary>
-		public OrganizationReference RightsHolder { get; set; } = new OrganizationReference();
+		public List<OrganizationReference> RightsHolder { get; set; } = new List<OrganizationReference>();
 
 		/// <summary>
 		/// Original Source of Progression Model
@@ -310,6 +310,13 @@ namespace RA.Models.Input
 		/// Progression Level is preceded by the referenced components
 		/// </summary>
 		public string PrecededBy { get; set; }
+
+		/// <summary>
+		/// Another source of information about the entity being described.
+		/// HINT: If the SameAs target is a resource in the Credential Registry, just the CTID needs to be provided.
+		/// ceterms:sameAs
+		/// </summary>
+		public List<string> SameAs { get; set; } = new List<string>();
 
 		/// <summary>
 		/// URI to the Progression Model

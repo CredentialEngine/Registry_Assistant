@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 namespace RA.Models.Input
 {
 
@@ -19,6 +20,7 @@ namespace RA.Models.Input
 		/// Date range to be deleted from this starting date
 		/// </summary>
 		public string FromDate { get; set; }
+
 		/// <summary>
 		/// Date range to be deleted up to this ending date.
 		/// </summary>
@@ -33,6 +35,7 @@ namespace RA.Models.Input
 		/// Identifier for Organization which owned the data to be purged
 		/// </summary>
 		public string OwnedByOrganizationIdentifier { get; set; }
+
 		/// <summary>
 		/// Leave blank for default
 		/// </summary>

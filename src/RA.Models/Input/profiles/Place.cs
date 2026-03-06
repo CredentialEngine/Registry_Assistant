@@ -49,17 +49,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
 
-		/// <summary>
-		/// LanguageMap for AlternateName
-		/// </summary>
-		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
+        /// <summary>
+        /// LanguageMap for AlternateName
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:alternateName" )]
+        public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Street Address1
 		/// </summary>
 		public string Address1 { get; set; }
 
-		public LanguageMap Address_Map { get; set; } = new LanguageMap();
+        [JsonProperty( "ceterms:streetAddress" )]
+        public LanguageMap AddressLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Street Address2 - this will be appended to Address1 on publish to the registry
@@ -78,21 +80,24 @@ namespace RA.Models.Input
 		/// </summary>
 		public string City { get; set; }
 
-		public LanguageMap City_Map { get; set; } = new LanguageMap();
+        [JsonProperty( "ceterms:addressLocality" )]
+        public LanguageMap CityLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// AddressRegion - State, Province, etc
 		/// </summary>
 		public string AddressRegion { get; set; }
 
-		public LanguageMap AddressRegion_Map { get; set; } = new LanguageMap();
-		///// <summary>
-		///// Named area or division within a region, such as a county in the U.S. or Canada.
-		///// 20-11-06 PROPOSED NOT OFFICIAL AT THIS TIME
-		///// 21-03-01 Identifier has been added, and so this may no longer be relevant?
-		///// </summary>
-		// public string SubRegion { get; set; }
-		// public LanguageMap SubRegion_Map { get; set; } = new LanguageMap();
+        [JsonProperty( "ceterms:addressRegion" )]
+        public LanguageMap AddressRegionLangMap { get; set; } = new LanguageMap();
+
+        /// <summary>
+        /// An administrative subdivision within a country that is intermediate between a region and a locality.
+        /// </summary>
+        public string SubRegion { get; set; }
+
+        [JsonProperty( "ceterms:subRegion" )]
+        public LanguageMap SubRegionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Postal Code
@@ -104,7 +109,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Country { get; set; }
 
-		public LanguageMap Country_Map { get; set; } = new LanguageMap();
+        [JsonProperty( "ceterms:addressCountry" )]
+        public LanguageMap CountryLangMap { get; set; } = new LanguageMap();
 
 		public double Latitude { get; set; }
 
@@ -148,7 +154,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Name { get; set; }
 
-		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
+        [JsonProperty( PropertyName = "ceterms:name" )]
+        public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// Specification of the type of contact
@@ -156,7 +163,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public string ContactType { get; set; }
 
-		public LanguageMap ContactType_Map { get; set; } = new LanguageMap();
+        [JsonProperty( PropertyName = "ceterms:contactType" )]
+        public LanguageMap ContactTypeLangMap { get; set; } = new LanguageMap();
 
 		public List<string> FaxNumber { get; set; }
 
@@ -174,5 +182,18 @@ namespace RA.Models.Input
 		/// List of URIs to social media pages for this contact point
 		/// </summary>
 		public List<string> SocialMediaPages { get; set; }
-	}
+
+
+        /// <summary>
+        /// List of Alternate Names for this resource
+        /// </summary>
+        public List<string> AlternateName { get; set; } = new List<string>();
+
+        /// <summary>
+        /// LanguageMap for AlternateName
+        /// </summary>
+        [JsonProperty( PropertyName = "ceterms:alternateName" )]
+        public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
+
+    }
 }

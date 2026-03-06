@@ -56,7 +56,16 @@ namespace RA.Models.Input
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
+		/// <summary>
+		/// Required
+		/// </summary>
 		public string SubjectWebpage { get; set; } // URL
+
+		/// <summary>
+		/// Organization that owns this ConditionManifest
+		/// Required
+		/// </summary>
+		public OrganizationReference ConditionManifestOf { get; set; } = new OrganizationReference();
 
 		/// <summary>
 		/// List of Alternate Names for this resource
@@ -67,11 +76,6 @@ namespace RA.Models.Input
 		/// LanguageMap for AlternateName
 		/// </summary>
 		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
-
-		/// <summary>
-		/// Organization that owns this ConditionManifest
-		/// </summary>
-		public OrganizationReference ConditionManifestOf { get; set; } = new OrganizationReference();
 
 		/// <summary>
 		/// Required condition profiles

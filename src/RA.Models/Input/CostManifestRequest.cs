@@ -38,6 +38,12 @@ namespace RA.Models.Input
 		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
+		/// Organization that owns this CostManifest
+		/// Required
+		/// </summary>
+		public OrganizationReference CostManifestOf { get; set; } = new OrganizationReference();
+
+		/// <summary>
 		/// URL for cost details
 		/// Required
 		/// </summary>
@@ -67,11 +73,6 @@ namespace RA.Models.Input
 		public string StartDate { get; set; }
 
 		public string EndDate { get; set; }
-
-		/// <summary>
-		/// Organization that owns this CostManifest
-		/// </summary>
-		public OrganizationReference CostManifestOf { get; set; } = new OrganizationReference();
 
 		/// <summary>
 		/// List of cost profiles

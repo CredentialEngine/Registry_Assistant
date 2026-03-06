@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
@@ -86,7 +82,7 @@ namespace RA.Models.JsonV2
 		public LanguageMap Rights { get; set; }
 
 		[JsonProperty( PropertyName = "ceasn:rightsHolder" )]
-		public string RightsHolder { get; set; }
+		public List<string> RightsHolder { get; set; }
 
 		[JsonProperty( PropertyName = "ceasn:source" )]
 		public object Source { get; set; }
@@ -169,6 +165,14 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "skos:topConceptOf" )]
 		public string TopConceptOf { get; set; }
+
+		/// <summary>
+		/// Another source of information about the entity being described.
+		/// List of URIs
+		/// ceterms:sameAs
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:sameAs" )]
+		public List<string> SameAs { get; set; }
 	}
 
 	public class ProgressionModelPlain
@@ -235,7 +239,7 @@ namespace RA.Models.JsonV2
 		/// Actually this context is a formed, but plain graph with URIs.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:rightsHolder" )]
-		public string RightsHolder { get; set; }
+		public List<string> RightsHolder { get; set; }
 
 		[JsonProperty( PropertyName = "ceasn:source" )]
 		public string Source { get; set; }

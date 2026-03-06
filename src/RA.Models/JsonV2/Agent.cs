@@ -125,6 +125,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:foundingDate" )]
 		public string FoundingDate { get; set; }
 
+
+		[JsonProperty( PropertyName = "ceterms:closingDate" )]
+		public string ClosingDate { get; set; }
+
+
 		[JsonProperty( PropertyName = "ceterms:agentType" )]
 		public List<CredentialAlignmentObject> AgentType { get; set; }
 

@@ -46,6 +46,10 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Receiving curriculum or requirement context to which the transfer value is applied.
+		/// If the types of applicability are formally defined as an enumeration published with URIs, then:
+		///		the relevant URI can be entered as the targetNode of the Credential Alignment Object; 
+		///	if they are informally defined or not published then:
+		///		use the targetNodeName and targetNodeDescription of the Credential Alignment Object to define the relevant type.
 		/// Range: ceterms:CredentialAlignmentObject
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:applicability" )]
@@ -75,12 +79,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:endDate" )]
 		public string EndDate { get; set; }
-
-		///// <summary>
-		///// May be replace by Identifier
-		///// </summary>
-		// [JsonProperty( PropertyName = "ceterms:codedNotation" )]
-		// public string CodedNotation { get; set; }
 
 		/// <summary>
 		/// Identifier

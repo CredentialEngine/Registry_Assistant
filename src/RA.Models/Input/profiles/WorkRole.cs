@@ -151,7 +151,7 @@ namespace RA.Models.Input
 		/// Reference to a relevant support service.
 		/// List of CTIDs that reference one or more published support services
 		/// </summary>
-		public List<string> HasSupportService { get; set; }
+		public List<string> HasSupportService { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Reference to a relevant Occupation.

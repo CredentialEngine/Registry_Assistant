@@ -22,6 +22,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Name { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>

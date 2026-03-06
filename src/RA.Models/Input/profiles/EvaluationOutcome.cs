@@ -6,13 +6,13 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace RA.Models.JsonV2
+namespace RA.Models.Input
 {
 	/// <summary>
 	/// Evaluation Outcome
 	/// Entity that describes the results of a valuation or appraisal of a resource.
 	/// </summary>
-	public class EvaluationOutcome : BaseResourceDocument
+	public class EvaluationOutcome
 	{
 
 		public EvaluationOutcome()
@@ -28,18 +28,29 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
 
-		[JsonProperty( "ceterms:name" )]
-		public LanguageMap Name { get; set; }
+		/// <summary>
+		/// Name of this resource
+		/// REQUIRED
+		/// </summary>
+		public string Name { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; }
+
+		/// <summary>
+		/// Statement, characterization or account of the entity.
+		/// REQUIRED
+		/// </summary>
+		public string Description { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap Description { get; set; }
+		public LanguageMap DescriptionLangMap { get; set; }
 
 		#endregion
 
 		/// <summary>
 		/// Description of a process by which a resource was created.
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]
 		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
 		/// <summary>
@@ -47,21 +58,20 @@ namespace RA.Models.JsonV2
 		/// Do not use this property if a simple text property such as ceterms:description is adequate
 		/// Range: ceterms:StructuredStatement
 		/// </summary>
-		[JsonProperty( "ceterms:hasStructuredStatement" )]
 		public List<StructuredStatement> HasStructuredStatement { get; set; }
 
 		/// <summary>
 		/// Description of transfer value that is part of this resource.
 		/// Range: ceterms:TransferValueProfile
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:isEvaluationOf" )]
 		public List<string> IsEvaluationOf { get; set; }
 
 		/// <summary>
 		/// Webpage that describes this entity.
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
 		public string SubjectWebpage { get; set; }
 
+
 	}
+
 }

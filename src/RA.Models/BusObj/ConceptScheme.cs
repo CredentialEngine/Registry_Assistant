@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace RA.Models.BusObj
 {
+	/*
 	//Used for code tables, etc.
 	public class ConceptScheme : BaseRdfEntity
 	{
@@ -23,7 +24,6 @@ namespace RA.Models.BusObj
 
 	}
 	//
-	//
 
 	public class BaseRdfEntity 
 	{
@@ -31,4 +31,6 @@ namespace RA.Models.BusObj
 		public string Label { get; set; }
 		public string Description { get; set; }
 	}
+	//
+	*/
 }

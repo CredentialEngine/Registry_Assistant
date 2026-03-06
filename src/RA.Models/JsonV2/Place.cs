@@ -51,7 +51,13 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceterms:addressRegion" )]
 		public LanguageMap AddressRegion { get; set; }
 
-		[JsonProperty( "ceterms:postalCode" )]
+        /// <summary>
+        /// An administrative subdivision within a country that is intermediate between a region and a locality.
+        /// </summary>
+        [JsonProperty( "ceterms:subRegion" )]
+        public LanguageMap SubRegion { get; set; }
+
+        [JsonProperty( "ceterms:postalCode" )]
 		public string PostalCode { get; set; }
 
 		[JsonProperty( "ceterms:addressCountry" )]

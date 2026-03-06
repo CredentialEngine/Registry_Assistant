@@ -19,6 +19,11 @@ namespace RA.Models.Input
 		/// </summary>
 		public Task Task { get; set; } = new Task();
 
+		/// <summary>
+		/// Task already formatted as JSON-LD
+		/// ONLY USED WITH PUBLISH LIST
+		/// </summary>
+		public MJ.Task FormattedTask { get; set; } = new MJ.Task();
 	}
 
 	/// <summary>

@@ -28,18 +28,12 @@ namespace RA.Models.Input
 		public string PublishForOrganizationIdentifier { get; set; }
 
 		/// <summary>
-		/// Flag to indicate if the data being published is from a primary source (true) or a secondary source (false)
-		/// There would be a risk where if not provided, defaults to false
-		/// </summary>
-		public bool IsPrimarySourceRecord { get; set; } = true;
-
-		/// <summary>
 		/// Publish Type.
 		/// Valid values:
 		/// - Primary (default)
 		/// - Secondary
 		/// </summary>
-		public string ResourcePublishType { get; set; }
+		public string ResourcePublishType { get; set; } = "Primary";
 
 		/// <summary>
 		/// Envelope Identifier

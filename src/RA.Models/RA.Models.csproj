@@ -62,7 +62,10 @@
   <ItemGroup>
     <Compile Include="BusObj\ActivityLog.cs" />
     <Compile Include="BusObj\ConceptScheme.cs" />
+    <Compile Include="BusObj\RegistryRequest.cs" />
+    <Compile Include="BusObj\Schema.cs" />
     <Compile Include="BusObj\TransferOwner.cs" />
+    <Compile Include="ConceptSchemes.cs" />
     <Compile Include="Input\AlignmentMapRequest.cs" />
     <Compile Include="Input\AssessmentRequest.cs" />
     <Compile Include="Input\BaseRequest.cs" />
@@ -79,6 +82,7 @@
     <Compile Include="Input\CtdlAttributes.cs" />
     <Compile Include="Input\DataSetProfileRequest.cs" />
     <Compile Include="Input\DeleteRequest.cs" />
+    <Compile Include="Input\GraphContentRequest.cs" />
     <Compile Include="Input\IndustryRequest.cs" />
     <Compile Include="Input\JobRequest.cs" />
     <Compile Include="Input\LearningOpportunityRequest.cs" />
@@ -87,13 +91,13 @@
     <Compile Include="Input\OrganizationRequest.cs" />
     <Compile Include="Input\PathwayRequest.cs" />
     <Compile Include="Input\PathwaySetRequest.cs" />
-    <Compile Include="Input\PlainGraphRequest.cs" />
+    <Compile Include="Input\PriorLearningPolicyRequest.cs" />
+    <Compile Include="Input\ProcessProfileRequest.cs" />
     <Compile Include="Input\profiles\AggregateDataProfile.cs" />
     <Compile Include="Input\profiles\AlignmentMap.cs" />
     <Compile Include="Input\profiles\AlignmentObject.cs" />
     <Compile Include="Input\profiles\BaseEmploymentToWorkObject.cs" />
     <Compile Include="Input\profiles\BasePrimaryResource.cs" />
-    <Compile Include="Input\profiles\Competency.cs" />
     <Compile Include="Input\profiles\CompetencyFrameworksGraph.cs" />
     <Compile Include="Input\profiles\ConditionProfile.cs" />
     <Compile Include="Input\profiles\CostProfile.cs" />
@@ -103,6 +107,7 @@
     <Compile Include="Input\profiles\EarningsProfile.cs" />
     <Compile Include="Input\profiles\EmploymentOutcomeProfile.cs" />
     <Compile Include="Input\profiles\EntityReference.cs" />
+    <Compile Include="Input\profiles\EvaluationOutcome.cs" />
     <Compile Include="Input\profiles\FinancialAssistanceProfile.cs" />
     <Compile Include="Input\profiles\FrameworkItem.cs" />
     <Compile Include="Input\profiles\HoldersProfile.cs" />
@@ -115,6 +120,7 @@
     <Compile Include="Input\profiles\Occupation.cs" />
     <Compile Include="Input\profiles\OrganizationReference.cs" />
     <Compile Include="Input\profiles\Place.cs" />
+    <Compile Include="Input\profiles\PriorLearningPolicy.cs" />
     <Compile Include="Input\profiles\ProcessProfile.cs" />
     <Compile Include="Input\profiles\QData\DataProfile.cs" />
     <Compile Include="Input\profiles\QData\DataSetDistribution.cs" />
@@ -128,7 +134,10 @@
     <Compile Include="Input\profiles\QuantitativeValue.cs" />
     <Compile Include="Input\profiles\RevocationProfile.cs" />
     <Compile Include="Input\profiles\ScheduledOffering.cs" />
+    <Compile Include="Input\profiles\SchemaDate.cs" />
+    <Compile Include="Input\profiles\StructuredStatement.cs" />
     <Compile Include="Input\profiles\Task.cs" />
+    <Compile Include="Input\profiles\TransferAgreement.cs" />
     <Compile Include="Input\profiles\ValueProfile.cs" />
     <Compile Include="Input\profiles\VerificationServiceProfile.cs" />
     <Compile Include="Input\profiles\WorkRole.cs" />
@@ -142,6 +151,7 @@
     <Compile Include="Input\SkosConceptSchemeRequest.cs" />
     <Compile Include="Input\SupportServiceRequest.cs" />
     <Compile Include="Input\TaskRequest.cs" />
+    <Compile Include="Input\TransferAgreementRequest.cs" />
     <Compile Include="Input\TransferIntermediaryRequest.cs" />
     <Compile Include="Input\TransferValueProfileRequest.cs" />
     <Compile Include="Input\VerificationServiceProfileRequest.cs" />
@@ -217,6 +227,7 @@
     <Compile Include="JsonV2\WorkRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryAssistantResponse.cs" />
+    <Compile Include="RegistryPublishingHistory.cs" />
     <Compile Include="RequestHelper.cs" />
     <Compile Include="SiteActivity.cs" />
   </ItemGroup>

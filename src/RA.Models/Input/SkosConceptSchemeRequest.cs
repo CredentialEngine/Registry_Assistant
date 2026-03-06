@@ -9,11 +9,12 @@ namespace RA.Models.Input
 		{
 			ConceptSchemeGraph = new SkosConceptSchemeGraph();
 		}
+
 		public string CTID { get; set; }
 
 		public SkosConceptSchemeGraph ConceptSchemeGraph { get; set; }
-
 	}
+
 	public class SkosConceptSchemeGraph
 	{
 		/// <summary>
@@ -32,23 +33,23 @@ namespace RA.Models.Input
 		{
 			ConceptScheme = new SkosConceptScheme();
 		}
+
 		public string CTID { get; set; }
 
-		//separate ConceptScheme and concepts
+		// separate ConceptScheme and concepts
 		public SkosConceptScheme ConceptScheme { get; set; } = new SkosConceptScheme();
 
 		public List<SkosConcept> Concepts { get; set; } = new List<SkosConcept>();
 	}
-
 
 	public class SkosConceptScheme
 	{
 		[JsonProperty( "@context" )]
 		public string Context { get; set; }
 
-		//actually not needed, as must be "@type": "ConceptScheme"
-		//[JsonProperty( "@type" )]
-		//public string Type { get; set; }
+		// actually not needed, as must be "@type": "ConceptScheme"
+		// [JsonProperty( "@type" )]
+		// public string Type { get; set; }
 
 		/// <summary>
 		/// URI of concept scheme
@@ -57,15 +58,14 @@ namespace RA.Models.Input
 		[JsonProperty( "@id" )]
 		public string Id { get; set; }
 
-
 		/// <summary>
 		/// CTID - identifier for Concept Scheme. 
 		/// This will have to be extracted from the id
 		/// </summary>
 		public string CTID { get; set; }
 
-		//public List<LanguageItem> ChangeNote { get; set; } = new List<LanguageItem>();
-		public object ChangeNote { get; set; } 
+		// public List<LanguageItem> ChangeNote { get; set; } = new List<LanguageItem>();
+		public object ChangeNote { get; set; }
 
 		[JsonProperty( "ceasn:conceptKeyword" )]
 		public List<LanguageItem> ConceptKeyword { get; set; } = new List<LanguageItem>();
@@ -87,7 +87,7 @@ namespace RA.Models.Input
 		/// </summary>
 		[JsonProperty( "dct:description" )]
 		public LanguageMap Description { get; set; } = new LanguageMap();
-		//public List<LanguageItem> Description { get; set; } = new List<LanguageItem>();
+		// public List<LanguageItem> Description { get; set; } = new List<LanguageItem>();
 
 		[JsonProperty( "skos:historyNote" )]
 		public List<LanguageItem> HistoryNote { get; set; } = new List<LanguageItem>();
@@ -128,20 +128,19 @@ namespace RA.Models.Input
 		[JsonProperty( "skos:hasTopConcept" )]
 		public List<string> HasTopConcept { get; set; } = new List<string>();
 
-		//in export, not sure where in interface
-		//public List<string> Relation { get; set; } = new List<string>();
+		// in export, not sure where in interface
+		// public List<string> Relation { get; set; } = new List<string>();
 	}
 
 	public class SkosConcept
 	{
-		//[JsonProperty( "@type" )]
-		//public string Type { get; set; }
+		// [JsonProperty( "@type" )]
+		// public string Type { get; set; }
 
 		[JsonProperty( "@context" )]
 		public string Context { get; set; }
 
-
-		//possibly will be the namespace:Property - could use for altLabel
+		// possibly will be the namespace:Property - could use for altLabel
 		[JsonProperty( "@id" )]
 		public string Id { get; set; }
 
@@ -154,7 +153,6 @@ namespace RA.Models.Input
 
 		[JsonProperty( "skos:altLabel" )]
 		public List<LanguageItem> AltLabel { get; set; } = new List<LanguageItem>();
-
 
 		[JsonProperty( "skos:changeNote" )]
 		public List<LanguageItem> ChangeNote { get; set; } = new List<LanguageItem>();
@@ -173,7 +171,7 @@ namespace RA.Models.Input
 		/// </summary>
 		[JsonProperty( "skos:definition" )]
 		public LanguageMap Definition { get; set; } = new LanguageMap();
-		//public List<LanguageItem> Definition { get; set; } = new List<LanguageItem>();
+		// public List<LanguageItem> Definition { get; set; } = new List<LanguageItem>();
 
 		[JsonProperty( "skos:hiddenLabel" )]
 		public List<LanguageItem> HiddenLabel { get; set; } = new List<LanguageItem>();
@@ -189,7 +187,7 @@ namespace RA.Models.Input
 		/// </summary>
 		[JsonProperty( "skos:prefLabel" )]
 		public LanguageMap PrefLabel { get; set; } = new LanguageMap();
-		//public List<LanguageItem> PrefLabel { get; set; } = new List<LanguageItem>();
+		// public List<LanguageItem> PrefLabel { get; set; } = new List<LanguageItem>();
 
 		/// <summary>
 		/// URI to the concept scheme
@@ -209,6 +207,7 @@ namespace RA.Models.Input
 		 */
 		[JsonProperty( PropertyName = "skos:broadMatch" )]
 		public List<string> BroadMatch { get; set; }
+
 		[JsonProperty( PropertyName = "skos:closeMatch" )]
 		public List<string> CloseMatch { get; set; }
 
@@ -220,8 +219,8 @@ namespace RA.Models.Input
 
 		[JsonProperty( PropertyName = "skos:NarrowMatch" )]
 		public List<string> NarrowMatch { get; set; }
+
 		[JsonProperty( PropertyName = "skos:relatedMatch" )]
 		public List<string> RelatedMatch { get; set; }
-
 	}
 }

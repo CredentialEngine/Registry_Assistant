@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using System.ComponentModel;
 
 namespace RA.Models.JsonV2
 {
@@ -35,6 +30,20 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
+
+		/// <summary>
+		/// Only present for a resource with a CTID
+		/// </summary>
+		[JsonProperty( "@id" )]
+		public string Id { get; set; } = string.Empty;
+
+		/// <summary>
+		/// Globally unique Credential Transparency Identifier (CTID)
+		/// optional
+		/// <see cref="https://credreg.net/ctdl/terms/ctid"/>
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:ctid" )]
+		public string CTID { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
@@ -98,9 +107,6 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
-
-		// [JsonProperty( PropertyName = "ceterms:region" )]
-		// public List<GeoCoordinates> Region { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:targetCredential" )]
 		public List<string> TargetCredential { get; set; }

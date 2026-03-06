@@ -203,5 +203,13 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasJob" )]
 		public List<string> HasJob { get; set; }
+
+		/// <summary>
+		/// Subject Webpage
+		/// URL
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
+		public string SubjectWebpage { get; set; }
+
 	}
 }

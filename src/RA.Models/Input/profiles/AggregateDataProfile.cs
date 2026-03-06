@@ -44,7 +44,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// DemographicInformation - language map
 		/// </summary>
-		public LanguageMap DemographicInformation_Map { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceterms:demographicInformation" )]
+		public LanguageMap DemographicInformationLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		///  Upper interquartile earnings.
@@ -93,6 +94,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>

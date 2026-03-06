@@ -152,8 +152,9 @@ namespace RA.Models.Input
 		public List<string> DerivedFrom { get; set; }
 
 		/// <summary>
-		/// Alignment assertion belonging to the alignment map.
-		/// URLs
+		/// Indicates contextualized data that reproduces or links to text such as part of a document or information about some aspect of a resource.
+		/// Do not use this property if a simple text property such as ceterms:description is adequate
+		/// Range: ceterms:StructuredStatement
 		/// </summary>
 		public List<string> HasStatement { get; set; }
 
@@ -168,7 +169,7 @@ namespace RA.Models.Input
 		public List<string> PublisherName { get; set; }
 
 		[JsonProperty( "ceasn:publisherName" )]
-		public LanguageMapList PublisherName_LangMap { get; set; }
+		public LanguageMapList PublisherNameLangMap { get; set; }
 
 		/// <summary>
 		/// Information about rights held in and over this resource.
@@ -176,7 +177,7 @@ namespace RA.Models.Input
 		public string Rights { get; set; }
 
 		[JsonProperty( "ceasn:rights" )]
-		public LanguageMap Rights_LangMap { get; set; }
+		public LanguageMap RightsLangMap { get; set; }
 
 		/// <summary>
 		/// Human-readable information resource other than a competency framework from which this competency was generated or derived by humans or machines.
@@ -214,7 +215,7 @@ namespace RA.Models.Input
 		public List<string> AlternateName { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName_LangMap { get; set; }
+		public LanguageMapList AlternateNameLangMap { get; set; }
 
 		/// <summary>
 		/// Organization that pronounces favorable judgment for this credential, assessment, learning opportunity, or organization.
@@ -286,7 +287,7 @@ namespace RA.Models.Input
 		public List<string> Keyword { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:keyword" )]
-		public LanguageMapList Keyword_LangMap { get; set; }
+		public LanguageMapList KeywordLangMap { get; set; }
 
 		/// <summary>
 		/// ObjectOfAction
@@ -301,7 +302,7 @@ namespace RA.Models.Input
 		public string ProcessStandardsDescription { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:processStandardsDescription" )]
-		public LanguageMap ProcessStandardsDescription_LangMap { get; set; }
+		public LanguageMap ProcessStandardsDescriptionLangMap { get; set; }
 
 		/// <summary>
 		/// Webpage or online document that describes the criteria, standards, and/or requirements used with a process.
@@ -352,7 +353,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Language map list for Subject
 		/// </summary>
-		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
+		[JsonProperty( PropertyName = "ceterms:subject" )]
+		public LanguageMapList SubjectLangMap { get; set; }
 
 		/// <summary>
 		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.

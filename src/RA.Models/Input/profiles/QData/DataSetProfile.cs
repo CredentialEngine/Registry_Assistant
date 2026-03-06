@@ -166,6 +166,7 @@ namespace RA.Models.Input.profiles.QData
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateNameLangMap { get; set; }
 
 		/// <summary>
@@ -268,13 +269,15 @@ namespace RA.Models.Input.profiles.QData
 		/// </summary>
 		public string Rights { get; set; }
 
-		public LanguageMap Rights_Map { get; set; }
+		[JsonProperty( "ceasn:rights" )]
+		public LanguageMap RightsLangMap { get; set; }
 
 		/// <summary>
 		/// Identification of data point(s) in the data set that describe personal subject attribute(s) used to uniquely identify a subject for the purpose of matching records and an indication of level of confidence in the accuracy of the match.
 		/// </summary>
 		public string SubjectIdentification { get; set; }
 
-		public LanguageMap SubjectIdentification_Map { get; set; }
+		[JsonProperty( PropertyName = "qdata:subjectIdentification" )]
+		public LanguageMap SubjectIdentificationLangMap { get; set; }
 	}
 }

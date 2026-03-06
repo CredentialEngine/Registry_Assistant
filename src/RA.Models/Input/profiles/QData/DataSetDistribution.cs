@@ -43,6 +43,7 @@ namespace RA.Models.Input.profiles.QData
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
@@ -82,7 +83,7 @@ namespace RA.Models.Input.profiles.QData
 		public string Rights { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:rights" )]
-		public LanguageMap Rights_Map { get; set; }
+		public LanguageMap RightsLangMap { get; set; }
 
 		/// <summary>
 		/// Authoritative source of an entity's information.

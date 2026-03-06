@@ -14,7 +14,7 @@ namespace RA.Models.JsonV2
 		public string Type { get; set; } = "ceasn:Rubric";
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; } = string.Empty;  // resource
+		public string CtdlId { get; set; } = string.Empty;
 
 		[JsonProperty( "ceterms:ctid" )]
 		public string CTID { get; set; }
@@ -67,13 +67,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceasn:dateCreated" )]
 		public string DateCreated { get; set; }
 
-		///// <summary>
-		///// Only allow date (yyyy-mm-dd), no time
-		///// xsd:date
-		///// </summary>
-		// [JsonProperty( "ceterms:dateEffective" )]
-		// public string DateEffective{ get; set; }
-
 		/// <summary>
 		/// Originally only allowing date (yyyy-mm-dd), no time. 
 		/// However, this is defined as: xsd:dateTime. So consumers like the credential registry search, expect a datetime format.
@@ -108,17 +101,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceasn:evaluatorType" )]
 		public List<string> EvaluatorType { get; set; }
-
-		///// <summary>
-		///// Date beyond which the resource is no longer offered or available.
-		///// Only allowing date (yyyy-mm-dd), no time. 
-		///// xsd:date
-		///// ceterms:expirationDate
-		///// </summary>
-		// [JsonProperty( "ceterms:expirationDate" )]
-		// public string ExpirationDate { get; set; }
-
-		// ????these are URIs - could imply RubricCriterion is to be a top level class
 
 		/// <summary>
 		/// RubricCriterian referenced defines a principle or standard to be met that demonstrates quality in performance of a task or obtaining an objective.
@@ -219,7 +201,7 @@ namespace RA.Models.JsonV2
 		/// Webpage that describes this entity.
 		/// </summary>
 		[JsonProperty( "ceterms:subjectWebpage" )]
-		public string SubjectWebpage { get; set; }  // URI
+		public string SubjectWebpage { get; set; }
 
 		#region Occupation, Industry, Program
 		[JsonProperty( PropertyName = "ceterms:occupationType" )]
@@ -276,7 +258,7 @@ namespace RA.Models.JsonV2
 		public string Type { get; set; } = "ceasn:RubricCriterion";
 
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }  // resource
+		public string CtdlId { get; set; }
 
 		[JsonProperty( "ceterms:ctid" )]
 		public string CTID { get; set; }
@@ -289,9 +271,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( "ceasn:description" )]
 		public LanguageMap Description { get; set; }
-
-		// [JsonProperty( "dcterms:Language" )]
-		// public List<string> Language { get; set; }
 
 		[JsonProperty( PropertyName = "asn:hasProgressionLevel" )]
 		public List<string> HasProgressionLevel { get; set; }
@@ -353,7 +332,7 @@ namespace RA.Models.JsonV2
 		/// Classes with the property hasRubricLevel would a list of strings (this bnode identifier)
 		/// </summary>
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }  // resource
+		public string CtdlId { get; set; }
 
 		/// <summary>
 		/// A name given to the resource.
@@ -377,8 +356,7 @@ namespace RA.Models.JsonV2
 		public List<string> HasCriterionLevel { get; set; }
 
 		/// <summary>
-		/// Reference to a progression model used.
-		/// **** should this be single???????????
+		/// Reference to a progression level used.
 		/// </summary>
 		[JsonProperty( "asn:hasProgressionLevel" )]
 		public List<string> HasProgressionLevel { get; set; }
@@ -406,7 +384,7 @@ namespace RA.Models.JsonV2
 		/// Classes with the property hasCriterioniLevel would a list of strings (this bnode identifier)
 		/// </summary>
 		[JsonProperty( "@id" )]
-		public string CtdlId { get; set; }  // resource
+		public string CtdlId { get; set; }
 
 		#region base properties
 
