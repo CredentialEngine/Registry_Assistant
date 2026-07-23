@@ -360,9 +360,9 @@ namespace RA.Models.Input
 
 		public string NextVersion { get; set; }
 
-		public string SupersededBy { get; set; }
+		public List<string> SupersededBy { get; set; }
 
-		public string Supersedes { get; set; }
+		public List<string> Supersedes { get; set; }
 
 		/// <summary>
 		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.

@@ -36,13 +36,18 @@ namespace RA.SamplesForDocumentation
 
 			//Assign a CTID for the entity being published and keep track of it
 			var myCTID = "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
-			//typically would have been stored prior to retrieving for publishing
-			//DataService.SaveLearningOpportunityCTID( myCTID );
+            //typically would have been stored prior to retrieving for publishing
+            //DataService.SaveLearningOpportunityCTID( myCTID );
 
-			//Populate the learning opportunity object
-			var myData = new LearningOpportunity()
+            //Populate the learning opportunity object
+            // Valid types are:
+			// LearningOpportunity,
+			// Course,
+			// LearningProgram
+            var myData = new LearningOpportunity()
 			{
-				Name = "My Learning Opportunity Name",
+                Type = "LearningOpportunity",
+                Name = "My Learning Opportunity Name",
 				Description = "This is some text that describes my learning opportunity.",
 				CTID = myCTID,
 				LifeCycleStatusType="Active",
@@ -68,7 +73,7 @@ namespace RA.SamplesForDocumentation
 			{
 				CTID = organizationIdentifierFromAccountsSite
 			} );
-			//
+
 			myData.AvailableAt = new List<Place>()
 			{
 				new Place()
@@ -90,7 +95,8 @@ namespace RA.SamplesForDocumentation
 				IdentifierTypeName = "MyVersion",
 				IdentifierValueCode = "2023-09-01"        //Alphanumeric string identifier of the entity
 			} );
-			//								Teaches competencies
+
+			// Teaches competencies
 			//	Where a learning opportunity teaches one or more competencies, they can be published in the Teaches property
 			//	List<CredentialAlignmentObject> Teaches
 			//  Ideally, the competencies would be part of a competency framework that could be published to the registry.

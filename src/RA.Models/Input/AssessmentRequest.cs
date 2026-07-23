@@ -617,6 +617,18 @@ namespace RA.Models.Input
 		public LanguageMapList SubjectLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
+		///  Resource(s) that replaces this resource.
+		///  full URL OR CTID (recommended)
+		/// </summary>
+		public List<string> SupersededBy { get; set; }
+
+		/// <summary>
+		/// Resource(s) that this resource replaces.
+		/// full URL OR CTID (recommended)
+		/// </summary>
+		public List<string> Supersedes { get; set; }
+
+		/// <summary>
 		/// Type of frequency at which a resource is offered; select from an existing enumeration of such types.
 		/// ConceptScheme: ceterms:ScheduleFrequency
 		/// scheduleFrequency:Annually scheduleFrequency:BiMonthly scheduleFrequency:EventBased scheduleFrequency:Irregular scheduleFrequency:Monthly scheduleFrequency:MultiplePerWeek scheduleFrequency:OnDemand scheduleFrequency:OpenEntryExit scheduleFrequency:Quarterly scheduleFrequency:SelfPaced scheduleFrequency:SemiAnnually scheduleFrequency:SingleInstance scheduleFrequency:Weekly

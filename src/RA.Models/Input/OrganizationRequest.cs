@@ -582,13 +582,13 @@ namespace RA.Models.Input
 		///  Resource that replaces this resource.
 		///  full URL OR CTID (recommended)
 		/// </summary>
-		public string SupersededBy { get; set; }
+		public List<string> SupersededBy { get; set; }
 
 		/// <summary>
 		/// Resource that this resource replaces.
 		/// full URL OR CTID (recommended)
 		/// </summary>
-		public string Supersedes { get; set; }
+		public List<string> Supersedes { get; set; }
 
 		/// <summary>
 		/// Webpage or online document that defines or explains the nature of transfer value handled by the organization.

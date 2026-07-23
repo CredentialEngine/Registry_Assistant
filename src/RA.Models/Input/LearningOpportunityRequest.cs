@@ -404,6 +404,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		///  Indicates a separately identifiable and independently useful component of the entity.
+		///  2026-01-30 An assessment Profile is now in the range of hasPart.
 		/// </summary>
 		public List<EntityReference> HasPart { get; set; }
 
@@ -776,13 +777,13 @@ namespace RA.Models.Input
 		///  Resource that replaces this resource.
 		///  full URL OR CTID (recommended)
 		/// </summary>
-		public string SupersededBy { get; set; }
+		public List<string> SupersededBy { get; set; }
 
 		/// <summary>
 		/// Resource that this resource replaces.
 		/// full URL OR CTID (recommended)
 		/// </summary>
-		public string Supersedes { get; set; }
+		public List<string> Supersedes { get; set; }
 
 		/// <summary>
 		/// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.

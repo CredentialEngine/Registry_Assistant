@@ -248,7 +248,7 @@ namespace RA.Models.Input
 		///  Must exist.
 		///  xsd:anyURI
 		/// </summary>
-		public string SupersededBy { get; set; }
+		public List<string> SupersededBy { get; set; }
 	}
 
 	/// <summary>
@@ -406,7 +406,7 @@ namespace RA.Models.Input
 		/// Indicates the entity that supersedes this entity.
 		/// URL
 		/// </summary>
-		public string SupersededBy { get; set; }
+		public List<string> SupersededBy { get; set; }
 
 		/// <summary>
 		/// URI to the concept scheme

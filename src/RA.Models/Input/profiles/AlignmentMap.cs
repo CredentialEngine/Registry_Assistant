@@ -389,12 +389,12 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Resource that replaces this resource.
 		/// </summary>
-		public string SupersededBy { get; set; }
+		public List<string> SupersededBy { get; set; }
 
 		/// <summary>
 		/// Resource that this resource replaces.
 		/// </summary>
-		public string Supersedes { get; set; }
+		public List<string> Supersedes { get; set; }
 
 		#endregion
 	}

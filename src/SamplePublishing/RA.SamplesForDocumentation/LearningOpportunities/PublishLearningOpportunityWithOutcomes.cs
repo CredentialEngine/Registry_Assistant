@@ -124,23 +124,23 @@ namespace RA.SamplesForDocumentation
 			  		DataSetProfile
 			  			DataSetTimeFrame
 			  				DataProfile
-			 * 
+			 *
 			 * DataSetProfile -  Particular characteristics or properties of a data set and its records.
 			 * Requires a CTID.
 			 * A key property is qdata:dataSetTimePeriod which a list of the class: qdata:DataSetTimeFrame
-			 * 
+			 *
 			 * qdata:DataSetTimeFrame - Time frame including earnings and employment start and end dates of the data set.
-			 * This class describes the timeframe for a set of statistics. 
-			 * The property: qdata:dataAttributes is a list of the class: qdata:DataProfile. 
-			 * 
+			 * This class describes the timeframe for a set of statistics.
+			 * The property: qdata:dataAttributes is a list of the class: qdata:DataProfile.
+			 *
 			 * qdata:DataProfile - Entity describing the attributes of the data set, its subjects and their values.
 			 * This class has a large number of properties for describing statitics.
 			 * Three new properties are being added that are not yet shown on https://credreg.net/qdata/terms/DataProfile#DataProfile:
 			 * - TotalWIOACompleters
 			 * - TotalWIOAExiters
 			 * - TotalWIOAParticipants
-			 * 
-			 * Additional properties are also expected to be added. 
+			 *
+			 * Additional properties are also expected to be added.
 			 */
 			var datasetProfileCtid = "ce-5d551a88-2021-1216-a271-073f2caf1930";// "ce-" + Guid.NewGuid().ToString().ToLowerInvariant();
 
@@ -192,7 +192,7 @@ namespace RA.SamplesForDocumentation
 				WorkTimeThreshold = "Statement of earnings thresholds used in determining whether a sufficient level of workforce attachment has been achieved to qualify as employed during the chosen employment and earnings time period."
 
 			};
-			#region 
+			#region
 			dataProfile.DataAvailable.Add( SampleServices.AddQuantitativeValue( 15, "Data Available spring" ) );
 			dataProfile.DataAvailable.Add( SampleServices.AddQuantitativeValue( 45, "Data Available fall" ) );
 			dataProfile.DataNotAvailable.Add( SampleServices.AddQuantitativeValue( 22, "Number of learningOpportunity AggregateDataProfile in the reporting group for which employment and earnings data has not been included in the data set" ) );
@@ -232,11 +232,11 @@ namespace RA.SamplesForDocumentation
 			//{
 			//	Name = "Subject Included Name",
 			//	Description = "Subject Included description",
-			//	SubjectType = new List<string>() { "LearningOpportunityHolder", "LearningOpportunitySeeker" }, 
+			//	SubjectType = new List<string>() { "LearningOpportunityHolder", "LearningOpportunitySeeker" },
 			//	SubjectValue = new List<QuantitativeValue>() { new QuantitativeValue()
 			//		{
 			//			Value=22, Description="some description"
-			//		} 
+			//		}
 			//	}
 			//} );
 			//dataProfile.SubjectExcluded.Add( new SubjectProfile()
