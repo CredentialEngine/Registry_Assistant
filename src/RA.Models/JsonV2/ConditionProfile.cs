@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿// <copyright file="ConditionProfile.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
@@ -23,6 +28,12 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
+
+		/// <summary>
+		/// Only present for a resource with a CTID
+		/// </summary>
+		[JsonProperty( "@id" )]
+		public string Id { get; set; } = string.Empty;
 
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; }
@@ -49,6 +60,21 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }
 
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateDateEffective" )]
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateExpirationDate" )]
+		public string ApproximateExpirationDate { get; set; }
+
+
 		[JsonProperty( PropertyName = "ceterms:audienceLevelType" )]
 		public List<CredentialAlignmentObject> AudienceLevelType { get; set; }
 
@@ -69,11 +95,27 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:commonCosts" )]
 		public List<string> CommonCosts { get; set; }
 
+		/// <summary>
+		/// Condition Excludes
+		/// Resource that does not count toward fulfilling a constraint, prerequisite, entry condition, or requirement.
+		/// Range: anyURI
+		/// Realistically could be any resource, in the registry or not
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:conditionExcludes" )]
+		public List<string> ConditionExcludes { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:estimatedCost" )]
 		public List<CostProfile> EstimatedCost { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
 		public string DateEffective { get; set; }
+
+		/// <summary>
+		/// Date beyond which the resource is no longer offered or available.
+		/// xsd:date
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
+		public string ExpirationDate { get; set; }
 
 		/// <summary>
 		/// Amount and nature of required work, experiential learning or other relevant experience.
@@ -128,6 +170,10 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:targetTask" )]
 		public List<string> TargetTask { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:targetMetric" )]
+		public List<string> TargetMetric { get; set; }
+
 		#endregion
 
 		[JsonProperty( PropertyName = "ceterms:weight" )]

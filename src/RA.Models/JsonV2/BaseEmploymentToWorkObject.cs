@@ -18,10 +18,10 @@ namespace RA.Models.JsonV2
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		/// <summary>
-		/// Type of official status of the resource; 
+		/// Type of official status of the resource;
 		/// URI to a concept
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]

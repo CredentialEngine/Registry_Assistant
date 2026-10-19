@@ -23,7 +23,7 @@ namespace RA.Models.Input.profiles.QData
 		public LanguageMap NameLangMap { get; set; }
 
 		/// <summary>
-		/// Resource Description 
+		/// Resource Description
 		/// Description is Required
 		/// Must be a minimum of 15 characters.
 		/// </summary>
@@ -62,9 +62,28 @@ namespace RA.Models.Input.profiles.QData
 		public string DistributionFile { get; set; }
 
 		/// <summary>
-		/// Effective date of this resource's content.
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// One of ApproximateDateEffective, or DateEffective is required
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
+
+		/// <summary>
+		/// Date after which this resource is available or applicable.
+		/// One of ApproximateDateEffective, or DateEffective is required
 		/// </summary>
 		public string DateEffective { get; set; }
+
+		/// <summary>
+		/// Date beyond which the resource is no longer offered or available.
+		/// </summary>
+		public string ExpirationDate { get; set; }
 
 		/// <summary>
 		/// A legal document giving official permission to do something with this resource.
@@ -89,6 +108,6 @@ namespace RA.Models.Input.profiles.QData
 		/// Authoritative source of an entity's information.
 		/// xsd:anyURI
 		/// </summary>
-		public List<string> Source { get; set; }
+		public string Source { get; set; }
 	}
 }

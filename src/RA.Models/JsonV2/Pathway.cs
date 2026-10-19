@@ -30,13 +30,7 @@ namespace RA.Models.JsonV2
 		public LanguageMapList AlternateName { get; set; }
 
 		/// <summary>
-		/// This property identifies a child pathwayComponent(s) in the downward path.
-		/// </summary>
-		[JsonProperty( PropertyName = "ceasn:hasChild" )]
-		public List<string> HasChild { get; set; }
-
-		/// <summary>
-		/// Goal or destination node of the pathway. 
+		/// Goal or destination node of the pathway.
 		/// URI for a ceterms:PathwayComponent
 		/// Multipicity: Single??
 		/// </summary>

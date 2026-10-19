@@ -1,16 +1,20 @@
-﻿using System;
+﻿// <copyright file="Industry.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
 	/// <summary>
 	/// Broad category of economic activities encompassing various sectors.
+	/// Inverse Properties are not published, but are included here for reference:
+	/// - IsSpecializationOf is an inverse property of HasSpecialization
+	/// - IsMemberOf is an inverse property of HasMember
 	/// </summary>
-	public class Industry
+	public class Industry : BaseResourceDocument
 	{
 
 		[JsonProperty( "@type" )]
@@ -58,7 +62,7 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Comment
-		/// Supplemental text provided by the promulgating body that clarifies the nature, scope or 
+		/// Supplemental text provided by the promulgating body that clarifies the nature, scope or
 		/// use of this competency.
 		/// </summary>
 		[JsonProperty( "ceasn:comment" )]
@@ -78,10 +82,20 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:hasOccupation" )]
 		public List<string> HasOccupation { get; set; }
 
+		[JsonProperty( "ceterms:hasWorkforceDemand" )]
+		public List<string> HasWorkforceDemand { get; set; }
+
+		/// <summary>
+		/// More specialized profession, trade, career field, or industry
+		/// that is encompassed by the one being described.
+		/// </summary>
+		[JsonProperty( "ceterms:hasSpecialization" )]
+		public List<string> HasSpecialization { get; set; }
+
 		/// <summary>
 		/// Identifier
 		/// Means of identifying a resource, typically consisting of an alphanumeric token and a context or scheme from which that token originates.
-		/// List of IdentifierValue 
+		/// List of IdentifierValue
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:identifier" )]
 		public List<IdentifierValue> Identifier { get; set; }
@@ -106,7 +120,7 @@ namespace RA.Models.JsonV2
 		public LanguageMapList Keyword { get; set; }
 
 		/// <summary>
-		/// The status type of this LearningOpportunityProfile. 
+		/// The status type of this LearningOpportunityProfile.
 		/// ConceptScheme: ceterms:LifeCycleStatus
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]
@@ -137,12 +151,13 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// VersionIdentifier
-		/// Alphanumeric identifier of the version of the credential that is unique within the 
+		/// Alphanumeric identifier of the version of the credential that is unique within the
 		/// organizational context of its owner.
-		/// The credential version captured here is any local identifier used by the credential 
+		/// The credential version captured here is any local identifier used by the credential
 		/// owner to identify the version of the credential in the its local system.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:versionIdentifier" )]
 		public List<IdentifierValue> VersionIdentifier { get; set; }
+
 	}
 }

@@ -15,7 +15,7 @@ namespace RA.Models.JsonV2
 		public ConditionManifest()
 		{
 			Type = "ceterms:ConditionManifest";
-			EntryConditions = new List<ConditionProfile>();
+			EntryCondition = new List<ConditionProfile>();
 			Requires = new List<ConditionProfile>();
 			Renewal = new List<ConditionProfile>();
 			Recommends = new List<ConditionProfile>();
@@ -55,7 +55,7 @@ namespace RA.Models.JsonV2
 		public List<ConditionProfile> Recommends { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:entryCondition" )]
-		public List<ConditionProfile> EntryConditions { get; set; }
+		public List<ConditionProfile> EntryCondition { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:corequisite" )]
 		public List<ConditionProfile> Corequisite { get; set; }
@@ -65,6 +65,15 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }
+
+		/// <summary>
+		/// Condition Excludes
+		/// Resource that does not count toward fulfilling a constraint, prerequisite, entry condition, or requirement.
+		/// Range: anyURI
+		/// Realistically could be any resource, in the registry or not
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:conditionExcludes" )]
+		public List<string> ConditionExcludes { get; set; }
 
 		#region process profiles
 

@@ -80,12 +80,24 @@ namespace RA.Models.JsonV2
 		public List<CredentialAlignmentObject> AccommodationType { get; set; }
 
 		/// <summary>
-		/// The status type of this LearningOpportunityProfile.
-		/// The default is Active.
-		/// ConceptScheme: ceterms:LifeCycleStatus
+		/// List of Alternate Names for this learning opportunity
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]
-		public CredentialAlignmentObject LifeCycleStatusType { get; set; }
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
+		public LanguageMapList AlternateName { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateDateEffective" )]
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateExpirationDate" )]
+		public string ApproximateExpirationDate { get; set; }
 
 		/// <summary>
 		/// Start Date of this resource
@@ -98,12 +110,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
 		public string ExpirationDate { get; set; }
-
-		/// <summary>
-		/// List of Alternate Names for this learning opportunity
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:alternateName" )]
-		public LanguageMapList AlternateName { get; set; }
 
 		/// <summary>
 		/// Physical location where the credential, assessment, or learning opportunity can be pursued.
@@ -179,6 +185,14 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:keyword" )]
 		public LanguageMapList Keyword { get; set; }
+
+		/// <summary>
+		/// The status type of this LearningOpportunityProfile.
+		/// The default is Active.
+		/// ConceptScheme: ceterms:LifeCycleStatus
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]
+		public CredentialAlignmentObject LifeCycleStatusType { get; set; }
 
 		/// <summary>
 		/// OccupationType

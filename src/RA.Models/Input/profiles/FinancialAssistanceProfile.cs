@@ -35,8 +35,22 @@ namespace RA.Models.Input
 		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
+		/// Organization(s) that offer this financial assistance profile
+		/// Optional UNLESS publishing the profile directly, in which case a CTID must be provided, and blank nodes are not allowed.
+		/// </summary>
+		public List<OrganizationReference> OfferedBy { get; set; }
+
+		/// <summary>
+		/// The financial assistance type is a list of one or more concepts from the ceterms:FinancialAssistance concept scheme.
+		/// <see cref="https://credreg.net/ctdl/terms/financialAssistanceForType"/>
+		/// ConceptScheme: ceterms:CostType
+		/// </summary>
+		public List<string> FinancialAssistanceForType { get; set; } = new List<string>();
+
+		/// <summary>
 		/// The financial assistance type is a list of one or more concepts from the ceterms:FinancialAssistance concept scheme.
 		/// <see cref="https://credreg.net/ctdl/terms/financialAssistanceType"/>
+		/// ConceptScheme: ceterms:FinancialAssistance
 		/// </summary>
 		public List<string> FinancialAssistanceType { get; set; } = new List<string>();
 
@@ -46,6 +60,11 @@ namespace RA.Models.Input
 		/// Recommended
 		/// </summary>
 		public List<QuantitativeValue> FinancialAssistanceValue { get; set; } = new List<QuantitativeValue>();
+
+		/// <summary>
+		/// Requirement or set of requirements for this resource
+		/// </summary>
+		public List<ConditionProfile> Requires { get; set; }
 
 		/// <summary>
 		/// Optional
@@ -60,6 +79,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 	}
 }

@@ -306,9 +306,9 @@ namespace RA.Models.Input
 		* Teaches
 		* Version
 		*/
-		public List<CredentialAlignmentObject> Assesses { get; set; } = new List<CredentialAlignmentObject>();
+		public List<CredentialAlignmentObject> Assesses { get; set; }
 
-		public List<string> AssessmentMethodType { get; set; } = new List<string>();
+		public List<string> AssessmentMethodType { get; set; }
 
 		/// <summary>
 		/// Assessment Method Description
@@ -319,48 +319,45 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap AssessmentMethodDescription_Map { get; set; } = new LanguageMap();
+		public LanguageMap AssessmentMethodDescriptionLangMap { get; set; }
 
-		public List<Place> AvailableAt { get; set; } = new List<Place>();
+		public List<Place> AvailableAt { get; set; }
 
 		public string CodedNotation { get; set; }
 
 		// both
-		public List<string> DeliveryType { get; set; } = new List<string>();
+		public List<string> DeliveryType { get; set; }
 
 		public string DeliveryTypeDescription { get; set; }
 
-		public LanguageMap DeliveryTypeDescription_LangMap { get; set; } = new LanguageMap();
+		public LanguageMap DeliveryTypeDescriptionLangMap { get; set; }
 
 		// condition profiles
-		public List<ConditionProfile> Requires { get; set; } = new List<ConditionProfile>();
+		public List<ConditionProfile> Requires { get; set; }
 
-		public List<ConditionProfile> Corequisite { get; set; } = new List<ConditionProfile>();
+		public List<ConditionProfile> Corequisite { get; set; }
 
-		public List<ConditionProfile> Recommends { get; set; } = new List<ConditionProfile>();
+		public List<ConditionProfile> Recommends { get; set; }
 
-		public List<ConditionProfile> EntryCondition { get; set; } = new List<ConditionProfile>();
+		public List<ConditionProfile> EntryCondition { get; set; }
 
 		/// <summary>
 		/// Assertions that recognize this entity in a specific Jurisdiction.
 		/// </summary>
-		public List<JurisdictionProfile> RecognizedIn { get; set; } = new List<JurisdictionProfile>();
+		public List<JurisdictionProfile> RecognizedIn { get; set; }
 
-		// LearningOpportunity only
-		public ValueProfile CreditValue { get; set; } // = new ValueProfile();
-
-		public List<DurationProfile> EstimatedDuration { get; set; } = new List<DurationProfile>();
+		public List<DurationProfile> EstimatedDuration { get; set; }
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
 		/// <see cref="https://purl.org/ctdl/terms/identifier"/>
 		/// ceterms:identifier
 		/// </summary>
-		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+		public List<IdentifierValue> Identifier { get; set; }
 
-		public List<string> Keyword { get; set; } = new List<string>();
+		public List<string> Keyword { get; set; }
 
-		public LanguageMapList KeywordLangMap { get; set; } = new LanguageMapList();
+		public LanguageMapList KeywordLangMap { get; set; }
 
 		/// <summary>
 		/// Learning Method Description
@@ -371,21 +368,21 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap LearningMethodDescription_Map { get; set; } = new LanguageMap();
+		public LanguageMap LearningMethodDescriptionLangMap { get; set; }
 
-		public List<string> LearningMethodType { get; set; } = new List<string>();
+		public List<string> LearningMethodType { get; set; }
 
 		/// <summary>
 		/// Delivery type for the learning opportunity for the credential.
 		/// </summary>
-		public List<string> LearningDeliveryType { get; set; } = new List<string>();
+		public List<string> LearningDeliveryType { get; set; }
 
 		public string LearningDeliveryTypeDescription { get; set; }
 
 		/// <summary>
 		/// Alternately can provide a language map
 		/// </summary>
-		public LanguageMap LearningDeliveryTypeDescription_Map { get; set; } = new LanguageMap();
+		public LanguageMap LearningDeliveryTypeDescriptionLangMap { get; set; }
 
 		/// <summary>
 		/// Organization(s) that offer this resource
@@ -399,9 +396,9 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<OrganizationReference> OwnedBy { get; set; }
 
-		public List<string> Subject { get; set; } = new List<string>();
+		public List<string> Subject { get; set; }
 
-		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList SubjectLangMap { get; set; }
 
 		/// <summary>
 		/// For Learning Opportunities only
@@ -419,7 +416,7 @@ namespace RA.Models.Input
 		/// For Learning Opportunities only
 		/// List of competencies being taught
 		/// </summary>
-		public List<CredentialAlignmentObject> Teaches { get; set; } = new List<CredentialAlignmentObject>();
+		public List<CredentialAlignmentObject> Teaches { get; set; }
 		#endregion
 
 		#region properties for OccupationType, IndustryType
@@ -437,9 +434,9 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Update handle of FrameworkItem to be like EntityReference - all in one, rather than separate property for Alternate and codes
 		/// </summary>
-		public List<FrameworkItem> OccupationType { get; set; } = new List<FrameworkItem>();
+		public List<FrameworkItem> OccupationType { get; set; }
 
-		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+		public List<FrameworkItem> IndustryType { get; set; }
 
 		/// <summary>
 		/// Future use? - don't use yet

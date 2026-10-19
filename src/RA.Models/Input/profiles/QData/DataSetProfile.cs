@@ -11,14 +11,14 @@ namespace RA.Models.Input.profiles.QData
 	/// <summary>
 	/// DataSet Profile
 	/// Particular characteristics or properties of a data set and its records.
-	/// 
+	///
 	/// NEW 24-09-30
-	/// Required: 
-	///     ceterms:ctid, qdata:dataProvider, 
-	///     ceterms:description, ceterms:name, 
-	///     qdata:dataSetTemporalCoverage, 
+	/// Required:
+	///     ceterms:ctid, qdata:dataProvider,
+	///     ceterms:description, ceterms:name,
+	///     qdata:dataSetTemporalCoverage,
 	///     qdata:hasMetric, qdata:hasObservation
-	///     
+	///
 	/// qdata:DataSetProfile
 	/// <see href="https://credreg.net/qdata/terms/DataSetProfile"/>
 	/// </summary>
@@ -28,7 +28,7 @@ namespace RA.Models.Input.profiles.QData
 		#region Required
 
 		/// <summary>
-		/// CTID - Required 
+		/// CTID - Required
 		/// </summary>
 		public string CTID { get; set; }
 
@@ -64,7 +64,7 @@ namespace RA.Models.Input.profiles.QData
 
 		/// <summary>
 		/// Data Set Temporal Coverage
-		/// Time period covered by the data. 
+		/// Time period covered by the data.
 		/// This property replaces DataSetTimePeriod
 		/// Required with new dataSetProfiles after 24-09-30
 		/// </summary>
@@ -76,7 +76,6 @@ namespace RA.Models.Input.profiles.QData
 		/// Required with new dataSetProfiles after 24-09-30
 		/// </summary>
 		public List<string> HasMetric { get; set; }
-		// public List<Metric> HasMetricFull { get; set; }
 
 		/// <summary>
 		/// The recorded data.
@@ -108,7 +107,7 @@ namespace RA.Models.Input.profiles.QData
 
 		/// <summary>
 		/// Authoritative source of an entity's information.
-		/// URL 
+		/// URL
 		/// </summary>
 		public string Source { get; set; }
 		#endregion
@@ -139,8 +138,8 @@ namespace RA.Models.Input.profiles.QData
 
 		/// <summary>
 		/// Subject matter of the resource.
-		/// Means to point to a credential or other resource where data is published by a third party. 
-		/// Allowed: 
+		/// Means to point to a credential or other resource where data is published by a third party.
+		/// Allowed:
 		/// - any credential
 		/// - assessment profile
 		/// - any learning opportunity
@@ -178,15 +177,34 @@ namespace RA.Models.Input.profiles.QData
 		public List<string> Classification { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Location or geographic area for a data set. 
+		/// Location or geographic area for a data set.
 		/// This will allow partial addresses. For example a state/region with a country
 		/// </summary>
 		public List<Place> DataSetSpatialCoverage { get; set; }
 
 		/// <summary>
-		/// Effective date of this resource's content.
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// One of ApproximateDateEffective, or DateEffective is required
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
+
+		/// <summary>
+		/// Date after which this resource is available or applicable.
+		/// One of ApproximateDateEffective, or DateEffective is required
 		/// </summary>
 		public string DateEffective { get; set; }
+
+		/// <summary>
+		/// Date beyond which the resource is no longer offered or available.
+		/// </summary>
+		public string ExpirationDate { get; set; }
 
 		/// <summary>
 		///  Description of a process by which a resource was created.
@@ -194,19 +212,36 @@ namespace RA.Models.Input.profiles.QData
 		public List<ProcessProfile> DevelopmentProcess { get; set; }
 
 		/// <summary>
-		/// A representation of the data set. 
+		/// A representation of the data set.
 		/// </summary>
 		public List<DataSetDistribution> HasDataSetDistribution { get; set; }
 
 		/// <summary>
-		/// A means of accessing one or more data sets or data processing functions.  
+		/// A means of accessing one or more data sets or data processing functions.
 		/// </summary>
 		public List<DataSetService> HasDataSetService { get; set; }
 
 		/// <summary>
-		/// A set of resources or concepts to which the metric is applied or which affect the observation of the metric. 
+		/// A set of resources or concepts to which the metric is applied or which affect the observation of the metric.
 		/// </summary>
 		public List<string> HasDimension { get; set; }
+
+		/// <summary>
+		/// IndustryType
+		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
+		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property.
+		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
+		/// ceterms:industryType
+		/// </summary>
+		public List<FrameworkItem> IndustryType { get; set; } = new List<FrameworkItem>();
+
+		/// <summary>
+		/// HELPER property (not part of CTDL) - provide a list of NAICS codes and API will validate and format
+		/// List of valid NAICS codes. These will be mapped to industry type
+		/// See:
+		/// https://www.naics.com/search/
+		/// </summary>
+		public List<string> NaicsList { get; set; } = new List<string>();
 
 		#region Instruction program and helpers
 
@@ -221,7 +256,7 @@ namespace RA.Models.Input.profiles.QData
 		public List<string> AlternativeInstructionalProgramType { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Helper property - provided a list of CIP codes and API will validate and format 
+		/// Helper property - provided a list of CIP codes and API will validate and format
 		/// List of valid Classification of Instructional Program codes. See:
 		/// https://nces.ed.gov/ipeds/cipcode/search.aspx?y=55
 		/// </summary>

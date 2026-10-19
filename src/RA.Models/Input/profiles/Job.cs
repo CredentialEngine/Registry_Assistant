@@ -1,4 +1,4 @@
-﻿// <copyright file="MetricManager.cs" company="Credential Engine">
+﻿// <copyright file="Job.cs" company="Credential Engine">
 //     Copyright (c) Credential Engine. All rights reserved.
 // </copyright>
 // <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
@@ -10,6 +10,10 @@ namespace RA.Models.Input
 {
 	/// <summary>
 	/// Set of responsibilities based on work roles within an occupation as defined by an employer.
+	/// Inverse Properties are not published, but are included here for reference:
+	/// - IsMemberOf is an inverse property of HasMember
+	/// - qdata:relevantDataSet
+	/// - IsSpecializationOf is an inverse property of HasSpecialization, so may not be published
 	/// </summary>
 	public class Job : BaseEmploymentToWorkObject
 	{
@@ -69,6 +73,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// LanguageMap for AlternateName
 		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
@@ -108,6 +113,13 @@ namespace RA.Models.Input
 		public List<string> Comment { get; set; } = new List<string>();
 
 		public LanguageMapList CommentLangMap { get; set; } = new LanguageMapList();
+
+		/// <summary>
+		/// Industry related to this resource
+		/// CTID for an existing Industry
+		/// ceterms:hasIndustry
+		/// </summary>
+		public List<string> HasIndustry { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Occupation related to this resource.
@@ -154,12 +166,33 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
+		/// <summary>
+		/// Less specialized profession, trade, or career field that encompasses the one being described.
+		/// CTID for an existing Job
+		/// ceterms:isSpecializationOf
+		/// </summary>
+		public List<string> IsSpecializationOf { get; set; }
+
+		/// <summary>
+		/// More specialized profession, trade, or career field that is encompassed by the one being described.
+		/// CTID for an existing Job
+		/// <see cref="https://credreg.net/ctdl/terms/hasSpecialization"/>
+		/// ceterms:hasSpecialization
+		/// </summary>
+		public List<string> HasSpecialization { get; set; }
+
+		/// <summary>
+		/// Type of level or grade indicating a point in a job or role progression, such as seniority or responsibility;
+		/// URI to a concept (there is not a registry defined concept scheme) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
+		/// ceterms:jobLevelType
+		/// </summary>
+		public List<string> JobLevelType { get; set; } = new List<string>();
+
 		///// <summary>
 		///// Is Member Of
 		///// Collection to which this resource belongs.
 		///// Inverse property that cannot be used here.
 		///// </summary>
-		// public List<string> IsMemberOf { get; set; } = new List<string>();
 
 		#region Industry type and helpers
 
@@ -281,6 +314,18 @@ namespace RA.Models.Input
 		public List<ConditionProfile> Requires { get; set; }
 
 		/// <summary>
+		/// Recommended resources for this resource.
+		/// </summary>
+		public List<ConditionProfile> Recommends { get; set; }
+
+		/// <summary>
+		///  Indicates a resource that is useful in preparing for the resource being described..
+		/// ceterms:preparationFrom
+		/// <seealso href="https://credreg.net/ctdl/terms/preparationFrom"></seealso>
+		/// </summary>
+		public List<ConditionProfile> PreparationFrom { get; set; }
+
+		/// <summary>
 		/// Another source of information about the entity being described.
 		/// ceterms:sameAs
 		/// </summary>
@@ -313,5 +358,11 @@ namespace RA.Models.Input
 		/// Refer to the referenced Transfer Value Profile for more information. Other resources may be included for the full value.
 		/// </summary>
 		public List<string> ReceivesTransferValueFrom { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Monetary compensation associated with work.
+		/// </summary>
+		public List<PayProfile> WorkPay { get; set; }
+
 	}
 }

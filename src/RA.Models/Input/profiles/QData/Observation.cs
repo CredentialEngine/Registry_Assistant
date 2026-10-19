@@ -1,14 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿// <copyright file="Observation.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace RA.Models.Input.profiles.QData
 {
 
 	/// <summary>
-	/// Data within a dataset defined by specific values for all relevant dimensions and associated with measured values.
+	/// Numeric value or category observed for a metric measured at fixed values for all relevant independent variables.
 	/// Required:
-	///     IsObservationOf 
-	/// And One Of: 
+	///     IsObservationOf
+	/// And One Of:
 	///     schema:value, schema:minValue, schema:maxValue, qdata:percentage, qdata:minPercentage, qdata:maxPercentage
 	/// </summary>
 	public class Observation
@@ -23,7 +28,7 @@ namespace RA.Models.Input.profiles.QData
 		public string Type { get; set; }
 
 		/// <summary>
-		/// An identifier for use with blank nodes. 
+		/// An identifier for use with blank nodes.
 		/// It will be ignored if included with a primary resource
 		/// </summary>
 		[JsonProperty( "@id" )]
@@ -71,6 +76,15 @@ namespace RA.Models.Input.profiles.QData
 		/// Range: qdata:Metric
 		/// </summary>
 		public string IsObservationOf { get; set; }
+
+		/// <summary>
+		/// Indicates the entity identified through an observation as meeting the metric criteria.
+		/// Used when the metric involves observation of categoric data, for example indicating an observation of which Industry or Occupation is the most common destination after completing study.
+		/// Range: rdfs:Resource
+		/// The target can be almost any resource, but is expected to be a published resource such as an industry or occupation or a blank node such as a credential alignment object for a resource such as an industry or occupation classification.
+		/// Bnodes would be added to the request property: ReferenceObjects
+		/// </summary>
+		public List<string> ObservedCategory { get; set; }
 
 		/// <summary>
 		/// The lower percentage of some characteristic or property.

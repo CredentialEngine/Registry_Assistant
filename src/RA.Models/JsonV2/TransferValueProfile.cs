@@ -27,7 +27,7 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:ctid" )]
 		public string CTID { get; set; }
-		#region Required 
+		#region Required
 
 		[JsonProperty( PropertyName = "ceterms:name" )]
 		public LanguageMap Name { get; set; }
@@ -47,7 +47,7 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// Receiving curriculum or requirement context to which the transfer value is applied.
 		/// If the types of applicability are formally defined as an enumeration published with URIs, then:
-		///		the relevant URI can be entered as the targetNode of the Credential Alignment Object; 
+		///		the relevant URI can be entered as the targetNode of the Credential Alignment Object;
 		///	if they are informally defined or not published then:
 		///		use the targetNodeName and targetNodeDescription of the Credential Alignment Object to define the relevant type.
 		/// Range: ceterms:CredentialAlignmentObject
@@ -77,13 +77,22 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// Date this assertion ends.
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:endDate" )]
+		[JsonProperty( "ceterms:endDate" )]
 		public string EndDate { get; set; }
+
+		/// <summary>
+		/// Approximate date some event or activity ends.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:approximateEndDate" )]
+		public string ApproximateEndDate { get; set; }
 
 		/// <summary>
 		/// Identifier
 		/// Definition:	Alphanumeric Identifier value.
-		/// List of URIs 
+		/// List of URIs
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:identifier" )]
 		public List<IdentifierValue> Identifier { get; set; }
@@ -92,7 +101,7 @@ namespace RA.Models.JsonV2
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		/// <summary>
 		/// Date the validity or usefulness of the information in this resource begins.
@@ -101,8 +110,17 @@ namespace RA.Models.JsonV2
 		public string StartDate { get; set; }
 
 		/// <summary>
+		/// Approximate date the validity or usefulness of the information in this resource begins.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:approximateStartDate" )] 
+		public string ApproximateStartDate { get; set; }
+
+		/// <summary>
 		/// Type of official status of the TransferProfile; select from an enumeration of such types.
-		/// The default is Active. 
+		/// The default is Active.
 		/// ConceptScheme: ceterms:LifeCycleStatus
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]
@@ -122,10 +140,10 @@ namespace RA.Models.JsonV2
 		public string NextVersion { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
-		public string SupersededBy { get; set; }
+		public List<string> SupersededBy { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:supersedes" )]
-		public string Supersedes { get; set; }
+		public List<string> Supersedes { get; set; }
 
 		/// <summary>
 		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.

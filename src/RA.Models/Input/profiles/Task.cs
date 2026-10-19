@@ -112,6 +112,19 @@ namespace RA.Models.Input
 		public LanguageMapList CommentLangMap { get; set; }
 
 		/// <summary>
+		/// The date on which this resource was most recently modified in some way.
+		/// xsd:dateTime
+		/// </summary>
+		public string DateModified { get; set; }
+
+		/// <summary>
+		/// Approximate date on which this resource was most recently modified in some way.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYYY-MM.
+		/// Range Includes:	schema:Date
+		/// </summary>
+		public string ApproximateDateModified { get; set; }
+
+		/// <summary>
 		/// Environmental Hazard Type
 		/// Type of condition in the physical work performance environment that entails risk exposures requiring mitigating processes;
 		/// select from an existing enumeration of such types.

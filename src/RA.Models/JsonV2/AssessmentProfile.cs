@@ -7,7 +7,7 @@ namespace RA.Models.JsonV2
 	public class AssessmentProfile : BaseResourceDocument
 	{
 		[JsonIgnore]
-		public static string classType = "ceterms:AssessmentProfile";
+		public const string classType = "ceterms:AssessmentProfile";
 
 		public AssessmentProfile()
 		{
@@ -94,17 +94,46 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:subject" )]
 		public List<CredentialAlignmentObject> Subject { get; set; }
 
+		/// <summary>
+		/// Primary academic discipline or professional career path.
+		/// Comment:
+		/// May be useful for describing credentials, assessments and learning opportunities that cover a general field but with a focus on a specific skill set, for example an apprenticeship in electrical engineering specializing in High Voltage applications. For degree credentials there are also properties for degree major, minor and concentration.
+		/// range: ceterms:CredentialAlignmentObject
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:specialistSubject" )]
+		public List<CredentialAlignmentObject> SpecialistSubject { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
 		public string SubjectWebpage { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:aggregateData" )]
 		public List<AggregateDataProfile> AggregateData { get; set; }
 
+		/// <summary>
+		/// An additional free text note about the quality assurance or licensing of an organisation or a qualification.
+		/// </summary>
+		[JsonProperty( PropertyName = "elm:additionalNote" )]
+		public Note AdditionalNote { get; set; } = null;
+
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }
 
 		/// <summary>
-		/// Assessment Method Description 
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateDateEffective" )]
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateExpirationDate" )]
+		public string ApproximateExpirationDate { get; set; }
+
+		/// <summary>
+		/// Assessment Method Description
 		/// Description of the assessment methods for a resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )]
@@ -114,7 +143,7 @@ namespace RA.Models.JsonV2
 		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
 
 		/// <summary>
-		/// Learning Method Description 
+		/// Learning Method Description
 		///  Description of the learning methods for a resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:learningMethodDescription" )]
@@ -137,6 +166,12 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:assessmentUseType" )]
 		public List<CredentialAlignmentObject> AssessmentUseType { get; set; }
+
+		/// <summary>
+		/// LanguageMap for AssociatedResourceDescription
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:associatedResourceDescription" )]
+		public LanguageMap AssociatedResourceDescription { get; set; } = null;
 
 		/// <summary>
 		/// Indicates the stage or level of achievement in a progression of learning.
@@ -172,6 +207,12 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:commonCosts" )]
 		public List<string> CommonCosts { get; set; }
+
+		/// <summary>
+		/// Description of the topics, concepts, theories, and practices addressed by this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:contentDescription" )]
+		public LanguageMap ContentDescription { get; set; } = null;
 
 		// 20-10-31 CreditValue is now of type ValueProfile
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
@@ -231,7 +272,7 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// Identifier
 		/// Definition:	Alphanumeric Identifier value.
-		/// List of URIs 
+		/// List of URIs
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:identifier" )]
 		public List<IdentifierValue> Identifier { get; set; }
@@ -240,7 +281,7 @@ namespace RA.Models.JsonV2
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		/// <summary>
 		/// Is Non-Credit
@@ -255,7 +296,7 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
-		#region Conditions 
+		#region Conditions
 		[JsonProperty( PropertyName = "ceterms:requires" )]
 		public List<ConditionProfile> Requires { get; set; }
 
@@ -272,7 +313,7 @@ namespace RA.Models.JsonV2
 		public List<ConditionProfile> EntryCondition { get; set; }
 		#endregion
 
-		#region Connections 
+		#region Connections
 
 		[JsonProperty( PropertyName = "ceterms:advancedStandingFrom" )]
 		public List<ConditionProfile> AdvancedStandingFrom { get; set; }
@@ -379,6 +420,19 @@ namespace RA.Models.JsonV2
 		public List<string> ReceivesTransferValueFrom { get; set; }
 
 		/// <summary>
+		/// Industry for which this resource is acknowledged to be valid.
+		/// List of CTIDs for published industry types.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:recognizedForIndustry" )]
+		public List<string> RecognizedForIndustry { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Credential awarded as the result of successful completion of the resource being described.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:resultsInCredential" )]
+		public List<string> ResultsInCredential { get; set; } = new List<string>();
+
+		/// <summary>
 		/// Another source of information about the entity being described.
 		/// List of URIs
 		/// ceterms:sameAs
@@ -414,6 +468,12 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
 		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; } = new List<CredentialAlignmentObject>();
+
+		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
+		public List<string> SupersededBy { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:supersedes" )]
+		public List<string> Supersedes { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:targetAssessment" )]
 		public List<string> TargetAssessment { get; set; }

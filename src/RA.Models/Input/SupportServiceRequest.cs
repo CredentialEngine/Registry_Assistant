@@ -38,6 +38,10 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Resources and assistance that help people overcome barriers to succeed in their education and career goals.
 	/// Support services can be provided at any stage of an individual's education or career, and may be targeted towards people with or without direct affiliation with an organization. The goal of support services is to provide people with the assistance they need to achieve their full potential. Examples of Support Services include career advice, job placement, childcare, transportation, tools, mentorship, counseling, and other forms of aid.
+	///
+	/// Inverse Properties are not published, but are included here for reference:
+	/// - supportServiceFor
+	/// - isSpecificServiceOf
 	/// </summary>
 	public class SupportService : BasePrimaryResource
 	{
@@ -150,6 +154,19 @@ namespace RA.Models.Input
 		public LanguageMapList AlternateNameLangMap { get; set; } = null;
 
 		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// One of ApproximateDateEffective, or DateEffective is required
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
+
+		/// <summary>
 		/// Online location where the credential, assessment, or learning opportunity can be pursued.
 		/// URL
 		/// </summary>
@@ -193,6 +210,11 @@ namespace RA.Models.Input
 		/// Entity that describes financial assistance that is offered or available.
 		/// </summary>
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
+
+		/// <summary>
+		/// Helper property for referencing existing financial assistance profiles by CTID
+		/// </summary>
+		public List<string> CommonFinancialAssistance { get; set; }
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.

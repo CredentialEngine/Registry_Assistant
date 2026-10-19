@@ -31,10 +31,28 @@ namespace RA.Models.Input
 		public LanguageMap DescriptionLangMap { get; set; }
 
 		/// <summary>
-		/// Effective date of the content of this profile
-		/// ceterms:dateEffective
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// One of ApproximateDateEffective, or DateEffective is required
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
+
+		/// <summary>
+		/// Date after which this resource is available or applicable.
+		/// One of ApproximateDateEffective, or DateEffective is required
 		/// </summary>
 		public string DateEffective { get; set; }
+
+		/// <summary>
+		/// Date beyond which the resource is no longer offered or available.
+		/// </summary>
+		public string ExpirationDate { get; set; }
 
 		/// <summary>
 		/// Jurisdiction Profile

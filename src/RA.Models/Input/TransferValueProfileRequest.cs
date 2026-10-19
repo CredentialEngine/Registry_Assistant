@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using RA.Models.JsonV2;
 
 namespace RA.Models.Input
 {
@@ -44,7 +45,7 @@ namespace RA.Models.Input
 	/// History
 	/// 21-01-13 Added DevelopementProcess
 	/// </summary>
-	public class TransferValueProfile
+	public class TransferValueProfile : BaseResourceDocument
 	{
 		public TransferValueProfile()
 		{
@@ -126,7 +127,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		/// <summary>
 		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.
@@ -143,10 +144,25 @@ namespace RA.Models.Input
 		public string StartDate { get; set; }
 
 		/// <summary>
+		/// Approximate date the validity or usefulness of the information in this resource begins.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		public string ApproximateStartDate { get; set; }
+
+		/// <summary>
 		/// Date this assertion ends.
-		/// Required
 		/// </summary>
 		public string EndDate { get; set; }
+
+		/// <summary>
+		/// Approximate date some event or activity ends.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		public string ApproximateEndDate { get; set; }
 
 		/// <summary>
 		///  Resource that provides the transfer value described by this resource, according to the entity providing this resource.
@@ -189,7 +205,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Receiving curriculum or requirement context to which the transfer value is applied.
 		/// If the types of applicability are formally defined as an enumeration published with URIs, then:
-		///		the relevant URI can be entered as the targetNode of the Credential Alignment Object; 
+		///		the relevant URI can be entered as the targetNode of the Credential Alignment Object;
 		///	if they are informally defined or not published then:
 		///		use the targetNodeName and targetNodeDescription of the Credential Alignment Object to define the relevant type.
 		/// Range: ceterms:CredentialAlignmentObject
@@ -207,7 +223,6 @@ namespace RA.Models.Input
 		public List<ConditionProfile> Requires { get; set; }
 
 		#region Version related properties
-		//
 
 		/// <summary>
 		/// Latest version of the credential.
@@ -228,13 +243,13 @@ namespace RA.Models.Input
 		public string NextVersion { get; set; }
 
 		/// <summary>
-		///  Resource that replaces this resource.
+		///  Resource(s) that replaces this resource.
 		///  full URL OR CTID (recommended)
 		/// </summary>
 		public List<string> SupersededBy { get; set; }
 
 		/// <summary>
-		/// Resource that this resource replaces.
+		/// Resource(s) that this resource replaces.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public List<string> Supersedes { get; set; }

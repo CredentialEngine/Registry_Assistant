@@ -82,8 +82,8 @@ namespace RA.Models.JsonV2
 		public string SubjectWebpage { get; set; }
 
 		/// <summary>
-		/// The status type of this Organization. 
-		/// The default is Active. 
+		/// The status type of this Organization.
+		/// The default is Active.
 		/// ConceptScheme: ceterms:LifeCycleStatus
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]
@@ -114,7 +114,7 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// Identifier
 		/// Definition:	Alphanumeric Identifier value.
-		/// List of URIs 
+		/// List of URIs
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:identifier" )]
 		public List<IdentifierValue> Identifier { get; set; }
@@ -122,13 +122,26 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:image" )]
 		public string Image { get; set; }
 
+		/// <summary>
+		/// Name of the organization as formally registered with a governmental or other legal authority.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:legalName" )]
+		public LanguageMap LegalName { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:foundingDate" )]
 		public string FoundingDate { get; set; }
-
 
 		[JsonProperty( PropertyName = "ceterms:closingDate" )]
 		public string ClosingDate { get; set; }
 
+		/// <summary>
+		/// Approximate date the organization ceased operations or ceased to exist.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:approximateClosingDate" )]
+		public string ApproximateClosingDate { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:agentType" )]
 		public List<CredentialAlignmentObject> AgentType { get; set; }
@@ -185,10 +198,10 @@ namespace RA.Models.JsonV2
 		public List<string> AvailabilityListing { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
-		public string SupersededBy { get; set; }
+		public List<string> SupersededBy { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:supersedes" )]
-		public string Supersedes { get; set; }
+		public List<string> Supersedes { get; set; }
 
 		/// <summary>
 		/// Webpage or online document that defines or explains the nature of transfer value handled by the organization.
@@ -278,6 +291,13 @@ namespace RA.Models.JsonV2
 		public List<string> HasCostManifest { get; set; }
 
 		/// <summary>
+		/// Industry related to this resource
+		/// ceterms:hasIndustry
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasIndustry" )]
+		public List<string> HasIndustry { get; set; } = new List<string>();
+
+		/// <summary>
 		/// Assertion by an agent that this resource has a specific workforce demand level.
 		/// </summary>
 		[JsonProperty( "ceterms:inDemandAction" )]
@@ -287,11 +307,22 @@ namespace RA.Models.JsonV2
 		/// may need to define as an object for link checker
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasVerificationService" )]
-		public List<string> HasVerificationService { get; set; } 
-		//public object HasVerificationService { get; set; }
+		public List<string> HasVerificationService { get; set; }
+
+		/// <summary>
+		/// Description of financial assistance offered by this organization.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:offersFinancialAssistance" )]
+		public List<string> OffersFinancialAssistance { get; set; }
+
+		/// <summary>
+		/// Types of entities that the agent accredits, endorses, approves, or recognizes;
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:qualityAssuranceTargetType" )]
+		public List<string> QualityAssuranceTargetType { get; set; } = new List<string>();
 
 		#region ProcessProfiles
-		[JsonProperty( PropertyName = "ceterms:administrationProcess", NullValueHandling = NullValueHandling.Ignore )]
+		[ JsonProperty( PropertyName = "ceterms:administrationProcess", NullValueHandling = NullValueHandling.Ignore )]
 		public List<ProcessProfile> AdministrationProcess { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:developmentProcess" )]

@@ -117,6 +117,20 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
 		public string CodedNotation { get; set; }
 
+		/// <summary>
+		/// The date on which this resource was most recently modified in some way.
+		/// xsd:dateTime
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:dateModified" )]
+		public string DateModified { get; set; }
+
+		/// <summary>
+		/// Approximate date on which this resource was most recently modified in some way.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:approximateDateModified" )]
+		public string ApproximateDateModified { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:environmentalHazardType" )]
 		public List<string> EnvironmentalHazardType { get; set; }
 

@@ -19,7 +19,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		/// <summary>
 		/// Type of official status of this resource. Select a valid concept from the LifeCycleStatus concept scheme.

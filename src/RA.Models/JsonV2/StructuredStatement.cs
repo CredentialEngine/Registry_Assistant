@@ -37,7 +37,7 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Statement, characterization or account of the entity.
-		/// 
+		///
 		/// Conditional Required if no Statement Text
 		/// </summary>
 		[JsonProperty( "ceterms:description" )]
@@ -45,7 +45,7 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Verbatim unformatted text of a statement, typically one made in a larger document.
-		/// 
+		///
 		/// Conditional Required if no Subject Webpage
 		/// </summary>
 		[JsonProperty( "ceterms:statementText" )]
@@ -53,13 +53,20 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Webpage that describes this entity.
-		/// 
+		///
 		/// Conditional Required if no Statement Text
 		/// </summary>
 		[JsonProperty( "ceterms:subjectWebpage" )]
 		public string SubjectWebpage { get; set; }
 
 		#endregion
+
+		/// <summary>
+		/// Statement of a date made as part of a StructuredStatement, the meaning of which is indicated by the statementType property.
+		/// xsd:date
+		/// </summary>
+		[JsonProperty( "ceterms:associatedDate" )]
+		public string AssociatedDate { get; set; }
 
 		[JsonProperty( "ceterms:codedNotation" )]
 		public string CodedNotation { get; set; }

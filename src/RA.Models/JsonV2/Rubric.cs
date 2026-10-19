@@ -68,7 +68,7 @@ namespace RA.Models.JsonV2
 		public string DateCreated { get; set; }
 
 		/// <summary>
-		/// Originally only allowing date (yyyy-mm-dd), no time. 
+		/// Originally only allowing date (yyyy-mm-dd), no time.
 		/// However, this is defined as: xsd:dateTime. So consumers like the credential registry search, expect a datetime format.
 		/// </summary>
 		[JsonProperty( "ceasn:dateModified" )]
@@ -144,7 +144,7 @@ namespace RA.Models.JsonV2
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		[JsonProperty( "ceasn:inLanguage" )]
 		public List<string> InLanguage { get; set; }
@@ -160,7 +160,7 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Type of official status of the TransferProfile; select from an enumeration of such types.
-		/// The default is Active. 
+		/// The default is Active.
 		/// ConceptScheme: ceterms:LifeCycleStatus
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]
@@ -247,7 +247,7 @@ namespace RA.Models.JsonV2
 		#endregion
 	}
 
-	public class RubricCriterion
+	public class RubricCriterion : BaseResourceDocument
 	{
 		public RubricCriterion()
 		{
@@ -386,6 +386,13 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "@id" )]
 		public string CtdlId { get; set; }
 
+		/// <summary>
+		///  A CTID is optional. Primary use case is to enable reference from an external resource like competencies.
+		///  NOTE: this suggests that a CTID could be used with HasCriterionLevel!
+		/// </summary>
+		[JsonProperty( "ceterms:ctid" )]
+		public string CTID { get; set; }
+
 		#region base properties
 
 		/// <summary>
@@ -397,7 +404,7 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// Description of the level achieved as defined by the Rubric Criterion.
 		/// </summary>
-		[JsonProperty( "ceasn:BenchmarkText" )]
+		[JsonProperty( "ceasn:benchmarkText" )]
 		public LanguageMap BenchmarkText { get; set; }
 
 		/// <summary>

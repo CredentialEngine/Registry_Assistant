@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
-	public class QualificationsFramework
+	public class QualificationsFramework : BaseResourceDocument
 	{
 
 		[JsonProperty( "@type" )]
@@ -24,6 +24,20 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
 		public List<string> OwnedBy { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateDateEffective" )]
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateExpirationDate" )]
+		public string ApproximateExpirationDate { get; set; }
 
 		/// <summary>
 		/// A person or organization chiefly responsible for the intellectual or artistic content of this resource.
@@ -197,7 +211,7 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Concept scheme used characterize different aspects (facets) of descriptors of nodes in a framework or similar resource.
-		/// URI to the concept
+		/// URI to the concept scheme
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasFacetScheme" )]
 		public List<string> HasFacetScheme { get; set; }
@@ -372,16 +386,16 @@ namespace RA.Models.JsonV2
 		public string NextVersion { get; set; }
 
 		/// <summary>
-		/// Resource that replaces this resource.
+		/// Resource(s) that replaces this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
-		public string SupersededBy { get; set; }
+		public List<string> SupersededBy { get; set; }
 
 		/// <summary>
-		/// Resource that this resource replaces.
+		/// Resource(s) that this resource replaces.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:supersedes" )]
-		public string Supersedes { get; set; }
+		public List<string> Supersedes { get; set; }
 
 		#endregion
 	}

@@ -113,6 +113,17 @@ namespace RA.Models.Input
 		public LanguageMapList AlternateNameLangMap { get; set; } = null;
 
 		/// <summary>
+		/// Identifier
+		/// Definition:	en-US: Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// </summary>
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
+
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		public List<string> InCatalog { get; set; }
+
+		/// <summary>
 		/// Resource(s) for which this resource is an intermediary.
 		/// Required. If a list the complete list of transfer value profiles is included with this transaction, then this property does not need to duplicate the information.
 		/// Range: ceterms:TransferValueProfile

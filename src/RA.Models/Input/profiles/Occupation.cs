@@ -14,6 +14,10 @@ namespace RA.Models.Input
 	/// - CTID
 	/// - NAME
 	/// - Description
+	/// Inverse Properties are not published, but are included here for reference:
+	/// - IsMemberOf is an inverse property of HasMember
+	/// - qdata:relevantDataSet
+	/// - IsSpecializationOf is an inverse property of HasSpecialization, so is not published
 	/// </summary>
 	public class Occupation : BaseEmploymentToWorkObject
 	{
@@ -111,6 +115,26 @@ namespace RA.Models.Input
 		public LanguageMapList CommentLangMap { get; set; }
 
 		/// <summary>
+		/// The date on which this resource was most recently modified in some way.
+		/// xsd:dateTime
+		/// </summary>
+		public string DateModified { get; set; }
+
+		/// <summary>
+		/// Approximate date on which this resource was most recently modified in some way.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYYY-MM.
+		/// Range Includes:	schema:Date
+		/// </summary>
+		public string ApproximateDateModified { get; set; }
+
+		/// <summary>
+		/// Industry related to this resource
+		/// CTID for an existing Industry
+		/// ceterms:hasIndustry
+		/// </summary>
+		public List<string> HasIndustry { get; set; } = new List<string>();
+
+		/// <summary>
 		/// Job related to this resource.
 		/// CTID for an existing Job
 		/// ceterms:hasJob
@@ -122,6 +146,7 @@ namespace RA.Models.Input
 		/// CTID for an existing Occupation
 		/// <see cref="https://credreg.net/ctdl/terms/hasSpecialization"/>
 		/// ceterms:hasSpecialization
+		/// Allowed range: ceterms:Occupation
 		/// </summary>
 		public List<string> HasSpecialization { get; set; }
 
@@ -177,13 +202,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> NaicsList { get; set; } = new List<string>();
 		#endregion
-
-		/// <summary>
-		/// Less specialized profession, trade, or career field that encompasses the one being described.
-		/// CTID for an existing Occupation
-		/// ceterms:isSpecializationOf
-		/// </summary>
-		public List<string> IsSpecializationOf { get; set; }
 
 		/// <summary>
 		/// Body of information embodied either directly or indirectly in this resource.

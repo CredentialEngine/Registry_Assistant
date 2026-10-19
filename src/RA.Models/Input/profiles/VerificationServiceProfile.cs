@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using RA.Models.JsonV2;
 
 namespace RA.Models.Input
 {
@@ -17,7 +18,7 @@ namespace RA.Models.Input
 	///
 	/// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first.
 	/// </summary>
-	public class VerificationServiceProfile
+	public class VerificationServiceProfile : BasePrimaryResource
 	{
 		public VerificationServiceProfile()
 		{
@@ -55,10 +56,28 @@ namespace RA.Models.Input
 		public List<OrganizationReference> OfferedBy { get; set; }
 
 		/// <summary>
-		/// Effective date of the content of this profile
-		/// ceterms:dateEffective
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// One of ApproximateDateEffective, or DateEffective is required
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
+
+		/// <summary>
+		/// Date after which this resource is available or applicable.
+		/// One of ApproximateDateEffective, or DateEffective is required
 		/// </summary>
 		public string DateEffective { get; set; }
+
+		/// <summary>
+		/// Date beyond which the resource is no longer offered or available.
+		/// </summary>
+		public string ExpirationDate { get; set; }
 
 		/// <summary>
 		/// Estimated cost of this service

@@ -39,6 +39,10 @@ namespace RA.Models.Input
 	/// - AgentSectorType
 	/// - At least one of email or address
 	///
+	/// Inverse properties not published:
+	/// - ceterms:credentialingAction
+	/// - ObjectOfAction
+	/// - qdata:relevantDataSet
 	/// </summary>
 	public class Organization : BaseRequestHelper
 	{
@@ -329,15 +333,36 @@ namespace RA.Models.Input
 		/// </summary>
 		public string ClosingDate { get; set; }
 
+		/// <summary>
+		/// Approximate date the organization ceased operations or ceased to exist.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		public string ApproximateClosingDate { get; set; }
+
+		/// <summary>
+		/// Name of the organization as formally registered with a governmental or other legal authority.
+		/// </summary>
+		public string LegalName { get; set; }
+
+		/// <summary>
+		///  LanguageMap for LegalName
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:legalName" )]
+		public LanguageMap LegalNameLangMap { get; set; } = new LanguageMap();
+
 		#region Concrete codes/identifiers
 
 		/// <summary>
 		/// Dun and Bradstreet DUNS number for identifying an organization or business person.
+		/// DUNS a nine-digit number
 		/// </summary>
 		public string Duns { get; set; }
 
 		/// <summary>
 		/// Federal Employer Identification Number (FEIN) identifying organizations, persons, states, government agencies, corporations, and companies.
+		/// FEIN is a nine-digit number that IRS assigns in the following format: XX-XXXXXXX.
 		/// </summary>
 		public string Fein { get; set; }
 
@@ -358,7 +383,12 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// ISIC Revision 4 Code
-		/// The International Standard of Industrial Classification of All Economic Activities (ISIC), Revision 4 code for a particular organization, business person, or place.
+		/// The International Standard of Industrial Classification of All Economic Activities (ISIC),
+		/// Revision 4 code for a particular organization, business person, or place.
+		///		Section: 1 letter code from A through U (broadest category).
+		///		Division: 2-digit numerical code (01 to 99).
+		///		Group: 3-digit numerical code.
+		///		Class: 4-digit numerical code (most detailed level)
 		/// </summary>
 		public string ISICV4 { get; set; }
 
@@ -368,6 +398,13 @@ namespace RA.Models.Input
 		public string NcesID { get; set; }
 
 		#endregion
+
+		/// <summary>
+		/// Alignment map owned by the agent.
+		/// List of CTIDs. BNodes are not allowed.
+		/// ceterms:hasAlignmentMap
+		/// </summary>
+		public List<string> HasAlignmentMap { get; set; }
 
 		/// <summary>
 		/// Reference to condition manifests
@@ -382,16 +419,16 @@ namespace RA.Models.Input
 		public List<string> HasCostManifest { get; set; }
 
 		/// <summary>
-		/// Alignment map owned by the agent.
-		/// List of CTIDs. BNodes are not allowed.
-		/// ceterms:hasAlignmentMap
-		/// </summary>
-		public List<string> HasAlignmentMap { get; set; }
-
-		/// <summary>
 		/// An inventory or listing of resources maintained by this Organization
 		/// </summary>
 		public List<string> HasCatalog { get; set; }
+
+		/// <summary>
+		/// Industry related to this resource
+		/// CTID for an existing Industry
+		/// ceterms:hasIndustry
+		/// </summary>
+		public List<string> HasIndustry { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
@@ -408,7 +445,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Language map list for AlternativeIndustryType
 		/// </summary>
-		public LanguageMapList AlternativeIndustryType_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList AlternativeIndustryTypeLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Jurisdiction Profile
@@ -579,13 +616,13 @@ namespace RA.Models.Input
 		public List<OrganizationReference> SubOrganization { get; set; }
 
 		/// <summary>
-		///  Resource that replaces this resource.
+		///  Resource(s) that replaces this resource.
 		///  full URL OR CTID (recommended)
 		/// </summary>
 		public List<string> SupersededBy { get; set; }
 
 		/// <summary>
-		/// Resource that this resource replaces.
+		/// Resource(s) that this resource replaces.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public List<string> Supersedes { get; set; }
@@ -624,8 +661,22 @@ namespace RA.Models.Input
 		public LanguageMap SupportServiceStatementDescriptionLangMap { get; set; }
 
 		/// <summary>
-		/// LIst of CTIDS for existing Verification Service profiles
+		/// List of CTIDS for existing Verification Service profiles
 		/// </summary>
 		public List<string> HasVerificationService { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Types of entities that the agent accredits, endorses, approves, or recognizes;
+		/// </summary>
+		public List<string> QualityAssuranceTargetType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Description of financial assistance offered by this organization.
+		/// List of CTIDs that reference published FinancialAssistanceProfiles
+		/// Recommended: treat this as an inverse property:
+		///		If the org just published 'n' FAPs, then should not have to then publish "OffersFinancialAssistance"
+		/// </summary>
+		public List<string> OffersFinancialAssistance { get; set; }
+
 	}
 }

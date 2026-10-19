@@ -176,7 +176,7 @@ namespace RA.Models.JsonV2
 		/// This should be a list of URIs. The data type is object to handle receiving a string, which will be converted to a list of strings
 		/// </summary>
 		[JsonProperty( "ceasn:exactAlignment" )]
-		// public List<string> exactAlignment { get; set; }
+		//public List<string> ExactAlignment { get; set; }
 		public object ExactAlignment { get; set; }
 
 		/// <summary>
@@ -241,6 +241,13 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:receivesTransferValueFrom" )]
 		public List<string> ReceivesTransferValueFrom { get; set; }
+
+		/// <summary>
+		/// Industry for which this resource is acknowledged to be valid.
+		/// List of CTIDs for published industry types.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:recognizedForIndustry" )]
+		public List<string> RecognizedForIndustry { get; set; } = new List<string>();
 
 		[JsonProperty( "ceterms:hasWorkforceDemand" )]
 		public List<string> HasWorkforceDemand { get; set; }

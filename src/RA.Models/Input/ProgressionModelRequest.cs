@@ -61,7 +61,7 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Progression Model
 	/// </summary>
-	public class ProgressionModel
+	public class ProgressionModel : BasePrimaryResource
 	{
 
 		/// <summary>
@@ -93,7 +93,7 @@ namespace RA.Models.Input
 		/// <summary>
 		///  LanguageMap for Name
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:name" )]
+		[JsonProperty( PropertyName = "ceasn:name" )]
 		public LanguageMap NameLangMap { get; set; } = null;
 
 		/// <summary>
@@ -124,15 +124,9 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// An agent responsible for making this resource available.
-		/// This was originally defined as a single, and continuing to match CaSS.
-		///  REQUIRED
+		/// REQUIRED
 		/// </summary>
 		public List<OrganizationReference> Publisher { get; set; } = new List<OrganizationReference>();
-
-		/// <summary>
-		/// ChangeNotes via LanguageMapList
-		/// </summary>
-		public LanguageMapList ChangeNoteLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Concept Keyword
@@ -180,6 +174,18 @@ namespace RA.Models.Input
 		public string DateModified { get; set; }
 
 		/// <summary>
+		/// Approximate date of creation of this resource.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateDateCreated { get; set; }
+
+		/// <summary>
+		/// Approximate date on which this resource was most recently modified in some way.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateDateModified { get; set; }
+
+		/// <summary>
 		/// A legal document giving official permission to do something with this resource.
 		/// xsd:anyURI
 		/// </summary>
@@ -219,6 +225,13 @@ namespace RA.Models.Input
 		/// xsd:anyURI
 		/// </summary>
 		public List<string> Source { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Another source of information about the entity being described.
+		/// HINT: If the SameAs target is a resource in the Credential Registry, just the CTID needs to be provided.
+		/// ceterms:sameAs
+		/// </summary>
+		public List<string> SameAs { get; set; } = new List<string>();
 	}
 
 	/// <summary>
@@ -302,7 +315,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Progression Level that logically comes after this level.
-		/// Provide the CTID or the full URI for the target pathway component.
+		/// Provide the CTID or the full URI for the target component.
 		/// </summary>
 		public string Precedes { get; set; }
 

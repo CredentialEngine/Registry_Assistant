@@ -40,6 +40,20 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:creditValue" )]
 		public List<ValueProfile> CreditValue { get; set; } = null;
 
+		/// <summary>
+		/// Identifier
+		/// Definition:	Alphanumeric Identifier value.
+		/// List of URIs
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:identifier" )]
+		public List<IdentifierValue> Identifier { get; set; }
+
+		/// <summary>
+		/// An inventory or listing of resources that includes this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
+		public List<string> InCatalog { get; set; }
+
 		[JsonProperty( PropertyName = "ceterms:intermediaryFor" )]
 		public List<string> IntermediaryFor { get; set; }
 

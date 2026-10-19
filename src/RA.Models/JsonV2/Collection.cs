@@ -27,6 +27,20 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
 		public string CodedNotation { get; set; }
 
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateDateEffective" )]
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateExpirationDate" )]
+		public string ApproximateExpirationDate { get; set; }
+
 		[JsonProperty( "ceterms:dateEffective" )]
 		public string DateEffective { get; set; }
 
@@ -59,7 +73,7 @@ namespace RA.Models.JsonV2
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		//The primary language used in or by this resource.
 		[JsonProperty( "ceterms:inLanguage" )]
@@ -76,6 +90,9 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:instructionalProgramType" )]
 		public List<CredentialAlignmentObject> InstructionalProgramType { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
+		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:keyword" )]
 		public LanguageMapList Keyword { get; set; }
@@ -124,12 +141,19 @@ namespace RA.Models.JsonV2
 		public List<string> OwnedBy { get; set; }
 
 		/// <summary>
+		/// Industry for which this resource is acknowledged to be valid.
+		/// List of CTIDs for published industry types.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:recognizedForIndustry" )]
+		public List<string> RecognizedForIndustry { get; set; } = new List<string>();
+
+		/// <summary>
 		/// Organizations that have permission to offer credentials of a
 		/// specific CredentialType.
 		/// The value of this property should be a ceterms:Collection of ceterms:CredentialOrganizations (or similar).
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:recognizedOfferers" )]
-		public string RecognizedOfferers { get; set; }
+		public List<string> RecognizedOfferers { get; set; }
 
 		/// <summary>
 		/// Subjects
@@ -252,8 +276,26 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "ceterms:startDate" )]
 		public string StartDate { get; set; }
 
+		/// <summary>
+		/// Approximate date the validity or usefulness of the information in this resource begins.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:approximateStartDate" )]
+		public string ApproximateStartDate { get; set; }
+
 		[JsonProperty( "ceterms:endDate" )]
 		public string EndDate { get; set; }
+
+		/// <summary>
+		/// Approximate date some event or activity ends.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:approximateEndDate" )]
+		public string ApproximateEndDate { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }

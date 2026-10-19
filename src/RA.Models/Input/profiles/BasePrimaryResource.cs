@@ -3,6 +3,7 @@
 // </copyright>
 // <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace RA.Models.Input
@@ -16,5 +17,13 @@ namespace RA.Models.Input
 		/// </summary>
 		[JsonProperty( "@id" )]
 		public string Id { get; set; }
+
+		/// <summary>
+		/// Another functionally similar entity.
+		/// The property is generally applicable in describing the similarity between any two entities.
+		/// ceterms:isSimilarTo
+		/// </summary>
+		public List<string> IsSimilarTo { get; set; } = new List<string>();
+
 	}
 }

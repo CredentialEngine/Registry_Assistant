@@ -15,6 +15,7 @@ namespace RA.Models.JsonV2
 		public CredentialAlignmentObject()
 		{
 			Type = "ceterms:CredentialAlignmentObject";
+			BNodeId = null;
 			CodedNotation = null;
 			AlignmentDate = null;
 			AlignmentType = null;

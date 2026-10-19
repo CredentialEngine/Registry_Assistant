@@ -22,10 +22,10 @@ namespace RA.Models.Input
 	{
 		public ConditionManifest()
 		{
-			EntryConditions = new List<ConditionProfile>();
+			EntryCondition = new List<ConditionProfile>();
 			Requires = new List<ConditionProfile>();
-			RenewedConditions = new List<ConditionProfile>();
-			RecommendedConditions = new List<ConditionProfile>();
+			Renewal = new List<ConditionProfile>();
+			Recommends = new List<ConditionProfile>();
 			Corequisite = new List<ConditionProfile>();
 		}
 
@@ -35,7 +35,8 @@ namespace RA.Models.Input
 		public string CTID { get; set; }
 
 		/// <summary>
-		/// Nmae for this ConditionManifest
+		/// Name for this ConditionManifest
+		/// OPTIONAL, but if provided, must be a minimum of 5 characters.
 		/// </summary>
 		public string Name { get; set; }
 
@@ -45,7 +46,7 @@ namespace RA.Models.Input
 		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
-		/// Description 
+		/// Description
 		/// REQUIRED and must be a minimum of 15 characters.
 		/// </summary>
 		public string Description { get; set; }
@@ -78,24 +79,32 @@ namespace RA.Models.Input
 		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
+		/// Condition Excludes
+		/// Resource that does not count toward fulfilling a constraint, prerequisite, entry condition, or requirement.
+		/// Range: anyURI
+		/// Realistically could be any resource, in the registry or not
+		/// </summary>
+		public List<string> ConditionExcludes { get; set; }
+
+		/// <summary>
 		/// Required condition profiles
 		/// </summary>
 		public List<ConditionProfile> Requires { get; set; }
 
 		/// <summary>
-		/// Renewed condition profiles
+		/// Entity describing the constraints, prerequisites, entry conditions, or requirements necessary to maintenance and renewal of a resource.
 		/// </summary>
-		public List<ConditionProfile> RenewedConditions { get; set; }
+		public List<ConditionProfile> Renewal { get; set; }
 
 		/// <summary>
 		/// Recommended condition profiles Recommends
 		/// </summary>
-		public List<ConditionProfile> RecommendedConditions { get; set; }
+		public List<ConditionProfile> Recommends { get; set; }
 
 		/// <summary>
 		/// Entry Conditions condition profiles
 		/// </summary>
-		public List<ConditionProfile> EntryConditions { get; set; }
+		public List<ConditionProfile> EntryCondition { get; set; }
 
 		/// <summary>
 		/// Corequisite Conditions

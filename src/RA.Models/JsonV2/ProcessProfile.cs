@@ -6,7 +6,7 @@ namespace RA.Models.JsonV2
 	/// <summary>
 	/// Common JSON-LD class for all process profiles
 	/// </summary>
-	public class ProcessProfile
+	public class ProcessProfile : BaseResourceDocument
 	{
 		public ProcessProfile()
 		{
@@ -24,7 +24,6 @@ namespace RA.Models.JsonV2
 			TargetCompetencyFramework = null;
 
 			Jurisdiction = null;
-			// Region = new List<GeoCoordinates>();
 			ExternalInputType = null;
 		}
 
@@ -52,10 +51,30 @@ namespace RA.Models.JsonV2
 		public LanguageMap Name{ get; set; } = new LanguageMap();
 
 		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateDateEffective" )]
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateExpirationDate" )]
+		public string ApproximateExpirationDate { get; set; }
+
+		/// <summary>
 		/// Effective date of the content of this profile
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
 		public string DateEffective { get; set; }
+
+		/// <summary>
+		/// Date beyond which the resource is no longer offered or available.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
+		public string ExpirationDate { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:externalInputType" )]
 		public List<CredentialAlignmentObject> ExternalInputType { get; set; }
@@ -75,6 +94,10 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:processFrequency" )]
 		public LanguageMap ProcessFrequency { get; set; }
 
+		/// <summary>
+		/// Processing Agent
+		/// Required when publishing the profile directly.
+		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:processingAgent" )]
 		public List<string> ProcessingAgent { get; set; }
 

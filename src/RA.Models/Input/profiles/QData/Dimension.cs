@@ -54,8 +54,9 @@ namespace RA.Models.Input.profiles.QData
 		/// Type of resource that may be a point in the dimension.
 		/// Items in a dimension will typically be instances of CTDL classes or concepts drawn from a CTDL concept scheme.
 		/// While this is not limited to the use of a CTDL ConceptScheme, qdata:DemographicCategory is available
+		/// 2026-03-10 Changed to a list
 		/// </summary>
-		public string DimensionType { get; set; }
+		public List<string> DimensionType { get; set; }
 
 		/// <summary>
 		/// Identifies a specific entity in a  Dimension. 

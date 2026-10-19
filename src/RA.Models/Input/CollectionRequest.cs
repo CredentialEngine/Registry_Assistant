@@ -26,6 +26,15 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
 
+		/// <summary>
+		/// Almost all properties of a competency may be provided.
+		/// Note:  IsMemberOf is a valid property, but it does not have to be provided as the Assistant Api will take care of populating this property.
+		/// Not allowed:
+		/// - HasChild
+		/// - IsChildOf
+		/// - IsPartOf
+		/// - IsTopChildOf
+		/// </summary>
 		public List<Competency> CompetencyMembers { get; set; } = new List<Competency>();
 
 		/// <summary>
@@ -58,7 +67,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// CollectionMember
-		/// Listof Collection members to be added to a collection 
+		/// Listof Collection members to be added to a collection
 		/// </summary>
 		public List<CollectionMember> CollectionMembers { get; set; } = new List<CollectionMember>();
 
@@ -100,7 +109,7 @@ namespace RA.Models.Input
 		public string CollectionCTID { get; set; }
 
 		/// <summary>
-		/// List of Competencies to be added to a collection 
+		/// List of Competencies to be added to a collection
 		/// </summary>
 		public List<Competency> CompetencyMembers { get; set; } = new List<Competency>();
 	}
@@ -189,6 +198,19 @@ namespace RA.Models.Input
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateNameLangMap { get; set; } = new LanguageMapList();
 
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// One of ApproximateDateEffective, or DateEffective is required
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
+
 		#region Classification
 		/// <summary>
 		/// Category or classification of this resource.
@@ -212,7 +234,7 @@ namespace RA.Models.Input
 		/// Optional
 		/// ConceptScheme: CollectionCategory
 		/// Current valid values:
-		/// collectionCategory:ETPL, collectionCategory:GIBill, collectionCategory:IndustryRecognized, collectionCategory:Quality, collectionCategory:Perkins
+		/// collectionCategory:Competency, collectionCategory:ETPL, collectionCategory:GIBill, collectionCategory:IndustryRecognized, collectionCategory:Quality, collectionCategory:Perkins
 		/// </summary>
 		public List<string> CollectionType { get; set; }
 
@@ -268,7 +290,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		/// <summary>
 		/// A word or phrase used by the promulgating agency to refine and differentiate individual resources contextually.
@@ -291,6 +313,12 @@ namespace RA.Models.Input
 		/// Conditions for collection membership
 		/// </summary>
 		public List<ConditionProfile> MembershipCondition { get; set; } = new List<ConditionProfile>();
+
+		/// <summary>
+		/// Industry for which this resource is acknowledged to be valid.
+		/// List of CTIDs for published industry types.
+		/// </summary>
+		public List<string> RecognizedForIndustry { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Subjects
@@ -415,11 +443,18 @@ namespace RA.Models.Input
 
 
 		/// <summary>
+		/// Jurisdiction Profile
+		/// Geo-political information about applicable geographic areas and their exceptions.
+		/// <see href="https://credreg.net/ctdl/terms/JurisdictionProfile">JurisdictionProfile</see>
+		/// </summary>
+		public List<JurisdictionProfile> Jurisdiction { get; set; } = new List<JurisdictionProfile>();
+
+		/// <summary>
 		/// Organizations that have permission to offer credentials of a
 		/// specific CredentialType.
 		/// The value of this property should be a ceterms:Collection of ceterms:CredentialOrganizations (or similar).
 		/// </summary>
-		public string RecognizedOfferers { get; set; }
+		public List<string> RecognizedOfferers { get; set; }
 
 
 		#region -- Process Profiles --
@@ -505,6 +540,15 @@ namespace RA.Models.Input
 		/// xsd:date
 		/// </summary>
 		public string StartDate { get; set; }
+
+		/// <summary>
+		/// Approximate date the validity or usefulness of the information in this resource begins.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		public string ApproximateStartDate { get; set; }
+
 		/// <summary>
 		/// End date of this resource
 		/// Require startDate or endDate
@@ -512,6 +556,14 @@ namespace RA.Models.Input
 		/// xsd:date
 		/// </summary>
 		public string EndDate { get; set; }
+
+		/// <summary>
+		/// Approximate date some event or activity ends.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		public string ApproximateEndDate { get; set; }
 
 		/// <summary>
 		/// List of Alternate Names for this resource

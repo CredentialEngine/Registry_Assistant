@@ -22,7 +22,7 @@ namespace RA.Models.JsonV2
 	/// - PublicationStatusType
 	/// - SendingOrganization
 	/// - ReceivingOrganization
-	/// 
+	///
 	/// Inverse properities, not published in this resource:
 	/// - ceterms:objectOfAction
 	/// - ceterms:IsPartOf
@@ -73,7 +73,7 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// OwnedBy
-		/// Organization or person with an enforceable claim or legal title to the resource. 
+		/// Organization or person with an enforceable claim or legal title to the resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:ownedBy" )]
 		public List<string> OwnedBy { get; set; }
@@ -108,7 +108,7 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Type or nature of the document that is being described.
-		/// Best practice is to draw from an existing concept scheme such as ceterms:DocumentCategory, 
+		/// Best practice is to draw from an existing concept scheme such as ceterms:DocumentCategory,
 		/// which may be supplemented by more precise terms from a locally defined concept scheme if required.
 		/// ConceptScheme: ceterms:AgreementCategory
 		/// </summary>
@@ -120,6 +120,37 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:approvedIn" )]
 		public List<JurisdictionProfile> ApprovedIn { get; set; }
+
+		/// <summary>
+		/// Approximate date of creation of this resource.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceasn:dateCreated.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateDateCreated" )]
+		public string ApproximateDateCreated { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateDateEffective" )]
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date on which this resource was most recently modified in some way.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// If the full date, i.e. year, month and day, are known use ceasn:dateModified.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateDateModified" )]
+		public string ApproximateDateModified { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateExpirationDate" )]
+		public string ApproximateExpirationDate { get; set; }
 
 		/// <summary>
 		/// The type of audience for which the resource is applicable, intended, or useful; select from an existing enumeration of such types.
@@ -141,7 +172,7 @@ namespace RA.Models.JsonV2
 		public string CodedNotation { get; set; }
 
 		/// <summary>
-		/// Person or organization holding the rights in copyright to this resource. 
+		/// Person or organization holding the rights in copyright to this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:copyrightHolder" )]
 		public List<string> CopyrightHolder { get; set; } = null;
@@ -344,7 +375,7 @@ namespace RA.Models.JsonV2
 		public string SubjectWebpage { get; set; }
 
 		/// <summary>
-		/// A list of sub-units of this resource. 
+		/// A list of sub-units of this resource.
 		/// </summary>
 		[JsonProperty( "ceasn:tableOfContents" )]
 		public LanguageMap TableOfContents { get; set; }
@@ -360,10 +391,10 @@ namespace RA.Models.JsonV2
 		public string NextVersion { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
-		public string SupersededBy { get; set; }
+		public List<string> SupersededBy { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:supersedes" )]
-		public string Supersedes { get; set; }
+		public List<string> Supersedes { get; set; }
 
 		/// <summary>
 		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.

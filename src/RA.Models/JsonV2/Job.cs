@@ -1,8 +1,9 @@
-﻿using System;
+﻿// <copyright file="Job.cs" company="Credential Engine">
+//     Copyright (c) Credential Engine. All rights reserved.
+// </copyright>
+// <license>Apache License 2.0 - https://www.apache.org/licenses/LICENSE-2.0</license>
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
@@ -14,7 +15,7 @@ namespace RA.Models.JsonV2
 	public class Job : BaseEmploymentToWorkObject
 	{
 		[JsonIgnore]
-		public static string classType = "ceterms:Job";
+		public const string classType = "ceterms:Job";
 
 		/// <summary>
 		///  type
@@ -92,6 +93,13 @@ namespace RA.Models.JsonV2
 		public List<string> HasSupportService { get; set; }
 
 		/// <summary>
+		/// Industry related to this resource
+		/// ceterms:hasIndustry
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasIndustry" )]
+		public List<string> HasIndustry { get; set; } = new List<string>();
+
+		/// <summary>
 		/// Occupation related to this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasOccupation" )]
@@ -129,12 +137,34 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// IndustryType
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
-		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
+		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property.
 		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
 		/// ceterms:industryType
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:industryType" )]
 		public List<CredentialAlignmentObject> IndustryType { get; set; }
+
+		/// <summary>
+		/// Less specialized profession, trade, or career field that encompasses the one being described.
+		/// List of URIs for an existing Occupation
+		/// ceterms:isSpecializationOf
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:isSpecializationOf" )]
+		public List<string> IsSpecializationOf { get; set; }
+
+		/// <summary>
+		/// More specialized profession, trade, or career field that is encompassed by the one being described.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasSpecialization" )]
+		public List<string> HasSpecialization { get; set; }
+
+		/// <summary>
+		/// Type of level or grade indicating a point in a job or role progression, such as seniority or responsibility;
+		/// URI to a concept (there is not a registry defined concept scheme) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
+		/// ceterms:jobLevelType
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:jobLevelType" )]
+		public List<string> JobLevelType { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Body of information embodied either directly or indirectly in this resource.
@@ -154,7 +184,7 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// OccupationType
 		/// Type of occupation; select from an existing enumeration of such types.
-		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
+		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net.
 		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:occupationType" )]
@@ -180,6 +210,20 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:requires" )]
 		public List<ConditionProfile> Requires { get; set; }
+
+		/// <summary>
+		/// Recommended resources for this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:recommends" )]
+		public List<ConditionProfile> Recommends { get; set; }
+
+		/// <summary>
+		///  Another resource that provides preparation for this resource.
+		/// ceterms:preparationFrom
+		/// <seealso href="https://credreg.net/ctdl/terms/preparationFrom"></seealso>
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:preparationFrom" )]
+		public List<ConditionProfile> PreparationFrom { get; set; }
 
 		/// <summary>
 		///Ability to apply knowledge and use know-how to complete tasks and solve problems including types or categories of developed proficiency or dexterity in mental operations and physical processes is embodied either directly or indirectly in this resource.
@@ -208,5 +252,12 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:receivesTransferValueFrom" )]
 		public List<string> ReceivesTransferValueFrom { get; set; }
+
+		/// <summary>
+		/// Monetary compensation associated with work.
+		/// For Learning Opportunity and Learning Program
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:workPay" )]
+		public List<PayProfile> WorkPay { get; set; }
 	}
 }

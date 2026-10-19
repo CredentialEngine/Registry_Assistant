@@ -35,6 +35,7 @@ namespace RA.Models.Input
 		/// Main input data as a graph
 		/// </summary>
 		public GraphInput GraphInput { get; set; }
+
 	}
 
 	public class GraphListRequest : BaseRequest

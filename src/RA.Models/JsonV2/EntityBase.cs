@@ -61,9 +61,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
 		public string CodedNotation { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:creditValue" )]
-		public List<ValueProfile> CreditValue { get; set; } = null;
-
 		[JsonProperty( PropertyName = "ceterms:deliveryType" )]
 		public List<CredentialAlignmentObject> DeliveryType { get; set; }
 

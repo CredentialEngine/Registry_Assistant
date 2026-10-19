@@ -25,7 +25,7 @@ namespace RA.Models.Input
 	/// - Publisher
 	/// - SubjectWebpage
 	/// </summary>
-	public class QualificationsFramework
+	public class QualificationsFramework : BasePrimaryResource
 	{
 		/// <summary>
 		/// constructor
@@ -167,6 +167,34 @@ namespace RA.Models.Input
 		/// Region or political jurisdiction such as a state, province or locale in which an organization pronounces favorable judgment for this credential, assessment, learning opportunity, or organization.
 		/// </summary>
 		public List<JurisdictionProfile> ApprovedIn { get; set; }
+
+		/// <summary>
+		/// Approximate date of creation of this resource.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceasn:dateCreated.
+		/// </summary>
+		public string ApproximateDateCreated { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// One of ApproximateDateEffective, or DateEffective is required
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date on which this resource was most recently modified in some way.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// If the full date, i.e. year, month and day, are known use ceasn:dateModified.
+		/// </summary>
+		public string ApproximateDateModified { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
 
 		/// <summary>
 		/// A person or organization chiefly responsible for the intellectual or artistic content of this resource.
@@ -371,7 +399,7 @@ namespace RA.Models.Input
 		/// Authoritative source of an entity's information.
 		/// URL
 		/// </summary>
-		public List<string> Source { get; set; }
+		public string Source { get; set; }
 
 		/// <summary>
 		/// Human-readable information resource other than a competency framework from which this resource was generated or derived by humans or machines.
@@ -456,12 +484,12 @@ namespace RA.Models.Input
 		public string NextVersion { get; set; }
 
 		/// <summary>
-		/// Resource that replaces this resource.
+		/// Resource(s) that replaces this resource.
 		/// </summary>
 		public List<string> SupersededBy { get; set; }
 
 		/// <summary>
-		/// Resource that this resource replaces.
+		/// Resource(s) that this resource replaces.
 		/// </summary>
 		public List<string> Supersedes { get; set; }
 

@@ -14,8 +14,8 @@ namespace RA.Models.Input
 	/// </summary>
 	public class StructuredStatement
 	{
-		[JsonIgnore]
-		public static string classType = "ceterms:StructuredStatement";
+		[JsonProperty( "@type" )]
+		public string Type { get; set; } = "ceterms:StructuredStatement";
 
 		public StructuredStatement()
 		{
@@ -39,7 +39,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Statement, characterization or account of the entity.
-		/// 
+		///
 		/// Conditional Required if no Statement Text
 		/// </summary>
 		public string Description { get; set; }
@@ -49,22 +49,28 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Verbatim unformatted text of a statement, typically one made in a larger document.
-		/// 
+		///
 		/// Conditional Required if no Subject Webpage
 		/// </summary>
-		public string StatementText { get; set; }		
-		
+		public string StatementText { get; set; }
+
 		[JsonProperty( "ceterms:statementText" )]
 		public LanguageMap StatementTextLangMap { get; set; }
 
 		/// <summary>
 		/// Webpage that describes this entity.
-		/// 
+		///
 		/// Conditional Required if no Statement Text
 		/// </summary>
 		public string SubjectWebpage { get; set; }
 
 		#endregion
+
+		/// <summary>
+		/// Statement of a date made as part of a StructuredStatement, the meaning of which is indicated by the statementType property.
+		/// xsd:date
+		/// </summary>
+		public string AssociatedDate { get; set; }
 
 		public string CodedNotation { get; set; }
 

@@ -24,7 +24,7 @@ namespace RA.Models.JsonV2
 		public object Graph { get; set; }
 	}
 
-	public class CompetencyFramework // : JsonLDDocument
+	public class CompetencyFramework : BaseResourceDocument
 	{
 		public CompetencyFramework()
 		{
@@ -149,6 +149,13 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( "ceasn:publisherName" )]
 		public LanguageMapList PublisherName { get; set; }
+
+		/// <summary>
+		/// Industry for which this resource is acknowledged to be valid.
+		/// List of CTIDs for published industry types.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:recognizedForIndustry" )]
+		public List<string> RecognizedForIndustry { get; set; } = new List<string>();
 
 		[JsonProperty( "ceasn:repositoryDate" )]
 		public string RepositoryDate { get; set; }

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
 {
-	public class AlignmentMap
+	public class AlignmentMap : BaseResourceDocument
 	{
 
 		[JsonProperty( "@type" )]
@@ -36,6 +36,20 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateName { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateDateEffective" )]
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateExpirationDate" )]
+		public string ApproximateExpirationDate { get; set; }
 
 		/// <summary>
 		/// A person or organization chiefly responsible for the intellectual or artistic content of this competency framework or competency.
@@ -137,7 +151,7 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// Indicates contextualized data that reproduces or links to text such as part of a document or information about some aspect of a resource.
 		/// Do not use this property if a simple text property such as ceterms:description is adequate
-		/// Range: ceterms:StructuredStatement
+		/// Range: rdf:Statement
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:hasStatement" )]
 		public List<string> HasStatement { get; set; }
@@ -349,16 +363,16 @@ namespace RA.Models.JsonV2
 		public string NextVersion { get; set; }
 
 		/// <summary>
-		/// Resource that replaces this resource.
+		/// Resource(s) that replaces this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
-		public string SupersededBy { get; set; }
+		public List<string> SupersededBy { get; set; }
 
 		/// <summary>
-		/// Resource that this resource replaces.
+		/// Resource(s) that this resource replaces.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:supersedes" )]
-		public string Supersedes { get; set; }
+		public List<string> Supersedes { get; set; }
 
 		/// <summary>
 		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.

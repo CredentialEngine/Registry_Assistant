@@ -12,7 +12,7 @@ namespace RA.Models.Input
 	/// Class used with a CredentialType format or publish request
 	/// Inverse properties. These properties are defined in CTDL for CredentialType class but are not published with a resource:
 	/// - objectOfAction
-	/// - relevantDataSet
+	/// - qdata:relevantDataSet
 	/// - targetPathway
 	/// </summary>
 	public class CredentialTypeRequest : BaseRequest
@@ -214,6 +214,18 @@ namespace RA.Models.Input
 		public string CredentialId { get; set; }
 
 		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
+
+		/// <summary>
 		/// Effective date of the content of this profile
 		/// ceterms:dateEffective
 		/// </summary>
@@ -243,6 +255,11 @@ namespace RA.Models.Input
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; }
 
 		/// <summary>
+		/// Helper property for referencing existing financial assistance profiles by CTID
+		/// </summary>
+		public List<string> CommonFinancialAssistance { get; set; }
+
+		/// <summary>
 		/// Indicates a resource that acts as a stand-in for the resource.
 		/// True range: CredentialType
 		/// </summary>
@@ -263,7 +280,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		/// <summary>
 		/// The primary language or languages of the entity, even if it makes use of other languages; e.g., a course offered in English to teach Spanish would have an inLanguage of English, while a credential in Quebec could have an inLanguage of both French and English.
@@ -393,6 +410,14 @@ namespace RA.Models.Input
 		public List<string> SameAs { get; set; } = new List<string>();
 
 		/// <summary>
+		/// Primary academic discipline or professional career path.
+		/// Comment:
+		/// May be useful for describing credentials, assessments and learning opportunities that cover a general field but with a focus on a specific skill set, for example an apprenticeship in electrical engineering specializing in High Voltage applications. For degree credentials there are also properties for degree major, minor and concentration.
+		/// range: ceterms:CredentialAlignmentObject
+		/// </summary>
+		public List<CredentialAlignmentObject> SpecialistSubject { get; set; }
+
+		/// <summary>
 		///  Indicates a broader type or class than the one being described.
 		///  Used in CTDL to indicate the Credential Class (i.e. subclass of ceterms:Credential) that encompasses this type of credential.
 		///  Range: Any Credential Subclass (not an object, the short class URI)
@@ -497,13 +522,13 @@ namespace RA.Models.Input
 		public string NextVersion { get; set; }
 
 		/// <summary>
-		///  Resource that replaces this resource.
+		///  Resource(s) that replaces this resource.
 		///  full URL OR CTID (recommended)
 		/// </summary>
 		public List<string> SupersededBy { get; set; }
 
 		/// <summary>
-		/// Resource that this resource replaces.
+		/// Resource(s) that this resource replaces.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public List<string> Supersedes { get; set; }

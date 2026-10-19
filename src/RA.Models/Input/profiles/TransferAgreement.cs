@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using RA.Models.JsonV2;
 
 namespace RA.Models.Input
 {
@@ -21,12 +22,12 @@ namespace RA.Models.Input
     /// - PublicationStatusType
     /// - SendingOrganization
 	/// - ReceivingOrganization
-    /// 
+    ///
     /// Inverse properities, not published in this resource:
     /// - ceterms:objectOfAction
     /// - ceterms:isMemberOf
     /// </summary>
-    public class TransferAgreement
+    public class TransferAgreement : BaseResourceDocument
 	{
 
 		public TransferAgreement()
@@ -77,7 +78,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// OwnedBy
-		/// Organization or person with an enforceable claim or legal title to the resource. 
+		/// Organization or person with an enforceable claim or legal title to the resource.
 		/// </summary>
 		public List<OrganizationReference> OwnedBy { get; set; }
 
@@ -116,7 +117,7 @@ namespace RA.Models.Input
         /// ConceptScheme: ceterms:AgreementCategory
         /// </summary>
         public List<string> AgreementType { get; set; }
-		
+
 		/// <summary>
 		/// Organization that pronounces favorable judgment for this credential, assessment, learning opportunity, or organization.
 		/// </summary>
@@ -126,6 +127,34 @@ namespace RA.Models.Input
 		/// Region or political jurisdiction such as a state, province or locale in which an organization pronounces favorable judgment for this credential, assessment, learning opportunity, or organization.
 		/// </summary>
 		public List<JurisdictionProfile> ApprovedIn { get; set; }
+
+		/// <summary>
+		/// Approximate date of creation of this resource.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceasn:dateCreated.
+		/// </summary>
+		public string ApproximateDateCreated { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// One of ApproximateDateEffective, or DateEffective is required
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date on which this resource was most recently modified in some way.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// If the full date, i.e. year, month and day, are known use ceasn:dateModified.
+		/// </summary>
+		public string ApproximateDateModified { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
 
 		/// <summary>
 		/// The type of audience for which the resource is applicable, intended, or useful; select from an existing enumeration of such types.
@@ -144,7 +173,7 @@ namespace RA.Models.Input
 		public string CodedNotation { get; set; }
 
         /// <summary>
-        /// Person or organization holding the rights in copyright to this resource. 
+        /// Person or organization holding the rights in copyright to this resource.
         /// </summary>
         public OrganizationReference CopyrightHolder { get; set; }
 
@@ -240,7 +269,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Type of method used to evaluate and recognize prior learning; select from an existing enumeration of such types.
-		/// ConceptScheme: ceterms:LearningRecognitionMethodCategory 
+		/// ConceptScheme: ceterms:LearningRecognitionMethodCategory
 		/// </summary>
 		public List<string> LearningRecognitionMethodType { get; set; }
 
@@ -346,10 +375,10 @@ namespace RA.Models.Input
 		public string SubjectWebpage { get; set; }
 
 		/// <summary>
-		/// A list of sub-units of this resource. 
+		/// A list of sub-units of this resource.
 		/// </summary>
 		public string TableOfContents { get; set; }
-		
+
 		[JsonProperty( "ceasn:tableOfContents" )]
 		public LanguageMap TableOfContentsLangMap { get; set; }
 

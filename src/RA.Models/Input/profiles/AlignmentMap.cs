@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using RA.Models.JsonV2;
 
 namespace RA.Models.Input
 {
@@ -23,8 +24,10 @@ namespace RA.Models.Input
 	/// - Publisher
 	/// - SubjectWebpage
 	///
+	/// Inverse properties not published:
+	/// - ObjectOfAction
 	/// </summary>
-	public class AlignmentMap
+	public class AlignmentMap : BasePrimaryResource
 	{
 
 		[JsonProperty( "@type" )]
@@ -154,7 +157,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Indicates contextualized data that reproduces or links to text such as part of a document or information about some aspect of a resource.
 		/// Do not use this property if a simple text property such as ceterms:description is adequate
-		/// Range: ceterms:StructuredStatement
+		/// Range: rdf:Statement
 		/// </summary>
 		public List<string> HasStatement { get; set; }
 
@@ -254,6 +257,34 @@ namespace RA.Models.Input
 		public List<OrganizationReference> CopyrightHolder { get; set; } = null;
 
 		/// <summary>
+		/// Approximate date of creation of this resource.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceasn:dateCreated.
+		/// </summary>
+		public string ApproximateDateCreated { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// One of ApproximateDateEffective, or DateEffective is required
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date on which this resource was most recently modified in some way.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// If the full date, i.e. year, month and day, are known use ceasn:dateModified.
+		/// </summary>
+		public string ApproximateDateModified { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
+
+		/// <summary>
 		/// Effective date of this resource's content.
 		/// </summary>
 		public string DateEffective { get; set; }
@@ -288,13 +319,6 @@ namespace RA.Models.Input
 
 		[JsonProperty( PropertyName = "ceterms:keyword" )]
 		public LanguageMapList KeywordLangMap { get; set; }
-
-		/// <summary>
-		/// ObjectOfAction
-		/// Action carried out upon this resource.
-		/// Refer to the referenced Action for more information. Other resources may be included for the full value.
-		/// This typically an inverse property. It is used on a CredentialingAction resource, not this (the resource itself)
-		/// </summary>
 
 		/// <summary>
 		/// Textual description of the criteria, standards, and/or requirements used with a process.
@@ -343,7 +367,7 @@ namespace RA.Models.Input
 		/// Authoritative source of an entity's information.
 		/// URL
 		/// </summary>
-		public List<string> Source { get; set; }
+		public string Source { get; set; }
 
 		/// <summary>
 		/// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
@@ -387,12 +411,12 @@ namespace RA.Models.Input
 		public string NextVersion { get; set; }
 
 		/// <summary>
-		/// Resource that replaces this resource.
+		/// Resource(s) that replaces this resource.
 		/// </summary>
 		public List<string> SupersededBy { get; set; }
 
 		/// <summary>
-		/// Resource that this resource replaces.
+		/// Resource(s) that this resource replaces.
 		/// </summary>
 		public List<string> Supersedes { get; set; }
 

@@ -6,6 +6,7 @@ namespace RA.Models.JsonV2
 {
 	/// <summary>
 	/// Profession, trade, or career field that may involve training and/or a formal qualification.
+	/// NOTE: IsSpecializationOf is an inverse property of HasSpecialization, so is not published
 	/// </summary>
 	public class Occupation : BaseEmploymentToWorkObject
 	{
@@ -84,6 +85,27 @@ namespace RA.Models.JsonV2
 		public LanguageMapList Comment { get; set; } = new LanguageMapList();
 
 		/// <summary>
+		/// The date on which this resource was most recently modified in some way.
+		/// xsd:dateTime
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:dateModified" )]
+		public string DateModified { get; set; }
+
+		/// <summary>
+		/// Approximate date on which this resource was most recently modified in some way.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:approximateDateModified" )]
+		public string ApproximateDateModified { get; set; }
+
+		/// <summary>
+		/// Industry related to this resource
+		/// ceterms:hasIndustry
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:hasIndustry" )]
+		public List<string> HasIndustry { get; set; } = new List<string>();
+
+		/// <summary>
 		/// Job related to this resource.
 		/// CTID for an existing Job
 		/// ceterms:hasJob
@@ -137,14 +159,6 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:industryType" )]
 		public List<CredentialAlignmentObject> IndustryType { get; set; }
-
-		/// <summary>
-		/// Less specialized profession, trade, or career field that encompasses the one being described.
-		/// List of URIs for an existing Occupation
-		/// ceterms:isSpecializationOf
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:isSpecializationOf" )]
-		public List<string> IsSpecializationOf { get; set; }
 
 		/// <summary>
 		/// Keyword or key phrase describing relevant aspects of an entity.

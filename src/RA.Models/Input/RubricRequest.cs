@@ -29,13 +29,6 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<RubricLevel> RubricLevel { get; set; } = new List<RubricLevel>();
 
-		///// <summary>
-		///// Criterion Category for this Rubric
-		///// Replaced by ceasn:hasCriterionCategory - points to a concept
-		///// </summary>
-		// [Obsolete]
-		// public List<CriterionCategory> CriterionCategory { get; set; } = new List<CriterionCategory>();
-
 		/// <summary>
 		/// An individual component or specific element within a criterion that defines a particular aspect or standard for evaluation.
 		/// </summary>
@@ -47,7 +40,7 @@ namespace RA.Models.Input
 	/// A rubric is typically an evaluation tool or set of guidelines used to promote the consistent application of learning expectations, learning objectives, or learning standards in the classroom, or to measure their attainment against a consistent set of criteria. In instructional settings, rubrics clearly define academic expectations for students and help to ensure consistency in the evaluation of academic work from student to student, assignment to assignment, or course to course. Rubrics are also used as scoring instruments to determine grades or the degree to which learning standards have been demonstrated or attained by students.
 	/// <see cref="http://standards.asn.desire2learn.com/rubric.html"/>
 	/// </summary>
-	public class Rubric
+	public class Rubric : BasePrimaryResource
 	{
 
 		public Rubric()
@@ -123,6 +116,21 @@ namespace RA.Models.Input
 		/// ceterms:audienceLevelType
 		/// </summary>
 		public List<string> AudienceLevelType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Approximate date of creation of this resource.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceasn:dateCreated.
+		/// </summary>
+		public string ApproximateDateCreated { get; set; }
+
+		/// <summary>
+		/// Approximate date on which this resource was most recently modified in some way.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// If the full date, i.e. year, month and day, are known use ceasn:dateModified.
+		/// </summary>
+		public string ApproximateDateModified { get; set; }
 
 		public List<string> DeliveryType { get; set; } = new List<string>();
 
@@ -230,13 +238,11 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Reference to a progression model used.
-		/// TBD - string, or list
 		/// </summary>
 		public string HasProgressionModel { get; set; }
 
 		/// <summary>
 		/// Reference to a progression level used.
-		/// TBD - string, or list
 		/// </summary>
 		public string HasProgressionLevel { get; set; }
 
@@ -258,7 +264,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		/// <summary>
 		/// Keyword or key phrase describing relevant aspects of an entity.
@@ -338,7 +344,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Language map list for Subject
 		/// </summary>
-		public LanguageMapList Subject_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList SubjectLangMap { get; set; } = new LanguageMapList();
 
 		#region Occupations, Industries, and instructional programs
 		// =====================================================================
@@ -523,7 +529,7 @@ namespace RA.Models.Input
 	/// <summary>
 	/// RubricCriterian defines a principle or standard to be met that demonstrates quality in performance of a task or obtaining an objective.
 	/// </summary>
-	public class RubricCriterion
+	public class RubricCriterion : BasePrimaryResource
 	{
 
 		public RubricCriterion()
@@ -531,6 +537,9 @@ namespace RA.Models.Input
 		}
 
 		#region Base properties
+		/// <summary>
+		///  A CTID is required
+		/// </summary>
 		public string CTID { get; set; }
 
 		/// <summary>
@@ -548,8 +557,6 @@ namespace RA.Models.Input
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
-
-		// public List<string> Language { get; set; } = new List<string>();
 
 		public string CodedNotation { get; set; }
 
@@ -614,6 +621,12 @@ namespace RA.Models.Input
 		/// Where a class has the property: HasCriterionLevel, it will have a list of these type of identifiers.
 		/// </summary>
 		public string Id { get; set; }
+
+		/// <summary>
+		///  A CTID is optional. Primary use case is to enable reference from an external resource like competencies.
+		///  NOTE: this suggests that a CTID could be used with HasCriterionLevel!
+		/// </summary>
+		public string CTID { get; set; }
 
 		/// <summary>
 		/// Label for the level achieved as defined by the Rubric Criterion.

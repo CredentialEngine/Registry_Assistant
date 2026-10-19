@@ -11,6 +11,10 @@ namespace RA.Models.Input
 	/// <summary>
 	/// Broad category of economic activities encompassing various sectors.
 	/// Required: ceterms:assertedBy, ceterms:ctid, ceterms:description, ceterms:name
+	/// Inverse Properties are not published, but are included here for reference:
+	/// - IsSpecializationOf is an inverse property of HasSpecialization
+	/// - IsMemberOf is an inverse property of HasMember
+	/// - qdata:relevantDataSet
 	/// </summary>
 	public class Industry : BasePrimaryResource
 	{
@@ -102,6 +106,20 @@ namespace RA.Models.Input
 		/// ceterms:hasOccupation
 		/// </summary>
 		public List<string> HasOccupation { get; set; }
+
+		/// <summary>
+		/// Level of workforce demand for the resource.
+		/// List of URIs (CTIDs recommended) for a WorkforceDemandAction
+		/// </summary>
+		public List<string> HasWorkforceDemand { get; set; }
+
+		/// <summary>
+		/// More specialized profession, trade, career field, or industry
+		/// that is encompassed by the one being described.
+		/// Allowsed range:
+		/// "ceterms:Industry"
+		/// </summary>
+		public List<string> HasSpecialization { get; set; }
 
 		/// <summary>
 		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
@@ -197,5 +215,6 @@ namespace RA.Models.Input
 		/// The credential version captured here is any local identifier used by the credential owner to identify the version of the credential in the its local system.
 		/// </summary>
 		public List<IdentifierValue> VersionIdentifier { get; set; }
+
 	}
 }

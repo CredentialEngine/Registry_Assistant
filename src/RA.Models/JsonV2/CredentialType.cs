@@ -70,6 +70,21 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:approvedIn" )]
 		public List<JurisdictionProfile> ApprovedIn { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateDateEffective" )]
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		[JsonProperty( "ceterms:approximateExpirationDate" )]
+		public string ApproximateExpirationDate { get; set; }
+
 		/// <summary>
 		/// Indicates the stage or level of achievement in a progression of learning.
 		/// range: ceterms:CredentialAlignmentObject
@@ -144,7 +159,7 @@ namespace RA.Models.JsonV2
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		#region Industry
 
@@ -239,6 +254,15 @@ namespace RA.Models.JsonV2
 		public string SubclassOf { get; set; }
 
 		/// <summary>
+		/// Primary academic discipline or professional career path.
+		/// Comment:
+		/// May be useful for describing credentials, assessments and learning opportunities that cover a general field but with a focus on a specific skill set, for example an apprenticeship in electrical engineering specializing in High Voltage applications. For degree credentials there are also properties for degree major, minor and concentration.
+		/// range: ceterms:CredentialAlignmentObject
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:specialistSubject" )]
+		public List<CredentialAlignmentObject> SpecialistSubject { get; set; }
+
+		/// <summary>
 		/// Uses Verification Service
 		/// Reference to a service that is used to verify this Credential.
 		/// Range: ceterms:VerificationServiceProfile
@@ -282,10 +306,10 @@ namespace RA.Models.JsonV2
 		public string NextVersion { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
-		public string SupersededBy { get; set; }
+		public List<string> SupersededBy { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:supersedes" )]
-		public string Supersedes { get; set; }
+		public List<string> Supersedes { get; set; }
 
 		/// <summary>
 		/// alphanumeric identifier of the version of the resource that is unique within the organizational context of its owner and which does not need the context of other information in order to be interpreted.

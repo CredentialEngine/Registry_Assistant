@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using RA.Models.JsonV2;
 
 namespace RA.Models.Input
 {
@@ -19,13 +20,13 @@ namespace RA.Models.Input
 	/// - OwnedBy
 	/// - PublicationStatusType
 	/// - SubjectWebpage
-	/// 
+	///
 	/// Inverse properities, not published in this resource:
 	/// - ceterms:objectOfAction
 	/// - ceterms:isMemberOf
 	/// - ceterms:IsPartOf
 	/// </summary>
-	public class PriorLearningPolicy
+	public class PriorLearningPolicy : BaseResourceDocument
 	{
 
 		public PriorLearningPolicy()
@@ -41,7 +42,7 @@ namespace RA.Models.Input
 			SubjectWebpage = null;
 		}
 
-		#region Required properties 
+		#region Required properties
 		/// <summary>
 		/// Need a custom mapping to @type based on input value
 		/// </summary>
@@ -63,7 +64,7 @@ namespace RA.Models.Input
 		public List<string> InLanguage { get; set; }
 
 		/// <summary>
-		/// Organization or person with an enforceable claim or legal title to the resource. 
+		/// Organization or person with an enforceable claim or legal title to the resource.
 		/// </summary>
 		public List<OrganizationReference> OwnedBy { get; set; }
 
@@ -87,6 +88,32 @@ namespace RA.Models.Input
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateNameLangMap { get; set; }
 
+		/// <summary>
+		/// Approximate date of creation of this resource.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceasn:dateCreated.
+		/// </summary>
+		public string ApproximateDateCreated { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date on which this resource was most recently modified in some way.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// If the full date, i.e. year, month and day, are known use ceasn:dateModified.
+		/// </summary>
+		public string ApproximateDateModified { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
 
 		/// <summary>
 		/// The type of audience for which the resource is applicable, intended, or useful; select from an existing enumeration of such types.
@@ -97,7 +124,6 @@ namespace RA.Models.Input
 		/// Category or classification of this resource.
 		/// List of URIs that point to a concept
 		/// </summary>
-		[JsonProperty( "ceterms:classification" )]
 		public List<string> Classification { get; set; }
 
 		/// <summary>
@@ -106,7 +132,7 @@ namespace RA.Models.Input
 		public string CodedNotation { get; set; }
 
         /// <summary>
-        /// Person or organization holding the rights in copyright to this resource. 
+        /// Person or organization holding the rights in copyright to this resource.
         /// Range: Organization
         /// </summary>
         public OrganizationReference CopyrightHolder { get; set; }
@@ -203,7 +229,7 @@ namespace RA.Models.Input
 
 		/// <summary>
 		/// Type of method used to evaluate and recognize prior learning; select from an existing enumeration of such types.
-		/// ConceptScheme: ceterms:LearningRecognitionMethodCategory 
+		/// ConceptScheme: ceterms:LearningRecognitionMethodCategory
 		/// </summary>
 		public List<string> LearningRecognitionMethodType { get; set; }
 
@@ -269,7 +295,7 @@ namespace RA.Models.Input
 		public List<string> SameAs { get; set; }
 
 		/// <summary>
-		/// A list of sub-units of this resource. 
+		/// A list of sub-units of this resource.
 		/// </summary>
 		public string TableOfContents { get; set; }
 

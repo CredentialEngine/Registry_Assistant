@@ -21,8 +21,9 @@ namespace RA.Models.Input
 	/// NOTE:
 	/// ceterms:CredentialingAction	is the super class and cannot be published.
 	/// </summary>
-	public class CredentialingAction
+	public class CredentialingAction : BasePrimaryResource
 	{
+		#region Requjired properties
 		/// <summary>
 		/// Type of credentialing action
 		/// One of
@@ -61,7 +62,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Acting Agent
 		/// REQUIRED
-		/// Provide the CTID for a participant in the Credential Registry or provide minimum data where not in the registry.
+		/// Provide the CTID for a participant in the Credential Registry.
 		/// </summary>
 		public List<OrganizationReference> ActingAgent { get; set; }
 
@@ -89,11 +90,42 @@ namespace RA.Models.Input
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
 
+
+		/// <summary>
+		/// Instrument
+		/// REQUIRED
+		/// Object that helped the agent perform the action. e.g. John wrote a book with a pen.
+		/// A credential or other instrument whose criteria was applied in executing the action.
+		/// Provide the CTID for a credential in the Credential Registry or provide minimum data for a credential not in the registry.
+		/// </summary>
+		public List<string> Instrument { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Object
+		/// REQUIRED
+		/// 24-07-30 Made Object a list of strings. May need to define as an object for initial testing - just in case
+		/// Object(s) upon which the action is carried out, whose state is kept intact or changed.
+		/// A reference for Credentials, AssessmentProfile, any LearningOpportunity Profile type, or any organization type
+		/// Input: a CTID or a blank node Id where the bnode will be added in the request class ReferenceObjects property.
+		/// 26-02-09 - WorkForceDemand action can have ceterms:Job ceterms:Occupation
+		/// </summary>
+		public List<string> Object { get; set; }
+
+		#endregion
+
 		/// <summary>
 		/// Description of a process by which a resource is administered.
 		/// ceterms:administrationProcess
 		/// </summary>
 		public List<ProcessProfile> AdministrationProcess { get; set; }
+
+		/// <summary>
+		/// Category or classification of this resource.
+		/// Where a more specific property exists, such as ceterms:naics, ceterms:isicV4, ceterms:credentialType, etc., use that property instead of this one.
+		/// URI to a concept(based on the ONet work activities example) or to a blank node in RA.Models.Input.BaseRequest.ReferenceObjects
+		/// ceterms:classification
+		/// </summary>
+		public List<string> Classification { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Evidence of Action
@@ -104,22 +136,11 @@ namespace RA.Models.Input
 		public string EvidenceOfAction { get; set; }
 
 		/// <summary>
-		/// Instrument
-		/// Object that helped the agent perform the action. e.g. John wrote a book with a pen.
-		/// A credential or other instrument whose criteria was applied in executing the action.
-		/// Provide the CTID for a credential in the Credential Registry or provide minimum data for a credential not in the registry.
+		/// Alphanumeric token that identifies this resource and information about the token's originating context or scheme.
+		/// <see href="https://credreg.net/ctdl/terms/identifier">Identifier</see>
+		/// ceterms:identifier
 		/// </summary>
-		public List<string> Instrument { get; set; } = new List<string>();
-
-		/// <summary>
-		/// Object
-		/// 24-07-30 Made Object a list of strings. May need to define as an object for initial testing - just in case
-		/// Object(s) upon which the action is carried out, whose state is kept intact or changed.
-		/// A reference for Credentials, AssessmentProfile, any LearningOpportunity Profile type, or any organization type
-		/// Input: a CTID or a blank node Id where the bnode will be added in the request class ReferenceObjects property.
-		/// 26-02-09 - WorkForceDemand action can have ceterms:Job ceterms:Occupation
-		/// </summary>
-		public List<string> Object { get; set; }
+		public List<IdentifierValue> Identifier { get; set; } = new List<IdentifierValue>();
 
 		/// <summary>
 		/// Participant
@@ -136,11 +157,27 @@ namespace RA.Models.Input
 		public string StartDate { get; set; }
 
 		/// <summary>
+		/// Approximate date the validity or usefulness of the information in this resource begins.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		public string ApproximateStartDate { get; set; }
+
+		/// <summary>
 		/// Date this action ends.
 		/// Full date is required
 		/// xsd:date
 		/// </summary>
 		public string EndDate { get; set; }
+
+		/// <summary>
+		/// Approximate date some event or activity ends.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		public string ApproximateEndDate { get; set; }
 
 		/// <summary>
 		/// Jurisdiction Profile

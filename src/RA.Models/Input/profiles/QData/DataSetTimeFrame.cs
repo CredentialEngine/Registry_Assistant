@@ -49,9 +49,25 @@ namespace RA.Models.Input.profiles.QData
 		public string StartDate { get; set; }
 
 		/// <summary>
+		/// Approximate date the validity or usefulness of the information in this resource begins.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		public string ApproximateStartDate { get; set; }
+
+		/// <summary>
 		/// End date for the profile
 		/// </summary>
 		public string EndDate { get; set; }
+
+		/// <summary>
+		/// Approximate date the validity or usefulness of the information in this resource ends.
+		/// Comment: The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// Values may be just a year (e.g. 2026) or a year and a month (e.g. (2026-05).
+		/// If the full date, i.e. year, month and day, are known use ceterms:closingDate.
+		/// </summary>
+		public string ApproximateEndDate { get; set; }
 
 		#endregion
 

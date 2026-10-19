@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace RA.Models.JsonV2
@@ -11,7 +7,7 @@ namespace RA.Models.JsonV2
 	public class Credential : BaseResourceDocument
 	{
 		[JsonIgnore]
-		public static string classType = "ceterms:Credential";
+		public const string classType = "ceterms:Credential";
 
 		public Credential()
 		{
@@ -39,7 +35,6 @@ namespace RA.Models.JsonV2
 			HasPart = null;
 			InLanguage = new List<string>();
 			IsAdvancedStandingFor = new List<ConditionProfile>();
-			IsPartOf = null;
 			IsPreparationFor = new List<ConditionProfile>();
 			IsRecommendedFor = new List<ConditionProfile>();
 			IsRequiredFor = new List<ConditionProfile>();
@@ -87,6 +82,13 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
+
+		/// <summary>
+		/// An additional free text note about the quality assurance or licensing of an organisation or a qualification.
+		/// </summary>
+		[JsonProperty( PropertyName = "elm:additionalNote" )]
+		public Note AdditionalNote { get; set; } = null;
+
 
 		[JsonProperty( PropertyName = "ceterms:aggregateData" )]
 		public List<AggregateDataProfile> AggregateData { get; set; }
@@ -139,9 +141,9 @@ namespace RA.Models.JsonV2
 		public string CredentialId { get; set; }
 
 		/// <summary>
-		/// CredentialType: Type of credential as defined by an authoritative body 
+		/// CredentialType: Type of credential as defined by an authoritative body
 		///		for use within an officially regulated qualification system.
-		/// The actual CTDL term is ceterms:credentialType, but the latter property is already in use, 
+		/// The actual CTDL term is ceterms:credentialType, but the latter property is already in use,
 		///		so using GovernmentCredentialType as the input class
 		///  <see cref="https://purl.org/ctdl/terms/credentialType"/>
 		/// Range: is an object of type: CredentialType
@@ -197,7 +199,7 @@ namespace RA.Models.JsonV2
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		// Image URL
 		[JsonProperty( PropertyName = "ceterms:image" )]
@@ -219,8 +221,11 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:isNonCredit" )]
 		public bool? IsNonCredit { get; set; }
 
-		[JsonProperty( PropertyName = "ceterms:isPartOf" )]
-		public List<string> IsPartOf { get; set; }
+		/// <summary>
+		/// The resource is registered with a governmental agency or other authorized organization because it has been vetted, approved and validated to meet specific criteria.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:isRegisteredApprenticeship" )]
+		public bool? IsRegisteredApprenticeship { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
@@ -230,6 +235,13 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:learningDeliveryType" )]
 		public List<CredentialAlignmentObject> LearningDeliveryType { get; set; }
+
+		/// <summary>
+		/// Detailed description of the mode of delivery for the learning opportunity for the credential- - using language map
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:learningDeliveryDescription" )]
+		public LanguageMap LearningDeliveryDescription { get; set; } = null;
+
 
 		[JsonProperty( PropertyName = "ceterms:learningMethodType" )]
 		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
@@ -262,6 +274,13 @@ namespace RA.Models.JsonV2
 		public List<string> ReceivesTransferValueFrom { get; set; }
 
 		/// <summary>
+		/// Industry for which this resource is acknowledged to be valid.
+		/// List of CTIDs for published industry types.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:recognizedForIndustry" )]
+		public List<string> RecognizedForIndustry { get; set; } = new List<string>();
+
+		/// <summary>
 		/// Action related to the credential
 		/// This may end up being a list of URIs?
 		/// </summary>
@@ -287,6 +306,15 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:subject" )]
 		public List<CredentialAlignmentObject> Subject { get; set; }
+
+		/// <summary>
+		/// Primary academic discipline or professional career path.
+		/// Comment:
+		/// May be useful for describing credentials, assessments and learning opportunities that cover a general field but with a focus on a specific skill set, for example an apprenticeship in electrical engineering specializing in High Voltage applications. For degree credentials there are also properties for degree major, minor and concentration.
+		/// range: ceterms:CredentialAlignmentObject
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:specialistSubject" )]
+		public List<CredentialAlignmentObject> SpecialistSubject { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
 		public string SubjectWebpage { get; set; }
@@ -509,30 +537,5 @@ namespace RA.Models.JsonV2
 		public List<string> NaicsList { get; set; } = null;
 	}
 
-	public class RevocationProfile
-	{
-		public RevocationProfile()
-		{
-			Type = "ceterms:RevocationProfile";
-			Jurisdiction = new List<JurisdictionProfile>();
-		}
 
-		[JsonProperty( "@type" )]
-		public string Type { get; set; }
-
-		[JsonProperty( PropertyName = "ceterms:description" )]
-		public LanguageMap Description { get; set; }
-
-		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
-		public string DateEffective { get; set; }
-
-		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
-		public List<JurisdictionProfile> Jurisdiction { get; set; }
-
-		[JsonProperty( PropertyName = "ceterms:revocationCriteria" )]
-		public string RevocationCriteria { get; set; }
-
-		[JsonProperty( PropertyName = "ceterms:revocationCriteriaDescription" )]
-		public LanguageMap RevocationCriteriaDescription { get; set; }
-	}
 }

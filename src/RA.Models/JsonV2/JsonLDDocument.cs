@@ -24,9 +24,16 @@ namespace RA.Models.JsonV2
 		[JsonIgnore]
 		[JsonProperty( "@context" )]
 		public string Context { get; set; }
-		// public Dictionary<string, object> Context { get; set; }
 
 		[JsonProperty( "schema:datePublished" )]
 		public string DatePublished { get; set; } = null;
+
+		/// <summary>
+		/// Another functionally similar entity.
+		/// The property is generally applicable in describing the similarity between any two entities.
+		/// ceterms:isSimilarTo
+		/// </summary>
+		[JsonProperty( "ceterms:isSimilarTo" )]
+		public List<string> IsSimilarTo { get; set; } = new List<string>();
 	}
 }

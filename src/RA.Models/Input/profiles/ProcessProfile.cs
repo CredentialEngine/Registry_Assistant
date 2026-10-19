@@ -12,7 +12,7 @@ namespace RA.Models.Input
 	/// Common input class for all process profiles
 	/// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first.
 	/// </summary>
-	public class ProcessProfile
+	public class ProcessProfile : BasePrimaryResource
 	{
 		public ProcessProfile()
 		{
@@ -62,10 +62,28 @@ namespace RA.Models.Input
 		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
+
+		/// <summary>
 		/// Effective date of the content of this profile
 		/// ceterms:dateEffective
 		/// </summary>
 		public string DateEffective { get; set; }
+
+		/// <summary>
+		/// Date beyond which the resource is no longer offered or available.
+		/// xsd:date
+		/// </summary>
+		public string ExpirationDate { get; set; }
 
 		/// <summary>
 		/// Webpage that describes this entity.
@@ -129,7 +147,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Alternately use a LanguageMap
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:processStandardsDescription" )] 		
+		[JsonProperty( PropertyName = "ceterms:processStandardsDescription" )]
 		public LanguageMap ProcessStandardsDescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
@@ -140,7 +158,7 @@ namespace RA.Models.Input
         /// <summary>
         /// Alternately use a LanguageMap
         /// </summary>
-        [JsonProperty( PropertyName = "ceterms:scoringMethodDescription" )] 
+        [JsonProperty( PropertyName = "ceterms:scoringMethodDescription" )]
 		public LanguageMap ScoringMethodDescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
@@ -156,7 +174,7 @@ namespace RA.Models.Input
         /// <summary>
         /// Alternately use a LanguageMap
         /// </summary>
-        [JsonProperty( PropertyName = "ceterms:scoringMethodExampleDescription" )] 
+        [JsonProperty( PropertyName = "ceterms:scoringMethodExampleDescription" )]
 		public LanguageMap ScoringMethodExampleDescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
@@ -188,7 +206,7 @@ namespace RA.Models.Input
         /// <summary>
         /// Alternately use a LanguageMap
         /// </summary>
-        [JsonProperty( PropertyName = "ceterms:verificationMethodDescription" )] 
+        [JsonProperty( PropertyName = "ceterms:verificationMethodDescription" )]
 		public LanguageMap VerificationMethodDescriptionLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>

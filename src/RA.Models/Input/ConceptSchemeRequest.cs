@@ -18,30 +18,32 @@ namespace RA.Models.Input
 		}
 
 		/// <summary>
-		/// Generate HasTopChild
-		/// if true, the HasTopChild property is not included in the input document. The HasTopChild property in the JSON document will be generated from the Concept list.
+		/// Generate HasTopConcept
+		/// if true, the HasTopConcept property is not included in the input document. The HasTopConcept property in the JSON document will be generated from the Concept list.
 		/// Should only be used where the structure is flat. That is there are no concepts that have child concepts. SO that is: all concepts are top childs.
-		/// Note: in some cases IsTopChild was provided and not HasTopChild. In this case: GenerateHasTopChild=true, and GenerateIsTopChild=false
+		/// Note: in some cases TopConceptOf was provided and not HasTopConcept. In this case:
+		/// - GenerateHasTopConcept=true, and
+		/// - GenerateTopConceptOf=false
 		/// </summary>
-		public bool GenerateHasTopChild { get; set; } = false;
+		public bool GenerateHasTopConcept { get; set; } = false;
 
 		/// <summary>
-		/// Generate HasTopChild where the concept has property of: TopConceptOf
+		/// Generate HasTopConcept where the concept has property of: TopConceptOf
 		/// </summary>
-		public bool GenerateHasTopChildFromIsTopChild { get; set; } = false;
+		public bool GenerateHasTopConceptFromTopConceptOf { get; set; } = false;
 
 		/// <summary>
-		/// Generate IsTopChild
-		/// if true, the IsTopChild property must not be included in the input document and the IsTopChild property in the JSON document will be generated for each concept in the list.
+		/// Generate TopConceptOf
+		/// if true, the TopConceptOf property must not be included in the input document and the TopConceptOf property in the JSON document will be generated for each concept in the list.
 		/// Must only be used where the structure is flat. That is there are no concepts have child concepts.
 		/// </summary>
-		public bool GenerateIsTopChild { get; set; } = false;
+		public bool GenerateTopConceptOf { get; set; } = false;
 
 		/// <summary>
 		/// ConceptScheme
 		/// Required
 		/// </summary>
-		public ConceptScheme ConceptScheme { get; set; } = new ConceptScheme();
+		public ConceptScheme ConceptScheme { get; set; }
 
 		/// <summary>
 		/// Concepts for ConceptScheme
@@ -103,11 +105,69 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Type { get; set; } = "skos:ConceptScheme";
 
+		#region Required properties
 		/// <summary>
-		/// CTID - identifier for Concept Scheme. 
+		/// CTID - identifier for Concept Scheme.
 		/// REQUIRED
 		/// </summary>
 		public string CTID { get; set; }
+
+		/// <summary>
+		/// Name of the Concept Scheme - required
+		/// REQUIRED
+		/// </summary>
+		public string Name { get; set; }
+
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:name" )]
+		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// Concept Scheme description
+		/// REQUIRED and must be a minimum of 15 characters.
+		/// </summary>
+		public string Description { get; set; }
+
+		/// <summary>
+		/// Alternately can provide a language map
+		/// </summary>
+		[JsonProperty( PropertyName = "ceasn:description" )]
+		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
+
+		/// <summary>
+		/// An agent responsible for making this resource available.
+		/// required
+		/// </summary>
+		public List<OrganizationReference> Publisher { get; set; } = new List<OrganizationReference>();
+
+
+		/// <summary>
+		/// Language. Required unless defaultLanguage is provided
+		/// </summary>
+		public List<string> InLanguage { get; set; } = new List<string>();
+
+		#endregion
+
+		/// <summary>
+		/// Approximate date of creation of this resource.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateDateCreated { get; set; }
+
+		/// <summary>
+		/// Approximate date on which this resource was most recently modified in some way.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateDateModified { get; set; }
+
+		/// <summary>
+		/// Creator
+		/// An entity primarily responsible for making this resource.
+		/// OPTIONAL
+		/// </summary>
+		public List<OrganizationReference> Creator { get; set; } = new List<OrganizationReference>();
 
 		/// <summary>
 		/// Concept Keyword
@@ -118,7 +178,8 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Concept Keywords via LanguageMapList
 		/// </summary>
-		public LanguageMapList ConceptKeyword_Map { get; set; } = new LanguageMapList();
+		[JsonProperty( PropertyName = "ceasn:conceptKeyword" )]
+		public LanguageMapList ConceptKeywordLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		/// Concept Term
@@ -126,12 +187,6 @@ namespace RA.Models.Input
 		/// skos:Concept
 		/// </summary>
 		public List<string> ConceptTerm { get; set; } = new List<string>();
-
-		/// <summary>
-		/// Creator
-		/// An entity primarily responsible for making this resource.
-		/// </summary>
-		public List<OrganizationReference> Creator { get; set; } = new List<OrganizationReference>();
 
 		/// <summary>
 		/// Date Copyrighted
@@ -154,18 +209,6 @@ namespace RA.Models.Input
 		public string DateModified { get; set; }
 
 		/// <summary>
-		/// Concept Scheme description
-		/// REQUIRED and must be a minimum of 15 characters.
-		/// </summary>
-		public string Description { get; set; }
-
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		[JsonProperty( PropertyName = "ceasn:description" )]
-		public LanguageMap DescriptionLangMap { get; set; } = new LanguageMap();
-
-		/// <summary>
 		/// Top Concepts
 		/// Concept of the scheme at the top of a hierarchy of narrower concepts.
 		/// List of CTIDs (recommended) or actual registry URIs
@@ -176,27 +219,11 @@ namespace RA.Models.Input
 		public List<string> SkosHasTopConcept { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Language. Required unless defaultLanguage is provided
-		/// </summary>
-		public List<string> InLanguage { get; set; } = new List<string>();
-
-		/// <summary>
 		/// A legal document giving official permission to do something with this resource.
 		/// xsd:anyURI
 		/// </summary>
 		public string License { get; set; }
 
-		/// <summary>
-		/// Name of the Concept Scheme - required
-		/// REQUIRED
-		/// </summary>
-		public string Name { get; set; }
-
-		/// <summary>
-		/// Alternately can provide a language map
-		/// </summary>
-		[JsonProperty( PropertyName = "ceasn:name" )]
-		public LanguageMap NameLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		/// The publication status of the of this resource.
@@ -209,13 +236,9 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> PublisherName { get; set; } = new List<string>();
 
-		public LanguageMapList PublisherNameMap { get; set; } = new LanguageMapList();
+		[JsonProperty( PropertyName = "ceasn:publisherName" )]
+		public LanguageMapList PublisherNameLangMap { get; set; } = new LanguageMapList();
 
-		/// <summary>
-		/// An agent responsible for making this resource available.
-		/// This was originally defined as a single, and continuing to match CaSS.
-		/// </summary>
-		public List<OrganizationReference> Publisher { get; set; } = new List<OrganizationReference>();
 
 		/// <summary>
 		/// Information about rights held in and over this resource.
@@ -223,7 +246,8 @@ namespace RA.Models.Input
 		/// </summary>
 		public string Rights { get; set; }
 
-		public LanguageMap RightsMap { get; set; } = new LanguageMap();
+		[JsonProperty( PropertyName = "ceasn:rights" )]
+		public LanguageMap RightsLangMap { get; set; } = new LanguageMap();
 
 		/// <summary>
 		///  An agent owning or managing rights over this resource.
@@ -262,7 +286,7 @@ namespace RA.Models.Input
 		public string Type { get; set; } = "skos:Concept";
 
 		/// <summary>
-		/// CTID - identifier for concept. 
+		/// CTID - identifier for concept.
 		/// Format: ce-UUID (lowercase)
 		/// Required
 		/// example: ce-a044dbd5-12ec-4747-97bd-a8311eb0a042
@@ -270,7 +294,7 @@ namespace RA.Models.Input
 		public string CTID { get; set; }
 
 		/// <summary>
-		/// Concept 
+		/// Concept
 		/// Required
 		/// </summary>
 		public string PrefLabel { get; set; }
@@ -341,7 +365,7 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> HiddenLabel { get; set; } = new List<string>();
 
-		public LanguageMapList HiddenLabel_Map { get; set; } = new LanguageMapList();
+		public LanguageMapList HiddenLabelLangMap { get; set; } = new LanguageMapList();
 
 		/// <summary>
 		///	Concept scheme to which this concept belongs.
@@ -378,7 +402,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Resource that logically comes after this resource.
 		/// This property indicates a simple or suggested ordering of resources; if a required ordering is intended, use ceterms:prerequisite instead.
-		/// Provide the CTID or the full URI for the target environment. 
+		/// Provide the CTID or the full URI for the target environment.
 		/// ceterms:ComponentCondition
 		/// </summary>
 		public List<string> Precedes { get; set; } = new List<string>();

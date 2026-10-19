@@ -12,6 +12,7 @@ namespace RA.Models.Input
 	/// Collection of tasks and competencies that embody a particular function in one or more jobs.
 	/// NOTES:
 	/// IsMemberOf - this is an inverse property. It would not be published with a WorkRole.
+	/// March 11, 2026 - changed to no longer require name, and make description required. 
 	/// </summary>
 	public class WorkRole : BaseEmploymentToWorkObject
 	{
@@ -26,35 +27,13 @@ namespace RA.Models.Input
 		/// Globally unique Credential Transparency Identifier (CTID)
 		/// required
 		/// - CTID
-		/// - NAME
 		/// <see cref="https://credreg.net/ctdl/terms/ctid"/>
 		/// </summary>
 		public string CTID { get; set; }
 
 		/// <summary>
-		/// Name of this WorkRole
-		/// Required
-		/// ceterms:name
-		/// </summary>
-		public string Name { get; set; }
-
-		/// <summary>
-		///  LanguageMap for Name
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:name" )]
-		public LanguageMap NameLangMap { get; set; } = null;
-
-		/// <summary>
-		/// Agent making a statement based on fact or belief.
-		/// Required
-		/// Single is more likely
-		/// </summary>
-		public List<OrganizationReference> AssertedBy { get; set; } = new List<OrganizationReference>();
-		#endregion
-
-		/// <summary>
 		/// Profile Description
-		/// Optional
+		/// required
 		/// Minimum of 15 characters when present, but should be clear.
 		/// </summary>
 		public string Description { get; set; }
@@ -64,6 +43,28 @@ namespace RA.Models.Input
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap DescriptionLangMap { get; set; }
+
+		/// <summary>
+		/// Agent making a statement based on fact or belief.
+		/// Required
+		/// Single is more likely
+		/// </summary>
+		public List<OrganizationReference> AssertedBy { get; set; } = new List<OrganizationReference>();
+		#endregion
+
+
+		/// <summary>
+		/// Name of this WorkRole
+		/// Recommended
+		/// ceterms:name
+		/// </summary>
+		public string Name { get; set; }
+
+		/// <summary>
+		///  LanguageMap for Name
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:name" )]
+		public LanguageMap NameLangMap { get; set; } = null;
 
 		/// <summary>
 		/// List of Alternate Names for this resource

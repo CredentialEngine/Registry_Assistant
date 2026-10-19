@@ -16,6 +16,12 @@ namespace RA.Models.Input
 		public string Type { get; set; } = "ceterms:CredentialAlignmentObject";
 
 		/// <summary>
+		/// An identifier for use with blank nodes, to minimize duplicates
+		/// </summary>
+		[JsonProperty( "@id" )]
+		public string BNodeId { get; set; } = string.Empty;
+
+		/// <summary>
 		/// Alignment Date
 		/// The date the alignment was made.
 		/// </summary>

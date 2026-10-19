@@ -68,7 +68,7 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:isDestinationComponentOf" )]
 		public List<string> IsDestinationComponentOf { get; set; }
 
-		[JsonProperty( PropertyName = "ceasn:isPartOf" )]
+		[JsonProperty( PropertyName = "ceterms:isPartOf" )]
 		public List<string> IsPartOf { get; set; } = new List<string>();
 
 		[JsonProperty( PropertyName = "asn:hasProgressionLevel" )]
@@ -118,7 +118,7 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Program term
-		/// For course component only 
+		/// For course component only
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:programTerm" )]
 		public LanguageMap ProgramTerm { get; set; }
@@ -158,7 +158,7 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// IndustryType
 		/// Type of industry; select from an existing enumeration of such types such as the SIC, NAICS, and ISIC classifications.
-		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property. 
+		/// Best practice in identifying industries for U.S. credentials is to provide the NAICS code using the ceterms:naics property.
 		/// Other credentials may use the ceterms:industrytype property and any framework of the class ceterms:IndustryClassification.
 		/// ceterms:industryType
 		/// </summary>
@@ -168,7 +168,7 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// OccupationType
 		/// Type of occupation; select from an existing enumeration of such types.
-		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
+		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net.
 		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:occupationType" )]
@@ -187,11 +187,6 @@ namespace RA.Models.JsonV2
 		[JsonProperty( "@type" )]
 		public string Type { get; set; }
 
-		// [JsonProperty( "@id" )]
-		// public string CtdlId { get; set; }
-
-		// [JsonProperty( PropertyName = "ceterms:ctid" )]
-		// public string CTID { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; } = new LanguageMap();
@@ -261,23 +256,23 @@ namespace RA.Models.JsonV2
 		public LanguageMap Name { get; set; } = null;
 
 		/// <summary>
-		/// Constraint Description 
+		/// Constraint Description
 		/// Optional
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:description" )]
 		public LanguageMap Description { get; set; }
 
 		/// <summary>
-		/// Type of symbol that denotes an operator in a constraint expression such as "gteq" (greater than or equal to), "eq" (equal to), "lt" (less than), "isAllOf" (is all of), "isAnyOf" (is any of); 
+		/// Type of symbol that denotes an operator in a constraint expression such as "gteq" (greater than or equal to), "eq" (equal to), "lt" (less than), "isAllOf" (is all of), "isAnyOf" (is any of);
 		/// URI to Concept
-		/// ceterms:Concept 
+		/// ceterms:Concept
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:comparator" )]
 		public string Comparator { get; set; }
 
 		/// <summary>
 		/// Left hand parameter of a constraint.
-		/// Range: rdf:Property, skos:Concept 
+		/// Range: rdf:Property, skos:Concept
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:leftSource" )]
 
@@ -286,7 +281,7 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// Action performed on the left constraint; select from an existing enumeration of such types.
 		/// URI to Concept
-		/// Range: ceterms:Concept 
+		/// Range: ceterms:Concept
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:leftAction" )]
 
@@ -294,7 +289,7 @@ namespace RA.Models.JsonV2
 
 		/// <summary>
 		/// Right hand parameter of a constraint.
-		/// Range: rdf:Property, skos:Concept 
+		/// Range: rdf:Property, skos:Concept
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:rightSource" )]
 
