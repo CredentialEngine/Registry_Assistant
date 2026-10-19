@@ -14,7 +14,7 @@ namespace RA.Models.Input
 	/// 2018-09-02 Where LanguageMap alternates are available, only enter one. The system will check the string version first.
 	/// 2023-11-11 Description is NO longer required.
 	/// </summary>
-	public class ConditionProfile
+	public class ConditionProfile : BaseConditionsProfile
 	{
 		/// <summary>
 		/// Constructor
@@ -85,6 +85,19 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<ConditionProfile> AlternativeCondition { get; set; }
 
+
+		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
+
 		/// <summary>
 		/// The type of credential seeker for whom the entity is applicable; select from an existing enumeration of such types.
 		/// audience:Citizen audience:CurrentMilitary audience:CurrentMilitaryDependent audience:CurrentMilitarySpouse audience:CurrentStudent audience:FormerMilitary audience:FormerMilitaryDependent audience:FormerMilitarySpouse audience:FormerStudent audience:FullTime audience:Member audience:NonCitizen audience:NonMember audience:NonResident audience:PartTime audience:PrivateEmployee audience:PublicEmployee audience:Resident
@@ -112,12 +125,19 @@ namespace RA.Models.Input
 		public LanguageMapList ConditionLangMap { get; set; } = null;
 
 		/// <summary>
+		/// Condition Excludes
+		/// Resource that does not count toward fulfilling a constraint, prerequisite, entry condition, or requirement.
+		/// Range: anyURI
+		/// Realistically could be any resource, in the registry or not
+		/// </summary>
+		public List<string> ConditionExcludes { get; set; }
+
+		/// <summary>
 		/// Credit Information
 		/// 20-09-30 being replaced by ValueProfile
 		/// 21-04-04 had started with singles now allowing a List
 		/// </summary>
-		//public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
-		public object CreditValue { get; set; } = null;
+		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 
 		/// <summary>
 		/// Detailed description of credit unit type.
@@ -135,6 +155,12 @@ namespace RA.Models.Input
 		/// ceterms:dateEffective
 		/// </summary>
 		public string DateEffective { get; set; }
+
+		/// <summary>
+		/// Date beyond which the resource is no longer offered or available.
+		/// xsd:date
+		/// </summary>
+		public string ExpirationDate { get; set; }
 
 		/// <summary>
 		/// Amount and nature of required work, experiential learning or other relevant experience.
@@ -235,6 +261,12 @@ namespace RA.Models.Input
 		public List<EntityReference> TargetJob { get; set; } = new List<EntityReference>();
 
 		/// <summary>
+		/// Metric used to assess whether a condition has been met.
+		/// Range: qdata:Metric
+		/// </summary>
+		public List<EntityReference> TargetMetric { get; set; } = new List<EntityReference>();
+
+		/// <summary>
 		/// Occupation that is the focus of a condition, process or another learning opportunity.
 		/// Only valid for
 		///		"isPreparationFor"/"IsRecommendedFor"/ isRequiredFor"
@@ -272,19 +304,24 @@ namespace RA.Models.Input
 		#endregion
 	}
 
-	/// <summary>
-	/// The Connection profile is a subset of a condition profile.
-	/// A separate profile is used by the API to clarify the subset of properties are applicable
-	/// 2023-03-28 Renamed to ConnectionProfile to make the purpose clearer? The old class is retained below ConnectionProfile for legacy purposes.
-	/// 2023-10-23 Moving to make this property obsolete, and just use ConditionProfile.
-	/// </summary>
-	[Obsolete]
-	public class ConnectionProfile : ConditionProfile
+	public class BaseConditionsProfile
 	{
-	}
+		public BaseConditionsProfile()
+		{
+			// Defaults to the condition profile type, but can be overridden by sub-classes
+			Type = "ceterms:ConditionProfile";
+		}
 
-	// retain in order to not mess up previous use
-	public class Connections : ConditionProfile
-	{
+		[JsonProperty( "@type" )]
+		public string Type { get; set; }
+
+		/// <summary>
+		/// Globally unique Credential Transparency Identifier
+		/// format:
+		/// ce-UUID (guid)
+		/// Required for a resource in the registry, not used for embedded resources
+		/// </summary>
+		public string CTID { get; set; }
+
 	}
 }

@@ -6,7 +6,7 @@ namespace RA.Models.JsonV2
 	public class LearningOpportunityProfile : BaseResourceDocument
 	{
 		[JsonIgnore]
-		public static string classType = "ceterms:LearningOpportunityProfile";
+		public const string classType = "ceterms:LearningOpportunityProfile";
 
 		public LearningOpportunityProfile()
 		{
@@ -53,57 +53,10 @@ namespace RA.Models.JsonV2
 		public List<string> InLanguage { get; set; }
 
 		/// <summary>
-		/// Keyword or key phrase describing relevant aspects of an entity.
+		/// An additional free text note about the quality assurance or licensing of an organisation or a qualification.
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:keyword" )]
-		public LanguageMapList Keyword { get; set; }
-
-		/// <summary>
-		/// Another source of information about the entity being described.
-		/// List of URIs
-		/// ceterms:sameAs
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:sameAs" )]
-		public List<string> SameAs { get; set; }
-
-		[JsonProperty( PropertyName = "ceterms:subject" )]
-		public List<CredentialAlignmentObject> Subject { get; set; }
-
-		/// <summary>
-		/// Webpage that describes this entity.
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
-		public string SubjectWebpage { get; set; } // URL
-
-		/// <summary>
-		/// The status type of this LearningOpportunityProfile. 
-		/// The default is Active. 
-		/// ConceptScheme: ceterms:LifeCycleStatus
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]
-		public CredentialAlignmentObject LifeCycleStatusType { get; set; }
-
-		/// <summary>
-		/// Category or classification of this resource.
-		/// List of URIs that point to a concept
-		/// </summary>
-		[JsonProperty( "ceterms:classification" )]
-		public List<string> Classification { get; set; }
-
-		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
-		public string CodedNotation { get; set; }
-
-		/// <summary>
-		/// Start Date of this resource
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
-		public string DateEffective { get; set; }
-
-		/// <summary>
-		/// End date of the learning opportunity if applicable
-		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
-		public string ExpirationDate { get; set; }
+		[JsonProperty( PropertyName = "elm:additionalNote" )]
+		public Note AdditionalNote { get; set; } = null;
 
 		[JsonProperty( PropertyName = "ceterms:aggregateData" )]
 		public List<AggregateDataProfile> AggregateData { get; set; }
@@ -148,24 +101,81 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:audienceType" )]
 		public List<CredentialAlignmentObject> AudienceType { get; set; }
 
+		/// <summary>
+		/// Keyword or key phrase describing relevant aspects of an entity.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:keyword" )]
+		public LanguageMapList Keyword { get; set; }
+
+		/// <summary>
+		/// Webpage that describes this entity.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:subjectWebpage" )]
+		public string SubjectWebpage { get; set; } // URL
+
+		/// <summary>
+		/// The status type of this LearningOpportunityProfile.
+		/// The default is Active.
+		/// ConceptScheme: ceterms:LifeCycleStatus
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:lifeCycleStatusType" )]
+		public CredentialAlignmentObject LifeCycleStatusType { get; set; }
+
+		/// <summary>
+		/// Category or classification of this resource.
+		/// List of URIs that point to a concept
+		/// </summary>
+		[JsonProperty( "ceterms:classification" )]
+		public List<string> Classification { get; set; }
+
+		[JsonProperty( PropertyName = "ceterms:codedNotation" )]
+		public string CodedNotation { get; set; }
+
+		/// <summary>
+		/// Start Date of this resource
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:dateEffective" )]
+		public string DateEffective { get; set; }
+
+		/// <summary>
+		/// End date of the learning opportunity if applicable
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:expirationDate" )]
+		public string ExpirationDate { get; set; }
+
+		/// <summary>
+		/// Local term for a type of learning opportunity or part of one.
+		/// List of CTIDs for concepts in the registry
+		/// ceterms:designationType
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:designationType" )]
+		public List<string> DesignationType { get; set; } = null;
+
 		[JsonProperty( PropertyName = "ceterms:learningMethodType" )]
 		public List<CredentialAlignmentObject> LearningMethodType { get; set; }
 
 		/// <summary>
-		/// Learning Method Description 
+		/// Type indicating how part of a learning opportunity is distinguished from others.
+		/// ConceptScheme: ceterms:PartType
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:learningPartType" )]
+		public List<string> LearningPartType { get; set; }
+
+/// <summary>
+		/// Learning Method Description
 		///  Description of the learning methods for a resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:learningMethodDescription" )]
 		public LanguageMap LearningMethodDescription { get; set; }
 
 		/// <summary>
-		///  Competency evaluated through the learning opportunity.		  
+		///  Competency evaluated through the learning opportunity.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:assesses" )]
 		public List<CredentialAlignmentObject> Assesses { get; set; }
 
 		/// <summary>
-		/// Assessment Method Description 
+		/// Assessment Method Description
 		/// Description of the assessment methods for a resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:assessmentMethodDescription" )]
@@ -173,6 +183,12 @@ namespace RA.Models.JsonV2
 
 		[JsonProperty( PropertyName = "ceterms:assessmentMethodType" )]
 		public List<CredentialAlignmentObject> AssessmentMethodType { get; set; }
+
+		/// <summary>
+		/// LanguageMap for AssociatedResourceDescription
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:associatedResourceDescription" )]
+		public LanguageMap AssociatedResourceDescription { get; set; } = null;
 
 		/// <summary>
 		/// Type of means by which a learning opportunity or assessment is delivered to credential seekers and by which they interact; select from an existing enumeration of such types.
@@ -211,7 +227,7 @@ namespace RA.Models.JsonV2
 		/// <summary>
 		/// OccupationType
 		/// Type of occupation; select from an existing enumeration of such types.
-		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net. 
+		///  For U.S. credentials, best practice is to identify an occupation using a framework such as the O*Net.
 		///  Other credentials may use any framework of the class ceterms:OccupationClassification, such as the EU's ESCO, ISCO-08, and SOC 2010.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:occupationType" )]
@@ -229,6 +245,12 @@ namespace RA.Models.JsonV2
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:isNonCredit" )]
 		public bool? IsNonCredit { get; set; }
+
+		/// <summary>
+		/// The resource is registered with a governmental agency or other authorized organization because it has been vetted, approved and validated to meet specific criteria.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:isRegisteredApprenticeship" )]
+		public bool? IsRegisteredApprenticeship { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:teaches" )]
 		public List<CredentialAlignmentObject> Teaches { get; set; }
@@ -269,7 +291,7 @@ namespace RA.Models.JsonV2
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:inCatalog" )]
-		public string InCatalog { get; set; }
+		public List<string> InCatalog { get; set; }
 
 		[JsonProperty( PropertyName = "ceterms:isPartOf" )]
 		public List<string> IsPartOf { get; set; }
@@ -287,7 +309,7 @@ namespace RA.Models.JsonV2
 		/// Only allowed for a course on a course
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:prerequisite" )]
-		public List<string> Prerequisite { get; set; }
+		public List<ConditionProfile> Prerequisite { get; set; }
 
 		/// <summary>
 		/// This resource provides transfer value for the referenced Transfer Value Profile.
@@ -304,12 +326,24 @@ namespace RA.Models.JsonV2
 		public List<string> ReceivesTransferValueFrom { get; set; }
 
 		/// <summary>
-		/// Action carried out upon this resource.
-		/// Refer to the referenced Action for more information. Other resources may be included for the full value.
+		/// Another source of information about the entity being described.
+		/// List of URIs
+		/// ceterms:sameAs
 		/// </summary>
-		[JsonProperty( PropertyName = "ceterms:objectOfAction" )]
-		public List<string> ObjectOfAction { get; set; }
+		[JsonProperty( PropertyName = "ceterms:sameAs" )]
+		public List<string> SameAs { get; set; }
 
+		[JsonProperty( PropertyName = "ceterms:subject" )]
+		public List<CredentialAlignmentObject> Subject { get; set; }
+
+		/// <summary>
+		/// Primary academic discipline or professional career path.
+		/// Comment:
+		/// May be useful for describing credentials, assessments and learning opportunities that cover a general field but with a focus on a specific skill set, for example an apprenticeship in electrical engineering specializing in High Voltage applications. For degree credentials there are also properties for degree major, minor and concentration.
+		/// range: ceterms:CredentialAlignmentObject
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:specialistSubject" )]
+		public List<CredentialAlignmentObject> SpecialistSubject { get; set; }
 		#region -- Quality Assurance BY --
 
 		/// <summary>
@@ -346,37 +380,37 @@ namespace RA.Models.JsonV2
 		#region Quality Assurance IN - Jurisdiction based Quality Assurance  (INs)
 
 		/// <summary>
-		/// List of Organizations that accredit this learning opportunity in a specific Jurisdiction. 
+		/// List of Organizations that accredit this learning opportunity in a specific Jurisdiction.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:accreditedIn" )]
 		public List<JurisdictionProfile> AccreditedIn { get; set; }
 
 		/// <summary>
-		/// List of Organizations that approve this learning opportunity in a specific Jurisdiction. 
+		/// List of Organizations that approve this learning opportunity in a specific Jurisdiction.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:approvedIn" )]
 		public List<JurisdictionProfile> ApprovedIn { get; set; }
 
 		/// <summary>
-		/// List of Organizations that offer this learning opportunity in a specific Jurisdiction. 
+		/// List of Organizations that offer this learning opportunity in a specific Jurisdiction.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:offeredIn" )]
 		public List<JurisdictionProfile> OfferedIn { get; set; }
 
 		/// <summary>
-		/// List of Organizations that recognize this learning opportunity in a specific Jurisdiction. 
+		/// List of Organizations that recognize this learning opportunity in a specific Jurisdiction.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:recognizedIn" )]
 		public List<JurisdictionProfile> RecognizedIn { get; set; }
 
 		/// <summary>
-		/// List of Organizations that regulate this learning opportunity in a specific Jurisdiction. 
+		/// List of Organizations that regulate this learning opportunity in a specific Jurisdiction.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:regulatedIn" )]
 		public List<JurisdictionProfile> RegulatedIn { get; set; }
 
 		/// <summary>
-		/// List of Organizations that revoke this learning opportunity in a specific Jurisdiction. 
+		/// List of Organizations that revoke this learning opportunity in a specific Jurisdiction.
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:revokedIn" )]
 		public List<JurisdictionProfile> RevokedIn { get; set; }
@@ -412,6 +446,12 @@ namespace RA.Models.JsonV2
 		[JsonProperty( PropertyName = "ceterms:commonCosts" )]
 		public List<string> CommonCosts { get; set; }
 
+		/// <summary>
+		/// Description of the topics, concepts, theories, and practices addressed by this resource.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:contentDescription" )]
+		public LanguageMap ContentDescription { get; set; } = null;
+
 		[JsonProperty( PropertyName = "ceterms:jurisdiction" )]
 		public List<JurisdictionProfile> Jurisdiction { get; set; }
 
@@ -440,24 +480,43 @@ namespace RA.Models.JsonV2
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; }
 
 		/// <summary>
-		///  Resource that replaces this resource.
+		/// Industry for which this resource is acknowledged to be valid.
+		/// List of CTIDs for published industry types.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:recognizedForIndustry" )]
+		public List<string> RecognizedForIndustry { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Credential awarded as the result of successful completion of the resource being described.
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:resultsInCredential" )]
+		public List<string> ResultsInCredential { get; set; } = new List<string>();
+
+		/// <summary>
+		///  Resource(s) that replaces this resource.
 		///  full URL OR CTID (recommended)
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:supersededBy" )]
-		public string SupersededBy { get; set; } // URL
+		public List<string> SupersededBy { get; set; } // URL
 
 		/// <summary>
-		/// Resource that this resource replaces.
+		/// Resource(s) that this resource replaces.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:supersedes" )]
-		public string Supersedes { get; set; } // URL
+		public List<string> Supersedes { get; set; } // URL
 
 		/// <summary>
 		/// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.
 		/// </summary>//
 		[JsonProperty( PropertyName = "ceterms:targetAssessment" )]
 		public List<string> TargetAssessment { get; set; }
+
+		/// <summary>
+		/// Credential that is a focus or target of the condition, process or verification service.
+		/// </summary>//
+		[JsonProperty( PropertyName = "ceterms:targetCredential" )]
+		public List<string> TargetCredential { get; set; }
 
 		/// <summary>
 		/// Learning opportunity that is the focus of a condition, process or another learning opportunity.
@@ -499,6 +558,13 @@ namespace RA.Models.JsonV2
 		// COURSE ONLY
 		[JsonProperty( PropertyName = "ceterms:sced" )]
 		public string SCED { get; set; }
+
+		/// <summary>
+		/// Monetary compensation associated with work.
+		/// For Learning Opportunity and Learning Program
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:workPay" )]
+		public List<PayProfile> WorkPay { get; set; }
 
 		#region process profiles
 

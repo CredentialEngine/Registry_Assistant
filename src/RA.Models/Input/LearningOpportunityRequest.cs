@@ -44,6 +44,15 @@ namespace RA.Models.Input
 		}
 	}
 
+	/// <summary>
+	/// LearningOpportunity request input class
+	/// Note: the following are inverse properties and NOT published with the resource:
+	/// - ceterms:hasProxy
+	/// - ceterms:isPartOf
+	/// - ceterms:objectOfAction
+	/// - ceterms:targetPathway
+	/// - qdata:relevantDataSet
+	/// </summary>
 	public class LearningOpportunity : BaseRequestHelper
 	{
 		public LearningOpportunity()
@@ -177,8 +186,7 @@ namespace RA.Models.Input
 		/// 21-07-19 - updating Creditvalue to also allow a list. It is defined as an object. The API will accept either a ValueProfile object or List of ValueProfiles
 		/// 21-08-18 - Changing permanently to the List, as only existing use was from the publisher (and the latter is updated to use the list)
 		/// </summary>
-		// public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
-		public object CreditValue { get; set; }
+		public List<ValueProfile> CreditValue { get; set; } = new List<ValueProfile>();
 
 		/// <summary>
 		/// Competency that the learning opportunity is intended to teach.
@@ -215,6 +223,12 @@ namespace RA.Models.Input
 		public LanguageMap LearningMethodDescriptionLangMap { get; set; } = null;
 
 		/// <summary>
+		/// Type indicating how part of a learning opportunity is distinguished from others.
+		/// ConceptScheme: ceterms:PartType
+		/// </summary>
+		public List<string> LearningPartType { get; set; }
+
+		/// <summary>
 		/// Type of means by which a learning opportunity or assessment is delivered to credential seekers and by which they interact; select from an existing enumeration of such types.
 		/// deliveryType:BlendedDelivery deliveryType:InPerson deliveryType:OnlineOnly
 		/// <see href="https://credreg.net/ctdl/terms/Delivery"></see>
@@ -232,7 +246,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// An inventory or listing of resources that includes this resource.
 		/// </summary>
-		public string InCatalog { get; set; }
+		public object InCatalog { get; set; }
 		#endregion
 
 		#region Online or Physical Location
@@ -260,6 +274,11 @@ namespace RA.Models.Input
 		// =========== optional ================================
 
 		/// <summary>
+		/// An additional free text note about the quality assurance or licensing of an organisation or a qualification.
+		/// </summary>
+		public Note AdditionalNote { get; set; } = null;
+
+		/// <summary>
 		/// List of Alternate Names for this learning opportunity
 		/// </summary>
 		public List<string> AlternateName { get; set; } = new List<string>();
@@ -270,33 +289,6 @@ namespace RA.Models.Input
 		[JsonProperty( PropertyName = "ceterms:alternateName" )]
 		public LanguageMapList AlternateNameLangMap { get; set; } = null;
 
-		#region Proposed collection helpers
-		///// <summary>
-		///// One or more collections of which this resource is to be a member.
-		///// The owner of the collection must be the same as the publisher of this resource.
-		///// Actions
-		///// Proposed:
-		/////		if this resource includes at least one of DateEffective or ExpirationDate, then a CollectionMember will be added to the collection, otherwise just the URI will be added to Collection.HasMember.
-		/////	Response:
-		/////		NO, it is believed that we cannot arbitrarily take action based on the dates
-		///// </summary>
-		// public List<string> IsMemberOfCollection { get; set; } = new List<string>();
-		///// <summary>
-		///// List of collection members for a collection where this learning opportunity is to be added.
-		///// The CollectionCTID is required.
-		///// The ProxyFor property should be empty or contain the same CTID as this resource.
-		/////		- actually it will just be ignored
-		/////	TODO - can we get away with just one property?
-		///// </summary>
-		// public List<CollectionMember> IsCollectionMemberOfCollection { get; set; } = new List<CollectionMember>();
-
-		///// <summary>
-		///// List of Collections from which to remove the current resource
-		///// </summary>
-		// public List<string> RemoveCollectionMember{ get; set; } = new List<string>();
-
-		#endregion
-
 		/// <summary>
 		///  Resource containing summary/statistical employment outcome, earnings, and/or holders information.
 		///  For deeper information, include qdata:DataSetProfile.
@@ -304,9 +296,21 @@ namespace RA.Models.Input
 		public List<AggregateDataProfile> AggregateData { get; set; } = new List<AggregateDataProfile>();
 
 		/// <summary>
+		/// Approximate date after which this resource is available or applicable.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateDateEffective { get; set; }
+
+		/// <summary>
+		/// Approximate date after which this resource is no longer offered or available.
+		/// The value should be in ISO 8601 date format; specifically YYYY or YYY-MM.
+		/// </summary>
+		public string ApproximateExpirationDate { get; set; }
+
+		/// <summary>
 		///  Competency evaluated through the learning opportunity.
 		/// </summary>
-		public List<CredentialAlignmentObject> Assesses { get; set; } = new List<CredentialAlignmentObject>();
+		public List<CredentialAlignmentObject> Assesses { get; set; }
 
 		/// <summary>
 		/// Assessment Method Description
@@ -326,6 +330,17 @@ namespace RA.Models.Input
 		/// <see href="https://credreg.net/ctdl/terms/AssessmentMethod"></see>
 		/// </summary>
 		public List<string> AssessmentMethodType { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Description of resources that support, supplement or are referenced during learning and assessment to which access may be required or recommended.
+		/// </summary>
+		public string AssociatedResourceDescription { get; set; }
+
+		/// <summary>
+		/// LanguageMap for AssociatedResourceDescription
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:associatedResourceDescription" )]
+		public LanguageMap AssociatedResourceDescriptionLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Indicates the stage or level of achievement in a progression of learning.
@@ -358,6 +373,17 @@ namespace RA.Models.Input
 		/// Set of costs maintained at an organizational or sub-organizational level, which apply to this learning opportunity.
 		/// </summary>
 		public List<string> CommonCosts { get; set; }
+
+		/// <summary>
+		/// Description of the topics, concepts, theories, and practices addressed by this resource.
+		/// </summary>
+		public string ContentDescription { get; set; }
+
+		/// <summary>
+		/// LanguageMap for ContentDescription
+		/// </summary>
+		[JsonProperty( PropertyName = "ceterms:contentDescription" )]
+		public LanguageMap ContentDescriptionLangMap { get; set; } = null;
 
 		/// <summary>
 		/// Detailed description of credit unit.
@@ -395,6 +421,11 @@ namespace RA.Models.Input
 		/// Entity that describes financial assistance that is offered or available.
 		/// </summary>
 		public List<FinancialAssistanceProfile> FinancialAssistance { get; set; } = new List<FinancialAssistanceProfile>();
+
+		/// <summary>
+		/// Helper property for referencing existing financial assistance profiles by CTID
+		/// </summary>
+		public List<string> CommonFinancialAssistance { get; set; }
 
 		/// <summary>
 		///  Indicates an offering and typical schedule.
@@ -441,6 +472,11 @@ namespace RA.Models.Input
 		public bool? IsNonCredit { get; set; }
 
 		/// <summary>
+		/// The resource is registered with a governmental agency or other authorized organization because it has been vetted, approved and validated to meet specific criteria.
+		/// </summary>
+		public bool? IsRegisteredApprenticeship { get; set; }
+
+		/// <summary>
 		/// Indicates another entity of which this entity is a component. That is of another Learning Opportunity
 		/// Covers partitive notions such as "embedded".
 		/// </summary>
@@ -468,7 +504,7 @@ namespace RA.Models.Input
 		/// Resource that is required as a prior condition to this resource.
 		/// Only allowed for a course on a course
 		/// </summary>
-		public List<EntityReference> Prerequisite { get; set; } = new List<EntityReference>();
+		public List<ConditionProfile> Prerequisite { get; set; } = new List<ConditionProfile>();
 
 		/// <summary>
 		/// This resource provides transfer value for the referenced Transfer Value Profile.
@@ -483,10 +519,15 @@ namespace RA.Models.Input
 		public List<string> ReceivesTransferValueFrom { get; set; } = new List<string>();
 
 		/// <summary>
-		/// Action carried out upon this resource.
-		/// Refer to the referenced Action for more information. Other resources may be included for the full value.
+		/// Industry for which this resource is acknowledged to be valid.
+		/// List of CTIDs for published industry types.
 		/// </summary>
-		public List<string> ObjectOfAction { get; set; } = new List<string>();
+		public List<string> RecognizedForIndustry { get; set; } = new List<string>();
+
+		/// <summary>
+		/// Credential awarded as the result of successful completion of the resource being described.
+		/// </summary>
+		public List<string> ResultsInCredential { get; set; } = new List<string>();
 
 		/// <summary>
 		/// Organization(s) that register this resource.
@@ -504,13 +545,21 @@ namespace RA.Models.Input
 		/// <summary>
 		/// Words or brief phrases describing the topicality of the entity; select subject terms from an existing enumeration of such terms.
 		/// </summary>
-		public List<string> Subject { get; set; } = new List<string>();
+		public List<string> Subject { get; set; }
 
 		/// <summary>
 		/// Language map list for Subject
 		/// </summary>
 		[JsonProperty( PropertyName = "ceterms:subject" )]
 		public LanguageMapList SubjectLangMap { get; set; } = null;
+
+		/// <summary>
+		/// Primary academic discipline or professional career path.
+		/// Comment:
+		/// May be useful for describing credentials, assessments and learning opportunities that cover a general field but with a focus on a specific skill set, for example an apprenticeship in electrical engineering specializing in High Voltage applications. For degree credentials there are also properties for degree major, minor and concentration.
+		/// range: ceterms:CredentialAlignmentObject
+		/// </summary>
+		public List<CredentialAlignmentObject> SpecialistSubject { get; set; }
 
 		/// <summary>
 		/// Type of frequency at which a resource is offered; select from an existing enumeration of such types.
@@ -627,6 +676,13 @@ namespace RA.Models.Input
 		/// </summary>
 		public List<string> Classification { get; set; } = new List<string>();
 
+		/// <summary>
+		/// Local term for a type of learning opportunity or part of one.
+		/// List of CTIDs for concepts in the registry
+		/// ceterms:designationType
+		/// </summary>
+		public List<string> DesignationType { get; set; } = new List<string>();
+
 		#region Conditions and connections
 		// Connection Profiles are Condition Profiles but typically only a subject of the Condition Profile properties are used.
 
@@ -664,14 +720,14 @@ namespace RA.Models.Input
 		// =========== connections ===========
 
 		/// <summary>
-		/// Credential that has its time or cost reduced by another credential, assessment or learning opportunity.
+		/// Resource that has its time or cost reduced by another resource.
 		/// ceterms:advancedStandingFrom
 		/// <seealso href="https://credreg.net/ctdl/terms/advancedStandingFrom"></seealso>
 		/// </summary>
 		public List<ConditionProfile> AdvancedStandingFrom { get; set; }
 
 		/// <summary>
-		/// This credential, assessment, or learning opportunity reduces the time or cost required to earn or complete the referenced credential, assessment, or learning opportunity.
+		/// This resource reduces the time or cost required to earn or complete the referenced resource.
 		/// <para>A third-party credential agent claiming that its credential provides advanced standing for the credential of another credential agent should consider using ceterms:recommendedFor instead of ceterms:advancedStandingFor in the absence of an explicit and verifiable agreement on advanced standing between the agents of the two credentials.</para>
 		/// ceterms:isAdvancedStandingFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isAdvancedStandingFor">isAdvancedStandingFor</seealso>
@@ -679,28 +735,28 @@ namespace RA.Models.Input
 		public List<ConditionProfile> IsAdvancedStandingFor { get; set; }
 
 		/// <summary>
-		/// This credential, assessment, or learning opportunity provides preparation for the credential, assessment, or learning opportunity being referenced.
+		/// This resource provides preparation for the resource being referenced.
 		/// ceterms:isPreparationFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isPreparationFor">isPreparationFor</seealso>
 		/// </summary>
 		public List<ConditionProfile> IsPreparationFor { get; set; }
 
 		/// <summary>
-		/// It is recommended to earn or complete this credential, assessment, or learning opportunity before attempting to earn or complete the referenced credential, assessment, or learning opportunity.
+		/// It is recommended to earn or complete this resource before attempting to earn or complete the referenced resource.
 		/// ceterms:isRecommendedFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isRecommendedFor">isRecommendedFor</seealso>
 		/// </summary>
 		public List<ConditionProfile> IsRecommendedFor { get; set; }
 
 		/// <summary>
-		/// This credential, assessment, or learning opportunity must be earned or completed prior to attempting to earn or complete the referenced credential, assessment, or learning opportunity.
+		/// This resource must be earned or completed prior to attempting to earn or complete the referenced resource.
 		/// ceterms:isRequiredFor
 		/// <seealso href="https://credreg.net/ctdl/terms/isRequiredFor"></seealso>
 		/// </summary>
 		public List<ConditionProfile> IsRequiredFor { get; set; }
 
 		/// <summary>
-		///  Another credential, learning opportunity or assessment that provides preparation for this credential, learning opportunity or assessment.
+		///  Indicates a resource that is useful in preparing for the resource being described..
 		/// ceterms:preparationFrom
 		/// <seealso href="https://credreg.net/ctdl/terms/preparationFrom"></seealso>
 		/// </summary>
@@ -774,13 +830,13 @@ namespace RA.Models.Input
 		#endregion
 
 		/// <summary>
-		///  Resource that replaces this resource.
+		///  Resource(s) that replaces this resource.
 		///  full URL OR CTID (recommended)
 		/// </summary>
 		public List<string> SupersededBy { get; set; }
 
 		/// <summary>
-		/// Resource that this resource replaces.
+		/// Resource(s) that this resource replaces.
 		/// full URL OR CTID (recommended)
 		/// </summary>
 		public List<string> Supersedes { get; set; }
@@ -789,6 +845,11 @@ namespace RA.Models.Input
 		/// Assessment that provides direct, indirect, formative or summative evaluation or estimation of the nature, ability, or quality for an entity.
 		/// </summary>
 		public List<EntityReference> TargetAssessment { get; set; }
+
+		/// <summary>
+		/// Credential that is a focus or target of the condition, process or verification service.
+		/// </summary>
+		public List<EntityReference> TargetCredential { get; set; }
 
 		/// <summary>
 		/// Learning opportunity that is the focus of a condition, process or another learning opportunity.
@@ -858,6 +919,12 @@ namespace RA.Models.Input
 		[JsonProperty( PropertyName = "ceterms:degreeConcentration" )]
 		public LanguageMapList DegreeConcentrationLangMap { get; set; } = null;
 		#endregion
+
+		/// <summary>
+		/// Monetary compensation associated with work.
+		/// For Learning Opportunity and Learning Program
+		/// </summary>
+		public List<PayProfile> WorkPay { get; set; }
 
 	}
 
