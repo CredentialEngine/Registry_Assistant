@@ -56,7 +56,7 @@ namespace RA.Models.JsonV2
 		/// An additional free text note about the quality assurance or licensing of an organisation or a qualification.
 		/// </summary>
 		[JsonProperty( PropertyName = "elm:additionalNote" )]
-		public Note AdditionalNote { get; set; } = null;
+		public List<Note> AdditionalNote { get; set; } = null;
 
 		[JsonProperty( PropertyName = "ceterms:aggregateData" )]
 		public List<AggregateDataProfile> AggregateData { get; set; }

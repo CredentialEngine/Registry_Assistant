@@ -276,7 +276,7 @@ namespace RA.Models.Input
 		/// <summary>
 		/// An additional free text note about the quality assurance or licensing of an organisation or a qualification.
 		/// </summary>
-		public Note AdditionalNote { get; set; } = null;
+		public List<Note> AdditionalNote { get; set; } = null;
 
 		/// <summary>
 		/// List of Alternate Names for this learning opportunity

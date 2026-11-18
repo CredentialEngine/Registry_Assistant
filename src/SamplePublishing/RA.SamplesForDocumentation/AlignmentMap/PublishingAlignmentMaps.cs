@@ -94,8 +94,8 @@ namespace RA.SamplesForDocumentation.AlignmentMaps
             myData.LatestVersion = "https://example.org/LatestVersionUrl";
             myData.PreviousVersion = "https://example.org/PreviousVersionUrl";
             myData.NextVersion = "https://example.org/NextVersionUrl";
-            myData.SupersededBy = "https://example.org/SupersededByUrl";
-            myData.Supersedes = "https://example.org/SupersedesUrl";
+            myData.SupersededBy = new List<string>() { "https://example.org/SupersededByUrl"};
+            myData.Supersedes = new List<string>() { "https://example.org/SupersedesUrl" };
 
             myData.ProcessStandards = "https://example.org/ProcessStandardsUrl";
             myData.ProcessStandardsDescription = "Description of the process standards related to this resource.";

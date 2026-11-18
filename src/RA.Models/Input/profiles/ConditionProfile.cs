@@ -308,7 +308,7 @@ namespace RA.Models.Input
 	{
 		public BaseConditionsProfile()
 		{
-			// Defaults to the condition profile type, but can be overridden by sub-classes
+			// Defaults to the condition profile type, but can be overridden by top-level classes
 			Type = "ceterms:ConditionProfile";
 		}
 
